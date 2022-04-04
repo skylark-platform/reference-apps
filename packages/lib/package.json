@@ -1,0 +1,26 @@
+{
+  "name": "@skylark-reference-apps/lib",
+  "description": "Common utility functions",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "license": "UNLICENSED",
+  "sideEffects": false,
+  "scripts": {
+    "test": "jest --config=jest.config.js",
+    "lint": "eslint -c ../../.eslintrc.js ."
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.0",
+    "@babel/preset-env": "^7.16.4",
+    "@babel/preset-typescript": "^7.16.0",
+    "@types/jest": "^27.0.3",
+    "eslint": "^8.3.0",
+    "jest": "^27.3.1",
+    "jest-junit": "^13.0.0"
+  },
+  "dependencies": {
+    "@aws-amplify/auth": "^4.4.1",
+    "amazon-cognito-identity-js": "^5.2.3"
+  }
+}

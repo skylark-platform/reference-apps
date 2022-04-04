@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="4" failures="0" errors="0" time="0.71">
+  <testsuite name="src/cognito/cognito.test.ts" errors="0" failures="0" skipped="0" timestamp="2022-04-04T12:00:33" time="0.292" tests="4">
+    <testcase classname="cognito › amplifyConfig" name="returns config when the credentials are passed into the function" time="0.002">
+    </testcase>
+    <testcase classname="cognito › amplifyConfig" name="returns config when the credentials are passed in through process.env" time="0.001">
+    </testcase>
+    <testcase classname="cognito › amplifyConfig" name="returns a secure cookie when the domain is not localhost" time="0">
+    </testcase>
+    <testcase classname="cognito › amplifyConfig" name="throws an error when invalid credentials are given" time="0.01">
+    </testcase>
+  </testsuite>
+</testsuites>

@@ -1,0 +1,32 @@
+{
+  "name": "@skylark-reference-apps/react",
+  "description": "Common React Components",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "license": "UNLICENSED",
+  "sideEffects": false,
+  "scripts": {
+    "test": "jest --config=jest.config.js",
+    "lint": "eslint -c ../../.eslintrc.js ."
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.0",
+    "@babel/preset-env": "^7.16.4",
+    "@babel/preset-react": "^7.16.0",
+    "@babel/preset-typescript": "^7.16.0",
+    "@storybook/react": "^6.3.12",
+    "@testing-library/dom": "^8.11.1",
+    "@testing-library/react": "^12.1.2",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.0.3",
+    "eslint": "^8.3.0",
+    "jest": "^27.3.1",
+    "jest-junit": "^13.0.0"
+  },
+  "dependencies": {
+    "next": "12.1.4",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  }
+}

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="1" failures="0" errors="0" time="1.362">
+  <testsuite name="src/link/link.test.tsx" errors="0" failures="0" skipped="0" timestamp="2022-04-04T11:58:45" time="0.744" tests="1">
+    <testcase classname="Link component" name="the component renders correctly" time="0.061">
+    </testcase>
+  </testsuite>
+</testsuites>
