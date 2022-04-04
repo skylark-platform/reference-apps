@@ -25,7 +25,7 @@ export const Link: React.FC<IProps> = ({
       {...{ href, as, replace, scroll, shallow, prefetch, locale }}
       passHref
     >
-      <a className="bg-red-500 text-4xl font-extrabold">{children}</a>
+      <a className="bg-pink-500 text-4xl font-extrabold">{children}</a>
     </NextLink>
   );
 };
