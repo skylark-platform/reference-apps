@@ -4,11 +4,15 @@ on: push
 
 jobs:
   chromatic-deployment:
+    name: Deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Install dependencies
-        run: yarn
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+          cache: yarn
+      - run: yarn
       - name: Publish to Chromatic
         uses: chromaui/action@v1
         with:
