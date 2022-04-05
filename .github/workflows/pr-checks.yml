@@ -12,6 +12,7 @@ jobs:
         with:
           node-version: 14
           cache: yarn
+      - run: yarn
       - run: yarn lint
       - run: yarn prettier:check
 
@@ -25,5 +26,6 @@ jobs:
         with:
           node-version: 14
           cache: yarn
+      - run: yarn
       # Check all apps build
       - run: yarn lerna-run build --parallel
