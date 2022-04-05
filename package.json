@@ -11,6 +11,7 @@
     "lerna-run": "lerna run",
     "lint": "yarn lerna-run --parallel lint",
     "prettier": "prettier . --write",
+    "prettier:check": "prettier . --check",
     "prepare": "husky install",
     "storybook": "yarn lerna-run storybook",
     "dev": "yarn lerna-run --parallel dev"
