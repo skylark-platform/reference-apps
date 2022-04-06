@@ -34,7 +34,7 @@ export const H3: React.FC = ({ children }) => (
 
 export const H4: React.FC = ({ children }) => (
   <h4
-    className={`${sharedStyles} text-[16px] font-semibold leading-[20px] md:text-[18px] md:leading-[24px]`}
+    className={`${sharedStyles} text-[16px] font-bold leading-[20px] md:text-[18px] md:leading-[24px]`}
   >
     {children}
   </h4>
@@ -42,14 +42,14 @@ export const H4: React.FC = ({ children }) => (
 
 export const H5: React.FC = ({ children }) => (
   <h5
-    className={`${sharedStyles} text-[13px] font-semibold leading-[18px] md:text-[14px] md:leading-[20px]`}
+    className={`${sharedStyles} text-[13px] font-bold leading-[18px] md:text-[14px] md:leading-[20px]`}
   >
     {children}
   </h5>
 );
 
 export const H6: React.FC = ({ children }) => (
-  <h6 className={`${sharedStyles} text-[12px] font-semibold leading-[26px]`}>
+  <h6 className={`${sharedStyles} text-[12px] font-bold leading-[26px]`}>
     {children}
   </h6>
 );
