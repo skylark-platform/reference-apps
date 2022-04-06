@@ -9,12 +9,14 @@
   "license": "MIT",
   "scripts": {
     "lerna-run": "lerna run",
-    "lint": "yarn lerna-run --parallel lint",
+    "lint": "lerna run --parallel lint",
+    "test": "lerna run --parallel test",
+    "test:ci": "lerna run --parallel test -- --ci --coverage",
     "prettier": "prettier . --write",
     "prettier:check": "prettier . --check",
     "prepare": "husky install",
-    "storybook": "yarn lerna-run storybook",
-    "dev": "yarn lerna-run --parallel dev"
+    "storybook": "lerna run --stream storybook",
+    "dev": "lerna run --parallel dev"
   },
   "devDependencies": {
     "@lerna/run": "^4.0.0",

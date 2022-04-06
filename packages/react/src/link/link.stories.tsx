@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { Link } from "./link.component";
 
 export default {
-  title: "react/Link",
+  title: "React/Link",
   component: Link,
 } as ComponentMeta<typeof Link>;
 

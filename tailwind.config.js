@@ -6,6 +6,13 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontSize: {
+        sub1: ["16px", "20px"],
+        sub2: ["13px", "20px"],
+        sub3: ["12px", "20px"],
+        ol1: ["11px", "11px"],
+        ol2: ["10px", "10px"],
+      },
       colors: {
         "skylark-blue": "#226DFF",
         gray: {
@@ -32,10 +39,15 @@ module.exports = {
           500: "#FF385C",
           600: "#D82646",
         },
+        button: {
+          primary: "#5B45CE",
+          hover: "#FF385C",
+          disabled: "#F3F3FB",
+        },
       },
       fontFamily: {
         display: "Outfit",
-        body: "Inter",
+        body: "Outfit",
       },
     },
   },

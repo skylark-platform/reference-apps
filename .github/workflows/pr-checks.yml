@@ -1,11 +1,11 @@
-name: Test
+name: Pull Request Checks
 
 on: pull_request
 
 jobs:
   lint:
     runs-on: ubuntu-latest
-    name: Lint/Prettier
+    name: Lint, Prettier & Jest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3
@@ -15,6 +15,14 @@ jobs:
       - run: yarn
       - run: yarn lint
       - run: yarn prettier:check
+      - run: yarn test:ci
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Frontend Unit Test Results
+          path: "!(node_modules)/**/reports/jest-junit.xml"
+          reporter: jest-junit
 
   build:
     needs: lint
