@@ -7,6 +7,10 @@ export class SkylarkReferenceAppStack extends cdk.Stack {
 
     new NextJSLambdaEdge(this, "NextJsApp", {
       serverlessBuildOutDir: "./build",
+      description: props?.description,
+      cloudfrontProps: {
+        comment: props?.stackName,
+      },
     });
   }
 }
