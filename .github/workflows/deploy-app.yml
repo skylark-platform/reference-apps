@@ -1,24 +1,18 @@
-name: Deploy
+name: Deploy App
 on: push
+concurrency:
+  group: deploy-app
 jobs:
-  deploy:
-    name: Deploy
+  prepare:
+    name: Prepare
     runs-on: ubuntu-latest
+    outputs:
+      git-branch: ${{ steps.branch-and-ref.outputs.branch }}
+      git-ref: ${{ steps.branch-and-ref.outputs.ref }}
     steps:
       - uses: actions/checkout@v1
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 14
-          cache: yarn
-      - run: yarn
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_LEGACY_SKYLARK_DEVELOPMENT }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_LEGACY_SKYLARK_DEVELOPMENT }}
-          aws-region: us-east-1
-      - name: Get branch
-        id: branch
+      - name: Get branch and ref
+        id: branch-and-ref
         run: |
           echo "github.event_name = ${{ github.event_name }}"
           echo "github.ref = ${{ github.ref }}"
@@ -37,13 +31,31 @@ jobs:
           echo "Git Ref: $GitRef"
           echo "Git Branch Name: $GitBranch"
 
-          echo "::set-output name=git-ref::$GitRef"
-          echo "::set-output name=git-branch::$GitBranch"
+          echo "::set-output name=ref::$GitRef"
+          echo "::set-output name=branch::$GitBranch"
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: prepare
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+          cache: yarn
+      - run: yarn
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_LEGACY_SKYLARK_DEVELOPMENT }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_LEGACY_SKYLARK_DEVELOPMENT }}
+          aws-region: us-east-1
       - name: Bootstrap and deploy CDK
         working-directory: packages/infra
         env:
           # APP: ${{ inputs.stack-name }}
-          GIT_BRANCH: ${{ steps.branch.outputs.git-branch }}
+          GIT_BRANCH: ${{ needs.prepare.outputs.git-branch }}
           # DOMAIN_NAME: ${{ inputs.domain-name }}
           # DOMAIN_ZONE_NAME: ${{ inputs.domain-zone-name }}
           # DOMAIN_CERTIFICATE_ARN: ${{ inputs.domain-certificate-arn }}
