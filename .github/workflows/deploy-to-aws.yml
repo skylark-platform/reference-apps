@@ -40,7 +40,7 @@ jobs:
           echo "::set-output name=git-ref::$GitRef"
           echo "::set-output name=git-branch::$GitBranch"
       - name: Bootstrap and deploy CDK
-        working-directory: components/frontend/apps/classic-cms/infra
+        working-directory: packages/infra
         env:
           # APP: ${{ inputs.stack-name }}
           GIT_BRANCH: ${{ steps.branch.outputs.git-branch }}
