@@ -8,11 +8,15 @@ export default {
 } as ComponentMeta<typeof OverlineComponent>;
 
 const Template: ComponentStory<typeof OverlineComponent> = (args) => (
-  <OverlineComponent {...args} />
+  <OverlineComponent {...args}>{`Overline ${args.level}`}</OverlineComponent>
 );
 
-export const Overline = Template.bind({});
-Overline.args = {
-  children: "Overline",
+export const Level1 = Template.bind({});
+Level1.args = {
   level: 1,
+};
+
+export const Level2 = Template.bind({});
+Level2.args = {
+  level: 2,
 };
