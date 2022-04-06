@@ -21,7 +21,6 @@ jobs:
         if: success() || failure()
         with:
           name: Frontend Unit Test Results
-          working-directory: ./components/frontend/
           path: "!(node_modules)/**/reports/jest-junit.xml"
           reporter: jest-junit
 
