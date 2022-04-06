@@ -11,7 +11,7 @@ console.log("args", process.argv);
 const app = process.env.APP || "media";
 const gitBranch = process.env.GIT_BRANCH;
 const sanitzedGitBranch =
-  gitBranch && gitBranch.toLowerCase().replace(/\./g, "-");
+  gitBranch && gitBranch.toLowerCase().replace(/\./g, "-").replace("/", "-");
 
 const stackName = [app, sanitzedGitBranch].filter((item) => !!item).join("-");
 const description = `${app} Skylark Reference App deployed via CDK`;
