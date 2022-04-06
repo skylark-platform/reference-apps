@@ -1,0 +1,52 @@
+name: Deploy
+on: push
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+          cache: yarn
+      - run: yarn
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_LEGACY_SKYLARK_DEVELOPMENT }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_LEGACY_SKYLARK_DEVELOPMENT }}
+          aws-region: us-east-1
+      - name: Get branch
+        id: branch
+        run: |
+          echo "github.event_name = ${{ github.event_name }}"
+          echo "github.ref = ${{ github.ref }}"
+          echo "github.event.ref = ${{ github.event.ref }}"
+
+          # If the event is delete, use the event ref
+          if [ "${{ github.event_name }}" = delete ]; then
+            GitRef="${{ github.event.ref }}"
+          elif [ "${{ github.event_name }}" = pull_request ]; then
+            GitRef="${{ github.head_ref }}"
+          else
+            GitRef="${{ github.ref }}"
+          fi
+          GitBranch=$(echo ${GitRef#refs/heads/})
+
+          echo "Git Ref: $GitRef"
+          echo "Git Branch Name: $GitBranch"
+
+          echo "::set-output name=git-ref::$GitRef"
+          echo "::set-output name=git-branch::$GitBranch"
+      - name: Bootstrap and deploy CDK
+        working-directory: components/frontend/apps/classic-cms/infra
+        env:
+          # APP: ${{ inputs.stack-name }}
+          GIT_BRANCH: ${{ steps.branch.outputs.git-branch }}
+          # DOMAIN_NAME: ${{ inputs.domain-name }}
+          # DOMAIN_ZONE_NAME: ${{ inputs.domain-zone-name }}
+          # DOMAIN_CERTIFICATE_ARN: ${{ inputs.domain-certificate-arn }}
+        run: |
+          yarn cdk bootstrap
+          yarn cdk deploy
