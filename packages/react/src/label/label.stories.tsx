@@ -4,7 +4,7 @@ import { MdClear } from "react-icons/md";
 import { Label } from "./label.component";
 
 export default {
-  title: "react/Label",
+  title: "React/Label",
   component: Label,
   argTypes: {
     iconPlacement: {

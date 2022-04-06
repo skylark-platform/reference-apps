@@ -4,7 +4,7 @@ import { MdClear } from "react-icons/md";
 import { Button } from "./button.component";
 
 export default {
-  title: "react/Button",
+  title: "React/Button",
   component: Button,
   parameters: {
     chromatic: { viewports: [320, 1200] },
