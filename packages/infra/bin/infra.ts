@@ -17,6 +17,9 @@ const stackName = [app, sanitzedGitBranch].filter((item) => !!item).join("-");
 const description = `${app} Skylark Reference App deployed via CDK`;
 const appPath = `../../apps/${app}`;
 
+const primaryDomain =
+  "media.apps.legacy-skylark-development.skylarkplatform.io";
+
 const builder = new Builder(appPath, "./build", {
   args: ["build"],
   cwd: appPath,
@@ -28,6 +31,7 @@ builder
     new SkylarkReferenceAppStack(app, "skylark-reference-app", {
       stackName,
       description,
+      primaryDomain,
       env: {
         account: process.env.CDK_DEFAULT_ACCOUNT,
         region: "us-east-1",
