@@ -56,9 +56,7 @@ jobs:
         env:
           # APP: ${{ inputs.stack-name }}
           GIT_BRANCH: ${{ needs.prepare.outputs.git-branch }}
-          # DOMAIN_NAME: ${{ inputs.domain-name }}
-          # DOMAIN_ZONE_NAME: ${{ inputs.domain-zone-name }}
-          # DOMAIN_CERTIFICATE_ARN: ${{ inputs.domain-certificate-arn }}
+          BASE_DOMAIN_NAME: legacy-skylark-development.skylarkplatform.io
         run: |
           yarn cdk bootstrap
           yarn cdk deploy

@@ -1,33 +1,50 @@
 import * as cdk from "aws-cdk-lib";
 import { NextJSLambdaEdge } from "@sls-next/cdk-construct";
-import { HostedZone } from "aws-cdk-lib/aws-route53";
+import {
+  HostedZone,
+  NsRecord,
+  RecordSet,
+  RecordTarget,
+  RecordType,
+} from "aws-cdk-lib/aws-route53";
 import {
   Certificate,
   CertificateValidation,
+  DnsValidatedCertificate,
 } from "aws-cdk-lib/aws-certificatemanager";
 
 export interface StackProps extends cdk.StackProps {
   stackName: string;
   description: string;
   primaryDomain: string;
+  baseDomain: string;
 }
 
 export class SkylarkReferenceAppStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props: StackProps) {
     super(scope, id, props);
+    const { description, stackName, primaryDomain, baseDomain } = props;
 
-    const { description, stackName, primaryDomain } = props;
+    const catchAllDomain = `*.${primaryDomain}`;
+    const wwwDomain = `www.${primaryDomain}`;
 
     const hostedZone = new HostedZone(this, "HostedZone", {
       zoneName: primaryDomain,
     });
 
-    const catchAllDomain = `*.${primaryDomain}`;
-    const wwwDomain = `www.${primaryDomain}`;
+    const parentHostedZone = HostedZone.fromLookup(this, "ParentHostedZone", {
+      domainName: baseDomain,
+    });
+    new NsRecord(this, "NSRecord", {
+      zone: parentHostedZone,
+      recordName: primaryDomain,
+      values: hostedZone.hostedZoneNameServers as string[],
+    });
 
-    const certificate = new Certificate(this, "Certificate", {
+    const certificate = new DnsValidatedCertificate(this, "Certificate", {
       domainName: catchAllDomain,
       subjectAlternativeNames: [primaryDomain],
+      hostedZone,
       validation: CertificateValidation.fromDns(hostedZone),
     });
 
