@@ -22,11 +22,11 @@ export class SkylarkReferenceAppStack extends cdk.Stack {
       zoneName: primaryDomain,
     });
 
-    const starDomain = `*.${primaryDomain}`;
+    const catchAllDomain = `*.${primaryDomain}`;
     const wwwDomain = `www.${primaryDomain}`;
 
     const certificate = new Certificate(this, "Certificate", {
-      domainName: starDomain,
+      domainName: catchAllDomain,
       subjectAlternativeNames: [primaryDomain],
       validation: CertificateValidation.fromDns(hostedZone),
     });
