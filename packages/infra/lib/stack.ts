@@ -22,15 +22,13 @@ export class SkylarkReferenceAppStack extends cdk.Stack {
       zoneName: primaryDomain,
     });
 
+    const starDomain = `*.${primaryDomain}`;
     const wwwDomain = `www.${primaryDomain}`;
 
     const certificate = new Certificate(this, "Certificate", {
-      domainName: primaryDomain,
-      subjectAlternativeNames: [wwwDomain],
-      validation: CertificateValidation.fromDnsMultiZone({
-        [primaryDomain]: hostedZone,
-        [wwwDomain]: hostedZone,
-      }),
+      domainName: starDomain,
+      subjectAlternativeNames: [primaryDomain],
+      validation: CertificateValidation.fromDns(hostedZone),
     });
 
     new NextJSLambdaEdge(this, "NextJsApp", {

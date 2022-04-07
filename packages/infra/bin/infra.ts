@@ -13,12 +13,13 @@ const gitBranch = process.env.GIT_BRANCH;
 const sanitzedGitBranch =
   gitBranch && gitBranch.toLowerCase().replace(/\./g, "-").replace("/", "-");
 
-const stackName = [app, sanitzedGitBranch].filter((item) => !!item).join("-");
+const stackName =
+  [app, sanitzedGitBranch].filter((item) => !!item).join("-") + "-2";
 const description = `${app} Skylark Reference App deployed via CDK`;
 const appPath = `../../apps/${app}`;
 
 const primaryDomain =
-  "media.apps.legacy-skylark-development.skylarkplatform.io";
+  "mediatwo.apps.legacy-skylark-development.skylarkplatform.io";
 
 const builder = new Builder(appPath, "./build", {
   args: ["build"],
