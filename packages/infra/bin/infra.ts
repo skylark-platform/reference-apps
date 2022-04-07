@@ -23,10 +23,7 @@ const main = async () => {
   const sanitzedGitBranch =
     gitBranch && gitBranch.toLowerCase().replace(/[^A-Za-z0-9]/g, "-");
   const stackName = strFromArr([sanitzedGitBranch, app], "-");
-  const primaryDomain = strFromArr(
-    [app, "apps", sanitzedGitBranch, baseDomain],
-    "."
-  );
+  const primaryDomain = strFromArr([app, "apps", baseDomain], ".");
   const description = `${app} Skylark Reference App deployed via CDK`;
 
   const builder = new Builder(appPath, "./build", {
