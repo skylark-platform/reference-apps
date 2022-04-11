@@ -50,7 +50,7 @@ const main = async () => {
   });
 
   console.log(`::set-output name=stack-name::${stackName}`);
-  console.log(`::set-output name=domain-name::${primaryDomain}`);
+  console.log(`::set-output name=domain::${primaryDomain}`);
 };
 
 main().catch((err) => {

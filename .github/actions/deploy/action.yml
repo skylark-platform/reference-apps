@@ -22,7 +22,7 @@ outputs:
     value: ${{ steps.cdk.outputs.domain }}
   url:
     description: The deployed app URL
-    value: https://${{ steps.cdk.outputs.url }}
+    value: https://${{ steps.cdk.outputs.domain }}
 runs:
   using: composite
   steps:
