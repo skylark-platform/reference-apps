@@ -39,6 +39,7 @@ const main = async () => {
 
   const cdkApp = new cdk.App();
   new SkylarkReferenceAppStack(cdkApp, `${stackName}-skylark-reference-app`, {
+    app,
     stackName,
     description,
     primaryDomain,

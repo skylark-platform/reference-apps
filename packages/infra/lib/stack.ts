@@ -7,6 +7,7 @@ import {
 } from "aws-cdk-lib/aws-certificatemanager";
 
 export interface StackProps extends cdk.StackProps {
+  app: string;
   stackName: string;
   description: string;
   primaryDomain: string;
@@ -16,7 +17,7 @@ export interface StackProps extends cdk.StackProps {
 export class SkylarkReferenceAppStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props: StackProps) {
     super(scope, id, props);
-    const { description, stackName, primaryDomain, baseDomain } = props;
+    const { app, description, stackName, primaryDomain, baseDomain } = props;
 
     const catchAllDomain = `*.${primaryDomain}`;
     const wwwDomain = `www.${primaryDomain}`;
@@ -26,8 +27,9 @@ export class SkylarkReferenceAppStack extends cdk.Stack {
     });
 
     const certificate = new DnsValidatedCertificate(this, "Certificate", {
-      domainName: primaryDomain,
-      subjectAlternativeNames: [catchAllDomain],
+      // Use a shorter domain for the certificate due to the 64 character limit
+      domainName: `${app}.${baseDomain}`,
+      subjectAlternativeNames: [primaryDomain, catchAllDomain],
       hostedZone: parentHostedZone,
       validation: CertificateValidation.fromDns(parentHostedZone),
     });
