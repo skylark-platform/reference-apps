@@ -28,24 +28,28 @@ export class SkylarkReferenceAppStack extends cdk.Stack {
     const catchAllDomain = `*.${primaryDomain}`;
     const wwwDomain = `www.${primaryDomain}`;
 
-    const hostedZone = new HostedZone(this, "HostedZone", {
-      zoneName: primaryDomain,
-    });
+    // media.apps.legacy-skylark.io
+    // www.media.apps
+
+    // const hostedZone = new HostedZone(this, "HostedZone", {
+    //   zoneName: primaryDomain,
+    // });
 
     const parentHostedZone = HostedZone.fromLookup(this, "ParentHostedZone", {
       domainName: baseDomain,
     });
-    new NsRecord(this, "NSRecord", {
-      zone: parentHostedZone,
-      recordName: primaryDomain,
-      values: hostedZone.hostedZoneNameServers as string[],
-    });
+
+    // new NsRecord(this, "NSRecord", {
+    //   zone: parentHostedZone,
+    //   recordName: primaryDomain,
+    //   values: hostedZone.hostedZoneNameServers as string[],
+    // });
 
     const certificate = new DnsValidatedCertificate(this, "Certificate", {
       domainName: catchAllDomain,
       subjectAlternativeNames: [primaryDomain],
-      hostedZone,
-      validation: CertificateValidation.fromDns(hostedZone),
+      hostedZone: parentHostedZone,
+      validation: CertificateValidation.fromDns(parentHostedZone),
     });
 
     new NextJSLambdaEdge(this, "NextJsApp", {
@@ -56,7 +60,7 @@ export class SkylarkReferenceAppStack extends cdk.Stack {
       },
       domain: {
         domainNames: [primaryDomain, wwwDomain],
-        hostedZone,
+        hostedZone: parentHostedZone,
         certificate,
       },
     });
