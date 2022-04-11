@@ -1,0 +1,46 @@
+name: Deploy
+description: Deploys a reference app to AWS
+inputs:
+  app:
+    description: The app to deploy. Must exist in the apps directory
+    required: false
+    default: media
+  base-domain:
+    description: |
+      The domain connected to an AWS zone used to connect the app domain to the deployed app
+      E.g. passing in "skylark-dev.skylarkplatform.io" could result in "media.apps.skylark-dev.skylarkplatform.io"
+    required: true
+  git-branch:
+    description: Used to prefix the deployment stack name
+    required: false
+outputs:
+  stack-name:
+    description: Name of the deployed stack on AWS
+    value: ${{ steps.cdk.outputs.stack-name }}
+  domain:
+    description: The deployed app domain name
+    value: ${{ steps.cdk.outputs.domain }}
+  url:
+    description: The deployed app URL
+    value: https://${{ steps.cdk.outputs.domain }}
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 14
+        cache: yarn
+    - name: Install deps
+      shell: bash
+      run: yarn
+    - name: Bootstrap and deploy CDK
+      shell: bash
+      id: cdk
+      working-directory: packages/infra
+      env:
+        APP: ${{ inputs.app }}
+        GIT_BRANCH: ${{ inputs.git-branch }}
+        BASE_DOMAIN_NAME: ${{ inputs.base-domain }}
+      run: |
+        yarn cdk bootstrap
+        yarn cdk deploy

@@ -3,8 +3,8 @@
 
 yarn lint
 
-yarn prettier
-
 yarn test
+
+yarn prettier
 
 git add .
