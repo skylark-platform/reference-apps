@@ -1,5 +1,12 @@
 name: Teardown App
-on: delete
+on:
+  delete:
+  workflow_dispatch:
+    inputs:
+      stack-name:
+        type: string
+        required: true
+        description: The name of the environment to delete
 concurrency:
   group: deploy-app
 env:
@@ -58,5 +65,6 @@ jobs:
           aws-region: us-east-1
       - uses: ./.github/actions/destroy
         with:
+          stack-name: ${{ github.event.inputs.stack-name }}
           git-branch: ${{ needs.prepare.outputs.git-branch }}
           base-domain: legacy-skylark-development.skylarkplatform.io # hardcode for now

@@ -7,8 +7,11 @@ import { pathExists } from "fs-extra";
 
 const app = process.env.APP || "media";
 const gitBranch = process.env.GIT_BRANCH;
-const baseDomain =
-  process.env.BASE_DOMAIN_NAME || "eng-james-wallis.skylarkplatform.io";
+const baseDomain = process.env.BASE_DOMAIN_NAME;
+
+if (!baseDomain) {
+  throw new Error(`Must provide environment variable "BASE_DOMAIN_NAME".`);
+}
 
 const strFromArr = (arr: any[], separator: string) =>
   arr.filter((item) => !!item).join(separator);
@@ -22,7 +25,8 @@ const main = async () => {
 
   const sanitzedGitBranch =
     gitBranch && gitBranch.toLowerCase().replace(/[^A-Za-z0-9]/g, "-");
-  const stackName = strFromArr([sanitzedGitBranch, app], "-");
+  const stackName =
+    process.env.STACK_NAME || strFromArr([sanitzedGitBranch, app], "-");
   const primaryDomain = strFromArr([app, "apps", baseDomain], ".");
   const description = `${app} Skylark Reference App deployed via CDK`;
 

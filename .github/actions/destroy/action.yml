@@ -5,6 +5,9 @@ inputs:
     description: The app to destroy. Must exist in the apps directory
     required: false
     default: media
+  stack-name:
+    description: The name of the stack to delete, optional
+    required: false
   base-domain:
     description: |
       The domain connected to an AWS zone used to connect the app domain to the deployed app
@@ -29,6 +32,7 @@ runs:
       working-directory: packages/infra
       env:
         APP: ${{ inputs.app }}
+        STACK_NAME: ${{ inputs.stack-name }}
         GIT_BRANCH: ${{ inputs.git-branch }}
         BASE_DOMAIN_NAME: ${{ inputs.base-domain }}
       run: |
