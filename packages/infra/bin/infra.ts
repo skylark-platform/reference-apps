@@ -50,6 +50,7 @@ const main = async () => {
     },
   });
 
+  console.log(`::notice::${app} stack name: ${stackName}`);
   console.log(`::set-output name=stack-name::${stackName}`);
   console.log(`::set-output name=domain::${primaryDomain}`);
 };
