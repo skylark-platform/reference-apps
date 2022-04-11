@@ -13,7 +13,7 @@ jobs:
       git-branch: ${{ steps.branch-and-ref.outputs.branch }}
       git-ref: ${{ steps.branch-and-ref.outputs.ref }}
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - name: Comment building status on PR
         uses: ostmodern/comment-url-on-pr@v1
         with:
@@ -51,7 +51,7 @@ jobs:
     outputs:
       url: ${{ steps.cdk.outputs.url }}
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
