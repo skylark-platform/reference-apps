@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import "source-map-support/register";
 import * as cdk from "aws-cdk-lib";
-import { SkylarkReferenceAppStack } from "../lib/stack";
 import { Builder } from "@sls-next/lambda-at-edge";
 import { pathExists } from "fs-extra";
+import { SkylarkReferenceAppStack } from "../lib/stack";
 
 const app = process.env.APP || "media";
 const gitBranch = process.env.GIT_BRANCH;
@@ -33,6 +33,7 @@ const main = async () => {
   const builder = new Builder(appPath, "./build", {
     args: ["build"],
     cwd: appPath,
+    useServerlessTraceTarget: true,
   });
 
   await builder.build();
