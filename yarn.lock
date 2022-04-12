@@ -3252,6 +3252,19 @@
     "@lerna/child-process" "4.0.0"
     npmlog "^4.1.2"
 
+"@lerna/exec@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@lerna/exec/-/exec-4.0.0.tgz#eb6cb95cb92d42590e9e2d628fcaf4719d4a8be6"
+  integrity sha512-VGXtL/b/JfY84NB98VWZpIExfhLOzy0ozm/0XaS4a2SmkAJc5CeUfrhvHxxkxiTBLkU+iVQUyYEoAT0ulQ8PCw==
+  dependencies:
+    "@lerna/child-process" "4.0.0"
+    "@lerna/command" "4.0.0"
+    "@lerna/filter-options" "4.0.0"
+    "@lerna/profiler" "4.0.0"
+    "@lerna/run-topologically" "4.0.0"
+    "@lerna/validation-error" "4.0.0"
+    p-map "^4.0.0"
+
 "@lerna/filter-options@4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@lerna/filter-options/-/filter-options-4.0.0.tgz#ac94cc515d7fa3b47e2f7d74deddeabb1de5e9e6"

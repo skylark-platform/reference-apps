@@ -38,6 +38,8 @@ jobs:
       - run: yarn
       # Check all apps build
       - run: yarn lerna-run build --parallel
+        env:
+          SENTRY_AUTH_TOKEN: ${{ inputs.sentry-token }}
 
   chromatic:
     needs: lint

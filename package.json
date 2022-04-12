@@ -9,6 +9,8 @@
   "license": "MIT",
   "scripts": {
     "lerna-run": "lerna run",
+    "lerna-exec": "lerna exec",
+    "deepclean": "lerna exec -- rm -rf node_modules && rm -rf node_modules",
     "lint": "lerna run --parallel lint",
     "test": "lerna run --parallel test",
     "test:ci": "lerna run --parallel test -- --ci --coverage",
@@ -19,6 +21,7 @@
     "dev": "lerna run --parallel dev"
   },
   "devDependencies": {
+    "@lerna/exec": "^4.0.0",
     "@lerna/run": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
