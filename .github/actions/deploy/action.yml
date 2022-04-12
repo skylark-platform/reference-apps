@@ -16,6 +16,9 @@ inputs:
   production:
     description: When "true" sets the NODE_ENV to production
     required: false
+  sentry-token:
+    description: Auth token for Sentry
+    required: true
 outputs:
   stack-name:
     description: Name of the deployed stack on AWS
@@ -59,6 +62,7 @@ runs:
         BASE_DOMAIN_NAME: ${{ inputs.base-domain }}
         NODE_ENV: ${{ steps.node_env.outputs.result }}
         NEXT_PUBLIC_NODE_ENV: ${{ steps.node_env.outputs.result }}
+        SENTRY_AUTH_TOKEN: ${{ inputs.sentry-token }}
       run: |
         yarn cdk bootstrap
         yarn cdk deploy
