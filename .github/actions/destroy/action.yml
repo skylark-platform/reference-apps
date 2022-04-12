@@ -16,6 +16,9 @@ inputs:
   git-branch:
     description: Used to prefix the deployment stack name
     required: false
+  sentry-token:
+    description: Auth token for Sentry
+    required: true
 runs:
   using: composite
   steps:
@@ -35,6 +38,7 @@ runs:
         STACK_NAME: ${{ inputs.stack-name }}
         GIT_BRANCH: ${{ inputs.git-branch }}
         BASE_DOMAIN_NAME: ${{ inputs.base-domain }}
+        SENTRY_AUTH_TOKEN: ${{ inputs.sentry-token }}
       run: |
         yarn cdk bootstrap
         yarn cdk destroy --force
