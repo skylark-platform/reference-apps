@@ -16,11 +16,13 @@
     "@babel/preset-typescript": "^7.16.0",
     "@types/jest": "^27.0.3",
     "eslint": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "jest": "^27.3.1",
     "jest-junit": "^13.0.0"
   },
   "dependencies": {
     "@aws-amplify/auth": "^4.4.1",
+    "@sentry/nextjs": "^6.19.6",
     "amazon-cognito-identity-js": "^5.2.3"
   }
 }

@@ -65,6 +65,7 @@ jobs:
           git-branch: ${{ needs.prepare.outputs.git-branch }}
           # hardcode domains until more accounts are supported
           base-domain: ${{ needs.prepare.outputs.git-branch == 'main' && 'skylark-dev.skylarkplatform.io' || 'legacy-skylark-development.skylarkplatform.io' }}
+          production: ${{ needs.prepare.outputs.git-branch == 'main' && 'true' || 'false' }}
 
   signal:
     name: Signal
