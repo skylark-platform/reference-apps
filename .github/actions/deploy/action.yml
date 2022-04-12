@@ -13,9 +13,6 @@ inputs:
   git-branch:
     description: Used to prefix the deployment stack name
     required: false
-  production:
-    description: When "true" sets the NODE_ENV to production
-    required: false
   sentry-token:
     description: Auth token for Sentry
     required: true
@@ -39,19 +36,6 @@ runs:
     - name: Install deps
       shell: bash
       run: yarn
-    - name: Set NODE_ENV
-      id: node_env
-      uses: actions/github-script@v6
-      env:
-        production: ${{ inputs.production }}
-      with:
-        result-encoding: string
-        script: |
-          const { production } = process.env;
-          if (production && production === "true") {
-            return "production";
-          }
-          return "development";
     - name: Bootstrap and deploy CDK
       shell: bash
       id: cdk
@@ -60,8 +44,6 @@ runs:
         APP: ${{ inputs.app }}
         GIT_BRANCH: ${{ inputs.git-branch }}
         BASE_DOMAIN_NAME: ${{ inputs.base-domain }}
-        NODE_ENV: ${{ steps.node_env.outputs.result }}
-        NEXT_PUBLIC_NODE_ENV: ${{ steps.node_env.outputs.result }}
         SENTRY_AUTH_TOKEN: ${{ inputs.sentry-token }}
       run: |
         yarn cdk bootstrap

@@ -20,6 +20,8 @@ export const getSentryOptions = ({
 }: SentryOpts): NextjsOptions => ({
   dsn: dsn || SENTRY_DSN || defaultDSN,
   environment: environment || NODE_ENV,
+  // Disable when "next dev" is run
+  enabled: environment !== "development",
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 1.0,
   // ...

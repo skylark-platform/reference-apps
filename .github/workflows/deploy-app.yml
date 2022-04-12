@@ -65,13 +65,13 @@ jobs:
           git-branch: ${{ needs.prepare.outputs.git-branch }}
           # hardcode domains until more accounts are supported
           base-domain: ${{ needs.prepare.outputs.git-branch == 'main' && 'skylark-dev.skylarkplatform.io' || 'legacy-skylark-development.skylarkplatform.io' }}
-          production: ${{ needs.prepare.outputs.git-branch == 'main' && 'true' || 'false' }}
           sentry-token: ${{ secrets.SENTRY_TOKEN }}
 
   signal:
     name: Signal
     runs-on: ubuntu-latest
     needs: deploy
+    if: always()
     steps:
       - uses: actions/github-script@v6
         id: additional-urls

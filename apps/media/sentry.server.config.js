@@ -6,5 +6,5 @@ import * as Sentry from "@sentry/nextjs";
 import { getSentryOptions } from "@skylark-reference-apps/lib";
 
 Sentry.init({
-  ...getSentryOptions(),
+  ...getSentryOptions({}),
 });
