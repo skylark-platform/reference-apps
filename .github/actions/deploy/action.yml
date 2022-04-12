@@ -13,6 +13,9 @@ inputs:
   git-branch:
     description: Used to prefix the deployment stack name
     required: false
+  sentry-token:
+    description: Auth token for Sentry
+    required: true
 outputs:
   stack-name:
     description: Name of the deployed stack on AWS
@@ -41,6 +44,7 @@ runs:
         APP: ${{ inputs.app }}
         GIT_BRANCH: ${{ inputs.git-branch }}
         BASE_DOMAIN_NAME: ${{ inputs.base-domain }}
+        SENTRY_AUTH_TOKEN: ${{ inputs.sentry-token }}
       run: |
         yarn cdk bootstrap
         yarn cdk deploy

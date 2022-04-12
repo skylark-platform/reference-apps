@@ -1,1 +1,2 @@
-export * from "./cognito/index";
+export * from "./cognito";
+export * from "./sentry";
