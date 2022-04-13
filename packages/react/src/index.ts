@@ -4,3 +4,4 @@ export * from "./label";
 export * from "./hello-world";
 export * from "./typography";
 export * from "./thumbnail";
+export * from "./skylark-branding";
