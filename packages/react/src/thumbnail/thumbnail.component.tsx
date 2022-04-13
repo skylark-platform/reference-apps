@@ -1,42 +1,54 @@
+import Link from "next/link";
 import React from "react";
+import { MdPlayArrow, MdCircle } from "react-icons/md";
+import { H4 } from "../typography/heading/heading.component";
 
-interface LabelProps extends React.HTMLAttributes<HTMLButtonElement> {
-  text?: string;
-  icon?: JSX.Element;
-  iconPlacement?: "left" | "right";
+export interface ThumbnailProps {
+  href: string
+  title: string
+  backgroundImage: string
+  subtitle?: string
+  tags?: string[]
 }
 
-export const Thumbnail: React.FC<LabelProps> = ({
-  text,
-  icon,
-  iconPlacement,
-  ...otherProps
-}) => {
-  let className = `
-flex justify-center items-center
-bg-gray-100
-text-gray-900 disabled:text-gray-300 font-body font-bold rounded-2xl
-`;
-
-  if (text) {
-    className += " px-4 py-0.5 text-xs uppercase";
-  } else {
-    className += " rounded-full p-1";
-  }
-
-  let iconClassName = "text-xl";
-  if (icon && text) {
-    const rightPlacedIcon = iconPlacement === "right";
-    className += ` ${rightPlacedIcon ? "flex-row-reverse" : "flex-row"}`;
-    iconClassName += ` ${rightPlacedIcon ? "ml-1" : "mr-1"}`;
-  }
-
-  return (
-    <button {...otherProps} className={className} type="button">
-      {icon && <span className={iconClassName}>{icon}</span>}
-      {text && <span className="py-0.5">{text}</span>}
-    </button>
+export const Thumbnail: React.FC<ThumbnailProps> = ({
+  href,
+  title,
+  subtitle,
+  tags,
+  backgroundImage
+}) => (
+    <Link href={href}>
+      <a
+        className={`aspect-video w-full bg-center block bg-contain group`}
+        style={{ backgroundImage: `url('${backgroundImage}')`}}
+      >
+        <div className="bg-black/[.3] flex justify-between flex-col p-4 text-white font-display h-full w-full hover:bg-purple-500/[.85] transition-all">
+          <div>
+            <div className="p-2 bg-gray-600/[.65] w-auto inline-block rounded-full group-hover:bg-black/[.3]">
+              <MdPlayArrow className="w-6 h-6" />
+            </div>
+          </div>
+          <div>
+            <H4 className="text-white">{title}</H4>
+            <div className="flex flex-row items-center">
+              <p className="font-thin text-sm">{subtitle}</p>
+              {tags && tags.map((tag) => (
+                <>
+                  <MdCircle className="h-1 w-1 mx-2 text-gray-400" />
+                  <p
+                    className="font-thin text-sm text-gray-400 group-hover:text-white transition-colors"
+                    key={tag}
+                  >
+                    {tag}
+                  </p>
+                </>
+              ))}
+            </div>
+          </div>
+        </div>
+      </a>
+    </Link>
   );
-};
 
 export default Thumbnail;

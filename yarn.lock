@@ -3217,6 +3217,16 @@
     execa "^5.0.0"
     strong-log-transformer "^2.1.0"
 
+"@lerna/cli@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@lerna/cli/-/cli-4.0.0.tgz#8eabd334558836c1664df23f19acb95e98b5bbf3"
+  integrity sha512-Neaw3GzFrwZiRZv2g7g6NwFjs3er1vhraIniEs0jjVLPMNC4eata0na3GfE5yibkM/9d3gZdmihhZdZ3EBdvYA==
+  dependencies:
+    "@lerna/global-options" "4.0.0"
+    dedent "^0.7.0"
+    npmlog "^4.1.2"
+    yargs "^16.2.0"
+
 "@lerna/collect-updates@4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@lerna/collect-updates/-/collect-updates-4.0.0.tgz#8e208b1bafd98a372ff1177f7a5e288f6bea8041"
@@ -3290,6 +3300,11 @@
   integrity sha512-yvmkerU31CTWS2c7DvmAWmZVeclPBqI7gPVr5VATUKNWJ/zmVcU4PqbYoLu92I9Qc4gY1TuUplMNdNuZTSL7IQ==
   dependencies:
     npmlog "^4.1.2"
+
+"@lerna/global-options@4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@lerna/global-options/-/global-options-4.0.0.tgz#c7d8b0de6a01d8a845e2621ea89e7f60f18c6a5f"
+  integrity sha512-TRMR8afAHxuYBHK7F++Ogop2a82xQjoGna1dvPOY6ltj/pEx59pdgcJfYcynYqMkFIk8bhLJJN9/ndIfX29FTQ==
 
 "@lerna/npm-run-script@4.0.0":
   version "4.0.0"
@@ -3872,7 +3887,7 @@
     send "0.17.2"
     sharp "0.29.1"
 
-"@sls-next/lambda-at-edge@3.7.0":
+"@sls-next/lambda-at-edge@3.7.0", "@sls-next/lambda-at-edge@^3.7.0":
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/@sls-next/lambda-at-edge/-/lambda-at-edge-3.7.0.tgz#096b8c5482936e7571131fbe821ced617e8f16bf"
   integrity sha512-7eTqq1baZEuvEhexDchsP3QdOqPYaW123c7TupYB60Rs31KQ12xXvpzgn+mTMuFVIOQUDY5y8EKsuzYGRrQfcw==
