@@ -14696,6 +14696,11 @@ store2@^2.12.0:
   resolved "https://registry.yarnpkg.com/store2/-/store2-2.13.2.tgz#01ad8802ca5b445b9c316b55e72645c13a3cd7e3"
   integrity sha512-CMtO2Uneg3SAz/d6fZ/6qbqqQHi2ynq6/KzMD/26gTkiEShCcpqFfTHgOxsE0egAq6SX3FmN4CeSqn8BzXQkJg==
 
+storybook-addon-pseudo-states@^1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/storybook-addon-pseudo-states/-/storybook-addon-pseudo-states-1.9.0.tgz#523683ebf06e9e426a5050a0b6908995f5cdaf15"
+  integrity sha512-2zhpAsmXUv1P8z9z+WOp4er9IxM0RCQZDu18lwkXf3yafrf5aLv1fzqK8EAPNNdYOeNHQPfjJZpMlDigUjDuOg==
+
 stream-browserify@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/stream-browserify/-/stream-browserify-3.0.0.tgz#22b0a2850cdf6503e73085da1fc7b7d0c2122f2f"

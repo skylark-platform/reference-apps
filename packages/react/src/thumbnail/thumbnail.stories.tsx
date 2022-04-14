@@ -32,3 +32,9 @@ WithSubtitleAndTags.args = {
   subtitle: "by Talent Name",
   tags: ["XX weeks", "Easy"],
 };
+
+export const WithHoverState = Template.bind({});
+WithHoverState.args = {
+  ...WithSubtitleAndTags.args,
+};
+WithHoverState.parameters = { pseudo: { hover: true } };

@@ -80,3 +80,9 @@ Disabled.args = {
   disabled: true,
   onClick,
 };
+
+export const Hover = Template.bind({});
+Hover.args = {
+  ...WithIcon.args,
+};
+Hover.parameters = { pseudo: { hover: true } };
