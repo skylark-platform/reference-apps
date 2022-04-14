@@ -2,10 +2,15 @@ import React, { useEffect, useRef, useState } from "react";
 import { MdArrowForward, MdArrowBack } from "react-icons/md";
 import { useDebouncedCallback } from "use-debounce";
 import { useTailwindBreakpoint } from "../hooks";
-import { Thumbnail, ThumbnailProps } from "../thumbnail";
+import {
+  Thumbnail,
+  ThumbnailContentLocation,
+  ThumbnailProps,
+} from "../thumbnail";
 
 interface RailProps {
   thumbnails: ThumbnailProps[];
+  thumbnailContentLocation: ThumbnailContentLocation;
   initial?: number;
 }
 
@@ -30,7 +35,11 @@ const determineScrollAmount = (
   return ascending ? scrollLeft + scrollAmount : scrollLeft - scrollAmount;
 };
 
-export const Rail: React.FC<RailProps> = ({ thumbnails, initial }) => {
+export const Rail: React.FC<RailProps> = ({
+  thumbnails,
+  initial,
+  thumbnailContentLocation,
+}) => {
   const myRef = useRef<HTMLDivElement>(null);
   const [tailwindBreakpoint] = useTailwindBreakpoint();
   const [showPreviousButton, setShowPreviousButton] = useState(false);
@@ -145,7 +154,10 @@ export const Rail: React.FC<RailProps> = ({ thumbnails, initial }) => {
               `}
               key={`${props.title}-${i}`}
             >
-              <Thumbnail {...props} />
+              <Thumbnail
+                {...props}
+                contentLocation={thumbnailContentLocation}
+              />
             </div>
           ))}
         </div>

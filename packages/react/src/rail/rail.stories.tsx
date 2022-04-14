@@ -23,6 +23,12 @@ Default.args = {
   thumbnails,
 };
 
+export const ThumbnailContentBelow = Template.bind({});
+ThumbnailContentBelow.args = {
+  thumbnails,
+  thumbnailContentLocation: "below",
+};
+
 export const ScrollOnRender = Template.bind({});
 ScrollOnRender.args = {
   thumbnails,

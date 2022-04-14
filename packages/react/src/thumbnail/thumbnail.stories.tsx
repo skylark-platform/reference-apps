@@ -11,11 +11,19 @@ export default {
       options: allBackgroundImages,
       control: { type: "select" },
     },
+    contentLocation: {
+      options: ["inside", "below"],
+      control: { type: "select" },
+    },
   },
 } as ComponentMeta<typeof Thumbnail>;
 
 const Template: ComponentStory<typeof Thumbnail> = (args) => (
-  <Thumbnail {...args} />
+  <div className="flex h-72 w-full flex-col justify-center overflow-y-visible mt-10">
+    <div className="p-10 bg-gray-900">
+      <Thumbnail {...args} />
+    </div>
+  </div>
 );
 
 export const Default = Template.bind({});
@@ -24,6 +32,7 @@ Default.args = {
   title: "Video Title",
   backgroundImage: "/movies/Movie%201.png",
   width: "w-96",
+  contentLocation: "inside",
 };
 
 export const WithSubtitleAndTags = Template.bind({});
@@ -31,6 +40,12 @@ WithSubtitleAndTags.args = {
   ...Default.args,
   subtitle: "by Talent Name",
   tags: ["XX weeks", "Easy"],
+};
+
+export const WithCallToAction = Template.bind({});
+WithCallToAction.args = {
+  ...Default.args,
+  callToAction: "Watch for free",
 };
 
 export const WithHoverState = Template.bind({});
