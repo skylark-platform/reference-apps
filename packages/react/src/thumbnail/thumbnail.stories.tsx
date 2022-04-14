@@ -16,13 +16,12 @@ Default.args = {
   href: "/",
   title: "Video Title",
   backgroundImage: "/movies/Movie%201.png",
+  width: "w-96",
 };
 
 export const WithSubtitleAndTags = Template.bind({});
 WithSubtitleAndTags.args = {
-  href: "/",
-  title: "Video Title",
-  backgroundImage: "/movies/Movie%201.png",
+  ...Default.args,
   subtitle: "by Talent Name",
   tags: ["XX weeks", "Easy"],
 };

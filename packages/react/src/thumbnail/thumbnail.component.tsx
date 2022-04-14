@@ -10,6 +10,7 @@ export interface ThumbnailProps {
   backgroundImage: string;
   subtitle?: string;
   tags?: string[];
+  width?: string;
 }
 
 export const Thumbnail: React.FC<ThumbnailProps> = ({
@@ -18,11 +19,16 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({
   subtitle,
   tags,
   backgroundImage,
+  width,
 }) => (
   <Link href={href}>
     <a
       // scale-[1.0001] stops a rough animation on a scale transition
-      className="group z-30 block aspect-video w-full scale-[1.0001] rounded-sm bg-contain bg-center bg-no-repeat transition-all hover:z-40 hover:scale-[1.02] md:hover:scale-105"
+      className={`
+        group z-30 block aspect-video scale-[1.0001] rounded-sm bg-contain bg-center bg-no-repeat
+        transition-all hover:z-40 hover:scale-[1.02] md:hover:scale-105
+        ${width || "w-full"}
+      `}
       style={{ backgroundImage: `url('${backgroundImage}')` }}
     >
       <div className="flex h-full w-full flex-col justify-between rounded-sm bg-black/[.3] p-4 font-display text-white transition-all hover:bg-purple-500/[.85]">
