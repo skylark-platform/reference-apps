@@ -138,10 +138,10 @@ export const Rail: React.FC<RailProps> = ({ thumbnails, initial }) => {
           {thumbnails.map((props, i) => (
             <div
               className={`
-                mx-1 w-1/2 min-w-[calc(50%-0.75rem)] snap-end
-                md:mx-2 md:w-1/3
-                md:min-w-[calc(33.333333%-0.8rem)] lg:mx-0
-                lg:w-1/4 lg:min-w-[calc(25%-1rem)]
+                mx-1
+                w-1/2 min-w-[calc(50%-0.75rem)] max-w-[calc(50%-0.75rem)] snap-end
+                md:mx-2 md:w-1/3 md:min-w-[calc(33.333333%-0.8rem)] md:max-w-[calc(33.333333%-0.8rem)]
+                lg:mx-0 lg:w-1/4 lg:min-w-[calc(25%-1rem)] lg:max-w-[calc(25%-1rem)]
               `}
               key={`${props.title}-${i}`}
             >

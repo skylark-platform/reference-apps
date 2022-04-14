@@ -74,3 +74,7 @@ export const thumbnails: ThumbnailProps[] = [
     backgroundImage: "/movies/Movie%2012.png",
   },
 ];
+
+export const allBackgroundImages = thumbnails.map(
+  ({ backgroundImage }) => backgroundImage
+);

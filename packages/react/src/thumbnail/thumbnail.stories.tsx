@@ -1,10 +1,17 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { Thumbnail } from "./thumbnail.component";
+import { allBackgroundImages } from "../rail/rail.fixtures";
 
 export default {
   title: "React/Thumbnail",
   component: Thumbnail,
+  argTypes: {
+    backgroundImage: {
+      options: allBackgroundImages,
+      control: { type: "select" },
+    },
+  },
 } as ComponentMeta<typeof Thumbnail>;
 
 const Template: ComponentStory<typeof Thumbnail> = (args) => (
