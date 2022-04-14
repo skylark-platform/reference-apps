@@ -15,7 +15,7 @@ export const Default = Template.bind({});
 Default.args = {
   href: "/",
   title: "Video Title",
-  backgroundImage: "/movies/Movie%201.png"
+  backgroundImage: "/movies/Movie%201.png",
 };
 
 export const WithSubtitleAndTags = Template.bind({});

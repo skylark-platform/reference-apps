@@ -3217,16 +3217,6 @@
     execa "^5.0.0"
     strong-log-transformer "^2.1.0"
 
-"@lerna/cli@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@lerna/cli/-/cli-4.0.0.tgz#8eabd334558836c1664df23f19acb95e98b5bbf3"
-  integrity sha512-Neaw3GzFrwZiRZv2g7g6NwFjs3er1vhraIniEs0jjVLPMNC4eata0na3GfE5yibkM/9d3gZdmihhZdZ3EBdvYA==
-  dependencies:
-    "@lerna/global-options" "4.0.0"
-    dedent "^0.7.0"
-    npmlog "^4.1.2"
-    yargs "^16.2.0"
-
 "@lerna/collect-updates@4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@lerna/collect-updates/-/collect-updates-4.0.0.tgz#8e208b1bafd98a372ff1177f7a5e288f6bea8041"
@@ -3300,11 +3290,6 @@
   integrity sha512-yvmkerU31CTWS2c7DvmAWmZVeclPBqI7gPVr5VATUKNWJ/zmVcU4PqbYoLu92I9Qc4gY1TuUplMNdNuZTSL7IQ==
   dependencies:
     npmlog "^4.1.2"
-
-"@lerna/global-options@4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@lerna/global-options/-/global-options-4.0.0.tgz#c7d8b0de6a01d8a845e2621ea89e7f60f18c6a5f"
-  integrity sha512-TRMR8afAHxuYBHK7F++Ogop2a82xQjoGna1dvPOY6ltj/pEx59pdgcJfYcynYqMkFIk8bhLJJN9/ndIfX29FTQ==
 
 "@lerna/npm-run-script@4.0.0":
   version "4.0.0"
@@ -5221,6 +5206,11 @@
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-2.0.1.tgz#20f18294f797f2209b5f65c8e3b5c8e8261d127c"
   integrity sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==
+
+"@types/tailwindcss@^3.0.10":
+  version "3.0.10"
+  resolved "https://registry.yarnpkg.com/@types/tailwindcss/-/tailwindcss-3.0.10.tgz#cd54bad9c00b4823e9e33c67af585347f235aa11"
+  integrity sha512-1UnZIHO0NOPyPlPFV0HuMjki2SHkvG9uBA1ZehWj/OQMSROk503nuNyyfmJSIT289yewxTbKoPG+KLxYRvfIIg==
 
 "@types/tapable@^1", "@types/tapable@^1.0.5":
   version "1.0.8"
@@ -15733,6 +15723,11 @@ use-composed-ref@^1.0.0:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/use-composed-ref/-/use-composed-ref-1.2.1.tgz#9bdcb5ccd894289105da2325e1210079f56bf849"
   integrity sha512-6+X1FLlIcjvFMAeAD/hcxDT8tmyrWnbSPMU0EnxQuDLIxokuFzWliXBiYZuGIx+mrAMLBw0WFfCkaPw8ebzAhw==
+
+use-debounce@^7.0.1:
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-7.0.1.tgz#380e6191cc13ad29f8e2149a12b5c37cc2891190"
+  integrity sha512-fOrzIw2wstbAJuv8PC9Vg4XgwyTLEOdq4y/Z3IhVl8DAE4svRcgyEUvrEXu+BMNgMoc3YND6qLT61kkgEKXh7Q==
 
 use-isomorphic-layout-effect@^1.0.0:
   version "1.1.2"

@@ -11,7 +11,10 @@ export default {
 } as ComponentMeta<typeof HeadingComponent>;
 
 const Template: ComponentStory<typeof HeadingComponent> = (args) => (
-  <HeadingComponent {...args} className="text-gray-900">{`Heading ${args.level}`}</HeadingComponent>
+  <HeadingComponent
+    {...args}
+    className="text-gray-900"
+  >{`Heading ${args.level}`}</HeadingComponent>
 );
 
 export const Level1 = Template.bind({});

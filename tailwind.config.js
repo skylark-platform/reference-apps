@@ -1,5 +1,6 @@
+// The Tailwind config is used in app or package directories so we can safely ignore this error
 // eslint-disable-next-line import/no-extraneous-dependencies
-const plugin = require('tailwindcss/plugin')
+const plugin = require("tailwindcss/plugin");
 
 module.exports = {
   content: [
@@ -57,20 +58,19 @@ module.exports = {
   plugins: [
     plugin(({ addUtilities }) => {
       addUtilities({
-        '.hide-scrollbar': {
+        ".hide-scrollbar": {
           /* IE and Edge */
-          '-ms-overflow-style': 'none',
+          "-ms-overflow-style": "none",
 
           /* Firefox */
-          'scrollbar-width': 'none',
+          "scrollbar-width": "none",
 
           /* Safari and Chrome */
-          '&::-webkit-scrollbar': {
-            display: 'none'
-          }
-        }
-      }
-      )
-    })
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
+        },
+      });
+    }),
   ],
 };
