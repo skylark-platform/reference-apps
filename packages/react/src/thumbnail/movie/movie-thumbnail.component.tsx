@@ -1,7 +1,7 @@
 import React from "react";
 import { H4 } from "../../typography";
 import {
-  BaseThumbnail,
+  MediaThumbnail,
   ThumbnailContentLocation,
   ThumbnailList,
   ThumbnailProps,
@@ -22,7 +22,7 @@ export const MovieThumbnail: React.FC<MovieThumbnailProps> = (props) => {
     contentLocation,
   } = props;
   return (
-    <BaseThumbnail
+    <MediaThumbnail
       {...props}
       contentLocation={contentLocation || "inside"}
       duration={undefined}
@@ -30,8 +30,9 @@ export const MovieThumbnail: React.FC<MovieThumbnailProps> = (props) => {
       <H4 className="text-white mt-2 mb-0.5">{title}</H4>
       <ThumbnailList
         contents={[subtitle, ...(tags && tags.length > 0 ? tags : [])]}
+        highlightFirst
       />
-      <ThumbnailList contents={[duration, releaseDate]} />
-    </BaseThumbnail>
+      <ThumbnailList contents={[duration, releaseDate]} highlightFirst />
+    </MediaThumbnail>
   );
 };

@@ -5,12 +5,6 @@ import { EpisodeThumbnail as EpisodeThumbnailComponent } from "./episode-thumbna
 export default {
   title: "React/Thumbnails/Episode",
   component: EpisodeThumbnailComponent,
-  argTypes: {
-    contentLocation: {
-      options: ["inside", "below"],
-      control: { type: "select" },
-    },
-  },
 } as ComponentMeta<typeof EpisodeThumbnailComponent>;
 
 const Template: ComponentStory<typeof EpisodeThumbnailComponent> = (args) => (

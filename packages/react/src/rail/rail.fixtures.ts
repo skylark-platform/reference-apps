@@ -1,4 +1,8 @@
-import { MovieThumbnailProps, EpisodeThumbnailProps } from "../thumbnail";
+import {
+  MovieThumbnailProps,
+  EpisodeThumbnailProps,
+  ThumbnailProps,
+} from "../thumbnail";
 
 export const movieThumbnails: MovieThumbnailProps[] = [
   {
@@ -181,5 +185,38 @@ export const episodeThumbnails: EpisodeThumbnailProps[] = [
       "Robb vows to get revenge on the Lannisters. Jon must officially decide if his place is with Robb or the Night's Watch. Daenerys says her final goodbye to Drogo.",
     backgroundImage: "/episodes/GOT%20-%20S1%20-%2010.png",
     duration: "59m",
+  },
+];
+
+export const collectionThumbnails: ThumbnailProps[] = [
+  {
+    href: "/",
+    title: "Sherlock Holmes",
+    backgroundImage: "/collections/Brand%20-%20Sherlock.png",
+    tags: ["Genres", "Themes"],
+  },
+  {
+    href: "/",
+    title: "Football Documentaries",
+    backgroundImage: "/collections/Brand%20-%20Football.png",
+    tags: ["Sport", "Documentaries"],
+  },
+  {
+    href: "/",
+    title: "Drama",
+    backgroundImage: "/collections/Brand%20-%20Drama.png",
+    tags: ["Genres", "Themes"],
+  },
+  {
+    href: "/",
+    title: "Tarantino",
+    backgroundImage: "/collections/Brand%20-%20Tarantino.png",
+    tags: ["Genres", "Themes"],
+  },
+  {
+    href: "/",
+    title: "Game of Thrones",
+    backgroundImage: "/collections/Brand%20-%20Game%20of%20Thrones.png",
+    tags: ["Genres", "Themes"],
   },
 ];

@@ -1,10 +1,15 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { Rail } from "./rail.component";
-import { episodeThumbnails, movieThumbnails } from "./rail.fixtures";
+import {
+  episodeThumbnails,
+  movieThumbnails,
+  collectionThumbnails,
+} from "./rail.fixtures";
 import {
   MovieThumbnail as MovieThumbnailComponent,
   EpisodeThumbnail as EpisodeThumbnailComponent,
+  CollectionThumbnail as CollectionThumbnailComponent,
 } from "../thumbnail";
 
 export default {
@@ -25,15 +30,15 @@ const getMovieThumbnails = (length?: number) => {
   }
   return arr.map((props) => (
     <MovieThumbnailComponent
-      contentLocation="inside"
       key={props.title}
       {...props}
+      contentLocation="inside"
     />
   ));
 };
 
 const Template: ComponentStory<typeof Rail> = (args) => (
-  <div className="flex h-96 w-full flex-col justify-center overflow-y-visible bg-gray-900">
+  <div className="flex h-[500px] w-full flex-col justify-center overflow-y-visible bg-gray-900">
     <Rail {...args} />
   </div>
 );
@@ -68,5 +73,12 @@ export const WithEpisodeThumbnails = Template.bind({});
 WithEpisodeThumbnails.args = {
   children: episodeThumbnails.map((props) => (
     <EpisodeThumbnailComponent key={props.title} {...props} />
+  )),
+};
+
+export const WithCollectionThumbnails = Template.bind({});
+WithCollectionThumbnails.args = {
+  children: collectionThumbnails.map((props) => (
+    <CollectionThumbnailComponent key={props.title} {...props} />
   )),
 };

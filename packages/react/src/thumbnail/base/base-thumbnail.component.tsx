@@ -5,10 +5,17 @@ import { H4 } from "../../typography";
 
 export type ThumbnailContentLocation = "inside" | "below";
 
-export interface ThumbnailProps {
-  title: string;
-  href: string;
+export interface BaseThumbnailProps {
   backgroundImage: string;
+  contentLocation?: ThumbnailContentLocation;
+  large?: boolean;
+}
+
+export interface BaseThumbnailWithLinkProps extends BaseThumbnailProps {
+  href: string;
+}
+export interface ThumbnailProps extends BaseThumbnailWithLinkProps {
+  title: string;
   subtitle?: string;
   playButton?: boolean;
   callToAction?: {
@@ -18,10 +25,6 @@ export interface ThumbnailProps {
   tags?: string[];
   releaseDate?: string;
   duration?: string;
-}
-
-export interface BaseThumbnailProps extends ThumbnailProps {
-  contentLocation: ThumbnailContentLocation;
 }
 
 /**
@@ -42,8 +45,14 @@ export interface BaseThumbnailProps extends ThumbnailProps {
  * - show callToAction
  */
 
-export const ThumbnailList: React.FC<{ contents: (string | undefined)[] }> = ({
+interface ListProps {
+  contents: (string | undefined)[];
+  highlightFirst?: boolean;
+}
+
+export const ThumbnailList: React.FC<ListProps> = ({
   contents,
+  highlightFirst,
 }) => (
   <div className="flex flex-row text-gray-400 items-center my-0.5">
     {contents
@@ -53,7 +62,7 @@ export const ThumbnailList: React.FC<{ contents: (string | undefined)[] }> = ({
           {index !== 0 && <MdCircle className="mx-2 h-1 w-1 text-gray-400" />}
           <p
             className={`
-            ${index === 0 ? "text-white" : "text-gray-400"}
+            ${highlightFirst && index === 0 ? "text-white" : "text-gray-400"}
             text-xs md:text-sm
             transition-colors group-hover:text-white
           `}
@@ -65,35 +74,63 @@ export const ThumbnailList: React.FC<{ contents: (string | undefined)[] }> = ({
   </div>
 );
 
-export const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
-  href,
+const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
   backgroundImage,
   contentLocation = "inside",
-  callToAction,
-  title,
-  subtitle,
-  tags = [],
-  duration,
   children,
+  large,
 }) => (
-  <Link href={href}>
-    <a className="group">
-      {/* BaseComponent start */}
-      <div
-        // scale-[1.0001] stops a rough animation on a scale transition
-        className={`
-          z-30 block aspect-video scale-[1.0001] rounded-sm bg-cover bg-center bg-no-repeat
-          transition-all hover:z-40 hover:scale-[1.02] md:hover:scale-105 w-full
-        `}
-        style={{ backgroundImage: `url('${backgroundImage}')` }}
-      >
-        <div
-          className={`
-        ${contentLocation === "below" ? "justify-end" : "justify-between"}
+  <div
+    // scale-[1.0001] stops a rough animation on a scale transition
+    className={`
+        ${
+          large
+            ? "aspect-3/4 hover:scale-[1.01] md:hover:scale-[1.03]"
+            : "aspect-video hover:scale-[1.02] md:hover:scale-105"
+        }
+        z-30 block aspect-video scale-[1.0001] rounded-sm bg-cover bg-center bg-no-repeat
+        transition-all hover:z-40 w-full
+      `}
+    style={{ backgroundImage: `url('${backgroundImage}')` }}
+  >
+    <div
+      className={`
+          ${contentLocation === "below" ? "justify-end" : "justify-between"}
           flex h-full w-full flex-col rounded-sm relative
-          bg-black/[.3] p-4 font-display text-white transition-all hover:bg-purple-500/[.85]
+          p-4 font-display text-white transition-all hover:bg-purple-500/[.85]
+          2xl:bg-black/[.3] bg-gradient-to-t from-gray-900 to-transparent scale-[1.01]
         `}
-        >
+    >
+      {children}
+    </div>
+  </div>
+);
+
+export const BaseThumbnailWithLink: React.FC<BaseThumbnailWithLinkProps> = (
+  props
+) => (
+  <Link href={props.href}>
+    <a className="group">
+      <BaseThumbnail {...props} />
+    </a>
+  </Link>
+);
+
+export const MediaThumbnail: React.FC<ThumbnailProps> = (props) => {
+  const {
+    contentLocation,
+    duration,
+    callToAction,
+    title,
+    subtitle,
+    tags,
+    href,
+    children,
+  } = props;
+  return (
+    <Link href={href}>
+      <a className="group">
+        <BaseThumbnail {...props}>
           {duration && (
             <div className="top-3 right-3 absolute text-xs font-light bg-gray-900 py-0.5 px-2 rounded-xl group-hover:opacity-0">
               {duration}
@@ -120,15 +157,13 @@ export const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
               <H4 className="text-white font-normal mb-0.5">{title}</H4>
               <ThumbnailList
                 contents={[subtitle, ...(tags && tags.length > 0 ? tags : [])]}
+                highlightFirst
               />
             </div>
           )}
-        </div>
-      </div>
-      {/* BaseComponent end */}
-      {contentLocation === "below" && children}
-    </a>
-  </Link>
-);
-
-export default BaseThumbnail;
+        </BaseThumbnail>
+        {contentLocation === "below" && children}
+      </a>
+    </Link>
+  );
+};
