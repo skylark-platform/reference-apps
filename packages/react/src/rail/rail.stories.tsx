@@ -1,7 +1,11 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { Rail } from "./rail.component";
-import { thumbnails } from "./rail.fixtures";
+import { episodeThumbnails, movieThumbnails } from "./rail.fixtures";
+import {
+  MovieThumbnail as MovieThumbnailComponent,
+  EpisodeThumbnail as EpisodeThumbnailComponent,
+} from "../thumbnail";
 
 export default {
   title: "React/Rail",
@@ -12,6 +16,22 @@ export default {
   },
 } as ComponentMeta<typeof Rail>;
 
+const getMovieThumbnails = (length?: number) => {
+  let arr = movieThumbnails;
+  if (length) {
+    arr = Array.from({ length }, (_, index) => ({
+      ...movieThumbnails[index % movieThumbnails.length],
+    }));
+  }
+  return arr.map((props) => (
+    <MovieThumbnailComponent
+      contentLocation="inside"
+      key={props.title}
+      {...props}
+    />
+  ));
+};
+
 const Template: ComponentStory<typeof Rail> = (args) => (
   <div className="flex h-96 w-full flex-col justify-center overflow-y-visible bg-gray-900">
     <Rail {...args} />
@@ -20,38 +40,33 @@ const Template: ComponentStory<typeof Rail> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-  thumbnails,
-};
-
-export const ThumbnailContentBelow = Template.bind({});
-ThumbnailContentBelow.args = {
-  thumbnails,
-  thumbnailContentLocation: "below",
+  children: getMovieThumbnails(),
 };
 
 export const ScrollOnRender = Template.bind({});
 ScrollOnRender.args = {
-  thumbnails,
+  ...Default.args,
   initial: 3,
 };
 
 export const NoScroll = Template.bind({});
 NoScroll.args = {
-  thumbnails: Array.from({ length: 4 }, (_, index) => ({
-    ...thumbnails[index % thumbnails.length],
-  })),
+  children: getMovieThumbnails(4),
 };
 
-export const With1Thumbnail = Template.bind({});
-With1Thumbnail.args = {
-  thumbnails: [thumbnails[0]],
+export const SingleThumbnail = Template.bind({});
+SingleThumbnail.args = {
+  children: getMovieThumbnails(1),
 };
 
-export const With50Thumbnails = Template.bind({});
-With50Thumbnails.args = {
-  thumbnails: Array.from({ length: 50 }, (_, index) => ({
-    ...thumbnails[index % thumbnails.length],
-    id: `${index}`,
-    title: `${index + 1}`,
-  })),
+export const FiftyThumbnails = Template.bind({});
+FiftyThumbnails.args = {
+  children: getMovieThumbnails(50),
+};
+
+export const WithEpisodeThumbnails = Template.bind({});
+WithEpisodeThumbnails.args = {
+  children: episodeThumbnails.map((props) => (
+    <EpisodeThumbnailComponent key={props.title} {...props} />
+  )),
 };

@@ -1,8 +1,7 @@
-import { ThumbnailProps } from "../thumbnail";
+import { MovieThumbnailProps, EpisodeThumbnailProps } from "../thumbnail";
 
-export const thumbnails: ThumbnailProps[] = [
+export const movieThumbnails: MovieThumbnailProps[] = [
   {
-    id: "1",
     href: "/",
     title: "Tenet",
     subtitle: "by Talent Name",
@@ -10,7 +9,6 @@ export const thumbnails: ThumbnailProps[] = [
     backgroundImage: "/movies/Movie%201.png",
   },
   {
-    id: "2",
     href: "/",
     title: "Emma",
     subtitle: "by Talent Name",
@@ -18,7 +16,6 @@ export const thumbnails: ThumbnailProps[] = [
     backgroundImage: "/movies/Movie%202.png",
   },
   {
-    id: "3",
     href: "/",
     title: "Cruella",
     subtitle: "by Talent Name",
@@ -26,7 +23,6 @@ export const thumbnails: ThumbnailProps[] = [
     backgroundImage: "/movies/Movie%203.png",
   },
   {
-    id: "4",
     href: "/",
     title: "Mank",
     subtitle: "by Talent Name",
@@ -34,7 +30,6 @@ export const thumbnails: ThumbnailProps[] = [
     backgroundImage: "/movies/Movie%204.png",
   },
   {
-    id: "5",
     href: "/",
     title: "Anna",
     subtitle: "by Talent Name",
@@ -42,7 +37,6 @@ export const thumbnails: ThumbnailProps[] = [
     backgroundImage: "/movies/Movie%205.png",
   },
   {
-    id: "6",
     href: "/",
     title: "1917",
     subtitle: "by Talent Name",
@@ -50,7 +44,6 @@ export const thumbnails: ThumbnailProps[] = [
     backgroundImage: "/movies/Movie%206.png",
   },
   {
-    id: "7",
     href: "/",
     title: "The Kid Who Would Be King",
     subtitle: "by Talent Name",
@@ -58,7 +51,6 @@ export const thumbnails: ThumbnailProps[] = [
     backgroundImage: "/movies/Movie%207.png",
   },
   {
-    id: "8",
     href: "/",
     title: "6 Underground",
     subtitle: "by Talent Name",
@@ -66,7 +58,6 @@ export const thumbnails: ThumbnailProps[] = [
     backgroundImage: "/movies/Movie%208.png",
   },
   {
-    id: "9",
     href: "/",
     title: "Once Upon a Time in Hollywood",
     subtitle: "by Talent Name",
@@ -74,7 +65,6 @@ export const thumbnails: ThumbnailProps[] = [
     backgroundImage: "/movies/Movie%209.png",
   },
   {
-    id: "10",
     href: "/",
     title: "Escape from Pretoria",
     subtitle: "by Talent Name",
@@ -82,7 +72,6 @@ export const thumbnails: ThumbnailProps[] = [
     backgroundImage: "/movies/Movie%2010.png",
   },
   {
-    id: "11",
     href: "/",
     title: "The Hustle",
     subtitle: "by Talent Name",
@@ -90,7 +79,6 @@ export const thumbnails: ThumbnailProps[] = [
     backgroundImage: "/movies/Movie%2011.png",
   },
   {
-    id: "12",
     href: "/",
     title: "Ava",
     subtitle: "by Talent Name",
@@ -99,6 +87,99 @@ export const thumbnails: ThumbnailProps[] = [
   },
 ];
 
-export const allBackgroundImages = thumbnails.map(
+export const allMovieBackgroundImages = movieThumbnails.map(
   ({ backgroundImage }) => backgroundImage
 );
+
+export const episodeThumbnails: EpisodeThumbnailProps[] = [
+  {
+    href: "/",
+    title: "Winter is Coming",
+    number: 1,
+    description:
+      "Series Premiere. Eddard Stark is torn between his family and an old friend when asked to serve at the side of King Robert Baratheon; Viserys plans to wed his sister to a nomadic warlord in exchange for an army.",
+    backgroundImage: "/episodes/GOT%20-%20S1%20-%201.png",
+    duration: "55m",
+  },
+  {
+    href: "/",
+    title: "The Kingsroad",
+    number: 2,
+    description:
+      "While Bran recovers from his fall, Ned takes only his daughters to King's Landing. Jon Snow goes with his uncle Benjen to the Wall. Tyrion joins them.",
+    backgroundImage: "/episodes/GOT%20-%20S1%20-%202.png",
+    duration: "52m",
+  },
+  {
+    href: "/",
+    title: "Lord Snow",
+    number: 3,
+    description:
+      "Jon begins his training with the Night's Watch; Ned confronts his past and future at King's Landing; Daenerys finds herself at odds with Viserys.",
+    backgroundImage: "/episodes/GOT%20-%20S1%20-%203.png",
+    duration: "59m",
+  },
+  {
+    href: "/",
+    title: "Cripples, Bastards, and Broken Things",
+    number: 4,
+    description:
+      "Eddard investigates Jon Arryn's murder. Jon befriends Samwell Tarly, a coward who has come to join the Night's Watch.",
+    backgroundImage: "/episodes/GOT%20-%20S1%20-%204.png",
+    duration: "55m",
+  },
+  {
+    href: "/",
+    title: "The Wolf and the Lion",
+    number: 5,
+    description:
+      "Catelyn has captured Tyrion and plans to bring him to her sister, Lysa Arryn, at the Vale, to be tried for his, supposed, crimes against Bran. Robert plans to have Daenerys killed, but Eddard refuses to be a part of it and quits.",
+    backgroundImage: "/episodes/GOT%20-%20S1%20-%205.png",
+    duration: "53m",
+  },
+  {
+    href: "/",
+    title: "A Golden Crown",
+    number: 6,
+    description:
+      "While recovering from his battle with Jaime, Eddard is forced to run the kingdom while Robert goes hunting. Tyrion demands a trial by combat for his freedom. Viserys is losing his patience with Drogo.",
+    backgroundImage: "/episodes/GOT%20-%20S1%20-%206.png",
+    duration: "53m",
+  },
+  {
+    href: "/",
+    title: "You Win or You Die",
+    number: 7,
+    description:
+      "Robert has been injured while hunting and is dying. Jon and the others finally take their vows to the Night's Watch. A man, sent by Robert, is captured for trying to poison Daenerys. Furious, Drogo vows to attack the Seven Kingdoms.",
+    backgroundImage: "/episodes/GOT%20-%20S1%20-%207.png",
+    duration: "49m",
+  },
+  {
+    href: "/",
+    title: "The Pointy End",
+    number: 8,
+    description:
+      "The Lannisters press their advantage over the Starks; Robb rallies his father's northern allies and heads south to war; The White Walkers attack the Wall; Tyrion returns to his father with some new friends.",
+    backgroundImage: "/episodes/GOT%20-%20S1%20-%208.png",
+    duration: "57m",
+  },
+  {
+    href: "/",
+    title: "Baelor",
+    number: 9,
+    description:
+      "Robb goes to war against the Lannisters. Jon finds himself struggling on deciding if his place is with Robb or the Night's Watch. Drogo has fallen ill from a fresh battle wound. Daenerys is desperate to save him.",
+    backgroundImage: "/episodes/GOT%20-%20S1%20-%209.png",
+    duration: "56m",
+  },
+  {
+    href: "/",
+    title: "Fire and Blood",
+    number: 10,
+    description:
+      "Robb vows to get revenge on the Lannisters. Jon must officially decide if his place is with Robb or the Night's Watch. Daenerys says her final goodbye to Drogo.",
+    backgroundImage: "/episodes/GOT%20-%20S1%20-%2010.png",
+    duration: "59m",
+  },
+];

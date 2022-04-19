@@ -1,14 +1,14 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import { Thumbnail } from "./thumbnail.component";
+import { BaseThumbnail } from "./base-thumbnail.component";
 
-describe("Thumbnail component", () => {
+describe("BaseThumbnail component", () => {
   it("the component renders correctly", () => {
     render(
-      <Thumbnail
+      <BaseThumbnail
         backgroundImage=""
+        contentLocation="inside"
         href="http://localhost/some-href"
-        id="1"
         title="A title"
       />
     );

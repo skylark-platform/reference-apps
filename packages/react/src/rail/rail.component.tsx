@@ -2,15 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { MdArrowForward, MdArrowBack } from "react-icons/md";
 import { useDebouncedCallback } from "use-debounce";
 import { useTailwindBreakpoint } from "../hooks";
-import {
-  Thumbnail,
-  ThumbnailContentLocation,
-  ThumbnailProps,
-} from "../thumbnail";
 
 interface RailProps {
-  thumbnails: ThumbnailProps[];
-  thumbnailContentLocation: ThumbnailContentLocation;
   initial?: number;
 }
 
@@ -35,16 +28,14 @@ const determineScrollAmount = (
   return ascending ? scrollLeft + scrollAmount : scrollLeft - scrollAmount;
 };
 
-export const Rail: React.FC<RailProps> = ({
-  thumbnails,
-  initial,
-  thumbnailContentLocation,
-}) => {
+export const Rail: React.FC<RailProps> = ({ initial, children }) => {
+  const numChildren = React.Children.toArray(children).length;
+
   const myRef = useRef<HTMLDivElement>(null);
   const [tailwindBreakpoint] = useTailwindBreakpoint();
   const [showPreviousButton, setShowPreviousButton] = useState(false);
   const [showNextButton, setShowNextButton] = useState(true);
-  const [numThumbnailsOnScreen, setNumThumbnailsOnScreen] = useState(2);
+  const [numChildrenOnScreen, setNumChildrenOnScreen] = useState(2);
 
   const debouncedOnScroll = useDebouncedCallback((e: Element) => {
     const { scrollWidth, scrollLeft, clientWidth } = e;
@@ -64,8 +55,8 @@ export const Rail: React.FC<RailProps> = ({
     const amount = determineScrollAmount(
       myRef.current as Element,
       ascending,
-      thumbnails.length,
-      numThumbnailsOnScreen
+      numChildren,
+      numChildrenOnScreen
     );
 
     myRef.current?.scrollTo({
@@ -78,7 +69,7 @@ export const Rail: React.FC<RailProps> = ({
       const amount = determineScrollAmount(
         myRef.current,
         true,
-        thumbnails.length,
+        numChildren,
         initial
       );
       myRef.current.scrollTo({
@@ -103,13 +94,13 @@ export const Rail: React.FC<RailProps> = ({
         numToShow = 4;
         break;
     }
-    setNumThumbnailsOnScreen(numToShow);
+    setNumChildrenOnScreen(numToShow);
   }, [tailwindBreakpoint]);
 
   return (
     <div className="w-full">
       <div className="relative flex items-center justify-center px-2">
-        {thumbnails.length > numThumbnailsOnScreen && (
+        {numChildren > numChildrenOnScreen && (
           <>
             <button
               className={`left-0 ${directionArrowClassName} ${
@@ -144,7 +135,8 @@ export const Rail: React.FC<RailProps> = ({
           ref={myRef}
           onScroll={(e) => debouncedOnScroll(e.target as Element)}
         >
-          {thumbnails.map((props, i) => (
+          {/* Add a wrapper around children so that they display correctly */}
+          {React.Children.map(children, (child) => (
             <div
               className={`
                 mx-1
@@ -152,12 +144,8 @@ export const Rail: React.FC<RailProps> = ({
                 md:mx-2 md:w-1/3 md:min-w-[calc(33.333333%-0.8rem)] md:max-w-[calc(33.333333%-0.8rem)]
                 lg:mx-0 lg:w-1/4 lg:min-w-[calc(25%-1rem)] lg:max-w-[calc(25%-1rem)]
               `}
-              key={`${props.title}-${i}`}
             >
-              <Thumbnail
-                {...props}
-                contentLocation={thumbnailContentLocation}
-              />
+              {child}
             </div>
           ))}
         </div>

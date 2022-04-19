@@ -1,2 +1,2 @@
-export * from "./thumbnail.component";
-export * from "./thumbnail-info.component";
+export * from "./movie/movie-thumbnail.component";
+export * from "./episode/episode-thumbnail.component";
