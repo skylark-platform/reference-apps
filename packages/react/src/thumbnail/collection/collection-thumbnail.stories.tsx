@@ -16,8 +16,8 @@ export default {
 const Template: ComponentStory<typeof CollectionThumbnailComponent> = (
   args
 ) => (
-  <div className="flex h-[400px] w-full flex-col justify-center overflow-y-visible mt-10">
-    <div className="p-10 bg-gray-900 w-96">
+  <div className="mt-10 flex h-[400px] w-full flex-col justify-center overflow-y-visible">
+    <div className="w-96 bg-gray-900 p-10">
       <CollectionThumbnailComponent {...args} />
     </div>
   </div>

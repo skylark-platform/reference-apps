@@ -54,7 +54,7 @@ export const ThumbnailList: React.FC<ListProps> = ({
   contents,
   highlightFirst,
 }) => (
-  <div className="flex flex-row text-gray-400 items-center my-0.5">
+  <div className="my-0.5 flex flex-row items-center text-gray-400">
     {contents
       .filter((el) => !!el)
       .map((text, index) => (
@@ -63,8 +63,8 @@ export const ThumbnailList: React.FC<ListProps> = ({
           <p
             className={`
             ${highlightFirst && index === 0 ? "text-white" : "text-gray-400"}
-            text-xs md:text-sm
-            transition-colors group-hover:text-white
+            text-xs transition-colors
+            group-hover:text-white md:text-sm
           `}
           >
             {text}
@@ -88,17 +88,17 @@ const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
             ? "aspect-3/4 hover:scale-[1.01] md:hover:scale-[1.03]"
             : "aspect-video hover:scale-[1.02] md:hover:scale-105"
         }
-        z-30 block aspect-video scale-[1.0001] rounded-sm bg-cover bg-center bg-no-repeat
-        transition-all hover:z-40 w-full
+        z-30 block aspect-video w-full scale-[1.0001] rounded-sm bg-cover bg-center
+        bg-no-repeat transition-all hover:z-40
       `}
     style={{ backgroundImage: `url('${backgroundImage}')` }}
   >
     <div
       className={`
           ${contentLocation === "below" ? "justify-end" : "justify-between"}
-          flex h-full w-full flex-col rounded-sm relative
-          p-4 font-display text-white transition-all hover:bg-purple-500/[.85]
-          2xl:bg-black/[.3] bg-gradient-to-t from-gray-900 to-transparent scale-[1.01]
+          relative flex h-full w-full scale-[1.01] flex-col
+          rounded-sm bg-gradient-to-t from-gray-900 to-transparent p-4
+          font-display text-white transition-all hover:bg-purple-500/[.85] 2xl:bg-black/[.3]
         `}
     >
       {children}
@@ -132,17 +132,17 @@ export const MediaThumbnail: React.FC<ThumbnailProps> = (props) => {
       <a className="group">
         <BaseThumbnail {...props}>
           {duration && (
-            <div className="top-3 right-3 absolute text-xs font-light bg-gray-900 py-0.5 px-2 rounded-xl group-hover:opacity-0">
+            <div className="absolute top-3 right-3 rounded-xl bg-gray-900 py-0.5 px-2 text-xs font-light group-hover:opacity-0">
               {duration}
             </div>
           )}
-          <div className="flex flex-row items-center gap-2 lg:gap-4 font-light">
+          <div className="flex flex-row items-center gap-2 font-light lg:gap-4">
             <div className="inline-block w-auto rounded-full bg-gray-600/[.65] p-2 group-hover:bg-black/[.3]">
               <MdPlayArrow className="h-6 w-6 md:h-8 md:w-8" />
             </div>
             {callToAction && (
               <p
-                className={`transition-opacity font-medium ${
+                className={`font-medium transition-opacity ${
                   callToAction?.display === "always"
                     ? "opacity-100"
                     : "opacity-0 group-hover:opacity-100"
@@ -154,7 +154,7 @@ export const MediaThumbnail: React.FC<ThumbnailProps> = (props) => {
           </div>
           {contentLocation === "inside" && (
             <div>
-              <H4 className="text-white font-normal mb-0.5">{title}</H4>
+              <H4 className="mb-0.5 font-normal text-white">{title}</H4>
               <ThumbnailList
                 contents={[subtitle, ...(tags && tags.length > 0 ? tags : [])]}
                 highlightFirst

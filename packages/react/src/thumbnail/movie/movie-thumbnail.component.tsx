@@ -27,7 +27,7 @@ export const MovieThumbnail: React.FC<MovieThumbnailProps> = (props) => {
       contentLocation={contentLocation || "inside"}
       duration={undefined}
     >
-      <H4 className="text-white mt-2 mb-0.5">{title}</H4>
+      <H4 className="mt-2 mb-0.5 text-white">{title}</H4>
       <ThumbnailList
         contents={[subtitle, ...(tags && tags.length > 0 ? tags : [])]}
         highlightFirst
