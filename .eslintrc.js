@@ -5,7 +5,7 @@ module.exports = {
     jest: true,
     es6: true,
   },
-  plugins: ["prettier", "react"],
+  plugins: ["prettier", "react", "unused-imports"],
   extends: [
     "airbnb-base",
     "eslint:recommended",
@@ -23,6 +23,8 @@ module.exports = {
         devDependencies: [".storybook/**"],
       },
     ],
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": "error",
   },
   ignorePatterns: ["**/.next/**/*"],
   overrides: [
@@ -39,7 +41,7 @@ module.exports = {
       },
       files: ["**/*.ts", "**/*.tsx"],
       excludedFiles: ["**/cypress/**/*", "./apps/classic-cms/**/*"],
-      plugins: ["prettier", "jest", "@typescript-eslint"],
+      plugins: ["prettier", "jest", "@typescript-eslint", "unused-imports"],
       extends: [
         "airbnb-typescript",
         "plugin:@typescript-eslint/recommended",

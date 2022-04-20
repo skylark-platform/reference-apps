@@ -12,6 +12,7 @@
     "lerna-exec": "lerna exec",
     "deepclean": "lerna exec -- rm -rf node_modules && rm -rf node_modules",
     "lint": "lerna run --parallel lint",
+    "lint:fix": "lerna run --parallel lint -- --fix",
     "test": "lerna run --parallel test",
     "test:ci": "lerna run --parallel test -- --ci --coverage",
     "prettier": "prettier . --write",
@@ -23,6 +24,7 @@
   "devDependencies": {
     "@lerna/exec": "^4.0.0",
     "@lerna/run": "^4.0.0",
+    "@types/tailwindcss": "^3.0.10",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "eslint": "8.3.0",
@@ -37,9 +39,10 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.27.1",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "husky": ">=6",
-    "prettier": "^2.5.1",
-    "prettier-plugin-tailwindcss": "^0.1.1",
+    "prettier": "2.5.1",
+    "prettier-plugin-tailwindcss": "0.1.1",
     "typescript": "^4.5.2"
   }
 }

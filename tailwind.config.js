@@ -1,3 +1,9 @@
+// The Tailwind config is used in app or package directories so we can safely ignore this error
+// eslint-disable-next-line import/no-extraneous-dependencies
+const plugin = require("tailwindcss/plugin");
+// eslint-disable-next-line import/no-extraneous-dependencies
+const lineClamp = require("@tailwindcss/line-clamp");
+
 module.exports = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
@@ -49,7 +55,28 @@ module.exports = {
         display: "Outfit",
         body: "Outfit",
       },
+      aspectRatio: {
+        "3/4": "3 / 4",
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    lineClamp,
+    plugin(({ addUtilities }) => {
+      addUtilities({
+        ".hide-scrollbar": {
+          /* IE and Edge */
+          "-ms-overflow-style": "none",
+
+          /* Firefox */
+          "scrollbar-width": "none",
+
+          /* Safari and Chrome */
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
+        },
+      });
+    }),
+  ],
 };

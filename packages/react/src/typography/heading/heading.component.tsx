@@ -2,54 +2,56 @@ import React from "react";
 
 export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
-interface HeadingProps {
+interface HProps {
+  className?: string;
+}
+
+interface HeadingProps extends HProps {
   level: HeadingLevel;
 }
 
-const sharedStyles = "text-gray-900";
-
-export const H1: React.FC = ({ children }) => (
+export const H1: React.FC<HProps> = ({ children, className = "" }) => (
   <h1
-    className={`${sharedStyles} text-[44px] font-medium leading-[44px] md:text-[56px] md:leading-[56px]`}
+    className={`text-[44px] font-medium leading-[44px] md:text-[56px] md:leading-[56px] ${className}`}
   >
     {children}
   </h1>
 );
 
-export const H2: React.FC = ({ children }) => (
+export const H2: React.FC<HProps> = ({ children, className = "" }) => (
   <h2
-    className={`${sharedStyles} text-[24px] font-medium leading-[24px] md:text-[32px] md:leading-[36px]`}
+    className={`text-[24px] font-medium leading-[24px] md:text-[32px] md:leading-[36px] ${className}`}
   >
     {children}
   </h2>
 );
 
-export const H3: React.FC = ({ children }) => (
+export const H3: React.FC<HProps> = ({ children, className = "" }) => (
   <h3
-    className={`${sharedStyles} text-[20px] font-medium leading-[24px] md:text-[27px] md:leading-[32px]`}
+    className={`text-[20px] font-medium leading-[24px] md:text-[27px] md:leading-[32px] ${className}`}
   >
     {children}
   </h3>
 );
 
-export const H4: React.FC = ({ children }) => (
+export const H4: React.FC<HProps> = ({ children, className = "" }) => (
   <h4
-    className={`${sharedStyles} text-[16px] font-bold leading-[20px] md:text-[18px] md:leading-[24px]`}
+    className={`text-[16px] font-medium leading-[20px] md:text-[18px] md:leading-[24px] ${className}`}
   >
     {children}
   </h4>
 );
 
-export const H5: React.FC = ({ children }) => (
+export const H5: React.FC<HProps> = ({ children, className = "" }) => (
   <h5
-    className={`${sharedStyles} text-[13px] font-bold leading-[18px] md:text-[14px] md:leading-[20px]`}
+    className={`text-[13px] font-medium leading-[18px] md:text-[14px] md:leading-[20px] ${className}`}
   >
     {children}
   </h5>
 );
 
-export const H6: React.FC = ({ children }) => (
-  <h6 className={`${sharedStyles} text-[12px] font-bold leading-[26px]`}>
+export const H6: React.FC<HProps> = ({ children, className = "" }) => (
+  <h6 className={`text-[12px] font-medium leading-[26px] ${className}`}>
     {children}
   </h6>
 );
@@ -57,6 +59,7 @@ export const H6: React.FC = ({ children }) => (
 export const Heading: React.FC<HeadingProps> = ({
   level: propLevel,
   children,
+  className,
 }) => {
   const headings = [H1, H2, H3, H4, H5, H6];
   let level = 1;
@@ -66,7 +69,7 @@ export const Heading: React.FC<HeadingProps> = ({
 
   const H = headings[level - 1];
 
-  return <H>{children}</H>;
+  return <H className={className}>{children}</H>;
 };
 
 export default Heading;

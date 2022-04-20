@@ -15,7 +15,7 @@ export default create({
   appBg: "#F6F8FB",
   appContentBg: "#FFF",
   appBorderColor: "#E5E9EF",
-  appBorderRadius: 10,
+  appBorderRadius: 4,
 
   // Typography
   fontBase: '"Inter", "Open Sans", sans-serif',
