@@ -26,8 +26,12 @@ const main = async () => {
   const sanitzedGitBranch =
     gitBranch && gitBranch.toLowerCase().replace(/[^A-Za-z0-9]/g, "-");
   const stackName =
-    process.env.STACK_NAME || strFromArr([sanitzedGitBranch, app], "-");
-  const primaryDomain = strFromArr([app, "apps", baseDomain], ".");
+    process.env.STACK_NAME ||
+    strFromArr(["skylark-reference-app", app, sanitzedGitBranch], "-");
+  const primaryDomain = strFromArr(
+    [sanitzedGitBranch, app, "apps", baseDomain],
+    "."
+  );
   const description = `${app} Skylark Reference App deployed via CDK`;
 
   const builder = new Builder(appPath, "./build", {
@@ -39,17 +43,21 @@ const main = async () => {
   await builder.build();
 
   const cdkApp = new cdk.App();
-  new SkylarkReferenceAppStack(cdkApp, `${stackName}-skylark-reference-app`, {
-    app,
-    stackName,
-    description,
-    primaryDomain,
-    baseDomain,
-    env: {
-      account: process.env.CDK_DEFAULT_ACCOUNT,
-      region: "us-east-1",
-    },
-  });
+  new SkylarkReferenceAppStack(
+    cdkApp,
+    strFromArr([sanitzedGitBranch, app, "skylark-reference-apps"], "-"),
+    {
+      app,
+      stackName,
+      description,
+      primaryDomain,
+      baseDomain,
+      env: {
+        account: process.env.CDK_DEFAULT_ACCOUNT,
+        region: "us-east-1",
+      },
+    }
+  );
 
   console.log(`::notice::${app} stack name: ${stackName}`);
   console.log(`::set-output name=stack-name::${stackName}`);
