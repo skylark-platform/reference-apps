@@ -27,7 +27,7 @@ const main = async () => {
     gitBranch && gitBranch.toLowerCase().replace(/[^A-Za-z0-9]/g, "-");
   const stackName =
     process.env.STACK_NAME ||
-    strFromArr(["skylark-reference-app", app, sanitzedGitBranch], "-");
+    strFromArr(["sl-ref-apps", app, sanitzedGitBranch], "-");
   const primaryDomain = strFromArr(
     [sanitzedGitBranch, app, "apps", baseDomain],
     "."
@@ -59,8 +59,8 @@ const main = async () => {
     }
   );
 
-  console.log(`::notice::${app} stack name: ${stackName}`);
   console.log(`::set-output name=stack-name::${stackName}`);
+  console.log(`::set-output name=app::${app}`);
   console.log(`::set-output name=domain::${primaryDomain}`);
 };
 

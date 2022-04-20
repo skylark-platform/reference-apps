@@ -48,3 +48,7 @@ runs:
       run: |
         yarn cdk bootstrap
         yarn cdk deploy
+    - name: Add stack-name and domain to GitHub Workflow
+      shell: bash
+      run: |
+        echo "::notice::Type: ${{ steps.cdk.outputs.app }}. Stack Name: ${{ steps.cdk.outputs.stack-name}}. Domain: ${{ steps.cdk.outputs.domain }}"
