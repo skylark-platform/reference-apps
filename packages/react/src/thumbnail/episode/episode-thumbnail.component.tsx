@@ -1,7 +1,7 @@
 import React from "react";
+import { List } from "../../list";
 import {
   MediaThumbnail,
-  ThumbnailList,
   ThumbnailProps,
 } from "../base/base-thumbnail.component";
 
@@ -29,7 +29,7 @@ export const EpisodeThumbnail: React.FC<EpisodeThumbnailProps> = (props) => {
       <p className="mt-0.5 mb-3 text-xs text-gray-400 line-clamp-3 md:text-sm md:line-clamp-4">
         {description}
       </p>
-      <ThumbnailList contents={[releaseDate]} highlightFirst />
+      <List contents={[releaseDate]} highlightFirst />
     </MediaThumbnail>
   );
 };

@@ -1,9 +1,9 @@
 import React from "react";
+import { List } from "../../list";
 import { H4 } from "../../typography";
 import {
   MediaThumbnail,
   ThumbnailContentLocation,
-  ThumbnailList,
   ThumbnailProps,
 } from "../base/base-thumbnail.component";
 
@@ -28,11 +28,11 @@ export const MovieThumbnail: React.FC<MovieThumbnailProps> = (props) => {
       duration={undefined}
     >
       <H4 className="mt-2 mb-0.5 text-white">{title}</H4>
-      <ThumbnailList
+      <List
         contents={[subtitle, ...(tags && tags.length > 0 ? tags : [])]}
         highlightFirst
       />
-      <ThumbnailList contents={[duration, releaseDate]} highlightFirst />
+      <List contents={[duration, releaseDate]} highlightFirst />
     </MediaThumbnail>
   );
 };

@@ -11,6 +11,7 @@ import {
   EpisodeThumbnail as EpisodeThumbnailComponent,
   CollectionThumbnail as CollectionThumbnailComponent,
 } from "../thumbnail";
+import { ThumbnailProps } from "../thumbnail/base/base-thumbnail.component";
 
 export default {
   title: "React/Rail",
@@ -78,7 +79,27 @@ WithEpisodeThumbnails.args = {
 
 export const WithCollectionThumbnails = Template.bind({});
 WithCollectionThumbnails.args = {
-  children: collectionThumbnails.map((props) => (
+  children: collectionThumbnails.map((props: ThumbnailProps) => (
     <CollectionThumbnailComponent key={props.title} {...props} />
+  )),
+};
+
+export const WithText = Template.bind({});
+WithText.args = {
+  children: [
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six",
+    "seven",
+    "eight",
+    "nine",
+    "ten",
+  ].map((text) => (
+    <p className="border border-white py-10 text-center text-white" key={text}>
+      {text}
+    </p>
   )),
 };

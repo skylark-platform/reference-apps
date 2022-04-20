@@ -128,10 +128,11 @@ export const Rail: React.FC<RailProps> = ({ initial, children }) => {
           className={`
             flex w-full snap-x snap-mandatory
             scroll-pr-6 flex-row overflow-x-auto scroll-smooth
-            py-1 px-4 hide-scrollbar md:scroll-pr-14
+            py-2 px-4 hide-scrollbar md:scroll-pr-14 md:py-4
             md:px-12 lg:scroll-pr-20 lg:gap-5
             lg:px-20
           `}
+          data-testid="rail-scroll"
           ref={myRef}
           onScroll={(e) => debouncedOnScroll(e.target as Element)}
         >

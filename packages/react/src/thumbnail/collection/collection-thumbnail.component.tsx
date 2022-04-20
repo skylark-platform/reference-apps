@@ -1,7 +1,7 @@
 import React from "react";
+import { List } from "../../list";
 import {
   BaseThumbnailWithLink,
-  ThumbnailList,
   ThumbnailProps,
 } from "../base/base-thumbnail.component";
 
@@ -14,7 +14,7 @@ export const CollectionThumbnail: React.FC<ThumbnailProps> = (props) => {
         {subtitle && <p className="text-3xl text-gray-400">{subtitle}</p>}
         {tags && (
           <div className="absolute bottom-0">
-            <ThumbnailList contents={tags} />
+            <List contents={tags} />
           </div>
         )}
       </div>

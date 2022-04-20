@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
-import { MdCircle, MdPlayArrow } from "react-icons/md";
+import { MdPlayArrow } from "react-icons/md";
+import { List } from "../../list";
 import { H4 } from "../../typography";
 
 export type ThumbnailContentLocation = "inside" | "below";
@@ -27,53 +28,6 @@ export interface ThumbnailProps extends BaseThumbnailWithLinkProps {
   duration?: string;
 }
 
-/**
- * Types of Thumbnail (<Thumbnail type="movie" contentPlacement="inside || below" />)
- * - MovieThumbnail with content inside
- * - MovieThumbnail with content outside
- * - EpisodeThumbnail (with and without release date / available until) - episode number, description, duration (shown as call to action on hover)
- * - CollectionThumbnail (with tags)
- *
- * Shared components
- * - ThumbnailBase (background with tint) (aspect ratio as prop)
- *   - Also includes Play button + call to action (hide on collection) aligned to bottom unless children are provided
- * - Tags (Movie + Collection)
- *
- * Shared props
- * - Title
- * - show playButton
- * - show callToAction
- */
-
-interface ListProps {
-  contents: (string | undefined)[];
-  highlightFirst?: boolean;
-}
-
-export const ThumbnailList: React.FC<ListProps> = ({
-  contents,
-  highlightFirst,
-}) => (
-  <div className="my-0.5 flex flex-row items-center text-gray-400">
-    {contents
-      .filter((el) => !!el)
-      .map((text, index) => (
-        <>
-          {index !== 0 && <MdCircle className="mx-2 h-1 w-1 text-gray-400" />}
-          <p
-            className={`
-            ${highlightFirst && index === 0 ? "text-white" : "text-gray-400"}
-            text-xs transition-colors
-            group-hover:text-white md:text-sm
-          `}
-          >
-            {text}
-          </p>
-        </>
-      ))}
-  </div>
-);
-
 const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
   backgroundImage,
   contentLocation = "inside",
@@ -88,7 +42,7 @@ const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
             ? "aspect-3/4 hover:scale-[1.01] md:hover:scale-[1.03]"
             : "aspect-video hover:scale-[1.02] md:hover:scale-105"
         }
-        z-30 block aspect-video w-full scale-[1.0001] rounded-sm bg-cover bg-center
+        z-30 block w-full scale-[1.0001] rounded-sm bg-cover bg-clip-border bg-center
         bg-no-repeat transition-all hover:z-40
       `}
     style={{ backgroundImage: `url('${backgroundImage}')` }}
@@ -96,9 +50,9 @@ const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
     <div
       className={`
           ${contentLocation === "below" ? "justify-end" : "justify-between"}
-          relative flex h-full w-full scale-[1.01] flex-col
-          rounded-sm bg-gradient-to-t from-gray-900 to-transparent p-4
-          font-display text-white transition-all hover:bg-purple-500/[.85] 2xl:bg-black/[.3]
+          relative flex h-full w-full flex-col rounded-sm
+          bg-gradient-to-t from-gray-900 to-transparent bg-clip-border bg-no-repeat p-4 font-display
+          text-white shadow shadow-gray-900 transition-all hover:scale-[1.005] group-hover:bg-purple-500/[.85]
         `}
     >
       {children}
@@ -155,7 +109,7 @@ export const MediaThumbnail: React.FC<ThumbnailProps> = (props) => {
           {contentLocation === "inside" && (
             <div>
               <H4 className="mb-0.5 font-normal text-white">{title}</H4>
-              <ThumbnailList
+              <List
                 contents={[subtitle, ...(tags && tags.length > 0 ? tags : [])]}
                 highlightFirst
               />
