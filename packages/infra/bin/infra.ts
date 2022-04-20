@@ -29,7 +29,7 @@ const main = async () => {
     process.env.STACK_NAME ||
     strFromArr(["sl-ref-apps", app, sanitzedGitBranch], "-");
   const primaryDomain = strFromArr(
-    [sanitzedGitBranch, app, "apps", baseDomain],
+    [app, sanitzedGitBranch, "apps", baseDomain],
     "."
   );
   const description = `${app} Skylark Reference App deployed via CDK`;
