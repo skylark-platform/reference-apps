@@ -63,6 +63,7 @@ module.exports = {
   },
   plugins: [
     lineClamp,
+    require("@tailwindcss/forms"),
     plugin(({ addUtilities }) => {
       addUtilities({
         ".hide-scrollbar": {

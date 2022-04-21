@@ -3,6 +3,7 @@ import React from "react";
 interface SkylarkLogoProps {
   className?: string;
 }
+
 export const SkylarkLogo: React.FC<SkylarkLogoProps> = ({ className }) => (
   <svg
     className={className}
