@@ -13,7 +13,7 @@ export default {
 } as ComponentMeta<typeof Carousel>;
 
 const Template: ComponentStory<typeof Carousel> = (args) => (
-  <div className="flex h-[600px] w-full lg:w-4/5 xl:w-2/3 flex-col justify-center overflow-y-visible bg-gray-900">
+  <div className="flex h-[600px] w-full flex-col justify-center overflow-y-visible bg-gray-900 lg:w-4/5 xl:w-2/3">
     <Carousel {...args} />
   </div>
 );

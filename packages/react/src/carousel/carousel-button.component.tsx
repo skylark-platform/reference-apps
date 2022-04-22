@@ -31,7 +31,7 @@ export const CarouselButton: React.FC<CarouselButtonProps> = ({
       <motion.svg className="w-8" viewBox="0 0 100 100">
         <motion.circle
           animate={active ? { scale: 1 } : { scale: 0.45 }}
-          className="fill-gray-900/60 stroke-[6] stroke-gray-500"
+          className="fill-gray-900/60 stroke-gray-500 stroke-[6]"
           cx="50"
           cy="50"
           r="48"
@@ -40,7 +40,7 @@ export const CarouselButton: React.FC<CarouselButtonProps> = ({
         {duration && active && (
           <motion.circle
             animate="visible"
-            className="stroke-[6] stroke-pink-500 fill-transparent"
+            className="fill-transparent stroke-pink-500 stroke-[6]"
             custom={1}
             cx="50"
             cy="50"
@@ -54,7 +54,7 @@ export const CarouselButton: React.FC<CarouselButtonProps> = ({
       {text && active && (
         <motion.p
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          className="hidden md:block text-xs pt-1"
+          className="hidden pt-1 text-xs md:block"
           initial={{ opacity: 0, scale: 0.8, y: 10 }}
           transition={{
             duration: 0.2,

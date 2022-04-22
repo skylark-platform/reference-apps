@@ -127,12 +127,12 @@ export const Rail: React.FC<RailProps> = ({ initial, children }) => {
         <div
           className={`
             flex w-full snap-x snap-mandatory
-             flex-row overflow-x-auto scroll-smooth
-            py-2 hide-scrollbar
-            scroll-pr-3 px-gutter
+             scroll-pr-3 flex-row overflow-x-auto
+            scroll-smooth py-2
+            px-gutter hide-scrollbar
             sm:scroll-pr-6 sm:px-sm-gutter
             md:scroll-pr-14 md:px-md-gutter md:py-4
-            lg:scroll-pr-lg-gutter lg:px-lg-gutter lg:gap-5
+            lg:scroll-pr-lg-gutter lg:gap-5 lg:px-lg-gutter
             xl:scroll-pr-xl-gutter xl:px-xl-gutter
           `}
           data-testid="rail-scroll"

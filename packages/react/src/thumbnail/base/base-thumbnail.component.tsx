@@ -50,8 +50,8 @@ const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
       className={`
           ${contentLocation === "below" ? "justify-end" : "justify-between"}
           relative flex h-full w-full flex-col rounded-sm
-          bg-gradient-to-t from-gray-900 to-transparent bg-clip-border bg-no-repeat p-2 sm:p-3 lg:p-4 font-display
-          text-white shadow shadow-gray-900 transition-all hover:scale-[1.005] group-hover:bg-purple-500/[.85]
+          bg-gradient-to-t from-gray-900 to-transparent bg-clip-border bg-no-repeat p-2 font-display text-white shadow
+          shadow-gray-900 transition-all hover:scale-[1.005] group-hover:bg-purple-500/[.85] sm:p-3 lg:p-4
         `}
     >
       {children}
@@ -89,12 +89,12 @@ export const MediaThumbnail: React.FC<ThumbnailProps> = (props) => {
             </div>
           )}
           <div className="flex flex-row items-center gap-2 font-light lg:gap-4">
-            <div className="hidden md:inline-block w-auto rounded-full bg-gray-600/[.65] p-2 group-hover:bg-black/[.3]">
+            <div className="hidden w-auto rounded-full bg-gray-600/[.65] p-2 group-hover:bg-black/[.3] md:inline-block">
               <MdPlayArrow className="text-lg lg:text-3xl" />
             </div>
             {callToAction && (
               <p
-                className={`text-xs sm:text-sm lg:text-base font-medium transition-opacity ${
+                className={`text-xs font-medium transition-opacity sm:text-sm lg:text-base ${
                   callToAction?.display === "always"
                     ? "opacity-100"
                     : "opacity-0 group-hover:opacity-100"
@@ -106,7 +106,7 @@ export const MediaThumbnail: React.FC<ThumbnailProps> = (props) => {
           </div>
           {contentLocation === "inside" && (
             <div>
-              <h4 className="md:mb-0.5 font-normal text-white text-xs sm:text-sm md:text-base line-clamp-3">
+              <h4 className="text-xs font-normal text-white line-clamp-3 sm:text-sm md:mb-0.5 md:text-base">
                 {title}
               </h4>
               <div className="hidden sm:block">

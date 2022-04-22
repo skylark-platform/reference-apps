@@ -62,17 +62,17 @@ export const Carousel: React.FC<CarouselProps> = ({
   return (
     <div
       className={`
-        w-full h-full flex justify-center items-center
-        relative overflow-hidden pb-32 md:pb-0
+        relative flex h-full w-full items-center
+        justify-center overflow-hidden pb-32 md:pb-0
       `}
     >
       <AnimatePresence custom={direction} initial={false}>
         <motion.div
           animate="center"
           className={`
-            block w-full h-full bg-cover bg-center
-            bg-no-repeat min-w-full
-            text-white absolute
+            absolute block h-full w-full min-w-full
+            bg-cover bg-center
+            bg-no-repeat text-white
           `}
           custom={direction}
           exit="exit"
@@ -86,13 +86,13 @@ export const Carousel: React.FC<CarouselProps> = ({
         >
           <div
             className={`
-            w-full h-full flex justify-between items-end flex-row pb-5 md:pb-20
-            bg-gradient-to-t from-gray-900 to-gray-900/5
-            px-sm-gutter md:pr-0 md:pl-md-gutter lg:pl-lg-gutter xl:pl-xl-gutter
+            flex h-full w-full flex-row items-end justify-between bg-gradient-to-t from-gray-900
+            to-gray-900/5 px-sm-gutter pb-5
+            md:pb-20 md:pr-0 md:pl-md-gutter lg:pl-lg-gutter xl:pl-xl-gutter
           `}
           >
             <div className="flex flex-col">
-              <h2 className="text-5xl md:text-6xl my-3 font-medium">{title}</h2>
+              <h2 className="my-3 text-5xl font-medium md:text-6xl">{title}</h2>
               <List
                 contents={[
                   duration,
@@ -102,7 +102,7 @@ export const Carousel: React.FC<CarouselProps> = ({
                 highlightFirst
                 textSize="sm"
               />
-              <div className="flex flex-row mb-4 mt-8 gap-x-4">
+              <div className="mb-4 mt-8 flex flex-row gap-x-4">
                 <Link href="/">
                   <a>
                     <Button
@@ -121,7 +121,7 @@ export const Carousel: React.FC<CarouselProps> = ({
           </div>
         </motion.div>
       </AnimatePresence>
-      <div className=" text-white z-50 flex justify-center items-start absolute bottom-5 md:bottom-20 md:right-lg-gutter">
+      <div className=" absolute bottom-5 z-50 flex items-start justify-center text-white md:bottom-20 md:right-lg-gutter">
         {items.length > 1 &&
           items.map(({ uid }, i) => (
             <CarouselButton
