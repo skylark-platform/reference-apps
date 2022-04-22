@@ -5,10 +5,13 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   text?: string;
   icon?: JSX.Element;
   iconPlacement?: "left" | "right";
+  variant?: "primary" | "secondary";
 }
 
-const largeStyles = "md:px-10 py-3 text-lg";
-const smallStyles = "md:px-6 py-2 text-base";
+const primaryStyles = "bg-button-primary";
+const secondaryStyles = "bg-button-secondary";
+const largeStyles = "px-6 md:px-10 py-3 text-sm sm:text-base md:text-lg";
+const smallStyles = "px-2 md:px-6 py-2 text-xs sm:text-sm md:text-base";
 const onlyIconLargeStyles = "p-3";
 const onlyIconSmallStyles = "p-2";
 
@@ -17,16 +20,18 @@ export const Button: React.FC<ButtonProps> = ({
   text,
   icon,
   iconPlacement,
+  variant,
   ...otherProps
 }) => {
   let className = `
+${variant === "secondary" ? secondaryStyles : primaryStyles}
 flex justify-center items-center
-bg-button-primary hover:bg-button-hover disabled:bg-button-disabled transition-colors
+hover:bg-button-hover disabled:bg-button-disabled transition-colors
 text-white disabled:text-gray-300 font-body rounded-sm
 `;
 
   if (text) {
-    className += `w-full md:w-auto px-2 ${
+    className += ` w-full md:w-auto px-2 ${
       size === "lg" ? largeStyles : smallStyles
     }`;
   } else {

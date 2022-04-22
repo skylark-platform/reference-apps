@@ -4,9 +4,14 @@ import { MdCircle } from "react-icons/md";
 export interface ListProps {
   contents: (string | undefined)[];
   highlightFirst?: boolean;
+  textSize?: "xs" | "sm" | "base" | "lg";
 }
 
-export const List: React.FC<ListProps> = ({ contents, highlightFirst }) => (
+export const List: React.FC<ListProps> = ({
+  contents,
+  highlightFirst,
+  textSize,
+}) => (
   <div className="my-0.5 flex flex-row items-center text-gray-400">
     {contents
       .filter((el) => !!el)
@@ -16,7 +21,8 @@ export const List: React.FC<ListProps> = ({ contents, highlightFirst }) => (
           <p
             className={`
               ${highlightFirst && index === 0 ? "text-white" : "text-gray-400"}
-              text-xs transition-colors
+              ${textSize ? `text-${textSize}` : "text-xs"}
+              transition-colors
               group-hover:text-white md:text-sm
             `}
           >

@@ -47,6 +47,7 @@ module.exports = {
         },
         button: {
           primary: "#5B45CE",
+          secondary: "rgba(104, 108, 119, 0.65)",
           hover: "#FF385C",
           disabled: "#F3F3FB",
         },
@@ -58,6 +59,13 @@ module.exports = {
       },
       aspectRatio: {
         "3/4": "3 / 4",
+      },
+      spacing: {
+        gutter: "0.5rem",
+        "sm-gutter": "1rem",
+        "md-gutter": "3rem",
+        "lg-gutter": "5rem",
+        "xl-gutter": "7rem",
       },
     },
   },
