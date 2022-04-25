@@ -34,7 +34,7 @@ export const CarouselButton: React.FC<CarouselButtonProps> = ({
           className="fill-gray-900/60 stroke-gray-500 stroke-[6]"
           cx="50"
           cy="50"
-          r="48"
+          r="47"
           transition={{ type: "spring", duration: 0.8 }}
         />
         {duration && active && (

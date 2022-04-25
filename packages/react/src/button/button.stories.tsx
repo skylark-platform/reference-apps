@@ -27,6 +27,10 @@ export default {
         disable: true,
       },
     },
+    variant: {
+      options: ["primary", "secondary"],
+      control: { type: "radio" },
+    },
     onClick: {
       control: false,
       table: {
@@ -49,6 +53,7 @@ Default.args = {
   iconPlacement: "left",
   disabled: false,
   onClick,
+  variant: "primary",
 };
 
 export const WithIcon = Template.bind({});
@@ -59,6 +64,7 @@ WithIcon.args = {
   iconPlacement: "left",
   disabled: false,
   onClick,
+  variant: "primary",
 };
 
 export const OnlyIcon = Template.bind({});
@@ -69,6 +75,7 @@ OnlyIcon.args = {
   iconPlacement: "left",
   disabled: false,
   onClick,
+  variant: "primary",
 };
 
 export const Disabled = Template.bind({});
@@ -79,6 +86,17 @@ Disabled.args = {
   iconPlacement: "left",
   disabled: true,
   onClick,
+  variant: "primary",
+};
+
+export const Secondary = Template.bind({});
+Secondary.args = {
+  text: "Button name",
+  icon: <MdClear />,
+  size: "lg",
+  iconPlacement: "right",
+  onClick,
+  variant: "secondary",
 };
 
 export const Hover = Template.bind({});
