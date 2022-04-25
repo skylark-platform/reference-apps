@@ -4,27 +4,26 @@ import { DimensionToggle } from "./dimension-toggle";
 import { DimensionRadioButton } from "./dimension-radio-button";
 import { SkylarkBranding } from "../skylark-branding";
 
-export const DimensionSettings: React.FC = () => {
-  const [hidden, setHidden] = useState(false);
+interface DimensionSettingsProps {
+  show?: boolean;
+}
+
+export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
+  show: propShow = false,
+}) => {
+  const [show, setShow] = useState(propShow);
 
   return (
     <>
       <div className="fixed bottom-0 right-sm-gutter flex md:right-md-gutter lg:right-lg-gutter xl:right-xl-gutter">
-        <DimensionToggle iconDir="up" onClick={() => setHidden(!hidden)} />
+        <DimensionToggle iconDir="up" onClick={() => setShow(true)} />
       </div>
-      {!hidden && (
+      {show && (
         <div
           className={` fixed bottom-0 left-0 right-0 z-50 block h-[60vh] bg-white md:h-auto`}
         >
-          <div
-            className={`${
-              hidden ? "fixed bottom-0" : "absolute -top-9"
-            } right-sm-gutter flex md:right-md-gutter lg:right-lg-gutter xl:right-xl-gutter`}
-          >
-            <DimensionToggle
-              iconDir="down"
-              onClick={() => setHidden(!hidden)}
-            />
+          <div className="absolute -top-9 right-sm-gutter flex md:right-md-gutter lg:right-lg-gutter xl:right-xl-gutter">
+            <DimensionToggle iconDir="down" onClick={() => setShow(false)} />
           </div>
           <div className="relative h-full overflow-y-auto py-4 px-sm-gutter md:py-12 md:px-md-gutter  lg:px-lg-gutter xl:px-xl-gutter">
             <div className="flex items-center justify-between">

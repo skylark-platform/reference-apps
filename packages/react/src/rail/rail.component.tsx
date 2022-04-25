@@ -8,10 +8,10 @@ interface RailProps {
 }
 
 const directionArrowClassName = `
-  absolute hidden sm:flex justify-center items-center
+  absolute hidden md:flex justify-center items-center
   h-[calc(100%-0.5rem)] bg-gray-900/[.3] hover:bg-gray-900/[.4]
   text-2xl text-gray-400 hover:text-white transition-all z-50
-  w-gutter sm:w-sm-gutter md:w-md-gutter lg:w-lg-gutter xl:w-xl-gutter
+  md:w-12 lg:w-16 xl:w-24
 `;
 
 const determineScrollAmount = (

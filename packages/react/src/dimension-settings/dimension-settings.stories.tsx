@@ -14,3 +14,8 @@ const Template: ComponentStory<typeof DimensionSettings> = (args) => (
 );
 
 export const Default = Template.bind({});
+
+export const WithShow = Template.bind({});
+WithShow.args = {
+  show: true,
+};
