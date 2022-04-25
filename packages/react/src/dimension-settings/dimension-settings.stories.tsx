@@ -8,7 +8,9 @@ export default {
 } as ComponentMeta<typeof DimensionSettings>;
 
 const Template: ComponentStory<typeof DimensionSettings> = (args) => (
-  <DimensionSettings {...args} />
+  <div className="h-screen w-screen bg-gray-900">
+    <DimensionSettings {...args} />
+  </div>
 );
 
 export const Default = Template.bind({});

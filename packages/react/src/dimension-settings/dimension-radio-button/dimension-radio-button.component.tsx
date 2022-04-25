@@ -28,7 +28,7 @@ export const DimensionRadioButton: React.FC<RadioButtonProps> = ({
             onChange={() => handleOnChange(option)}
           />
           <label
-            className="m-2 ml-3	align-top text-base font-medium text-gray-500 peer-checked:text-black md:text-lg"
+            className="m-2 ml-3 align-top text-sm font-medium text-gray-500 peer-checked:text-black"
             onClick={() => handleOnChange(option)}
           >
             {option}
