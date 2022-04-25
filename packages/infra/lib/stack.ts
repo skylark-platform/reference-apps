@@ -34,7 +34,7 @@ export class SkylarkReferenceAppStack extends cdk.Stack {
       validation: CertificateValidation.fromDns(parentHostedZone),
     });
 
-    new NextJSLambdaEdge(this, "NextJsApp", {
+    const nextJsApp = new NextJSLambdaEdge(this, "NextJsApp", {
       serverlessBuildOutDir: "./build",
       description,
       cloudfrontProps: {
@@ -46,5 +46,8 @@ export class SkylarkReferenceAppStack extends cdk.Stack {
         certificate,
       },
     });
+    const defaultLambda = nextJsApp.defaultNextLambda.node
+      .defaultChild as cdk.CfnResource;
+    defaultLambda.applyRemovalPolicy(cdk.RemovalPolicy.RETAIN);
   }
 }

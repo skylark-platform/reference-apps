@@ -3831,29 +3831,29 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@sls-next/aws-common@3.7.0":
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/@sls-next/aws-common/-/aws-common-3.7.0.tgz#636c66a7f126bcbcf7a2beadce4375c9789d382a"
-  integrity sha512-NNaJkBg+iJBlZW3pj4we3P6dzuLEMloWSnwzNXU518KGWvx7r3+2pD0kMe+LprTRBuOP82DCeYMHxncM3CvC+w==
+"@sls-next/aws-common@3.8.0-alpha.0":
+  version "3.8.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/@sls-next/aws-common/-/aws-common-3.8.0-alpha.0.tgz#90d386ee95b564ea4b6845b8645e0ee6b3b8979e"
+  integrity sha512-uXsLJ6snWx2FyhZ0rESP1lQz2YqUDojuiYJo+olluQ8hJq7W4fUhZOawy+SAF1wFSxgFFgfs1GKUcocxkzASFA==
   dependencies:
     "@aws-sdk/client-s3" "3.54.0"
     "@aws-sdk/client-sqs" "3.54.0"
-    "@sls-next/core" "3.7.0"
+    "@sls-next/core" "3.8.0-alpha.0"
 
-"@sls-next/cdk-construct@^3.7.0":
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/@sls-next/cdk-construct/-/cdk-construct-3.7.0.tgz#d5b933883a66c8c5d40ee0d93663011b3c5fd3db"
-  integrity sha512-M35jEbYqiS7J6+592uMH3OHzrxRTeCGc8S8nH4VQBpqRzaOfofz2oFr92Hs24xVhe+vMa8Be0VqVUPyxB45HuQ==
+"@sls-next/cdk-construct@3.8.0-alpha.0":
+  version "3.8.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/@sls-next/cdk-construct/-/cdk-construct-3.8.0-alpha.0.tgz#c71972f368c379f6866f0ef393b16cf8530df7c6"
+  integrity sha512-Uf68FBDqrUH+//JQOlUJXNSkiFVibQLtiutq9gtTXI6qDAsorwTYzOc6aoD3rWAqeJkddMbfzBmHrfnuT1jdYw==
   dependencies:
-    "@sls-next/core" "3.7.0"
-    "@sls-next/lambda-at-edge" "3.7.0"
+    "@sls-next/core" "3.8.0-alpha.0"
+    "@sls-next/lambda-at-edge" "3.8.0-alpha.0"
     fast-glob "3.2.11"
     fs-extra "9.1.0"
 
-"@sls-next/core@3.7.0":
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/@sls-next/core/-/core-3.7.0.tgz#bc4f4874c20574f1c51166c3bbddaac7f4e2dc34"
-  integrity sha512-fCRV0iI84FboRk8YKATSFVp4dzR27zd6Rez/qfa4Utv9HL9UZbDTpKlyuUp24vEvADAZSp5laxj1JgOZBn2iOQ==
+"@sls-next/core@3.8.0-alpha.0":
+  version "3.8.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/@sls-next/core/-/core-3.8.0-alpha.0.tgz#4b22a28682964b7deb7e1bc7a95f0a4fe55a99c9"
+  integrity sha512-M52D2bw64HPWJOmwZBiHRFeSn9S3AXocdWV2LqUx9OXtDA9vtCeYph7yelBzMFBGCEYsLWNR2z1m0GYh8iBV0A==
   dependencies:
     "@hapi/accept" "5.0.2"
     cookie "0.4.2"
@@ -3872,15 +3872,15 @@
     send "0.17.2"
     sharp "0.29.1"
 
-"@sls-next/lambda-at-edge@3.7.0", "@sls-next/lambda-at-edge@^3.7.0":
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/@sls-next/lambda-at-edge/-/lambda-at-edge-3.7.0.tgz#096b8c5482936e7571131fbe821ced617e8f16bf"
-  integrity sha512-7eTqq1baZEuvEhexDchsP3QdOqPYaW123c7TupYB60Rs31KQ12xXvpzgn+mTMuFVIOQUDY5y8EKsuzYGRrQfcw==
+"@sls-next/lambda-at-edge@3.8.0-alpha.0":
+  version "3.8.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/@sls-next/lambda-at-edge/-/lambda-at-edge-3.8.0-alpha.0.tgz#0cbd892ed59342962723fe05eb7e9087902d466d"
+  integrity sha512-gDlr5t4Z10en72NOAUz1fLRcf0BLb7N+pY4RgyqWwea/YaMqoLu3Az/liGa1YnoCH0dGWtxe80dVLqB5Yi854g==
   dependencies:
     "@aws-sdk/client-s3" "3.54.0"
     "@aws-sdk/client-sqs" "3.54.0"
-    "@sls-next/aws-common" "3.7.0"
-    "@sls-next/core" "3.7.0"
+    "@sls-next/aws-common" "3.8.0-alpha.0"
+    "@sls-next/core" "3.8.0-alpha.0"
     "@vercel/nft" "0.17.5"
     execa "5.1.1"
     fs-extra "9.1.0"

@@ -8,7 +8,7 @@ on:
         required: true
         description: The name of the environment to delete
 concurrency:
-  group: deploy-app
+  group: deploy-app-${{ github.event.ref || github.ref }}
 env:
   pr-comment-id: reference-apps-deployment
   pr-comment-title: "Reference Apps Deployment"
