@@ -1,7 +1,11 @@
 name: Pull Request Checks
-on: pull_request
+on:
+  pull_request:
+  push:
+    branches:
+      - main
 concurrency:
-  group: pr-checks-${{ github.head_ref }}
+  group: pr-checks-${{ github.head_ref || github.ref }}
   cancel-in-progress: true
 jobs:
   lint:
