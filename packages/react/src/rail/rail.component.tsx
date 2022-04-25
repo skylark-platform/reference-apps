@@ -99,7 +99,7 @@ export const Rail: React.FC<RailProps> = ({ initial, children }) => {
 
   return (
     <div className="w-full">
-      <div className="relative flex items-center justify-center px-0.5 sm:px-2">
+      <div className="relative flex items-center justify-center">
         {numChildren > numChildrenOnScreen && (
           <>
             <button
