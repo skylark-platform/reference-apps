@@ -1,6 +1,3 @@
-/* eslint-disable eslint-comments/disable-enable-pair */
-/* eslint-disable react/jsx-no-literals */
-/* eslint-disable no-console */
 import React, { useState } from "react";
 import { DimensionContent } from "./dimension-content";
 import { DimensionToggle } from "./dimension-toggle";
@@ -23,15 +20,15 @@ export const DimensionSettings: React.FC = () => {
       >
         <div className="flex items-center justify-between">
           <SkylarkBranding className="w-16 md:w-48" />
-          <div className="ml-2 flex  flex-col items-start justify-end text-sm md:flex-row md:items-center md:text-base">
-            <p className="text-gray-400">Demo v1.0 - </p>
+          <div className="ml-2 flex flex-col items-start justify-end text-sm md:flex-row md:items-center md:text-base">
+            <p className="text-gray-400">{`Demo v1.0 -`}</p>
             <a
               className="text-skylark-blue md:pl-1"
               href="mailto:hello@skylarkplatform.com?subject=Enquiry from demo app"
               rel="noreferrer"
               target="_blank"
             >
-              hello@skylarkplatform.com
+              {`hello@skylarkplatform.com`}
             </a>
           </div>
         </div>

@@ -1,5 +1,3 @@
-/* eslint-disable eslint-comments/disable-enable-pair */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import React from "react";
 
 interface SkylarkLogoProps {
@@ -139,8 +137,8 @@ export const SkylarkLogoWithText: React.FC<SkylarkLogoProps> = ({
 
 export const SkylarkBranding: React.FC<SkylarkLogoProps> = ({ className }) => (
   <>
-    <SkylarkLogo className={`md:hidden ${className}`} />
-    <SkylarkLogoWithText className={`hidden md:block ${className}`} />
+    <SkylarkLogo className={`md:hidden ${className || ""}`} />
+    <SkylarkLogoWithText className={`hidden md:block ${className || ""}`} />
   </>
 );
 
