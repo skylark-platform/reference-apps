@@ -3,7 +3,7 @@ import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { DimensionContent } from "./dimension-content.component";
 
 export default {
-  title: "React/DimensionContent",
+  title: "React/DimensionSettings/DimensionContent",
   component: DimensionContent,
 } as ComponentMeta<typeof DimensionContent>;
 

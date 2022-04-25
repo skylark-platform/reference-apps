@@ -3,7 +3,7 @@ import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { DimensionToggle } from "./dimension-toggle.component";
 
 export default {
-  title: "React/DimensionToggle",
+  title: "React/DimensionSettings/DimensionToggle",
   component: DimensionToggle,
 } as ComponentMeta<typeof DimensionToggle>;
 
