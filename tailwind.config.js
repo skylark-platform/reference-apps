@@ -54,6 +54,7 @@ module.exports = {
       fontFamily: {
         display: "Outfit",
         body: "Outfit",
+        "skylark-branding": "Inter",
       },
       aspectRatio: {
         "3/4": "3 / 4",
@@ -62,6 +63,7 @@ module.exports = {
   },
   plugins: [
     lineClamp,
+    require("@tailwindcss/forms"),
     plugin(({ addUtilities }) => {
       addUtilities({
         ".hide-scrollbar": {
