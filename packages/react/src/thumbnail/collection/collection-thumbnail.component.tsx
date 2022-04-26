@@ -10,10 +10,10 @@ export const CollectionThumbnail: React.FC<ThumbnailProps> = (props) => {
   return (
     <BaseThumbnailWithLink large {...props} contentLocation="inside">
       <div className="relative flex h-full w-full flex-col items-center justify-center text-center">
-        <h4 className="text-3xl">{title}</h4>
+        <h4 className="text-sm sm:text-lg md:text-3xl">{title}</h4>
         {subtitle && <p className="text-3xl text-gray-400">{subtitle}</p>}
         {tags && (
-          <div className="absolute bottom-0">
+          <div className="absolute bottom-0 hidden md:block">
             <List contents={tags} />
           </div>
         )}

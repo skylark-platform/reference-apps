@@ -8,10 +8,10 @@ interface RailProps {
 }
 
 const directionArrowClassName = `
-  absolute hidden sm:flex justify-center items-center
+  absolute hidden md:flex justify-center items-center
   h-[calc(100%-0.5rem)] bg-gray-900/[.3] hover:bg-gray-900/[.4]
   text-2xl text-gray-400 hover:text-white transition-all z-50
-  w-6 md:w-12 lg:w-20
+  md:w-12 lg:w-16 xl:w-24
 `;
 
 const determineScrollAmount = (
@@ -99,7 +99,7 @@ export const Rail: React.FC<RailProps> = ({ initial, children }) => {
 
   return (
     <div className="w-full">
-      <div className="relative flex items-center justify-center px-2">
+      <div className="relative flex items-center justify-center">
         {numChildren > numChildrenOnScreen && (
           <>
             <button
@@ -127,10 +127,13 @@ export const Rail: React.FC<RailProps> = ({ initial, children }) => {
         <div
           className={`
             flex w-full snap-x snap-mandatory
-            scroll-pr-6 flex-row overflow-x-auto scroll-smooth
-            py-2 px-4 hide-scrollbar md:scroll-pr-14 md:py-4
-            md:px-12 lg:scroll-pr-20 lg:gap-5
-            lg:px-20
+             scroll-pr-3 flex-row overflow-x-auto
+            scroll-smooth py-2
+            px-gutter hide-scrollbar
+            sm:scroll-pr-6 sm:px-sm-gutter
+            md:scroll-pr-14 md:px-md-gutter md:py-4
+            lg:scroll-pr-lg-gutter lg:gap-5 lg:px-lg-gutter
+            xl:scroll-pr-xl-gutter xl:px-xl-gutter
           `}
           data-testid="rail-scroll"
           ref={myRef}

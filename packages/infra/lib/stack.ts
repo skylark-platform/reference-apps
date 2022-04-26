@@ -46,6 +46,7 @@ export class SkylarkReferenceAppStack extends cdk.Stack {
         certificate,
       },
     });
+    // https://github.com/serverless-nextjs/serverless-next.js/issues/2432
     const defaultLambda = nextJsApp.defaultNextLambda.node
       .defaultChild as cdk.CfnResource;
     defaultLambda.applyRemovalPolicy(cdk.RemovalPolicy.RETAIN);
