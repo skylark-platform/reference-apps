@@ -56,6 +56,17 @@ Default.args = {
   variant: "primary",
 };
 
+export const Tertiary = Template.bind({});
+Default.args = {
+  text: "Button name",
+  icon: undefined,
+  size: "lg",
+  iconPlacement: "left",
+  disabled: false,
+  onClick,
+  variant: "tertiary",
+};
+
 export const WithIcon = Template.bind({});
 WithIcon.args = {
   text: "Button name",
