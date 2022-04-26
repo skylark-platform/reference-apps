@@ -22,7 +22,7 @@ export const List: React.FC<ListProps> = ({
             className={`
               ${highlightFirst && index === 0 ? "text-white" : "text-gray-400"}
               ${textSize ? `text-${textSize}` : "text-xs"}
-              transition-colors
+              font-normal transition-colors
               group-hover:text-white md:text-sm
             `}
           >

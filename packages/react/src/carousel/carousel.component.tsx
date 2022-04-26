@@ -115,7 +115,7 @@ export const Carousel: React.FC<CarouselProps> = ({
                 <Button icon={<MdAdd />} variant="secondary" />
               </div>
               <p className="text-xs text-gray-300">
-                {`30 day free trial available. £21.99/mo after.`}
+                {`30 day free trial available. £12.99/mo after.`}
               </p>
             </div>
           </div>
