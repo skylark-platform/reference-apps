@@ -147,6 +147,8 @@ export const Rail: React.FC<RailProps> = ({ initial, children }) => {
                 w-1/2 min-w-[calc(50%-0.75rem)] max-w-[calc(50%-0.75rem)] snap-end
                 md:mx-2 md:w-1/3 md:min-w-[calc(33.333333%-0.8rem)] md:max-w-[calc(33.333333%-0.8rem)]
                 lg:mx-0 lg:w-1/4 lg:min-w-[calc(25%-1rem)] lg:max-w-[calc(25%-1rem)]
+                xl:mx-0 xl:w-1/5 xl:min-w-[calc(20%-1rem)] xl:max-w-[calc(20%-1rem)]
+                2xl:mx-0 2xl:w-1/6 2xl:min-w-[calc(16.666666%-1rem)] 2xl:max-w-[calc(16.666666%-1rem)]
               `}
             >
               {child}
