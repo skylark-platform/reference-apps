@@ -5,14 +5,15 @@ import { NavigationToggle } from "./navigation-toggle";
 interface NavigationProps {
   links: { text: string; href: string }[];
   activeHref: string;
-  defaultOpen: boolean;
+  defaultOpen?: boolean;
 }
 
 export const Navigation: React.FC<NavigationProps> = ({
   links,
   activeHref,
+  defaultOpen,
 }) => {
-  const [openOnMobile, setMobileOpen] = useState(false);
+  const [openOnMobile, setMobileOpen] = useState(defaultOpen || false);
   return (
     <>
       <div className="absolute top-0 left-0 flex md:hidden">

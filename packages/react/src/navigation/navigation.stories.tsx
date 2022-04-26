@@ -23,6 +23,7 @@ Default.args = {
     { text: "Movies", href: "/movies" },
     { text: "TV Shows", href: "/tvshows" },
   ],
+  defaultOpen: true,
 };
 
 export const WithActive = Template.bind({});
@@ -33,4 +34,5 @@ WithActive.args = {
     { text: "TV Shows", href: "/tvshows" },
   ],
   activeHref: "/",
+  defaultOpen: true,
 };
