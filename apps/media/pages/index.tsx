@@ -5,6 +5,7 @@ import {
   CollectionThumbnail,
   EpisodeThumbnail,
   MovieThumbnail,
+  Navigation,
   Rail,
 } from "@skylark-reference-apps/react";
 
@@ -22,7 +23,18 @@ const Home: NextPage = () => (
       <link href="/favicon.ico" rel="icon" />
     </Head>
 
-    <div className="aspect-video h-[90vh] w-full md:h-[80vh]">
+    <div className="fixed z-[999] w-full md:h-28 xl:h-32">
+      <Navigation
+        activeHref="/"
+        links={[
+          { text: "Discover", href: "/" },
+          { text: "Movies", href: "/movies" },
+          { text: "TV Shows", href: "/tv" },
+        ]}
+      />
+    </div>
+
+    <div className="aspect-video h-[90vh] w-full md:h-[90vh]">
       <Carousel changeInterval={4} items={heros} />
     </div>
 

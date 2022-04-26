@@ -2,9 +2,15 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { Navigation } from "./navigation.component";
 
-describe("Label component", () => {
+describe("Navigation component", () => {
   it("the component renders correctly", () => {
-    render(<Navigation links={[{ text: "JW", href: "/homepage" }]} />);
+    render(
+      <Navigation
+        activeHref="/"
+        defaultOpen
+        links={[{ text: "JW", href: "/homepage" }]}
+      />
+    );
     expect(screen.getByRole("link")).toHaveProperty(
       "href",
       "http://localhost/homepage"

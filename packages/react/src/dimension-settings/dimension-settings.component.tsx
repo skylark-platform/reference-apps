@@ -16,14 +16,14 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
   return (
     <>
       <div className="fixed bottom-0 right-sm-gutter flex md:right-md-gutter lg:right-lg-gutter xl:right-xl-gutter">
-        <DimensionToggle iconDir="up" onClick={() => setShow(true)} />
+        <DimensionToggle variant="open" onClick={() => setShow(true)} />
       </div>
       {show && (
         <div
           className={` fixed bottom-0 left-0 right-0 z-50 block h-[60vh] bg-white md:h-auto`}
         >
           <div className="absolute -top-9 right-sm-gutter flex md:right-md-gutter lg:right-lg-gutter xl:right-xl-gutter">
-            <DimensionToggle iconDir="down" onClick={() => setShow(false)} />
+            <DimensionToggle variant="close" onClick={() => setShow(false)} />
           </div>
           <div className="relative h-full overflow-y-auto py-4 px-sm-gutter md:py-12 md:px-md-gutter  lg:px-lg-gutter xl:px-xl-gutter">
             <div className="flex items-center justify-between">
