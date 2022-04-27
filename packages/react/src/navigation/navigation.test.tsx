@@ -1,17 +1,16 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import { AppHeader } from "./app-header.component";
+import { Navigation } from "./navigation.component";
 
-describe("AppHeader component", () => {
+describe("Navigation component", () => {
   it("the component renders correctly", () => {
     render(
-      <AppHeader
+      <Navigation
         activeHref="/"
-        links={[{ text: "Home", href: "/homepage" }]}
-        title="test title"
+        defaultOpen
+        links={[{ text: "JW", href: "/homepage" }]}
       />
     );
-    expect(screen.getByText(/test title/)).toBeTruthy();
     expect(screen.getByRole("link")).toHaveProperty(
       "href",
       "http://localhost/homepage"

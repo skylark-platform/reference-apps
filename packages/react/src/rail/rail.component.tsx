@@ -90,8 +90,14 @@ export const Rail: React.FC<RailProps> = ({ initial, children }) => {
       case "md":
         numToShow = 3;
         break;
-      default:
+      case "lg":
         numToShow = 4;
+        break;
+      case "xl":
+        numToShow = 5;
+        break;
+      default:
+        numToShow = 6;
         break;
     }
     setNumChildrenOnScreen(numToShow);

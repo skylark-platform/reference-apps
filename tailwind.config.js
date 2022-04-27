@@ -3,6 +3,8 @@
 const plugin = require("tailwindcss/plugin");
 // eslint-disable-next-line import/no-extraneous-dependencies
 const lineClamp = require("@tailwindcss/line-clamp");
+// eslint-disable-next-line import/no-extraneous-dependencies
+const forms = require("@tailwindcss/forms");
 
 module.exports = {
   content: [
@@ -68,11 +70,18 @@ module.exports = {
         "lg-gutter": "5rem",
         "xl-gutter": "7rem",
       },
+      zIndex: {
+        60: "60",
+        70: "70",
+        80: "80",
+        90: "90",
+        100: "100",
+      },
     },
   },
   plugins: [
     lineClamp,
-    require("@tailwindcss/forms"),
+    forms,
     plugin(({ addUtilities }) => {
       addUtilities({
         ".hide-scrollbar": {

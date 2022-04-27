@@ -22,8 +22,8 @@ const Home: NextPage = () => (
       <link href="/favicon.ico" rel="icon" />
     </Head>
 
-    <div className="aspect-video h-[90vh] w-full md:h-[80vh]">
-      <Carousel changeInterval={4} items={heros} />
+    <div className="aspect-video h-[90vh] w-full md:h-[95vh]">
+      <Carousel changeInterval={6} items={heros} />
     </div>
 
     <div className="my-6 w-full">

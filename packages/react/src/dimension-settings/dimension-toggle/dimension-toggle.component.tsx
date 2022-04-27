@@ -2,12 +2,12 @@ import React from "react";
 import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
 
 interface DimensionToggleProps extends React.HTMLAttributes<HTMLButtonElement> {
-  iconDir: "up" | "down";
+  variant: "open" | "close";
   onClick: () => void;
 }
 
 export const DimensionToggle: React.FC<DimensionToggleProps> = ({
-  iconDir,
+  variant,
   onClick,
 }) => (
   <button
@@ -15,8 +15,8 @@ export const DimensionToggle: React.FC<DimensionToggleProps> = ({
     type="button"
     onClick={onClick}
   >
-    {iconDir === "up" && <MdArrowDropUp className="text-3xl" />}
-    {iconDir === "down" && <MdArrowDropDown className="text-3xl" />}
+    {variant === "open" && <MdArrowDropUp className="text-3xl" />}
+    {variant === "close" && <MdArrowDropDown className="text-3xl" />}
   </button>
 );
 

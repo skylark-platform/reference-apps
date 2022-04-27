@@ -15,14 +15,14 @@ const Template: ComponentStory<typeof DimensionToggle> = (args) => (
 
 export const Open = Template.bind({});
 Open.args = {
-  iconDir: "up",
+  variant: "open",
   // eslint-disable-next-line no-alert
   onClick: () => window.alert("Button clicked"),
 };
 
 export const Close = Template.bind({});
 Close.args = {
-  iconDir: "down",
+  variant: "close",
   // eslint-disable-next-line no-alert
   onClick: () => window.alert("Button clicked"),
 };

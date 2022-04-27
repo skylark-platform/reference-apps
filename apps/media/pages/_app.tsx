@@ -5,11 +5,20 @@ import "@fontsource/outfit/700.css";
 import "@fontsource/inter/500.css";
 import "@fontsource/inter/600.css";
 import type { AppProps } from "next/app";
-import { DimensionSettings } from "@skylark-reference-apps/react";
+import { AppHeader, DimensionSettings } from "@skylark-reference-apps/react";
+import { useRouter } from "next/router";
+
+const links = [
+  { text: "Discover", href: "/" },
+  { text: "Movies", href: "/movies" },
+  { text: "TV Shows", href: "/tvshows" },
+];
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const { asPath } = useRouter();
   return (
     <div>
+      <AppHeader activeHref={asPath} links={links} title="StreamTV" />
       <Component {...pageProps} />
       <DimensionSettings />
     </div>

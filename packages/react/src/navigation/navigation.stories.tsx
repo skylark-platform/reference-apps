@@ -1,19 +1,30 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { AppHeader } from "./app-header.component";
+import { Navigation } from "./navigation.component";
 
 export default {
-  title: "React/AppHeader",
-  component: AppHeader,
-} as ComponentMeta<typeof AppHeader>;
+  title: "React/Navigation",
+  component: Navigation,
+} as ComponentMeta<typeof Navigation>;
 
-const Template: ComponentStory<typeof AppHeader> = (args) => (
-  <AppHeader {...args} />
+const Template: ComponentStory<typeof Navigation> = (args) => (
+  <div className="h-screen w-screen bg-gray-500 md:h-48 md:w-full">
+    <Navigation {...args} />
+  </div>
 );
 
 export const Default = Template.bind({});
 Default.args = {
-  title: "StreamTV",
+  links: [
+    { text: "Discover", href: "/" },
+    { text: "Movies", href: "/movies" },
+    { text: "TV Shows", href: "/tvshows" },
+  ],
+  defaultOpen: true,
+};
+
+export const WithActive = Template.bind({});
+WithActive.args = {
   links: [
     { text: "Discover", href: "/" },
     { text: "Movies", href: "/movies" },
