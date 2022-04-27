@@ -9,4 +9,5 @@ export * from "./dimension-settings";
 export * from "./carousel";
 export * from "./rail";
 export * from "./app-header";
+export * from "./app-background-gradient";
 export * from "./navigation";

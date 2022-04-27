@@ -6,7 +6,7 @@ interface IProps {
 }
 
 export const HelloWorld: React.FC<IProps> = ({ spin, pulse }) => (
-  <div className="absolute inset-0 flex items-center justify-center bg-gray-900 font-display">
+  <div className="absolute inset-0 flex items-center justify-center font-display">
     <p
       className={`
         text-6xl text-white

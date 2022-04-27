@@ -77,6 +77,9 @@ module.exports = {
         90: "90",
         100: "100",
       },
+      backgroundImage: {
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+      },
     },
   },
   plugins: [
@@ -95,6 +98,13 @@ module.exports = {
           "&::-webkit-scrollbar": {
             display: "none",
           },
+        },
+        ".bg-page-gradient": {
+          "background-color": "var(--tw-gradient-to)",
+          "background-image":
+            "radial-gradient(circle 50vw at 50% -20vw, var(--tw-gradient-from), var(--tw-gradient-to))",
+          "background-size": "100% 100%",
+          "background-repeat": "no-repeat",
         },
       });
     }),
