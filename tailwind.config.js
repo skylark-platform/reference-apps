@@ -50,6 +50,7 @@ module.exports = {
           secondary: "rgba(104, 108, 119, 0.65)",
           hover: "#FF385C",
           disabled: "#F3F3FB",
+          tertiary: "rgba(27, 26, 32, 0.25)",
         },
       },
       fontFamily: {
