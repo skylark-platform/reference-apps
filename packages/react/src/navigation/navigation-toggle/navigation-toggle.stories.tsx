@@ -5,9 +5,6 @@ import { NavigationToggle } from "./navigation-toggle.component";
 export default {
   title: "React/Navigation/Toggle",
   component: NavigationToggle,
-  parameters: {
-    chromatic: { viewports: [320, 1200] },
-  },
 } as ComponentMeta<typeof NavigationToggle>;
 
 const Template: ComponentStory<typeof NavigationToggle> = (args) => (
