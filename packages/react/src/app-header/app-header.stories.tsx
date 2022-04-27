@@ -11,16 +11,21 @@ const Template: ComponentStory<typeof AppHeader> = (args) => (
   <AppHeader {...args} />
 );
 
-export const LargeScreen = Template.bind({});
-LargeScreen.args = {
-  // eslint-disable-next-line no-alert
-  onClick: () => window.alert("Button clicked"),
+export const Default = Template.bind({});
+Default.args = {
   title: "StreamTV",
+  links: [
+    { text: "Discover", href: "/" },
+    { text: "Movies", href: "/movies" },
+    { text: "TV Shows", href: "/tvshows" },
+  ],
+  activeHref: "/",
+  defaultOpen: true,
 };
 
 export const Mobile = Template.bind({});
 Mobile.args = {
-  title: "StreamTV",
+  ...Default.args,
 };
 Mobile.parameters = {
   chromatic: { viewports: [320] },

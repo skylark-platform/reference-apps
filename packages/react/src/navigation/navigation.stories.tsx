@@ -5,13 +5,10 @@ import { Navigation } from "./navigation.component";
 export default {
   title: "React/Navigation",
   component: Navigation,
-  parameters: {
-    chromatic: { viewports: [320, 1200] },
-  },
 } as ComponentMeta<typeof Navigation>;
 
 const Template: ComponentStory<typeof Navigation> = (args) => (
-  <div className="h-screen w-screen bg-gray-900 md:h-48 md:w-full">
+  <div className="h-screen w-screen bg-gray-500 md:h-48 md:w-full">
     <Navigation {...args} />
   </div>
 );
@@ -35,4 +32,15 @@ WithActive.args = {
   ],
   activeHref: "/",
   defaultOpen: true,
+};
+
+export const Mobile = Template.bind({});
+Mobile.args = {
+  ...Default.args,
+};
+Mobile.parameters = {
+  chromatic: { viewports: [320] },
+  viewport: {
+    defaultViewport: "mobile1",
+  },
 };
