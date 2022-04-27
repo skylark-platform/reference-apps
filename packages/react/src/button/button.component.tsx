@@ -10,7 +10,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const primaryStyles = "bg-button-primary";
 const secondaryStyles = "bg-button-secondary";
-const tertiaryStyles = "bg-purple-700";
+const tertiaryStyles = "bg-button-tertiary";
 const largeStyles = "px-6 md:px-10 py-3 text-sm sm:text-base md:text-lg";
 const smallStyles = "px-2 md:px-6 py-2 text-xs sm:text-sm md:text-base";
 const onlyIconLargeStyles = "p-3";
@@ -21,7 +21,7 @@ export const Button: React.FC<ButtonProps> = ({
   text,
   icon,
   iconPlacement,
-  variant,
+  variant = "primary",
   ...otherProps
 }) => {
   let className = `

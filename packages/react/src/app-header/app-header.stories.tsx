@@ -18,19 +18,6 @@ LargeScreen.args = {
   title: "StreamTV",
 };
 
-export const Tablet = Template.bind({});
-Tablet.args = {
-  // eslint-disable-next-line no-alert
-  onClick: () => window.alert("Button clicked"),
-  title: "StreamTV",
-};
-Tablet.parameters = {
-  chromatic: { viewports: [1200] },
-  viewport: {
-    defaultViewport: "tablet",
-  },
-};
-
 export const Mobile = Template.bind({});
 Mobile.args = {
   title: "StreamTV",

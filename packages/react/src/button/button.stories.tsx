@@ -57,7 +57,7 @@ Default.args = {
 };
 
 export const Tertiary = Template.bind({});
-Default.args = {
+Tertiary.args = {
   text: "Button name",
   icon: undefined,
   size: "lg",
