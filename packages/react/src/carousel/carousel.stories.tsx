@@ -33,3 +33,7 @@ WithChangeInterval.args = {
   items: heros,
   changeInterval: 4,
 };
+WithChangeInterval.parameters = {
+  // disables Chromatic's snapshotting as the timer animation causes issues
+  chromatic: { disableSnapshot: true },
+};

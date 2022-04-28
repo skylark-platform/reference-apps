@@ -11,6 +11,7 @@ module.exports = {
     "eslint:recommended",
     "plugin:react/recommended",
     "prettier",
+    "plugin:storybook/recommended",
   ],
   settings: {
     react: { version: "detect" },
@@ -40,7 +41,7 @@ module.exports = {
         tsconfigRootDir: __dirname,
       },
       files: ["**/*.ts", "**/*.tsx"],
-      excludedFiles: ["**/cypress/**/*", "./apps/classic-cms/**/*"],
+      excludedFiles: ["**/cypress/**/*"],
       plugins: ["prettier", "jest", "@typescript-eslint", "unused-imports"],
       extends: [
         "airbnb-typescript",
