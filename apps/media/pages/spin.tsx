@@ -6,7 +6,6 @@ const Spin: NextPage = () => (
   <div className="flex min-h-screen flex-col items-center justify-center py-2">
     <Head>
       <title>{`Skylark Media Reference App`}</title>
-      <link href="/favicon.ico" rel="icon" />
     </Head>
 
     <HelloWorld spin />

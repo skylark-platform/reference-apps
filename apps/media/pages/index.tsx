@@ -19,7 +19,6 @@ const Home: NextPage = () => (
   <div className="mb-20 flex min-h-screen flex-col items-center bg-gray-900">
     <Head>
       <title>{`Skylark Media Reference App`}</title>
-      <link href="/favicon.ico" rel="icon" />
     </Head>
 
     <div className="aspect-video h-[90vh] w-full md:h-[95vh]">
