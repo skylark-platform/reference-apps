@@ -10,9 +10,8 @@ interface DimensionSettingsProps {
 }
 
 const variants = {
-  initial: { opacity: 0, y: "90%" },
+  hidden: { opacity: 0, y: "90%" },
   animate: { opacity: 1, y: 0 },
-  exit: { y: "80%" },
 };
 
 export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
@@ -28,9 +27,9 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
         {show && (
           <motion.div
             animate="animate"
-            className={`fixed bottom-0 left-0 right-0 z-50 block h-[60vh] bg-white font-skylark-branding md:h-auto`}
-            exit="initial"
-            initial="initial"
+            className={`fixed bottom-0 left-0 right-0 z-50 block h-[80vh] bg-white font-skylark-branding md:h-auto`}
+            exit="hidden"
+            initial="hidden"
             key="dimension-settings"
             transition={{ type: "spring", bounce: 0.2 }}
             variants={variants}
