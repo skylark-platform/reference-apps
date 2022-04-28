@@ -8,7 +8,9 @@ export default {
 } as ComponentMeta<typeof HelloWorld>;
 
 const Template: ComponentStory<typeof HelloWorld> = (args) => (
-  <HelloWorld {...args} />
+  <div className="h-screen w-screen bg-gray-900">
+    <HelloWorld {...args} />
+  </div>
 );
 
 export const Default = Template.bind({});
