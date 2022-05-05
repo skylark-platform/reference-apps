@@ -16,11 +16,17 @@ const Template: ComponentStory<typeof Player> = (args) => (
   </div>
 );
 
+// From https://gist.github.com/jsturgis/3b19447b304616f18657
+const video = {
+  title: "Elephant Dream",
+  src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+};
+
 export const Default = Template.bind({});
 Default.args = {
-  src: "/mux-video-intro.mp4",
+  src: video.src,
   videoId: "1",
-  videoTitle: "Mux Video Intro",
+  videoTitle: video.title,
 };
 
 export const WithPoster = Template.bind({});
