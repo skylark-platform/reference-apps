@@ -6,7 +6,8 @@ export default {
   title: "React/Player",
   component: Player,
   parameters: {
-    chromatic: { delay: 1000 },
+    // MuxPlayer doesn't play well with the snapshot (shows blank)
+    chromatic: { disableSnapshot: true },
   },
 } as ComponentMeta<typeof Player>;
 
@@ -16,17 +17,11 @@ const Template: ComponentStory<typeof Player> = (args) => (
   </div>
 );
 
-// From https://gist.github.com/jsturgis/3b19447b304616f18657
-const video = {
-  title: "Elephant Dream",
-  src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-};
-
 export const Default = Template.bind({});
 Default.args = {
-  src: video.src,
+  src: "/mux-video-intro.mp4",
   videoId: "1",
-  videoTitle: video.title,
+  videoTitle: "Mux Video Intro",
 };
 
 export const WithPoster = Template.bind({});
