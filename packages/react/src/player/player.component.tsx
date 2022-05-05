@@ -25,7 +25,7 @@ export const Player: React.FC<PlayerProps> = ({
 
   return (
     <MuxVideo
-      className="w-screen sm:w-11/12 md:w-3/4 lg:w-2/3 xl:w-1/2 aspect-video shadow md:shadow-xl shadow-black bg-black"
+      className="aspect-video w-screen bg-black shadow shadow-black sm:w-11/12 md:w-3/4 md:shadow-xl lg:w-2/3 xl:w-1/2"
       controls
       data-testid="player"
       metadata={{

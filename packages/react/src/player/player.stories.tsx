@@ -8,7 +8,7 @@ export default {
 } as ComponentMeta<typeof Player>;
 
 const Template: ComponentStory<typeof Player> = (args) => (
-  <div className="flex w-screen h-screen bg-gray-900 justify-center items-center">
+  <div className="flex h-screen w-screen items-center justify-center bg-gray-900">
     <Player {...args} />
   </div>
 );
