@@ -5,6 +5,9 @@ import { Player } from "./player.component";
 export default {
   title: "React/Player",
   component: Player,
+  parameters: {
+    chromatic: { delay: 1000 },
+  },
 } as ComponentMeta<typeof Player>;
 
 const Template: ComponentStory<typeof Player> = (args) => (
