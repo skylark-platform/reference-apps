@@ -36,13 +36,7 @@ jobs:
     strategy:
       matrix:
         # app: [media]
-        tests:
-          [
-            {
-              app: "media",
-              percy_token: "${{ secrets.PERCY_MEDIA_APP_TOKEN }}",
-            },
-          ]
+        tests: [{ app: "media", percy_secret: "PERCY_MEDIA_APP_TOKEN" }]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3
@@ -57,7 +51,7 @@ jobs:
       - run: yarn test:percy
         working-directory: apps/${{ matrix.tests.app }}
         env:
-          PERCY_TOKEN: ${{ matrix.tests.percy_token }}
+          PERCY_TOKEN: ${{ secrets[matrix.tests.percy_secret] }}
 
   chromatic:
     needs: lint
