@@ -5,6 +5,7 @@ import { useTailwindBreakpoint } from "../hooks";
 
 interface RailProps {
   initial?: number;
+  header?: string;
 }
 
 const directionArrowClassName = `

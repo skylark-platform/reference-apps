@@ -21,7 +21,7 @@ const Home: NextPage = () => (
       <title>{`Skylark Media Reference App`}</title>
     </Head>
 
-    <div className="aspect-video h-[90vh] w-full md:h-[95vh]">
+    <div className="h-[90vh] w-full md:h-[95vh]">
       <Carousel changeInterval={6} items={heros} />
     </div>
 

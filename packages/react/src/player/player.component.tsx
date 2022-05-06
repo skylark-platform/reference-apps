@@ -24,20 +24,24 @@ export const Player: React.FC<PlayerProps> = ({
       : undefined;
 
   return (
-    <MuxVideo
-      className="aspect-video w-screen bg-black shadow shadow-black sm:w-11/12 md:w-3/4 md:shadow-xl lg:w-2/3 xl:w-1/2"
-      controls
-      data-testid="player"
-      metadata={{
-        video_id: videoId,
-        video_title: videoTitle,
-      }}
-      poster={poster}
-      ref={undefined}
-      // Convert relative URL into absolute
-      src={absoluteSrc}
-      streamType={"on-demand"}
-    />
+    <div className="w-screen sm:w-11/12 md:w-3/4 lg:w-2/3 xl:w-1/2">
+      <div className="aspect-h-9 aspect-w-16 shadow shadow-black md:shadow-xl">
+        <MuxVideo
+          className="h-full w-full bg-black object-cover object-center"
+          controls
+          data-testid="player"
+          metadata={{
+            video_id: videoId,
+            video_title: videoTitle,
+          }}
+          poster={poster}
+          ref={undefined}
+          // Convert relative URL into absolute
+          src={absoluteSrc}
+          streamType={"on-demand"}
+        />
+      </div>
+    </div>
   );
 };
 
