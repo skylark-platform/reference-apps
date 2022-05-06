@@ -5,6 +5,8 @@ const plugin = require("tailwindcss/plugin");
 const lineClamp = require("@tailwindcss/line-clamp");
 // eslint-disable-next-line import/no-extraneous-dependencies
 const forms = require("@tailwindcss/forms");
+// eslint-disable-next-line import/no-extraneous-dependencies
+const aspectRatio = require("@tailwindcss/aspect-ratio");
 
 module.exports = {
   content: [
@@ -61,7 +63,26 @@ module.exports = {
         "skylark-branding": "Inter",
       },
       aspectRatio: {
+        auto: "auto",
+        square: "1 / 1",
+        video: "16 / 9",
         "3/4": "3 / 4",
+        1: "1",
+        2: "2",
+        3: "3",
+        4: "4",
+        5: "5",
+        6: "6",
+        7: "7",
+        8: "8",
+        9: "9",
+        10: "10",
+        11: "11",
+        12: "12",
+        13: "13",
+        14: "14",
+        15: "15",
+        16: "16",
       },
       spacing: {
         gutter: "0.5rem",
@@ -82,9 +103,13 @@ module.exports = {
       },
     },
   },
+  corePlugins: {
+    aspectRatio: false,
+  },
   plugins: [
     lineClamp,
     forms,
+    aspectRatio,
     plugin(({ addUtilities }) => {
       addUtilities({
         ".hide-scrollbar": {

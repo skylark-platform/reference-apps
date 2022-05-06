@@ -32,10 +32,11 @@ jobs:
   build-and-test:
     needs: lint
     runs-on: ubuntu-latest
-    name: Build and test ${{ matrix.app }} app
+    name: Build and test ${{ matrix.tests.app }} app
     strategy:
       matrix:
-        app: [media]
+        # app: [media]
+        tests: [{ app: "media", percy_token: secrets.PERCY_MEDIA_APP_TOKEN }]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3
@@ -44,13 +45,13 @@ jobs:
           cache: yarn
       - run: yarn
       - run: yarn build
-        working-directory: apps/${{ matrix.app }}
+        working-directory: apps/${{ matrix.tests.app }}
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_TOKEN }}
       - run: yarn test:percy
-        working-directory: apps/${{ matrix.app }}
+        working-directory: apps/${{ matrix.tests.app }}
         env:
-          PERCY_TOKEN: ${{ secrets.PERCY_MEDIA_APP_TOKEN }}
+          PERCY_TOKEN: ${{ matrix.tests.percy_token }}
 
   chromatic:
     needs: lint
