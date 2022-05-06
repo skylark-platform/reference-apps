@@ -36,7 +36,13 @@ jobs:
     strategy:
       matrix:
         # app: [media]
-        tests: [{ app: "media", percy_token: secrets.PERCY_MEDIA_APP_TOKEN }]
+        tests:
+          [
+            {
+              app: "media",
+              percy_token: "${{ secrets.PERCY_MEDIA_APP_TOKEN }}",
+            },
+          ]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3
