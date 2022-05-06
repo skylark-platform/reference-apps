@@ -26,6 +26,7 @@
     "jest-junit": "^13.0.0"
   },
   "dependencies": {
+    "@mux-elements/mux-video-react": "^0.4.6",
     "@skylark-reference-apps/lib": "*",
     "framer-motion": "^6.3.0",
     "next": "12.1.4",
