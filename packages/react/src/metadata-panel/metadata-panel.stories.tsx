@@ -1,7 +1,11 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { MdArrowDropDownCircle, MdCalendarToday } from "react-icons/md";
-import { FaPen } from "react-icons/fa";
+import {
+  MdRecentActors,
+  MdCalendarToday,
+  MdMovie,
+  MdMode,
+} from "react-icons/md";
 import { MetadataPanel } from "./metadata-panel.component";
 
 export default {
@@ -17,12 +21,12 @@ export const Default = Template.bind({});
 Default.args = {
   content: [
     {
-      icon: <MdArrowDropDownCircle />,
+      icon: <MdRecentActors />,
       header: "Key Cast",
       body: "Michelle Fairley, Lena Headey, Emilia Clarke, Iain Glen, Harry Lloyd ",
     },
     {
-      icon: <MdArrowDropDownCircle />,
+      icon: <MdMovie />,
       header: "Producers",
       body: [
         "Mark Huffam",
@@ -33,13 +37,13 @@ Default.args = {
       ],
     },
     {
-      icon: <FaPen />,
+      icon: <MdMode />,
       header: "Writers",
       body: "Mark Huffam, Carolyn Strauss, Joanna Burn, Frank Doelger, Guymon Casady",
     },
     {
       icon: <MdCalendarToday />,
-      header: "Realeased",
+      header: "Released",
       body: "10 April 2011",
     },
   ],

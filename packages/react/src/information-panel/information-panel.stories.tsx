@@ -23,7 +23,7 @@ Default.args = {
       availableUntil: 12,
       description:
         "Series Premiere. Lord Stark is troubled by disturbing reports from a Night's Watch deserter.",
-      genre: ["Drama", "Mythical", "Based on a book"],
+      genres: ["Drama", "Mythical", "Based on a book"],
     },
   ],
 };
