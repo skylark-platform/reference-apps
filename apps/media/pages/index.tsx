@@ -26,11 +26,7 @@ const Home: NextPage = () => (
     </div>
 
     <div className="my-6 w-full">
-      <h2 className="ml-sm-gutter text-2xl font-normal text-white md:ml-md-gutter lg:ml-lg-gutter xl:ml-xl-gutter">
-        {`Movies`}
-        <span className="ml-1 text-gray-500">{`(${movieThumbnails.length})`}</span>
-      </h2>
-      <Rail>
+      <Rail displayCount header="Movies">
         {movieThumbnails.map((movie) => (
           <MovieThumbnail
             contentLocation="below"
@@ -42,11 +38,7 @@ const Home: NextPage = () => (
     </div>
 
     <div className="my-6 w-full">
-      <h2 className="ml-sm-gutter text-2xl font-normal text-white md:ml-md-gutter lg:ml-lg-gutter xl:ml-xl-gutter">
-        {`Game of Thrones`}
-        <span className="ml-1 text-gray-500">{`(${episodeThumbnails.length})`}</span>
-      </h2>
-      <Rail>
+      <Rail displayCount header="Game of Thrones">
         {episodeThumbnails.map((ep) => (
           <EpisodeThumbnail key={ep.title} {...ep} />
         ))}
@@ -54,11 +46,7 @@ const Home: NextPage = () => (
     </div>
 
     <div className="my-6 w-full">
-      <h2 className="ml-sm-gutter text-2xl font-normal text-white md:ml-md-gutter lg:ml-lg-gutter xl:ml-xl-gutter">
-        {`Discover`}
-        <span className="ml-1 text-gray-500">{`(${collectionThumbnails.length})`}</span>
-      </h2>
-      <Rail>
+      <Rail displayCount header="Discover">
         {collectionThumbnails.map((collection) => (
           <CollectionThumbnail key={collection.title} {...collection} />
         ))}

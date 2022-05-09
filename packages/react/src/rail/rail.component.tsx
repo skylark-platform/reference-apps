@@ -6,6 +6,7 @@ import { useTailwindBreakpoint } from "../hooks";
 interface RailProps {
   initial?: number;
   header?: string;
+  displayCount?: boolean;
 }
 
 const directionArrowClassName = `
@@ -29,7 +30,12 @@ const determineScrollAmount = (
   return ascending ? scrollLeft + scrollAmount : scrollLeft - scrollAmount;
 };
 
-export const Rail: React.FC<RailProps> = ({ initial, children }) => {
+export const Rail: React.FC<RailProps> = ({
+  initial,
+  children,
+  header,
+  displayCount,
+}) => {
   const numChildren = React.Children.toArray(children).length;
 
   const myRef = useRef<HTMLDivElement>(null);
@@ -106,6 +112,12 @@ export const Rail: React.FC<RailProps> = ({ initial, children }) => {
 
   return (
     <div className="w-full">
+      <h2 className="ml-sm-gutter text-2xl font-normal text-white md:ml-md-gutter lg:ml-lg-gutter xl:ml-xl-gutter">
+        {header}
+        {displayCount && (
+          <span className="ml-1 text-gray-500">{`(${numChildren})`}</span>
+        )}
+      </h2>
       <div className="relative flex items-center justify-center">
         {numChildren > numChildrenOnScreen && (
           <>
