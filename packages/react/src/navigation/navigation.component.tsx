@@ -55,8 +55,8 @@ export const Navigation: React.FC<NavigationProps> = ({
       <motion.nav
         animate={openOnMobile || !useMobileNavigation ? "open" : "closed"}
         className={`
-          relative z-80 h-screen w-screen items-center justify-center bg-gray-900
-          text-center font-body md:h-full md:w-full md:justify-start md:bg-gray-900/70
+          fixed inset-0 z-80 items-center justify-center bg-gray-900 text-center font-body
+          md:relative md:inset-auto md:h-full md:w-full md:justify-start md:bg-gray-900/70
           ${openOnMobile ? "flex" : "hidden md:flex"}
         `}
         initial="initialOpen"

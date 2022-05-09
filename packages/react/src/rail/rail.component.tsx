@@ -146,7 +146,7 @@ export const Rail: React.FC<RailProps> = ({
         <div
           className={`
             flex w-full snap-x snap-mandatory
-             scroll-pr-3 flex-row overflow-x-auto
+            scroll-pr-3 flex-row overflow-x-auto
             scroll-smooth py-2
             px-gutter hide-scrollbar
             sm:scroll-pr-6 sm:px-sm-gutter

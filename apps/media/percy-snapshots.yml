@@ -1,2 +1,6 @@
-- http://localhost:3000
-- http://localhost:3000/player
+- url: http://localhost:3000
+  name: Home page
+  waitForTimeout: 1000
+- url: http://localhost:3000/player
+  name: Player page
+  waitForTimeout: 1000
