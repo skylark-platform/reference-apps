@@ -12,9 +12,8 @@ export interface NavigationProps {
 
 const variants = {
   initialOpen: {
-    // opacity: 1,
+    opacity: 1,
     x: 0,
-    // display: "none",
   },
   open: {
     opacity: 1,
@@ -61,7 +60,7 @@ export const Navigation: React.FC<NavigationProps> = ({
           md:bg-gray-900/70 md:opacity-100
           ${openOnMobile ? "flex" : "hidden md:flex"}
         `}
-        // initial="open"
+        initial="initialOpen"
         transition={transition}
         variants={variants}
       >
