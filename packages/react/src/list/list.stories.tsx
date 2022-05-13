@@ -24,3 +24,9 @@ FirstItemHighlighted.args = {
   ...Default.args,
   highlightFirst: true,
 };
+
+export const AllItemsHighlighted = Template.bind({});
+AllItemsHighlighted.args = {
+  ...Default.args,
+  highlightAll: true,
+};
