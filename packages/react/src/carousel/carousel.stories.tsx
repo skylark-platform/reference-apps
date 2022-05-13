@@ -28,6 +28,12 @@ WithSingleItem.args = {
   items: [heros[0]],
 };
 
+export const WithActiveItem = Template.bind({});
+WithActiveItem.args = {
+  items: heros,
+  activeItem: heros.length - 1,
+};
+
 export const WithChangeInterval = Template.bind({});
 WithChangeInterval.args = {
   items: heros,

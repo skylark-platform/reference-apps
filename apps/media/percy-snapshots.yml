@@ -1,6 +1,6 @@
-- url: http://localhost:3000
+- url: http://localhost:3000?carousel_item=0
   name: Home page
-  waitForTimeout: 1000
+  waitForTimeout: 10000
 - url: http://localhost:3000/player
   name: Player page
-  waitForTimeout: 1000
+  waitForTimeout: 10000
