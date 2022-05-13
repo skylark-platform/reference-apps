@@ -28,7 +28,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           <Button icon={<MdAccountCircle />} size="sm" variant="tertiary" />
         </span>
       </div>
-      <div className="hidden gap-1 md:flex lg:gap-2">
+      <div className="hidden gap-1 md:flex">
         <Button icon={<MdAccountCircle />} text="Sign in" />
         <Button text="Register" variant="tertiary" />
       </div>

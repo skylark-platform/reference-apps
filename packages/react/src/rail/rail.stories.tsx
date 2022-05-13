@@ -84,6 +84,18 @@ WithCollectionThumbnails.args = {
   )),
 };
 
+export const WithHeader = Template.bind({});
+WithHeader.args = {
+  ...Default.args,
+  header: "Movies",
+};
+
+export const WithHeaderAndCount = Template.bind({});
+WithHeaderAndCount.args = {
+  ...WithHeader.args,
+  displayCount: true,
+};
+
 export const WithText = Template.bind({});
 WithText.args = {
   children: [

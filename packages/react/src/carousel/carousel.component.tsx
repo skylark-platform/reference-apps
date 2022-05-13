@@ -16,6 +16,7 @@ import { Button } from "../button";
 interface CarouselProps {
   items: MediaItem[];
   changeInterval?: number;
+  activeItem?: number;
 }
 
 const variants = {
@@ -38,6 +39,7 @@ const variants = {
 export const Carousel: React.FC<CarouselProps> = ({
   items,
   changeInterval,
+  activeItem,
 }) => {
   const [[page, direction], setPage] = useState([0, 0]);
   const itemIndex = wrap(0, items.length, page);
@@ -47,14 +49,22 @@ export const Carousel: React.FC<CarouselProps> = ({
   };
 
   useEffect(() => {
-    if (changeInterval && items.length > 1) {
+    if (activeItem) {
+      const newActiveItem =
+        activeItem && activeItem < items.length ? activeItem : 0;
+      setPage([newActiveItem, direction]);
+    }
+  }, [activeItem]);
+
+  useEffect(() => {
+    if (changeInterval && activeItem === undefined && items.length > 1) {
       const timeout = setTimeout(() => {
         paginate(1);
       }, changeInterval * 1000);
       return () => clearTimeout(timeout);
     }
     return undefined;
-  }, [page, changeInterval, items.length]);
+  }, [page, changeInterval, activeItem, items.length]);
 
   const { image, title, releaseDate, type } = items[itemIndex];
   const { duration } = items[itemIndex] as Episode | Movie; // Access properties that won't exist in season
@@ -126,7 +136,7 @@ export const Carousel: React.FC<CarouselProps> = ({
           items.map(({ uid }, i) => (
             <CarouselButton
               active={i === itemIndex}
-              duration={changeInterval}
+              duration={activeItem !== undefined ? undefined : changeInterval}
               key={uid}
               text={`${i + 1} / ${items.length}`}
               onClick={() => setPage([i, i > itemIndex ? 1 : -1])}

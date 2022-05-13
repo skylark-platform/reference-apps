@@ -43,7 +43,7 @@ export const Navigation: React.FC<NavigationProps> = ({
 }) => {
   const [openOnMobile, setMobileOpen] = useState(defaultOpen || false);
   const [twBreakpoint] = useTailwindBreakpoint();
-  const useMobileNavigation = ["", "sm"].includes(twBreakpoint);
+  const onDesktop = !["", "sm"].includes(twBreakpoint);
   return (
     <>
       <div className="absolute top-0 left-0 z-90 flex md:hidden">
@@ -53,10 +53,11 @@ export const Navigation: React.FC<NavigationProps> = ({
         />
       </div>
       <motion.nav
-        animate={openOnMobile || !useMobileNavigation ? "open" : "closed"}
+        animate={onDesktop || openOnMobile ? "open" : "closed"}
         className={`
-          relative z-80 h-screen w-screen items-center justify-center bg-gray-900
-          text-center font-body md:h-full md:w-full md:justify-start md:bg-gray-900/70
+          fixed inset-0 z-80 items-center justify-center bg-gray-900 text-center font-body
+          opacity-0 md:relative md:inset-auto md:h-full md:w-full md:justify-start
+          md:bg-gray-900/70 md:opacity-100
           ${openOnMobile ? "flex" : "hidden md:flex"}
         `}
         initial="initialOpen"

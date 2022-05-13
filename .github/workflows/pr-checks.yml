@@ -29,10 +29,14 @@ jobs:
           path: "!(node_modules)/**/reports/jest-junit.xml"
           reporter: jest-junit
 
-  build:
+  build-and-test:
     needs: lint
     runs-on: ubuntu-latest
-    name: Build All Apps
+    name: Build and test ${{ matrix.tests.app }} app
+    strategy:
+      matrix:
+        # app: [media]
+        tests: [{ app: "media", percy_secret: "PERCY_MEDIA_APP_TOKEN" }]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3
@@ -40,10 +44,14 @@ jobs:
           node-version: 14
           cache: yarn
       - run: yarn
-      # Check all apps build
-      - run: yarn lerna-run build --parallel
+      - run: yarn build
+        working-directory: apps/${{ matrix.tests.app }}
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_TOKEN }}
+      - run: yarn test:percy
+        working-directory: apps/${{ matrix.tests.app }}
+        env:
+          PERCY_TOKEN: ${{ secrets[matrix.tests.percy_secret] }}
 
   chromatic:
     needs: lint
