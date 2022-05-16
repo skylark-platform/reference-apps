@@ -12,3 +12,5 @@ export * from "./app-header";
 export * from "./app-background-gradient";
 export * from "./navigation";
 export * from "./player";
+export * from "./brand-header";
+export * from "./media-player-content";
