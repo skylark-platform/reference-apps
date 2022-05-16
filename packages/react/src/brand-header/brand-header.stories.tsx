@@ -18,5 +18,5 @@ Default.args = {
   releaseYear: 2011,
   ageRange: "18+",
   description:
-    "Summers span decades. Winters can last a lifetime. And the struggle for the Iron Throne begins",
+    "Summers span decades. Winters can last a lifetime. And the struggle for the Iron Throne begins.",
 };

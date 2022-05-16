@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { MdPlayArrow, MdPause } from "react-icons/md";
+import { List } from "../list";
 
 interface MediaPlayerContentProps {
   inProgress: boolean;
@@ -26,10 +27,17 @@ export const MediaPlayerContent: React.FC<MediaPlayerContentProps> = ({
           {play ? <MdPlayArrow size={30} /> : <MdPause size={30} />}
         </div>
         <div className="flex flex-col pl-2">
-          <span className="font-semibold">
+          <span className="pb-1 font-semibold">
             {play ? "Start Watching" : "Pause Watching"}
           </span>
-          <span className="pt-1 text-gray-300">{`S${season} : E${episodeNumber} - ${episodeName}`}</span>
+          <List
+            contents={[
+              <span
+                key={season}
+              >{`S${season} : E${episodeNumber} - ${episodeName}`}</span>,
+            ]}
+            textSize={"sm"}
+          />
         </div>
       </div>
     </div>
