@@ -4,17 +4,25 @@ import { motion, AnimatePresence } from "framer-motion";
 import { wrap } from "popmotion";
 import {
   entertainmentTypeAsString,
-  Episode,
-  MediaItem,
-  Movie,
+  EntertainmentType,
 } from "@skylark-reference-apps/lib";
 import { MdAdd, MdPlayCircleFilled } from "react-icons/md";
 import { CarouselButton } from "./carousel-button.component";
 import { List } from "../list";
 import { Button } from "../button";
 
+export interface CarouselItem {
+  uid: string;
+  title: string;
+  slug: string;
+  image: string;
+  type: EntertainmentType;
+  releaseDate: string;
+  duration?: string;
+}
+
 interface CarouselProps {
-  items: MediaItem[];
+  items: CarouselItem[];
   changeInterval?: number;
   activeItem?: number;
 }
@@ -66,8 +74,7 @@ export const Carousel: React.FC<CarouselProps> = ({
     return undefined;
   }, [page, changeInterval, activeItem, items.length]);
 
-  const { image, title, releaseDate, type } = items[itemIndex];
-  const { duration } = items[itemIndex] as Episode | Movie; // Access properties that won't exist in season
+  const { image, title, releaseDate, type, duration } = items[itemIndex];
 
   return (
     <div

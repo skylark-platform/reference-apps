@@ -1,12 +1,17 @@
-type EntertainmentType = "movie" | "episode" | "season" | "brand";
+export type EntertainmentType = "movie" | "episode" | "season" | "brand";
 
 interface EntertainmentInformation {
   uid: string;
-  title: string;
+  objectTitle: string;
   slug: string;
   type: EntertainmentType;
   releaseDate?: string;
-  synopsis: {
+  title?: {
+    short?: string;
+    medium?: string;
+    long?: string;
+  };
+  synopsis?: {
     short?: string;
     medium?: string;
     long?: string;
@@ -16,36 +21,40 @@ interface EntertainmentInformation {
   creditUrls?: string[];
   ratingUrls?: string[];
   genreUrls?: string[];
-  imageUrls?: string[];
+  // imageUrls?: string[];
   themeUrls?: string[];
+  images?: {
+    type: string;
+    url: string;
+    urlPath: string;
+  }[];
 
   // Include image property during development, in future use imageUrls
-  image: string;
+  image?: string;
 }
 
 export interface Movie extends EntertainmentInformation {
   type: "movie";
-  duration: string;
+  duration?: string;
 }
 
 export interface Episode extends EntertainmentInformation {
   type: "episode";
-  number: number;
-  duration: string;
+  number?: number;
+  duration?: string;
 }
 
 export interface Season extends EntertainmentInformation {
   type: "season";
-  numberOfEpisodes: number;
-  items?: (EntertainmentInformation | Episode)[];
+  numberOfEpisodes?: number;
+  number?: number;
+  items?: Episode[];
 }
 
 export interface Brand extends EntertainmentInformation {
   type: "brand";
-  items?: (EntertainmentInformation | Movie | Episode | Season)[];
+  items?: (Movie | Episode | Season)[];
 }
-
-export type MediaItem = Movie | Episode | Season;
 
 export const entertainmentTypeAsString = (type: EntertainmentType) => {
   switch (type) {
