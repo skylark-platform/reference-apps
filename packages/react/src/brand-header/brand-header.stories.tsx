@@ -13,7 +13,7 @@ const Template: ComponentStory<typeof BrandHeader> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-  show: "Game of Thrones",
+  brand: "Game of Thrones",
   numberOfSeasons: 8,
   releaseYear: 2011,
   ageRange: "18+",

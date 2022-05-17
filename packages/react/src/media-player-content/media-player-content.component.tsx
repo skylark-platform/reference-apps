@@ -15,14 +15,14 @@ export const MediaPlayerContent: React.FC<MediaPlayerContentProps> = ({
   episodeNumber,
   episodeName,
 }) => {
-  const [play, isPlay] = useState(inProgress);
+  const [play, setPlay] = useState(inProgress);
 
   return (
     <div className="w-full bg-black text-sm text-white md:w-5/12 lg:w-2/12">
       <div className="flex items-center">
         <div
           className="m-1 rounded-full border border-0 bg-button-primary p-5"
-          onClick={() => isPlay(!play)}
+          onClick={() => setPlay(!play)}
         >
           {play ? <MdPlayArrow size={30} /> : <MdPause size={30} />}
         </div>
