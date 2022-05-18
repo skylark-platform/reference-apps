@@ -33,7 +33,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ text, items }) => {
           onClick={() => setDropdown(!dropdown)}
         >
           {text}
-          <div className="sm: flex pl-20 md:pl-28">
+          <div className="sm: flex pl-20 pr-1 md:pl-24">
             <MdArrowDropDown size={25} />
           </div>
         </button>
