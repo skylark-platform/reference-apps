@@ -10,12 +10,12 @@ export const Dropdown: React.FC<DropdownProps> = ({ text, genres }) => {
   const [dropdown, setDropdown] = useState(false);
 
   return (
-    <div className="flex justify-start ">
-      <div className="dropdown relative ">
+    <div className="flex">
+      <div className="dropdown relative">
         <button
           className="
           dropdown-toggle
-          mb-3
+          mb-2
           flex
           items-center
           bg-gray-600
@@ -33,15 +33,13 @@ export const Dropdown: React.FC<DropdownProps> = ({ text, genres }) => {
             <MdArrowDropDown size={25} />
           </div>
         </button>
-        <ul
-          aria-labelledby="dropdownMenuButton1"
-          className={dropdown ? "" : "hidden"}
-        >
+        <ul className={dropdown ? "" : "hidden"}>
           {genres.map((genre) => (
             <li key={genre}>
               <a
                 className="
                 block
+                bg-white
                 py-3
                 px-5
                 text-xs
