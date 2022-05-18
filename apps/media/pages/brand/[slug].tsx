@@ -1,10 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import {
-  Carousel,
-  EpisodeThumbnail,
-  Rail,
-} from "@skylark-reference-apps/react";
+import { Carousel } from "@skylark-reference-apps/react";
 import useSWR from "swr";
 import {
   SKYLARK_API,
@@ -12,29 +8,43 @@ import {
   Brand,
   Season,
   Episode,
+  ImageUrl,
 } from "@skylark-reference-apps/lib";
 import { useRouter } from "next/router";
 
 const brandBySlugFetcher = (brandSlug: string) =>
   fetch(
-    `${SKYLARK_API}/api/brands/?slug=${brandSlug}&fields_to_expand=items,image_urls,items__items,items__items__image_urls&fields=items,image_urls,items__title_medium,items__season_number,items__year,items__items,items__items__image_urls,items__items__title_short,items__items__synopsis_medium,items__items__synopsis_long,items__items__episode_number`
+    `${SKYLARK_API}/api/brands/?slug=${brandSlug}&fields_to_expand=items,image_urls,items__items,items__items__image_urls&fields=items,title,slug,title_short,image_urls,items__title_medium,items__season_number,items__year,items__items,items__items__image_urls,items__items__title_short,items__items__synopsis_medium,items__items__synopsis_long,items__items__episode_number,items__items__slug,items__items__uid`
   )
     .then((r) => r.json())
     .then((res: ApiResponseBrandWithSeasonsAndEpisodes) => {
       const [brand] = res.objects;
       const parsedBrand: Brand = {
+        self: brand.self,
+        isExpanded: true,
         type: "brand",
-        objectTitle: "",
-        slug: "",
+        objectTitle: brand.title,
+        slug: brand.slug,
         uid: "",
-        images: brand.image_urls?.map(({ image_type, url, url_path }) => ({
-          type: image_type,
-          url,
-          urlPath: url_path,
-        })),
+        title: {
+          short: brand.title_short,
+          medium: brand.title_medium,
+          long: brand.title_long,
+        },
+        images: brand.image_urls?.map(
+          ({ image_type, url, url_path, self }) => ({
+            self,
+            isExpanded: true,
+            type: image_type,
+            url,
+            urlPath: url_path,
+          })
+        ),
         items: brand.items.map(
           (season): Season => ({
             type: "season",
+            isExpanded: true,
+            self: season.self,
             uid: "",
             objectTitle: season.title,
             slug: "",
@@ -42,6 +52,8 @@ const brandBySlugFetcher = (brandSlug: string) =>
             releaseDate: `${season.year || ""}`,
             items: season.items.map(
               (episode): Episode => ({
+                isExpanded: true,
+                self: episode.self,
                 objectTitle: episode.title,
                 type: "episode",
                 number: episode.episode_number,
@@ -55,13 +67,15 @@ const brandBySlugFetcher = (brandSlug: string) =>
                   medium: episode.synopsis_medium,
                   long: episode.synopsis_long,
                 },
-                slug: "",
-                uid: "",
+                slug: episode.slug,
+                uid: episode.uid,
                 images: episode.image_urls?.map(
-                  ({ image_type, url, url_path }) => ({
+                  ({ image_type, url, url_path, self }) => ({
                     type: image_type,
                     url,
                     urlPath: url_path,
+                    self,
+                    isExpanded: true,
                   })
                 ),
               })
@@ -93,22 +107,24 @@ const BrandPage: NextPage = () => {
               title: "",
               type: "brand",
               releaseDate: "",
-              image: `${
-                brand?.images?.find((image) => image.type === "Main")?.url || ""
-              }`,
+              image: brand?.images
+                ? ((brand.images as ImageUrl[]).find(
+                    (image) => image.isExpanded && image.type === "Main"
+                  )?.url as string)
+                : "",
             },
           ]}
         />
       </div>
 
-      {brand &&
+      {/* {brand &&
         brand.items?.map(
           (item) =>
             item.type === "season" && (
-              <div className="my-6 w-full" key={item.number || item.slug}>
+              <div className="my-6 w-full" key={item.number || item.objectTitle || item.slug}>
                 <Rail displayCount header={`Season ${item.number || "-"}`}>
-                  {item.items
-                    ?.sort((a: Episode, b: Episode) =>
+                  {item.isExpanded && (item.items as Episode[]).filter((ep) => ep.isExpanded)
+                    .sort((a: Episode, b: Episode) =>
                       (a.number || 0) > (b.number || 0) ? 1 : -1
                     )
                     .map((ep: Episode) => (
@@ -120,20 +136,20 @@ const BrandPage: NextPage = () => {
                         description={
                           ep.synopsis?.medium || ep.synopsis?.short || ""
                         }
-                        href=""
+                        href={`/player/${ep.uid}`}
                         key={ep.objectTitle}
                         number={ep.number || 0}
                         title={
                           ep?.title?.short ||
                           ep?.title?.medium ||
-                          ep.objectTitle
+                          ep.objectTitle || ""
                         }
                       />
                     ))}
                 </Rail>
               </div>
             )
-        )}
+        )} */}
       {!brand && <p>{`Loading ${query?.slug as string}`}</p>}
     </div>
   );
