@@ -6,7 +6,7 @@ describe("Dropdown component", () => {
   it("the component renders correctly", () => {
     render(
       <Dropdown
-        genres={[
+        items={[
           "Action & Adventure",
           "Children & Family",
           "Comedy",

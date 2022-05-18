@@ -14,7 +14,7 @@ const Template: ComponentStory<typeof Dropdown> = (args) => (
 export const Genre = Template.bind({});
 Genre.args = {
   text: "Genres",
-  genres: [
+  items: [
     "Action & Adventure",
     "Children & Family",
     "Comedy",
@@ -31,7 +31,7 @@ Genre.args = {
 export const Themes = Template.bind({});
 Themes.args = {
   text: "Themes",
-  genres: [
+  items: [
     "Love",
     "Redemption",
     "Resurrection",

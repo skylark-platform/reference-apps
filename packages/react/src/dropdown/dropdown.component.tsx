@@ -3,15 +3,19 @@ import { MdArrowDropDown } from "react-icons/md";
 
 interface DropdownProps {
   text: string;
-  genres: string[];
+  items: string[];
 }
 
-export const Dropdown: React.FC<DropdownProps> = ({ text, genres }) => {
+export const Dropdown: React.FC<DropdownProps> = ({ text, items }) => {
   const [dropdown, setDropdown] = useState(false);
 
   return (
     <div className="flex">
-      <div className="dropdown relative">
+      <div
+        className="dropdown relative"
+        onMouseEnter={() => setDropdown(!dropdown)}
+        onMouseLeave={() => setDropdown(!dropdown)}
+      >
         <button
           className="
           dropdown-toggle
@@ -34,8 +38,8 @@ export const Dropdown: React.FC<DropdownProps> = ({ text, genres }) => {
           </div>
         </button>
         <ul className={dropdown ? "" : "hidden"}>
-          {genres.map((genre) => (
-            <li key={genre}>
+          {items.map((item) => (
+            <li key={item}>
               <a
                 className="
                 block
@@ -50,7 +54,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ text, genres }) => {
               "
                 href="#"
               >
-                {genre}
+                {item}
               </a>
             </li>
           ))}
