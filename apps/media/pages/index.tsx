@@ -185,7 +185,7 @@ const parseSkylarkObject = (
 
 const brandBySlugFetcher = () =>
   fetch(
-    `${SKYLARK_API}/api/sets/coll_30e5c34723a549d8af15e1878400a665/?fields_to_expand=items__content_url,items__content_url__items,items__content_url__items__content_url,items__content_url__items__content_url__image_urls&fields=items,items__content_url,items__short_title,items__content_url__items,items__content_url__set_type_slug,items__content_url__self,items__content_url__title_short`
+    `${SKYLARK_API}/api/sets/coll_30e5c34723a549d8af15e1878400a665/?fields_to_expand=items__content_url,items__content_url__items,items__content_url__items__content_url,items__content_url__items__content_url__image_urls,items__content_url__items__image_urls&fields=items,items__content_url,items__short_title,items__content_url__items,items__content_url__set_type_slug,items__content_url__self,items__content_url__title_short`
   )
     .then((r) => r.json())
     .then((res: CompleteApiEntertainmentObject) => parseSkylarkObject(res));
@@ -227,7 +227,10 @@ const Home: NextPage = () => {
                         carouselItem.title?.short ||
                         carouselItem.objectTitle ||
                         "",
-                      slug: carouselItem.slug || "",
+                      href:
+                        carouselItem.type && carouselItem.slug
+                          ? `/${carouselItem.type}/${carouselItem.slug}`
+                          : "",
                       image: carouselItem.images
                         ? ((carouselItem.images as ImageUrl[]).find(
                             (image) => image.isExpanded && image.type === "Main"
@@ -257,10 +260,15 @@ const Home: NextPage = () => {
                       <MovieThumbnail
                         backgroundImage={
                           movie.images
-                            ? ((movie.images as ImageUrl[]).find(
-                                (image) =>
-                                  image.isExpanded && image.type === "Thumbnail"
-                              )?.url as string)
+                            ? `${
+                                (
+                                  (movie.images as ImageUrl[]).find(
+                                    (image) =>
+                                      image.isExpanded &&
+                                      image.type === "Thumbnail"
+                                  )?.url as string
+                                ).split(".jpg")[0]
+                              }-384x216.jpg`
                             : ""
                         }
                         contentLocation="below"
@@ -293,11 +301,15 @@ const Home: NextPage = () => {
                         <EpisodeThumbnail
                           backgroundImage={
                             episode.images
-                              ? ((episode.images as ImageUrl[]).find(
-                                  (image) =>
-                                    image.isExpanded &&
-                                    image.type === "Thumbnail"
-                                )?.url as string)
+                              ? `${
+                                  (
+                                    (episode.images as ImageUrl[]).find(
+                                      (image) =>
+                                        image.isExpanded &&
+                                        image.type === "Thumbnail"
+                                    )?.url as string
+                                  )?.split(".jpg")?.[0]
+                                }-384x216.jpg`
                               : ""
                           }
                           contentLocation="below"

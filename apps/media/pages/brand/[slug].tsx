@@ -103,7 +103,7 @@ const BrandPage: NextPage = () => {
           items={[
             {
               uid: "",
-              slug: "",
+              href: "",
               title: "",
               type: "brand",
               releaseDate: "",

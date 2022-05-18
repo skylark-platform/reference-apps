@@ -14,7 +14,7 @@ import { Button } from "../button";
 export interface CarouselItem {
   uid: string;
   title: string;
-  slug: string;
+  href: string;
   image: string;
   type: EntertainmentType;
   releaseDate: string;
@@ -74,7 +74,7 @@ export const Carousel: React.FC<CarouselProps> = ({
     return undefined;
   }, [page, changeInterval, activeItem, items.length]);
 
-  const { image, title, releaseDate, type, duration } = items[itemIndex];
+  const { image, title, releaseDate, type, duration, href } = items[itemIndex];
 
   return (
     <div
@@ -120,7 +120,7 @@ export const Carousel: React.FC<CarouselProps> = ({
                 textSize="sm"
               />
               <div className="mb-4 mt-8 flex flex-row gap-x-4">
-                <Link href="/">
+                <Link href={href}>
                   <a>
                     <Button
                       icon={<MdPlayCircleFilled />}

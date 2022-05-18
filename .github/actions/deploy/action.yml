@@ -45,6 +45,8 @@ runs:
         GIT_BRANCH: ${{ inputs.git-branch }}
         BASE_DOMAIN_NAME: ${{ inputs.base-domain }}
         SENTRY_AUTH_TOKEN: ${{ inputs.sentry-token }}
+        # TODO Remove this / make dynamic
+        NEXT_PUBLIC_SKYLARK_API_URL: https://api.showcase-test.eng-james-wallis.skylarkplatform.io
       run: |
         yarn cdk bootstrap
         yarn cdk deploy
