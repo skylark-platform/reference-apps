@@ -12,13 +12,12 @@ export const Dropdown: React.FC<DropdownProps> = ({ text, items }) => {
   return (
     <div className="flex">
       <div
-        className="dropdown relative"
-        onMouseEnter={() => setDropdown(!dropdown)}
-        onMouseLeave={() => setDropdown(!dropdown)}
+        className="relative"
+        onMouseEnter={() => setDropdown(true)}
+        onMouseLeave={() => setDropdown(false)}
       >
         <button
           className="
-          dropdown-toggle
           mb-2
           flex
           items-center
@@ -27,7 +26,6 @@ export const Dropdown: React.FC<DropdownProps> = ({ text, items }) => {
           pl-5
           text-sm text-white
           hover:bg-gray-700
-          hover:shadow-lg
         "
           type="button"
           onClick={() => setDropdown(!dropdown)}
