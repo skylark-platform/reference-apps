@@ -49,7 +49,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ text, items }) => {
                 text-xs
                 font-semibold
                 hover:bg-gray-100
-                hover:text-skylark-blue
+                hover:text-purple-500
                 md:text-sm
               "
                 href="#"
