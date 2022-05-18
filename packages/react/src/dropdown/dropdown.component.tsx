@@ -35,7 +35,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ text, genres }) => {
         </button>
         <ul
           aria-labelledby="dropdownMenuButton1"
-          className={dropdown ? "hidden" : ""}
+          className={dropdown ? "" : "hidden"}
         >
           {genres.map((genre) => (
             <li key={genre}>
