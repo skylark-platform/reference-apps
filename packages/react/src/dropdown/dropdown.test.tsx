@@ -1,10 +1,10 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
+import { fireEvent } from "@storybook/testing-library";
 import { Dropdown } from "./dropdown.component";
-import { Open } from "./dropdown.stories";
 
 describe("Dropdown component", () => {
-  it("the component renders correctly", () => {
+  it("the component renders correctly while clicked", () => {
     render(
       <Dropdown
         items={[
@@ -23,12 +23,14 @@ describe("Dropdown component", () => {
       />
     );
     expect(screen.getByText(/Genres/)).toBeTruthy();
-    expect(screen.getAllByText(/Children & Family/)).toBeTruthy();
+    expect(screen.queryByText(/Sci-fi & Fantasy/)).toBeNull();
+    fireEvent.click(screen.getByText(/Genres/i));
+    expect(screen.getByText(/Sci-fi & Fantasy/)).toBeTruthy();
   });
 
-  it("the component renders correctly while hovered", () => {
+  it("the component renders correctly while hovering", () => {
     render(
-      <Open
+      <Dropdown
         items={[
           "Action & Adventure",
           "Children & Family",
@@ -45,6 +47,8 @@ describe("Dropdown component", () => {
       />
     );
     expect(screen.getByText(/Genres/)).toBeTruthy();
-    expect(screen.findByDisplayValue(/Sci-fi & Fantasy/)).toBeTruthy();
+    expect(screen.queryByText(/Children & Family/)).toBeNull();
+    fireEvent.mouseOver(screen.getByText(/Genres/i));
+    expect(screen.getAllByText(/Children & Family/)).toBeTruthy();
   });
 });

@@ -35,11 +35,12 @@ export const Dropdown: React.FC<DropdownProps> = ({ text, items }) => {
             <MdArrowDropDown size={25} />
           </div>
         </button>
-        <ul className={dropdown ? "" : "hidden"}>
-          {items.map((item) => (
-            <li key={item}>
-              <a
-                className="
+        {dropdown && (
+          <ul>
+            {items.map((item) => (
+              <li key={item}>
+                <a
+                  className="
                 block
                 bg-white
                 py-3
@@ -50,13 +51,14 @@ export const Dropdown: React.FC<DropdownProps> = ({ text, items }) => {
                 hover:text-purple-500
                 md:text-sm
               "
-                href="#"
-              >
-                {item}
-              </a>
-            </li>
-          ))}
-        </ul>
+                  href="#"
+                >
+                  {item}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
