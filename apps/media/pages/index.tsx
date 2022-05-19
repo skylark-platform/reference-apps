@@ -25,6 +25,7 @@ export async function getStaticProps() {
     props: {
       initialData,
     },
+    revalidate: 300, // Skylark cache reset is 300 seconds
   };
 }
 
