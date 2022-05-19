@@ -12,7 +12,6 @@ import { List } from "../list";
 import { Button } from "../button";
 
 export interface CarouselItem {
-  uid: string;
   title: string;
   href: string;
   image: string;
@@ -94,7 +93,7 @@ export const Carousel: React.FC<CarouselProps> = ({
           custom={direction}
           exit="exit"
           initial="enter"
-          key={`${title}-${image}`}
+          key={`${title}-${image}-carousel-item`}
           style={{ backgroundImage: `url('${image}')` }}
           transition={{
             x: { type: "easeIn", stiffness: 300, damping: 30 },
@@ -140,11 +139,11 @@ export const Carousel: React.FC<CarouselProps> = ({
       </AnimatePresence>
       <div className=" absolute bottom-5 z-50 flex items-start justify-center text-white md:bottom-20 md:right-lg-gutter">
         {items.length > 1 &&
-          items.map(({ uid }, i) => (
+          items.map(({ title: itemTitle, image: itemImage }, i) => (
             <CarouselButton
               active={i === itemIndex}
               duration={activeItem !== undefined ? undefined : changeInterval}
-              key={uid}
+              key={`${itemTitle}-${itemImage}-carousel-button`}
               text={`${i + 1} / ${items.length}`}
               onClick={() => setPage([i, i > itemIndex ? 1 : -1])}
             />

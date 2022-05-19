@@ -15,49 +15,60 @@ export interface ImageUrl {
   type: string;
 }
 
-export interface UnexpandedImageUrl {
+export interface UnexpandedObject {
   self: string;
   isExpanded: false;
 }
 
-export type ImageUrls = UnexpandedImageUrl[] | ImageUrl[];
+export type ImageUrls = UnexpandedObject[] | ImageUrl[];
+
+export interface Credit {
+  isExpanded: true;
+  character: string;
+  peopleUrl: {
+    name?: string;
+  };
+  roleUrl: {
+    title?: string;
+  };
+}
+
+export type Credits = UnexpandedObject[] | Credit[];
 
 export interface SkylarkObject {
   self: string;
   type: ObjectTypes;
   isExpanded: true;
-  uid?: string;
-  objectTitle?: string;
-  slug?: string;
-  releaseDate?: string;
-  title?: {
-    short?: string;
-    medium?: string;
-    long?: string;
+  uid: string;
+  objectTitle: string;
+  slug: string;
+  releaseDate: string;
+  title: {
+    short: string;
+    medium: string;
+    long: string;
   };
-  synopsis?: {
-    short?: string;
-    medium?: string;
-    long?: string;
+  synopsis: {
+    short: string;
+    medium: string;
+    long: string;
   };
-  tags?: string[];
-  titleSort?: string;
-  creditUrls?: string[];
-  ratingUrls?: string[];
-  genreUrls?: string[];
+  tags: string[];
+  titleSort: string;
+  credits: Credits;
+  ratingUrls: string[];
+  genreUrls: string[];
   // imageUrls?: string[];
-  themeUrls?: string[];
-  images?: ImageUrls;
-  items?: AllEntertainment[];
+  themeUrls: string[];
+  images: ImageUrls;
+  items: AllEntertainment[];
 
   // Include image property during development, in future use imageUrls
   image?: string;
 }
 
-export interface UnexpandedSkylarkObject {
-  self: string;
+export interface UnexpandedSkylarkObject extends UnexpandedObject {
   type: ObjectTypes;
-  isExpanded: false;
 }
 
 export interface Asset extends SkylarkObject {
@@ -66,26 +77,29 @@ export interface Asset extends SkylarkObject {
 
 export interface Movie extends SkylarkObject {
   type: "movie";
-  duration?: string;
+  items: (Asset | UnexpandedSkylarkObject)[];
 }
 
 export interface Episode extends SkylarkObject {
   type: "episode";
-  number?: number;
-  duration?: string;
-  // items?: Asset[];
+  number: number;
+  items: (Asset | UnexpandedSkylarkObject)[];
 }
 
 export interface Season extends SkylarkObject {
   type: "season";
-  numberOfEpisodes?: number;
-  number?: number;
-  // items?: Episode[];
+  numberOfEpisodes: number;
+  number: number;
+  items: (Episode | Asset | UnexpandedSkylarkObject)[];
 }
 
 export interface Brand extends SkylarkObject {
   type: "brand";
-  // items?: (Movie | Episode | Season)[];
+  items: (Movie | Episode | Season | Asset | UnexpandedSkylarkObject)[];
+}
+
+export interface Set extends SkylarkObject {
+  type: SetTypes;
 }
 
 export type AllEntertainment =
@@ -95,7 +109,8 @@ export type AllEntertainment =
   | Episode
   | Season
   | Movie
-  | Brand;
+  | Brand
+  | Set;
 
 export const entertainmentTypeAsString = (type: EntertainmentType) => {
   switch (type) {

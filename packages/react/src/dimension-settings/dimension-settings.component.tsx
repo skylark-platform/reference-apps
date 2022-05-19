@@ -20,7 +20,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
   const [show, setShow] = useState(propShow);
   return (
     <>
-      <div className="fixed bottom-0 right-sm-gutter flex md:right-md-gutter lg:right-lg-gutter xl:right-xl-gutter">
+      <div className="fixed bottom-0 right-sm-gutter z-20 flex md:right-md-gutter lg:right-lg-gutter xl:right-xl-gutter">
         <DimensionToggle variant="open" onClick={() => setShow(true)} />
       </div>
       <AnimatePresence>

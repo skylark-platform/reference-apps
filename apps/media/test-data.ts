@@ -7,7 +7,6 @@ import {
 
 export const heros: CarouselItem[] = [
   {
-    uid: "1",
     title: "Deadpool",
     href: "deadpool",
     image: "/heros/deadpool.png",
@@ -16,7 +15,6 @@ export const heros: CarouselItem[] = [
     type: "movie",
   },
   {
-    uid: "2",
     title: "Game of Thrones",
     href: "got",
     image: "/heros/got.png",
@@ -24,7 +22,6 @@ export const heros: CarouselItem[] = [
     type: "season",
   },
   {
-    uid: "3",
     title: "Sing 2",
     href: "sing-2",
     image: "/heros/sing.png",
@@ -33,7 +30,6 @@ export const heros: CarouselItem[] = [
     type: "movie",
   },
   {
-    uid: "4",
     title: "Us",
     href: "us",
     image: "/heros/us.png",

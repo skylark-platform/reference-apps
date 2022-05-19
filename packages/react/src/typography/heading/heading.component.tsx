@@ -36,7 +36,7 @@ export const H3: React.FC<HProps> = ({ children, className = "" }) => (
 
 export const H4: React.FC<HProps> = ({ children, className = "" }) => (
   <h4
-    className={`text-[16px] font-medium leading-[20px] md:text-[18px] md:leading-[24px] ${className}`}
+    className={`text-[16px] font-normal leading-[20px] md:text-[18px] md:leading-[24px] ${className}`}
   >
     {children}
   </h4>
@@ -44,14 +44,14 @@ export const H4: React.FC<HProps> = ({ children, className = "" }) => (
 
 export const H5: React.FC<HProps> = ({ children, className = "" }) => (
   <h5
-    className={`text-[13px] font-medium leading-[18px] md:text-[14px] md:leading-[20px] ${className}`}
+    className={`text-[13px] font-normal leading-[18px] md:text-[14px] md:leading-[20px] ${className}`}
   >
     {children}
   </h5>
 );
 
 export const H6: React.FC<HProps> = ({ children, className = "" }) => (
-  <h6 className={`text-[12px] font-medium leading-[26px] ${className}`}>
+  <h6 className={`text-[12px] font-normal leading-[26px] ${className}`}>
     {children}
   </h6>
 );

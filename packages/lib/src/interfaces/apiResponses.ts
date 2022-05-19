@@ -12,6 +12,7 @@ interface BaseApiEntertainment {
   synopsis_medium?: string;
   synopsis_long?: string;
   image_urls?: ApiImage[];
+  credits?: ApiCredit[];
 }
 
 export interface CompleteSetItem {
@@ -25,6 +26,7 @@ export interface CompleteApiEntertainmentObject extends BaseApiEntertainment {
   year?: number;
   season_number?: number;
   content_url: never;
+  number_of_episodes?: number;
   // content_url?: {
   //   items: CompleteApiEntertainmentObject[];
   // }
@@ -45,6 +47,18 @@ export interface ApiImage {
 
 export type ApiImageUrls = string[] | ApiImage[];
 
+export interface ApiCredit {
+  character: string;
+  people_url: {
+    name: string;
+  };
+  role_url: {
+    title: string;
+  };
+}
+
+export type ApiCredits = string[] | ApiCredit[];
+
 interface ApiAsset {
   self: string;
 }
@@ -57,8 +71,9 @@ export interface ApiEpisode extends BaseApiEntertainment {
 interface ApiSeasonWithEpisode extends BaseApiEntertainment {
   self: string;
   items: ApiEpisode[];
-  year?: number;
+  year: number;
   season_number: number;
+  number_of_episodes: number;
 }
 
 interface ApiBrandWithSeasonsAndEpisodes extends BaseApiEntertainment {
