@@ -1,4 +1,34 @@
-import { EntertainmentType, ObjectTypes, UnexpandedObject } from "../interfaces";
+import {
+  EntertainmentType,
+  ObjectTypes,
+  UnexpandedObject,
+} from "../interfaces";
+
+/**
+ * Recusively parses an object and returns it in the Skylark API format
+ * @param obj a JS object
+ * @param prefix optional - the prefix, used in recursion
+ * @returns formatted fields query
+ */
+export const convertObjectToSkylarkApiFields = (
+  obj: object,
+  prefix?: string
+): string => {
+  const keys = Object.entries(obj).map(
+    ([key, value]: [key: string, value: object]) => {
+      const keyWithPrefix = prefix ? `${prefix}__${key}` : key;
+      if (value && Object.keys(value).length > 0) {
+        return `${keyWithPrefix},${convertObjectToSkylarkApiFields(
+          value,
+          keyWithPrefix
+        )}`;
+      }
+      return keyWithPrefix;
+    }
+  );
+
+  return keys.join(",");
+};
 
 export const convertEntertainmentTypeToString = (type: EntertainmentType) => {
   switch (type) {
@@ -22,7 +52,7 @@ export const convertEntertainmentTypeToString = (type: EntertainmentType) => {
  * @param type The object type to convert
  * @returns string, the endpoint
  */
- export const convertObjectTypeToSkylarkEndpoint = (
+export const convertObjectTypeToSkylarkEndpoint = (
   type: ObjectTypes
 ): string => {
   switch (type) {
@@ -39,7 +69,9 @@ export const convertEntertainmentTypeToString = (type: EntertainmentType) => {
   }
 };
 
-export const convertToUnexpandedObject = (arr: string[]): UnexpandedObject[] => {
+export const convertToUnexpandedObject = (
+  arr: string[]
+): UnexpandedObject[] => {
   const unexpandedImageUrls: UnexpandedObject[] = arr.map((item) => ({
     self: item,
     isExpanded: false,
@@ -52,7 +84,7 @@ export const convertToUnexpandedObject = (arr: string[]): UnexpandedObject[] => 
  * @param self the URL for the object
  * @returns {ObjectTypes}
  */
- export const convertUrlToObjectType = (url: string): ObjectTypes => {
+export const convertUrlToObjectType = (url: string): ObjectTypes => {
   if (url.startsWith("/api/episode")) {
     return "episode";
   }

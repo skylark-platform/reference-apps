@@ -1,4 +1,8 @@
-import { convertObjectToSkylarkApiFields, convertToUnexpandedObject, convertUrlToObjectType } from "./converters";
+import {
+  convertObjectToSkylarkApiFields,
+  convertToUnexpandedObject,
+  convertUrlToObjectType,
+} from "./converters";
 import {
   AllEntertainment,
   ApiCredit,

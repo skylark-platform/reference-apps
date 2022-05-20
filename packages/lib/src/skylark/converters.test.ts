@@ -1,6 +1,4 @@
-import {
-  convertObjectToSkylarkApiFields,
-} from "./converters";
+import { convertObjectToSkylarkApiFields } from "./converters";
 
 const fieldsToExpand = {
   items: {

@@ -1,6 +1,4 @@
-import {
-  createSkylarkApiQuery,
-} from "./skylarkApiHelpers";
+import { createSkylarkApiQuery } from "./skylarkApiHelpers";
 
 const fieldsToExpand = {
   items: {

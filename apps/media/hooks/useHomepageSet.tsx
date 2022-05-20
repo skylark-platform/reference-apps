@@ -80,7 +80,9 @@ export const homepageSetFetcher = () =>
     }
   )
     .then((r) => r.json())
-    .then((res: { objects: ApiEntertainmentObject[] }) => parseSkylarkObject(res.objects[0]));
+    .then((res: { objects: ApiEntertainmentObject[] }) =>
+      parseSkylarkObject(res.objects[0])
+    );
 
 export const useHomepageSet = (initial: AllEntertainment) => {
   const { data, error } = useSWR<AllEntertainment, Error>(
