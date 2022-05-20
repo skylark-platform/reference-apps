@@ -12,7 +12,7 @@ import { useBrandWithSeasonBySlug } from "../../hooks/useBrandWithSeasonBySlug";
 const BrandPage: NextPage = () => {
   const { query } = useRouter();
 
-  const { brand } = useBrandWithSeasonBySlug(query?.slug as string);
+  const { brand, error } = useBrandWithSeasonBySlug(query?.slug as string);
   return (
     <div className="mb-20 flex min-h-screen flex-col items-center bg-gray-900">
       <Head>
@@ -79,6 +79,13 @@ const BrandPage: NextPage = () => {
             )
         )}
       {!brand && <p>{`Loading ${query?.slug as string}`}</p>}
+
+      {error && (
+        <div>
+          <p>{`Error fetching data`}</p>
+          <p>{error}</p>
+        </div>
+      )}
     </div>
   );
 };

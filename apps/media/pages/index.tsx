@@ -6,14 +6,15 @@ import {
   EpisodeThumbnail,
   MovieThumbnail,
   Rail,
+  useDeviceType,
 } from "@skylark-reference-apps/react";
 import { useRouter } from "next/router";
 import {
-  ImageUrl,
   Episode,
   SkylarkObject,
   EntertainmentType,
   AllEntertainment,
+  getImageSrc,
 } from "@skylark-reference-apps/lib";
 
 import { collectionThumbnails } from "../test-data";
@@ -32,6 +33,7 @@ export async function getStaticProps() {
 const Home: NextPage<{ initialData: AllEntertainment }> = ({ initialData }) => {
   const { query } = useRouter();
   const { homepage } = useHomepageSet(initialData);
+  const deviceType = useDeviceType();
 
   const activeCarouselItem = query?.carousel_item
     ? parseInt(query.carousel_item as string, 10)
@@ -70,14 +72,11 @@ const Home: NextPage<{ initialData: AllEntertainment }> = ({ initialData }) => {
                           : "",
                       image:
                         carouselItem.images && typeof window !== "undefined"
-                          ? `${
-                              (
-                                (carouselItem.images as ImageUrl[]).find(
-                                  (image) =>
-                                    image.isExpanded && image.type === "Main"
-                                )?.url as string
-                              ).split(".jpg")[0]
-                            }-${window.innerHeight}x${window.innerWidth}.webp`
+                          ? getImageSrc(
+                              carouselItem.images,
+                              "Main",
+                              `${window.innerHeight}x${window.innerWidth}`
+                            )
                           : "",
                       type: carouselItem.type as EntertainmentType,
                       releaseDate: carouselItem.releaseDate || "",
@@ -102,15 +101,7 @@ const Home: NextPage<{ initialData: AllEntertainment }> = ({ initialData }) => {
                       <MovieThumbnail
                         backgroundImage={
                           movie.images
-                            ? `${
-                                (
-                                  (movie.images as ImageUrl[]).find(
-                                    (image) =>
-                                      image.isExpanded &&
-                                      image.type === "Thumbnail"
-                                  )?.url as string
-                                ).split(".jpg")[0]
-                              }-384x216.jpg`
+                            ? getImageSrc(movie.images, "Thumbnail", "384x216")
                             : ""
                         }
                         contentLocation="below"
@@ -147,15 +138,11 @@ const Home: NextPage<{ initialData: AllEntertainment }> = ({ initialData }) => {
                         <EpisodeThumbnail
                           backgroundImage={
                             episode.images
-                              ? `${
-                                  (
-                                    (episode.images as ImageUrl[]).find(
-                                      (image) =>
-                                        image.isExpanded &&
-                                        image.type === "Thumbnail"
-                                    )?.url as string
-                                  )?.split(".jpg")?.[0]
-                                }-384x216.jpg`
+                              ? getImageSrc(
+                                  episode.images,
+                                  "Thumbnail",
+                                  "384x216"
+                                )
                               : ""
                           }
                           contentLocation="below"
@@ -193,6 +180,8 @@ const Home: NextPage<{ initialData: AllEntertainment }> = ({ initialData }) => {
           ))}
         </Rail>
       </div>
+
+      <p className="py-4 text-lg text-white">{`Device type: ${deviceType}`}</p>
     </div>
   );
 };
