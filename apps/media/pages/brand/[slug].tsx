@@ -5,7 +5,7 @@ import {
   EpisodeThumbnail,
   Rail,
 } from "@skylark-reference-apps/react";
-import { Episode, ImageUrl } from "@skylark-reference-apps/lib";
+import { Episode, ImageUrl, getImageSrc } from "@skylark-reference-apps/lib";
 import { useRouter } from "next/router";
 import { useBrandWithSeasonBySlug } from "../../hooks/useBrandWithSeasonBySlug";
 
@@ -13,7 +13,6 @@ const BrandPage: NextPage = () => {
   const { query } = useRouter();
 
   const { brand } = useBrandWithSeasonBySlug(query?.slug as string);
-  console.log(brand);
   return (
     <div className="mb-20 flex min-h-screen flex-col items-center bg-gray-900">
       <Head>
@@ -56,15 +55,11 @@ const BrandPage: NextPage = () => {
                     )
                     .map((ep: Episode) => (
                       <EpisodeThumbnail
-                        backgroundImage={
-                          ep.images?.[0].isExpanded
-                            ? `${
-                                (ep.images as ImageUrl[]).find(
-                                  (image) => image.type === "Thumbnail"
-                                )?.url || ""
-                              }`
-                            : ""
-                        }
+                        backgroundImage={getImageSrc(
+                          ep.images,
+                          "Thumbnail",
+                          "250x250"
+                        )}
                         description={
                           ep.synopsis?.medium || ep.synopsis?.short || ""
                         }

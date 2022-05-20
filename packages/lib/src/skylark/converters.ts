@@ -30,7 +30,14 @@ export const convertObjectToSkylarkApiFields = (
   return keys.join(",");
 };
 
-export const convertEntertainmentTypeToString = (type: EntertainmentType) => {
+/**
+ * Converts an EntertainmentType into a readable string
+ * @param type
+ * @returns string
+ */
+export const convertEntertainmentTypeToString = (
+  type: EntertainmentType
+): string => {
   switch (type) {
     case "movie":
       return "Movie";
@@ -69,16 +76,6 @@ export const convertObjectTypeToSkylarkEndpoint = (
   }
 };
 
-export const convertToUnexpandedObject = (
-  arr: string[]
-): UnexpandedObject[] => {
-  const unexpandedImageUrls: UnexpandedObject[] = arr.map((item) => ({
-    self: item,
-    isExpanded: false,
-  }));
-  return unexpandedImageUrls;
-};
-
 /**
  * Determines the Skylark object type using the self URL
  * @param self the URL for the object
@@ -106,4 +103,19 @@ export const convertUrlToObjectType = (url: string): ObjectTypes => {
   }
 
   return null;
+};
+
+/**
+ * Converts an array of urls to UnexpandedObjects
+ * @param urls
+ * @returns
+ */
+export const convertToUnexpandedObject = (
+  urls: string[]
+): UnexpandedObject[] => {
+  const unexpandedImageUrls: UnexpandedObject[] = urls.map((url) => ({
+    self: url,
+    isExpanded: false,
+  }));
+  return unexpandedImageUrls;
 };

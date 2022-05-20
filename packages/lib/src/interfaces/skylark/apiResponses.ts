@@ -40,9 +40,14 @@ export interface ApiEntertainmentObject {
   year?: number;
   season_number?: number;
   number_of_episodes?: number;
-  content_url: never;
+  title_sort?: string;
+  content_url?: never;
 }
 
 export interface ApiSetObject {
   content_url: ApiEntertainmentObject;
+}
+
+export interface ApiMultipleEntertainmentObjects {
+  objects: ApiEntertainmentObject[];
 }

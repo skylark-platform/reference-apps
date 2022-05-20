@@ -2,9 +2,9 @@ import useSWR from "swr";
 import {
   createSkylarkApiQuery,
   SKYLARK_API,
-  ApiEntertainmentObject,
   parseSkylarkObject,
   AllEntertainment,
+  ApiMultipleEntertainmentObjects,
 } from "@skylark-reference-apps/lib";
 
 const fieldsToExpand = {
@@ -80,8 +80,8 @@ export const homepageSetFetcher = () =>
     }
   )
     .then((r) => r.json())
-    .then((res: { objects: ApiEntertainmentObject[] }) =>
-      parseSkylarkObject(res.objects[0])
+    .then(({ objects: [homepage] }: ApiMultipleEntertainmentObjects) =>
+      parseSkylarkObject(homepage)
     );
 
 export const useHomepageSet = (initial: AllEntertainment) => {
@@ -90,7 +90,6 @@ export const useHomepageSet = (initial: AllEntertainment) => {
     homepageSetFetcher,
     { fallbackData: initial }
   );
-  console.log("data", data);
 
   return {
     homepage: data,

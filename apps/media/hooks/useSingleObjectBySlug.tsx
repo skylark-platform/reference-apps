@@ -2,11 +2,11 @@ import useSWR from "swr";
 import {
   createSkylarkApiQuery,
   SKYLARK_API,
-  ApiEntertainmentObject,
   parseSkylarkObject,
   AllEntertainment,
   EntertainmentType,
   convertObjectTypeToSkylarkEndpoint,
+  ApiMultipleEntertainmentObjects,
 } from "@skylark-reference-apps/lib";
 
 const fieldsToExpand = {
@@ -58,8 +58,8 @@ const singleObjectFetcher = ([endpoint, slug]: [
     cache: "no-store",
   })
     .then((r) => r.json())
-    .then((res: { objects: ApiEntertainmentObject[] }) =>
-      parseSkylarkObject(res.objects[0])
+    .then(({ objects: [object] }: ApiMultipleEntertainmentObjects) =>
+      parseSkylarkObject(object)
     );
 
 export const useSingleObjectBySlug = (

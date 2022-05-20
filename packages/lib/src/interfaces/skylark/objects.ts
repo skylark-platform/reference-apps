@@ -7,6 +7,8 @@ export type EntertainmentType =
   | "asset";
 export type ObjectTypes = EntertainmentType | SetTypes | null;
 
+export type ImageTypes = "Thumbnail" | "Main" | "Poster";
+
 export interface UnexpandedObject {
   self: string;
   isExpanded: false;

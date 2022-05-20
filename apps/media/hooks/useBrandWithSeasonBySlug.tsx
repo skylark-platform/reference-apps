@@ -1,10 +1,10 @@
 import {
   createSkylarkApiQuery,
   SKYLARK_API,
-  ApiEntertainmentObject,
   parseSkylarkObject,
   AllEntertainment,
   Brand,
+  ApiMultipleEntertainmentObjects,
 } from "@skylark-reference-apps/lib";
 import useSWR from "swr";
 
@@ -91,16 +91,14 @@ export const brandWithSeasonFetcher = (slug: string) =>
     cache: "no-store",
   })
     .then((r) => r.json())
-    .then((res: { objects: ApiEntertainmentObject[] }) =>
-      parseSkylarkObject(res.objects[0])
+    .then(({ objects: [brand] }: ApiMultipleEntertainmentObjects) =>
+      parseSkylarkObject(brand)
     );
 
 export const useBrandWithSeasonBySlug = (
   slug: string,
   initial?: AllEntertainment
 ) => {
-  console.log(apiQuery);
-
   const { data, error } = useSWR<AllEntertainment, Error>(
     slug,
     brandWithSeasonFetcher,

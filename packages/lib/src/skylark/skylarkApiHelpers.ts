@@ -25,6 +25,15 @@ import {
 } from "../interfaces";
 
 /**
+ * Determines if an API object has been expanded
+ * In Skylark, if one item in the array hasn't been expanded then none of them will be
+ * @param items Possible Skylark objects or strings
+ * @returns boolean
+ */
+const determineIfExpanded = (items: string[] | object[]): boolean =>
+  typeof items[0] === "string" || items[0] instanceof String;
+
+/**
  * Combines multiple parameters into the format expected by the Skylark API
  * @param {fieldsToExpand, fields} - object containing query parameters to be parsed
  * @returns URL query
@@ -59,7 +68,7 @@ export const createSkylarkApiQuery = ({
  * @returns {ImageUrls}
  */
 export const parseSkylarkImageUrls = (imageUrls: ApiImageUrls): ImageUrls => {
-  if (typeof imageUrls[0] === "string" || imageUrls[0] instanceof String) {
+  if (determineIfExpanded(imageUrls)) {
     return convertToUnexpandedObject(imageUrls as string[]);
   }
 
@@ -83,7 +92,7 @@ export const parseSkylarkImageUrls = (imageUrls: ApiImageUrls): ImageUrls => {
  * @returns {Credits}
  */
 export const parseSkylarkCredits = (credits: ApiCredits): Credits => {
-  if (typeof credits[0] === "string" || credits[0] instanceof String) {
+  if (determineIfExpanded(credits)) {
     return convertToUnexpandedObject(credits as string[]);
   }
 
@@ -115,7 +124,7 @@ export const parseSkylarkObject = (
   let items: AllEntertainment[] = [];
   if (obj.items && obj.items.length > 0) {
     // If one item is a string, the items haven't been expanded
-    if (typeof obj.items[0] === "string" || obj.items[0] instanceof String) {
+    if (determineIfExpanded([obj])) {
       items = (obj.items as string[]).map(
         (self): UnexpandedSkylarkObject => ({
           isExpanded: false,
@@ -154,7 +163,7 @@ export const parseSkylarkObject = (
     type: null,
     images: obj.image_urls ? parseSkylarkImageUrls(obj.image_urls) : [],
     credits: obj.credits ? parseSkylarkCredits(obj.credits) : [],
-    titleSort: obj.title_short || "",
+    titleSort: obj.title_sort || "",
 
     // TODO add these
     releaseDate: "",
