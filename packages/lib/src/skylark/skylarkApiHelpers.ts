@@ -1,3 +1,4 @@
+import { convertObjectToSkylarkApiFields, convertToUnexpandedObject, convertUrlToObjectType } from "./converters";
 import {
   AllEntertainment,
   ApiCredit,
@@ -6,46 +7,18 @@ import {
   ApiImageUrls,
   Asset,
   Brand,
-  CompleteApiEntertainmentObject,
-  CompleteSetItem,
+  ApiEntertainmentObject,
+  ApiSetObject,
   Credit,
   Credits,
   Episode,
   ImageUrl,
   ImageUrls,
   Movie,
-  ObjectTypes,
   Season,
   SkylarkObject,
-  UnexpandedObject,
   UnexpandedSkylarkObject,
 } from "../interfaces";
-
-/**
- * Recusively parses an object and returns it in the Skylark API format
- * @param obj a JS object
- * @param prefix optional - the prefix, used in recursion
- * @returns formatted fields query
- */
-export const convertObjectToSkylarkApiFields = (
-  obj: object,
-  prefix?: string
-): string => {
-  const keys = Object.entries(obj).map(
-    ([key, value]: [key: string, value: object]) => {
-      const keyWithPrefix = prefix ? `${prefix}__${key}` : key;
-      if (value && Object.keys(value).length > 0) {
-        return `${keyWithPrefix},${convertObjectToSkylarkApiFields(
-          value,
-          keyWithPrefix
-        )}`;
-      }
-      return keyWithPrefix;
-    }
-  );
-
-  return keys.join(",");
-};
 
 /**
  * Combines multiple parameters into the format expected by the Skylark API
@@ -73,65 +46,6 @@ export const createSkylarkApiQuery = ({
   }
 
   return query.join("&");
-};
-
-/**
- * Determines the Skylark object type using the self URL
- * @param self the URL for the object
- * @returns {ObjectTypes}
- */
-export const getObjectTypeFromSelf = (self: string): ObjectTypes => {
-  if (self.startsWith("/api/episode")) {
-    return "episode";
-  }
-
-  if (self.startsWith("/api/movie")) {
-    return "movie";
-  }
-
-  if (self.startsWith("/api/brand")) {
-    return "brand";
-  }
-
-  if (self.startsWith("/api/season")) {
-    return "season";
-  }
-
-  if (self.startsWith("/api/asset")) {
-    return "asset";
-  }
-
-  return null;
-};
-
-/**
- * Converts an ObjectType to a valid Skylark Endpoint
- * @param type The object type to convert
- * @returns string, the endpoint
- */
-export const convertObjectTypeToSkylarkEndpoint = (
-  type: ObjectTypes
-): string => {
-  switch (type) {
-    case "episode":
-      return "episodes";
-    case "movie":
-      return "movies";
-    case "season":
-      return "seasons";
-    case "brand":
-      return "brands";
-    default:
-      throw new Error("Unknown type provided");
-  }
-};
-
-const convertToUnexpandedObject = (arr: string[]): UnexpandedObject[] => {
-  const unexpandedImageUrls: UnexpandedObject[] = arr.map((item) => ({
-    self: item,
-    isExpanded: false,
-  }));
-  return unexpandedImageUrls;
 };
 
 /**
@@ -192,7 +106,7 @@ export const parseSkylarkCredits = (credits: ApiCredits): Credits => {
  * @returns a Skylark Object, preferably with a set ObjectType
  */
 export const parseSkylarkObject = (
-  obj: CompleteApiEntertainmentObject
+  obj: ApiEntertainmentObject
 ): AllEntertainment => {
   let items: AllEntertainment[] = [];
   if (obj.items && obj.items.length > 0) {
@@ -202,13 +116,13 @@ export const parseSkylarkObject = (
         (self): UnexpandedSkylarkObject => ({
           isExpanded: false,
           self,
-          type: getObjectTypeFromSelf(self),
+          type: convertUrlToObjectType(self),
         })
       );
     } else {
       const objectItems = obj.items as (
-        | CompleteApiEntertainmentObject
-        | CompleteSetItem
+        | ApiEntertainmentObject
+        | ApiSetObject
       )[];
       items = objectItems.map(
         (item): AllEntertainment => parseSkylarkObject(item.content_url || item)

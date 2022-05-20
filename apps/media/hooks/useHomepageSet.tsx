@@ -2,7 +2,7 @@ import useSWR from "swr";
 import {
   createSkylarkApiQuery,
   SKYLARK_API,
-  CompleteApiEntertainmentObject,
+  ApiEntertainmentObject,
   parseSkylarkObject,
   AllEntertainment,
 } from "@skylark-reference-apps/lib";
@@ -70,16 +70,17 @@ const apiQuery = createSkylarkApiQuery({
 });
 
 const homepageSwrKey = "homepage-set";
+const homepageSlug = "media-reference-homepage";
 
 export const homepageSetFetcher = () =>
   fetch(
-    `${SKYLARK_API}/api/sets/coll_30e5c34723a549d8af15e1878400a665/?${apiQuery}`,
+    `${SKYLARK_API}/api/sets/?slug=${homepageSlug}&set_type_slug=homepage&${apiQuery}`,
     {
       cache: "no-store",
     }
   )
     .then((r) => r.json())
-    .then((res: CompleteApiEntertainmentObject) => parseSkylarkObject(res));
+    .then((res: { objects: ApiEntertainmentObject[] }) => parseSkylarkObject(res.objects[0]));
 
 export const useHomepageSet = (initial: AllEntertainment) => {
   const { data, error } = useSWR<AllEntertainment, Error>(

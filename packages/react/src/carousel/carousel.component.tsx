@@ -3,7 +3,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { wrap } from "popmotion";
 import {
-  entertainmentTypeAsString,
+  convertEntertainmentTypeToString,
   EntertainmentType,
 } from "@skylark-reference-apps/lib";
 import { MdAdd, MdPlayCircleFilled } from "react-icons/md";
@@ -113,7 +113,7 @@ export const Carousel: React.FC<CarouselProps> = ({
                 contents={[
                   duration,
                   releaseDate,
-                  entertainmentTypeAsString(type),
+                  convertEntertainmentTypeToString(type),
                 ]}
                 highlightFirst
                 textSize="sm"

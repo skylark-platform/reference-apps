@@ -1,7 +1,7 @@
 import {
   createSkylarkApiQuery,
   SKYLARK_API,
-  CompleteApiEntertainmentObject,
+  ApiEntertainmentObject,
   parseSkylarkObject,
   AllEntertainment,
   Brand,
@@ -86,12 +86,12 @@ const apiQuery = createSkylarkApiQuery({
   fields,
 });
 
-export const objectWithItemsFetcher = (slug: string) =>
+export const brandWithSeasonFetcher = (slug: string) =>
   fetch(`${SKYLARK_API}/api/brands/?slug=${slug}&${apiQuery}`, {
     cache: "no-store",
   })
     .then((r) => r.json())
-    .then((res: { objects: CompleteApiEntertainmentObject[] }) =>
+    .then((res: { objects: ApiEntertainmentObject[] }) =>
       parseSkylarkObject(res.objects[0])
     );
 
@@ -103,7 +103,7 @@ export const useBrandWithSeasonBySlug = (
 
   const { data, error } = useSWR<AllEntertainment, Error>(
     slug,
-    objectWithItemsFetcher,
+    brandWithSeasonFetcher,
     { fallbackData: initial }
   );
 

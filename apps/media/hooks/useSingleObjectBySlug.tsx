@@ -2,7 +2,7 @@ import useSWR from "swr";
 import {
   createSkylarkApiQuery,
   SKYLARK_API,
-  CompleteApiEntertainmentObject,
+  ApiEntertainmentObject,
   parseSkylarkObject,
   AllEntertainment,
   EntertainmentType,
@@ -58,7 +58,7 @@ const singleObjectFetcher = ([endpoint, slug]: [
     cache: "no-store",
   })
     .then((r) => r.json())
-    .then((res: { objects: CompleteApiEntertainmentObject[] }) =>
+    .then((res: { objects: ApiEntertainmentObject[] }) =>
       parseSkylarkObject(res.objects[0])
     );
 
