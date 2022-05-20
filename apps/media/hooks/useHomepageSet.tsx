@@ -6,6 +6,7 @@ import {
   AllEntertainment,
   ApiMultipleEntertainmentObjects,
 } from "@skylark-reference-apps/lib";
+import { useDeviceType } from "@skylark-reference-apps/react/src/hooks";
 
 const fieldsToExpand = {
   items: {
@@ -64,16 +65,19 @@ const fields = {
   },
 };
 
-const apiQuery = createSkylarkApiQuery({
-  fieldsToExpand,
-  fields,
-});
-
 const homepageSwrKey = "homepage-set";
 const homepageSlug = "media-reference-homepage";
 
-export const homepageSetFetcher = () =>
-  fetch(
+export const homepageSetFetcher = (
+  params?: [key: string, deviceType: string]
+) => {
+  const apiQuery = createSkylarkApiQuery({
+    fieldsToExpand,
+    fields,
+    deviceTypes: params?.[1] ? [params?.[1]] : [],
+  });
+
+  return fetch(
     `${SKYLARK_API}/api/sets/?slug=${homepageSlug}&set_type_slug=homepage&${apiQuery}`,
     {
       cache: "no-store",
@@ -83,10 +87,13 @@ export const homepageSetFetcher = () =>
     .then(({ objects: [homepage] }: ApiMultipleEntertainmentObjects) =>
       parseSkylarkObject(homepage)
     );
+};
 
 export const useHomepageSet = (initial: AllEntertainment) => {
+  const deviceType = useDeviceType();
+
   const { data, error } = useSWR<AllEntertainment, Error>(
-    homepageSwrKey,
+    [homepageSwrKey, deviceType],
     homepageSetFetcher,
     { fallbackData: initial }
   );

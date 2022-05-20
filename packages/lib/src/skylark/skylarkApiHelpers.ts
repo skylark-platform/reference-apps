@@ -41,9 +41,11 @@ const determineIfExpanded = (items: string[] | object[]): boolean =>
 export const createSkylarkApiQuery = ({
   fieldsToExpand,
   fields,
+  deviceTypes,
 }: {
   fieldsToExpand: object;
   fields: object;
+  deviceTypes?: string[];
 }) => {
   const parsedFieldsToExpand = convertObjectToSkylarkApiFields(fieldsToExpand);
   const parsedFields = convertObjectToSkylarkApiFields(fields);
@@ -56,6 +58,10 @@ export const createSkylarkApiQuery = ({
 
   if (parsedFields) {
     query.push(`fields=${parsedFields}`);
+  }
+
+  if (deviceTypes && deviceTypes.length > 0) {
+    query.push(`device_types=${deviceTypes.join(",")}`);
   }
 
   return query.join("&");

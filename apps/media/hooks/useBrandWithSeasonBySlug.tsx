@@ -6,6 +6,7 @@ import {
   Brand,
   ApiMultipleEntertainmentObjects,
 } from "@skylark-reference-apps/lib";
+import { useDeviceType } from "@skylark-reference-apps/react/src/hooks";
 import useSWR from "swr";
 
 const fieldsToExpand = {
@@ -81,26 +82,33 @@ const fields = {
   },
 };
 
-const apiQuery = createSkylarkApiQuery({
-  fieldsToExpand,
-  fields,
-});
+export const brandWithSeasonFetcher = ([slug, deviceType]: [
+  slug: string,
+  deviceType: string
+]) => {
+  const apiQuery = createSkylarkApiQuery({
+    fieldsToExpand,
+    fields,
+    deviceTypes: [deviceType],
+  });
 
-export const brandWithSeasonFetcher = (slug: string) =>
-  fetch(`${SKYLARK_API}/api/brands/?slug=${slug}&${apiQuery}`, {
+  return fetch(`${SKYLARK_API}/api/brands/?slug=${slug}&${apiQuery}`, {
     cache: "no-store",
   })
     .then((r) => r.json())
     .then(({ objects: [brand] }: ApiMultipleEntertainmentObjects) =>
       parseSkylarkObject(brand)
     );
+};
 
 export const useBrandWithSeasonBySlug = (
   slug: string,
   initial?: AllEntertainment
 ) => {
+  const deviceType = useDeviceType();
+
   const { data, error } = useSWR<AllEntertainment, Error>(
-    slug,
+    [slug, deviceType],
     brandWithSeasonFetcher,
     { fallbackData: initial }
   );
