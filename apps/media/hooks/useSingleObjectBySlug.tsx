@@ -54,9 +54,7 @@ const singleObjectFetcher = ([endpoint, slug]: [
   endpoint: string,
   slug: string
 ]) =>
-  fetch(`${SKYLARK_API}/api/${endpoint}/?slug=${slug}&${apiQuery}`, {
-    cache: "no-store",
-  })
+  fetch(`${SKYLARK_API}/api/${endpoint}/?slug=${slug}&${apiQuery}`)
     .then((r) => r.json())
     .then(({ objects: [object] }: ApiMultipleEntertainmentObjects) =>
       parseSkylarkObject(object)

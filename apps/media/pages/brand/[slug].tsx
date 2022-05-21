@@ -83,7 +83,9 @@ const BrandPage: NextPage = () => {
       {error && (
         <div>
           <p>{`Error fetching data`}</p>
-          <p>{error}</p>
+          <p>{error.name}</p>
+          <p>{error.message}</p>
+          <p>{error.stack}</p>
         </div>
       )}
     </div>

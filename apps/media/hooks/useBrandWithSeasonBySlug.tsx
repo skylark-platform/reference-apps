@@ -92,9 +92,7 @@ export const brandWithSeasonFetcher = ([slug, deviceType]: [
     deviceTypes: [deviceType],
   });
 
-  return fetch(`${SKYLARK_API}/api/brands/?slug=${slug}&${apiQuery}`, {
-    cache: "no-store",
-  })
+  return fetch(`${SKYLARK_API}/api/brands/?slug=${slug}&${apiQuery}`)
     .then((r) => r.json())
     .then(({ objects: [brand] }: ApiMultipleEntertainmentObjects) =>
       parseSkylarkObject(brand)
