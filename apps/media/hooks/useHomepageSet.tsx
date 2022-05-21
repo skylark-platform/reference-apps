@@ -86,13 +86,12 @@ export const homepageSetFetcher = (
     );
 };
 
-export const useHomepageSet = (initial: AllEntertainment) => {
+export const useHomepageSet = () => {
   const deviceType = useDeviceType();
 
   const { data, error } = useSWR<AllEntertainment, Error>(
     [homepageSwrKey, deviceType],
-    homepageSetFetcher,
-    { fallbackData: initial }
+    homepageSetFetcher
   );
 
   return {

@@ -6,32 +6,29 @@ import {
   EpisodeThumbnail,
   MovieThumbnail,
   Rail,
+  useAppLoaded,
 } from "@skylark-reference-apps/react";
 import { useRouter } from "next/router";
 import {
   Episode,
   SkylarkObject,
   EntertainmentType,
-  AllEntertainment,
   getImageSrc,
 } from "@skylark-reference-apps/lib";
+import { useEffect } from "react";
 
 import { collectionThumbnails } from "../test-data";
-import { useHomepageSet, homepageSetFetcher } from "../hooks/useHomepageSet";
+import { useHomepageSet } from "../hooks/useHomepageSet";
 
-export async function getStaticProps() {
-  const initialData = await homepageSetFetcher();
-  return {
-    props: {
-      initialData,
-    },
-    revalidate: 300, // Skylark cache reset is 300 seconds
-  };
-}
-
-const Home: NextPage<{ initialData: AllEntertainment }> = ({ initialData }) => {
+const Home: NextPage = () => {
   const { query } = useRouter();
-  const { homepage } = useHomepageSet(initialData);
+  const { homepage } = useHomepageSet();
+  const { setAppLoaded } = useAppLoaded();
+
+  // Show loading screen until homepage has loaded
+  useEffect(() => {
+    setAppLoaded(!!homepage);
+  }, [homepage]);
 
   const activeCarouselItem = query?.carousel_item
     ? parseInt(query.carousel_item as string, 10)

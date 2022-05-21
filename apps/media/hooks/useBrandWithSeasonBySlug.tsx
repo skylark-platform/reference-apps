@@ -105,16 +105,12 @@ export const brandWithSeasonFetcher = ([slug, deviceType]: [
     );
 };
 
-export const useBrandWithSeasonBySlug = (
-  slug: string,
-  initial?: AllEntertainment
-) => {
+export const useBrandWithSeasonBySlug = (slug: string) => {
   const deviceType = useDeviceType();
 
   const { data, error } = useSWR<AllEntertainment, Error>(
     [slug, deviceType],
-    brandWithSeasonFetcher,
-    { fallbackData: initial }
+    brandWithSeasonFetcher
   );
 
   return {
