@@ -75,7 +75,9 @@ const Home: NextPage<{ initialData: AllEntertainment }> = ({ initialData }) => {
                           ? getImageSrc(
                               carouselItem.images,
                               "Main",
-                              `${window.innerHeight}x${window.innerWidth}`
+                              window.innerHeight > window.innerWidth
+                                ? `${window.innerHeight}x${window.innerHeight}`
+                                : `${window.innerWidth}x${window.innerWidth}`
                             )
                           : "",
                       type: carouselItem.type as EntertainmentType,

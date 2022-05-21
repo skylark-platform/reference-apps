@@ -74,6 +74,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                     transition-colors hover:text-white md:text-base
                     ${activeHref === href ? "text-white" : "text-gray-500"}
                   `}
+                  onClick={() => setMobileOpen(false)}
                 >
                   {text}
                 </a>

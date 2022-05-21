@@ -11,7 +11,7 @@ export const NavigationToggle: React.FC<NavigationToggleProps> = ({
   onClick,
 }) => (
   <button
-    className="flex h-14 w-14 items-center justify-center bg-gray-900 text-white md:bg-gray-900/80 md:p-5"
+    className="flex h-mobile-header w-mobile-header items-center justify-center bg-gray-900 text-white md:bg-gray-900/80 md:p-5"
     type="button"
     onClick={onClick}
   >

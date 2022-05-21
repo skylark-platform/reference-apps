@@ -12,7 +12,7 @@ const EpisodePage: NextPage = () => {
   const episode = data as Episode | undefined;
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-start py-2 pt-14 md:pt-64">
+    <div className="flex min-h-screen flex-col items-center justify-start py-2 md:pt-64">
       <Head>
         <title>{`Skylark Media Reference App`}</title>
       </Head>

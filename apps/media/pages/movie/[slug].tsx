@@ -11,7 +11,7 @@ const MoviePage: NextPage = () => {
   const movie = data as Movie | undefined;
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-start py-2 pt-14 md:pt-64">
+    <div className="flex min-h-screen flex-col items-center justify-start py-2 md:pt-64">
       <h1>
         {movie?.title.long || movie?.title?.medium || movie?.title?.short}
       </h1>

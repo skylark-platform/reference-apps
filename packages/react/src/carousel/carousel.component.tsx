@@ -56,6 +56,14 @@ export const Carousel: React.FC<CarouselProps> = ({
   };
 
   useEffect(() => {
+    // Load images before they are active
+    items.forEach(({ image: src }) => {
+      const image = new Image();
+      image.src = src;
+    });
+  }, [items]);
+
+  useEffect(() => {
     if (activeItem) {
       const newActiveItem =
         activeItem && activeItem < items.length ? activeItem : 0;
