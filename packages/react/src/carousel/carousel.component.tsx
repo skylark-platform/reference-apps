@@ -48,6 +48,7 @@ export const Carousel: React.FC<CarouselProps> = ({
   changeInterval,
   activeItem,
 }) => {
+  const [loadedImages, setLoadedImages] = useState<string[]>([]);
   const [[page, direction], setPage] = useState([0, 0]);
   const itemIndex = wrap(0, items.length, page);
 
@@ -57,11 +58,16 @@ export const Carousel: React.FC<CarouselProps> = ({
 
   useEffect(() => {
     // Load images before they are active
-    items.forEach(({ image: src }) => {
-      const image = new Image();
-      image.src = src;
-    });
-  }, [items]);
+    items
+      .filter(({ image: src }) => !loadedImages.includes(src))
+      .forEach(({ image: src }) => {
+        const image = new Image();
+        image.addEventListener("load", () => {
+          setLoadedImages([...loadedImages, src]);
+        });
+        image.src = src;
+      });
+  }, [items, loadedImages, setLoadedImages]);
 
   useEffect(() => {
     if (activeItem) {
@@ -82,6 +88,7 @@ export const Carousel: React.FC<CarouselProps> = ({
   }, [page, changeInterval, activeItem, items.length]);
 
   const { image, title, releaseDate, type, duration, href } = items[itemIndex];
+  const activeImageHasLoaded = loadedImages.includes(image);
 
   return (
     <div
@@ -97,12 +104,15 @@ export const Carousel: React.FC<CarouselProps> = ({
             absolute block h-full w-full min-w-full
             bg-cover bg-center
             bg-no-repeat text-white
+            ${!activeImageHasLoaded ? "animate-pulse bg-gray-800" : ""}
           `}
           custom={direction}
           exit="exit"
           initial="enter"
           key={`${title}-${image}-carousel-item`}
-          style={{ backgroundImage: `url('${image}')` }}
+          style={{
+            backgroundImage: activeImageHasLoaded ? `url('${image}')` : "",
+          }}
           transition={{
             x: { type: "easeIn", stiffness: 300, damping: 30 },
           }}
