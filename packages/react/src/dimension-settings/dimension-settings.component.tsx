@@ -59,7 +59,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                   </a>
                 </div>
               </div>
-              <p className="pt-2">{`Device type: ${deviceType}`}</p>
+              <p className="pt-2 text-sm">{`Device type: ${deviceType}`}</p>
               <div className="grid grid-cols-1 gap-8 pt-7 md:grid-cols-2 md:pt-14 lg:grid-cols-4">
                 <DimensionContent label="Time">
                   <DimensionRadioButton

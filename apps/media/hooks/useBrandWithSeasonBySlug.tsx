@@ -94,7 +94,13 @@ export const brandWithSeasonFetcher = ([slug, deviceType]: [
 
   return fetch(`${SKYLARK_API}/api/brands/?slug=${slug}&${apiQuery}`)
     .then((r) => r.json())
-    .then(({ objects: [brand] }: ApiMultipleEntertainmentObjects) =>
+    .then(({ objects }: ApiMultipleEntertainmentObjects) => {
+      if (!objects || objects.length === 0) {
+        throw new Error("Brand not found");
+      }
+      return objects;
+    })
+    .then(([brand]: ApiMultipleEntertainmentObjects["objects"]) =>
       parseSkylarkObject(brand)
     );
 };
@@ -112,7 +118,8 @@ export const useBrandWithSeasonBySlug = (
   );
 
   return {
-    brand: data as Brand,
+    brand: data as Brand | undefined,
+    notFound: error?.message === "Brand not found",
     error,
   };
 };
