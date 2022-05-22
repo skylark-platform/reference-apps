@@ -4,6 +4,7 @@ import { DimensionContent } from "./dimension-content";
 import { DimensionToggle } from "./dimension-toggle";
 import { DimensionRadioButton } from "./dimension-radio-button";
 import { SkylarkBranding } from "../skylark-branding";
+import { useDeviceType } from "../hooks/useDeviceType";
 
 interface DimensionSettingsProps {
   show?: boolean;
@@ -18,6 +19,8 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
   show: propShow = false,
 }) => {
   const [show, setShow] = useState(propShow);
+  const deviceType = useDeviceType();
+
   return (
     <>
       <div
@@ -56,6 +59,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                   </a>
                 </div>
               </div>
+              <p className="pt-2">{`Device type: ${deviceType}`}</p>
               <div className="grid grid-cols-1 gap-8 pt-7 md:grid-cols-2 md:pt-14 lg:grid-cols-4">
                 <DimensionContent label="Time">
                   <DimensionRadioButton

@@ -16,7 +16,13 @@ const BrandPage: NextPage = () => {
   return (
     <div className="mb-20 flex min-h-screen flex-col items-center bg-gray-900">
       <Head>
-        <title>{`Skylark Media Reference App`}</title>
+        <title>{`${
+          brand.title.short ||
+          brand.title.medium ||
+          brand.title.long ||
+          brand.objectTitle ||
+          "Brand page"
+        } - StreamTV`}</title>
       </Head>
 
       <div className="h-[90vh] w-full md:h-[95vh]">
@@ -37,6 +43,9 @@ const BrandPage: NextPage = () => {
           ]}
         />
       </div>
+
+      {!brand && !error && <p>{`Loading ${query?.slug as string}`}</p>}
+      {error && <p>{`Error fetching brand: ${error.message}`}</p>}
 
       {brand &&
         brand.items?.map(
@@ -78,16 +87,6 @@ const BrandPage: NextPage = () => {
               </div>
             )
         )}
-      {!brand && <p>{`Loading ${query?.slug as string}`}</p>}
-
-      {error && (
-        <div>
-          <p>{`Error fetching data`}</p>
-          <p>{error.name}</p>
-          <p>{error.message}</p>
-          <p>{error.stack}</p>
-        </div>
-      )}
     </div>
   );
 };

@@ -6,7 +6,6 @@ import {
   EpisodeThumbnail,
   MovieThumbnail,
   Rail,
-  useDeviceType,
 } from "@skylark-reference-apps/react";
 import { useRouter } from "next/router";
 import {
@@ -33,7 +32,6 @@ export async function getStaticProps() {
 const Home: NextPage<{ initialData: AllEntertainment }> = ({ initialData }) => {
   const { query } = useRouter();
   const { homepage } = useHomepageSet(initialData);
-  const deviceType = useDeviceType();
 
   const activeCarouselItem = query?.carousel_item
     ? parseInt(query.carousel_item as string, 10)
@@ -42,7 +40,7 @@ const Home: NextPage<{ initialData: AllEntertainment }> = ({ initialData }) => {
   return (
     <div className="mb-20 flex min-h-screen flex-col items-center bg-gray-900">
       <Head>
-        <title>{`Skylark Media Reference App`}</title>
+        <title>{`Home - StreamTV`}</title>
       </Head>
 
       {homepage?.isExpanded &&
@@ -182,8 +180,6 @@ const Home: NextPage<{ initialData: AllEntertainment }> = ({ initialData }) => {
           ))}
         </Rail>
       </div>
-
-      <p className="py-4 text-lg text-white">{`Device type: ${deviceType}`}</p>
     </div>
   );
 };

@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import { Player } from "@skylark-reference-apps/react";
 import { getImageSrc, Movie } from "@skylark-reference-apps/lib";
 import { useRouter } from "next/router";
+import Head from "next/head";
 import { useSingleObjectBySlug } from "../../hooks/useSingleObjectBySlug";
 
 const MoviePage: NextPage = () => {
@@ -12,6 +13,15 @@ const MoviePage: NextPage = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-start py-2 md:pt-64">
+      <Head>
+        <title>{`${
+          movie?.title.short ||
+          movie?.title.medium ||
+          movie?.title.long ||
+          movie?.objectTitle ||
+          "Movie page"
+        } - StreamTV`}</title>
+      </Head>
       <h1>
         {movie?.title.long || movie?.title?.medium || movie?.title?.short}
       </h1>

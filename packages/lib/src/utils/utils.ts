@@ -1,5 +1,12 @@
 import { ImageTypes, ImageUrl, ImageUrls } from "../interfaces/skylark/objects";
 
+/**
+ * getImageSrc - finds and returns the wanted type of image optionally with an added resize value
+ * @param images {ImageUrls} - All images returned by Skylark
+ * @param type {ImageTypes} - The image type to find and return
+ * @param size {string} - Optional resize value in the form {height}x{width} e.g. (100x200)
+ * @returns {string} the image URL or an empty string
+ */
 export const getImageSrc = (
   images: ImageUrls,
   type: ImageTypes,

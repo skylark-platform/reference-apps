@@ -14,7 +14,13 @@ const EpisodePage: NextPage = () => {
   return (
     <div className="flex min-h-screen flex-col items-center justify-start py-2 md:pt-64">
       <Head>
-        <title>{`Skylark Media Reference App`}</title>
+        <title>{`${
+          episode?.title.short ||
+          episode?.title.medium ||
+          episode?.title.long ||
+          episode?.objectTitle ||
+          "Episode page"
+        } - StreamTV`}</title>
       </Head>
       <h1>{episode?.title?.short}</h1>
       <p>
