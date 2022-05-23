@@ -13,10 +13,13 @@ describe("InformationPanel component", () => {
         parentTitles={["Game of Thrones"]}
         rating="18+"
         seasonNumber={1}
+        themes={["Action", "Adventure"]}
         title="1. Winter is Coming"
       />
     );
     expect(screen.getByText(/Game of Thrones/)).toBeTruthy();
     expect(screen.getByText(/1. Winter is Coming/)).toBeTruthy();
+    expect(screen.getByText(/Drama/)).toBeTruthy();
+    expect(screen.getByText(/Action/)).toBeTruthy();
   });
 });

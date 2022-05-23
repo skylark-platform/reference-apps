@@ -5,7 +5,12 @@ import {
   MetadataPanel,
   Player,
 } from "@skylark-reference-apps/react";
-import { Episode, getTitleByOrder, Season } from "@skylark-reference-apps/lib";
+import {
+  Episode,
+  getImageSrc,
+  getTitleByOrder,
+  Season,
+} from "@skylark-reference-apps/lib";
 import { useRouter } from "next/router";
 import {
   MdRecentActors,
@@ -41,9 +46,10 @@ const EpisodePage: NextPage = () => {
       </Head>
       <div className="flex h-full w-full justify-center py-10 md:py-0 md:pb-16">
         <Player
+          poster={episode?.images && getImageSrc(episode.images, "Thumbnail")}
           src={"/mux-video-intro.mp4"}
           videoId={"1"}
-          videoTitle={"Mux Video Intro"}
+          videoTitle={titleShortToLong}
         />
       </div>
       <div className="flex flex-col md:flex-row md:py-2">
