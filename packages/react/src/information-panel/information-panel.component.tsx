@@ -23,8 +23,8 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
   description,
   genres,
 }) => (
-  <div className="w-full bg-black">
-    <div className="p-2	text-white" key={show}>
+  <div className="h-full w-full bg-gray-900">
+    <div className="p-2 text-white" key={show}>
       <div className="left flex w-full flex-col gap-3">
         <div className="hidden md:flex">
           <List
@@ -34,12 +34,12 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
           />
         </div>
         <div className="pt-2 text-2xl md:text-3xl">{episode}</div>
-        <span className="mt-4 mb-2 hidden w-1/12 border-b border-b-[1px] border-gray-800 md:flex" />
+        <span className="mt-4 mb-2 hidden w-2/12 border-b border-b-[1px] border-gray-800 md:flex" />
         <div className="flex">
           <List
             contents={[
               <span className="flex items-center" key={"duration-icon"}>
-                <MdOutlineWatchLater className="mt-0 mr-2 h-6 w-7" />
+                <MdOutlineWatchLater className="mt-0 mr-2" size={25} />
                 {`${duration}m`}
               </span>,
               ageRange,
@@ -49,7 +49,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
             textSize={"sm"}
           />
         </div>
-        <div className="mb-5 pt-2 text-lg text-gray-400">{description}</div>
+        <div className="text-md mb-5 pt-2 text-gray-400">{description}</div>
         <div className="text-gray-500">
           <List contents={genres} />
         </div>
