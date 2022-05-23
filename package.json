@@ -15,6 +15,7 @@
     "lint:fix": "lerna run --parallel lint -- --fix",
     "test": "lerna run --parallel test",
     "test:ci": "lerna run --parallel test -- --ci --coverage",
+    "tsc": "lerna run --parallel tsc",
     "prettier": "prettier . --write",
     "prettier:check": "prettier . --check",
     "prepare": "husky install",

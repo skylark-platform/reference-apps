@@ -32,11 +32,11 @@ const PlayerPage: NextPage = () => (
             "Series Premiere. Lord Stark is troubled by disturbing reports from a Night's Watch deserter."
           }
           duration={57}
-          episode={"1. Winter is Coming"}
           genres={["Drama", "Mythical", "Based on a book"]}
+          parentTitles={["Game of Thrones"]}
           rating={"18+"}
-          season={1}
-          show={"Game of Thrones"}
+          seasonNumber={1}
+          title={"Winter is Coming"}
         />
       </div>
       <div className="h-full w-full md:w-6/12 lg:w-4/12">
