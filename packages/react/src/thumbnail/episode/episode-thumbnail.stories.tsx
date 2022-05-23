@@ -26,9 +26,3 @@ Default.args = {
   duration: "55m",
   releaseDate: "22 Jan 2022",
 };
-
-export const DefaultWithHoverState = Template.bind({});
-DefaultWithHoverState.args = {
-  ...Default.args,
-};
-DefaultWithHoverState.parameters = { pseudo: { hover: true } };
