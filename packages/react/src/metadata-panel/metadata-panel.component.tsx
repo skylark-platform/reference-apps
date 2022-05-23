@@ -9,7 +9,7 @@ interface MetadataPanelProps {
 }
 
 export const MetadataPanel: React.FC<MetadataPanelProps> = ({ content }) => (
-  <div className="w-full border-l border-gray-800 bg-gray-900 text-xs text-white md:text-base">
+  <div className="w-full border-gray-800 bg-gray-900 text-xs text-white md:border-l md:text-base">
     {content.map(({ body, header, icon }) => (
       <div
         className="grid w-full grid-cols-8 py-2 md:grid-cols-8 md:gap-4 md:py-4 lg:grid-cols-10"

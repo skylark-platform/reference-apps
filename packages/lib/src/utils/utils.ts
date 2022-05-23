@@ -1,4 +1,11 @@
-import { ImageTypes, ImageUrl, ImageUrls } from "../interfaces/skylark/objects";
+import {
+  ImageTypes,
+  ImageUrl,
+  ImageUrls,
+  Credit,
+  Credits,
+  CreditTypes,
+} from "../interfaces/skylark/objects";
 
 /**
  * getImageSrc - finds and returns the wanted type of image optionally with an added resize value
@@ -24,4 +31,20 @@ export const getImageSrc = (
       : `${urlWithoutExtension}.jpg`;
   }
   return "";
+};
+
+/**
+ * getCreditsByType - finds and returns all the credits that match a given type
+ * @param credits {Credits}
+ * @param type {CreditTypes}
+ * @returns {Credit[]} an array of Credit
+ */
+export const getCreditsByType = (
+  credits: Credits,
+  type: CreditTypes
+): Credit[] => {
+  const expandedCredits = (credits as Credit[]).filter(
+    ({ isExpanded }) => isExpanded
+  );
+  return expandedCredits.filter((credit) => credit.roleUrl?.title === type);
 };

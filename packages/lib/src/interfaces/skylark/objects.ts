@@ -9,6 +9,8 @@ export type ObjectTypes = EntertainmentType | SetTypes | null;
 
 export type ImageTypes = "Thumbnail" | "Main" | "Poster";
 
+export type CreditTypes = "Actor" | "Director" | "Writer";
+
 export type DeviceTypes = "smartphone" | "pc";
 
 export interface UnexpandedObject {

@@ -9,11 +9,11 @@ describe("InformationPanel component", () => {
         availableUntil={12}
         description="Series Premiere. Lord Stark is troubled by disturbing reports from a Night's Watch deserter."
         duration={57}
-        episode="1. Winter is Coming"
         genres={["Drama", "Mythical", "Based on a book"]}
+        parentTitles={["Game of Thrones"]}
         rating="18+"
-        season={1}
-        show="Game of Thrones"
+        seasonNumber={1}
+        title="1. Winter is Coming"
       />
     );
     expect(screen.getByText(/Game of Thrones/)).toBeTruthy();
