@@ -7,10 +7,10 @@ interface InformationPanelProps {
   season: number;
   episode: string;
   duration: number;
-  ageRange: string;
+  rating?: string;
   availableUntil: number;
-  description: string;
-  genres: string[];
+  description?: string;
+  genres?: string[];
 }
 
 export const InformationPanel: React.FC<InformationPanelProps> = ({
@@ -18,7 +18,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
   season,
   episode,
   duration,
-  ageRange,
+  rating,
   availableUntil,
   description,
   genres,
@@ -42,17 +42,21 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
                 <MdOutlineWatchLater className="mt-0 mr-2" size={25} />
                 {`${duration}m`}
               </span>,
-              ageRange,
+              rating,
               `Available for ${availableUntil} days`,
             ]}
             highlightFirst
             textSize={"sm"}
           />
         </div>
-        <div className="text-md mb-5 pt-2 text-gray-400">{description}</div>
-        <div className="text-gray-500">
-          <List contents={genres} />
-        </div>
+        {description && (
+          <p className="text-md mb-5 pt-2 text-gray-400">{description}</p>
+        )}
+        {genres && (
+          <div className="text-gray-500">
+            <List contents={genres} />
+          </div>
+        )}
       </div>
     </div>
   </div>

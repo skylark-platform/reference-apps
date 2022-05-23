@@ -43,6 +43,21 @@ export interface Credit {
 
 export type Credits = UnexpandedObject[] | Credit[];
 
+export interface Theme {
+  isExpanded: true;
+  name: string;
+}
+
+export type Themes = UnexpandedObject[] | Theme[];
+
+export interface Rating {
+  isExpanded: true;
+  title: string;
+  value: string;
+}
+
+export type Ratings = UnexpandedObject[] | Rating[];
+
 export interface SkylarkObject {
   self: string;
   type: ObjectTypes;
@@ -64,9 +79,9 @@ export interface SkylarkObject {
   tags: string[];
   titleSort: string;
   credits: Credits;
-  ratingUrls: string[];
+  ratings: Ratings;
   genreUrls: string[];
-  themeUrls: string[];
+  themes: Themes;
   images: ImageUrls;
   items: AllEntertainment[];
 }

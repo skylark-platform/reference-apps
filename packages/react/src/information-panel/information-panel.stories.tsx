@@ -17,7 +17,7 @@ Default.args = {
   season: 1,
   episode: "1. Winter is Coming",
   duration: 57,
-  ageRange: "18+",
+  rating: "18+",
   availableUntil: 12,
   description:
     "Series Premiere. Lord Stark is troubled by disturbing reports from a Night's Watch deserter.",

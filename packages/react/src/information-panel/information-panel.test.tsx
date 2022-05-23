@@ -6,12 +6,12 @@ describe("InformationPanel component", () => {
   it("the component renders correctly", () => {
     render(
       <InformationPanel
-        ageRange="18+"
         availableUntil={12}
         description="Series Premiere. Lord Stark is troubled by disturbing reports from a Night's Watch deserter."
         duration={57}
         episode="1. Winter is Coming"
         genres={["Drama", "Mythical", "Based on a book"]}
+        rating="18+"
         season={1}
         show="Game of Thrones"
       />

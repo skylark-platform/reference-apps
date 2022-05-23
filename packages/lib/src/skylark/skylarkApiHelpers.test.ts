@@ -3,13 +3,17 @@ import {
   ApiEntertainmentObject,
   Credit,
   ImageUrl,
+  Rating,
   SkylarkObject,
+  Theme,
   UnexpandedObject,
 } from "../interfaces";
 import {
   createSkylarkApiQuery,
   parseSkylarkImageUrls,
   parseSkylarkCredits,
+  parseSkylarkThemes,
+  parseSkylarkRatings,
 } from "./skylarkApiHelpers";
 
 const fieldsToExpand = {
@@ -200,6 +204,98 @@ describe("skylarkApiHelpers", () => {
     });
   });
 
+  describe("parseSkylarkThemes", () => {
+    it("parses Themes when they are not expanded", () => {
+      const imageUrls = parseSkylarkThemes(["/api/theme/1", "/api/theme/2"]);
+
+      const expected: UnexpandedObject[] = [
+        {
+          isExpanded: false,
+          self: "/api/theme/1",
+        },
+        {
+          isExpanded: false,
+          self: "/api/theme/2",
+        },
+      ];
+
+      expect(imageUrls).toEqual(expected);
+    });
+
+    it("parses Themes when they are expanded", () => {
+      const imageUrls = parseSkylarkThemes([
+        {
+          name: "Horror",
+        },
+        {
+          name: "Action",
+        },
+      ]);
+
+      const expected: Theme[] = [
+        {
+          isExpanded: true,
+          name: "Horror",
+        },
+        {
+          isExpanded: true,
+          name: "Action",
+        },
+      ];
+
+      expect(imageUrls[0]).toHaveProperty("isExpanded", true);
+      expect(imageUrls).toEqual(expected);
+    });
+  });
+
+  describe("parseSkylarkRatings", () => {
+    it("parses Ratings when they are not expanded", () => {
+      const imageUrls = parseSkylarkRatings(["/api/rating/1", "/api/rating/2"]);
+
+      const expected: UnexpandedObject[] = [
+        {
+          isExpanded: false,
+          self: "/api/rating/1",
+        },
+        {
+          isExpanded: false,
+          self: "/api/rating/2",
+        },
+      ];
+
+      expect(imageUrls).toEqual(expected);
+    });
+
+    it("parses Rating when they are expanded", () => {
+      const imageUrls = parseSkylarkRatings([
+        {
+          value: "12",
+          title: "twelve",
+        },
+        {
+          value: "15",
+          title: "fifteen",
+        },
+      ]);
+
+      const expected: Rating[] = [
+        {
+          isExpanded: true,
+          value: "12",
+          title: "twelve",
+        },
+        {
+          isExpanded: true,
+          value: "15",
+          title: "fifteen",
+        },
+      ];
+
+      expect(imageUrls[0]).toHaveProperty("isExpanded", true);
+      expect(imageUrls).toEqual(expected);
+    });
+  });
+
   describe("parseSkylarkObject", () => {
     const apiObject: ApiEntertainmentObject = {
       uid: "1",
@@ -232,10 +328,10 @@ describe("skylarkApiHelpers", () => {
       },
       type: null,
       tags: [],
-      themeUrls: [],
+      themes: [],
       titleSort: "",
       releaseDate: "",
-      ratingUrls: [],
+      ratings: [],
       items: [],
       images: [],
       credits: [],

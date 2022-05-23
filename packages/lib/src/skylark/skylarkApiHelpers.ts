@@ -22,6 +22,14 @@ import {
   Season,
   SkylarkObject,
   UnexpandedSkylarkObject,
+  ApiTheme,
+  Theme,
+  ApiThemes,
+  Themes,
+  ApiRating,
+  ApiRatings,
+  Rating,
+  Ratings,
 } from "../interfaces";
 
 /**
@@ -119,6 +127,49 @@ export const parseSkylarkCredits = (credits: ApiCredits): Credits => {
 };
 
 /**
+ * Parses the themes object from the Skylark API
+ * isExpanded depending on whether the object has been expanded
+ * @param themes the themes object from the Skylark API
+ * @returns {Themes}
+ */
+export const parseSkylarkThemes = (themes: ApiThemes): Themes => {
+  if (determineIfExpanded(themes)) {
+    return convertToUnexpandedObject(themes as string[]);
+  }
+
+  const parsedImageUrls: Theme[] = (themes as ApiTheme[]).map(
+    (item: ApiTheme): Theme => ({
+      isExpanded: true,
+      name: item.name,
+    })
+  );
+
+  return parsedImageUrls;
+};
+
+/**
+ * Parses the ratings object from the Skylark API
+ * isExpanded depending on whether the object has been expanded
+ * @param ratings the ratings object from the Skylark API
+ * @returns {Ratings}
+ */
+export const parseSkylarkRatings = (ratings: ApiRatings): Ratings => {
+  if (determineIfExpanded(ratings)) {
+    return convertToUnexpandedObject(ratings as string[]);
+  }
+
+  const parsedImageUrls: Rating[] = (ratings as ApiRating[]).map(
+    (item: ApiRating): Rating => ({
+      isExpanded: true,
+      value: item.value,
+      title: item.title,
+    })
+  );
+
+  return parsedImageUrls;
+};
+
+/**
  * Parses an object returned by the Skylark API
  * If the object contains child items, it will attempt to parse those too
  * @param obj
@@ -169,14 +220,13 @@ export const parseSkylarkObject = (
     type: null,
     images: obj.image_urls ? parseSkylarkImageUrls(obj.image_urls) : [],
     credits: obj.credits ? parseSkylarkCredits(obj.credits) : [],
+    themes: obj.theme_urls ? parseSkylarkThemes(obj.theme_urls) : [],
+    ratings: obj.rating_urls ? parseSkylarkRatings(obj.rating_urls) : [],
     titleSort: obj.title_sort || "",
-
     // TODO add these
     releaseDate: "",
-    ratingUrls: [],
     tags: [],
     genreUrls: [],
-    themeUrls: [],
   };
 
   if (obj.self) {

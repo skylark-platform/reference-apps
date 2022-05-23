@@ -24,10 +24,9 @@ const PlayerPage: NextPage = () => (
         videoTitle={"Mux Video Intro"}
       />
     </div>
-    <div className="flex flex-col md:flex-row md:py-2 ">
-      <div className="ml-6 h-full w-full pb-4 md:w-6/12 lg:w-8/12 ">
+    <div className="flex flex-col md:flex-row md:py-2">
+      <div className="ml-6 h-full w-full pb-4 md:w-6/12 lg:w-8/12">
         <InformationPanel
-          ageRange={"18+"}
           availableUntil={12}
           description={
             "Series Premiere. Lord Stark is troubled by disturbing reports from a Night's Watch deserter."
@@ -35,6 +34,7 @@ const PlayerPage: NextPage = () => (
           duration={57}
           episode={"1. Winter is Coming"}
           genres={["Drama", "Mythical", "Based on a book"]}
+          rating={"18+"}
           season={1}
           show={"Game of Thrones"}
         />
