@@ -143,6 +143,8 @@ export const movieThumbnails: MovieThumbnailProps[] = [
   },
 ];
 
+export const genres = ["Action & Adventure", "Drama", "Horror", "Sports"];
+
 export const allMovieBackgroundImages = movieThumbnails.map(
   ({ backgroundImage }) => backgroundImage
 );

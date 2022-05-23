@@ -2,11 +2,15 @@ import { useState } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 
-import { MdPlayCircleFilled } from "react-icons/md";
+import { MdRefresh } from "react-icons/md";
 
-import { Button, MovieThumbnail } from "@skylark-reference-apps/react";
+import {
+  Button,
+  Dropdown,
+  MovieThumbnail,
+} from "@skylark-reference-apps/react";
 
-import { movieThumbnails } from "../test-data";
+import { movieThumbnails, genres } from "../test-data";
 
 const Movies: NextPage = () => {
   const [movies, loadMore] = useState(movieThumbnails);
@@ -25,7 +29,12 @@ const Movies: NextPage = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-x-4 gap-y-6 md:grid-cols-4 xl:grid-cols-6">
+        <div className="flex flex-row gap-x-2 pb-24">
+          <Dropdown items={genres} label="Genres" />
+          <Dropdown items={genres} label="Themes" />
+        </div>
+
+        <div className="grid grid-cols-2 gap-x-4 gap-y-6 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
           {movies.map((movie) => (
             <div className="" key={movie.title}>
               <MovieThumbnail
@@ -38,10 +47,10 @@ const Movies: NextPage = () => {
             </div>
           ))}
         </div>
-        <div className="flex flex-row justify-center py-10">
+        <div className="flex flex-row justify-center py-28">
           <Button
             className=""
-            icon={<MdPlayCircleFilled />}
+            icon={<MdRefresh />}
             iconPlacement="left"
             text="Load more"
             onClick={() => loadMore([...movies, ...movieThumbnails])}
