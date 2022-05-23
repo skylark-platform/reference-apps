@@ -68,6 +68,7 @@ module.exports = {
         "md-gutter": "3rem",
         "lg-gutter": "5rem",
         "xl-gutter": "7rem",
+        "mobile-header": "3.5rem",
       },
       zIndex: {
         60: "60",

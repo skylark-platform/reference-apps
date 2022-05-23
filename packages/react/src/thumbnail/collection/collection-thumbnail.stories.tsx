@@ -31,9 +31,3 @@ Default.args = {
   backgroundImage: "/collections/Brand%20-%20Sherlock.png",
   tags: ["Genres", "Themes"],
 };
-
-export const DefaultWithHoverState = Template.bind({});
-DefaultWithHoverState.args = {
-  ...Default.args,
-};
-DefaultWithHoverState.parameters = { pseudo: { hover: true } };

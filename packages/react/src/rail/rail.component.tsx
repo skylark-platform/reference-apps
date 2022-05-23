@@ -112,12 +112,14 @@ export const Rail: React.FC<RailProps> = ({
 
   return (
     <div className="w-full">
-      <h2 className="ml-sm-gutter text-2xl font-normal text-white md:ml-md-gutter lg:ml-lg-gutter xl:ml-xl-gutter">
-        {header}
-        {displayCount && (
-          <span className="ml-1 text-gray-500">{`(${numChildren})`}</span>
-        )}
-      </h2>
+      {header && (
+        <h2 className="ml-sm-gutter text-2xl font-normal text-white md:ml-md-gutter lg:ml-lg-gutter xl:ml-xl-gutter">
+          {header}
+          {displayCount && (
+            <span className="ml-1 text-gray-500 lg:ml-2">{`(${numChildren})`}</span>
+          )}
+        </h2>
+      )}
       <div className="relative flex items-center justify-center">
         {numChildren > numChildrenOnScreen && (
           <>

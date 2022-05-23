@@ -4,6 +4,7 @@ import { DimensionContent } from "./dimension-content";
 import { DimensionToggle } from "./dimension-toggle";
 import { DimensionRadioButton } from "./dimension-radio-button";
 import { SkylarkBranding } from "../skylark-branding";
+import { useDeviceType } from "../hooks/useDeviceType";
 
 interface DimensionSettingsProps {
   show?: boolean;
@@ -18,16 +19,22 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
   show: propShow = false,
 }) => {
   const [show, setShow] = useState(propShow);
+  const deviceType = useDeviceType();
+
   return (
     <>
-      <div className="fixed bottom-0 right-sm-gutter flex md:right-md-gutter lg:right-lg-gutter xl:right-xl-gutter">
+      <div
+        className={`fixed bottom-0 right-sm-gutter z-20 flex transition-opacity duration-500 md:right-md-gutter lg:right-lg-gutter xl:right-xl-gutter ${
+          show ? "opacity-0" : "opacity-100"
+        }`}
+      >
         <DimensionToggle variant="open" onClick={() => setShow(true)} />
       </div>
       <AnimatePresence>
         {show && (
           <motion.div
             animate="animate"
-            className={`fixed bottom-0 left-0 right-0 z-50 block h-[80vh] bg-white font-skylark-branding md:h-auto`}
+            className={`fixed bottom-0 left-0 right-0 z-50 block h-[75vh] bg-white font-skylark-branding md:h-auto`}
             exit="hidden"
             initial="hidden"
             key="dimension-settings"
@@ -52,6 +59,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                   </a>
                 </div>
               </div>
+              <p className="pt-2 text-sm">{`Device type: ${deviceType}`}</p>
               <div className="grid grid-cols-1 gap-8 pt-7 md:grid-cols-2 md:pt-14 lg:grid-cols-4">
                 <DimensionContent label="Time">
                   <DimensionRadioButton

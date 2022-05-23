@@ -16,7 +16,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   <header className="fixed z-80 flex w-full flex-col font-display md:h-28 md:flex-row-reverse">
     <div
       className={`
-      fixed z-90 flex h-14 w-full items-center justify-center
+      fixed z-90 flex h-mobile-header w-full items-center justify-center
       bg-purple-500 md:relative md:h-full md:w-3/5 md:justify-between
       md:pr-md-gutter lg:w-2/3 lg:pr-lg-gutter xl:pr-xl-gutter
     `}

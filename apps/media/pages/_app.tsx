@@ -24,7 +24,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <div className="relative">
       <AppBackgroundGradient />
       <AppHeader activeHref={asPath} links={links} title="StreamTV" />
-      <div className="relative z-10 h-full w-full">
+      <div className="relative z-10 h-full w-full pt-mobile-header md:pt-0">
         <Component {...pageProps} />
       </div>
       <DimensionSettings />
