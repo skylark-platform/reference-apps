@@ -55,7 +55,10 @@ export const DefaultWithHoverState = Template.bind({});
 DefaultWithHoverState.args = {
   ...Default.args,
 };
-DefaultWithHoverState.parameters = { pseudo: { hover: true } };
+DefaultWithHoverState.parameters = {
+  pseudo: { hover: true },
+  chromatic: { viewports: [1200] }, // hover is disabled on mobile
+};
 
 export const WithContentBelowHoverState = Template.bind({});
 WithContentBelowHoverState.args = {
