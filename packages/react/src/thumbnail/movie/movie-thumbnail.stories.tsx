@@ -50,9 +50,3 @@ WithContentBelow.args = {
     text: "Watch now",
   },
 };
-
-export const WithContentBelowHoverState = Template.bind({});
-WithContentBelowHoverState.args = {
-  ...WithContentBelow.args,
-};
-WithContentBelowHoverState.parameters = { pseudo: { hover: true } };
