@@ -49,7 +49,7 @@ const Home: NextPage = () => {
                 <div className="h-[90vh] w-full md:h-[95vh]" key={key}>
                   <Carousel
                     activeItem={activeCarouselItem}
-                    changeInterval={6}
+                    changeInterval={8}
                     items={(
                       item.items?.filter(
                         (carouselItem) => carouselItem.isExpanded === true
@@ -171,7 +171,10 @@ const Home: NextPage = () => {
         })}
 
       <div className="my-6 w-full">
-        <Rail displayCount header="Discover">
+        <Rail
+          displayCount
+          header="Discover (this is hardcoded and not implemented)"
+        >
           {collectionThumbnails.map((collection) => (
             <CollectionThumbnail key={collection.title} {...collection} />
           ))}
