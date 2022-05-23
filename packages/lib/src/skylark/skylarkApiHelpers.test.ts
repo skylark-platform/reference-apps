@@ -1,18 +1,17 @@
-import { parseSkylarkObject } from ".";
+import { parseSkylarkObject, parseSkylarkThemesAndGenres } from ".";
 import {
   ApiEntertainmentObject,
   Credit,
   ImageUrl,
   Rating,
   SkylarkObject,
-  Theme,
+  ThemeGenre,
   UnexpandedObject,
 } from "../interfaces";
 import {
   createSkylarkApiQuery,
   parseSkylarkImageUrls,
   parseSkylarkCredits,
-  parseSkylarkThemes,
   parseSkylarkRatings,
 } from "./skylarkApiHelpers";
 
@@ -204,9 +203,12 @@ describe("skylarkApiHelpers", () => {
     });
   });
 
-  describe("parseSkylarkThemes", () => {
+  describe("parseSkylarkThemesAndGenres", () => {
     it("parses Themes when they are not expanded", () => {
-      const imageUrls = parseSkylarkThemes(["/api/theme/1", "/api/theme/2"]);
+      const imageUrls = parseSkylarkThemesAndGenres([
+        "/api/theme/1",
+        "/api/theme/2",
+      ]);
 
       const expected: UnexpandedObject[] = [
         {
@@ -223,7 +225,7 @@ describe("skylarkApiHelpers", () => {
     });
 
     it("parses Themes when they are expanded", () => {
-      const imageUrls = parseSkylarkThemes([
+      const imageUrls = parseSkylarkThemesAndGenres([
         {
           name: "Horror",
         },
@@ -232,7 +234,7 @@ describe("skylarkApiHelpers", () => {
         },
       ]);
 
-      const expected: Theme[] = [
+      const expected: ThemeGenre[] = [
         {
           isExpanded: true,
           name: "Horror",
@@ -330,12 +332,12 @@ describe("skylarkApiHelpers", () => {
       tags: [],
       themes: [],
       titleSort: "",
-      releaseDate: "",
       ratings: [],
       items: [],
       images: [],
       credits: [],
-      genreUrls: [],
+      genres: [],
+      parent: null,
     };
 
     it("parses a SkylarkObject with no items", () => {
@@ -388,6 +390,44 @@ describe("skylarkApiHelpers", () => {
       expect(parsedObject).toEqual(expectedObject);
     });
 
+    it("parses a SkylarkObject with a parent", () => {
+      const apiObjectWithParent: ApiEntertainmentObject = {
+        ...apiObject,
+        parent_url: apiObject,
+      };
+
+      const parsedObject = parseSkylarkObject(apiObjectWithParent);
+
+      const expectedObject: SkylarkObject = {
+        ...defaultExpectedObject,
+        parent: defaultExpectedObject,
+      };
+
+      expect(parsedObject).toEqual(expectedObject);
+    });
+
+    it("parses a SkylarkObject with a parent that also has a parent", () => {
+      const apiObjectWithParent: ApiEntertainmentObject = {
+        ...apiObject,
+        parent_url: {
+          ...apiObject,
+          parent_url: apiObject,
+        },
+      };
+
+      const parsedObject = parseSkylarkObject(apiObjectWithParent);
+
+      const expectedObject: SkylarkObject = {
+        ...defaultExpectedObject,
+        parent: {
+          ...defaultExpectedObject,
+          parent: defaultExpectedObject,
+        },
+      };
+
+      expect(parsedObject).toEqual(expectedObject);
+    });
+
     it("parses additional Episode fields when the self URL starts with /api/episode", () => {
       const obj: ApiEntertainmentObject = {
         ...apiObject,
@@ -426,7 +466,7 @@ describe("skylarkApiHelpers", () => {
       expect(parsedObject).toHaveProperty("type", "season");
       expect(parsedObject).toHaveProperty("numberOfEpisodes", 10);
       expect(parsedObject).toHaveProperty("number", 1);
-      expect(parsedObject).toHaveProperty("releaseDate", "2015");
+      expect(parsedObject).toHaveProperty("year", 2015);
     });
 
     it("parses additional Brand fields when the self URL starts with /api/brand", () => {

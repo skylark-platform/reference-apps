@@ -7,6 +7,7 @@ import {
 import {
   getCreditsByType,
   getImageSrc,
+  getTitleByOrder,
   Movie,
 } from "@skylark-reference-apps/lib";
 import { useRouter } from "next/router";
@@ -25,17 +26,24 @@ const MoviePage: NextPage = () => {
   const { data } = useSingleObjectBySlug("movie", query?.slug as string);
   const movie = data as Movie | undefined;
 
-  const titleLongToShort =
-    movie?.title.long ||
-    movie?.title.medium ||
-    movie?.title.short ||
-    movie?.objectTitle;
+  const titleShortToLong = getTitleByOrder(
+    movie?.title,
+    ["short", "medium", "long"],
+    movie?.objectTitle
+  );
+  const titleLongToShort = getTitleByOrder(
+    movie?.title,
+    ["long", "medium", "short"],
+    movie?.objectTitle
+  );
 
-  const titleShortToLong =
-    movie?.title.short ||
-    movie?.title.medium ||
-    movie?.title.long ||
-    movie?.objectTitle;
+  const parentTitle = movie?.parent?.isExpanded && movie.parent.title;
+
+  const themes: string[] =
+    movie?.themes.map((theme) => (theme.isExpanded ? theme.name : "")) || [];
+
+  const genres: string[] =
+    movie?.genres.map((genre) => (genre.isExpanded ? genre.name : "")) || [];
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-start pb-20 md:pt-64">
@@ -60,16 +68,20 @@ const MoviePage: NextPage = () => {
               movie?.synopsis.short
             }
             duration={57}
-            genres={movie?.themes.map((theme) =>
-              theme.isExpanded ? theme.name : ""
-            )}
-            parentTitles={["Game of Thrones"]}
+            genres={genres}
+            parentTitles={[
+              getTitleByOrder(parentTitle || undefined, [
+                "long",
+                "medium",
+                "short",
+              ]),
+            ]}
             rating={
               movie?.ratings?.[0]?.isExpanded
                 ? movie?.ratings?.[0].title
                 : undefined
             }
-            seasonNumber={1}
+            themes={themes}
             title={titleLongToShort || ""}
           />
         </div>
@@ -82,29 +94,23 @@ const MoviePage: NextPage = () => {
               {
                 icon: <MdRecentActors />,
                 header: "Key Cast",
-                body: movie?.credits
-                  ? getCreditsByType(movie?.credits, "Actor").map(
-                      (credit) => credit?.peopleUrl?.name || ""
-                    )
-                  : [],
+                body: getCreditsByType(movie?.credits, "Actor").map(
+                  (credit) => credit?.peopleUrl?.name || ""
+                ),
               },
               {
                 icon: <MdMovie />,
                 header: "Directors",
-                body: movie?.credits
-                  ? getCreditsByType(movie?.credits, "Director").map(
-                      (credit) => credit?.peopleUrl?.name || ""
-                    )
-                  : [],
+                body: getCreditsByType(movie?.credits, "Director").map(
+                  (credit) => credit?.peopleUrl?.name || ""
+                ),
               },
               {
                 icon: <MdMode />,
                 header: "Writers",
-                body: movie?.credits
-                  ? getCreditsByType(movie?.credits, "Writer").map(
-                      (credit) => credit?.peopleUrl?.name || ""
-                    )
-                  : [],
+                body: getCreditsByType(movie?.credits, "Writer").map(
+                  (credit) => credit?.peopleUrl?.name || ""
+                ),
               },
               {
                 icon: <MdCalendarToday />,

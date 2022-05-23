@@ -21,11 +21,11 @@ export interface ApiCredit {
 
 export type ApiCredits = string[] | ApiCredit[];
 
-export interface ApiTheme {
+export interface ApiThemeGenre {
   name: string;
 }
 
-export type ApiThemes = string[] | ApiTheme[];
+export type ApiThemesAndGenres = string[] | ApiThemeGenre[];
 
 export interface ApiRating {
   title: string;
@@ -33,6 +33,8 @@ export interface ApiRating {
 }
 
 export type ApiRatings = string[] | ApiRating[];
+
+export type ApiParentUrl = string | ApiEntertainmentObject;
 
 export interface ApiEntertainmentObject {
   uid: string;
@@ -42,7 +44,8 @@ export interface ApiEntertainmentObject {
   title_short?: string;
   title_medium?: string;
   title_long?: string;
-  theme_urls?: ApiThemes;
+  theme_urls?: ApiThemesAndGenres;
+  genre_urls?: ApiThemesAndGenres;
   synopsis_short?: string;
   synopsis_medium?: string;
   synopsis_long?: string;
@@ -57,6 +60,7 @@ export interface ApiEntertainmentObject {
   number_of_episodes?: number;
   title_sort?: string;
   content_url?: never;
+  parent_url?: ApiEntertainmentObject | string;
 }
 
 export interface ApiSetObject {

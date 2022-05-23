@@ -11,6 +11,7 @@ interface InformationPanelProps {
   availableUntil: number;
   description?: string;
   genres?: string[];
+  themes?: string[];
 }
 
 export const InformationPanel: React.FC<InformationPanelProps> = ({
@@ -21,6 +22,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
   availableUntil,
   description,
   genres,
+  themes,
   seasonNumber,
 }) => (
   <div className="h-full w-full bg-gray-900">
@@ -59,10 +61,13 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
             {description}
           </p>
         )}
-        {genres && (
-          <div className="text-gray-500">
-            <List contents={genres} />
-          </div>
+        {[genres, themes].map(
+          (contents) =>
+            contents && (
+              <div className="-my-0.5 text-gray-500" key={contents?.join("")}>
+                <List contents={contents} />
+              </div>
+            )
         )}
       </div>
     </div>

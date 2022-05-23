@@ -1,7 +1,7 @@
 import {
   convertObjectToSkylarkApiFields,
-  convertToUnexpandedObject,
-  convertUrlToObjectType,
+  convertToUnexpandedObjects,
+  convertToUnexpandedSkylarkObjects,
 } from "./converters";
 import {
   AllEntertainment,
@@ -21,15 +21,15 @@ import {
   Movie,
   Season,
   SkylarkObject,
-  UnexpandedSkylarkObject,
-  ApiTheme,
-  Theme,
-  ApiThemes,
-  Themes,
   ApiRating,
   ApiRatings,
   Rating,
   Ratings,
+  ApiThemesAndGenres,
+  ApiThemeGenre,
+  ThemesAndGenres,
+  ThemeGenre,
+  CreditTypes,
 } from "../interfaces";
 
 /**
@@ -83,7 +83,7 @@ export const createSkylarkApiQuery = ({
  */
 export const parseSkylarkImageUrls = (imageUrls: ApiImageUrls): ImageUrls => {
   if (determineIfExpanded(imageUrls)) {
-    return convertToUnexpandedObject(imageUrls as string[]);
+    return convertToUnexpandedObjects(imageUrls as string[]);
   }
 
   const parsedImageUrls: ImageUrl[] = (imageUrls as ApiImage[]).map(
@@ -107,10 +107,10 @@ export const parseSkylarkImageUrls = (imageUrls: ApiImageUrls): ImageUrls => {
  */
 export const parseSkylarkCredits = (credits: ApiCredits): Credits => {
   if (determineIfExpanded(credits)) {
-    return convertToUnexpandedObject(credits as string[]);
+    return convertToUnexpandedObjects(credits as string[]);
   }
 
-  const parsedImageUrls: Credit[] = (credits as ApiCredit[]).map(
+  const parsedCredits: Credit[] = (credits as ApiCredit[]).map(
     (item: ApiCredit): Credit => ({
       isExpanded: true,
       character: item.character,
@@ -118,47 +118,50 @@ export const parseSkylarkCredits = (credits: ApiCredits): Credits => {
         name: item.people_url.name,
       },
       roleUrl: {
-        title: item.role_url.title,
+        title: item.role_url.title as CreditTypes | undefined,
       },
     })
   );
 
-  return parsedImageUrls;
+  return parsedCredits;
 };
 
 /**
- * Parses the themes object from the Skylark API
+ * Parses the theme_urls and genre_urls object from the Skylark API
+ * Handles both Themes and Genres as have the same structure
  * isExpanded depending on whether the object has been expanded
- * @param themes the themes object from the Skylark API
+ * @param themes the themes or genres object from the Skylark API
  * @returns {Themes}
  */
-export const parseSkylarkThemes = (themes: ApiThemes): Themes => {
-  if (determineIfExpanded(themes)) {
-    return convertToUnexpandedObject(themes as string[]);
+export const parseSkylarkThemesAndGenres = (
+  apiObj: ApiThemesAndGenres
+): ThemesAndGenres => {
+  if (determineIfExpanded(apiObj)) {
+    return convertToUnexpandedObjects(apiObj as string[]);
   }
 
-  const parsedImageUrls: Theme[] = (themes as ApiTheme[]).map(
-    (item: ApiTheme): Theme => ({
+  const parsedObj: ThemeGenre[] = (apiObj as ApiThemeGenre[]).map(
+    (item: ApiThemeGenre): ThemeGenre => ({
       isExpanded: true,
       name: item.name,
     })
   );
 
-  return parsedImageUrls;
+  return parsedObj;
 };
 
 /**
- * Parses the ratings object from the Skylark API
+ * Parses the rating_urls object from the Skylark API
  * isExpanded depending on whether the object has been expanded
  * @param ratings the ratings object from the Skylark API
  * @returns {Ratings}
  */
 export const parseSkylarkRatings = (ratings: ApiRatings): Ratings => {
   if (determineIfExpanded(ratings)) {
-    return convertToUnexpandedObject(ratings as string[]);
+    return convertToUnexpandedObjects(ratings as string[]);
   }
 
-  const parsedImageUrls: Rating[] = (ratings as ApiRating[]).map(
+  const parsedRatings: Rating[] = (ratings as ApiRating[]).map(
     (item: ApiRating): Rating => ({
       isExpanded: true,
       value: item.value,
@@ -166,7 +169,7 @@ export const parseSkylarkRatings = (ratings: ApiRatings): Ratings => {
     })
   );
 
-  return parsedImageUrls;
+  return parsedRatings;
 };
 
 /**
@@ -182,13 +185,7 @@ export const parseSkylarkObject = (
   if (obj.items && obj.items.length > 0) {
     // If one item is a string, the items haven't been expanded
     if (determineIfExpanded([obj])) {
-      items = (obj.items as string[]).map(
-        (self): UnexpandedSkylarkObject => ({
-          isExpanded: false,
-          self,
-          type: convertUrlToObjectType(self),
-        })
-      );
+      items = convertToUnexpandedSkylarkObjects(obj.items as string[]);
     } else {
       const objectItems = obj.items as (
         | ApiEntertainmentObject
@@ -197,6 +194,18 @@ export const parseSkylarkObject = (
       items = objectItems.map(
         (item): AllEntertainment => parseSkylarkObject(item.content_url || item)
       );
+    }
+  }
+
+  let parent = null;
+  if (obj.parent_url) {
+    if (determineIfExpanded([obj.parent_url] as object[])) {
+      const [unexpandedParentUrl] = convertToUnexpandedSkylarkObjects([
+        obj.parent_url,
+      ] as string[]);
+      parent = unexpandedParentUrl;
+    } else {
+      parent = parseSkylarkObject(obj.parent_url as ApiEntertainmentObject);
     }
   }
 
@@ -217,16 +226,16 @@ export const parseSkylarkObject = (
       long: obj.synopsis_long || "",
     },
     items,
+    parent,
     type: null,
     images: obj.image_urls ? parseSkylarkImageUrls(obj.image_urls) : [],
     credits: obj.credits ? parseSkylarkCredits(obj.credits) : [],
-    themes: obj.theme_urls ? parseSkylarkThemes(obj.theme_urls) : [],
+    themes: obj.theme_urls ? parseSkylarkThemesAndGenres(obj.theme_urls) : [],
+    genres: obj.genre_urls ? parseSkylarkThemesAndGenres(obj.genre_urls) : [],
     ratings: obj.rating_urls ? parseSkylarkRatings(obj.rating_urls) : [],
     titleSort: obj.title_sort || "",
     // TODO add these
-    releaseDate: "",
     tags: [],
-    genreUrls: [],
   };
 
   if (obj.self) {
@@ -262,8 +271,8 @@ export const parseSkylarkObject = (
         ...x,
         type: "season",
         number: obj.season_number || -1,
-        releaseDate: `${obj.year || ""}`,
         numberOfEpisodes: obj.number_of_episodes || -1,
+        year: obj.year || -1,
         items: items as (Episode | Asset)[],
       };
       return season;

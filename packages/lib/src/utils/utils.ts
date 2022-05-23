@@ -1,4 +1,5 @@
 import {
+  TitleTypes,
   ImageTypes,
   ImageUrl,
   ImageUrls,
@@ -6,6 +7,31 @@ import {
   Credits,
   CreditTypes,
 } from "../interfaces/skylark/objects";
+
+/**
+ * Returns the title from the titles object using a given order of priority
+ * @param titles the titles object
+ * @param priority order of priority
+ * @param objectTitle optional objectTitle
+ * @returns {string}
+ */
+export const getTitleByOrder = (
+  titles: { [k in TitleTypes]: string } | undefined,
+  priority: TitleTypes[],
+  objectTitle?: string
+): string => {
+  if (!titles) {
+    return objectTitle || "";
+  }
+
+  const foundType = priority.find((type) => {
+    if (titles[type]) {
+      return titles[type];
+    }
+    return null;
+  });
+  return foundType ? titles[foundType] : objectTitle || "";
+};
 
 /**
  * getImageSrc - finds and returns the wanted type of image optionally with an added resize value
@@ -40,9 +66,13 @@ export const getImageSrc = (
  * @returns {Credit[]} an array of Credit
  */
 export const getCreditsByType = (
-  credits: Credits,
+  credits: Credits | undefined,
   type: CreditTypes
 ): Credit[] => {
+  if (!credits) {
+    return [];
+  }
+
   const expandedCredits = (credits as Credit[]).filter(
     ({ isExpanded }) => isExpanded
   );

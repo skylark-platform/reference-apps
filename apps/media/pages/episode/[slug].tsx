@@ -5,7 +5,7 @@ import {
   MetadataPanel,
   Player,
 } from "@skylark-reference-apps/react";
-import { Episode } from "@skylark-reference-apps/lib";
+import { Episode, getTitleByOrder, Season } from "@skylark-reference-apps/lib";
 import { useRouter } from "next/router";
 import {
   MdRecentActors,
@@ -13,28 +13,31 @@ import {
   MdMode,
   MdCalendarToday,
 } from "react-icons/md";
-import { useEpisodeBySlug } from "../../hooks/useEpisodeBySlug";
+import { useSingleObjectBySlug } from "../../hooks/useSingleObjectBySlug";
 
 const EpisodePage: NextPage = () => {
   const { query } = useRouter();
-  const { data } = useEpisodeBySlug("episode", query?.slug as string);
+  const { data } = useSingleObjectBySlug("episode", query?.slug as string);
   const episode = data as Episode | undefined;
-  const title =
-    episode?.title.long ||
-    episode?.title.medium ||
-    episode?.title.short ||
-    episode?.objectTitle ||
-    "";
+
+  const titleShortToLong = getTitleByOrder(
+    episode?.title,
+    ["short", "medium", "long"],
+    episode?.objectTitle
+  );
+  const titleLongToShort = getTitleByOrder(
+    episode?.title,
+    ["long", "medium", "short"],
+    episode?.objectTitle
+  );
+  const parentParentTitle =
+    episode?.parent?.isExpanded &&
+    episode?.parent.parent?.isExpanded &&
+    episode.parent.parent.title;
   return (
     <div className="flex min-h-screen flex-col items-center justify-start py-2 md:pt-64">
       <Head>
-        <title>{`${
-          episode?.title.short ||
-          episode?.title.medium ||
-          episode?.title.long ||
-          episode?.objectTitle ||
-          "Episode page"
-        } - StreamTV`}</title>
+        <title>{`${titleShortToLong || "Episode page"} - StreamTV`}</title>
       </Head>
       <div className="flex h-full w-full justify-center py-10 md:py-0 md:pb-16">
         <Player
@@ -53,17 +56,31 @@ const EpisodePage: NextPage = () => {
               episode?.synopsis.short
             }
             duration={57}
-            episode={episode?.number ? `${episode.number}. ${title}` : title}
-            genres={episode?.themes.map((theme) =>
-              theme.isExpanded ? theme.name : ""
-            )}
+            parentTitles={[
+              getTitleByOrder(parentParentTitle || undefined, [
+                "long",
+                "medium",
+                "short",
+              ]),
+            ]}
             rating={
-              episode?.ratings?.[0].isExpanded
+              episode?.ratings?.[0]?.isExpanded
                 ? episode?.ratings?.[0].title
                 : undefined
             }
-            season={1}
-            show={"Game of Thrones"}
+            seasonNumber={
+              episode?.parent?.isExpanded
+                ? (episode.parent as Season)?.number
+                : ""
+            }
+            themes={episode?.themes.map((theme) =>
+              theme.isExpanded ? theme.name : ""
+            )}
+            title={
+              episode?.number
+                ? `${episode.number}. ${titleLongToShort}`
+                : titleLongToShort
+            }
           />
         </div>
         <div className="h-full w-full md:w-6/12 lg:w-4/12">
@@ -96,7 +113,9 @@ const EpisodePage: NextPage = () => {
               {
                 icon: <MdCalendarToday />,
                 header: "Released",
-                body: "10 April 2011",
+                body: episode?.parent?.isExpanded
+                  ? `${(episode.parent as Season)?.year}`
+                  : "",
               },
             ]}
           />

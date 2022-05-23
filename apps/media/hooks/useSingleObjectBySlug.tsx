@@ -20,6 +20,7 @@ const fieldsToExpand = {
   },
   rating_urls: {},
   theme_urls: {},
+  genre_urls: {},
 };
 
 const fields = {
@@ -55,6 +56,7 @@ const fields = {
     title_medium: {},
     title_long: {},
     season_number: {},
+    year: {},
     parent_url: {
       self: {},
       title: {},
@@ -68,6 +70,9 @@ const fields = {
     value: {},
   },
   theme_urls: {
+    name: {},
+  },
+  genre_urls: {
     name: {},
   },
 };
