@@ -2,7 +2,7 @@ import React from "react";
 import { MdCircle } from "react-icons/md";
 
 export interface ListProps {
-  contents: (string | undefined | JSX.Element)[];
+  contents: (string | number | undefined | JSX.Element)[];
   highlightFirst?: boolean;
   highlightAll?: boolean;
   textSize?: "xs" | "sm" | "base" | "lg";
