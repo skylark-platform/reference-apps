@@ -40,6 +40,14 @@ const EpisodePage: NextPage = () => {
     episode?.parent?.isExpanded &&
     episode?.parent.parent?.isExpanded &&
     episode.parent.parent.title;
+
+  const themes: string[] = episode?.themes?.isExpanded
+    ? episode.themes.items.map(({ name }) => name)
+    : [];
+  const genres: string[] = episode?.genres?.isExpanded
+    ? episode.genres.items.map(({ name }) => name)
+    : [];
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-start pb-20 md:pt-64">
       <Head>
@@ -47,7 +55,7 @@ const EpisodePage: NextPage = () => {
       </Head>
       <div className="flex h-full w-full justify-center pb-10 md:pb-16">
         <Player
-          poster={episode?.images && getImageSrc(episode.images, "Thumbnail")}
+          poster={getImageSrc(episode?.images, "Thumbnail") || ""}
           src={"/mux-video-intro.mp4"}
           videoId={"1"}
           videoTitle={titleShortToLong}
@@ -64,6 +72,7 @@ const EpisodePage: NextPage = () => {
                 episode.synopsis.short
               }
               duration={57}
+              genres={genres}
               parentTitles={[
                 getTitleByOrder(parentParentTitle || undefined, [
                   "long",
@@ -72,8 +81,8 @@ const EpisodePage: NextPage = () => {
                 ]),
               ]}
               rating={
-                episode.ratings?.[0]?.isExpanded
-                  ? episode.ratings?.[0].title
+                episode?.ratings?.isExpanded
+                  ? episode.ratings.items?.[0]?.title
                   : undefined
               }
               seasonNumber={
@@ -81,9 +90,7 @@ const EpisodePage: NextPage = () => {
                   ? (episode.parent as Season)?.number
                   : ""
               }
-              themes={episode.themes.map((theme) =>
-                theme.isExpanded ? theme.name : ""
-              )}
+              themes={themes}
               title={
                 episode.number
                   ? `${episode.number}. ${titleLongToShort}`

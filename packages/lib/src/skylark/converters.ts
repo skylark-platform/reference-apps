@@ -2,7 +2,9 @@ import {
   EntertainmentType,
   ObjectTypes,
   UnexpandedObject,
+  UnexpandedObjects,
   UnexpandedSkylarkObject,
+  UnexpandedSkylarkObjects,
 } from "../interfaces";
 
 /**
@@ -113,12 +115,15 @@ export const convertUrlToObjectType = (url: string): ObjectTypes => {
  */
 export const convertToUnexpandedObjects = (
   urls: string[]
-): UnexpandedObject[] => {
-  const objs: UnexpandedObject[] = urls.map((url) => ({
+): UnexpandedObjects => {
+  const items: UnexpandedObject[] = urls.map((url) => ({
     self: url,
     isExpanded: false,
   }));
-  return objs;
+  return {
+    isExpanded: false,
+    items,
+  };
 };
 
 /**
@@ -128,11 +133,15 @@ export const convertToUnexpandedObjects = (
  */
 export const convertToUnexpandedSkylarkObjects = (
   urls: string[]
-): UnexpandedSkylarkObject[] => {
-  const objs: UnexpandedSkylarkObject[] = urls.map((url) => ({
+): UnexpandedSkylarkObjects => {
+  const objects: UnexpandedSkylarkObject[] = urls.map((url) => ({
     self: url,
     type: convertUrlToObjectType(url),
     isExpanded: false,
   }));
-  return objs;
+
+  return {
+    isExpanded: false,
+    objects,
+  };
 };

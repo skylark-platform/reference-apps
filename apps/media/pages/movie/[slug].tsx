@@ -39,11 +39,13 @@ const MoviePage: NextPage = () => {
 
   const parentTitle = movie?.parent?.isExpanded && movie.parent.title;
 
-  const themes: string[] =
-    movie?.themes.map((theme) => (theme.isExpanded ? theme.name : "")) || [];
+  const themes: string[] = movie?.themes?.isExpanded
+    ? movie.themes.items.map(({ name }) => name)
+    : [];
 
-  const genres: string[] =
-    movie?.genres.map((genre) => (genre.isExpanded ? genre.name : "")) || [];
+  const genres: string[] = movie?.genres?.isExpanded
+    ? movie.genres.items.map(({ name }) => name)
+    : [];
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-start pb-20 md:pt-64">
@@ -78,8 +80,8 @@ const MoviePage: NextPage = () => {
                 ]),
               ]}
               rating={
-                movie.ratings?.[0]?.isExpanded
-                  ? movie?.ratings?.[0].title
+                movie?.ratings?.isExpanded
+                  ? movie.ratings.items?.[0]?.title
                   : undefined
               }
               themes={themes}

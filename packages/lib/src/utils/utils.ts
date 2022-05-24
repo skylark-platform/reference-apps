@@ -1,12 +1,12 @@
 import {
-  TitleTypes,
-  ImageTypes,
-  ImageUrl,
-  ImageUrls,
   Credit,
   Credits,
   CreditTypes,
-} from "../interfaces/skylark/objects";
+  ImageTypes,
+  ImageUrls,
+  TitleTypes,
+  UnexpandedObjects,
+} from "../interfaces";
 
 /**
  * Returns the title from the titles object using a given order of priority
@@ -41,18 +41,17 @@ export const getTitleByOrder = (
  * @returns {string} the image URL or an empty string
  */
 export const getImageSrc = (
-  images: ImageUrls,
+  images: UnexpandedObjects | ImageUrls | undefined,
   type: ImageTypes,
   size?: string
 ): string => {
-  if (!images.length) return "";
+  if (!images || !images.isExpanded || images.items.length === 0) {
+    return "";
+  }
 
-  const expandedImages = (images as ImageUrl[]).filter(
-    ({ isExpanded }) => isExpanded
-  );
-  let image = expandedImages.find((img) => img.type === type);
+  let image = images.items.find((img) => img.type === type);
 
-  if (!image) [image] = expandedImages;
+  if (!image) [image] = images.items;
 
   const urlWithoutExtension = image.url.replace(/\.[^/.]+$/, "");
   return size
@@ -67,15 +66,12 @@ export const getImageSrc = (
  * @returns {Credit[]} an array of Credit
  */
 export const getCreditsByType = (
-  credits: Credits | undefined,
+  credits: UnexpandedObjects | Credits | undefined,
   type: CreditTypes
 ): Credit[] => {
-  if (!credits) {
+  if (!credits || !credits.isExpanded) {
     return [];
   }
 
-  const expandedCredits = (credits as Credit[]).filter(
-    ({ isExpanded }) => isExpanded
-  );
-  return expandedCredits.filter((credit) => credit.roleUrl?.title === type);
+  return credits.items.filter((credit) => credit.roleUrl?.title === type);
 };
