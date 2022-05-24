@@ -10,11 +10,17 @@ import {
 } from "@skylark-reference-apps/lib";
 
 const fieldsToExpand = {
+  parent_url: {
+    parent_url: {},
+  },
   image_urls: {},
   credits: {
     role_url: {},
     people_url: {},
   },
+  rating_urls: {},
+  theme_urls: {},
+  genre_urls: {},
 };
 
 const fields = {
@@ -42,6 +48,32 @@ const fields = {
     people_url: {
       name: {},
     },
+  },
+  parent_url: {
+    self: {},
+    title: {},
+    title_short: {},
+    title_medium: {},
+    title_long: {},
+    season_number: {},
+    year: {},
+    parent_url: {
+      self: {},
+      title: {},
+      title_short: {},
+      title_medium: {},
+      title_long: {},
+    },
+  },
+  rating_urls: {
+    title: {},
+    value: {},
+  },
+  theme_urls: {
+    name: {},
+  },
+  genre_urls: {
+    name: {},
   },
 };
 

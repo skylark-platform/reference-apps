@@ -14,6 +14,8 @@ import {
   SkylarkObject,
   EntertainmentType,
   getImageSrc,
+  Season,
+  getTitleByOrder,
 } from "@skylark-reference-apps/lib";
 import { useEffect } from "react";
 
@@ -56,11 +58,11 @@ const Home: NextPage = () => {
                       ) as SkylarkObject[]
                     ).map((carouselItem) => ({
                       uid: carouselItem.uid || "",
-                      title:
-                        carouselItem.title?.medium ||
-                        carouselItem.title?.short ||
-                        carouselItem.objectTitle ||
-                        "",
+                      title: getTitleByOrder(
+                        carouselItem.title,
+                        ["medium", "short"],
+                        carouselItem.objectTitle
+                      ),
                       href:
                         carouselItem.type && carouselItem.slug
                           ? `/${carouselItem.type}/${carouselItem.slug}`
@@ -76,7 +78,9 @@ const Home: NextPage = () => {
                             )
                           : "",
                       type: carouselItem.type as EntertainmentType,
-                      releaseDate: carouselItem.releaseDate || "",
+                      releaseDate: (carouselItem as Season)?.year
+                        ? `${(carouselItem as Season).year}`
+                        : "",
                     }))}
                   />
                 </div>

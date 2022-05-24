@@ -3,7 +3,7 @@ import {
   convertEntertainmentTypeToString,
   convertObjectToSkylarkApiFields,
   convertObjectTypeToSkylarkEndpoint,
-  convertToUnexpandedObject,
+  convertToUnexpandedObjects,
   convertUrlToObjectType,
 } from "./converters";
 
@@ -145,9 +145,9 @@ describe("converters", () => {
     });
   });
 
-  describe("convertToUnexpandedObject", () => {
+  describe("convertToUnexpandedObjects", () => {
     it("converts an array of urls to UnexpandedObjects", () => {
-      const objects = convertToUnexpandedObject([
+      const objects = convertToUnexpandedObjects([
         "/api/episode/1",
         "/api/episode/2",
       ]);

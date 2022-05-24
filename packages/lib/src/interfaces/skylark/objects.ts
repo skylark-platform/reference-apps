@@ -9,8 +9,13 @@ export type ObjectTypes = EntertainmentType | SetTypes | null;
 
 export type ImageTypes = "Thumbnail" | "Main" | "Poster";
 
+export type CreditTypes = "Actor" | "Director" | "Writer";
+
 export type DeviceTypes = "smartphone" | "pc";
 
+export type TitleTypes = "short" | "medium" | "long";
+
+export type SynopsisTypes = TitleTypes;
 export interface UnexpandedObject {
   self: string;
   isExpanded: false;
@@ -37,11 +42,26 @@ export interface Credit {
     name?: string;
   };
   roleUrl: {
-    title?: string;
+    title?: CreditTypes;
   };
 }
 
 export type Credits = UnexpandedObject[] | Credit[];
+
+export interface ThemeGenre {
+  isExpanded: true;
+  name: string;
+}
+
+export type ThemesAndGenres = UnexpandedObject[] | ThemeGenre[];
+
+export interface Rating {
+  isExpanded: true;
+  title: string;
+  value: string;
+}
+
+export type Ratings = UnexpandedObject[] | Rating[];
 
 export interface SkylarkObject {
   self: string;
@@ -50,25 +70,21 @@ export interface SkylarkObject {
   uid: string;
   objectTitle: string;
   slug: string;
-  releaseDate: string;
   title: {
-    short: string;
-    medium: string;
-    long: string;
+    [key in TitleTypes]: string;
   };
   synopsis: {
-    short: string;
-    medium: string;
-    long: string;
+    [key in SynopsisTypes]: string;
   };
   tags: string[];
   titleSort: string;
   credits: Credits;
-  ratingUrls: string[];
-  genreUrls: string[];
-  themeUrls: string[];
+  ratings: Ratings;
+  themes: ThemesAndGenres;
+  genres: ThemesAndGenres;
   images: ImageUrls;
   items: AllEntertainment[];
+  parent: AllEntertainment | null;
 }
 
 export interface Asset extends SkylarkObject {
@@ -90,6 +106,7 @@ export interface Season extends SkylarkObject {
   type: "season";
   numberOfEpisodes: number;
   number: number;
+  year: number;
   items: (Episode | Asset | UnexpandedSkylarkObject)[];
 }
 
