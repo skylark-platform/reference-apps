@@ -16,7 +16,7 @@ const Movies: NextPage = () => {
   const { movies } = useAllMovies("movie");
 
   return (
-    <div className="flex w-full justify-center py-20 px-gutter  sm:px-sm-gutter md:py-32 lg:px-lg-gutter xl:px-xl-gutter">
+    <div className="flex w-full justify-center py-20 px-gutter sm:px-sm-gutter md:py-32 lg:px-lg-gutter xl:px-xl-gutter">
       <Head>
         <title>{`Skylark Media Reference App`}</title>
       </Head>

@@ -28,14 +28,11 @@ export const MovieThumbnail: React.FC<MovieThumbnailProps> = (props) => {
       duration={undefined}
     >
       <H4 className="mt-2 mb-0.5 text-white">{title}</H4>
-      {duration ? (
-        <List contents={[duration, releaseDate]} highlightFirst />
-      ) : (
-        <List
-          contents={[subtitle, ...(tags && tags.length > 0 ? tags : [])]}
-          highlightFirst
-        />
-      )}
+      <List
+        contents={[subtitle, ...(tags && tags.length > 0 ? tags : [])]}
+        highlightFirst
+      />
+      <List contents={[duration, releaseDate]} highlightFirst />
     </MediaThumbnail>
   );
 };
