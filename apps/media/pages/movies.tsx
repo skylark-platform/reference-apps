@@ -30,7 +30,7 @@ const Movies: NextPage = () => {
           </div>
         </div>
 
-        <div className="flex flex-row gap-x-2 pb-24">
+        <div className="flex flex-row gap-x-2 pb-8 md:pb-20 xl:pb-24">
           <Dropdown items={genres} label="Genres" />
           <Dropdown items={genres} label="Themes" />
         </div>
