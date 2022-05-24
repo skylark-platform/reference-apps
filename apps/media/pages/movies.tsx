@@ -1,4 +1,3 @@
-import { useState } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { MdRefresh } from "react-icons/md";
@@ -11,12 +10,10 @@ import {
 import { getImageSrc } from "@skylark-reference-apps/lib";
 
 import { useAllMovies } from "../hooks/useMoviesSet";
-import { movieThumbnails, genres } from "../test-data";
+import { genres } from "../test-data";
 
 const Movies: NextPage = () => {
   const { movies } = useAllMovies("movie");
-
-  const [moviess, loadMore] = useState(movieThumbnails);
 
   return (
     <div className="flex w-full justify-center py-20 px-gutter  sm:px-sm-gutter md:py-32 lg:px-lg-gutter xl:px-xl-gutter">
@@ -58,13 +55,7 @@ const Movies: NextPage = () => {
           ))}
         </div>
         <div className="flex flex-row justify-center py-28">
-          <Button
-            className=""
-            icon={<MdRefresh />}
-            iconPlacement="left"
-            text="Load more"
-            onClick={() => loadMore([...moviess, ...movieThumbnails])}
-          />
+          <Button icon={<MdRefresh />} iconPlacement="left" text="Load more" />
         </div>
       </div>
     </div>

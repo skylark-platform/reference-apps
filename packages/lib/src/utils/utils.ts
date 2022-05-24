@@ -12,6 +12,8 @@ export const getImageSrc = (
   type: ImageTypes,
   size?: string
 ): string => {
+  if (!images.length) return "";
+
   const expandedImages = (images as ImageUrl[]).filter(
     ({ isExpanded }) => isExpanded
   );
@@ -19,12 +21,8 @@ export const getImageSrc = (
 
   if (!image) [image] = expandedImages;
 
-  if (image) {
-    const urlWithoutExtension = image.url.replace(/\.[^/.]+$/, "");
-    return size
-      ? `${urlWithoutExtension}-${size}.jpg`
-      : `${urlWithoutExtension}.jpg`;
-  }
-
-  return "";
+  const urlWithoutExtension = image.url.replace(/\.[^/.]+$/, "");
+  return size
+    ? `${urlWithoutExtension}-${size}.jpg`
+    : `${urlWithoutExtension}.jpg`;
 };
