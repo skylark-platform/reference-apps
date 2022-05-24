@@ -41,7 +41,7 @@ const EpisodePage: NextPage = () => {
     episode?.parent.parent?.isExpanded &&
     episode.parent.parent.title;
   return (
-    <div className="flex min-h-screen flex-col items-center justify-start py-2 md:pt-64">
+    <div className="flex min-h-screen flex-col items-center justify-start pb-20 md:pt-64">
       <Head>
         <title>{`${titleShortToLong || "Episode page"} - StreamTV`}</title>
       </Head>
@@ -53,8 +53,8 @@ const EpisodePage: NextPage = () => {
           videoTitle={titleShortToLong}
         />
       </div>
-      <div className="flex flex-col md:flex-row md:py-2">
-        <div className="ml-6 h-full w-full pb-4 md:w-6/12 lg:w-8/12">
+      <div className="flex flex-col px-2 md:flex-row md:py-2">
+        <div className="h-full w-full pb-4 md:w-6/12 md:pl-6 lg:w-8/12">
           <InformationPanel
             availableUntil={12}
             description={
