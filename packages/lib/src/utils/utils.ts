@@ -45,18 +45,19 @@ export const getImageSrc = (
   type: ImageTypes,
   size?: string
 ): string => {
+  if (!images.length) return "";
+
   const expandedImages = (images as ImageUrl[]).filter(
     ({ isExpanded }) => isExpanded
   );
-  const image = expandedImages.find((img) => img.type === type);
+  let image = expandedImages.find((img) => img.type === type);
 
-  if (image) {
-    const urlWithoutExtension = image.url.replace(/\.[^/.]+$/, "");
-    return size
-      ? `${urlWithoutExtension}-${size}.jpg`
-      : `${urlWithoutExtension}.jpg`;
-  }
-  return "";
+  if (!image) [image] = expandedImages;
+
+  const urlWithoutExtension = image.url.replace(/\.[^/.]+$/, "");
+  return size
+    ? `${urlWithoutExtension}-${size}.jpg`
+    : `${urlWithoutExtension}.jpg`;
 };
 
 /**

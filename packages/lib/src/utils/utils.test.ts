@@ -101,9 +101,14 @@ describe("utils", () => {
       expect(src).toEqual("https://skylark.com/images/2.jpg");
     });
 
-    it("returns an empty string when the type isn't found", () => {
-      const src = getImageSrc(imageUrls, "Poster");
+    it("returns empty string if the given image array is empty", () => {
+      const src = getImageSrc([], "Main");
       expect(src).toEqual("");
+    });
+
+    it("returns first image if the type isn't found", () => {
+      const src = getImageSrc(imageUrls, "Poster");
+      expect(src).toEqual("https://skylark.com/images/1.jpg");
     });
 
     it("returns an the image source with given sizing", () => {

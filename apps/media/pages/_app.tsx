@@ -15,7 +15,7 @@ import { useRouter } from "next/router";
 
 const links = [
   { text: "Discover", href: "/" },
-  { text: "Movies", href: "/spin" },
+  { text: "Movies", href: "/movies" },
   { text: "TV Shows", href: "/brand/game-of-thrones" },
 ];
 

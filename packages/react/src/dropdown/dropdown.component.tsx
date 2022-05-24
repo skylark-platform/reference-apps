@@ -2,59 +2,60 @@ import React, { useState } from "react";
 import { MdArrowDropDown } from "react-icons/md";
 
 interface DropdownProps {
-  text: string;
+  label: string;
   items: string[];
 }
 
-export const Dropdown: React.FC<DropdownProps> = ({ text, items }) => {
-  const [dropdown, setDropdown] = useState(false);
+export const Dropdown: React.FC<DropdownProps> = ({ label, items }) => {
+  const [isOpen, setOpen] = useState(false);
 
   return (
     <div className="flex">
       <div
         className="relative"
-        onMouseEnter={() => setDropdown(true)}
-        onMouseLeave={() => setDropdown(false)}
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
       >
         <button
           className="
           mb-2
           flex
           items-center
-          bg-gray-600
+          bg-gray-800
           py-2.5
           pl-5
-          text-sm text-white
-          hover:bg-gray-700
+          text-sm
+          text-white
         "
           type="button"
-          onClick={() => setDropdown(!dropdown)}
+          onClick={() => setOpen(!isOpen)}
         >
-          {text}
+          {label}
           <div className="sm: flex pl-20 pr-1 md:pl-24">
             <MdArrowDropDown size={25} />
           </div>
         </button>
-        {dropdown && (
-          <ul>
+        {isOpen && (
+          <ul className="absolute z-40 w-full">
             {items.map((item) => (
               <li key={item}>
-                <a
+                <button
                   className="
-                block
-                bg-white
-                py-3
-                px-5
-                text-xs
-                font-semibold
-                hover:bg-gray-100
-                hover:text-purple-500
-                md:text-sm
-              "
-                  href="#"
+                  block
+                  w-full
+                  bg-white
+                  py-3
+                  px-5
+                  text-left
+                  text-xs
+                  font-semibold
+                  hover:bg-gray-100
+                  hover:text-purple-500
+                  md:text-sm
+                  "
                 >
                   {item}
-                </a>
+                </button>
               </li>
             ))}
           </ul>

@@ -19,7 +19,7 @@ describe("Dropdown component", () => {
           "Thrillers",
           "TV Shows",
         ]}
-        text={"Genres"}
+        label={"Genres"}
       />
     );
     expect(screen.getByText(/Genres/)).toBeTruthy();
@@ -43,7 +43,7 @@ describe("Dropdown component", () => {
           "Thrillers",
           "TV Shows",
         ]}
-        text={"Genres"}
+        label={"Genres"}
       />
     );
     expect(screen.getByText(/Genres/)).toBeTruthy();
