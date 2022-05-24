@@ -34,8 +34,6 @@ export interface ApiRating {
 
 export type ApiRatings = string[] | ApiRating[];
 
-export type ApiParentUrl = string | ApiEntertainmentObject;
-
 export interface ApiEntertainmentObject {
   uid: string;
   self: string;

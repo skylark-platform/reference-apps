@@ -45,7 +45,7 @@ const EpisodePage: NextPage = () => {
       <Head>
         <title>{`${titleShortToLong || "Episode page"} - StreamTV`}</title>
       </Head>
-      <div className="flex h-full w-full justify-center py-10 md:py-0 md:pb-16">
+      <div className="flex h-full w-full justify-center pb-10 md:pb-16">
         <Player
           poster={episode?.images && getImageSrc(episode.images, "Thumbnail")}
           src={"/mux-video-intro.mp4"}
