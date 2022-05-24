@@ -26,10 +26,10 @@ describe("utils", () => {
       expect(src).toEqual("https://skylark.com/images/2.jpg");
     });
 
-    it("returns an empty string when the type isn't found", () => {
+    it("returns first image if the type isn't found", () => {
       const src = getImageSrc(imageUrls, "Poster");
 
-      expect(src).toEqual("");
+      expect(src).toEqual("https://skylark.com/images/1.jpg");
     });
 
     it("returns an the image source with given sizing", () => {

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
-
 import { MdRefresh } from "react-icons/md";
 
 import {
@@ -9,11 +8,16 @@ import {
   Dropdown,
   MovieThumbnail,
 } from "@skylark-reference-apps/react";
+import { getImageSrc } from "@skylark-reference-apps/lib";
 
+import { useAllMovies } from "../hooks/useMoviesSet";
 import { movieThumbnails, genres } from "../test-data";
 
 const Movies: NextPage = () => {
-  const [movies, loadMore] = useState(movieThumbnails);
+  const { movies } = useAllMovies("movie");
+
+  const [moviess, loadMore] = useState(movieThumbnails);
+
   return (
     <div className="flex w-full justify-center py-20 px-gutter  sm:px-sm-gutter md:py-32 lg:px-lg-gutter xl:px-xl-gutter">
       <Head>
@@ -35,16 +39,22 @@ const Movies: NextPage = () => {
         </div>
 
         <div className="grid grid-cols-2 gap-x-4 gap-y-6 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
-          {movies.map((movie) => (
-            <div className="" key={movie.title}>
-              <MovieThumbnail
-                contentLocation="below"
-                duration="1h 59m"
-                key={movie.title}
-                releaseDate="2020"
-                {...movie}
-              />
-            </div>
+          {movies?.map((movie) => (
+            <MovieThumbnail
+              backgroundImage={
+                movie.images
+                  ? getImageSrc(movie?.images, "Thumbnail", "384x216")
+                  : ""
+              }
+              contentLocation="below"
+              duration="1h 59m"
+              href={
+                movie.type && movie.slug ? `/${movie.type}/${movie.slug}` : ""
+              }
+              key={movie.objectTitle || movie.uid || movie.slug}
+              releaseDate="2020"
+              title={movie.title?.short || ""}
+            />
           ))}
         </div>
         <div className="flex flex-row justify-center py-28">
@@ -53,7 +63,7 @@ const Movies: NextPage = () => {
             icon={<MdRefresh />}
             iconPlacement="left"
             text="Load more"
-            onClick={() => loadMore([...movies, ...movieThumbnails])}
+            onClick={() => loadMore([...moviess, ...movieThumbnails])}
           />
         </div>
       </div>
