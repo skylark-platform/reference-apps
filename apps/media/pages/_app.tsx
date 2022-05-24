@@ -16,7 +16,7 @@ import { useRouter } from "next/router";
 const links = [
   { text: "Discover", href: "/" },
   { text: "Movies", href: "/movies" },
-  { text: "TV Shows", href: "/player" },
+  { text: "TV Shows", href: "/brand/game-of-thrones" },
 ];
 
 function MyApp({ Component, pageProps }: AppProps) {

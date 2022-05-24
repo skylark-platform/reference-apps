@@ -5,7 +5,12 @@ import {
   EpisodeThumbnail,
   Rail,
 } from "@skylark-reference-apps/react";
-import { Episode, ImageUrl, getImageSrc } from "@skylark-reference-apps/lib";
+import {
+  Episode,
+  ImageUrl,
+  getImageSrc,
+  getTitleByOrder,
+} from "@skylark-reference-apps/lib";
 import { useRouter } from "next/router";
 import { useBrandWithSeasonBySlug } from "../../hooks/useBrandWithSeasonBySlug";
 
@@ -15,16 +20,16 @@ const BrandPage: NextPage = () => {
   const { brand, notFound, error } = useBrandWithSeasonBySlug(
     query?.slug as string
   );
+
+  const titleShortToLong = getTitleByOrder(
+    brand?.title,
+    ["short", "medium", "long"],
+    brand?.objectTitle
+  );
   return (
     <div className="mb-20 flex min-h-screen flex-col items-center bg-gray-900">
       <Head>
-        <title>{`${
-          brand?.title.short ||
-          brand?.title.medium ||
-          brand?.title.long ||
-          brand?.objectTitle ||
-          "Brand page"
-        } - StreamTV`}</title>
+        <title>{`${titleShortToLong || "Brand page"} - StreamTV`}</title>
       </Head>
 
       <div className="h-[90vh] w-full md:h-[95vh]">
@@ -78,12 +83,11 @@ const BrandPage: NextPage = () => {
                         href={`/episode/${ep.slug}`}
                         key={ep.objectTitle}
                         number={ep.number || 0}
-                        title={
-                          ep?.title?.short ||
-                          ep?.title?.medium ||
-                          ep.objectTitle ||
-                          ""
-                        }
+                        title={getTitleByOrder(
+                          ep?.title,
+                          ["short", "medium"],
+                          ep.objectTitle
+                        )}
                       />
                     ))}
                 </Rail>

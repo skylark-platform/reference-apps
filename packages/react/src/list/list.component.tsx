@@ -15,13 +15,14 @@ export const List: React.FC<ListProps> = ({
   textSize,
 }) => (
   <div className="my-0.5 flex flex-row items-center text-gray-400">
-    {contents
-      .filter((el) => !!el)
-      .map((text, index) => (
-        <React.Fragment key={`list-${text as string}`}>
-          {index !== 0 && <MdCircle className="mx-2 h-1 w-1 text-gray-400" />}
-          <p
-            className={`
+    {contents &&
+      contents
+        .filter((el) => !!el)
+        .map((text, index) => (
+          <React.Fragment key={`list-${text as string}`}>
+            {index !== 0 && <MdCircle className="mx-2 h-1 w-1 text-gray-400" />}
+            <p
+              className={`
               ${
                 (highlightFirst && index === 0) || highlightAll
                   ? "text-white"
@@ -31,11 +32,11 @@ export const List: React.FC<ListProps> = ({
               font-normal transition-colors
               group-hover:text-white
             `}
-          >
-            {text}
-          </p>
-        </React.Fragment>
-      ))}
+            >
+              {text}
+            </p>
+          </React.Fragment>
+        ))}
   </div>
 );
 
