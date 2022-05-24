@@ -7,6 +7,7 @@ import {
 } from "@skylark-reference-apps/react";
 import {
   Episode,
+  getCreditsByType,
   getImageSrc,
   getTitleByOrder,
   Season,
@@ -98,23 +99,23 @@ const EpisodePage: NextPage = () => {
               {
                 icon: <MdRecentActors />,
                 header: "Key Cast",
-                body: "Michelle Fairley, Lena Headey, Emilia Clarke, Iain Glen, Harry Lloyd",
+                body: getCreditsByType(episode?.credits, "Actor").map(
+                  (credit) => credit?.peopleUrl?.name || ""
+                ),
               },
               {
                 icon: <MdMovie />,
-                header: "Producers",
-                body: [
-                  "Mark Huffam",
-                  "Carolyn Strauss",
-                  "Joanna Burn",
-                  "Frank Doelger",
-                  "Guymon Casady",
-                ],
+                header: "Directors",
+                body: getCreditsByType(episode?.credits, "Director").map(
+                  (credit) => credit?.peopleUrl?.name || ""
+                ),
               },
               {
                 icon: <MdMode />,
                 header: "Writers",
-                body: "Mark Huffam, Carolyn Strauss, Joanna Burn, Frank Doelger, Guymon Casady",
+                body: getCreditsByType(episode?.credits, "Writer").map(
+                  (credit) => credit?.peopleUrl?.name || ""
+                ),
               },
               {
                 icon: <MdCalendarToday />,
