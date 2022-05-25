@@ -92,7 +92,9 @@ export const brandWithSeasonFetcher = ([slug, deviceType]: [
     deviceTypes: [deviceType],
   });
 
-  return fetch(`${SKYLARK_API}/api/brands/?slug=${slug}&${apiQuery}`)
+  return fetch(`${SKYLARK_API}/api/brands/?slug=${slug}&${apiQuery}`, {
+    headers: { "Accept-Language": "en-gb" },
+  })
     .then((r) => r.json())
     .then(({ objects }: ApiMultipleEntertainmentObjects) => {
       if (!objects || objects.length === 0) {
