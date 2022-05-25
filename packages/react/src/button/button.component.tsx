@@ -36,13 +36,13 @@ export const Button: React.FC<ButtonProps> = ({
   ${variant === "primary" ? primaryStyles : ""}
   ${variant === "secondary" ? secondaryStyles : ""}
   ${variant === "tertiary" ? tertiaryStyles : ""}
-flex justify-center items-center w-fit
+flex justify-center items-center h-full
 hover:bg-button-hover disabled:bg-button-disabled transition-colors
 text-white disabled:text-gray-300 font-body rounded-sm cursor-pointer
 `;
 
   if (text) {
-    className += ` px-2
+    className += ` w-full md:w-fit px-2
       ${size === "sm" ? smStyles : ""}
       ${size === "lg" ? lgStyles : ""}
       ${size === "xl" ? xlStyles : ""}

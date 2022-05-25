@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { wrap } from "popmotion";
 import {
@@ -136,17 +135,14 @@ export const Carousel: React.FC<CarouselProps> = ({
                 highlightFirst
                 textSize="sm"
               />
-              <div className="mb-4 mt-8 flex flex-row gap-x-4">
-                <Link href={href}>
-                  <a>
-                    <Button
-                      icon={<MdPlayCircleFilled />}
-                      iconPlacement="right"
-                      text="Watch for free"
-                    />
-                  </a>
-                </Link>
-                <Button icon={<MdAdd />} variant="secondary" />
+              <div className="mb-4 mt-8 flex flex-row items-center gap-x-4">
+                <Button
+                  href={href}
+                  icon={<MdPlayCircleFilled size={25} />}
+                  iconPlacement="right"
+                  text="Watch for free"
+                />
+                <Button icon={<MdAdd size={25} />} variant="secondary" />
               </div>
               <p className="text-xs text-gray-300">
                 {`30 day free trial available. £12.99/mo after.`}

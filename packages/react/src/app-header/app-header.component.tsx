@@ -25,11 +25,15 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
         <MdStream className="h-9 w-9 md:ml-8 md:h-12 md:w-12 lg:ml-16 xl:ml-20" />
         <h2 className="ml-1 text-base md:ml-2 md:text-2xl">{title}</h2>
         <span className="absolute right-2 md:hidden">
-          <Button icon={<MdAccountCircle />} size="sm" variant="tertiary" />
+          <Button
+            icon={<MdAccountCircle size={20} />}
+            size="sm"
+            variant="tertiary"
+          />
         </span>
       </div>
       <div className="hidden gap-1 md:flex">
-        <Button icon={<MdAccountCircle />} text="Sign in" />
+        <Button icon={<MdAccountCircle size={25} />} text="Sign in" />
         <Button text="Register" variant="tertiary" />
       </div>
     </div>
