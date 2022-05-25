@@ -54,7 +54,7 @@ const MoviePage: NextPage = () => {
       </Head>
       <div className="flex h-full w-full justify-center pb-10 md:pb-16">
         <Player
-          poster={movie?.images && getImageSrc(movie.images, "Thumbnail")}
+          poster={getImageSrc(movie?.images, "Thumbnail")}
           src="/mux-video-intro.mp4"
           videoId="1"
           videoTitle={titleShortToLong || ""}

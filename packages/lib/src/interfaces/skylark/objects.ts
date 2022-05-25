@@ -111,14 +111,14 @@ export interface Movie extends SkylarkObject {
 
 export interface Episode extends SkylarkObject {
   type: "episode";
-  number: number;
+  number?: number;
 }
 
 export interface Season extends SkylarkObject {
   type: "season";
-  numberOfEpisodes: number;
-  number: number;
-  year: number;
+  numberOfEpisodes?: number;
+  number?: number;
+  year?: number;
 }
 
 export interface Brand extends SkylarkObject {

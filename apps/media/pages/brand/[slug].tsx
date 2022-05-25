@@ -1,6 +1,12 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { EpisodeThumbnail, Rail, List } from "@skylark-reference-apps/react";
+import {
+  EpisodeThumbnail,
+  Rail,
+  BrandHeader,
+  CallToAction,
+  Hero,
+} from "@skylark-reference-apps/react";
 import {
   Episode,
   getImageSrc,
@@ -10,6 +16,9 @@ import {
 } from "@skylark-reference-apps/lib";
 import { useRouter } from "next/router";
 import { useBrandWithSeasonBySlug } from "../../hooks/useBrandWithSeasonBySlug";
+
+const sortEpisodesByNumber = (a: Episode, b: Episode) =>
+  (a.number || 0) > (b.number || 0) ? 1 : -1;
 
 const BrandPage: NextPage = () => {
   const { query } = useRouter();
@@ -25,13 +34,15 @@ const BrandPage: NextPage = () => {
       (a.number || 0) > (b.number || 0) ? 1 : -1
     );
 
+  const [firstEpisodeOfFirstSeason] = seasons?.[0]?.items?.isExpanded
+    ? (seasons[0].items.objects as Episode[]).sort(sortEpisodesByNumber)
+    : [];
+
   const titleShortToLong = getTitleByOrder(
     brand?.title,
     ["short", "medium", "long"],
     brand?.objectTitle
   );
-
-  const heroImage = getImageSrcAndSizeByWindow(brand?.images, "Main");
 
   return (
     <div className="mb-20 flex min-h-screen flex-col items-center bg-gray-900">
@@ -39,56 +50,46 @@ const BrandPage: NextPage = () => {
         <title>{`${titleShortToLong || "Brand page"} - StreamTV`}</title>
       </Head>
 
-      <div
-        className="h-[90vh] w-full md:h-[95vh]"
-        style={{
-          backgroundImage: `url('${heroImage}')`,
-        }}
-      >
-        <div
-          className={`
-          flex h-full w-full flex-row items-end justify-between bg-gradient-to-t from-gray-900
-          to-gray-900/5 px-sm-gutter pb-5
-          md:pb-20 md:pr-0 md:pl-md-gutter lg:pl-lg-gutter xl:pl-xl-gutter
-        `}
-        >
-          <div className="flex flex-col">
-            <h1 className="text-6xl text-white">
-              {getTitleByOrder(
-                brand?.title,
-                ["long", "medium", "short"],
-                brand?.objectTitle
-              )}
-            </h1>
-            <List
-              contents={[
-                seasons.length,
-                seasons?.[0]?.year,
-                brand?.ratings?.isExpanded
-                  ? brand.ratings.items?.[0].title
-                  : "",
-              ]}
-              textSize="lg"
-            />
-          </div>
+      <Hero bgImage={getImageSrcAndSizeByWindow(brand?.images, "Main")}>
+        <div className="flex flex-col">
+          <BrandHeader
+            description={
+              brand?.synopsis.long ||
+              brand?.synopsis.medium ||
+              brand?.synopsis.short
+            }
+            numberOfSeasons={seasons.length}
+            rating={
+              brand?.ratings?.isExpanded ? brand.ratings.items?.[0].title : ""
+            }
+            releaseDate={seasons?.[0]?.year}
+            title={getTitleByOrder(
+              brand?.title,
+              ["long", "medium", "short"],
+              brand?.objectTitle
+            )}
+          />
+          <CallToAction
+            episodeNumber={1}
+            episodeTitle={
+              seasons.length && seasons[0].items?.isExpanded
+                ? getTitleByOrder(seasons[0].items?.objects[0].title, [
+                    "long",
+                    "medium",
+                    "short",
+                  ])
+                : ""
+            }
+            href={
+              firstEpisodeOfFirstSeason
+                ? `/${firstEpisodeOfFirstSeason.type}/${firstEpisodeOfFirstSeason.slug}`
+                : ""
+            }
+            inProgress={false}
+            seasonNumber={1}
+          />
         </div>
-        {/* Use Carousel until brand components are ready */}
-        {/* <Carousel
-          items={[
-            {
-              href: "",
-              title: "",
-              type: "brand",
-              releaseDate: "",
-              image: brand?.images
-                ? ((brand.images as ImageUrl[]).find(
-                    (image) => image.isExpanded && image.type === "Main"
-                  )?.url as string)
-                : "",
-            },
-          ]}
-        /> */}
-      </div>
+      </Hero>
 
       {!brand && !error && <p>{`Loading ${query?.slug as string}`}</p>}
       {notFound && <p>{`Brand ${query?.slug as string} not found`}</p>}
@@ -108,9 +109,7 @@ const BrandPage: NextPage = () => {
                   {season.items?.isExpanded &&
                     (season.items.objects as Episode[])
                       .filter((ep) => ep.isExpanded && ep.type === "episode")
-                      .sort((a: Episode, b: Episode) =>
-                        (a.number || 0) > (b.number || 0) ? 1 : -1
-                      )
+                      .sort(sortEpisodesByNumber)
                       .map((ep: Episode) => (
                         <EpisodeThumbnail
                           backgroundImage={getImageSrc(

@@ -72,7 +72,7 @@ const Home: NextPage = () => {
                             ),
                             type: carouselItem.type as EntertainmentType,
                             releaseDate: (carouselItem as Season)?.year
-                              ? `${(carouselItem as Season).year}`
+                              ? `${(carouselItem as Season).year || ""}`
                               : "",
                           }))
                         : []

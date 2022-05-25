@@ -11,7 +11,7 @@ export default {
   },
   argTypes: {
     size: {
-      options: ["sm", "lg"],
+      options: ["sm", "lg", "xl"],
       control: { type: "radio" },
     },
     disabled: {
@@ -70,7 +70,7 @@ Tertiary.args = {
 export const WithIcon = Template.bind({});
 WithIcon.args = {
   text: "Button name",
-  icon: <MdClear />,
+  icon: <MdClear size={20} />,
   size: "lg",
   iconPlacement: "left",
   disabled: false,
@@ -81,7 +81,7 @@ WithIcon.args = {
 export const OnlyIcon = Template.bind({});
 OnlyIcon.args = {
   text: "",
-  icon: <MdClear />,
+  icon: <MdClear size={20} />,
   size: "lg",
   iconPlacement: "left",
   disabled: false,
@@ -92,7 +92,7 @@ OnlyIcon.args = {
 export const Disabled = Template.bind({});
 Disabled.args = {
   text: "Button name",
-  icon: <MdClear />,
+  icon: <MdClear size={20} />,
   size: "lg",
   iconPlacement: "left",
   disabled: true,
@@ -103,7 +103,7 @@ Disabled.args = {
 export const Secondary = Template.bind({});
 Secondary.args = {
   text: "Button name",
-  icon: <MdClear />,
+  icon: <MdClear size={20} />,
   size: "lg",
   iconPlacement: "right",
   onClick,
@@ -115,3 +115,14 @@ Hover.args = {
   ...WithIcon.args,
 };
 Hover.parameters = { pseudo: { hover: true } };
+
+export const WithHref = Template.bind({});
+WithHref.args = {
+  text: "Link",
+  icon: <MdClear size={20} />,
+  size: "lg",
+  iconPlacement: "left",
+  disabled: false,
+  variant: "primary",
+  href: "/party",
+};

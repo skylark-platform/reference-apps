@@ -37,11 +37,7 @@ const Movies: NextPage = () => {
       <div className="grid grid-cols-2 gap-x-4 gap-y-6 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
         {movies?.map((movie) => (
           <MovieThumbnail
-            backgroundImage={
-              movie.images
-                ? getImageSrc(movie?.images, "Thumbnail", "384x216")
-                : ""
-            }
+            backgroundImage={getImageSrc(movie?.images, "Thumbnail", "384x216")}
             contentLocation="below"
             duration="1h 59m"
             href={

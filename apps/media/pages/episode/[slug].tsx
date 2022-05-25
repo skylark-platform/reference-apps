@@ -55,7 +55,7 @@ const EpisodePage: NextPage = () => {
       </Head>
       <div className="flex h-full w-full justify-center pb-10 md:pb-16">
         <Player
-          poster={getImageSrc(episode?.images, "Thumbnail") || ""}
+          poster={getImageSrc(episode?.images, "Thumbnail")}
           src={"/mux-video-intro.mp4"}
           videoId={"1"}
           videoTitle={titleShortToLong}
@@ -129,7 +129,7 @@ const EpisodePage: NextPage = () => {
                   icon: <MdCalendarToday />,
                   header: "Released",
                   body: episode.parent?.isExpanded
-                    ? `${(episode.parent as Season)?.year}`
+                    ? `${(episode.parent as Season)?.year || ""}`
                     : "",
                 },
               ]}

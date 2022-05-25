@@ -21,6 +21,7 @@ const fieldsToExpand = {
       image_urls: {},
     },
   },
+  rating_urls: {},
 };
 
 const fields = {
@@ -47,6 +48,10 @@ const fields = {
       name: {},
     },
   },
+  rating_urls: {
+    title: {},
+    slug: {},
+  },
   items: {
     self: {},
     slug: {},
@@ -63,6 +68,7 @@ const fields = {
     synopsis_medium: {},
     season_number: {},
     episode_number: {},
+    year: {},
     items: {
       self: {},
       slug: {},

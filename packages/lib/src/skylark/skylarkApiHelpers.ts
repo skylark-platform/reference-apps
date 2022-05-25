@@ -289,7 +289,7 @@ export const parseSkylarkObject = (
       const episode: Episode = {
         ...x,
         type: "episode",
-        number: obj.episode_number || -1,
+        number: obj.episode_number || undefined,
       };
       return episode;
     }
@@ -298,9 +298,9 @@ export const parseSkylarkObject = (
       const season: Season = {
         ...x,
         type: "season",
-        number: obj.season_number || -1,
-        numberOfEpisodes: obj.number_of_episodes || -1,
-        year: obj.year || -1,
+        number: obj.season_number || undefined,
+        numberOfEpisodes: obj.number_of_episodes || undefined,
+        year: obj.year || undefined,
       };
       return season;
     }
