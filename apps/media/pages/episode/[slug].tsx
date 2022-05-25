@@ -91,9 +91,10 @@ const EpisodePage: NextPage = () => {
               }
             />
           </div>
+          <span className="flex border-gray-800 bg-gray-900 md:mx-3 md:border-r" />
           <div className="h-full w-full md:w-6/12 lg:w-4/12">
             <div className="flex justify-center">
-              <span className="mb-4 w-1/5 border-b-[1px] border-gray-800 md:hidden" />
+              <span className="mb-4 w-4/5 border-b-[1px] border-gray-800 md:hidden" />
             </div>
             <MetadataPanel
               content={[
