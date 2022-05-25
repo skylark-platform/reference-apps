@@ -15,6 +15,7 @@ import {
   getImageSrc,
   Season,
   getTitleByOrder,
+  getImageSrcAndSizeByWindow,
 } from "@skylark-reference-apps/lib";
 import { useEffect } from "react";
 
@@ -65,16 +66,10 @@ const Home: NextPage = () => {
                               carouselItem.type && carouselItem.slug
                                 ? `/${carouselItem.type}/${carouselItem.slug}`
                                 : "",
-                            image:
-                              typeof window !== "undefined"
-                                ? getImageSrc(
-                                    carouselItem.images,
-                                    "Main",
-                                    window.innerHeight > window.innerWidth
-                                      ? `${window.innerHeight}x${window.innerHeight}`
-                                      : `${window.innerWidth}x${window.innerWidth}`
-                                  )
-                                : "",
+                            image: getImageSrcAndSizeByWindow(
+                              carouselItem.images,
+                              "Main"
+                            ),
                             type: carouselItem.type as EntertainmentType,
                             releaseDate: (carouselItem as Season)?.year
                               ? `${(carouselItem as Season).year}`

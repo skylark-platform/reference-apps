@@ -4,6 +4,7 @@ import { EpisodeThumbnail, Rail, List } from "@skylark-reference-apps/react";
 import {
   Episode,
   getImageSrc,
+  getImageSrcAndSizeByWindow,
   getTitleByOrder,
   Season,
 } from "@skylark-reference-apps/lib";
@@ -30,13 +31,7 @@ const BrandPage: NextPage = () => {
     brand?.objectTitle
   );
 
-  const imageSize =
-    typeof window !== "undefined" &&
-    (window.innerHeight > window.innerWidth
-      ? `${window.innerHeight}x${window.innerHeight}`
-      : `${window.innerWidth}x${window.innerWidth}`);
-
-  const heroImage = getImageSrc(brand?.images, "Main", imageSize || "");
+  const heroImage = getImageSrcAndSizeByWindow(brand?.images, "Main");
 
   return (
     <div className="mb-20 flex min-h-screen flex-col items-center bg-gray-900">

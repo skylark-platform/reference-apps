@@ -21,6 +21,9 @@ export interface ExpandedObjects {
 
 export interface UnexpandedSkylarkObject extends UnexpandedObject {
   type: ObjectTypes;
+}
+
+export interface UnexpandedParentObject extends UnexpandedSkylarkObject {
   isExpanded: false;
 }
 
@@ -95,7 +98,7 @@ export interface SkylarkObject {
   genres?: ThemesAndGenres | UnexpandedObjects;
   images?: ImageUrls | UnexpandedObjects;
   items?: ExpandedSkylarkObjects | UnexpandedSkylarkObjects;
-  parent?: AllEntertainment | UnexpandedSkylarkObject;
+  parent?: AllEntertainment | UnexpandedParentObject;
 }
 
 export interface Asset extends SkylarkObject {

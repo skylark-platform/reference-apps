@@ -118,7 +118,6 @@ export const convertToUnexpandedObjects = (
 ): UnexpandedObjects => {
   const items: UnexpandedObject[] = urls.map((url) => ({
     self: url,
-    isExpanded: false,
   }));
   return {
     isExpanded: false,
@@ -137,7 +136,6 @@ export const convertToUnexpandedSkylarkObjects = (
   const objects: UnexpandedSkylarkObject[] = urls.map((url) => ({
     self: url,
     type: convertUrlToObjectType(url),
-    isExpanded: false,
   }));
 
   return {

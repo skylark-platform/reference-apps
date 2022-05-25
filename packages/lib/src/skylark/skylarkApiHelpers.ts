@@ -33,6 +33,7 @@ import {
   UnexpandedObjects,
   UnexpandedSkylarkObjects,
   ExpandedSkylarkObjects,
+  UnexpandedParentObject,
 } from "../interfaces";
 
 /**
@@ -224,7 +225,11 @@ export const parseSkylarkObject = (
       const [unexpandedParentUrl] = convertToUnexpandedSkylarkObjects([
         obj.parent_url,
       ] as string[]).objects;
-      parent = unexpandedParentUrl;
+      const unexpandedParent: UnexpandedParentObject = {
+        ...unexpandedParentUrl,
+        isExpanded: false,
+      };
+      parent = unexpandedParent;
     } else {
       parent = parseSkylarkObject(obj.parent_url as ApiEntertainmentObject);
     }
