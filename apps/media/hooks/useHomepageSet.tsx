@@ -78,7 +78,8 @@ export const homepageSetFetcher = (
   });
 
   return fetch(
-    `${SKYLARK_API}/api/sets/?slug=${homepageSlug}&set_type_slug=homepage&${apiQuery}`
+    `${SKYLARK_API}/api/sets/?slug=${homepageSlug}&set_type_slug=homepage&${apiQuery}`,
+    { headers: { "Accept-Language": "en-gb" } }
   )
     .then((r) => r.json())
     .then(({ objects: [homepage] }: ApiMultipleEntertainmentObjects) =>
