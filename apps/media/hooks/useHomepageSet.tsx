@@ -1,3 +1,4 @@
+import axios from "axios";
 import useSWR from "swr";
 import {
   createSkylarkApiQuery,
@@ -77,14 +78,17 @@ export const homepageSetFetcher = (
     deviceTypes: params?.[1] ? [params?.[1]] : [],
   });
 
-  return fetch(
-    `${SKYLARK_API}/api/sets/?slug=${homepageSlug}&set_type_slug=homepage&${apiQuery}`,
-    { headers: { "Accept-Language": "en-gb" } }
-  )
-    .then((r) => r.json())
-    .then(({ objects: [homepage] }: ApiMultipleEntertainmentObjects) =>
-      parseSkylarkObject(homepage)
-    );
+  return axios
+    .get<ApiMultipleEntertainmentObjects>(
+      `${SKYLARK_API}/api/sets/?slug=${homepageSlug}&set_type_slug=homepage&${apiQuery}`,
+      { headers: { "Accept-Language": "en-gb" }, }
+    )
+    .then(({ data }) => {
+      const {
+        objects: [homepage],
+      } = data;
+      return parseSkylarkObject(homepage);
+    });
 };
 
 export const useHomepageSet = () => {

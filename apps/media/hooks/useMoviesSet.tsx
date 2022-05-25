@@ -1,3 +1,4 @@
+import axios from "axios";
 import useSWR from "swr";
 import {
   createSkylarkApiQuery,
@@ -34,13 +35,17 @@ export const moviesSetFetcher = (endpoint: string) => {
     fields,
   });
 
-  return fetch(`${SKYLARK_API}/api/${endpoint}/?${apiQuery}`, {
-    headers: { "Accept-Language": "en-gb" },
-  })
-    .then((r) => r.json())
-    .then(({ objects: movies }: ApiMultipleEntertainmentObjects) =>
-      movies.map((movie) => parseSkylarkObject(movie))
-    );
+  return axios
+    .get<ApiMultipleEntertainmentObjects>(
+      `${SKYLARK_API}/api/${endpoint}/?${apiQuery}`,
+      {
+        headers: { "Accept-Language": "en-gb" },
+      }
+    )
+    .then(({ data }) => {
+      const { objects: movies } = data;
+      return movies.map((movie) => parseSkylarkObject(movie));
+    });
 };
 
 export const useAllMovies = (type: EntertainmentType) => {
