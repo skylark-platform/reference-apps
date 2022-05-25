@@ -86,7 +86,9 @@ const singleObjectFetcher = ([endpoint, slug]: [
   endpoint: string,
   slug: string
 ]) =>
-  fetch(`${SKYLARK_API}/api/${endpoint}/?slug=${slug}&${apiQuery}`)
+  fetch(`${SKYLARK_API}/api/${endpoint}/?slug=${slug}&${apiQuery}`, {
+    headers: { "Accept-Language": "en-gb" },
+  })
     .then((r) => r.json())
     .then(({ objects: [object] }: ApiMultipleEntertainmentObjects) =>
       parseSkylarkObject(object)
