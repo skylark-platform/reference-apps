@@ -107,19 +107,11 @@ export interface Asset extends SkylarkObject {
 
 export interface Movie extends SkylarkObject {
   type: "movie";
-  // items: {
-  //   isExpanded: true
-  //   objects: Asset[]
-  // } | UnexpandedSkylarkObjects;
 }
 
 export interface Episode extends SkylarkObject {
   type: "episode";
   number: number;
-  // items: {
-  //   isExpanded: true
-  //   objects: Asset[]
-  // } | UnexpandedSkylarkObjects;
 }
 
 export interface Season extends SkylarkObject {
@@ -127,18 +119,10 @@ export interface Season extends SkylarkObject {
   numberOfEpisodes: number;
   number: number;
   year: number;
-  // items: {
-  //   isExpanded: true
-  //   objects: (Episode | Asset)[]
-  // } | UnexpandedSkylarkObjects;
 }
 
 export interface Brand extends SkylarkObject {
   type: "brand";
-  // items: {
-  //   isExpanded: true
-  //   objects: (Movie | Episode | Season | Asset)[]
-  // } | UnexpandedSkylarkObjects;
 }
 
 export interface Set extends SkylarkObject {
