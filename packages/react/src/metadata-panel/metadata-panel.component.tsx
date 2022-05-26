@@ -18,7 +18,9 @@ export const MetadataPanel: React.FC<MetadataPanelProps> = ({ content }) => (
         <div className="col-span-1 flex justify-center text-xl md:justify-end md:text-2xl">
           {icon}
         </div>
-        <div className="col-span-2 flex w-full justify-start">{header}</div>
+        <div className="col-span-2 flex w-full justify-start pt-px sm:pt-0">
+          {header}
+        </div>
         <div className="col-span-5 justify-start text-gray-400 lg:col-span-7">
           {body && Array.isArray(body) ? body.join(", ") : body}
         </div>
