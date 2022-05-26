@@ -13,7 +13,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   activeHref,
   defaultOpen,
 }) => (
-  <header className="fixed z-80 flex w-full flex-col font-display md:h-28 md:flex-row-reverse">
+  <header className="fixed z-80 flex w-full flex-col font-display md:h-24 md:flex-row-reverse lg:h-28">
     <div
       className={`
       fixed z-90 flex h-mobile-header w-full items-center justify-center
@@ -22,8 +22,10 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
     `}
     >
       <div className="flex items-center justify-center text-3xl text-gray-100">
-        <MdStream className="h-9 w-9 md:ml-8 md:h-12 md:w-12 lg:ml-16 xl:ml-20" />
-        <h2 className="ml-1 text-base md:ml-2 md:text-2xl">{title}</h2>
+        <MdStream className="h-9 w-9 md:ml-8 md:h-10 md:w-10 lg:ml-16 lg:h-12 lg:w-12 xl:ml-20" />
+        <h2 className="ml-1 text-base md:ml-2 md:text-xl lg:text-2xl">
+          {title}
+        </h2>
         <span className="absolute right-2 md:hidden">
           <Button icon={<MdAccountCircle />} size="sm" variant="tertiary" />
         </span>
