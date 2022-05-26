@@ -15,10 +15,10 @@ export const MetadataPanel: React.FC<MetadataPanelProps> = ({ content }) => (
         className="grid w-full grid-cols-8 py-2 md:gap-4 md:py-4 lg:grid-cols-10"
         key={header}
       >
-        <div className="col-span-1 mt-1 flex justify-center sm:text-lg md:justify-end md:text-xl">
+        <div className="col-span-1 flex justify-center sm:text-lg md:justify-end md:text-2xl">
           {icon}
         </div>
-        <div className="col-span-2 flex w-full justify-center">{header}</div>
+        <div className="col-span-2 flex w-full justify-start">{header}</div>
         <div className="col-span-5 justify-start text-gray-400 lg:col-span-7">
           {body && Array.isArray(body) ? body.join(", ") : body}
         </div>
