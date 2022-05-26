@@ -34,7 +34,9 @@ export const moviesSetFetcher = (endpoint: string) => {
     fields,
   });
 
-  return fetch(`${SKYLARK_API}/api/${endpoint}/?${apiQuery}`)
+  return fetch(`${SKYLARK_API}/api/${endpoint}/?${apiQuery}`, {
+    headers: { "Accept-Language": "en-gb" },
+  })
     .then((r) => r.json())
     .then(({ objects: movies }: ApiMultipleEntertainmentObjects) =>
       movies.map((movie) => parseSkylarkObject(movie))
