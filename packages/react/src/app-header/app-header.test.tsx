@@ -11,8 +11,11 @@ describe("AppHeader component", () => {
         title="test title"
       />
     );
-    expect(screen.getByText(/test title/)).toBeTruthy();
-    expect(screen.getByRole("link")).toHaveProperty(
+    expect(screen.getByText("test title").closest("a")).toHaveProperty(
+      "href",
+      "http://localhost/"
+    );
+    expect(screen.getByText("Home").closest("a")).toHaveProperty(
       "href",
       "http://localhost/homepage"
     );
