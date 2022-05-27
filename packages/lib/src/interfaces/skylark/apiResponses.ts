@@ -1,4 +1,4 @@
-import { SetTypes } from "./objects";
+import { SetTypes } from "./types";
 
 export interface ApiImage {
   self: string;
@@ -28,8 +28,8 @@ export interface ApiThemeGenre {
 export type ApiThemesAndGenres = string[] | ApiThemeGenre[];
 
 export interface ApiRating {
-  title: string;
-  value: string;
+  title?: string;
+  value?: string;
 }
 
 export type ApiRatings = string[] | ApiRating[];

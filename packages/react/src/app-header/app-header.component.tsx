@@ -30,11 +30,15 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           </Link>
         </h2>
         <span className="absolute right-2 md:hidden">
-          <Button icon={<MdAccountCircle />} size="sm" variant="tertiary" />
+          <Button
+            icon={<MdAccountCircle size={20} />}
+            size="sm"
+            variant="tertiary"
+          />
         </span>
       </div>
       <div className="hidden gap-1 md:flex">
-        <Button icon={<MdAccountCircle />} text="Sign in" />
+        <Button icon={<MdAccountCircle size={25} />} text="Sign in" />
         <Button text="Register" variant="tertiary" />
       </div>
     </div>

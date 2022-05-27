@@ -8,15 +8,17 @@ export default {
 } as ComponentMeta<typeof BrandHeader>;
 
 const Template: ComponentStory<typeof BrandHeader> = (args) => (
-  <BrandHeader {...args} />
+  <div className="bg-gray-900">
+    <BrandHeader {...args} />
+  </div>
 );
 
 export const Default = Template.bind({});
 Default.args = {
-  brand: "Game of Thrones",
+  title: "Game of Thrones",
   numberOfSeasons: 8,
-  releaseYear: 2011,
-  ageRange: "18+",
+  releaseDate: 2011,
+  rating: "18+",
   description:
     "Summers span decades. Winters can last a lifetime. And the struggle for the Iron Throne begins.",
 };

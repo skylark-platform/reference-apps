@@ -10,10 +10,10 @@ interface RailProps {
 }
 
 const directionArrowClassName = `
-  absolute hidden md:flex justify-center items-center
-  h-[calc(100%-0.5rem)] bg-gray-900/[.3] hover:bg-gray-900/[.4]
-  text-2xl text-gray-400 hover:text-white transition-all z-50
-  md:w-12 lg:w-16 xl:w-24
+  group absolute hidden md:flex justify-center items-center
+  h-[calc(100%-0.5rem)] hover:bg-gray-900/[.4]
+  text-2xl text-gray-300 hover:text-white transition-all z-50
+  md:w-12 lg:w-16 xl:w-24 from-gray-900 to-gray-900/[.4]
 `;
 
 const determineScrollAmount = (
@@ -124,24 +124,24 @@ export const Rail: React.FC<RailProps> = ({
         {numChildren > numChildrenOnScreen && (
           <>
             <button
-              className={`left-0 ${directionArrowClassName} ${
+              className={`left-0 bg-gradient-to-r ${directionArrowClassName} ${
                 showPreviousButton ? "opacity-100" : "opacity-0"
               }`}
               data-testid="previous-button"
               type="button"
               onClick={() => scrollToNextBlock(false)}
             >
-              <MdArrowBack />
+              <MdArrowBack className="transition-all md:group-hover:scale-110" />
             </button>
             <button
-              className={`right-0 ${directionArrowClassName} ${
+              className={`right-0 bg-gradient-to-l ${directionArrowClassName} ${
                 showNextButton ? "opacity-100" : "opacity-0"
               }`}
               data-testid="forward-button"
               type="button"
               onClick={() => scrollToNextBlock(true)}
             >
-              <MdArrowForward />
+              <MdArrowForward className="transition-all md:group-hover:scale-110" />
             </button>
           </>
         )}
