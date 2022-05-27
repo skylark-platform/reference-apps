@@ -12,7 +12,7 @@ export const MetadataPanel: React.FC<MetadataPanelProps> = ({ content }) => (
   <div className="w-full text-xs text-white md:text-base">
     {content.map(({ body, header, icon }) => (
       <div
-        className="grid w-full grid-cols-8 py-2 md:gap-16 md:py-4 lg:grid-cols-10"
+        className="grid grid-cols-8 py-2 sm:w-9/12 md:w-full md:py-4 lg:grid-cols-10 lg:gap-16"
         key={header}
       >
         <div className="col-span-1 justify-center text-xl md:justify-end md:text-2xl">
