@@ -87,7 +87,7 @@ const MoviePage: NextPage = () => {
             />
           </div>
           <span className="flex border-gray-800 bg-gray-900 md:mx-3 md:border-r" />
-          <div className="h-full w-full md:w-5/12">
+          <div className="h-full w-full pt-4 md:w-5/12">
             <div className="flex justify-center">
               <span className="mb-4 w-4/5 border-b border-gray-800 md:hidden" />
             </div>
