@@ -9,20 +9,17 @@ interface MetadataPanelProps {
 }
 
 export const MetadataPanel: React.FC<MetadataPanelProps> = ({ content }) => (
-  <div className="w-full border-gray-800 bg-gray-900 text-xs text-white md:border-l md:text-base">
+  <div className=" text-xs text-white md:text-base">
     {content.map(({ body, header, icon }) => (
       <div
-        className="grid w-full grid-cols-8 py-2 md:grid-cols-8 md:gap-4 md:py-4 lg:grid-cols-10"
+        className="grid grid-cols-6 py-2 sm:grid-cols-5 md:grid-cols-10 md:py-4 2xl:grid-cols-8"
         key={header}
       >
-        <div className="col-span-1 mt-1 flex justify-center md:col-span-1 md:justify-end lg:col-span-1">
-          {icon}
+        <div className="col-span-2 flex w-full sm:col-span-1 md:col-span-4 2xl:col-span-2">
+          <div className="flex text-xl md:text-2xl">{icon}</div>
+          <div className="ml-2 flex justify-start pt-0.5 sm:pt-0">{header}</div>
         </div>
-        <div className="col-span-2 flex w-full justify-center md:col-span-2 lg:col-span-2">
-          {" "}
-          {header}
-        </div>
-        <div className="col-span-5 justify-start text-gray-400 md:col-span-5 lg:col-span-7">
+        <div className="col-span-4 mt-0.5 flex justify-start text-gray-400 sm:col-span-3 md:col-span-6 md:mt-0 2xl:col-span-4">
           {body && Array.isArray(body) ? body.join(", ") : body}
         </div>
       </div>

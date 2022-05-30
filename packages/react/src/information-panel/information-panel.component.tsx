@@ -43,7 +43,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
           </div>
         )}
         <div className="pt-2 text-2xl md:text-3xl">{title}</div>
-        <span className="mt-4 mb-2 hidden w-2/12 border-b border-gray-800 md:flex" />
+        <span className="mt-4 mb-2 hidden w-36 border-b border-gray-800 md:flex" />
         <List
           contents={[
             <span className="flex items-center" key={"duration-icon"}>

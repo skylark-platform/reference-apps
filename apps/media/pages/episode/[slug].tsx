@@ -63,7 +63,7 @@ const EpisodePage: NextPage = () => {
       </div>
       {episode && (
         <div className="flex flex-col px-gutter sm:px-sm-gutter md:flex-row md:py-2 lg:px-lg-gutter xl:px-xl-gutter">
-          <div className="h-full w-full pb-4 md:w-6/12 md:pl-6 lg:w-8/12">
+          <div className="h-full w-full pb-4 md:w-7/12">
             <InformationPanel
               availableUntil={12}
               description={
@@ -98,9 +98,10 @@ const EpisodePage: NextPage = () => {
               }
             />
           </div>
-          <div className="h-full w-full md:w-6/12 lg:w-4/12">
+          <span className="flex border-gray-800 bg-gray-900 md:mx-3 md:border-r" />
+          <div className="h-full w-full pl-1 sm:pl-5 md:w-5/12">
             <div className="flex justify-center">
-              <span className="mb-4 w-1/5 border-b-[1px] border-gray-800 md:hidden" />
+              <span className="mb-4 w-full border-b border-gray-800 md:hidden" />
             </div>
             <MetadataPanel
               content={[
