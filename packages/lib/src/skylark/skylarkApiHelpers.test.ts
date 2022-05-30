@@ -1,12 +1,12 @@
 import { parseSkylarkObject, parseSkylarkThemesAndGenres } from ".";
 import {
   ApiEntertainmentObject,
-  Credit,
-  ImageUrl,
-  Rating,
+  Credits,
+  ImageUrls,
+  Ratings,
   SkylarkObject,
-  ThemeGenre,
-  UnexpandedObject,
+  ThemesAndGenres,
+  UnexpandedObjects,
 } from "../interfaces";
 import {
   createSkylarkApiQuery,
@@ -83,16 +83,17 @@ describe("skylarkApiHelpers", () => {
     it("parses Image URLs when they are not expanded", () => {
       const imageUrls = parseSkylarkImageUrls(["/api/image/1", "/api/image/2"]);
 
-      const expected: UnexpandedObject[] = [
-        {
-          isExpanded: false,
-          self: "/api/image/1",
-        },
-        {
-          isExpanded: false,
-          self: "/api/image/2",
-        },
-      ];
+      const expected: UnexpandedObjects = {
+        isExpanded: false,
+        items: [
+          {
+            self: "/api/image/1",
+          },
+          {
+            self: "/api/image/2",
+          },
+        ],
+      };
 
       expect(imageUrls).toEqual(expected);
     });
@@ -113,48 +114,50 @@ describe("skylarkApiHelpers", () => {
         },
       ]);
 
-      const expected: ImageUrl[] = [
-        {
-          isExpanded: true,
-          self: "/api/images/1",
-          url: "skylark.com/image/1.jpg",
-          urlPath: "/image/1.jpg",
-          type: "Thumbnail",
-        },
-        {
-          isExpanded: true,
-          self: "/api/images/2",
-          url: "skylark.com/image/2.jpg",
-          urlPath: "/image/2.jpg",
-          type: "Main",
-        },
-      ];
+      const expected: ImageUrls = {
+        isExpanded: true,
+        items: [
+          {
+            self: "/api/images/1",
+            url: "skylark.com/image/1.jpg",
+            urlPath: "/image/1.jpg",
+            type: "Thumbnail",
+          },
+          {
+            self: "/api/images/2",
+            url: "skylark.com/image/2.jpg",
+            urlPath: "/image/2.jpg",
+            type: "Main",
+          },
+        ],
+      };
 
-      expect(imageUrls[0]).toHaveProperty("isExpanded", true);
+      expect(imageUrls).toHaveProperty("isExpanded", true);
       expect(imageUrls).toEqual(expected);
     });
   });
 
   describe("parseSkylarkCredits", () => {
     it("parses Credits when they are not expanded", () => {
-      const imageUrls = parseSkylarkCredits(["/api/credit/1", "/api/credit/2"]);
+      const credits = parseSkylarkCredits(["/api/credit/1", "/api/credit/2"]);
 
-      const expected: UnexpandedObject[] = [
-        {
-          isExpanded: false,
-          self: "/api/credit/1",
-        },
-        {
-          isExpanded: false,
-          self: "/api/credit/2",
-        },
-      ];
+      const expected: UnexpandedObjects = {
+        isExpanded: false,
+        items: [
+          {
+            self: "/api/credit/1",
+          },
+          {
+            self: "/api/credit/2",
+          },
+        ],
+      };
 
-      expect(imageUrls).toEqual(expected);
+      expect(credits).toEqual(expected);
     });
 
     it("parses Credits when they are expanded", () => {
-      const imageUrls = parseSkylarkCredits([
+      const credits = parseSkylarkCredits([
         {
           character: "Alexander Hamilton",
           people_url: {
@@ -175,57 +178,59 @@ describe("skylarkApiHelpers", () => {
         },
       ]);
 
-      const expected: Credit[] = [
-        {
-          isExpanded: true,
-          character: "Alexander Hamilton",
-          peopleUrl: {
-            name: "Lin",
+      const expected: Credits = {
+        isExpanded: true,
+        items: [
+          {
+            character: "Alexander Hamilton",
+            peopleUrl: {
+              name: "Lin",
+            },
+            roleUrl: {
+              title: "Actor",
+            },
           },
-          roleUrl: {
-            title: "Actor",
+          {
+            character: "Aaron Burr",
+            peopleUrl: {
+              name: "Leslie",
+            },
+            roleUrl: {
+              title: "Actor",
+            },
           },
-        },
-        {
-          isExpanded: true,
-          character: "Aaron Burr",
-          peopleUrl: {
-            name: "Leslie",
-          },
-          roleUrl: {
-            title: "Actor",
-          },
-        },
-      ];
+        ],
+      };
 
-      expect(imageUrls[0]).toHaveProperty("isExpanded", true);
-      expect(imageUrls).toEqual(expected);
+      expect(credits).toHaveProperty("isExpanded", true);
+      expect(credits).toEqual(expected);
     });
   });
 
   describe("parseSkylarkThemesAndGenres", () => {
     it("parses Themes when they are not expanded", () => {
-      const imageUrls = parseSkylarkThemesAndGenres([
+      const themeGenres = parseSkylarkThemesAndGenres([
         "/api/theme/1",
         "/api/theme/2",
       ]);
 
-      const expected: UnexpandedObject[] = [
-        {
-          isExpanded: false,
-          self: "/api/theme/1",
-        },
-        {
-          isExpanded: false,
-          self: "/api/theme/2",
-        },
-      ];
+      const expected: UnexpandedObjects = {
+        isExpanded: false,
+        items: [
+          {
+            self: "/api/theme/1",
+          },
+          {
+            self: "/api/theme/2",
+          },
+        ],
+      };
 
-      expect(imageUrls).toEqual(expected);
+      expect(themeGenres).toEqual(expected);
     });
 
     it("parses Themes when they are expanded", () => {
-      const imageUrls = parseSkylarkThemesAndGenres([
+      const themeGenres = parseSkylarkThemesAndGenres([
         {
           name: "Horror",
         },
@@ -234,42 +239,44 @@ describe("skylarkApiHelpers", () => {
         },
       ]);
 
-      const expected: ThemeGenre[] = [
-        {
-          isExpanded: true,
-          name: "Horror",
-        },
-        {
-          isExpanded: true,
-          name: "Action",
-        },
-      ];
+      const expected: ThemesAndGenres = {
+        isExpanded: true,
+        items: [
+          {
+            name: "Horror",
+          },
+          {
+            name: "Action",
+          },
+        ],
+      };
 
-      expect(imageUrls[0]).toHaveProperty("isExpanded", true);
-      expect(imageUrls).toEqual(expected);
+      expect(themeGenres).toHaveProperty("isExpanded", true);
+      expect(themeGenres).toEqual(expected);
     });
   });
 
   describe("parseSkylarkRatings", () => {
     it("parses Ratings when they are not expanded", () => {
-      const imageUrls = parseSkylarkRatings(["/api/rating/1", "/api/rating/2"]);
+      const ratings = parseSkylarkRatings(["/api/rating/1", "/api/rating/2"]);
 
-      const expected: UnexpandedObject[] = [
-        {
-          isExpanded: false,
-          self: "/api/rating/1",
-        },
-        {
-          isExpanded: false,
-          self: "/api/rating/2",
-        },
-      ];
+      const expected: UnexpandedObjects = {
+        isExpanded: false,
+        items: [
+          {
+            self: "/api/rating/1",
+          },
+          {
+            self: "/api/rating/2",
+          },
+        ],
+      };
 
-      expect(imageUrls).toEqual(expected);
+      expect(ratings).toEqual(expected);
     });
 
     it("parses Rating when they are expanded", () => {
-      const imageUrls = parseSkylarkRatings([
+      const ratings = parseSkylarkRatings([
         {
           value: "12",
           title: "twelve",
@@ -280,21 +287,22 @@ describe("skylarkApiHelpers", () => {
         },
       ]);
 
-      const expected: Rating[] = [
-        {
-          isExpanded: true,
-          value: "12",
-          title: "twelve",
-        },
-        {
-          isExpanded: true,
-          value: "15",
-          title: "fifteen",
-        },
-      ];
+      const expected: Ratings = {
+        isExpanded: true,
+        items: [
+          {
+            value: "12",
+            title: "twelve",
+          },
+          {
+            value: "15",
+            title: "fifteen",
+          },
+        ],
+      };
 
-      expect(imageUrls[0]).toHaveProperty("isExpanded", true);
-      expect(imageUrls).toEqual(expected);
+      expect(ratings).toHaveProperty("isExpanded", true);
+      expect(ratings).toEqual(expected);
     });
   });
 
@@ -330,14 +338,14 @@ describe("skylarkApiHelpers", () => {
       },
       type: null,
       tags: [],
-      themes: [],
       titleSort: "",
-      ratings: [],
-      items: [],
-      images: [],
-      credits: [],
-      genres: [],
-      parent: null,
+      themes: undefined,
+      ratings: undefined,
+      items: undefined,
+      images: undefined,
+      credits: undefined,
+      genres: undefined,
+      parent: undefined,
     };
 
     it("parses a SkylarkObject with no items", () => {
@@ -356,7 +364,10 @@ describe("skylarkApiHelpers", () => {
 
       const expectedObject: SkylarkObject = {
         ...defaultExpectedObject,
-        items: [defaultExpectedObject, defaultExpectedObject],
+        items: {
+          isExpanded: true,
+          objects: [defaultExpectedObject, defaultExpectedObject],
+        },
       };
 
       expect(parsedObject).toEqual(expectedObject);
@@ -378,13 +389,19 @@ describe("skylarkApiHelpers", () => {
 
       const expectedObject: SkylarkObject = {
         ...defaultExpectedObject,
-        items: [
-          {
-            ...defaultExpectedObject,
-            items: [defaultExpectedObject, defaultExpectedObject],
-          },
-          defaultExpectedObject,
-        ],
+        items: {
+          isExpanded: true,
+          objects: [
+            {
+              ...defaultExpectedObject,
+              items: {
+                isExpanded: true,
+                objects: [defaultExpectedObject, defaultExpectedObject],
+              },
+            },
+            defaultExpectedObject,
+          ],
+        },
       };
 
       expect(parsedObject).toEqual(expectedObject);

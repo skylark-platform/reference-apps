@@ -11,11 +11,11 @@ import {
 import { useRouter } from "next/router";
 import {
   Episode,
-  SkylarkObject,
   EntertainmentType,
   getImageSrc,
   Season,
   getTitleByOrder,
+  getImageSrcAndSizeByWindow,
 } from "@skylark-reference-apps/lib";
 import { useEffect } from "react";
 
@@ -43,7 +43,8 @@ const Home: NextPage = () => {
       </Head>
 
       {homepage?.isExpanded &&
-        homepage.items?.map((item) => {
+        homepage?.items?.isExpanded &&
+        homepage.items.objects.map((item) => {
           if (item.isExpanded) {
             const key = `${item.self}-${item.slug}-${item.uid}-${item.objectTitle}`;
             if (item.type === "slider") {
@@ -52,59 +53,49 @@ const Home: NextPage = () => {
                   <Carousel
                     activeItem={activeCarouselItem}
                     changeInterval={8}
-                    items={(
-                      item.items?.filter(
-                        (carouselItem) => carouselItem.isExpanded === true
-                      ) as SkylarkObject[]
-                    ).map((carouselItem) => ({
-                      uid: carouselItem.uid || "",
-                      title: getTitleByOrder(
-                        carouselItem.title,
-                        ["medium", "short"],
-                        carouselItem.objectTitle
-                      ),
-                      href:
-                        carouselItem.type && carouselItem.slug
-                          ? `/${carouselItem.type}/${carouselItem.slug}`
-                          : "",
-                      image:
-                        carouselItem.images && typeof window !== "undefined"
-                          ? getImageSrc(
+                    items={
+                      item?.items?.isExpanded
+                        ? item.items.objects.map((carouselItem) => ({
+                            uid: carouselItem.uid || "",
+                            title: getTitleByOrder(
+                              carouselItem.title,
+                              ["medium", "short"],
+                              carouselItem.objectTitle
+                            ),
+                            href:
+                              carouselItem.type && carouselItem.slug
+                                ? `/${carouselItem.type}/${carouselItem.slug}`
+                                : "",
+                            image: getImageSrcAndSizeByWindow(
                               carouselItem.images,
-                              "Main",
-                              window.innerHeight > window.innerWidth
-                                ? `${window.innerHeight}x${window.innerHeight}`
-                                : `${window.innerWidth}x${window.innerWidth}`
-                            )
-                          : "",
-                      type: carouselItem.type as EntertainmentType,
-                      releaseDate: (carouselItem as Season)?.year
-                        ? `${(carouselItem as Season).year}`
-                        : "",
-                    }))}
+                              "Main"
+                            ),
+                            type: carouselItem.type as EntertainmentType,
+                            releaseDate: (carouselItem as Season)?.year
+                              ? `${(carouselItem as Season).year || ""}`
+                              : "",
+                          }))
+                        : []
+                    }
                   />
                 </div>
               );
             }
 
-            if (item.type === "rail") {
+            if (item.type === "rail" && item?.items?.isExpanded) {
               return (
                 <div className="my-6 w-full" key={key}>
                   <Rail
                     displayCount
                     header={item.title?.medium || item.title?.short}
                   >
-                    {(
-                      item.items?.filter(
-                        (railItem) => railItem.isExpanded === true
-                      ) as SkylarkObject[]
-                    ).map((movie) => (
+                    {item.items.objects.map((movie) => (
                       <MovieThumbnail
-                        backgroundImage={
-                          movie.images
-                            ? getImageSrc(movie.images, "Thumbnail", "384x216")
-                            : ""
-                        }
+                        backgroundImage={getImageSrc(
+                          movie.images,
+                          "Thumbnail",
+                          "384x216"
+                        )}
                         contentLocation="below"
                         href={
                           movie.type && movie.slug
@@ -120,32 +111,24 @@ const Home: NextPage = () => {
               );
             }
 
-            if (item.type === "season") {
+            if (item.type === "season" && item?.items?.isExpanded) {
               return (
                 <div className="my-6 w-full" key={key}>
                   <Rail
                     displayCount
                     header={item.title?.medium || item.title?.short}
                   >
-                    {(
-                      item.items?.filter(
-                        (railItem) => railItem.isExpanded === true
-                      ) as Episode[]
-                    )
+                    {(item.items.objects as Episode[])
                       .sort((a: Episode, b: Episode) =>
                         (a.number || 0) > (b.number || 0) ? 1 : -1
                       )
                       .map((episode) => (
                         <EpisodeThumbnail
-                          backgroundImage={
-                            episode.images
-                              ? getImageSrc(
-                                  episode.images,
-                                  "Thumbnail",
-                                  "384x216"
-                                )
-                              : ""
-                          }
+                          backgroundImage={getImageSrc(
+                            episode.images,
+                            "Thumbnail",
+                            "384x216"
+                          )}
                           contentLocation="below"
                           description={
                             episode.synopsis?.short ||

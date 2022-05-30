@@ -1,3 +1,4 @@
+import { convertToUnexpandedSkylarkObjects } from ".";
 import { EntertainmentType } from "../interfaces";
 import {
   convertEntertainmentTypeToString,
@@ -148,20 +149,44 @@ describe("converters", () => {
   describe("convertToUnexpandedObjects", () => {
     it("converts an array of urls to UnexpandedObjects", () => {
       const objects = convertToUnexpandedObjects([
+        "/api/image/1",
+        "/api/image/2",
+      ]);
+
+      expect(objects).toEqual({
+        isExpanded: false,
+        items: [
+          {
+            self: "/api/image/1",
+          },
+          {
+            self: "/api/image/2",
+          },
+        ],
+      });
+    });
+  });
+
+  describe("convertToUnexpandedSkylarkObjects", () => {
+    it("converts an array of urls to UnexpandedSkylarkObjects", () => {
+      const objects = convertToUnexpandedSkylarkObjects([
         "/api/episode/1",
         "/api/episode/2",
       ]);
 
-      expect(objects).toEqual([
-        {
-          self: "/api/episode/1",
-          isExpanded: false,
-        },
-        {
-          self: "/api/episode/2",
-          isExpanded: false,
-        },
-      ]);
+      expect(objects).toEqual({
+        isExpanded: false,
+        objects: [
+          {
+            self: "/api/episode/1",
+            type: "episode",
+          },
+          {
+            self: "/api/episode/2",
+            type: "episode",
+          },
+        ],
+      });
     });
   });
 });

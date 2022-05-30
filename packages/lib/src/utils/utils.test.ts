@@ -1,4 +1,4 @@
-import { getCreditsByType } from ".";
+import { getCreditsByType, getImageSrcAndSizeByWindow } from ".";
 import { Credits, ImageUrls } from "../interfaces";
 import { getImageSrc, getTitleByOrder } from "./utils";
 
@@ -79,30 +79,44 @@ describe("utils", () => {
   });
 
   describe("getImageSrc", () => {
-    const imageUrls: ImageUrls = [
-      {
-        isExpanded: true,
-        self: "/api/image/1",
-        url: "https://skylark.com/images/1.jpg",
-        urlPath: "/images/1.jpg",
-        type: "Thumbnail",
-      },
-      {
-        isExpanded: true,
-        self: "/api/image/2",
-        url: "https://skylark.com/images/2.jpg",
-        urlPath: "/images/2.jpg",
-        type: "Main",
-      },
-    ];
+    const imageUrls: ImageUrls = {
+      isExpanded: true,
+      items: [
+        {
+          self: "/api/image/1",
+          url: "https://skylark.com/images/1.jpg",
+          urlPath: "/images/1.jpg",
+          type: "Thumbnail",
+        },
+        {
+          self: "/api/image/2",
+          url: "https://skylark.com/images/2.jpg",
+          urlPath: "/images/2.jpg",
+          type: "Main",
+        },
+      ],
+    };
 
     it("returns the matching image source for the given type", () => {
       const src = getImageSrc(imageUrls, "Main");
       expect(src).toEqual("https://skylark.com/images/2.jpg");
     });
 
+    it("returns empty string if the images is undefined", () => {
+      const src = getImageSrc(undefined, "Main");
+      expect(src).toEqual("");
+    });
+
+    it("returns empty string if the images have not been expanded by the API", () => {
+      const src = getImageSrc(
+        { isExpanded: false, items: [{ self: "/api/image/1" }] },
+        "Main"
+      );
+      expect(src).toEqual("");
+    });
+
     it("returns empty string if the given image array is empty", () => {
-      const src = getImageSrc([], "Main");
+      const src = getImageSrc({ isExpanded: true, items: [] }, "Main");
       expect(src).toEqual("");
     });
 
@@ -117,45 +131,60 @@ describe("utils", () => {
     });
   });
 
-  describe("getCreditsByType", () => {
-    const credits: Credits = [
-      {
-        isExpanded: true,
-        character: "",
-        roleUrl: {
-          title: "Director",
-        },
-        peopleUrl: {
-          name: "Donald",
-        },
-      },
-      {
-        isExpanded: true,
-        character: "",
-        roleUrl: {
-          title: "Director",
-        },
-        peopleUrl: {
-          name: "Glover",
-        },
-      },
-      {
-        isExpanded: true,
-        character: "",
-        roleUrl: {
-          title: "Writer",
-        },
-        peopleUrl: {
-          name: "Childish Gambino",
-        },
-      },
-    ];
-
-    it("returns all Directors", () => {
-      const directors = getCreditsByType(credits, "Director");
-      expect(directors).toEqual([
+  describe("getImageSrcAndSizeByWindow", () => {
+    const imageUrls: ImageUrls = {
+      isExpanded: true,
+      items: [
         {
-          isExpanded: true,
+          self: "/api/image/1",
+          url: "https://skylark.com/images/1.jpg",
+          urlPath: "/images/1.jpg",
+          type: "Thumbnail",
+        },
+        {
+          self: "/api/image/2",
+          url: "https://skylark.com/images/2.jpg",
+          urlPath: "/images/2.jpg",
+          type: "Main",
+        },
+      ],
+    };
+
+    const { window } = global;
+    afterEach(() => {
+      global.window = window;
+    });
+
+    it("returns image without size if window is undefined", () => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      delete global.window;
+      const src = getImageSrcAndSizeByWindow(imageUrls, "Main");
+      expect(src).toEqual("https://skylark.com/images/2.jpg");
+    });
+
+    it("returns image with size set to window innerWidth as it is larger than innerHeight", () => {
+      window.innerWidth = 200;
+      window.innerHeight = 100;
+      window.dispatchEvent(new Event("resize"));
+      const src = getImageSrcAndSizeByWindow(imageUrls, "Main");
+      expect(src).toEqual("https://skylark.com/images/2-200x200.jpg");
+    });
+
+    it("returns image with size set to window innerHeight as it is larger than innerWidth", () => {
+      window.innerWidth = 100;
+      window.innerHeight = 200;
+      window.dispatchEvent(new Event("resize"));
+      const src = getImageSrcAndSizeByWindow(imageUrls, "Main");
+      expect(src).toEqual("https://skylark.com/images/2-200x200.jpg");
+    });
+  });
+
+  describe("getCreditsByType", () => {
+    const credits: Credits = {
+      isExpanded: true,
+      items: [
+        {
           character: "",
           roleUrl: {
             title: "Director",
@@ -165,7 +194,39 @@ describe("utils", () => {
           },
         },
         {
-          isExpanded: true,
+          character: "",
+          roleUrl: {
+            title: "Director",
+          },
+          peopleUrl: {
+            name: "Glover",
+          },
+        },
+        {
+          character: "",
+          roleUrl: {
+            title: "Writer",
+          },
+          peopleUrl: {
+            name: "Childish Gambino",
+          },
+        },
+      ],
+    };
+
+    it("returns all Directors", () => {
+      const directors = getCreditsByType(credits, "Director");
+      expect(directors).toEqual([
+        {
+          character: "",
+          roleUrl: {
+            title: "Director",
+          },
+          peopleUrl: {
+            name: "Donald",
+          },
+        },
+        {
           character: "",
           roleUrl: {
             title: "Director",

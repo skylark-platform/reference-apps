@@ -1,42 +1,54 @@
-export type SetTypes = "slider" | "rail" | "collection";
-export type EntertainmentType =
-  | "movie"
-  | "episode"
-  | "season"
-  | "brand"
-  | "asset";
-export type ObjectTypes = EntertainmentType | SetTypes | null;
+import {
+  CreditTypes,
+  ObjectTypes,
+  SetTypes,
+  SynopsisTypes,
+  TitleTypes,
+} from "./types";
 
-export type ImageTypes = "Thumbnail" | "Main" | "Poster";
-
-export type CreditTypes = "Actor" | "Director" | "Writer";
-
-export type DeviceTypes = "smartphone" | "pc";
-
-export type TitleTypes = "short" | "medium" | "long";
-
-export type SynopsisTypes = TitleTypes;
 export interface UnexpandedObject {
   self: string;
+}
+
+export interface UnexpandedObjects {
   isExpanded: false;
+  items: UnexpandedObject[];
+}
+
+export interface ExpandedObjects {
+  isExpanded: true;
 }
 
 export interface UnexpandedSkylarkObject extends UnexpandedObject {
   type: ObjectTypes;
 }
 
+export interface UnexpandedParentObject extends UnexpandedSkylarkObject {
+  isExpanded: false;
+}
+
+export interface UnexpandedSkylarkObjects {
+  isExpanded: false;
+  objects: UnexpandedSkylarkObject[];
+}
+
+export interface ExpandedSkylarkObjects {
+  isExpanded: true;
+  objects: AllEntertainment[];
+}
+
 export interface ImageUrl {
   self: string;
-  isExpanded: true;
   url: string;
   urlPath: string;
   type: string;
 }
 
-export type ImageUrls = UnexpandedObject[] | ImageUrl[];
+export interface ImageUrls extends ExpandedObjects {
+  items: ImageUrl[];
+}
 
 export interface Credit {
-  isExpanded: true;
   character: string;
   peopleUrl: {
     name?: string;
@@ -46,22 +58,24 @@ export interface Credit {
   };
 }
 
-export type Credits = UnexpandedObject[] | Credit[];
-
-export interface ThemeGenre {
-  isExpanded: true;
-  name: string;
+export interface Credits extends ExpandedObjects {
+  items: Credit[];
 }
 
-export type ThemesAndGenres = UnexpandedObject[] | ThemeGenre[];
+export interface ThemeGenre {
+  name: string;
+}
+export interface ThemesAndGenres extends ExpandedObjects {
+  items: ThemeGenre[];
+}
 
 export interface Rating {
-  isExpanded: true;
   title: string;
   value: string;
 }
-
-export type Ratings = UnexpandedObject[] | Rating[];
+export interface Ratings extends ExpandedObjects {
+  items: Rating[];
+}
 
 export interface SkylarkObject {
   self: string;
@@ -78,13 +92,13 @@ export interface SkylarkObject {
   };
   tags: string[];
   titleSort: string;
-  credits: Credits;
-  ratings: Ratings;
-  themes: ThemesAndGenres;
-  genres: ThemesAndGenres;
-  images: ImageUrls;
-  items: AllEntertainment[];
-  parent: AllEntertainment | null;
+  credits?: Credits | UnexpandedObjects;
+  ratings?: Ratings | UnexpandedObjects;
+  themes?: ThemesAndGenres | UnexpandedObjects;
+  genres?: ThemesAndGenres | UnexpandedObjects;
+  images?: ImageUrls | UnexpandedObjects;
+  items?: ExpandedSkylarkObjects | UnexpandedSkylarkObjects;
+  parent?: AllEntertainment | UnexpandedParentObject;
 }
 
 export interface Asset extends SkylarkObject {
@@ -93,26 +107,22 @@ export interface Asset extends SkylarkObject {
 
 export interface Movie extends SkylarkObject {
   type: "movie";
-  items: (Asset | UnexpandedSkylarkObject)[];
 }
 
 export interface Episode extends SkylarkObject {
   type: "episode";
-  number: number;
-  items: (Asset | UnexpandedSkylarkObject)[];
+  number?: number;
 }
 
 export interface Season extends SkylarkObject {
   type: "season";
-  numberOfEpisodes: number;
-  number: number;
-  year: number;
-  items: (Episode | Asset | UnexpandedSkylarkObject)[];
+  numberOfEpisodes?: number;
+  number?: number;
+  year?: number;
 }
 
 export interface Brand extends SkylarkObject {
   type: "brand";
-  items: (Movie | Episode | Season | Asset | UnexpandedSkylarkObject)[];
 }
 
 export interface Set extends SkylarkObject {
@@ -121,7 +131,6 @@ export interface Set extends SkylarkObject {
 
 export type AllEntertainment =
   | SkylarkObject
-  | UnexpandedSkylarkObject
   | Asset
   | Episode
   | Season
