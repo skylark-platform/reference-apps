@@ -76,7 +76,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
               </p>
               {(isTrunicated || isExpanded) && (
                 <button
-                  className="visible font-semibold underline hover:text-purple-50 md:invisible"
+                  className="md:none font-semibold underline"
                   onClick={() => setExpand(!isExpanded)}
                 >
                   {isExpanded ? "show less" : "show more"}
@@ -87,7 +87,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
           {[genres, themes].map(
             (contents) =>
               contents && (
-                <div className="-my-0.5 text-gray-500" key={contents?.join("")}>
+                <div className="my-0.5 text-gray-500" key={contents?.join("")}>
                   <List contents={contents} />
                 </div>
               )
@@ -97,3 +97,5 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
     </div>
   );
 };
+
+export default InformationPanel;
