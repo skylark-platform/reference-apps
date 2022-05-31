@@ -87,7 +87,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
           {[genres, themes].map(
             (contents) =>
               contents && (
-                <div className="my-0.5 text-gray-500" key={contents?.join("")}>
+                <div className="-my-0.5 text-gray-500" key={contents?.join("")}>
                   <List contents={contents} />
                 </div>
               )
