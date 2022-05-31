@@ -26,12 +26,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
   seasonNumber,
 }) => {
   const [isExpanded, setExpand] = useState(false);
-  const [isTrunicated, setTrunicated] = useState(false);
 
-  const setTrunicatedWrapper = (el: HTMLParagraphElement) => {
-    const trunc = !!(el && el.clientHeight < el.scrollHeight);
-    setTrunicated(trunc);
-  };
   return (
     <div className="h-full w-full bg-gray-900">
       <div className="p-2 text-white">
@@ -67,21 +62,16 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
           {description && (
             <div className="mb-5 pt-2 text-sm text-gray-400 md:text-base">
               <p
-                className={`${
-                  isExpanded ? "line-clamp-none" : "line-clamp-4"
-                } md:line-clamp-none`}
-                ref={setTrunicatedWrapper}
+                className={`${isExpanded ? "line-clamp-none" : "line-clamp-4"}`}
               >
                 {description}
               </p>
-              {(isTrunicated || isExpanded) && (
-                <button
-                  className="md:none font-semibold underline"
-                  onClick={() => setExpand(!isExpanded)}
-                >
-                  {isExpanded ? "show less" : "show more"}
-                </button>
-              )}
+              <button
+                className="md:none font-semibold underline"
+                onClick={() => setExpand(!isExpanded)}
+              >
+                {isExpanded ? "Show less" : "Show more"}
+              </button>
             </div>
           )}
           {[genres, themes].map(
