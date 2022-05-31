@@ -74,7 +74,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
               </p>
               {(isTrunicated || isExpanded) && (
                 <button
-                  className="md:none font-semibold underline"
+                  className="font-semibold underline"
                   onClick={() => setExpand(!isExpanded)}
                 >
                   {isExpanded ? "Show less" : "Show more"}
