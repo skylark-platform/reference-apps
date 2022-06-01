@@ -61,7 +61,7 @@ const MoviePage: NextPage = () => {
         />
       </div>
       {movie && (
-        <div className="flex flex-col px-gutter sm:px-sm-gutter md:flex-row md:py-2 lg:px-lg-gutter xl:px-xl-gutter">
+        <div className="flex w-full flex-col px-gutter sm:px-sm-gutter md:flex-row md:py-2 lg:px-lg-gutter xl:px-xl-gutter">
           <div className="h-full w-full pb-4 md:w-7/12">
             <InformationPanel
               availableUntil={12}
@@ -91,7 +91,7 @@ const MoviePage: NextPage = () => {
           <span className="flex border-gray-800 bg-gray-900 md:mx-3 md:border-r" />
           <div className="h-full w-full pt-4 pl-1 sm:pl-5 md:w-5/12">
             <div className="flex justify-center">
-              <span className="mb-4 w-full border-b border-gray-800 md:hidden" />
+              <span className="mb-4 w-4/5 border-b border-gray-800 md:hidden" />
             </div>
             <MetadataPanel
               content={[
