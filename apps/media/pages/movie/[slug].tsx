@@ -61,7 +61,7 @@ const MoviePage: NextPage = () => {
         />
       </div>
       {movie && (
-        <div className="flex flex-col px-gutter sm:px-sm-gutter md:flex-row md:py-2 lg:px-lg-gutter xl:px-xl-gutter">
+        <div className="flex w-full flex-col px-gutter sm:px-sm-gutter md:flex-row md:py-2 lg:px-lg-gutter xl:px-xl-gutter">
           <div className="h-full w-full pb-4 md:w-7/12">
             <InformationPanel
               availableUntil={12}
