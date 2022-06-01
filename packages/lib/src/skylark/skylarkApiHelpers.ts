@@ -79,16 +79,6 @@ export const createSkylarkApiQuery = ({
   return query.join("&");
 };
 
-export const addCacheBustHackToApiQuery = (query: string) => {
-  const d = new Date();
-  const minute = d.getMinutes();
-  if (query.includes("fields=")) {
-    return query.replace("fields=", `fields=${minute},`);
-  }
-
-  return `${query}&fields=${minute}`;
-};
-
 /**
  * Parses the image_urls object from the Skylark API
  * isExpanded depending on whether the object has been expanded
