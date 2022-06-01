@@ -111,6 +111,42 @@ const Home: NextPage = () => {
               );
             }
 
+            if (item.type === "collection" && item?.items?.isExpanded) {
+              return (
+                <div className="my-6 w-full" key={key}>
+                  <Rail
+                    displayCount
+                    header={item.title?.medium || item.title?.short}
+                  >
+                    {item.items.objects.map((collectionItem) => (
+                      <CollectionThumbnail
+                        backgroundImage={getImageSrc(
+                          collectionItem.images,
+                          "Thumbnail",
+                          "350x350"
+                        )}
+                        contentLocation="below"
+                        href={
+                          collectionItem.type && collectionItem.slug
+                            ? `/${collectionItem.type}/${collectionItem.slug}`
+                            : ""
+                        }
+                        key={
+                          collectionItem.objectTitle ||
+                          collectionItem.uid ||
+                          collectionItem.slug
+                        }
+                        title={getTitleByOrder(collectionItem.title, [
+                          "short",
+                          "medium",
+                        ])}
+                      />
+                    ))}
+                  </Rail>
+                </div>
+              );
+            }
+
             if (item.type === "season" && item?.items?.isExpanded) {
               return (
                 <div className="my-6 w-full" key={key}>
