@@ -44,7 +44,7 @@ const fetchPlaybackUrl = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   const data = (await response.json()) as ApiViewingsObjects | ApiViewingsError;
-  const { error } = data;
+  const { error } = data as ApiViewingsError;
 
   if (error) {
     return res.status(500).json(error);
