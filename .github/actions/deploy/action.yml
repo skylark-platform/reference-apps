@@ -13,9 +13,6 @@ inputs:
   git-branch:
     description: Used to prefix the deployment stack name
     required: false
-  sentry-token:
-    description: Auth token for Sentry
-    required: true
   skylark-api-url:
     description: The Skylark API URL
     required: true
@@ -47,7 +44,6 @@ runs:
         APP: ${{ inputs.app }}
         GIT_BRANCH: ${{ inputs.git-branch }}
         BASE_DOMAIN_NAME: ${{ inputs.base-domain }}
-        SENTRY_AUTH_TOKEN: ${{ inputs.sentry-token }}
         NEXT_PUBLIC_SKYLARK_API_URL: ${{ inputs.skylark-api-url }}
       run: |
         yarn cdk bootstrap

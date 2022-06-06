@@ -4,17 +4,6 @@
 
 Running apps in `dev` mode works out of the box.
 
-To build an app locally you need to configure Sentry:
-
-1. Create a `.sentryclirc` file in the root repository directory
-2. Visit your [auth token user settings page](https://sentry.io/settings/account/api/auth-tokens/) and create or copy an existing token
-3. Add the token into the `.sentryclirc` file in the following format:
-
-```
-[auth]
-token=YOUR_SENTRY_TOKEN_HERE
-```
-
 ## Tech
 
 ### Core tech

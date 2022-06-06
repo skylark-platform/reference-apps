@@ -68,3 +68,13 @@ export interface ApiSetObject {
 export interface ApiMultipleEntertainmentObjects {
   objects: ApiEntertainmentObject[];
 }
+
+export interface ApiViewingsObjects {
+  objects: {
+    mux: { tokenised_url: string };
+  }[];
+}
+
+export interface ApiViewingsError {
+  error: string;
+}

@@ -17,7 +17,6 @@ describe("cognito", () => {
         cognitoUserPoolId: "123123",
         cognitoUserPoolWebClientId: "123",
         cognitoIdentityPoolId: "111",
-        cookieDomain: "localhost",
         storageBucket: "amplifyBucket",
       });
 
@@ -28,13 +27,6 @@ describe("cognito", () => {
           userPoolWebClientId: "123",
           identityPoolId: "111",
           authenticationFlowType: "USER_SRP_AUTH",
-        },
-        cookieStorage: {
-          domain: "localhost",
-          path: "/",
-          expires: 365,
-          sameSite: "lax" as const,
-          secure: false,
         },
         Storage: {
           AWSS3: {
@@ -65,13 +57,6 @@ describe("cognito", () => {
           authenticationFlowType: "USER_SRP_AUTH",
           identityPoolId: "111",
         },
-        cookieStorage: {
-          domain: "localhost",
-          path: "/",
-          expires: 365,
-          sameSite: "lax" as const,
-          secure: false,
-        },
         Storage: {
           AWSS3: {
             bucket: "s3Bucket",
@@ -81,19 +66,6 @@ describe("cognito", () => {
       };
 
       expect(config).toEqual(expectedConfig);
-    });
-
-    it("returns a secure cookie when the domain is not localhost", () => {
-      const config = amplifyConfig({
-        cognitoRegion: "eu-west-1",
-        cognitoUserPoolId: "123123",
-        cognitoUserPoolWebClientId: "123",
-        cognitoIdentityPoolId: "111",
-        cookieDomain: "skylarkplatform.io",
-        storageBucket: "amplifyBucket",
-      });
-
-      expect(config.cookieStorage.secure).toEqual(true);
     });
 
     it("throws an error when invalid credentials are given", () => {

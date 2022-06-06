@@ -13,9 +13,10 @@
     "test:percy": "start-server-and-test start http://localhost:3000 percy:snapshot"
   },
   "dependencies": {
+    "@aws-amplify/auth": "^4.5.6",
+    "@aws-amplify/core": "^4.5.6",
     "@fontsource/inter": "^4.5.1",
     "@fontsource/outfit": "^4.5.2",
-    "@sentry/nextjs": "^6.19.6",
     "@skylark-reference-apps/lib": "*",
     "@skylark-reference-apps/react": "*",
     "@tailwindcss/line-clamp": "^0.3.1",
