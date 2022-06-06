@@ -65,7 +65,6 @@ jobs:
           git-branch: ${{ needs.prepare.outputs.git-branch }}
           # hardcode domains until more accounts are supported
           base-domain: ${{ needs.prepare.outputs.git-branch == 'main' && 'skylark-dev.skylarkplatform.io' || 'legacy-skylark-development.skylarkplatform.io' }}
-          sentry-token: ${{ secrets.SENTRY_TOKEN }}
           # TODO replace this with an input for workflow-dispatch / showcase environment
           skylark-api-url: https://api.showcase-test.eng-james-wallis.skylarkplatform.io
 
