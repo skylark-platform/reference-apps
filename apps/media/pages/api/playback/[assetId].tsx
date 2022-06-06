@@ -8,9 +8,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import Amplify from "@aws-amplify/core";
 import Auth from "@aws-amplify/auth";
 
-const config = amplifyConfig();
-Amplify.configure(config);
-
 const fetchPlaybackUrl = async (req: NextApiRequest, res: NextApiResponse) => {
   const { assetId } = req.query;
   const email = process.env.COGNITO_EMAIL as string;
@@ -19,12 +16,18 @@ const fetchPlaybackUrl = async (req: NextApiRequest, res: NextApiResponse) => {
   // check email and password are popluated. Return 500 with message either email or password is empty
   let token;
   try {
+    const config = amplifyConfig();
+    Amplify.configure(config);
     await Auth.signIn(email, password);
     const session = await Auth.currentSession();
     token = session.getIdToken().getJwtToken();
-  } catch (e) {
+  } catch (err) {
     // return error 500
-    return res.status(500).json(e);
+    console.log("Error getting amplify token", err)
+    if (Object.prototype.hasOwnProperty.call(err, "message")) {
+      return res.status(500).json({ name: (err as Error)?.name, message: (err as Error).message });
+    }
+    return res.status(500).json({ name: "Unknown error", message: err });
   }
 
   const url = `${SKYLARK_API}/api/viewings/`;
@@ -41,7 +44,7 @@ const fetchPlaybackUrl = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   const data = (await response.json()) as ApiViewingsObjects | ApiViewingsError;
-  const { error } = data as ApiViewingsError;
+  const { error } = data;
 
   if (error) {
     return res.status(500).json(error);
