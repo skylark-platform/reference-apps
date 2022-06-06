@@ -71,7 +71,7 @@ runs:
         NEXT_PUBLIC_COGNITO_USER_POOL_ID: ${{ inputs.cognito-user-pool-id }}
         NEXT_PUBLIC_COGNITO_IDENTITY_POOL_ID: ${{ inputs.cognito-identity-pool-id }}
         NEXT_PUBLIC_AMPLIFY_STORAGE_BUCKET: ${{ inputs.amplify-storage-bucket }}
-        COGNITO_EMAIL=: ${{ inputs.cognito-email }}
+        COGNITO_EMAIL: ${{ inputs.cognito-email }}
         COGNITO_PASSWORD: ${{ inputs.cognito-password }}
       run: |
         yarn cdk bootstrap
