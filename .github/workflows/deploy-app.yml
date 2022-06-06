@@ -67,7 +67,13 @@ jobs:
           base-domain: ${{ needs.prepare.outputs.git-branch == 'main' && 'skylark-dev.skylarkplatform.io' || 'legacy-skylark-development.skylarkplatform.io' }}
           # TODO replace this with an input for workflow-dispatch / showcase environment
           skylark-api-url: https://api.showcase-test.eng-james-wallis.skylarkplatform.io
-
+          cognito-aws-region: ${{ secrets.NEXT_PUBLIC_COGNITO_AWS_REGION }}
+          cognito-client-id: ${{ secrets.NEXT_PUBLIC_COGNITO_CLIENT_ID }}
+          cognito-user-pool-id: ${{ secrets.NEXT_PUBLIC_COGNITO_USER_POOL_ID }}
+          cognito-identity-pool-id: ${{ secrets.NEXT_PUBLIC_COGNITO_IDENTITY_POOL_ID }}
+          amplify-storage-bucket: ${{ secrets.NEXT_PUBLIC_AMPLIFY_STORAGE_BUCKET }}
+          cognito-email: ${{ secrets.COGNITO_EMAIL }}
+          cognito-password: ${{ secrets.COGNITO_PASSWORD }}
   signal:
     name: Signal
     runs-on: ubuntu-latest
