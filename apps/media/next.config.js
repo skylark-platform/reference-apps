@@ -14,7 +14,7 @@ const moduleExports = {
     // https://github.com/serverless-nextjs/serverless-next.js/issues/184
     // https://nextjs.org/docs/api-reference/next.config.js/environment-variables
     COGNITO_EMAIL: process.env.COGNITO_EMAIL,
-    COGNITO_PASSWORD: process.env.COGNITO_USERNAME,
+    COGNITO_PASSWORD: process.env.COGNITO_PASSWORD,
     COGNITO_AWS_REGION: process.env.COGNITO_AWS_REGION,
     COGNITO_CLIENT_ID: process.env.COGNITO_CLIENT_ID,
     COGNITO_USER_POOL_ID: process.env.COGNITO_USER_POOL_ID,
