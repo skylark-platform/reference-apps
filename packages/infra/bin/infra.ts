@@ -43,7 +43,7 @@ const main = async () => {
     args: ["build"],
     cwd: appPath,
     env: {
-      jwtest: "thisisatest",
+      JWTEST: "thisisatest",
     }
     // useServerlessTraceTarget: true,
   });
