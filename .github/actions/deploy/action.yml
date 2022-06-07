@@ -44,6 +44,7 @@ runs:
         APP: ${{ inputs.app }}
         GIT_BRANCH: ${{ inputs.git-branch }}
         BASE_DOMAIN_NAME: ${{ inputs.base-domain }}
+        DOMAIN_ZONE_NAME: ${{ inputs.domain-zone-name }}
         NEXT_PUBLIC_SKYLARK_API_URL: ${{ inputs.skylark-api-url }}
       run: |
         yarn cdk bootstrap
