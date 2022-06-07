@@ -16,7 +16,12 @@ const fetchPlaybackUrl = async (req: NextApiRequest, res: NextApiResponse) => {
   // check email and password are popluated. Return 500 with message either email or password is empty
   let token;
   try {
-    const config = amplifyConfig();
+    const config = amplifyConfig({
+      region: process.env.COGNITO_AWS_REGION as string,
+      identityPoolId: process.env.COGNITO_IDENTITY_POOL_ID as string,
+      userPoolId: process.env.COGNITO_USER_POOL_ID as string,
+      userPoolWebClientId: process.env.COGNITO_CLIENT_ID as string,
+    });
     Amplify.configure(config);
     await Auth.signIn(email, password);
     const session = await Auth.currentSession();
