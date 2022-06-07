@@ -57,13 +57,6 @@ jobs:
     needs: prepare
     steps:
       - uses: actions/checkout@v3
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          # Use skylark-dev account on main branch
-          aws-access-key-id: ${{ needs.prepare.outputs.git-branch == 'main' && secrets.AWS_ACCESS_KEY_ID_SKYLARK_DEV || secrets.AWS_ACCESS_KEY_ID_LEGACY_SKYLARK_DEVELOPMENT }}
-          aws-secret-access-key: ${{ needs.prepare.outputs.git-branch == 'main' && secrets.AWS_SECRET_ACCESS_KEY_SKYLARK_DEV || secrets.AWS_SECRET_ACCESS_KEY_LEGACY_SKYLARK_DEVELOPMENT }}
-          aws-region: us-east-1
       - uses: ./.github/actions/destroy
         with:
           stack-name: ${{ github.event.inputs.stack-name }}
@@ -71,4 +64,5 @@ jobs:
             ${{ needs.prepare.outputs.git-branch }}
             # hardcode domains until more accounts are supported
           base-domain: ${{ needs.prepare.outputs.git-branch == 'main' && 'skylark-dev.skylarkplatform.io' || 'legacy-skylark-development.skylarkplatform.io' }}
-          sentry-token: ${{ secrets.SENTRY_TOKEN }}
+          aws-access-key-id: ${{ needs.prepare.outputs.git-branch == 'main' && secrets.AWS_ACCESS_KEY_ID_SKYLARK_DEV || secrets.AWS_ACCESS_KEY_ID_LEGACY_SKYLARK_DEVELOPMENT }}
+          aws-secret-access-key: ${{ needs.prepare.outputs.git-branch == 'main' && secrets.AWS_SECRET_ACCESS_KEY_SKYLARK_DEV || secrets.AWS_SECRET_ACCESS_KEY_LEGACY_SKYLARK_DEVELOPMENT }}

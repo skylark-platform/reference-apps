@@ -16,12 +16,21 @@ inputs:
   git-branch:
     description: Used to prefix the deployment stack name
     required: false
-  sentry-token:
-    description: Auth token for Sentry
+  aws-access-key-id:
+    description: AWS access key ID
+    required: true
+  aws-secret-access-key:
+    description: AWS secret access key
     required: true
 runs:
   using: composite
   steps:
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        aws-region: us-east-1
     - uses: actions/setup-node@v3
       with:
         node-version: 14
@@ -38,7 +47,6 @@ runs:
         STACK_NAME: ${{ inputs.stack-name }}
         GIT_BRANCH: ${{ inputs.git-branch }}
         BASE_DOMAIN_NAME: ${{ inputs.base-domain }}
-        SENTRY_AUTH_TOKEN: ${{ inputs.sentry-token }}
       run: |
         yarn cdk bootstrap
         yarn cdk destroy --force

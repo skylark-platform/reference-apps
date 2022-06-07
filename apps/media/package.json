@@ -15,7 +15,6 @@
   "dependencies": {
     "@fontsource/inter": "^4.5.1",
     "@fontsource/outfit": "^4.5.2",
-    "@sentry/nextjs": "^6.19.6",
     "@skylark-reference-apps/lib": "*",
     "@skylark-reference-apps/react": "*",
     "@tailwindcss/line-clamp": "^0.3.1",

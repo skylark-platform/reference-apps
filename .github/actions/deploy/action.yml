@@ -13,11 +13,14 @@ inputs:
   git-branch:
     description: Used to prefix the deployment stack name
     required: false
-  sentry-token:
-    description: Auth token for Sentry
-    required: true
   skylark-api-url:
     description: The Skylark API URL
+    required: true
+  aws-access-key-id:
+    description: AWS access key ID
+    required: true
+  aws-secret-access-key:
+    description: AWS secret access key
     required: true
 outputs:
   stack-name:
@@ -32,6 +35,12 @@ outputs:
 runs:
   using: composite
   steps:
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        aws-region: us-east-1
     - uses: actions/setup-node@v3
       with:
         node-version: 14
@@ -47,7 +56,6 @@ runs:
         APP: ${{ inputs.app }}
         GIT_BRANCH: ${{ inputs.git-branch }}
         BASE_DOMAIN_NAME: ${{ inputs.base-domain }}
-        SENTRY_AUTH_TOKEN: ${{ inputs.sentry-token }}
         NEXT_PUBLIC_SKYLARK_API_URL: ${{ inputs.skylark-api-url }}
       run: |
         yarn cdk bootstrap
