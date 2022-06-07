@@ -42,6 +42,9 @@ const main = async () => {
   const builder = new Builder(appPath, "./build", {
     args: ["build"],
     cwd: appPath,
+    env: {
+      builder: "test",
+    }
     // useServerlessTraceTarget: true,
   });
 
