@@ -52,13 +52,6 @@ jobs:
       url: ${{ steps.cdk.outputs.url }}
     steps:
       - uses: actions/checkout@v3
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          # Use skylark-dev account on main branch
-          aws-access-key-id: ${{ needs.prepare.outputs.git-branch == 'main' && secrets.AWS_ACCESS_KEY_ID_SKYLARK_DEV || secrets.AWS_ACCESS_KEY_ID_LEGACY_SKYLARK_DEVELOPMENT }}
-          aws-secret-access-key: ${{ needs.prepare.outputs.git-branch == 'main' && secrets.AWS_SECRET_ACCESS_KEY_SKYLARK_DEV || secrets.AWS_SECRET_ACCESS_KEY_LEGACY_SKYLARK_DEVELOPMENT }}
-          aws-region: us-east-1
       - uses: ./.github/actions/deploy
         id: cdk
         with:
@@ -73,6 +66,8 @@ jobs:
           cognito-identity-pool-id: ${{ secrets.NEXT_PUBLIC_COGNITO_IDENTITY_POOL_ID }}
           cognito-email: ${{ secrets.COGNITO_EMAIL }}
           cognito-password: ${{ secrets.COGNITO_PASSWORD }}
+          aws-access-key-id: ${{ needs.prepare.outputs.git-branch == 'main' && secrets.AWS_ACCESS_KEY_ID_SKYLARK_DEV || secrets.AWS_ACCESS_KEY_ID_LEGACY_SKYLARK_DEVELOPMENT }}
+          aws-secret-access-key: ${{ needs.prepare.outputs.git-branch == 'main' && secrets.AWS_SECRET_ACCESS_KEY_SKYLARK_DEV || secrets.AWS_SECRET_ACCESS_KEY_LEGACY_SKYLARK_DEVELOPMENT }}
   signal:
     name: Signal
     runs-on: ubuntu-latest
