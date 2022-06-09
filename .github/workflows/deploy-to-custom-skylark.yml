@@ -22,14 +22,15 @@ jobs:
     name: Prepare
     runs-on: ubuntu-latest
     outputs:
-      domain: ${{ steps.branch-and-ref.outputs.branch }}
-      git-ref: ${{ steps.branch-and-ref.outputs.ref }}
+      domain: ${{ steps.sanitize-url.outputs.result }}
     steps:
       - uses: actions/github-script@v6
+        id: sanitize-url
         name: Convert Launcher URL to domain
         env:
           LAUNCHER_URL: ${{ inputs.launcher-url }}
         with:
+          result-encoding: string
           script: |
             const url = process.env.LAUNCHER_URL;
             if (!url) {
