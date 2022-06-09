@@ -82,8 +82,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/destroy
         with:
-          stack-name: ${{ github.event.inputs.stack-name || "" }}
-          git-branch: ${{ !inputs.launcher-url && needs.prepare.outputs.git-branch }}
+          stack-name: ${{ github.event.inputs.stack-name || '' }}
+          git-branch: ${{ !inputs.launcher-url && needs.prepare.outputs.git-branch || '' }}
           base-domain: ${{ needs.prepare.outputs.domain || (needs.prepare.outputs.git-branch == 'main' && 'skylark-dev.skylarkplatform.io' || 'legacy-skylark-development.skylarkplatform.io') }}
           aws-access-key-id: ${{ inputs.aws-access-key-id || (needs.prepare.outputs.git-branch == 'main' && secrets.AWS_ACCESS_KEY_ID_SKYLARK_DEV || secrets.AWS_ACCESS_KEY_ID_LEGACY_SKYLARK_DEVELOPMENT) }}
           aws-secret-access-key: ${{ inputs.aws-secret-access-key || (needs.prepare.outputs.git-branch == 'main' && secrets.AWS_SECRET_ACCESS_KEY_SKYLARK_DEV || secrets.AWS_SECRET_ACCESS_KEY_LEGACY_SKYLARK_DEVELOPMENT) }}
