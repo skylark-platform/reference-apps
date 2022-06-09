@@ -15,7 +15,7 @@ on:
         required: true
         description: AWS secret access key to use
 concurrency:
-  group: custom-deploy-${{ inputs.launcher-url }}
+  group: deploy-app-${{ inputs.launcher-url }}
 
 jobs:
   prepare:

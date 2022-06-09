@@ -5,7 +5,7 @@ on:
     inputs:
       stack-name:
         type: string
-        required: false
+        required: true
         description: The name of the environment to delete
       launcher-url:
         type: string
@@ -13,14 +13,14 @@ on:
         description: The Launcher URL for the Skylark instance
       aws-access-key-id:
         type: string
-        required: true
+        required: false
         description: AWS account key ID to use
       aws-secret-access-key:
         type: string
-        required: true
+        required: false
         description: AWS secret access key to use
 concurrency:
-  group: deploy-app-${{ github.event.ref || github.ref }}
+  group: deploy-app-${{ inputs.launcher-url || github.event.ref || github.ref }}
 env:
   pr-comment-id: reference-apps-deployment
   pr-comment-title: "Reference Apps Deployment"
