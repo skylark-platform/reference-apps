@@ -24,6 +24,10 @@ jobs:
     outputs:
       domain: ${{ steps.sanitize-url.outputs.result }}
     steps:
+      - name: Mask AWS Credentials
+        run: |
+          echo "::add-mask::${{ inputs.aws-access-key-id }}"
+          echo "::add-mask::${{ inputs.aws-secret-access-key }}"
       - uses: actions/github-script@v6
         id: sanitize-url
         name: Convert Launcher URL to domain
