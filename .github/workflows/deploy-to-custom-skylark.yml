@@ -1,0 +1,56 @@
+name: Deploy to Custom Skylark
+on:
+  workflow_dispatch:
+    inputs:
+      launcher-url:
+        type: string
+        required: true
+        description: The Launcher URL for the Skylark instance
+      aws-access-key-id:
+        type: string
+        required: true
+        description: AWS account key ID to use
+      aws-secret-access-key:
+        type: string
+        required: true
+        description: AWS secret access key to use
+concurrency:
+  group: custom-deploy-${{ inputs.launcher-url }}
+
+jobs:
+  prepare:
+    name: Prepare
+    runs-on: ubuntu-latest
+    outputs:
+      domain: ${{ steps.branch-and-ref.outputs.branch }}
+      git-ref: ${{ steps.branch-and-ref.outputs.ref }}
+    steps:
+      - uses: actions/github-script@v6
+        name: Convert Launcher URL to domain
+        env:
+          LAUNCHER_URL: ${{ inputs.launcher-url }}
+        with:
+          script: |
+            const url = process.env.LAUNCHER_URL;
+            if (!url) {
+              throw new Error(`Launcher URL cannot be empty: "${url}"`);
+            }
+            const urlObject = new URL(url);
+            // Handle if www. domain is given
+            const domain = domain.hostname.replace('www.','');
+            console.log("Domain: ", domain);
+            return domain;
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: prepare
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/deploy
+        with:
+          base-domain: ${{ needs.prepare.outputs.domain }}
+          # TODO don't assume the API URL will be "api."
+          skylark-api-url: https://api.${{ needs.prepare.outputs.domain }}
+          aws-access-key-id: ${{ inputs.aws-access-key-id }}
+          aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
