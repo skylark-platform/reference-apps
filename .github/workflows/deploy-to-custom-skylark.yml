@@ -37,7 +37,7 @@ jobs:
             }
             const urlObject = new URL(url);
             // Handle if www. domain is given
-            const domain = domain.hostname.replace('www.','');
+            const domain = urlObject.hostname.replace('www.','');
             console.log("Domain: ", domain);
             return domain;
 
