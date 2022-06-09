@@ -25,26 +25,16 @@ jobs:
       domain: ${{ steps.sanitize-url.outputs.result }}
     steps:
       - name: Mask AWS Credentials
+        # Workaround for masking workflow_dispatch inputs https://github.com/actions/runner/issues/643
         run: |
-          echo "::add-mask::${{ inputs.aws-access-key-id }}"
-          echo "::add-mask::${{ inputs.aws-secret-access-key }}"
-      - uses: actions/github-script@v6
+          ACCESS_KEY_ID=$(jq -r '.inputs.aws-access-key-id' $GITHUB_EVENT_PATH)
+          SECRET_KEY_ID=$(jq -r '.inputs.aws-secret-access-key' $GITHUB_EVENT_PATH)
+          echo "::add-mask::$ACCESS_KEY_ID"
+          echo "::add-mask::$SECRET_KEY_ID"
+      - uses: ./.github/actions/parse-domain-from-url
         id: sanitize-url
-        name: Convert Launcher URL to domain
-        env:
-          LAUNCHER_URL: ${{ inputs.launcher-url }}
         with:
-          result-encoding: string
-          script: |
-            const url = process.env.LAUNCHER_URL;
-            if (!url) {
-              throw new Error(`Launcher URL cannot be empty: "${url}"`);
-            }
-            const urlObject = new URL(url);
-            // Handle if www. domain is given
-            const domain = urlObject.hostname.replace('www.','');
-            console.log("Domain: ", domain);
-            return domain;
+          url: ${{ inputs.launcher-url }}
 
   deploy:
     name: Deploy

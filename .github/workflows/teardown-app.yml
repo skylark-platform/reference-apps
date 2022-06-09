@@ -5,8 +5,20 @@ on:
     inputs:
       stack-name:
         type: string
-        required: true
+        required: false
         description: The name of the environment to delete
+      launcher-url:
+        type: string
+        required: true
+        description: The Launcher URL for the Skylark instance
+      aws-access-key-id:
+        type: string
+        required: true
+        description: AWS account key ID to use
+      aws-secret-access-key:
+        type: string
+        required: true
+        description: AWS secret access key to use
 concurrency:
   group: deploy-app-${{ github.event.ref || github.ref }}
 env:
@@ -50,6 +62,17 @@ jobs:
 
           echo "::set-output name=ref::$GitRef"
           echo "::set-output name=branch::$GitBranch"
+      - name: Mask AWS Credentials
+        # Workaround for masking workflow_dispatch inputs https://github.com/actions/runner/issues/643
+        run: |
+          ACCESS_KEY_ID=$(jq -r '.inputs.aws-access-key-id' $GITHUB_EVENT_PATH)
+          SECRET_KEY_ID=$(jq -r '.inputs.aws-secret-access-key' $GITHUB_EVENT_PATH)
+          echo "::add-mask::$ACCESS_KEY_ID"
+          echo "::add-mask::$SECRET_KEY_ID"
+      - uses: ./.github/actions/parse-domain-from-url
+        id: sanitize-url
+        with:
+          url: ${{ inputs.launcher-url }}
 
   teardown:
     name: Teardown
@@ -59,10 +82,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/destroy
         with:
-          stack-name: ${{ github.event.inputs.stack-name }}
-          git-branch:
-            ${{ needs.prepare.outputs.git-branch }}
-            # hardcode domains until more accounts are supported
-          base-domain: ${{ needs.prepare.outputs.git-branch == 'main' && 'skylark-dev.skylarkplatform.io' || 'legacy-skylark-development.skylarkplatform.io' }}
-          aws-access-key-id: ${{ needs.prepare.outputs.git-branch == 'main' && secrets.AWS_ACCESS_KEY_ID_SKYLARK_DEV || secrets.AWS_ACCESS_KEY_ID_LEGACY_SKYLARK_DEVELOPMENT }}
-          aws-secret-access-key: ${{ needs.prepare.outputs.git-branch == 'main' && secrets.AWS_SECRET_ACCESS_KEY_SKYLARK_DEV || secrets.AWS_SECRET_ACCESS_KEY_LEGACY_SKYLARK_DEVELOPMENT }}
+          stack-name: ${{ github.event.inputs.stack-name || "" }}
+          git-branch: ${{ !inputs.launcher-url && needs.prepare.outputs.git-branch }}
+          base-domain: ${{ needs.prepare.outputs.domain || (needs.prepare.outputs.git-branch == 'main' && 'skylark-dev.skylarkplatform.io' || 'legacy-skylark-development.skylarkplatform.io') }}
+          aws-access-key-id: ${{ inputs.aws-access-key-id || (needs.prepare.outputs.git-branch == 'main' && secrets.AWS_ACCESS_KEY_ID_SKYLARK_DEV || secrets.AWS_ACCESS_KEY_ID_LEGACY_SKYLARK_DEVELOPMENT) }}
+          aws-secret-access-key: ${{ inputs.aws-secret-access-key || (needs.prepare.outputs.git-branch == 'main' && secrets.AWS_SECRET_ACCESS_KEY_SKYLARK_DEV || secrets.AWS_SECRET_ACCESS_KEY_LEGACY_SKYLARK_DEVELOPMENT) }}
