@@ -43,8 +43,8 @@ jobs:
         with:
           script: |
             console.log(context.payload)
-            const accessKeyId = context.payload["aws-access-key-id"];
-            const secretAccessKey = context.payload["aws-secret-access-key"];
+            const accessKeyId = context.payload.inputs["aws-access-key-id"];
+            const secretAccessKey = context.payload.inputs["aws-secret-access-key"];
             core.setSecret(accessKeyId);
             core.setSecret(secretAccessKey);
             console.log("ACCESS_KEY_ID", accessKeyId);
