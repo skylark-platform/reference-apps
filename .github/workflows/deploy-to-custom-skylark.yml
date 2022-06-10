@@ -24,26 +24,14 @@ jobs:
     outputs:
       domain: ${{ steps.sanitize-url.outputs.result }}
     steps:
-      # - name: Mask AWS Credentials
-      #   # Workaround for masking workflow_dispatch inputs https://github.com/actions/runner/issues/643
-      #   run: |
-      #     ACCESS_KEY_ID=$(jq -r '.inputs.aws-access-key-id' $GITHUB_EVENT_PATH)
-      #     SECRET_KEY_ID=$(jq -r '.inputs.aws-secret-access-key' $GITHUB_EVENT_PATH)
-      #     echo "::add-mask::$ACCESS_KEY_ID"
-      #     echo "::add-mask::$SECRET_KEY_ID"
-      - uses: actions/github-script@v6
-        name: Mask AWS Credentials
+      - name: Mask AWS Credentials
         # Workaround for masking workflow_dispatch inputs https://github.com/actions/runner/issues/643
-        env:
-          ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
-          SECRET_KEY_ID: ${{ inputs.aws-secret-access-key }}
-        with:
-          result-encoding: string
-          script: |
-            core.setSecret(process.env.ACCESS_KEY_ID);
-            core.setSecret(process.env.SECRET_KEY_ID);
-            console.log("ACCESS_KEY_ID", process.env.ACCESS_KEY_ID);
-            console.log("SECRET_KEY_ID", process.env.SECRET_KEY_ID);
+        run: |
+          echo $GITHUB_EVENT_PATH
+          ACCESS_KEY_ID=$(jq -r '.inputs.aws-access-key-id' $GITHUB_EVENT_PATH)
+          SECRET_KEY_ID=$(jq -r '.inputs.aws-secret-access-key' $GITHUB_EVENT_PATH)
+          echo "::add-mask::$ACCESS_KEY_ID"
+          echo "::add-mask::$SECRET_KEY_ID"
 
       - uses: ./.github/actions/parse-domain-from-url
         id: sanitize-url
