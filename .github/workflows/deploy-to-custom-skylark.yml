@@ -44,17 +44,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Mask AWS Credentials
-        uses: actions/github-script@v6
+        uses: ./.github/actions/mask-aws-credentials
         id: mask
-        # Workaround for masking workflow_dispatch inputs https://github.com/actions/runner/issues/643
-        with:
-          script: |
-            const accessKeyId = context.payload.inputs["aws-access-key-id"];
-            const secretAccessKey = context.payload.inputs["aws-secret-access-key"];
-            core.setSecret(accessKeyId);
-            core.setSecret(secretAccessKey);
-            core.setOutput("aws-access-key-id", accessKeyId);
-            core.setOutput("aws-secret-access-key", secretAccessKey);
       - uses: ./.github/actions/deploy
         with:
           base-domain: ${{ needs.prepare.outputs.domain }}
