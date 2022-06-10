@@ -43,10 +43,14 @@ jobs:
         with:
           script: |
             console.log(context.payload)
-            //core.setSecret("${{ inputs.aws-access-key-id }}");
-            //core.setSecret("${{ inputs.aws-secret-access-key }}");
-            //console.log("ACCESS_KEY_ID", "${{ inputs.aws-access-key-id }}");
-            //console.log("SECRET_KEY_ID", process.env.SECRET_KEY_ID);
+            const accessKeyId = context.payload["aws-access-key-id"];
+            const secretAccessKey = context.payload["aws-secret-access-key"];
+            core.setSecret(accessKeyId);
+            core.setSecret(secretAccessKey);
+            console.log("ACCESS_KEY_ID", accessKeyId);
+            console.log("SECRET_KEY_ID", secretAccessKey);
+            core.setOutput("aws-access-key-id", accessKeyId);
+            core.setOutput("aws-secret-access-key", secretAccessKey);
             process.exit(1)
 
       - uses: ./.github/actions/parse-domain-from-url
