@@ -23,6 +23,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       domain: ${{ steps.sanitize-url.outputs.result }}
+      aws-access-key-id: ${{ steps.mask.outputs.aws-access-key-id }}
+      aws-secret-access-key: ${{ steps.mask.outputs.aws-secret-access-key }}
     steps:
       # - name: Mask AWS Credentials
       #   # Workaround for masking workflow_dispatch inputs https://github.com/actions/runner/issues/643
@@ -33,17 +35,18 @@ jobs:
       #     echo "::add-mask::$SECRET_KEY_ID"
       - uses: actions/github-script@v6
         name: Mask AWS Credentials
+        id: mask
         # Workaround for masking workflow_dispatch inputs https://github.com/actions/runner/issues/643
-        env:
-          ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
-          SECRET_KEY_ID: ${{ inputs.aws-secret-access-key }}
+        # env:
+        #   ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        #   SECRET_KEY_ID: ${{ inputs.aws-secret-access-key }}
         with:
           result-encoding: string
           script: |
-            core.setSecret(process.env.ACCESS_KEY_ID);
-            core.setSecret(process.env.SECRET_KEY_ID);
-            console.log("ACCESS_KEY_ID", process.env.ACCESS_KEY_ID);
-            console.log("SECRET_KEY_ID", process.env.SECRET_KEY_ID);
+            core.setSecret("${{ inputs.aws-access-key-id }}");
+            core.setSecret("${{ inputs.aws-secret-access-key }}");
+            console.log("ACCESS_KEY_ID", "${{ inputs.aws-access-key-id }}");
+            # console.log("SECRET_KEY_ID", process.env.SECRET_KEY_ID);
 
       - uses: ./.github/actions/parse-domain-from-url
         id: sanitize-url
@@ -61,5 +64,5 @@ jobs:
           base-domain: ${{ needs.prepare.outputs.domain }}
           # TODO don't assume the API URL will be "api."
           skylark-api-url: https://api.${{ needs.prepare.outputs.domain }}
-          aws-access-key-id: ${{ inputs.aws-access-key-id }}
-          aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+          aws-access-key-id: ${{ needs.prepare.outputs.aws-access-key-id }}
+          aws-secret-access-key: ${{ needs.prepare.outputs.aws-secret-access-key }}

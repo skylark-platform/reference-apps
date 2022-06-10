@@ -19,10 +19,14 @@ runs:
       with:
         result-encoding: string
         script: |
-          const url = process.env.LAUNCHER_URL;
-          if (!url) {
-            throw new Error(`Launcher URL cannot be empty: "${url}"`);
+          const launcherUrl = process.env.LAUNCHER_URL;
+          if (!launcherUrl) {
+            throw new Error(`Launcher URL cannot be empty: "${launcherUrl}"`);
           }
+
+          // In case only a domain is passed, add protocol so it can be parsed
+          const url = launcherUrl.startsWith("http") ? launcherUrl : `http://${launcherUrl}`;
+
           const urlObject = new URL(url);
           // Handle if www. domain is given
           const domain = urlObject.hostname.replace('www.','');
