@@ -1,0 +1,24 @@
+# Workaround for masking workflow_dispatch inputs https://github.com/actions/runner/issues/643
+name: Masks AWS Credentials
+description: Retrieves AWS Credentials from context.payload and masks them
+outputs:
+  aws-access-key-id:
+    description: Masked AWS access key ID
+    value: ${{ steps.mask.outputs.aws-access-key-id || '' }}
+  aws-secret-access-key:
+    description: Masked AWS secret access key
+    value: ${{ steps.mask.outputs.aws-secret-access-key || '' }}
+runs:
+  using: composite
+  steps:
+    - name: Mask AWS Credentials
+      uses: actions/github-script@v6
+      id: mask
+      with:
+        script: |
+          const accessKeyId = context.payload.inputs["aws-access-key-id"];
+          const secretAccessKey = context.payload.inputs["aws-secret-access-key"];
+          core.setSecret(accessKeyId);
+          core.setSecret(secretAccessKey);
+          core.setOutput("aws-access-key-id", accessKeyId);
+          core.setOutput("aws-secret-access-key", secretAccessKey);

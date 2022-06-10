@@ -1,0 +1,39 @@
+name: Deploy to Custom Skylark
+on:
+  workflow_dispatch:
+    inputs:
+      launcher-url:
+        type: string
+        required: true
+        description: The Launcher URL for the Skylark instance
+      aws-access-key-id:
+        type: string
+        required: true
+        description: AWS account key ID to use
+      aws-secret-access-key:
+        type: string
+        required: true
+        description: AWS secret access key to use
+concurrency:
+  group: deploy-app-${{ inputs.launcher-url }}
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Mask AWS Credentials
+        uses: ./.github/actions/mask-aws-credentials
+        id: mask
+      - uses: ./.github/actions/parse-domain-from-url
+        id: sanitize-url
+        with:
+          url: ${{ inputs.launcher-url }}
+      - uses: ./.github/actions/deploy
+        with:
+          base-domain: ${{ steps.sanitize-url.outputs.domain }}
+          # TODO don't assume the API URL will be "api."
+          skylark-api-url: https://api.${{ steps.sanitize-url.outputs.domain }}
+          aws-access-key-id: ${{ steps.mask.outputs.aws-access-key-id }}
+          aws-secret-access-key: ${{ steps.mask.outputs.aws-secret-access-key }}
