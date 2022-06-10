@@ -41,12 +41,13 @@ jobs:
         #   ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
         #   SECRET_KEY_ID: ${{ inputs.aws-secret-access-key }}
         with:
-          result-encoding: string
           script: |
-            core.setSecret("${{ inputs.aws-access-key-id }}");
-            core.setSecret("${{ inputs.aws-secret-access-key }}");
-            console.log("ACCESS_KEY_ID", "${{ inputs.aws-access-key-id }}");
-            # console.log("SECRET_KEY_ID", process.env.SECRET_KEY_ID);
+            console.log(context.payload)
+            //core.setSecret("${{ inputs.aws-access-key-id }}");
+            //core.setSecret("${{ inputs.aws-secret-access-key }}");
+            //console.log("ACCESS_KEY_ID", "${{ inputs.aws-access-key-id }}");
+            //console.log("SECRET_KEY_ID", process.env.SECRET_KEY_ID);
+            process.exit(1)
 
       - uses: ./.github/actions/parse-domain-from-url
         id: sanitize-url
