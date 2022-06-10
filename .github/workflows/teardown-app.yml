@@ -31,6 +31,7 @@ jobs:
     outputs:
       git-branch: ${{ steps.branch-and-ref.outputs.branch }}
       git-ref: ${{ steps.branch-and-ref.outputs.ref }}
+      domain: ${{ steps.sanitize-url.outputs.domain }}
     steps:
       - uses: actions/checkout@v3
       - name: Comment status on PR

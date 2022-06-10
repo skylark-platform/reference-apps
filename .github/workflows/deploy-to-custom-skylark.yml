@@ -32,8 +32,8 @@ jobs:
           url: ${{ inputs.launcher-url }}
       - uses: ./.github/actions/deploy
         with:
-          base-domain: ${{ steps.sanitize-url.outputs.result }}
+          base-domain: ${{ steps.sanitize-url.outputs.domain }}
           # TODO don't assume the API URL will be "api."
-          skylark-api-url: https://api.${{ steps.sanitize-url.outputs.result }}
+          skylark-api-url: https://api.${{ steps.sanitize-url.outputs.domain }}
           aws-access-key-id: ${{ steps.mask.outputs.aws-access-key-id }}
           aws-secret-access-key: ${{ steps.mask.outputs.aws-secret-access-key }}
