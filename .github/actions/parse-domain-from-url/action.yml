@@ -15,7 +15,7 @@ runs:
       id: sanitize-url
       name: Convert Launcher URL to domain
       env:
-        LAUNCHER_URL: ${{ inputs.launcher-url }}
+        LAUNCHER_URL: ${{ inputs.url }}
       with:
         result-encoding: string
         script: |
