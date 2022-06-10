@@ -18,38 +18,22 @@ concurrency:
   group: deploy-app-${{ inputs.launcher-url }}
 
 jobs:
-  prepare:
-    name: Prepare
-    runs-on: ubuntu-latest
-    outputs:
-      domain: ${{ steps.sanitize-url.outputs.result }}
-    steps:
-      - uses: actions/checkout@v3
-      # - name: Mask AWS Credentials
-      #   # Workaround for masking workflow_dispatch inputs https://github.com/actions/runner/issues/643
-      #   run: |
-      #     ACCESS_KEY_ID=$(jq -r '.inputs.aws-access-key-id' $GITHUB_EVENT_PATH)
-      #     SECRET_KEY_ID=$(jq -r '.inputs.aws-secret-access-key' $GITHUB_EVENT_PATH)
-      #     echo "::add-mask::$ACCESS_KEY_ID"
-      #     echo "::add-mask::$SECRET_KEY_ID"
-      - uses: ./.github/actions/parse-domain-from-url
-        id: sanitize-url
-        with:
-          url: ${{ inputs.launcher-url }}
-
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-    needs: prepare
     steps:
       - uses: actions/checkout@v3
       - name: Mask AWS Credentials
         uses: ./.github/actions/mask-aws-credentials
         id: mask
+      - uses: ./.github/actions/parse-domain-from-url
+        id: sanitize-url
+        with:
+          url: ${{ inputs.launcher-url }}
       - uses: ./.github/actions/deploy
         with:
-          base-domain: ${{ needs.prepare.outputs.domain }}
+          base-domain: ${{ steps.sanitize-url.outputs.result }}
           # TODO don't assume the API URL will be "api."
-          skylark-api-url: https://api.${{ needs.prepare.outputs.domain }}
+          skylark-api-url: https://api.${{ steps.sanitize-url.outputs.result }}
           aws-access-key-id: ${{ steps.mask.outputs.aws-access-key-id }}
           aws-secret-access-key: ${{ steps.mask.outputs.aws-secret-access-key }}

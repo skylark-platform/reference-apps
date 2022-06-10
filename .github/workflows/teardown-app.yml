@@ -62,13 +62,6 @@ jobs:
 
           echo "::set-output name=ref::$GitRef"
           echo "::set-output name=branch::$GitBranch"
-      - name: Mask AWS Credentials
-        # Workaround for masking workflow_dispatch inputs https://github.com/actions/runner/issues/643
-        run: |
-          ACCESS_KEY_ID=$(jq -r '.inputs.aws-access-key-id' $GITHUB_EVENT_PATH)
-          SECRET_KEY_ID=$(jq -r '.inputs.aws-secret-access-key' $GITHUB_EVENT_PATH)
-          echo "::add-mask::$ACCESS_KEY_ID"
-          echo "::add-mask::$SECRET_KEY_ID"
       - uses: ./.github/actions/parse-domain-from-url
         id: sanitize-url
         with:
@@ -80,10 +73,13 @@ jobs:
     needs: prepare
     steps:
       - uses: actions/checkout@v3
+      - name: Mask AWS Credentials
+        uses: ./.github/actions/mask-aws-credentials
+        id: mask
       - uses: ./.github/actions/destroy
         with:
           stack-name: ${{ github.event.inputs.stack-name || '' }}
           git-branch: ${{ !inputs.launcher-url && needs.prepare.outputs.git-branch || '' }}
           base-domain: ${{ needs.prepare.outputs.domain || (needs.prepare.outputs.git-branch == 'main' && 'skylark-dev.skylarkplatform.io' || 'legacy-skylark-development.skylarkplatform.io') }}
-          aws-access-key-id: ${{ inputs.aws-access-key-id || (needs.prepare.outputs.git-branch == 'main' && secrets.AWS_ACCESS_KEY_ID_SKYLARK_DEV || secrets.AWS_ACCESS_KEY_ID_LEGACY_SKYLARK_DEVELOPMENT) }}
-          aws-secret-access-key: ${{ inputs.aws-secret-access-key || (needs.prepare.outputs.git-branch == 'main' && secrets.AWS_SECRET_ACCESS_KEY_SKYLARK_DEV || secrets.AWS_SECRET_ACCESS_KEY_LEGACY_SKYLARK_DEVELOPMENT) }}
+          aws-access-key-id: ${{ steps.mask.outputs.aws-access-key-id || (needs.prepare.outputs.git-branch == 'main' && secrets.AWS_ACCESS_KEY_ID_SKYLARK_DEV || secrets.AWS_ACCESS_KEY_ID_LEGACY_SKYLARK_DEVELOPMENT) }}
+          aws-secret-access-key: ${{ steps.mask.outputs.aws-secret-access-key || (needs.prepare.outputs.git-branch == 'main' && secrets.AWS_SECRET_ACCESS_KEY_SKYLARK_DEV || secrets.AWS_SECRET_ACCESS_KEY_LEGACY_SKYLARK_DEVELOPMENT) }}

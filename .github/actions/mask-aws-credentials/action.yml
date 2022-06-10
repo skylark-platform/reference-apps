@@ -4,10 +4,10 @@ description: Retrieves AWS Credentials from context.payload and masks them
 outputs:
   aws-access-key-id:
     description: Masked AWS access key ID
-    value: ${{ steps.mask.outputs.aws-access-key-id }}
+    value: ${{ steps.mask.outputs.aws-access-key-id || '' }}
   aws-secret-access-key:
     description: Masked AWS secret access key
-    value: ${{ steps.mask.outputs.aws-secret-access-key }}
+    value: ${{ steps.mask.outputs.aws-secret-access-key || '' }}
 runs:
   using: composite
   steps:
