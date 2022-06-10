@@ -24,6 +24,7 @@ jobs:
     outputs:
       domain: ${{ steps.sanitize-url.outputs.result }}
     steps:
+      - uses: actions/checkout@v3
       # - name: Mask AWS Credentials
       #   # Workaround for masking workflow_dispatch inputs https://github.com/actions/runner/issues/643
       #   run: |
