@@ -81,7 +81,7 @@ export const homepageSetFetcher = (
   return axios
     .get<ApiMultipleEntertainmentObjects>(
       `${SKYLARK_API}/api/sets/?slug=${homepageSlug}&set_type_slug=homepage&${apiQuery}`,
-      { headers: { "Accept-Language": "en-gb" }, }
+      { headers: { "Accept-Language": "en-gb" } }
     )
     .then(({ data }) => {
       const {

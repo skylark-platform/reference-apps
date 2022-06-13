@@ -90,7 +90,7 @@ const singleObjectFetcher = ([endpoint, slug]: [
   axios
     .get<ApiMultipleEntertainmentObjects>(
       `${SKYLARK_API}/api/${endpoint}/?slug=${slug}&${apiQuery}`,
-      { headers: { "Accept-Language": "en-gb" }, }
+      { headers: { "Accept-Language": "en-gb" } }
     )
     .then(({ data }) => {
       const {

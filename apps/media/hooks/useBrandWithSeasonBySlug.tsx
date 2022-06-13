@@ -99,21 +99,13 @@ export const brandWithSeasonFetcher = ([slug, deviceType]: [
     deviceTypes: [deviceType],
   });
 
-<<<<<<< HEAD
-  return fetch(`${SKYLARK_API}/api/brands/?slug=${slug}&${apiQuery}`, {
-    headers: { "Accept-Language": "en-gb" },
-  })
-    .then((r) => r.json())
-    .then(({ objects }: ApiMultipleEntertainmentObjects) => {
-=======
   return axios
     .get<ApiMultipleEntertainmentObjects>(
       `${SKYLARK_API}/api/brands/?slug=${slug}&${apiQuery}`,
-      { headers: { "Accept-Language": "en-gb" }, }
+      { headers: { "Accept-Language": "en-gb" } }
     )
     .then(({ data }) => {
       const { objects } = data;
->>>>>>> 56169c7 (feat: add axios)
       if (!objects || objects.length === 0) {
         throw new Error("Brand not found");
       }
