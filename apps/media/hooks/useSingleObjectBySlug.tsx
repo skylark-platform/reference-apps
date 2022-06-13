@@ -21,6 +21,7 @@ const fieldsToExpand = {
   rating_urls: {},
   theme_urls: {},
   genre_urls: {},
+  items: {},
 };
 
 const fields = {
@@ -75,6 +76,7 @@ const fields = {
   genre_urls: {
     name: {},
   },
+  items: {},
 };
 
 const apiQuery = createSkylarkApiQuery({
