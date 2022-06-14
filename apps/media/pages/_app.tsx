@@ -9,7 +9,6 @@ import {
   AppBackgroundGradient,
   AppHeader,
   DimensionSettings,
-  AppLoadedProvider,
 } from "@skylark-reference-apps/react";
 import { useRouter } from "next/router";
 
@@ -22,16 +21,14 @@ const links = [
 function MyApp({ Component, pageProps }: AppProps) {
   const { asPath } = useRouter();
   return (
-    <AppLoadedProvider>
-      <div className="relative">
-        <AppBackgroundGradient />
-        <AppHeader activeHref={asPath} links={links} title="StreamTV" />
-        <div className="relative z-10 h-full w-full pt-mobile-header md:pt-0">
-          <Component {...pageProps} />
-        </div>
-        <DimensionSettings />
+    <div className="relative">
+      <AppBackgroundGradient />
+      <AppHeader activeHref={asPath} links={links} title="StreamTV" />
+      <div className="relative z-10 h-full w-full pt-mobile-header md:pt-0">
+        <Component {...pageProps} />
       </div>
-    </AppLoadedProvider>
+      <DimensionSettings />
+    </div>
   );
 }
 

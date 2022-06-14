@@ -18,6 +18,6 @@ export * from "./dropdown";
 export * from "./hooks";
 export * from "./metadata-panel";
 export * from "./information-panel";
-export * from "./contexts";
 export * from "./list";
 export * from "./hero";
+export * from "./skeleton";

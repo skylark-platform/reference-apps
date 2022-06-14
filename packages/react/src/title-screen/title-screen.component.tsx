@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import { MdStream } from "react-icons/md";
 
-interface LoadingScreenProps {
+interface TitleScreenProps {
   show: boolean;
   title: string;
   onAnimationComplete?: () => void;
@@ -28,7 +28,7 @@ const character = {
   show: { opacity: 1, y: 0 },
 };
 
-export const LoadingScreen: React.FC<LoadingScreenProps> = ({
+export const TitleScreen: React.FC<TitleScreenProps> = ({
   show = true,
   title = "StreamTV",
   onExitComplete,
@@ -124,4 +124,4 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
   );
 };
 
-export default LoadingScreen;
+export default TitleScreen;

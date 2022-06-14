@@ -14,7 +14,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   activeHref,
   defaultOpen,
 }) => (
-  <header className="fixed z-80 flex w-full flex-col font-display md:h-24 md:flex-row-reverse lg:h-28">
+  <header className="fixed top-0 z-80 flex w-full flex-col font-display md:h-24 md:flex-row-reverse lg:h-28">
     <div
       className={`
       fixed z-90 flex h-mobile-header w-full items-center justify-center

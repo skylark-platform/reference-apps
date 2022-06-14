@@ -42,8 +42,8 @@ export const Navigation: React.FC<NavigationProps> = ({
   defaultOpen,
 }) => {
   const [openOnMobile, setMobileOpen] = useState(defaultOpen || false);
-  const [twBreakpoint] = useTailwindBreakpoint();
-  const onDesktop = !["", "sm"].includes(twBreakpoint);
+  const [twBreakpoint] = useTailwindBreakpoint("");
+  const onDesktop = !["", "sm"].includes(twBreakpoint as string);
   return (
     <>
       <div className="absolute top-0 left-0 z-90 flex md:hidden">
