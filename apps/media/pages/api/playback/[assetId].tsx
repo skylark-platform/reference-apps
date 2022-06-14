@@ -21,7 +21,6 @@ const fetchPlaybackUrl = async (req: NextApiRequest, res: NextApiResponse) => {
   const email = process.env.COGNITO_EMAIL as string;
   const password = process.env.COGNITO_PASSWORD as string;
 
-  // check email and password are popluated. Return 500 with message either email or password is empty
   let token;
   try {
     const config = amplifyConfig({

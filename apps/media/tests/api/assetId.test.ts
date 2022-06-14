@@ -1,8 +1,10 @@
 /**
  * @jest-environment node
  */
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { createMocks, RequestMethod } from "node-mocks-http";
 import type { NextApiRequest, NextApiResponse } from "next";
+// eslint-disable-next-line import/no-extraneous-dependencies
 import fetchMock from "jest-fetch-mock";
 import Amplify from "@aws-amplify/core";
 import Auth from "@aws-amplify/auth";
