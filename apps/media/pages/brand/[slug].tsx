@@ -6,6 +6,7 @@ import {
   BrandHeader,
   CallToAction,
   Hero,
+  Skeleton,
 } from "@skylark-reference-apps/react";
 import {
   Episode,
@@ -45,95 +46,102 @@ const BrandPage: NextPage = () => {
   );
 
   return (
-    <div className="mb-20 flex min-h-screen flex-col items-center bg-gray-900">
+    <div className="mb-20 mt-48 flex min-h-screen flex-col items-center bg-gray-900">
       <Head>
         <title>{`${titleShortToLong || "Brand page"} - StreamTV`}</title>
       </Head>
 
-      <Hero bgImage={getImageSrcAndSizeByWindow(brand?.images, "Main")}>
-        <div className="flex flex-col">
-          <BrandHeader
-            description={
-              brand?.synopsis.long ||
-              brand?.synopsis.medium ||
-              brand?.synopsis.short
-            }
-            numberOfSeasons={seasons.length}
-            rating={
-              brand?.ratings?.isExpanded ? brand.ratings.items?.[0].title : ""
-            }
-            releaseDate={seasons?.[0]?.year}
-            title={getTitleByOrder(
-              brand?.title,
-              ["long", "medium", "short"],
-              brand?.objectTitle
-            )}
-          />
-          <CallToAction
-            episodeNumber={1}
-            episodeTitle={
-              seasons.length && seasons[0].items?.isExpanded
-                ? getTitleByOrder(seasons[0].items?.objects[0].title, [
-                    "long",
-                    "medium",
-                    "short",
-                  ])
-                : ""
-            }
-            href={
-              firstEpisodeOfFirstSeason
-                ? `/${firstEpisodeOfFirstSeason.type}/${firstEpisodeOfFirstSeason.slug}`
-                : ""
-            }
-            inProgress={false}
-            seasonNumber={1}
-          />
+      <Skeleton show={!brand && !error}>
+        <div className="-mt-48">
+          <Hero bgImage={getImageSrcAndSizeByWindow(brand?.images, "Main")}>
+            <div className="flex flex-col">
+              <BrandHeader
+                description={
+                  brand?.synopsis.long ||
+                  brand?.synopsis.medium ||
+                  brand?.synopsis.short
+                }
+                numberOfSeasons={seasons.length}
+                rating={
+                  brand?.ratings?.isExpanded
+                    ? brand.ratings.items?.[0].title
+                    : ""
+                }
+                releaseDate={seasons?.[0]?.year}
+                title={getTitleByOrder(
+                  brand?.title,
+                  ["long", "medium", "short"],
+                  brand?.objectTitle
+                )}
+              />
+              <CallToAction
+                episodeNumber={1}
+                episodeTitle={
+                  seasons.length && seasons[0].items?.isExpanded
+                    ? getTitleByOrder(seasons[0].items?.objects[0].title, [
+                        "long",
+                        "medium",
+                        "short",
+                      ])
+                    : ""
+                }
+                href={
+                  firstEpisodeOfFirstSeason
+                    ? `/${firstEpisodeOfFirstSeason.type}/${firstEpisodeOfFirstSeason.slug}`
+                    : ""
+                }
+                inProgress={false}
+                seasonNumber={1}
+              />
+            </div>
+          </Hero>
         </div>
-      </Hero>
 
-      {!brand && !error && <p>{`Loading ${query?.slug as string}`}</p>}
-      {notFound && <p>{`Brand ${query?.slug as string} not found`}</p>}
-      {error && !notFound && <p>{`Error fetching brand: ${error.message}`}</p>}
-
-      {brand &&
-        brand.items?.isExpanded &&
-        (brand.items.objects as Season[]).map(
-          (season) =>
-            season.isExpanded &&
-            season.type === "season" && (
-              <div
-                className="my-6 w-full"
-                key={season.number || season.objectTitle || season.slug}
-              >
-                <Rail displayCount header={`Season ${season.number || "-"}`}>
-                  {season.items?.isExpanded &&
-                    (season.items.objects as Episode[])
-                      .filter((ep) => ep.isExpanded && ep.type === "episode")
-                      .sort(sortEpisodesByNumber)
-                      .map((ep: Episode) => (
-                        <EpisodeThumbnail
-                          backgroundImage={getImageSrc(
-                            ep.images,
-                            "Thumbnail",
-                            "250x250"
-                          )}
-                          description={
-                            ep.synopsis?.medium || ep.synopsis?.short || ""
-                          }
-                          href={`/episode/${ep.slug}`}
-                          key={ep.objectTitle}
-                          number={ep.number || 0}
-                          title={getTitleByOrder(
-                            ep?.title,
-                            ["short", "medium"],
-                            ep.objectTitle
-                          )}
-                        />
-                      ))}
-                </Rail>
-              </div>
-            )
+        {notFound && <p>{`Brand ${query?.slug as string} not found`}</p>}
+        {error && !notFound && (
+          <p>{`Error fetching brand: ${error.message}`}</p>
         )}
+
+        {brand &&
+          brand.items?.isExpanded &&
+          (brand.items.objects as Season[]).map(
+            (season) =>
+              season.isExpanded &&
+              season.type === "season" && (
+                <div
+                  className="my-6 w-full"
+                  key={season.number || season.objectTitle || season.slug}
+                >
+                  <Rail displayCount header={`Season ${season.number || "-"}`}>
+                    {season.items?.isExpanded &&
+                      (season.items.objects as Episode[])
+                        .filter((ep) => ep.isExpanded && ep.type === "episode")
+                        .sort(sortEpisodesByNumber)
+                        .map((ep: Episode) => (
+                          <EpisodeThumbnail
+                            backgroundImage={getImageSrc(
+                              ep.images,
+                              "Thumbnail",
+                              "250x250"
+                            )}
+                            description={
+                              ep.synopsis?.medium || ep.synopsis?.short || ""
+                            }
+                            href={`/episode/${ep.slug}`}
+                            key={ep.objectTitle}
+                            number={ep.number || 0}
+                            title={getTitleByOrder(
+                              ep?.title,
+                              ["short", "medium"],
+                              ep.objectTitle
+                            )}
+                          />
+                        ))}
+                  </Rail>
+                </div>
+              )
+          )}
+      </Skeleton>
     </div>
   );
 };

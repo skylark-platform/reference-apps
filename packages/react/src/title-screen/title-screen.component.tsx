@@ -1,9 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
-import { MdStream } from "react-icons/md";
 
 interface TitleScreenProps {
   title: string;
+  logo?: JSX.Element;
 }
 
 const durationToShowAfterAnimationComplete = 0.4;
@@ -25,7 +25,7 @@ const character = {
   show: { opacity: 1, y: 0 },
 };
 
-export const TitleScreen: React.FC<TitleScreenProps> = ({ title }) => {
+export const TitleScreen: React.FC<TitleScreenProps> = ({ title, logo }) => {
   const staggerCharacter = 0.7 / title.length;
   const text = {
     hidden: { opacity: 0 },
@@ -86,12 +86,14 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({ title }) => {
             initial="hidden"
             variants={text}
           >
-            <motion.span
-              className="mr-2 inline-block md:mr-4"
-              variants={character}
-            >
-              <MdStream className="h-12 w-12 rounded-md bg-purple-500 sm:h-14 sm:w-14 lg:h-16 lg:w-16" />
-            </motion.span>
+            {logo && (
+              <motion.span
+                className="mr-2 inline-block md:mr-4"
+                variants={character}
+              >
+                {logo}
+              </motion.span>
+            )}
             {title.split("").map((item, i) => (
               <motion.span
                 className="inline-block"

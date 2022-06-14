@@ -18,7 +18,7 @@ const wrapper = {
   show: {
     opacity: 1,
     transition: {
-      delayChildren: 1,
+      delayChildren: 0.2,
       staggerChildren: 1,
     },
   },
@@ -73,7 +73,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
         <motion.div
           animate={{ opacity: 1 }}
           initial={{ opacity: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.5 }}
         >
           {children}
         </motion.div>

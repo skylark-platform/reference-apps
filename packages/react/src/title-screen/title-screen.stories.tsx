@@ -1,4 +1,5 @@
 import React from "react";
+import { MdStream } from "react-icons/md";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { TitleScreen } from "./title-screen.component";
 
@@ -17,4 +18,15 @@ Default.args = {
 };
 Default.parameters = {
   chromatic: { delay: 2000 }, // To let animation finish
+};
+
+export const WithLogo = Template.bind({});
+WithLogo.args = {
+  ...Default.args,
+  logo: (
+    <MdStream className="h-12 w-12 rounded-md bg-purple-500 sm:h-14 sm:w-14 lg:h-16 lg:w-16" />
+  ),
+};
+WithLogo.parameters = {
+  ...Default.parameters,
 };

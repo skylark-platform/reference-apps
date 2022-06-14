@@ -4,6 +4,7 @@ import {
   InformationPanel,
   MetadataPanel,
   Player,
+  Skeleton,
 } from "@skylark-reference-apps/react";
 import {
   Episode,
@@ -61,6 +62,7 @@ const EpisodePage: NextPage = () => {
       <Head>
         <title>{`${titleShortToLong || "Episode page"} - StreamTV`}</title>
       </Head>
+      <Skeleton show={!episode}>
       <div className="flex h-full w-full justify-center pb-10 md:pb-16">
         <Player
           poster={getImageSrc(episode?.images, "Thumbnail")}
@@ -110,42 +112,43 @@ const EpisodePage: NextPage = () => {
           <div className="h-full w-full pl-1 sm:pl-5 md:w-5/12">
             <div className="flex justify-center">
               <span className="mb-4 w-4/5 border-b border-gray-800 md:hidden" />
+              </div>
+              <MetadataPanel
+                content={[
+                  {
+                    icon: <MdRecentActors />,
+                    header: "Key Cast",
+                    body: getCreditsByType(episode.credits, "Actor").map(
+                      (credit) => credit?.peopleUrl?.name || ""
+                    ),
+                  },
+                  {
+                    icon: <MdMovie />,
+                    header: "Directors",
+                    body: getCreditsByType(episode.credits, "Director").map(
+                      (credit) => credit?.peopleUrl?.name || ""
+                    ),
+                  },
+                  {
+                    icon: <MdMode />,
+                    header: "Writers",
+                    body: getCreditsByType(episode.credits, "Writer").map(
+                      (credit) => credit?.peopleUrl?.name || ""
+                    ),
+                  },
+                  {
+                    icon: <MdCalendarToday />,
+                    header: "Released",
+                    body: episode.parent?.isExpanded
+                      ? `${(episode.parent as Season)?.year || ""}`
+                      : "",
+                  },
+                ]}
+              />
             </div>
-            <MetadataPanel
-              content={[
-                {
-                  icon: <MdRecentActors />,
-                  header: "Key Cast",
-                  body: getCreditsByType(episode.credits, "Actor").map(
-                    (credit) => credit?.peopleUrl?.name || ""
-                  ),
-                },
-                {
-                  icon: <MdMovie />,
-                  header: "Directors",
-                  body: getCreditsByType(episode.credits, "Director").map(
-                    (credit) => credit?.peopleUrl?.name || ""
-                  ),
-                },
-                {
-                  icon: <MdMode />,
-                  header: "Writers",
-                  body: getCreditsByType(episode.credits, "Writer").map(
-                    (credit) => credit?.peopleUrl?.name || ""
-                  ),
-                },
-                {
-                  icon: <MdCalendarToday />,
-                  header: "Released",
-                  body: episode.parent?.isExpanded
-                    ? `${(episode.parent as Season)?.year || ""}`
-                    : "",
-                },
-              ]}
-            />
           </div>
-        </div>
-      )}
+        )}
+      </Skeleton>
     </div>
   );
 };
