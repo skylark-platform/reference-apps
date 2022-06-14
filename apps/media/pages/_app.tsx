@@ -9,6 +9,7 @@ import {
   AppBackgroundGradient,
   AppHeader,
   DimensionSettings,
+  TitleScreen,
 } from "@skylark-reference-apps/react";
 import { useRouter } from "next/router";
 
@@ -22,6 +23,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const { asPath } = useRouter();
   return (
     <div className="relative">
+      <TitleScreen title="StreamTV" />
       <AppBackgroundGradient />
       <AppHeader activeHref={asPath} links={links} title="StreamTV" />
       <div className="relative z-10 h-full w-full pt-mobile-header md:pt-0">

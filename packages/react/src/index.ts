@@ -1,6 +1,7 @@
 export * from "./link";
 export * from "./button";
 export * from "./label";
+export * from "./title-screen";
 export * from "./loading-screen";
 export * from "./typography";
 export * from "./thumbnail";

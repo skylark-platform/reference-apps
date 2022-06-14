@@ -13,7 +13,6 @@ const Template: ComponentStory<typeof TitleScreen> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-  show: true,
   title: "StreamTV",
 };
 Default.parameters = {

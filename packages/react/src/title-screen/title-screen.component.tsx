@@ -1,12 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
-import React from "react";
+import React, { useState } from "react";
 import { MdStream } from "react-icons/md";
 
 interface TitleScreenProps {
-  show: boolean;
   title: string;
-  onAnimationComplete?: () => void;
-  onExitComplete?: () => void;
 }
 
 const durationToShowAfterAnimationComplete = 0.4;
@@ -28,12 +25,7 @@ const character = {
   show: { opacity: 1, y: 0 },
 };
 
-export const TitleScreen: React.FC<TitleScreenProps> = ({
-  show = true,
-  title = "StreamTV",
-  onExitComplete,
-  onAnimationComplete,
-}) => {
+export const TitleScreen: React.FC<TitleScreenProps> = ({ title }) => {
   const staggerCharacter = 0.7 / title.length;
   const text = {
     hidden: { opacity: 0 },
@@ -76,8 +68,10 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
     },
   };
 
+  const [show, setShow] = useState(true);
+
   return (
-    <AnimatePresence onExitComplete={onExitComplete}>
+    <AnimatePresence>
       {show && (
         <motion.div
           className="fixed inset-0 z-[999] flex flex-col items-center justify-center gap-y-1 bg-gray-900 font-display text-white sm:gap-y-2 lg:gap-y-4"
@@ -114,7 +108,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
             exit="exit"
             initial="hidden"
             variants={skylarkDemoText}
-            onAnimationComplete={onAnimationComplete}
+            onAnimationComplete={() => setShow(false)}
           >
             {`by Skylark`}
           </motion.p>

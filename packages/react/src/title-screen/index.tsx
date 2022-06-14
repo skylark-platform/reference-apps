@@ -1,1 +1,1 @@
-export * from "./loading-screen.component";
+export * from "./title-screen.component";
