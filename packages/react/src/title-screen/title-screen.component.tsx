@@ -4,29 +4,36 @@ import React, { useState } from "react";
 interface TitleScreenProps {
   title: string;
   logo?: JSX.Element;
+  exitBackgroundColor?: string;
 }
 
 const durationToShowAfterAnimationComplete = 0.4;
-
-const container = {
-  exit: {
-    opacity: 0,
-    transition: {
-      delay: durationToShowAfterAnimationComplete,
-      duration: 1,
-    },
-    backgroundColor: "#5B45CE",
-  },
-  show: { opacity: 1 },
-};
 
 const character = {
   hidden: { opacity: 0, y: 50 },
   show: { opacity: 1, y: 0 },
 };
 
-export const TitleScreen: React.FC<TitleScreenProps> = ({ title, logo }) => {
+export const TitleScreen: React.FC<TitleScreenProps> = ({
+  title,
+  logo,
+  exitBackgroundColor,
+  children,
+}) => {
   const staggerCharacter = 0.7 / title.length;
+
+  const container = {
+    exit: {
+      opacity: 0,
+      transition: {
+        delay: durationToShowAfterAnimationComplete,
+        duration: 1,
+      },
+      backgroundColor: exitBackgroundColor,
+    },
+    show: { opacity: 1 },
+  };
+
   const text = {
     hidden: { opacity: 0 },
     show: {
@@ -47,12 +54,13 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({ title, logo }) => {
     },
   };
 
-  const skylarkDemoText = {
+  const childrenVariants = {
     hidden: { opacity: 0, y: -30 },
     show: {
       opacity: 1,
       y: 0,
       transition: {
+        // Ensure it runs after the title animation
         delay:
           title.length * staggerCharacter +
           text.show.transition.delayChildren +
@@ -104,16 +112,16 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({ title, logo }) => {
               </motion.span>
             ))}
           </motion.p>
-          <motion.p
+          <motion.div
             animate="show"
-            className="flex items-center text-xs text-gray-500 sm:text-sm lg:text-lg"
+            className="flex flex-col items-center justify-center"
             exit="exit"
             initial="hidden"
-            variants={skylarkDemoText}
+            variants={childrenVariants}
             onAnimationComplete={() => setShow(false)}
           >
-            {`by Skylark`}
-          </motion.p>
+            {children}
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>

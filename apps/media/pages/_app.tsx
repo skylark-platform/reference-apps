@@ -29,11 +29,16 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <div className="relative">
       <TitleScreen
+        exitBackgroundColor="#5B45CE"
         logo={
           <MdStream className="h-12 w-12 rounded-md bg-purple-500 sm:h-14 sm:w-14 lg:h-16 lg:w-16" />
         }
         title={appTitle}
-      />
+      >
+        <p className="text-xs text-gray-500 sm:text-sm lg:text-lg">
+          {`by Skylark`}
+        </p>
+      </TitleScreen>
       <AppBackgroundGradient />
       <AppHeader activeHref={asPath} links={links}>
         <div className="flex items-center justify-center text-3xl text-gray-100">
