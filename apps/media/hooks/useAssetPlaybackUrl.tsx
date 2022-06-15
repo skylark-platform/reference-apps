@@ -10,17 +10,19 @@ export const useAssetPlaybackUrl = (
   items: ExpandedSkylarkObjects | UnexpandedSkylarkObjects | undefined
 ) => {
   const [playbackUrl, setPlaybackUrl] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (items?.isExpanded && items.objects[0].uid) {
       axios
         .get<ApiPlaybackResponse>(`/api/playback/${items.objects[0].uid}`)
         .then((res) => setPlaybackUrl(res.data.playback_url))
-        .catch((error) => {
-          console.error(error);
-          setPlaybackUrl("");
-        });
+        .catch((err: string) => setError(err));
     }
   }, [items]);
-  return playbackUrl;
+  return {
+    playbackUrl,
+    error,
+    isLoading: !playbackUrl && !error,
+  };
 };

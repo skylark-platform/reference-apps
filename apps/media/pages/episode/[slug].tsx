@@ -25,8 +25,8 @@ import { useAssetPlaybackUrl } from "../../hooks/useAssetPlaybackUrl";
 const EpisodePage: NextPage = () => {
   const { query } = useRouter();
   const { data } = useSingleObjectBySlug("episode", query?.slug as string);
+  const { playbackUrl } = useAssetPlaybackUrl(data?.items);
 
-  const playbackUrl = useAssetPlaybackUrl(data?.items);
   const episode = data as Episode | undefined;
 
   const titleShortToLong = getTitleByOrder(

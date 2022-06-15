@@ -25,9 +25,6 @@ inputs:
   cognito-user-pool-id:
     description: The Cognito User Pool ID
     required: true
-  cognito-identity-pool-id:
-    description: The Cognito Identity ID
-    required: true
   cognito-email:
     description: The Cognito Email
     required: true
@@ -79,7 +76,6 @@ runs:
         COGNITO_AWS_REGION: ${{ inputs.cognito-aws-region }}
         COGNITO_CLIENT_ID: ${{ inputs.cognito-client-id }}
         COGNITO_USER_POOL_ID: ${{ inputs.cognito-user-pool-id }}
-        COGNITO_IDENTITY_POOL_ID: ${{ inputs.cognito-identity-pool-id }}
       run: |
         yarn cdk bootstrap
         yarn cdk deploy

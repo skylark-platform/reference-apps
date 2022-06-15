@@ -63,7 +63,6 @@ jobs:
           cognito-aws-region: ${{ secrets.NEXT_PUBLIC_COGNITO_AWS_REGION }}
           cognito-client-id: ${{ secrets.NEXT_PUBLIC_COGNITO_CLIENT_ID }}
           cognito-user-pool-id: ${{ secrets.NEXT_PUBLIC_COGNITO_USER_POOL_ID }}
-          cognito-identity-pool-id: ${{ secrets.NEXT_PUBLIC_COGNITO_IDENTITY_POOL_ID }}
           cognito-email: ${{ secrets.COGNITO_EMAIL }}
           cognito-password: ${{ secrets.COGNITO_PASSWORD }}
           aws-access-key-id: ${{ needs.prepare.outputs.git-branch == 'main' && secrets.AWS_ACCESS_KEY_ID_SKYLARK_DEV || secrets.AWS_ACCESS_KEY_ID_LEGACY_SKYLARK_DEVELOPMENT }}
