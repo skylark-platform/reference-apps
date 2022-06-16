@@ -53,11 +53,12 @@ runs:
         cache: yarn
     - name: Install deps
       shell: bash
+      working-directory: ${{ github.action_path }}/../../
       run: yarn
     - name: Bootstrap and deploy CDK
       shell: bash
       id: cdk
-      working-directory: packages/infra
+      working-directory: ${{ github.action_path }}/../../packages/infra
       env:
         APP: ${{ inputs.app }}
         GIT_BRANCH: ${{ inputs.git-branch }}
