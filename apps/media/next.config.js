@@ -22,5 +22,4 @@ const moduleExports = {
   },
 };
 
-// Ensure that your source maps include changes from all other Webpack plugins
 module.exports = withTM(moduleExports);

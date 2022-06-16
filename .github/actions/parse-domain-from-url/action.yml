@@ -1,0 +1,34 @@
+name: Parse domain from URL
+description: Parses the domain name from a given url
+inputs:
+  url:
+    description: The URL to parse
+    required: true
+outputs:
+  domain:
+    description: The parsed domain
+    value: ${{ steps.sanitize-url.outputs.result }}
+runs:
+  using: composite
+  steps:
+    - uses: actions/github-script@v6
+      id: sanitize-url
+      name: Convert Launcher URL to domain
+      env:
+        LAUNCHER_URL: ${{ inputs.url }}
+      with:
+        result-encoding: string
+        script: |
+          const launcherUrl = process.env.LAUNCHER_URL;
+          if (!launcherUrl) {
+            throw new Error(`Launcher URL cannot be empty: "${launcherUrl}"`);
+          }
+
+          // In case only a domain is passed, add protocol so it can be parsed
+          const url = launcherUrl.startsWith("http") ? launcherUrl : `http://${launcherUrl}`;
+
+          const urlObject = new URL(url);
+          // Handle if www. domain is given
+          const domain = urlObject.hostname.replace('www.','');
+          console.log("Domain: ", domain);
+          return domain;

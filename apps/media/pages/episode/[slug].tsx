@@ -20,10 +20,12 @@ import {
   MdCalendarToday,
 } from "react-icons/md";
 import { useSingleObjectBySlug } from "../../hooks/useSingleObjectBySlug";
+import { useAssetPlaybackUrl } from "../../hooks/useAssetPlaybackUrl";
 
 const EpisodePage: NextPage = () => {
   const { query } = useRouter();
   const { data } = useSingleObjectBySlug("episode", query?.slug as string);
+  const { error, isLoading, playbackUrl } = useAssetPlaybackUrl(data?.items);
   const episode = data as Episode | undefined;
 
   const titleShortToLong = getTitleByOrder(
@@ -56,7 +58,7 @@ const EpisodePage: NextPage = () => {
       <div className="flex h-full w-full justify-center pb-10 md:pb-16">
         <Player
           poster={getImageSrc(episode?.images, "Thumbnail")}
-          src={"/mux-video-intro.mp4"}
+          src={isLoading && error ? "/mux-video-intro.mp4" : playbackUrl}
           videoId={"1"}
           videoTitle={titleShortToLong}
         />
