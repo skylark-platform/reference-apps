@@ -4,25 +4,24 @@ import {
   UnexpandedSkylarkObjects,
 } from "@skylark-reference-apps/lib";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import useSWR from "swr";
+
+const assetUrlFetcher = (uid: string) =>
+  axios
+    .get<ApiPlaybackResponse>(`/api/playback/${uid}`)
+    .then((res) => res.data.playback_url);
 
 export const useAssetPlaybackUrl = (
   items: ExpandedSkylarkObjects | UnexpandedSkylarkObjects | undefined
 ) => {
-  const [playbackUrl, setPlaybackUrl] = useState("");
-  const [error, setError] = useState("");
+  const { data: playbackUrl, error } = useSWR<string, Error>(
+    items?.objects[0].uid,
+    assetUrlFetcher
+  );
 
-  useEffect(() => {
-    if (items?.isExpanded && items.objects[0].uid) {
-      axios
-        .get<ApiPlaybackResponse>(`/api/playback/${items.objects[0].uid}`)
-        .then((res) => setPlaybackUrl(res.data.playback_url))
-        .catch((err: string) => setError(err));
-    }
-  }, [items]);
   return {
     playbackUrl,
-    error,
-    isLoading: !playbackUrl && !error,
+    isError: error,
+    isLoading: !error && !playbackUrl,
   };
 };

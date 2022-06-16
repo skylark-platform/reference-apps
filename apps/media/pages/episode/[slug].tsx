@@ -25,7 +25,7 @@ import { useAssetPlaybackUrl } from "../../hooks/useAssetPlaybackUrl";
 const EpisodePage: NextPage = () => {
   const { query } = useRouter();
   const { data } = useSingleObjectBySlug("episode", query?.slug as string);
-  const { error, isLoading, playbackUrl } = useAssetPlaybackUrl(data?.items);
+  const { playbackUrl } = useAssetPlaybackUrl(data?.items);
   const episode = data as Episode | undefined;
 
   const titleShortToLong = getTitleByOrder(
@@ -58,7 +58,7 @@ const EpisodePage: NextPage = () => {
       <div className="flex h-full w-full justify-center pb-10 md:pb-16">
         <Player
           poster={getImageSrc(episode?.images, "Thumbnail")}
-          src={isLoading && error ? "/mux-video-intro.mp4" : playbackUrl}
+          src={playbackUrl || "/mux-video-intro.mp4"}
           videoId={"1"}
           videoTitle={titleShortToLong}
         />

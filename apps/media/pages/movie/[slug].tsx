@@ -24,7 +24,7 @@ import { useAssetPlaybackUrl } from "../../hooks/useAssetPlaybackUrl";
 const MoviePage: NextPage = () => {
   const { query } = useRouter();
   const { data } = useSingleObjectBySlug("movie", query?.slug as string);
-  const { error, isLoading, playbackUrl } = useAssetPlaybackUrl(data?.items);
+  const { playbackUrl } = useAssetPlaybackUrl(data?.items);
   const movie = data as Movie | undefined;
 
   const titleShortToLong = getTitleByOrder(
@@ -56,7 +56,7 @@ const MoviePage: NextPage = () => {
       <div className="flex h-full w-full justify-center pb-10 md:pb-16">
         <Player
           poster={getImageSrc(movie?.images, "Thumbnail")}
-          src={isLoading && error ? "/mux-video-intro.mp4" : playbackUrl}
+          src={playbackUrl || "/mux-video-intro.mp4"}
           videoId="1"
           videoTitle={titleShortToLong || ""}
         />
