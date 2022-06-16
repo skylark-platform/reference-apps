@@ -6,11 +6,11 @@ import {
   BrandHeader,
   CallToAction,
   Hero,
+  getImageSrcAndSizeByWindow,
 } from "@skylark-reference-apps/react";
 import {
   Episode,
   getImageSrc,
-  getImageSrcAndSizeByWindow,
   getTitleByOrder,
   Season,
 } from "@skylark-reference-apps/lib";
@@ -62,7 +62,7 @@ const BrandPage: NextPage = () => {
             rating={
               brand?.ratings?.isExpanded ? brand.ratings.items?.[0].title : ""
             }
-            releaseDate={seasons?.[0]?.year}
+            releaseDate={seasons?.[0]?.releaseDate}
             title={getTitleByOrder(
               brand?.title,
               ["long", "medium", "short"],

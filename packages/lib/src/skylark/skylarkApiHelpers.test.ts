@@ -101,12 +101,14 @@ describe("skylarkApiHelpers", () => {
     it("parses Image URLs when they are expanded", () => {
       const imageUrls = parseSkylarkImageUrls([
         {
+          uid: "1",
           self: "/api/images/1",
           url: "skylark.com/image/1.jpg",
           url_path: "/image/1.jpg",
           image_type: "Thumbnail",
         },
         {
+          uid: "2",
           self: "/api/images/2",
           url: "skylark.com/image/2.jpg",
           url_path: "/image/2.jpg",
@@ -318,6 +320,7 @@ describe("skylarkApiHelpers", () => {
       synopsis_long: "Long synopsis",
       self: "/api/unknown-object",
       slug: "object-title",
+      release_date: "1/1/2000"
     };
 
     const defaultExpectedObject: SkylarkObject = {
@@ -346,6 +349,7 @@ describe("skylarkApiHelpers", () => {
       credits: undefined,
       genres: undefined,
       parent: undefined,
+      releaseDate: "",
     };
 
     it("parses a SkylarkObject with no items", () => {
@@ -475,7 +479,6 @@ describe("skylarkApiHelpers", () => {
         self: "/api/seasons/1",
         season_number: 1,
         number_of_episodes: 10,
-        year: 2015,
       };
 
       const parsedObject = parseSkylarkObject(obj);

@@ -5,7 +5,7 @@ import { List } from "../list";
 interface BrandHeaderProps {
   title: string;
   numberOfSeasons: number;
-  releaseDate?: number;
+  releaseDate?: string;
   rating: string;
   description?: string;
 }

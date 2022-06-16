@@ -7,15 +7,14 @@ import {
   MovieThumbnail,
   Rail,
   useAppLoaded,
+  getImageSrcAndSizeByWindow,
 } from "@skylark-reference-apps/react";
 import { useRouter } from "next/router";
 import {
   Episode,
   EntertainmentType,
   getImageSrc,
-  Season,
   getTitleByOrder,
-  getImageSrcAndSizeByWindow,
 } from "@skylark-reference-apps/lib";
 import { useEffect } from "react";
 
@@ -71,9 +70,7 @@ const Home: NextPage = () => {
                               "Main"
                             ),
                             type: carouselItem.type as EntertainmentType,
-                            releaseDate: (carouselItem as Season)?.year
-                              ? `${(carouselItem as Season).year || ""}`
-                              : "",
+                            releaseDate: carouselItem.releaseDate,
                           }))
                         : []
                     }

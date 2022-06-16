@@ -130,7 +130,7 @@ const EpisodePage: NextPage = () => {
                   icon: <MdCalendarToday />,
                   header: "Released",
                   body: episode.parent?.isExpanded
-                    ? `${(episode.parent as Season)?.year || ""}`
+                    ? `${episode.parent.releaseDate}`
                     : "",
                 },
               ]}
