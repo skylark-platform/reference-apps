@@ -41,6 +41,7 @@ const fields = {
   synopsis_long: {},
   episode_number: {},
   season_number: {},
+  release_date: {},
   credits: {
     character: {},
     role_url: {
@@ -57,7 +58,7 @@ const fields = {
     title_medium: {},
     title_long: {},
     season_number: {},
-    year: {},
+    release_date: {},
     parent_url: {
       self: {},
       title: {},

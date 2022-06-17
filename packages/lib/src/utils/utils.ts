@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import {
   Credit,
   Credits,
@@ -95,3 +96,14 @@ export const getCreditsByType = (
 
   return credits.items.filter((credit) => credit.roleUrl?.title === type);
 };
+
+/**
+ * formatReleaseDate - formats the release date
+ * @param date date string
+ * @param format optional format for the date
+ * @returns string, empty if the date is empty
+ */
+export const formatReleaseDate = (
+  date?: string,
+  format = "MMMM D, YYYY"
+): string => (date ? dayjs(date).format(format) : "");

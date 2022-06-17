@@ -6,6 +6,7 @@ import {
   Skeleton,
 } from "@skylark-reference-apps/react";
 import {
+  formatReleaseDate,
   getCreditsByType,
   getImageSrc,
   getTitleByOrder,
@@ -128,7 +129,7 @@ const MoviePage: NextPage = () => {
                   {
                     icon: <MdCalendarToday />,
                     header: "Released",
-                    body: "10 April 2011",
+                    body: formatReleaseDate(movie.releaseDate),
                   },
                 ]}
               />

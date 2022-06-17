@@ -10,6 +10,7 @@ import {
 } from "@skylark-reference-apps/react";
 import {
   Episode,
+  formatReleaseDate,
   getImageSrc,
   getImageSrcAndSizeByWindow,
   getTitleByOrder,
@@ -67,7 +68,7 @@ const BrandPage: NextPage = () => {
                     ? brand.ratings.items?.[0].title
                     : ""
                 }
-                releaseDate={seasons?.[0]?.year}
+                releaseDate={formatReleaseDate(seasons?.[0]?.releaseDate)}
                 title={getTitleByOrder(
                   brand?.title,
                   ["long", "medium", "short"],

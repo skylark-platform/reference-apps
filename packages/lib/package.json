@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@aws-amplify/auth": "^4.4.1",
-    "amazon-cognito-identity-js": "^5.2.3"
+    "amazon-cognito-identity-js": "^5.2.3",
+    "dayjs": "^1.11.3"
   }
 }

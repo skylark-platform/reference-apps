@@ -13,7 +13,6 @@ import {
   Episode,
   EntertainmentType,
   getImageSrc,
-  Season,
   getTitleByOrder,
   getImageSrcAndSizeByWindow,
 } from "@skylark-reference-apps/lib";
@@ -70,9 +69,7 @@ const Home: NextPage = () => {
                                 "Main"
                               ),
                               type: carouselItem.type as EntertainmentType,
-                              releaseDate: (carouselItem as Season)?.year
-                                ? `${(carouselItem as Season).year || ""}`
-                                : "",
+                              releaseDate: carouselItem.releaseDate,
                             }))
                           : []
                       }
@@ -102,6 +99,7 @@ const Home: NextPage = () => {
                               : ""
                           }
                           key={movie.objectTitle || movie.uid || movie.slug}
+                          releaseDate={movie.releaseDate}
                           title={movie.title?.short || ""}
                         />
                       ))}
@@ -180,6 +178,7 @@ const Home: NextPage = () => {
                               episode.objectTitle || episode.uid || episode.slug
                             }
                             number={episode.number || 0}
+                            releaseDate={episode.releaseDate}
                             title={episode.title?.short || ""}
                           />
                         ))}
