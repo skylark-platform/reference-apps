@@ -25,11 +25,13 @@ import { useAssetPlaybackUrl } from "../../hooks/useAssetPlaybackUrl";
 const EpisodePage: NextPage = () => {
   const { query } = useRouter();
   const { data } = useSingleObjectBySlug("episode", query?.slug as string);
-  const assetUid = data?.items?.objects[0].uid;
+  const assetUid = data?.items?.isExpanded ? data?.items?.objects[0]?.uid : "";
   const { playbackUrl, isLoading } = useAssetPlaybackUrl(assetUid);
   // if no object has no items then default to static video
   const playerSrc =
-    !isLoading || !assetUid ? playbackUrl || "/mux-video-intro.mp4" : "";
+    !isLoading || (data && !assetUid)
+      ? playbackUrl || "/mux-video-intro.mp4"
+      : "";
   const episode = data as Episode | undefined;
 
   const titleShortToLong = getTitleByOrder(

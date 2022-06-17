@@ -8,7 +8,6 @@ import {
 
 export interface UnexpandedObject {
   self: string;
-  uid?: string;
 }
 
 export interface UnexpandedObjects {
