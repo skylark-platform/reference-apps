@@ -1,4 +1,9 @@
-export type SetTypes = "slider" | "rail" | "collection";
+export type SetTypes =
+  | "slider"
+  | "rail"
+  | "collection"
+  | "homepage"
+  | "generic";
 export type EntertainmentType =
   | "movie"
   | "episode"

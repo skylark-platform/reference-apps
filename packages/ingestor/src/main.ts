@@ -1,23 +1,46 @@
 // Import dotenv must be first
 import "./env";
 import Amplify from "@aws-amplify/core";
-import { amplifyConfig, ApiEntertainmentObject, ApiImageType, ApiSchedule, ApiSetType } from "@skylark-reference-apps/lib"
-import { Attachment, FieldSet, Records } from "airtable";
-import { COGNITO_REGION, COGNITO_USER_POOL_CLIENT_ID, COGNITO_USER_POOL_ID } from "./constants";
+import {
+  amplifyConfig,
+  ApiBaseObject,
+  ApiCreditUnexpanded,
+  ApiEntertainmentObject,
+  ApiPerson,
+  ApiRole,
+} from "@skylark-reference-apps/lib";
+import { FieldSet, Record, Records } from "airtable";
+import {
+  COGNITO_REGION,
+  COGNITO_USER_POOL_CLIENT_ID,
+  COGNITO_USER_POOL_ID,
+} from "./constants";
 import { signInToCognito } from "./cognito";
-import { createOrUpdateEntertainmentObject, getAlwaysSchedule, ApiEntertainmentObjectType, getImageTypes, createImage, getSetTypes } from "./api/skylark";
-import { getBrandsTable, getEpisodesTable, getMoviesTable, getSeasonsTable } from "./api/airtable";
+import {
+  createOrUpdateObject,
+  getAlwaysSchedule,
+  getImageTypes,
+  getSetTypes,
+  createOrUpdateRole,
+  createDynamicObject,
+} from "./api/skylark";
+import { getAllTables } from "./api/airtable";
+import { ApiObjectType, Metadata } from "./interfaces";
+import {
+  spotlightMovies,
+  homePageSlider,
+  mediaReferenceHomepage,
+  discoverCollection,
+  tarantinoMoviesCollection,
+} from "./additional-objects/sets";
+import { quentinTarantinoMovies } from "./additional-objects/dynamicObjects";
+import {
+  createOrUpdateSetAndContents,
+  parseAirtableImagesAndUploadToSkylark,
+} from "./utils";
 
 interface ApiEntertainmentObjectWithAirtableId extends ApiEntertainmentObject {
   airtableId: string;
-}
-
-interface Metadata {
-  schedules: {
-    always: ApiSchedule
-  };
-  imageTypes: ApiImageType[]
-  setTypes: ApiSetType[]
 }
 
 const config = amplifyConfig({
@@ -28,84 +51,174 @@ const config = amplifyConfig({
 
 Amplify.configure(config);
 
-const createEntertainmentObjectsInSkylark = (type: ApiEntertainmentObjectType, airtableRecords: Records<FieldSet>, metadata: Metadata, parents?: ApiEntertainmentObjectWithAirtableId[]) => {
-  const promises = airtableRecords.map(async({ fields, id }): Promise<ApiEntertainmentObjectWithAirtableId> => {
-    const parentObject = parents?.find(({ airtableId }) => fields.parent && (fields.parent as string[])[0] === airtableId);
-    const object: ApiEntertainmentObject = {
-      uid: "",
-      self: "",
-      title: fields?.title as string,
-      slug: fields?.slug as string,
-      title_short: fields?.title_short as string,
-      title_medium: fields?.title_medium as string,
-      title_long: fields?.title_long as string,
-      synopsis_short: fields?.synopsis_short as string,
-      synopsis_medium: fields?.synopsis_medium as string,
-      synopsis_long: fields?.synopsis_long as string,
-      release_date: fields?.release_date as string,
-      parent_url: parentObject?.self,
-      schedule_urls: [metadata.schedules.always.self],
-    }
-
-    if(type === "seasons") {
-      object.season_number = fields?.season_number as number
-      object.number_of_episodes = fields?.number_of_episodes as number
-    }
-
-    if(type === "episodes") {
-      object.episode_number = fields?.episode_number as number
-    }
-
-    const createdObject = await createOrUpdateEntertainmentObject(type, object);
-
-    const imageUrls = await Promise.all(Object.keys(fields).filter((key) => key.startsWith("image__")).map((key) => {
-      const [airtableImage] = fields[key] as Attachment[];
-      const imageSlug = key.replace("image__", "");
-      const imageType = metadata.imageTypes.find(({ slug }) => slug === imageSlug);
-      if (!imageType) {
-        throw new Error(`Invalid image type ${imageSlug} (${key})`);
-      }
-      return createImage(airtableImage.filename, airtableImage.url, createdObject.self, imageType.self, [metadata.schedules.always.self]);
-    }));
-
+const getPeopleAndRoleUrlsFromCredit = (
+  { fields: credit }: Record<FieldSet>,
+  people: (ApiPerson & { airtableId: string })[],
+  roles: (ApiRole & { airtableId: string })[]
+): ApiCreditUnexpanded | null => {
+  const person = people.find(
+    (p) => p.airtableId === (credit.person as string[])[0]
+  );
+  const role = roles.find((r) => r.airtableId === (credit.role as string[])[0]);
+  if (person && role) {
     return {
-      ...createdObject,
-      airtableId: id,
-      image_urls: imageUrls,
+      people_url: person?.self,
+      role_url: role?.self,
+    };
+  }
+  return null;
+};
+
+const createObjectsInSkylark = <T extends ApiBaseObject>(
+  type: ApiObjectType,
+  airtableRecords: Records<FieldSet>,
+  metadata: Metadata,
+  parents?: ApiEntertainmentObjectWithAirtableId[]
+) => {
+  const promises: Promise<T & { airtableId: string }>[] = airtableRecords.map(
+    async ({ fields, id }): Promise<T & { airtableId: string }> => {
+      const parentObject = parents?.find(
+        ({ airtableId }) =>
+          fields.parent && (fields.parent as string[])[0] === airtableId
+      );
+
+      const object = {
+        uid: "",
+        self: "",
+        name: fields?.name as string,
+        title: fields?.title as string,
+        slug: fields?.slug as string,
+        title_short: fields?.title_short as string,
+        title_medium: fields?.title_medium as string,
+        title_long: fields?.title_long as string,
+        synopsis_short: fields?.synopsis_short as string,
+        synopsis_medium: fields?.synopsis_medium as string,
+        synopsis_long: fields?.synopsis_long as string,
+        release_date: fields?.release_date as string,
+        parent_url: parentObject?.self,
+        schedule_urls: [metadata.schedules.always.self],
+        season_number: fields?.season_number as number,
+        number_of_episodes: fields?.number_of_episodes as number,
+        episode_number: fields?.episode_number as number,
+        credits: [] as ApiCreditUnexpanded[],
+      };
+
+      if (fields.credits) {
+        const credits = (fields.credits as string[]).map((creditId) =>
+          metadata.airtableCredits.find(
+            ({ id: airtableCreditId }) => airtableCreditId === creditId
+          )
+        );
+        const apiCredits = credits
+          .map(
+            (credit) =>
+              credit &&
+              getPeopleAndRoleUrlsFromCredit(
+                credit,
+                metadata.people,
+                metadata.roles
+              )
+          )
+          .filter((credit) => !!credit) as ApiCreditUnexpanded[];
+        object.credits = apiCredits;
+      }
+
+      const createdObject = await createOrUpdateObject<T>(type, object);
+
+      const imageUrls = await parseAirtableImagesAndUploadToSkylark<T>(
+        fields,
+        createdObject,
+        metadata
+      );
+
+      return {
+        ...createdObject,
+        airtableId: id,
+        image_urls: imageUrls,
+      };
     }
-  });
+  );
 
   return Promise.all(promises);
-}
+};
 
-const main = async() => {
+const main = async () => {
   await signInToCognito();
 
   const alwaysSchedule = await getAlwaysSchedule();
   const imageTypes = await getImageTypes();
   const setTypes = await getSetTypes();
 
-  const airtableBrands = await getBrandsTable();
-  const airtableSeasons = await getSeasonsTable();
-  const airtableEpisodes = await getEpisodesTable();
-  const airtableMovies = await getMoviesTable();
+  const airtable = await getAllTables();
 
   const metadata: Metadata = {
     schedules: {
       always: alwaysSchedule,
     },
     imageTypes,
-    setTypes,
-  }
+    people: [],
+    roles: [],
+    airtableCredits: airtable.credits,
+    set: {
+      types: setTypes,
+      metadata: airtable.setsMetadata.map(({ fields }) => fields),
+    },
+  };
 
-  const brands = await createEntertainmentObjectsInSkylark("brands", airtableBrands, metadata);
-  const seasons = await createEntertainmentObjectsInSkylark("seasons", airtableSeasons, metadata, brands);
-  await createEntertainmentObjectsInSkylark("episodes", airtableEpisodes, metadata, seasons);
-  await createEntertainmentObjectsInSkylark("movies", airtableMovies, metadata);
+  const roles = await Promise.all(
+    airtable.roles.map(async ({ fields, id }) => {
+      const role = await createOrUpdateRole(fields.title as string, [
+        metadata.schedules.always.self,
+      ]);
+      return {
+        ...role,
+        airtableId: id,
+      };
+    })
+  );
+  metadata.roles = roles;
+  const people = await createObjectsInSkylark<ApiPerson>(
+    "people",
+    airtable.people,
+    metadata
+  );
+  metadata.people = people;
 
+  const brands = await createObjectsInSkylark<ApiEntertainmentObject>(
+    "brands",
+    airtable.brands,
+    metadata
+  );
+  const seasons = await createObjectsInSkylark<ApiEntertainmentObject>(
+    "seasons",
+    airtable.seasons,
+    metadata,
+    brands
+  );
+  await createObjectsInSkylark<ApiEntertainmentObject>(
+    "episodes",
+    airtable.episodes,
+    metadata,
+    seasons
+  );
+  await createObjectsInSkylark<ApiEntertainmentObject>(
+    "movies",
+    airtable.movies,
+    metadata
+  );
 
-  console.log("clean")
-}
+  await createDynamicObject(quentinTarantinoMovies, metadata);
+
+  await createOrUpdateSetAndContents(spotlightMovies, metadata);
+  await createOrUpdateSetAndContents(homePageSlider, metadata);
+  await createOrUpdateSetAndContents(tarantinoMoviesCollection, metadata);
+  // discoverCollection needs the tarantinoMoviesCollection
+  await createOrUpdateSetAndContents(discoverCollection, metadata);
+  // Order matters, homepage is last as it includes the rail and slider
+  await createOrUpdateSetAndContents(mediaReferenceHomepage, metadata);
+
+  console.log("clean");
+};
 
 main().catch((err) => {
   // eslint-disable-next-line no-console

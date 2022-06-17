@@ -18,7 +18,6 @@ import {
 } from "@skylark-reference-apps/lib";
 import { useEffect } from "react";
 
-import { collectionThumbnails } from "../test-data";
 import { useHomepageSet } from "../hooks/useHomepageSet";
 
 const Home: NextPage = () => {
@@ -189,17 +188,6 @@ const Home: NextPage = () => {
 
           return <>{item.isExpanded && item.objectTitle}</>;
         })}
-
-      <div className="my-6 w-full">
-        <Rail
-          displayCount
-          header="Discover (this is hardcoded and not implemented)"
-        >
-          {collectionThumbnails.map((collection) => (
-            <CollectionThumbnail key={collection.title} {...collection} />
-          ))}
-        </Rail>
-      </div>
     </div>
   );
 };

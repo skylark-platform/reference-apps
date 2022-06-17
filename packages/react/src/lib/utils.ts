@@ -1,4 +1,9 @@
-import { getImageSrc, ImageTypes, ImageUrls, UnexpandedObjects } from "@skylark-reference-apps/lib";
+import {
+  getImageSrc,
+  ImageTypes,
+  ImageUrls,
+  UnexpandedObjects,
+} from "@skylark-reference-apps/lib";
 
 /**
  * getImageSrcAndSizeByWindow - returns the image src with the size set to the window height or width, whichever is more
