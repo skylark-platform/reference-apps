@@ -1,27 +1,21 @@
-import {
-  ApiPlaybackResponse,
-  ExpandedSkylarkObjects,
-  UnexpandedSkylarkObjects,
-} from "@skylark-reference-apps/lib";
+import { ApiPlaybackResponse } from "@skylark-reference-apps/lib";
 import axios from "axios";
 import useSWR from "swr";
 
 const assetUrlFetcher = (uid: string) =>
   axios
     .get<ApiPlaybackResponse>(`/api/playback/${uid}`)
-    .then((res) => res.data.playback_url);
+    .then((res) => res.data);
 
-export const useAssetPlaybackUrl = (
-  items: ExpandedSkylarkObjects | UnexpandedSkylarkObjects | undefined
-) => {
-  const { data: playbackUrl, error } = useSWR<string, Error>(
-    items?.objects[0].uid,
+export const useAssetPlaybackUrl = (uid?: string) => {
+  const { data, error } = useSWR<ApiPlaybackResponse, Error>(
+    uid,
     assetUrlFetcher
   );
 
   return {
-    playbackUrl,
+    playbackUrl: data?.playback_url,
     isError: error,
-    isLoading: !error && !playbackUrl,
+    isLoading: !error && !data,
   };
 };
