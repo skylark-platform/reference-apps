@@ -64,7 +64,7 @@ jobs:
           echo "::set-output name=ref::$GitRef"
           echo "::set-output name=branch::$GitBranch"
       - uses: ./.github/actions/parse-domain-from-url
-        if: ${{ inputs.launcher-url != "" }}
+        if: ${{ inputs.launcher-url != '' }}
         id: sanitize-url
         with:
           url: ${{ inputs.launcher-url }}
