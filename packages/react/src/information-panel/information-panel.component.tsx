@@ -54,7 +54,10 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
           <span className="mt-4 mb-2 hidden w-36 border-b border-gray-800 md:flex" />
           <List
             contents={[
-              <span className="flex items-center" key={"duration-icon"}>
+              <span
+                className="flex items-center"
+                key={`duration-icon-for-${title}`}
+              >
                 <MdOutlineWatchLater className="mt-0 mr-2" size={25} />
                 {`${duration}m`}
               </span>,
@@ -82,11 +85,17 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
               )}
             </div>
           )}
-          {[genres, themes].map(
-            (contents) =>
-              contents && (
-                <div className="-my-0.5 text-gray-500" key={contents?.join("")}>
-                  <List contents={contents} />
+          {[
+            { key: "genres", items: genres },
+            { key: "themes", items: themes },
+          ].map(
+            ({ key, items }) =>
+              items && (
+                <div
+                  className="-my-0.5 text-gray-500"
+                  key={`${key}-${items?.join("")}`}
+                >
+                  <List contents={items} />
                 </div>
               )
           )}
