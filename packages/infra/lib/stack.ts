@@ -50,5 +50,9 @@ export class SkylarkReferenceAppStack extends cdk.Stack {
     const defaultLambda = nextJsApp.defaultNextLambda.node
       .defaultChild as cdk.CfnResource;
     defaultLambda.applyRemovalPolicy(cdk.RemovalPolicy.RETAIN);
+    const apiLambda = nextJsApp.nextApiLambda?.node.defaultChild as
+      | cdk.CfnResource
+      | undefined;
+    apiLambda?.applyRemovalPolicy(cdk.RemovalPolicy.RETAIN);
   }
 }
