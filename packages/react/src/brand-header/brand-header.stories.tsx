@@ -17,7 +17,7 @@ export const Default = Template.bind({});
 Default.args = {
   title: "Game of Thrones",
   numberOfSeasons: 8,
-  releaseDate: 2011,
+  releaseDate: "2011",
   rating: "18+",
   description:
     "Summers span decades. Winters can last a lifetime. And the struggle for the Iron Throne begins.",

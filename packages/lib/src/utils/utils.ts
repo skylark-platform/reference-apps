@@ -107,3 +107,10 @@ export const formatReleaseDate = (
   date?: string,
   format = "MMMM D, YYYY"
 ): string => (date ? dayjs(date).format(format) : "");
+
+/**
+ * formatYear - takes a date, returns the year
+ * @param date date string
+ * @returns string, empty if the date is empty
+ */
+export const formatYear = (date?: string) => formatReleaseDate(date, "YYYY");

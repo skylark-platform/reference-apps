@@ -17,7 +17,7 @@ Default.args = {
   title: "StreamTV",
 };
 Default.parameters = {
-  chromatic: { delay: 2000 }, // To let animation finish
+  chromatic: { disableSnapshot: true },
 };
 
 export const WithLogo = Template.bind({});
