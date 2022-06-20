@@ -4,6 +4,7 @@ import { wrap } from "popmotion";
 import {
   convertEntertainmentTypeToString,
   EntertainmentType,
+  formatYear,
 } from "@skylark-reference-apps/lib";
 import { MdAdd, MdPlayCircleFilled } from "react-icons/md";
 import { CarouselButton } from "./carousel-button.component";
@@ -49,6 +50,7 @@ export const Carousel: React.FC<CarouselProps> = ({
 }) => {
   const [loadedImages, setLoadedImages] = useState<string[]>([]);
   const [[page, direction], setPage] = useState([0, 0]);
+  const [areImagesLoaded, setImagesLoaded] = useState(false);
   const itemIndex = wrap(0, items.length, page);
 
   const paginate = (newDirection: number) => {
@@ -56,17 +58,21 @@ export const Carousel: React.FC<CarouselProps> = ({
   };
 
   useEffect(() => {
-    // Load images before they are active
-    items
-      .filter(({ image: src }) => !loadedImages.includes(src))
-      .forEach(({ image: src }) => {
+    const loadImage = (url: string) =>
+      new Promise((resolve, reject) => {
         const image = new Image();
+        image.src = url;
         image.addEventListener("load", () => {
-          setLoadedImages([...loadedImages, src]);
+          setLoadedImages([...loadedImages, url]);
+          resolve(url);
         });
-        image.src = src;
+        image.onerror = (err) => reject(err);
       });
-  }, [items, loadedImages, setLoadedImages]);
+
+    Promise.all(items.map(({ image }) => loadImage(image)))
+      .then(() => setImagesLoaded(true))
+      .catch((error) => new Error(`Failed to load images: ${error as string}`));
+  }, [items]);
 
   useEffect(() => {
     if (activeItem) {
@@ -87,7 +93,7 @@ export const Carousel: React.FC<CarouselProps> = ({
   }, [page, changeInterval, activeItem, items.length]);
 
   const { image, title, releaseDate, type, duration, href } = items[itemIndex];
-  const activeImageHasLoaded = loadedImages.includes(image);
+  const activeImageHasLoaded = areImagesLoaded || loadedImages.includes(image);
 
   return (
     <div
@@ -129,7 +135,7 @@ export const Carousel: React.FC<CarouselProps> = ({
               <List
                 contents={[
                   duration,
-                  releaseDate,
+                  formatYear(releaseDate),
                   convertEntertainmentTypeToString(type),
                 ]}
                 highlightFirst

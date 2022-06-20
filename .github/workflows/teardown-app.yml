@@ -64,6 +64,7 @@ jobs:
           echo "::set-output name=ref::$GitRef"
           echo "::set-output name=branch::$GitBranch"
       - uses: ./.github/actions/parse-domain-from-url
+        if: ${{ inputs.launcher-url != '' }}
         id: sanitize-url
         with:
           url: ${{ inputs.launcher-url }}
@@ -81,6 +82,6 @@ jobs:
         with:
           stack-name: ${{ github.event.inputs.stack-name || '' }}
           git-branch: ${{ !inputs.launcher-url && needs.prepare.outputs.git-branch || '' }}
-          base-domain: ${{ needs.prepare.outputs.domain || (needs.prepare.outputs.git-branch == 'main' && 'skylark-dev.skylarkplatform.io' || 'legacy-skylark-development.skylarkplatform.io') }}
-          aws-access-key-id: ${{ steps.mask.outputs.aws-access-key-id || (needs.prepare.outputs.git-branch == 'main' && secrets.AWS_ACCESS_KEY_ID_SKYLARK_DEV || secrets.AWS_ACCESS_KEY_ID_LEGACY_SKYLARK_DEVELOPMENT) }}
-          aws-secret-access-key: ${{ steps.mask.outputs.aws-secret-access-key || (needs.prepare.outputs.git-branch == 'main' && secrets.AWS_SECRET_ACCESS_KEY_SKYLARK_DEV || secrets.AWS_SECRET_ACCESS_KEY_LEGACY_SKYLARK_DEVELOPMENT) }}
+          base-domain: ${{ needs.prepare.outputs.domain || 'skylark-dev.skylarkplatform.io' }}
+          aws-access-key-id: ${{ steps.mask.outputs.aws-access-key-id || secrets.AWS_ACCESS_KEY_ID_SKYLARK_DEV }}
+          aws-secret-access-key: ${{ steps.mask.outputs.aws-secret-access-key || secrets.AWS_SECRET_ACCESS_KEY_SKYLARK_DEV }}

@@ -21,6 +21,7 @@ const fieldsToExpand = {
   rating_urls: {},
   theme_urls: {},
   genre_urls: {},
+  items: {},
 };
 
 const fields = {
@@ -40,6 +41,7 @@ const fields = {
   synopsis_long: {},
   episode_number: {},
   season_number: {},
+  release_date: {},
   credits: {
     character: {},
     role_url: {
@@ -56,7 +58,7 @@ const fields = {
     title_medium: {},
     title_long: {},
     season_number: {},
-    year: {},
+    release_date: {},
     parent_url: {
       self: {},
       title: {},
@@ -75,6 +77,7 @@ const fields = {
   genre_urls: {
     name: {},
   },
+  items: {},
 };
 
 const apiQuery = createSkylarkApiQuery({

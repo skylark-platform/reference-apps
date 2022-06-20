@@ -7,8 +7,8 @@ import { useTailwindBreakpoint } from "./useTailwindBreakpoint";
  * @returns {DeviceTypes}
  */
 export const useDeviceType = (): DeviceTypes => {
-  const [breakpoint] = useTailwindBreakpoint();
-  const isSmartphone = ["", "sm"].includes(breakpoint);
+  const [breakpoint] = useTailwindBreakpoint("");
+  const isSmartphone = ["", "sm"].includes(breakpoint as string);
   const device: DeviceTypes = isSmartphone ? "smartphone" : "pc";
   return device;
 };

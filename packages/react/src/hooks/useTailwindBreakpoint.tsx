@@ -29,8 +29,10 @@ const convertWidthToBreakpoint = (width: number) => {
   return "";
 };
 
-export const useTailwindBreakpoint = () => {
-  const [breakpoint, setBreakpoint] = useState("");
+export const useTailwindBreakpoint = (initialValue?: string) => {
+  const [breakpoint, setBreakpoint] = useState<string | undefined>(
+    initialValue
+  );
 
   const handleResize = () => {
     const newBreakpoint = convertWidthToBreakpoint(window.innerWidth);

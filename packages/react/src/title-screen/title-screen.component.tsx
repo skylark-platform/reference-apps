@@ -1,40 +1,39 @@
 import { AnimatePresence, motion } from "framer-motion";
-import React from "react";
-import { MdStream } from "react-icons/md";
+import React, { useState } from "react";
 
-interface LoadingScreenProps {
-  show: boolean;
+interface TitleScreenProps {
   title: string;
-  onAnimationComplete?: () => void;
-  onExitComplete?: () => void;
+  logo?: JSX.Element;
+  exitBackgroundColor?: string;
 }
 
 const durationToShowAfterAnimationComplete = 0.4;
-
-const container = {
-  exit: {
-    opacity: 0,
-    transition: {
-      delay: durationToShowAfterAnimationComplete,
-      duration: 1,
-    },
-    backgroundColor: "#5B45CE",
-  },
-  show: { opacity: 1 },
-};
 
 const character = {
   hidden: { opacity: 0, y: 50 },
   show: { opacity: 1, y: 0 },
 };
 
-export const LoadingScreen: React.FC<LoadingScreenProps> = ({
-  show = true,
-  title = "StreamTV",
-  onExitComplete,
-  onAnimationComplete,
+export const TitleScreen: React.FC<TitleScreenProps> = ({
+  title,
+  logo,
+  exitBackgroundColor,
+  children,
 }) => {
   const staggerCharacter = 0.7 / title.length;
+
+  const container = {
+    exit: {
+      opacity: 0,
+      transition: {
+        delay: durationToShowAfterAnimationComplete,
+        duration: 1,
+      },
+      backgroundColor: exitBackgroundColor,
+    },
+    show: { opacity: 1 },
+  };
+
   const text = {
     hidden: { opacity: 0 },
     show: {
@@ -55,12 +54,13 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
     },
   };
 
-  const skylarkDemoText = {
+  const childrenVariants = {
     hidden: { opacity: 0, y: -30 },
     show: {
       opacity: 1,
       y: 0,
       transition: {
+        // Ensure it runs after the title animation
         delay:
           title.length * staggerCharacter +
           text.show.transition.delayChildren +
@@ -76,8 +76,10 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
     },
   };
 
+  const [show, setShow] = useState(true);
+
   return (
-    <AnimatePresence onExitComplete={onExitComplete}>
+    <AnimatePresence>
       {show && (
         <motion.div
           className="fixed inset-0 z-[999] flex flex-col items-center justify-center gap-y-1 bg-gray-900 font-display text-white sm:gap-y-2 lg:gap-y-4"
@@ -92,12 +94,14 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
             initial="hidden"
             variants={text}
           >
-            <motion.span
-              className="mr-2 inline-block md:mr-4"
-              variants={character}
-            >
-              <MdStream className="h-12 w-12 rounded-md bg-purple-500 sm:h-14 sm:w-14 lg:h-16 lg:w-16" />
-            </motion.span>
+            {logo && (
+              <motion.span
+                className="mr-2 inline-block md:mr-4"
+                variants={character}
+              >
+                {logo}
+              </motion.span>
+            )}
             {title.split("").map((item, i) => (
               <motion.span
                 className="inline-block"
@@ -108,20 +112,20 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
               </motion.span>
             ))}
           </motion.p>
-          <motion.p
+          <motion.div
             animate="show"
-            className="flex items-center text-xs text-gray-500 sm:text-sm lg:text-lg"
+            className="flex flex-col items-center justify-center"
             exit="exit"
             initial="hidden"
-            variants={skylarkDemoText}
-            onAnimationComplete={onAnimationComplete}
+            variants={childrenVariants}
+            onAnimationComplete={() => setShow(false)}
           >
-            {`by Skylark`}
-          </motion.p>
+            {children}
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
   );
 };
 
-export default LoadingScreen;
+export default TitleScreen;

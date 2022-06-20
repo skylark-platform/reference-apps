@@ -1,5 +1,10 @@
 import { Credits, ImageUrls } from "../interfaces";
-import { getCreditsByType, getImageSrc, getTitleByOrder } from "./utils";
+import {
+  formatReleaseDate,
+  getCreditsByType,
+  getImageSrc,
+  getTitleByOrder,
+} from "./utils";
 
 describe("utils", () => {
   describe("getTitleByOrder", () => {
@@ -196,6 +201,25 @@ describe("utils", () => {
     it("returns an empty array as credits is undefined", () => {
       const got = getCreditsByType(undefined, "Actor");
       expect(got).toEqual([]);
+    });
+  });
+
+  describe("formatReleaseDate", () => {
+    const date = "1/1/2000";
+
+    it("returns date in the default format when a format isn't given", () => {
+      const formattedDate = formatReleaseDate(date);
+      expect(formattedDate).toEqual("January 1, 2000");
+    });
+
+    it("returns date in the given format when a format is given", () => {
+      const formattedDate = formatReleaseDate(date, "YYYY");
+      expect(formattedDate).toEqual("2000");
+    });
+
+    it("returns empty string when date is undefined", () => {
+      const formattedDate = formatReleaseDate(undefined);
+      expect(formattedDate).toEqual("");
     });
   });
 });
