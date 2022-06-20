@@ -58,11 +58,7 @@ const fetchPlaybackUrl = async (req: NextApiRequest, res: NextApiResponse) => {
   if (error) {
     return res.status(500).json(error);
   }
-  if (
-    !data.objects ||
-    data.objects.length === 0 ||
-    !data.objects[0]?.mux.tokenised_url
-  ) {
+  if (!data?.objects?.[0]?.mux.tokenised_url) {
     return res.status(404).json({ error: "Playback URL not found in Skylark" });
   }
   return res
