@@ -8,6 +8,7 @@ import {
 } from "@skylark-reference-apps/react";
 import {
   Episode,
+  formatReleaseDate,
   getCreditsByType,
   getImageSrc,
   getTitleByOrder,
@@ -140,7 +141,7 @@ const EpisodePage: NextPage = () => {
                     icon: <MdCalendarToday />,
                     header: "Released",
                     body: episode.parent?.isExpanded
-                      ? `${(episode.parent as Season)?.year || ""}`
+                      ? formatReleaseDate(episode.releaseDate)
                       : "",
                   },
                 ]}

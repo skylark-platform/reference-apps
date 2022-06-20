@@ -318,6 +318,7 @@ describe("skylarkApiHelpers", () => {
       synopsis_long: "Long synopsis",
       self: "/api/unknown-object",
       slug: "object-title",
+      release_date: "1/1/2000",
     };
 
     const defaultExpectedObject: SkylarkObject = {
@@ -346,6 +347,7 @@ describe("skylarkApiHelpers", () => {
       credits: undefined,
       genres: undefined,
       parent: undefined,
+      releaseDate: "1/1/2000",
     };
 
     it("parses a SkylarkObject with no items", () => {
@@ -475,7 +477,6 @@ describe("skylarkApiHelpers", () => {
         self: "/api/seasons/1",
         season_number: 1,
         number_of_episodes: 10,
-        year: 2015,
       };
 
       const parsedObject = parseSkylarkObject(obj);
@@ -483,7 +484,6 @@ describe("skylarkApiHelpers", () => {
       expect(parsedObject).toHaveProperty("type", "season");
       expect(parsedObject).toHaveProperty("numberOfEpisodes", 10);
       expect(parsedObject).toHaveProperty("number", 1);
-      expect(parsedObject).toHaveProperty("year", 2015);
     });
 
     it("parses additional Brand fields when the self URL starts with /api/brand", () => {

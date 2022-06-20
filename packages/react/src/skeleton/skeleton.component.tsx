@@ -72,6 +72,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
       {!show && children && (
         <motion.div
           animate={{ opacity: 1 }}
+          className="contents w-full"
           initial={{ opacity: 0 }}
           transition={{ duration: 0.4 }}
         >

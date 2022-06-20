@@ -68,7 +68,7 @@ const fields = {
     synopsis_medium: {},
     season_number: {},
     episode_number: {},
-    year: {},
+    release_date: {},
     items: {
       self: {},
       slug: {},

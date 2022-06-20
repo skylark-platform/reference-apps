@@ -264,6 +264,7 @@ export const parseSkylarkObject = (
       : undefined,
     ratings: obj.rating_urls ? parseSkylarkRatings(obj.rating_urls) : undefined,
     titleSort: obj.title_sort || "",
+    releaseDate: obj.release_date || "",
     // TODO add these
     tags: [],
   };
@@ -300,7 +301,6 @@ export const parseSkylarkObject = (
         type: "season",
         number: obj.season_number || undefined,
         numberOfEpisodes: obj.number_of_episodes || undefined,
-        year: obj.year || undefined,
       };
       return season;
     }

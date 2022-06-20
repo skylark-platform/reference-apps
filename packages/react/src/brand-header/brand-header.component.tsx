@@ -1,3 +1,4 @@
+import { formatYear } from "@skylark-reference-apps/lib";
 import React from "react";
 import { MdVideoLibrary } from "react-icons/md";
 import { List } from "../list";
@@ -5,7 +6,7 @@ import { List } from "../list";
 interface BrandHeaderProps {
   title: string;
   numberOfSeasons: number;
-  releaseDate?: number;
+  releaseDate?: string;
   rating: string;
   description?: string;
 }
@@ -33,7 +34,7 @@ export const BrandHeader: React.FC<BrandHeaderProps> = ({
                 }`}
               </span>
             ) : undefined,
-            releaseDate,
+            formatYear(releaseDate),
             rating,
           ]}
           highlightFirst
