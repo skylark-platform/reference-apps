@@ -57,16 +57,15 @@ jobs:
         with:
           git-branch: ${{ needs.prepare.outputs.git-branch }}
           # hardcode domains until more accounts are supported
-          base-domain: ${{ needs.prepare.outputs.git-branch == 'main' && 'skylark-dev.skylarkplatform.io' || 'legacy-skylark-development.skylarkplatform.io' }}
-          # TODO replace this with an input for workflow-dispatch / showcase environment
+          base-domain: skylark-dev.skylarkplatform.io
           skylark-api-url: https://api.showcase-test.eng-james-wallis.skylarkplatform.io
           cognito-aws-region: ${{ secrets.NEXT_PUBLIC_COGNITO_AWS_REGION }}
           cognito-client-id: ${{ secrets.NEXT_PUBLIC_COGNITO_CLIENT_ID }}
           cognito-user-pool-id: ${{ secrets.NEXT_PUBLIC_COGNITO_USER_POOL_ID }}
           cognito-email: ${{ secrets.COGNITO_EMAIL }}
           cognito-password: ${{ secrets.COGNITO_PASSWORD }}
-          aws-access-key-id: ${{ needs.prepare.outputs.git-branch == 'main' && secrets.AWS_ACCESS_KEY_ID_SKYLARK_DEV || secrets.AWS_ACCESS_KEY_ID_LEGACY_SKYLARK_DEVELOPMENT }}
-          aws-secret-access-key: ${{ needs.prepare.outputs.git-branch == 'main' && secrets.AWS_SECRET_ACCESS_KEY_SKYLARK_DEV || secrets.AWS_SECRET_ACCESS_KEY_LEGACY_SKYLARK_DEVELOPMENT }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_SKYLARK_DEV }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_SKYLARK_DEV }}
 
   signal:
     name: Signal
