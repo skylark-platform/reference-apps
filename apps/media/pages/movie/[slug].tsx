@@ -3,6 +3,7 @@ import {
   InformationPanel,
   MetadataPanel,
   Player,
+  Skeleton,
 } from "@skylark-reference-apps/react";
 import {
   getCreditsByType,
@@ -59,80 +60,82 @@ const MoviePage: NextPage = () => {
       <Head>
         <title>{`${titleShortToLong || "Movie page"} - StreamTV`}</title>
       </Head>
-      <div className="flex h-full w-full justify-center pb-10 md:pb-16">
-        <Player
-          poster={getImageSrc(movie?.images, "Thumbnail")}
-          src={playerSrc}
-          videoId="1"
-          videoTitle={titleShortToLong || ""}
-        />
-      </div>
-      {movie && (
-        <div className="flex w-full flex-col px-gutter sm:px-sm-gutter md:flex-row md:py-2 lg:px-lg-gutter xl:px-xl-gutter">
-          <div className="h-full w-full pb-4 md:w-7/12">
-            <InformationPanel
-              availableUntil={12}
-              description={
-                movie.synopsis.long ||
-                movie.synopsis.medium ||
-                movie.synopsis.short
-              }
-              duration={57}
-              genres={genres}
-              parentTitles={[
-                getTitleByOrder(parentTitle || undefined, [
-                  "long",
-                  "medium",
-                  "short",
-                ]),
-              ]}
-              rating={
-                movie?.ratings?.isExpanded
-                  ? movie.ratings.items?.[0]?.title
-                  : undefined
-              }
-              themes={themes}
-              title={titleLongToShort || ""}
-            />
-          </div>
-          <span className="flex border-gray-800 bg-gray-900 md:mx-3 md:border-r" />
-          <div className="h-full w-full pt-4 pl-1 sm:pl-5 md:w-5/12">
-            <div className="flex justify-center">
-              <span className="mb-4 w-4/5 border-b border-gray-800 md:hidden" />
-            </div>
-            <MetadataPanel
-              content={[
-                {
-                  icon: <MdRecentActors />,
-                  header: "Key Cast",
-                  body: getCreditsByType(movie.credits, "Actor").map(
-                    (credit) => credit?.peopleUrl?.name || ""
-                  ),
-                },
-                {
-                  icon: <MdMovie />,
-                  header: "Directors",
-                  body: getCreditsByType(movie.credits, "Director").map(
-                    (credit) => credit?.peopleUrl?.name || ""
-                  ),
-                },
-                {
-                  icon: <MdMode />,
-                  header: "Writers",
-                  body: getCreditsByType(movie.credits, "Writer").map(
-                    (credit) => credit?.peopleUrl?.name || ""
-                  ),
-                },
-                {
-                  icon: <MdCalendarToday />,
-                  header: "Released",
-                  body: "10 April 2011",
-                },
-              ]}
-            />
-          </div>
+      <Skeleton show={!movie}>
+        <div className="flex h-full w-full justify-center pb-10 md:pb-16">
+          <Player
+            poster={getImageSrc(movie?.images, "Thumbnail")}
+            src={playerSrc}
+            videoId="1"
+            videoTitle={titleShortToLong || ""}
+          />
         </div>
-      )}
+        {movie && (
+          <div className="flex w-full flex-col px-gutter sm:px-sm-gutter md:flex-row md:py-2 lg:px-lg-gutter xl:px-xl-gutter">
+            <div className="h-full w-full pb-4 md:w-7/12">
+              <InformationPanel
+                availableUntil={12}
+                description={
+                  movie.synopsis.long ||
+                  movie.synopsis.medium ||
+                  movie.synopsis.short
+                }
+                duration={57}
+                genres={genres}
+                parentTitles={[
+                  getTitleByOrder(parentTitle || undefined, [
+                    "long",
+                    "medium",
+                    "short",
+                  ]),
+                ]}
+                rating={
+                  movie?.ratings?.isExpanded
+                    ? movie.ratings.items?.[0]?.title
+                    : undefined
+                }
+                themes={themes}
+                title={titleLongToShort || ""}
+              />
+            </div>
+            <span className="flex border-gray-800 bg-gray-900 md:mx-3 md:border-r" />
+            <div className="h-full w-full pt-4 pl-1 sm:pl-5 md:w-5/12">
+              <div className="flex justify-center">
+                <span className="mb-4 w-4/5 border-b border-gray-800 md:hidden" />
+              </div>
+              <MetadataPanel
+                content={[
+                  {
+                    icon: <MdRecentActors />,
+                    header: "Key Cast",
+                    body: getCreditsByType(movie.credits, "Actor").map(
+                      (credit) => credit?.peopleUrl?.name || ""
+                    ),
+                  },
+                  {
+                    icon: <MdMovie />,
+                    header: "Directors",
+                    body: getCreditsByType(movie.credits, "Director").map(
+                      (credit) => credit?.peopleUrl?.name || ""
+                    ),
+                  },
+                  {
+                    icon: <MdMode />,
+                    header: "Writers",
+                    body: getCreditsByType(movie.credits, "Writer").map(
+                      (credit) => credit?.peopleUrl?.name || ""
+                    ),
+                  },
+                  {
+                    icon: <MdCalendarToday />,
+                    header: "Released",
+                    body: "10 April 2011",
+                  },
+                ]}
+              />
+            </div>
+          </div>
+        )}
+      </Skeleton>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { MdArrowForward, MdArrowBack } from "react-icons/md";
 import { useDebouncedCallback } from "use-debounce";
-import { useTailwindBreakpoint } from "../hooks";
+import { useNumberOfThumbnailsByBreakpoint } from "../hooks";
 
 interface RailProps {
   initial?: number;
@@ -39,10 +39,9 @@ export const Rail: React.FC<RailProps> = ({
   const numChildren = React.Children.toArray(children).length;
 
   const myRef = useRef<HTMLDivElement>(null);
-  const [tailwindBreakpoint] = useTailwindBreakpoint();
   const [showPreviousButton, setShowPreviousButton] = useState(false);
   const [showNextButton, setShowNextButton] = useState(true);
-  const [numChildrenOnScreen, setNumChildrenOnScreen] = useState(2);
+  const numChildrenOnScreen = useNumberOfThumbnailsByBreakpoint();
 
   const debouncedOnScroll = useDebouncedCallback((e: Element) => {
     const { scrollWidth, scrollLeft, clientWidth } = e;
@@ -84,31 +83,6 @@ export const Rail: React.FC<RailProps> = ({
       });
     }
   }, []);
-
-  useEffect(() => {
-    // The actual number is determined in CSS using the width
-    // This function helps decide the amount skipped when next/previous buttons are used
-    let numToShow: number;
-    switch (tailwindBreakpoint) {
-      case "":
-      case "sm":
-        numToShow = 2;
-        break;
-      case "md":
-        numToShow = 3;
-        break;
-      case "lg":
-        numToShow = 4;
-        break;
-      case "xl":
-        numToShow = 5;
-        break;
-      default:
-        numToShow = 6;
-        break;
-    }
-    setNumChildrenOnScreen(numToShow);
-  }, [tailwindBreakpoint]);
 
   return (
     <div className="w-full">
