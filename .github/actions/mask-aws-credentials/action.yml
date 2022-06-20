@@ -16,9 +16,13 @@ runs:
       id: mask
       with:
         script: |
-          const accessKeyId = context.payload.inputs["aws-access-key-id"];
-          const secretAccessKey = context.payload.inputs["aws-secret-access-key"];
-          core.setSecret(accessKeyId);
-          core.setSecret(secretAccessKey);
-          core.setOutput("aws-access-key-id", accessKeyId);
-          core.setOutput("aws-secret-access-key", secretAccessKey);
+          const accessKeyId = context.payload.inputs?.["aws-access-key-id"];
+          const secretAccessKey = context.payload.inputs?.["aws-secret-access-key"];
+          if (accessKeyId) {
+            core.setSecret(accessKeyId);
+            core.setOutput("aws-access-key-id", accessKeyId);
+          }
+          if (secretAccessKey) {
+            core.setSecret(secretAccessKey);
+            core.setOutput("aws-secret-access-key", secretAccessKey);
+          }
