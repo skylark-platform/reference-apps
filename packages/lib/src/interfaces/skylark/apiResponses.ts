@@ -4,14 +4,18 @@ export interface ApiBaseObject {
   uid: string;
   self: string;
   slug: string;
+  schedule_urls?: string[];
 }
 
-export interface ApiImage {
-  uid: string;
-  self: string;
+export interface ApiImage extends ApiBaseObject {
+  title: string;
+  slug: never;
   url: string;
   url_path: string;
   image_type: string;
+  image_type_url: string;
+  image_location: string;
+  content_url: string;
 }
 
 export type ApiImageUrls = string[] | ApiImage[];
@@ -68,7 +72,6 @@ export interface ApiEntertainmentObject extends ApiBaseObject {
   title_sort?: string;
   content_url?: never;
   parent_url?: ApiEntertainmentObject | string;
-  schedule_urls?: string[];
 }
 
 export interface ApiSetObject {

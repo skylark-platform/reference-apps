@@ -67,10 +67,27 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_SKYLARK_DEV }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_SKYLARK_DEV }}
 
+  ingestor:
+    name: Content Ingestor
+    runs-on: ubuntu-latest
+    needs: [prepare, deploy]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/run-ingestor
+        with:
+          airtable-api-key: ${{ secrets.AIRTABLE_API_KEY }}
+          airtable-base-id: ${{ secrets.AIRTABLE_BASE_ID }}
+          skylark-api-url: https://api.showcase-test.eng-james-wallis.skylarkplatform.io
+          cognito-aws-region: ${{ secrets.NEXT_PUBLIC_COGNITO_AWS_REGION }}
+          cognito-client-id: ${{ secrets.NEXT_PUBLIC_COGNITO_CLIENT_ID }}
+          cognito-user-pool-id: ${{ secrets.NEXT_PUBLIC_COGNITO_USER_POOL_ID }}
+          cognito-email: ${{ secrets.COGNITO_EMAIL }}
+          cognito-password: ${{ secrets.COGNITO_PASSWORD }}
+
   signal:
     name: Signal
     runs-on: ubuntu-latest
-    needs: deploy
+    needs: [deploy, ingestor]
     if: always()
     steps:
       - uses: actions/github-script@v6

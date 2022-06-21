@@ -9,13 +9,31 @@ import {
 } from "@skylark-reference-apps/lib";
 import { Record, FieldSet } from "airtable";
 
+export interface ApiEntertainmentObjectWithAirtableId
+  extends ApiEntertainmentObject {
+  airtableId: string;
+}
+
+export interface Airtables {
+  brands: Record<FieldSet>[];
+  seasons: Record<FieldSet>[];
+  episodes: Record<FieldSet>[];
+  movies: Record<FieldSet>[];
+  roles: Record<FieldSet>[];
+  people: Record<FieldSet>[];
+  credits: Record<FieldSet>[];
+  setsMetadata: Record<FieldSet>[];
+}
+
 export type ApiObjectType =
   | "brands"
   | "seasons"
   | "episodes"
   | "movies"
   | "people"
-  | "roles";
+  | "roles"
+  | "images"
+  | "computed-scheduled-items";
 
 export interface SetConfig extends Partial<ApiEntertainmentObject> {
   title: string;

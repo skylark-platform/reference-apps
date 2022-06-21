@@ -1,8 +1,14 @@
 import Airtable from "airtable";
-import { AIRTABLE_API_KEY, AIRTABLE_BASE_ID } from "../constants";
+import { Airtables } from "../interfaces";
+import { AIRTABLE_API_KEY, AIRTABLE_BASE_ID } from "./constants";
 
 const base = new Airtable({ apiKey: AIRTABLE_API_KEY }).base(AIRTABLE_BASE_ID);
 
+/**
+ * getTable - fetches a table from Airtable and filters empty rows
+ * @param name - the table name
+ * @returns table contents
+ */
 const getTable = async (name: string) => {
   const table = base(name);
   const data = await table.select().all();
@@ -17,7 +23,11 @@ const getTable = async (name: string) => {
   return dataWithoutEmptyRecords;
 };
 
-export const getAllTables = async () => {
+/**
+ * Fetches and returns the tables from Airtable
+ * @returns Object containing Airtable tables
+ */
+export const getAllTables = async (): Promise<Airtables> => {
   const tables = [
     "brands",
     "seasons",

@@ -1,3 +1,7 @@
+/**
+ * Specs for Sets that are created by the ingestor outside of Airtable
+ * (Usually you'd create these through the CMS)
+ */
 import { SetConfig } from "../interfaces";
 import { quentinTarantinoMovies } from "./dynamicObjects";
 

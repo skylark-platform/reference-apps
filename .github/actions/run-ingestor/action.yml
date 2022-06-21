@@ -1,0 +1,52 @@
+name: Run Content Ingestor
+description: Runs the content ingestor on a given Skylark
+inputs:
+  airtable-base-id:
+    description: The Airtable Base to use
+    required: false
+  airtable-api-key:
+    description: The Airtable API key
+    required: false
+  skylark-api-url:
+    description: The Skylark API URL
+    required: true
+  cognito-aws-region:
+    description: The Cognito AWS Region
+    required: true
+  cognito-client-id:
+    description: The Cognito Client ID
+    required: true
+  cognito-user-pool-id:
+    description: The Cognito User Pool ID
+    required: true
+  cognito-email:
+    description: The Cognito Email
+    required: true
+  cognito-password:
+    description: The Cognito Password
+    required: true
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 14
+        cache: yarn
+    - name: Install deps
+      shell: bash
+      working-directory: ${{ github.action_path }}/../../../
+      run: yarn
+    - name: Run ingestor
+      shell: bash
+      working-directory: ${{ github.action_path }}/../../../packages/ingestor
+      env:
+        AIRTABLE_API_KEY: ${{ inputs.airtable-api-key }}
+        AIRTABLE_BASE_ID: ${{ inputs.airtable-base-id }}
+        SKYLARK_API_URL: ${{ inputs.skylark-api-url }}
+        COGNITO_EMAIL: ${{ inputs.cognito-email }}
+        COGNITO_PASSWORD: ${{ inputs.cognito-password }}
+        COGNITO_AWS_REGION: ${{ inputs.cognito-aws-region }}
+        COGNITO_CLIENT_ID: ${{ inputs.cognito-client-id }}
+        COGNITO_USER_POOL_ID: ${{ inputs.cognito-user-pool-id }}
+      run: |
+        yarn ingest
