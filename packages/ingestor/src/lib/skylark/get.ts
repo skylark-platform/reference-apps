@@ -2,6 +2,9 @@ import {
   ApiSchedule,
   ApiImageType,
   ApiSetType,
+  ApiSetItem,
+  ApiEntertainmentObject,
+  SetTypes,
 } from "@skylark-reference-apps/lib";
 import { authenticatedSkylarkRequest } from "./api";
 
@@ -80,6 +83,47 @@ export const getImageTypes = async (): Promise<ApiImageType[]> => {
 export const getSetTypes = async (): Promise<ApiSetType[]> => {
   const res = await authenticatedSkylarkRequest<{ objects?: ApiSetType[] }>(
     "/api/set-types/"
+  );
+  return res.data?.objects || [];
+};
+
+/**
+ * getSetBySlug - Queries a Skylark set using a slug
+ * @param setType - the set type
+ * @param slug - query slug
+ * @returns The first object returned, otherwise null if none are found
+ */
+export const getSetBySlug = async (
+  setType: SetTypes,
+  slug: string
+): Promise<ApiEntertainmentObject | null> => {
+  const res = await authenticatedSkylarkRequest<{
+    objects?: ApiEntertainmentObject[];
+  }>(`/api/sets/?set_type_slug=${setType}&slug=${slug}`, {
+    method: "GET",
+    params: {
+      all: true,
+    },
+  });
+
+  return res.data.objects?.[0] || null;
+};
+
+/**
+ * getSetItems - Gets the items for a set using its ID
+ * @param setUid - Set ID
+ * @returns set items
+ */
+export const getSetItems = async (setUid: string) => {
+  const url = `/api/sets/${setUid}/items/`;
+  const res = await authenticatedSkylarkRequest<{ objects?: ApiSetItem[] }>(
+    url,
+    {
+      method: "GET",
+      params: {
+        all: true,
+      },
+    }
   );
   return res.data?.objects || [];
 };

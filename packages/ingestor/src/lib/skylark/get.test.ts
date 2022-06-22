@@ -1,5 +1,5 @@
 import Auth from "@aws-amplify/auth";
-import { ApiImage, ApiSchedule, ApiSetType } from "@skylark-reference-apps/lib";
+import { ApiEntertainmentObject, ApiImage, ApiSchedule, ApiSetType } from "@skylark-reference-apps/lib";
 import axios from "axios";
 import {
   getResourceBySlug,
@@ -9,6 +9,8 @@ import {
   getResourceByName,
   getResourceByProperty,
   getResourceByTitle,
+  getSetBySlug,
+  getSetItems,
 } from "./get";
 
 jest.mock("axios");
@@ -188,7 +190,7 @@ describe("skylark.get", () => {
   });
 
   describe("getSetTypes", () => {
-    it("calls /api/image-types", async () => {
+    it("calls /api/set-types", async () => {
       axiosRequest.mockResolvedValue({ data: {} });
       await getSetTypes();
 
@@ -213,6 +215,68 @@ describe("skylark.get", () => {
     it("returns an empty array when no objects are returned", async () => {
       axiosRequest.mockResolvedValue({ data: {} });
       const got = await getSetTypes();
+
+      expect(got).toEqual([]);
+    });
+  });
+
+  describe("getSetBySlug", () => {
+    it("calls /api/sets/?set_type_slug=", async () => {
+      axiosRequest.mockResolvedValue({ data: {} });
+      await getSetBySlug("collection", "my-collection");
+
+      expect(axiosRequest).toBeCalledWith(
+        expect.objectContaining({
+          url: "https://skylarkplatform.io/api/sets/?set_type_slug=collection&slug=my-collection",
+        })
+      );
+    });
+
+    it("returns the first set object returned", async () => {
+      const setTypes: ApiEntertainmentObject[] = [
+        { uid: "1", title: "set1", self: "/api/sets/set1", slug: "set1" },
+        { uid: "2", title: "set2", self: "/api/sets/set2", slug: "set2" },
+      ];
+      axiosRequest.mockResolvedValue({ data: { objects: setTypes } });
+      const got = await getSetBySlug("collection", "my-collection");
+
+      expect(got).toEqual(setTypes[0]);
+    });
+
+    it("returns null when no objects are returned", async () => {
+      axiosRequest.mockResolvedValue({ data: {} });
+      const got = await getSetBySlug("collection", "my-collection");
+
+      expect(got).toEqual(null);
+    });
+  });
+
+  describe("getSetItems", () => {
+    it("calls /api/sets/?set_type_slug=", async () => {
+      axiosRequest.mockResolvedValue({ data: {} });
+      await getSetItems("set-1");
+
+      expect(axiosRequest).toBeCalledWith(
+        expect.objectContaining({
+          url: "https://skylarkplatform.io/api/sets/set-1/items/",
+        })
+      );
+    });
+
+    it("returns all objects", async () => {
+      const setTypes: ApiEntertainmentObject[] = [
+        { uid: "1", title: "episode", self: "/api/episode/1", slug: "episode1" },
+        { uid: "2", title: "movie", self: "/api/movie/1", slug: "movie1" },
+      ];
+      axiosRequest.mockResolvedValue({ data: { objects: setTypes } });
+      const got = await getSetItems("set-1");
+
+      expect(got).toEqual(setTypes);
+    });
+
+    it("returns an empty array when no objects are returned", async () => {
+      axiosRequest.mockResolvedValue({ data: {} });
+      const got = await getSetItems("set-1");
 
       expect(got).toEqual([]);
     });
