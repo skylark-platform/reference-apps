@@ -67,10 +67,10 @@ export const getAlwaysSchedule = async (): Promise<ApiSchedule> => {
  * @returns the image types available in Skylark
  */
 export const getImageTypes = async (): Promise<ApiImageType[]> => {
-  const res = await authenticatedSkylarkRequest<{ objects: ApiImageType[] }>(
+  const res = await authenticatedSkylarkRequest<{ objects?: ApiImageType[] }>(
     "/api/image-types/"
   );
-  return res.data.objects;
+  return res.data?.objects || [];
 };
 
 /**
@@ -78,8 +78,8 @@ export const getImageTypes = async (): Promise<ApiImageType[]> => {
  * @returns the set types available in Skylark
  */
 export const getSetTypes = async (): Promise<ApiSetType[]> => {
-  const res = await authenticatedSkylarkRequest<{ objects: ApiSetType[] }>(
+  const res = await authenticatedSkylarkRequest<{ objects?: ApiSetType[] }>(
     "/api/set-types/"
   );
-  return res.data.objects;
+  return res.data?.objects || [];
 };

@@ -5,6 +5,7 @@ import {
   ApiDynamicObject,
   ApiCreditUnexpanded,
   ApiPerson,
+  ApiEntertainmentObject,
 } from "@skylark-reference-apps/lib";
 import { Attachment, FieldSet, Records, Record } from "airtable";
 import {
@@ -60,24 +61,6 @@ export const createOrUpdateDynamicObject = (
   );
 };
 
-const getPeopleAndRoleUrlsFromCredit = (
-  { fields: credit }: Record<FieldSet>,
-  people: (ApiPerson & { airtableId: string })[],
-  roles: (ApiRole & { airtableId: string })[]
-): ApiCreditUnexpanded | null => {
-  const person = people.find(
-    (p) => p.airtableId === (credit.person as string[])[0]
-  );
-  const role = roles.find((r) => r.airtableId === (credit.role as string[])[0]);
-  if (person && role) {
-    return {
-      people_url: person?.self,
-      role_url: role?.self,
-    };
-  }
-  return null;
-};
-
 export const parseAirtableImagesAndUploadToSkylark = <T extends ApiBaseObject>(
   fields: FieldSet,
   objectToAttachTo: T,
@@ -113,20 +96,61 @@ export const parseAirtableImagesAndUploadToSkylark = <T extends ApiBaseObject>(
       })
   );
 
-export const createObjectsInSkylark = <T extends ApiBaseObject>(
+const getPeopleAndRoleUrlsFromCredit = (
+  { fields: credit }: Record<FieldSet>,
+  people: (ApiPerson & { airtableId: string })[],
+  roles: (ApiRole & { airtableId: string })[]
+): ApiCreditUnexpanded | null => {
+  const person = people.find(
+    (p) => p.airtableId === (credit.person as string[])[0]
+  );
+  const role = roles.find((r) => r.airtableId === (credit.role as string[])[0]);
+  if (person && role) {
+    return {
+      people_url: person?.self,
+      role_url: role?.self,
+    };
+  }
+  return null;
+};
+
+const getCreditsFromField = (
+  fieldCredits: string[] | undefined,
+  metadata: Metadata
+) => {
+  if (!fieldCredits || fieldCredits.length === 0) {
+    return undefined;
+  }
+  const credits = fieldCredits.map((creditId) =>
+    metadata.airtableCredits.find(
+      ({ id: airtableCreditId }) => airtableCreditId === creditId
+    )
+  );
+  const apiCredits = credits
+    .map(
+      (credit) =>
+        credit &&
+        getPeopleAndRoleUrlsFromCredit(credit, metadata.people, metadata.roles)
+    )
+    .filter((credit) => !!credit) as ApiCreditUnexpanded[];
+  return apiCredits;
+};
+
+const createOrUpdateAirtableObjectsInSkylark = <T extends ApiBaseObject>(
   type: ApiObjectType,
   airtableRecords: Records<FieldSet>,
   metadata: Metadata,
-  parents?: ApiEntertainmentObjectWithAirtableId[]
+  parents: ApiEntertainmentObjectWithAirtableId[],
+  lookupProperty: "slug" | "title"
 ) => {
-  const promises: Promise<T & { airtableId: string }>[] = airtableRecords.map(
+  const promises = airtableRecords.map(
     async ({ fields, id }): Promise<T & { airtableId: string }> => {
       const parentObject = parents?.find(
         ({ airtableId }) =>
           fields.parent && (fields.parent as string[])[0] === airtableId
       );
 
-      const object = {
+      const object: ApiEntertainmentObject & { name: string } = {
         uid: "",
         self: "",
         name: fields?.name as string,
@@ -144,32 +168,17 @@ export const createObjectsInSkylark = <T extends ApiBaseObject>(
         season_number: fields?.season_number as number,
         number_of_episodes: fields?.number_of_episodes as number,
         episode_number: fields?.episode_number as number,
-        credits: [] as ApiCreditUnexpanded[],
       };
 
-      if (fields.credits) {
-        const credits = (fields.credits as string[]).map((creditId) =>
-          metadata.airtableCredits.find(
-            ({ id: airtableCreditId }) => airtableCreditId === creditId
-          )
-        );
-        const apiCredits = credits
-          .map(
-            (credit) =>
-              credit &&
-              getPeopleAndRoleUrlsFromCredit(
-                credit,
-                metadata.people,
-                metadata.roles
-              )
-          )
-          .filter((credit) => !!credit) as ApiCreditUnexpanded[];
-        object.credits = apiCredits;
+      // Only add Credits if there are any so we don't clear any
+      const credits = getCreditsFromField(fields.credits as string[], metadata);
+      if (credits) {
+        object.credits = credits;
       }
 
       const createdObject = await createOrUpdateObject<T>(
         type,
-        { property: "slug", value: object.slug },
+        { property: lookupProperty, value: object[lookupProperty] },
         object,
         "PATCH"
       );
@@ -190,3 +199,35 @@ export const createObjectsInSkylark = <T extends ApiBaseObject>(
 
   return Promise.all(promises);
 };
+
+export const createOrUpdateAirtableObjectsInSkylarkBySlug = <
+  T extends ApiBaseObject
+>(
+  type: ApiObjectType,
+  airtableRecords: Records<FieldSet>,
+  metadata: Metadata,
+  parents?: ApiEntertainmentObjectWithAirtableId[]
+) =>
+  createOrUpdateAirtableObjectsInSkylark<T>(
+    type,
+    airtableRecords,
+    metadata,
+    parents || [],
+    "slug"
+  );
+
+export const createOrUpdateAirtableObjectsInSkylarkByTitle = <
+  T extends ApiBaseObject
+>(
+  type: ApiObjectType,
+  airtableRecords: Records<FieldSet>,
+  metadata: Metadata,
+  parents?: ApiEntertainmentObjectWithAirtableId[]
+) =>
+  createOrUpdateAirtableObjectsInSkylark<T>(
+    type,
+    airtableRecords,
+    metadata,
+    parents || [],
+    "title"
+  );

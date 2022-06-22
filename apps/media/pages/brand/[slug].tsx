@@ -105,7 +105,7 @@ const BrandPage: NextPage = () => {
 
         {brand &&
           brand.items?.isExpanded &&
-          (brand.items.objects as Season[]).map(
+          seasons.map(
             (season) =>
               season.isExpanded &&
               season.type === "season" && (

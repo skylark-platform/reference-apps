@@ -61,7 +61,7 @@ export interface ApiEntertainmentObject extends ApiBaseObject {
   synopsis_medium?: string;
   synopsis_long?: string;
   image_urls?: ApiImage[] | string[];
-  credits?: ApiCredit[];
+  credits?: ApiCredit[] | ApiCreditUnexpanded[];
   rating_urls?: ApiRatings;
   set_type_slug?: SetTypes;
   items?: string[] | (ApiEntertainmentObject | ApiSetObject)[];

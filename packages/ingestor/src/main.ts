@@ -18,9 +18,9 @@ import {
   getImageTypes,
   getSetTypes,
   createOrUpdateDynamicObject,
-  createObjectsInSkylark,
   createOrUpdateSetAndContents,
-  createOrUpdateObject,
+  createOrUpdateAirtableObjectsInSkylarkBySlug,
+  createOrUpdateAirtableObjectsInSkylarkByTitle,
 } from "./lib/skylark";
 import { getAllTables } from "./lib/airtable";
 import { Airtables, Metadata } from "./interfaces";
@@ -60,62 +60,49 @@ const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
     },
   };
 
-  const roles = await Promise.all(
-    airtable.roles.map(async ({ fields, id }) => {
-      const title = fields.title as string;
-      const roleData: Partial<ApiRole> = {
-        title,
-        schedule_urls: [metadata.schedules.always.self],
-      };
-      const role = await createOrUpdateObject<ApiRole>(
-        "roles",
-        { property: "title", value: title },
-        roleData,
-        "PUT"
-      );
-      return {
-        ...role,
-        airtableId: id,
-      };
-    })
-  );
-  metadata.roles = roles;
-
-  const people = await createObjectsInSkylark<ApiPerson>(
-    "people",
-    airtable.people,
+  metadata.roles = await createOrUpdateAirtableObjectsInSkylarkByTitle<ApiRole>(
+    "roles",
+    airtable.roles,
     metadata
   );
-  metadata.people = people;
+
+  metadata.people =
+    await createOrUpdateAirtableObjectsInSkylarkBySlug<ApiPerson>(
+      "people",
+      airtable.people,
+      metadata
+    );
 
   // eslint-disable-next-line no-console
   console.log("Metadata objects created");
-
   return metadata;
 };
 
 const createMediaObjects = async (airtable: Airtables, metadata: Metadata) => {
-  const brands = await createObjectsInSkylark<ApiEntertainmentObject>(
-    "brands",
-    airtable.brands,
-    metadata
-  );
-  const seasons = await createObjectsInSkylark<ApiEntertainmentObject>(
-    "seasons",
-    airtable.seasons,
-    metadata,
-    brands
-  );
-  await createObjectsInSkylark<ApiEntertainmentObject>(
+  const brands =
+    await createOrUpdateAirtableObjectsInSkylarkBySlug<ApiEntertainmentObject>(
+      "brands",
+      airtable.brands,
+      metadata
+    );
+  const seasons =
+    await createOrUpdateAirtableObjectsInSkylarkBySlug<ApiEntertainmentObject>(
+      "seasons",
+      airtable.seasons,
+      metadata,
+      brands
+    );
+  await createOrUpdateAirtableObjectsInSkylarkBySlug<ApiEntertainmentObject>(
     "episodes",
     airtable.episodes,
     metadata,
-    seasons
+    [...seasons, ...brands]
   );
-  await createObjectsInSkylark<ApiEntertainmentObject>(
+  await createOrUpdateAirtableObjectsInSkylarkBySlug<ApiEntertainmentObject>(
     "movies",
     airtable.movies,
-    metadata
+    metadata,
+    brands
   );
 
   // eslint-disable-next-line no-console

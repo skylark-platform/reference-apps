@@ -20,6 +20,7 @@ export const authenticatedSkylarkRequest = async <T>(
     url,
     headers: {
       Authorization: `Bearer ${token}`,
+      "Cache-Control": "no-cache",
     },
   });
 };

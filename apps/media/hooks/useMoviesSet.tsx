@@ -20,6 +20,7 @@ const fields = {
   slug: {},
   type: {},
   self: {},
+  release_date: {},
   image_urls: {
     self: {},
     url: {},

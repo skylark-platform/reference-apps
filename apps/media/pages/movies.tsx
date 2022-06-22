@@ -8,7 +8,7 @@ import {
   MovieThumbnail,
   Skeleton,
 } from "@skylark-reference-apps/react";
-import { getImageSrc } from "@skylark-reference-apps/lib";
+import { formatYear, getImageSrc } from "@skylark-reference-apps/lib";
 
 import { useAllMovies } from "../hooks/useMoviesSet";
 import { genres } from "../test-data";
@@ -51,7 +51,7 @@ const Movies: NextPage = () => {
                 movie.type && movie.slug ? `/${movie.type}/${movie.slug}` : ""
               }
               key={movie.objectTitle || movie.uid || movie.slug}
-              releaseDate="2020"
+              releaseDate={formatYear(movie.releaseDate)}
               title={movie.title?.short || ""}
             />
           ))}
