@@ -4,10 +4,21 @@ import { MdArrowDropDown } from "react-icons/md";
 interface DropdownProps {
   label: string;
   items: string[];
+  setGenre: (value: string) => void;
 }
 
-export const Dropdown: React.FC<DropdownProps> = ({ label, items }) => {
+export const Dropdown: React.FC<DropdownProps> = ({
+  label,
+  items,
+  setGenre,
+}) => {
   const [isOpen, setOpen] = useState(false);
+  const [genreName, setGenreName] = useState("");
+
+  const handleOnClick = (item: string) => {
+    setGenre(item);
+    setGenreName(item);
+  };
 
   return (
     <div className="flex">
@@ -30,7 +41,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ label, items }) => {
           type="button"
           onClick={() => setOpen(!isOpen)}
         >
-          {label}
+          {genreName || label}
           <div className="sm: flex pl-20 pr-1 md:pl-24">
             <MdArrowDropDown size={25} />
           </div>
@@ -53,6 +64,8 @@ export const Dropdown: React.FC<DropdownProps> = ({ label, items }) => {
                   hover:text-purple-500
                   md:text-sm
                   "
+                  type="button"
+                  onClick={() => handleOnClick(item)}
                 >
                   {item}
                 </button>

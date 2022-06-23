@@ -12,6 +12,7 @@ import {
 
 const fieldsToExpand = {
   image_urls: {},
+  genre_urls: {},
 };
 
 const fields = {
@@ -26,15 +27,25 @@ const fields = {
     url_path: {},
     image_type: {},
   },
+  genre_urls: {
+    name: {},
+  },
 };
 
-export const moviesSetFetcher = (endpoint: string) => {
+export const moviesSetFetcher = ([endpoint, genreUid]: [
+  slug: string,
+  deviceType: string
+]) => {
   const apiQuery = createSkylarkApiQuery({
     fieldsToExpand,
     fields,
   });
 
-  return fetch(`${SKYLARK_API}/api/${endpoint}/?${apiQuery}`, {
+  const getMovieEndpoint = genreUid
+    ? `${SKYLARK_API}/api/${endpoint}/?genres_url=${genreUid}&${apiQuery}`
+    : `${SKYLARK_API}/api/${endpoint}/?${apiQuery}`;
+
+  return fetch(getMovieEndpoint, {
     headers: { "Accept-Language": "en-gb" },
   })
     .then((r) => r.json())
@@ -43,10 +54,10 @@ export const moviesSetFetcher = (endpoint: string) => {
     );
 };
 
-export const useAllMovies = (type: EntertainmentType) => {
+export const useAllMovies = (type: EntertainmentType, genreUid?: string) => {
   const endpoint = convertObjectTypeToSkylarkEndpoint(type);
   const { data, error } = useSWR<AllEntertainment[], Error>(
-    [endpoint],
+    [endpoint, genreUid],
     moviesSetFetcher
   );
 

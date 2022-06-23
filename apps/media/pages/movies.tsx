@@ -9,12 +9,15 @@ import {
   Skeleton,
 } from "@skylark-reference-apps/react";
 import { getImageSrc } from "@skylark-reference-apps/lib";
-
+import { useState } from "react";
 import { useAllMovies } from "../hooks/useMoviesSet";
-import { genres } from "../test-data";
+import { useAllGenres } from "../hooks/useGenres";
 
 const Movies: NextPage = () => {
-  const { movies } = useAllMovies("movie");
+  const [genre, setGenre] = useState("");
+  const { genres } = useAllGenres("genres");
+  const selectedGenreUid = genres?.find(({ name }) => name === genre);
+  const { movies } = useAllMovies("movie", selectedGenreUid?.uid);
 
   return (
     <div className="flex w-full flex-col justify-center py-20">
@@ -31,8 +34,11 @@ const Movies: NextPage = () => {
           </div>
         </div>
         <div className="flex flex-row gap-x-2 pb-8 md:pb-20 xl:pb-24">
-          <Dropdown items={genres} label="Genres" />
-          <Dropdown items={genres} label="Themes" />
+          <Dropdown
+            items={genres?.map(({ name }) => name) || []}
+            label="Themes"
+            setGenre={setGenre}
+          />
         </div>
       </div>
 
