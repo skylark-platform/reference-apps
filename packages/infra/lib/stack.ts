@@ -46,9 +46,8 @@ export class SkylarkReferenceAppStack extends cdk.Stack {
         hostedZone: parentHostedZone,
         certificate,
       },
-
       // Use a default cache policy so we don't hit the limit of 20 cache policies per AWS account
-      // Not recommended
+      // Not recommended for production deployments
       nextImageCachePolicy: CachePolicy.CACHING_DISABLED as CachePolicy,
       nextLambdaCachePolicy: CachePolicy.CACHING_DISABLED as CachePolicy,
     });
