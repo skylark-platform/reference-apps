@@ -18,6 +18,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   const handleOnClick = (item: string) => {
     setGenre(item);
     setGenreName(item);
+    setOpen(false);
   };
 
   return (
@@ -27,7 +28,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
       >
-        <div className="flex w-56 bg-gray-800">
+        <div className="flex w-56 bg-gray-800 pt-1">
           <button
             className="
           mb-2
@@ -38,7 +39,6 @@ export const Dropdown: React.FC<DropdownProps> = ({
           pl-5
           text-sm
           text-white
-          
         "
             type="button"
             onClick={() => setOpen(!isOpen)}
@@ -49,7 +49,6 @@ export const Dropdown: React.FC<DropdownProps> = ({
             <MdArrowDropDown size={25} />
           </div>
         </div>
-
         {isOpen && (
           <ul className="absolute z-40 h-48 w-full overflow-y-auto lg:h-64">
             {items.map((item) => (
