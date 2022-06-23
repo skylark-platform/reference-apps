@@ -5,7 +5,9 @@ import {
   amplifyConfig,
   ApiEntertainmentObject,
   ApiPerson,
+  ApiRating,
   ApiRole,
+  ApiThemeGenre,
 } from "@skylark-reference-apps/lib";
 import {
   COGNITO_REGION,
@@ -53,10 +55,13 @@ const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
     imageTypes,
     people: [],
     roles: [],
+    genres: [],
+    themes: [],
+    ratings: [],
     airtableCredits: airtable.credits,
     set: {
       types: setTypes,
-      metadata: airtable.setsMetadata.map(({ fields }) => fields),
+      additionalFields: airtable.setsMetadata.map(({ fields }) => fields),
     },
   };
 
@@ -70,6 +75,27 @@ const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
     await createOrUpdateAirtableObjectsInSkylarkBySlug<ApiPerson>(
       "people",
       airtable.people,
+      metadata
+    );
+
+  metadata.genres =
+    await createOrUpdateAirtableObjectsInSkylarkBySlug<ApiThemeGenre>(
+      "genres",
+      airtable.genres,
+      metadata
+    );
+
+  metadata.themes =
+    await createOrUpdateAirtableObjectsInSkylarkBySlug<ApiThemeGenre>(
+      "themes",
+      airtable.themes,
+      metadata
+    );
+
+  metadata.ratings =
+    await createOrUpdateAirtableObjectsInSkylarkBySlug<ApiRating>(
+      "ratings",
+      airtable.ratings,
       metadata
     );
 

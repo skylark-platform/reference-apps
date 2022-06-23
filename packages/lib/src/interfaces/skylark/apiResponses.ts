@@ -37,13 +37,13 @@ export interface ApiCredit {
 
 export type ApiCredits = string[] | ApiCreditUnexpanded[] | ApiCredit[];
 
-export interface ApiThemeGenre {
+export interface ApiThemeGenre extends ApiBaseObject {
   name: string;
 }
 
 export type ApiThemesAndGenres = string[] | ApiThemeGenre[];
 
-export interface ApiRating {
+export interface ApiRating extends ApiBaseObject {
   title?: string;
   value?: string;
 }

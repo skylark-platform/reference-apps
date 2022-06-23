@@ -1,10 +1,14 @@
 import {
+  ApiBaseObject,
+  ApiCredit,
   ApiEntertainmentObject,
   ApiImageType,
   ApiPerson,
+  ApiRating,
   ApiRole,
   ApiSchedule,
   ApiSetType,
+  ApiThemeGenre,
   SetTypes,
 } from "@skylark-reference-apps/lib";
 import { Record, FieldSet } from "airtable";
@@ -22,6 +26,9 @@ export interface Airtables {
   roles: Record<FieldSet>[];
   people: Record<FieldSet>[];
   credits: Record<FieldSet>[];
+  genres: Record<FieldSet>[];
+  themes: Record<FieldSet>[];
+  ratings: Record<FieldSet>[];
   setsMetadata: Record<FieldSet>[];
 }
 
@@ -33,8 +40,24 @@ export type ApiObjectType =
   | "people"
   | "roles"
   | "images"
+  | "genres"
+  | "themes"
+  | "ratings"
   | "computed-scheduled-items";
 
+type AllApiObjects = Partial<
+  ApiEntertainmentObject &
+    ApiThemeGenre &
+    ApiRole &
+    ApiPerson &
+    ApiRating &
+    ApiCredit
+>;
+export type ApiSkylarkObjectWithAllPotentialFields = Omit<
+  AllApiObjects,
+  "slug"
+> &
+  ApiBaseObject & { title: string; name: string };
 export interface SetConfig extends Partial<ApiEntertainmentObject> {
   title: string;
   slug: string;
@@ -69,9 +92,12 @@ export interface Metadata {
   imageTypes: ApiImageType[];
   set: {
     types: ApiSetType[];
-    metadata: FieldSet[];
+    additionalFields: FieldSet[];
   };
   airtableCredits: Record<FieldSet>[];
   roles: (ApiRole & { airtableId: string })[];
   people: (ApiPerson & { airtableId: string })[];
+  genres: (ApiThemeGenre & { airtableId: string })[];
+  themes: (ApiThemeGenre & { airtableId: string })[];
+  ratings: (ApiRating & { airtableId: string })[];
 }

@@ -6,8 +6,16 @@ import {
 import { FieldSet } from "airtable";
 import { SetConfig, Metadata } from "../../interfaces";
 import { authenticatedSkylarkRequest } from "./api";
-import { parseAirtableImagesAndUploadToSkylark } from "./create";
-import { getResourceByName, getResourceBySlug, getSetBySlug, getSetItems } from "./get";
+import {
+  convertAirtableFieldsToSkylarkObject,
+  parseAirtableImagesAndUploadToSkylark,
+} from "./create";
+import {
+  getResourceByName,
+  getResourceBySlug,
+  getSetBySlug,
+  getSetItems,
+} from "./get";
 
 const createOrUpdateSet = async (
   setConfig: SetConfig,
@@ -24,16 +32,25 @@ const createOrUpdateSet = async (
     slug
   );
 
+  let object = {};
+  if (additionalProperties) {
+    object = convertAirtableFieldsToSkylarkObject(
+      additionalProperties,
+      metadata
+    );
+  }
+
   const url = existingSet ? `/api/sets/${existingSet.uid}` : `/api/sets/`;
   const { data: set } =
     await authenticatedSkylarkRequest<ApiEntertainmentObject>(url, {
       method: existingSet ? "PUT" : "POST",
       data: {
         ...existingSet,
-        ...additionalProperties,
+        ...object,
+        uid: existingSet?.uid || "",
+        self: existingSet?.self || "",
         title,
         slug,
-        schedule_urls: [metadata.schedules.always.self],
         set_type_url: setType?.self,
       },
     });
@@ -69,7 +86,7 @@ export const createOrUpdateSetAndContents = async (
   setConfig: SetConfig,
   metadata: Metadata
 ) => {
-  const additionalAirtableProperties = metadata.set.metadata.find(
+  const additionalAirtableProperties = metadata.set.additionalFields.find(
     ({ slug: metadataSlug }) => metadataSlug === setConfig.slug
   );
 
@@ -87,41 +104,43 @@ export const createOrUpdateSetAndContents = async (
     );
   }
 
-  const existingSetItems = set ? await getSetItems(set.uid) : [];
+  if (setConfig.contents.length > 0) {
+    const existingSetItems = set ? await getSetItems(set.uid) : [];
 
-  await Promise.all(
-    setConfig.contents.map(async (config, index) => {
-      const position = index + 1;
-      let object: ApiEntertainmentObject | ApiDynamicObject | null;
-      if (config.type === "set") {
-        object = await getSetBySlug(config.set_type, config.slug);
-      } else if (config.type === "dynamic-object") {
-        object = await getResourceByName<ApiDynamicObject>(
-          "computed-scheduled-items",
-          config.name
-        );
-      } else {
-        object = await getResourceBySlug<ApiEntertainmentObject>(
-          config.type,
-          config.slug
-        );
-      }
+    await Promise.all(
+      setConfig.contents.map(async (config, index) => {
+        const position = index + 1;
+        let object: ApiEntertainmentObject | ApiDynamicObject | null;
+        if (config.type === "set") {
+          object = await getSetBySlug(config.set_type, config.slug);
+        } else if (config.type === "dynamic-object") {
+          object = await getResourceByName<ApiDynamicObject>(
+            "computed-scheduled-items",
+            config.name
+          );
+        } else {
+          object = await getResourceBySlug<ApiEntertainmentObject>(
+            config.type,
+            config.slug
+          );
+        }
 
-      if (!object) {
-        throw new Error(
-          `Object requested for set item ${
-            config.type === "dynamic-object" ? config.name : config.slug
-          } (${config.type}) not found`
-        );
-      }
+        if (!object) {
+          throw new Error(
+            `Object requested for set item ${
+              config.type === "dynamic-object" ? config.name : config.slug
+            } (${config.type}) not found`
+          );
+        }
 
-      return createOrUpdateSetItem(
-        set.uid,
-        object.self,
-        position,
-        existingSetItems,
-        metadata
-      );
-    })
-  );
+        return createOrUpdateSetItem(
+          set.uid,
+          object.self,
+          position,
+          existingSetItems,
+          metadata
+        );
+      })
+    );
+  }
 };

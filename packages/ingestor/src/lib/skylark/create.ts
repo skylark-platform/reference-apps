@@ -5,19 +5,19 @@ import {
   ApiDynamicObject,
   ApiCreditUnexpanded,
   ApiPerson,
-  ApiEntertainmentObject,
 } from "@skylark-reference-apps/lib";
 import { Attachment, FieldSet, Records, Record } from "airtable";
 import {
   ApiEntertainmentObjectWithAirtableId,
   ApiObjectType,
+  ApiSkylarkObjectWithAllPotentialFields,
   DynamicObjectConfig,
   Metadata,
 } from "../../interfaces";
 import { authenticatedSkylarkRequest } from "./api";
 import { getResourceByProperty } from "./get";
 
-export const createOrUpdateObject = async <T extends ApiBaseObject>(
+const createOrUpdateObject = async <T extends ApiBaseObject>(
   type: ApiObjectType,
   lookup: {
     property: "slug" | "title" | "name";
@@ -76,7 +76,9 @@ export const parseAirtableImagesAndUploadToSkylark = <T extends ApiBaseObject>(
           ({ slug }) => slug === imageSlug
         );
         if (!imageType) {
-          throw new Error(`Invalid image type ${imageSlug} (${key})`);
+          throw new Error(
+            `Invalid image type "${imageSlug}" (${key} field on Airtable)`
+          );
         }
 
         const imageData = {
@@ -115,11 +117,11 @@ const getPeopleAndRoleUrlsFromCredit = (
 };
 
 const getCreditsFromField = (
-  fieldCredits: string[] | undefined,
+  fieldCredits: string[] | null,
   metadata: Metadata
 ) => {
   if (!fieldCredits || fieldCredits.length === 0) {
-    return undefined;
+    return null;
   }
   const credits = fieldCredits.map((creditId) =>
     metadata.airtableCredits.find(
@@ -136,6 +138,84 @@ const getCreditsFromField = (
   return apiCredits;
 };
 
+const getUrlsFromField = (
+  field: string[] | null,
+  skylarkData: { airtableId: string; self: string }[]
+) => {
+  if (!field || field.length === 0) {
+    return null;
+  }
+
+  const urls = skylarkData
+    .filter(({ airtableId }) => field.includes(airtableId))
+    .map(({ self }) => self);
+  return urls;
+};
+
+export const convertAirtableFieldsToSkylarkObject = (
+  fields: FieldSet,
+  metadata: Metadata,
+  parents?: ApiEntertainmentObjectWithAirtableId[]
+) => {
+  const parentObject = parents?.find(
+    ({ airtableId }) =>
+      fields.parent && (fields.parent as string[])[0] === airtableId
+  );
+
+  const object: ApiSkylarkObjectWithAllPotentialFields = {
+    uid: "",
+    self: "",
+    name: fields?.name as string,
+    title: fields?.title as string,
+    slug: fields?.slug as string,
+    title_short: fields?.title_short as string,
+    title_medium: fields?.title_medium as string,
+    title_long: fields?.title_long as string,
+    synopsis_short: fields?.synopsis_short as string,
+    synopsis_medium: fields?.synopsis_medium as string,
+    synopsis_long: fields?.synopsis_long as string,
+    release_date: fields?.release_date as string,
+    parent_url: parentObject?.self,
+    schedule_urls: [metadata.schedules.always.self],
+    season_number: fields?.season_number as number,
+    number_of_episodes: fields?.number_of_episodes as number,
+    episode_number: fields?.episode_number as number,
+    value: fields?.value as string,
+  };
+
+  // Only add Credits if there are any so we don't clear any
+  const credits = getCreditsFromField(fields.credits as string[], metadata);
+  if (credits) {
+    object.credits = credits;
+  }
+
+  const genreUrls = getUrlsFromField(
+    fields.genres as string[],
+    metadata.genres
+  );
+  if (genreUrls) {
+    object.genre_urls = genreUrls;
+  }
+
+  const themeUrls = getUrlsFromField(
+    fields.themes as string[],
+    metadata.themes
+  );
+  if (themeUrls) {
+    object.theme_urls = themeUrls;
+  }
+
+  const ratingUrls = getUrlsFromField(
+    fields.ratings as string[],
+    metadata.ratings
+  );
+  if (ratingUrls) {
+    object.rating_urls = ratingUrls;
+  }
+
+  return object;
+};
+
 const createOrUpdateAirtableObjectsInSkylark = <T extends ApiBaseObject>(
   type: ApiObjectType,
   airtableRecords: Records<FieldSet>,
@@ -145,36 +225,11 @@ const createOrUpdateAirtableObjectsInSkylark = <T extends ApiBaseObject>(
 ) => {
   const promises = airtableRecords.map(
     async ({ fields, id }): Promise<T & { airtableId: string }> => {
-      const parentObject = parents?.find(
-        ({ airtableId }) =>
-          fields.parent && (fields.parent as string[])[0] === airtableId
+      const object = convertAirtableFieldsToSkylarkObject(
+        fields,
+        metadata,
+        parents
       );
-
-      const object: ApiEntertainmentObject & { name: string } = {
-        uid: "",
-        self: "",
-        name: fields?.name as string,
-        title: fields?.title as string,
-        slug: fields?.slug as string,
-        title_short: fields?.title_short as string,
-        title_medium: fields?.title_medium as string,
-        title_long: fields?.title_long as string,
-        synopsis_short: fields?.synopsis_short as string,
-        synopsis_medium: fields?.synopsis_medium as string,
-        synopsis_long: fields?.synopsis_long as string,
-        release_date: fields?.release_date as string,
-        parent_url: parentObject?.self,
-        schedule_urls: [metadata.schedules.always.self],
-        season_number: fields?.season_number as number,
-        number_of_episodes: fields?.number_of_episodes as number,
-        episode_number: fields?.episode_number as number,
-      };
-
-      // Only add Credits if there are any so we don't clear any
-      const credits = getCreditsFromField(fields.credits as string[], metadata);
-      if (credits) {
-        object.credits = credits;
-      }
 
       const createdObject = await createOrUpdateObject<T>(
         type,

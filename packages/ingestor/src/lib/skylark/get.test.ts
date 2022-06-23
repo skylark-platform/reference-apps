@@ -1,5 +1,10 @@
 import Auth from "@aws-amplify/auth";
-import { ApiEntertainmentObject, ApiImage, ApiSchedule, ApiSetType } from "@skylark-reference-apps/lib";
+import {
+  ApiEntertainmentObject,
+  ApiImage,
+  ApiSchedule,
+  ApiSetType,
+} from "@skylark-reference-apps/lib";
 import axios from "axios";
 import {
   getResourceBySlug,
@@ -265,7 +270,12 @@ describe("skylark.get", () => {
 
     it("returns all objects", async () => {
       const setTypes: ApiEntertainmentObject[] = [
-        { uid: "1", title: "episode", self: "/api/episode/1", slug: "episode1" },
+        {
+          uid: "1",
+          title: "episode",
+          self: "/api/episode/1",
+          slug: "episode1",
+        },
         { uid: "2", title: "movie", self: "/api/movie/1", slug: "movie1" },
       ];
       axiosRequest.mockResolvedValue({ data: { objects: setTypes } });
