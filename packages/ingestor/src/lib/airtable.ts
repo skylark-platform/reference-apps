@@ -1,19 +1,24 @@
-import Airtable, { Error } from "airtable";
+import { Record, FieldSet } from "airtable";
+import axios from "axios";
 import { Airtables } from "../interfaces";
 import { AIRTABLE_API_KEY, AIRTABLE_BASE_ID } from "./constants";
-
-const base = new Airtable({ apiKey: AIRTABLE_API_KEY }).base(AIRTABLE_BASE_ID);
 
 /**
  * getTable - fetches a table from Airtable and filters empty rows
  * @param name - the table name
  * @returns table contents
  */
-const getTable = async (name: string) => {
-  const table = base(name);
+const getTable = async (name: string): Promise<Record<FieldSet>[]> => {
   try {
-    const data = await table.select().all();
-    const dataWithoutEmptyRecords = data.filter(
+    const res = await axios.get<{ records: Record<FieldSet>[] }>(
+      `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${name}`,
+      {
+        headers: {
+          Authorization: `Bearer ${AIRTABLE_API_KEY}`,
+        },
+      }
+    );
+    const dataWithoutEmptyRecords = res.data.records.filter(
       ({ fields }) =>
         !(
           fields &&
@@ -24,7 +29,7 @@ const getTable = async (name: string) => {
     return dataWithoutEmptyRecords;
   } catch (err) {
     // If table is not found, log warning but return empty array
-    if ((err as Error).statusCode === 404) {
+    if (axios.isAxiosError(err) && err.response?.status === 404) {
       // eslint-disable-next-line no-console
       console.warn(`warn: Table "${name}" does not exist`);
       return [];

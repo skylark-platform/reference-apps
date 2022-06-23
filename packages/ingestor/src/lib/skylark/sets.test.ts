@@ -11,7 +11,7 @@ jest.mock("@skylark-reference-apps/lib", () => ({
   SKYLARK_API: "https://skylarkplatform.io",
 }));
 
-describe("skylark.get", () => {
+describe("skylark.sets", () => {
   let axiosRequest: jest.Mock;
 
   beforeEach(() => {
