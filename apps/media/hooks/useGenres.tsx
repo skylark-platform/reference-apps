@@ -4,6 +4,7 @@ import {
   SKYLARK_API,
   ApiThemeGenre,
 } from "@skylark-reference-apps/lib";
+import axios from "axios";
 
 const fields = {
   name: {},
@@ -15,13 +16,15 @@ export const genresSetFetcher = (endpoint: string) => {
     fieldsToExpand: {},
     fields,
   });
-
-  // use axios here
-  return fetch(`${SKYLARK_API}/api/${endpoint}/?${apiQuery}`, {
-    headers: { "Accept-Language": "en-gb" },
-  })
-    .then((r) => r.json())
-    .then(({ objects: genres }) => genres as ApiThemeGenre[]);
+  return axios
+    .get<ApiThemeGenre[]>(`${SKYLARK_API}/api/${endpoint}/?${apiQuery}`, {
+      headers: { "Accept-Language": "en-gb" },
+    })
+    .then(({ data }) => {
+      // fix this
+      const { objects: genres }: any = data;
+      return genres as ApiThemeGenre[];
+    });
 };
 
 export const useAllGenres = (type: string) => {

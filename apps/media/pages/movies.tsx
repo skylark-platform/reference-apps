@@ -36,7 +36,7 @@ const Movies: NextPage = () => {
         <div className="flex flex-row gap-x-2 pb-8 md:pb-20 xl:pb-24">
           <Dropdown
             items={genres?.map(({ name }) => name) || []}
-            label="Themes"
+            label="Genres"
             setGenre={setGenre}
           />
         </div>

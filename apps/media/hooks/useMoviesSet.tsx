@@ -41,11 +41,11 @@ export const moviesSetFetcher = ([endpoint, genreUid]: [
     fields,
   });
 
-  const getMovieEndpoint = genreUid
+  const getSelectedGenreMovieEndpoint = genreUid
     ? `${SKYLARK_API}/api/${endpoint}/?genres_url=${genreUid}&${apiQuery}`
     : `${SKYLARK_API}/api/${endpoint}/?${apiQuery}`;
 
-  return fetch(getMovieEndpoint, {
+  return fetch(getSelectedGenreMovieEndpoint, {
     headers: { "Accept-Language": "en-gb" },
   })
     .then((r) => r.json())

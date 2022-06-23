@@ -27,27 +27,31 @@ export const Dropdown: React.FC<DropdownProps> = ({
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
       >
-        <button
-          className="
+        <div className="flex w-56 bg-gray-800">
+          <button
+            className="
           mb-2
           flex
+          w-full
           items-center
-          bg-gray-800
           py-2.5
           pl-5
           text-sm
           text-white
+          
         "
-          type="button"
-          onClick={() => setOpen(!isOpen)}
-        >
-          {genreName || label}
-          <div className="sm: flex pl-20 pr-1 md:pl-24">
+            type="button"
+            onClick={() => setOpen(!isOpen)}
+          >
+            {genreName || label}
+          </button>
+          <div className="sm: flex w-full justify-end pr-1 pt-2 text-white">
             <MdArrowDropDown size={25} />
           </div>
-        </button>
+        </div>
+
         {isOpen && (
-          <ul className="absolute z-40 w-full">
+          <ul className="absolute z-40 h-48 w-full overflow-y-auto lg:h-64">
             {items.map((item) => (
               <li key={item}>
                 <button
