@@ -22,7 +22,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   };
 
   return (
-    <div className="flex">
+    <div className="flex" onClick={() => setOpen(!isOpen)}>
       <div
         className="relative"
         onMouseEnter={() => setOpen(true)}
