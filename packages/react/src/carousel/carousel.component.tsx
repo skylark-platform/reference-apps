@@ -106,7 +106,7 @@ export const Carousel: React.FC<CarouselProps> = ({
         <motion.div
           animate="center"
           className={`
-            absolute block h-full w-full min-w-full
+            min-w-full absolute block h-full w-full
             bg-cover bg-center
             bg-no-repeat text-white
             ${!activeImageHasLoaded ? "animate-pulse bg-gray-800" : ""}

@@ -17,14 +17,13 @@ export const genresSetFetcher = (endpoint: string) => {
     fields,
   });
   return axios
-    .get<ApiThemeGenre[]>(`${SKYLARK_API}/api/${endpoint}/?${apiQuery}`, {
-      headers: { "Accept-Language": "en-gb" },
-    })
-    .then(({ data }) => {
-      // fix this
-      const { objects: genres }: any = data;
-      return genres as ApiThemeGenre[];
-    });
+    .get<{ objects: ApiThemeGenre[] }>(
+      `${SKYLARK_API}/api/${endpoint}/?${apiQuery}`,
+      {
+        headers: { "Accept-Language": "en-gb" },
+      }
+    )
+    .then(({ data }) => data.objects);
 };
 
 export const useAllGenres = (type: string) => {

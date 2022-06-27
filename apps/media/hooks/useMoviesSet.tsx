@@ -33,8 +33,8 @@ const fields = {
 };
 
 export const moviesSetFetcher = ([endpoint, genreUid]: [
-  slug: string,
-  deviceType: string
+  endpoint: string,
+  genreUid: string
 ]) => {
   const apiQuery = createSkylarkApiQuery({
     fieldsToExpand,

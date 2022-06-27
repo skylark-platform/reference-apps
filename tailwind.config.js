@@ -81,6 +81,9 @@ module.exports = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
       },
     },
+    minWidth: {
+      56: "14rem",
+    },
   },
   corePlugins: {
     aspectRatio: false,

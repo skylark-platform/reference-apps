@@ -4,34 +4,38 @@ import { MdArrowDropDown } from "react-icons/md";
 interface DropdownProps {
   label: string;
   items: string[];
-  setGenre: (value: string) => void;
+  onChange: (value: string) => void;
 }
 
 export const Dropdown: React.FC<DropdownProps> = ({
   label,
   items,
-  setGenre,
+  onChange,
 }) => {
   const [isOpen, setOpen] = useState(false);
-  const [genreName, setGenreName] = useState("");
+  const [selected, setSelected] = useState("");
+  const orderedGenres = items.sort((a, b) => {
+    if (a < b) return -1;
+    if (a > b) return 1;
+    return 0;
+  });
 
   const handleOnClick = (item: string) => {
-    setGenre(item);
-    setGenreName(item);
+    onChange(item);
+    setSelected(item);
     setOpen(false);
   };
 
   return (
-    <div className="flex" onClick={() => setOpen(!isOpen)}>
-      <div
-        className="relative"
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
-      >
-        <div className="flex w-56 bg-gray-800 pt-1">
-          <button
-            className="
-          mb-2
+    <div
+      className="relative"
+      onClick={() => setOpen(!isOpen)}
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
+      <div className="flex min-w-56 whitespace-nowrap bg-gray-800 py-1">
+        <button
+          className="
           flex
           w-full
           items-center
@@ -40,21 +44,21 @@ export const Dropdown: React.FC<DropdownProps> = ({
           text-sm
           text-white
         "
-            type="button"
-            onClick={() => setOpen(!isOpen)}
-          >
-            {genreName || label}
-          </button>
-          <div className="sm: flex w-full justify-end pr-1 pt-2 text-white">
-            <MdArrowDropDown size={25} />
-          </div>
+          type="button"
+          onClick={() => setOpen(!isOpen)}
+        >
+          {selected || label}
+        </button>
+        <div className="sm: flex w-full justify-end pr-1 pt-2 text-white">
+          <MdArrowDropDown size={25} />
         </div>
-        {isOpen && (
-          <ul className="absolute z-40 h-48 w-full overflow-y-auto lg:h-64">
-            {items.map((item) => (
-              <li key={item}>
-                <button
-                  className="
+      </div>
+      {isOpen && (
+        <ul className="xl:h-62 absolute z-40 h-44 w-full overflow-y-auto sm:h-48 md:h-52 lg:h-72">
+          {orderedGenres.map((item) => (
+            <li key={item}>
+              <button
+                className="
                   block
                   w-full
                   bg-white
@@ -67,17 +71,17 @@ export const Dropdown: React.FC<DropdownProps> = ({
                   hover:text-purple-500
                   md:text-sm
                   "
-                  type="button"
-                  onClick={() => handleOnClick(item)}
-                >
-                  {item}
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+                type="button"
+                onClick={() => handleOnClick(item)}
+              >
+                {item}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
+
 export default Dropdown;
