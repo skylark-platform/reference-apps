@@ -1,4 +1,5 @@
 import {
+  ApiAssetType,
   ApiBaseObject,
   ApiCredit,
   ApiDimension,
@@ -43,8 +44,9 @@ export interface Airtables {
   themes: Record<FieldSet>[];
   ratings: Record<FieldSet>[];
   images: Record<FieldSet>[];
-  schedules: Record<FieldSet>[];
+  availibility: Record<FieldSet>[];
   setsMetadata: Record<FieldSet>[];
+  assetTypes: Record<FieldSet>[];
 }
 
 export type ApiObjectType =
@@ -58,6 +60,8 @@ export type ApiObjectType =
   | "genres"
   | "themes"
   | "ratings"
+  | "image-types"
+  | "asset-types"
   | "computed-scheduled-items";
 
 type AllApiObjects = Partial<
@@ -110,6 +114,7 @@ export interface Metadata {
     all: (ApiSchedule & ApiAirtableFields)[];
   };
   imageTypes: ApiImageType[];
+  assetTypes: ApiAssetType[];
   set: {
     types: ApiSetType[];
     additionalRecords: { id: string; fields: FieldSet }[];

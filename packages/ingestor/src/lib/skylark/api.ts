@@ -1,5 +1,5 @@
 import { SKYLARK_API } from "@skylark-reference-apps/lib";
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosRequestHeaders } from "axios";
 import { getToken } from "../cognito";
 
 /**
@@ -15,12 +15,15 @@ export const authenticatedSkylarkRequest = async <T>(
   const token = await getToken();
   const url = new URL(path, SKYLARK_API).toString();
 
+  const headers: AxiosRequestHeaders = {
+    "Cache-Control": "no-cache",
+    ...config?.headers,
+    Authorization: `Bearer ${token}`,
+  };
+
   return axios.request<T>({
     ...config,
     url,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Cache-Control": "no-cache",
-    },
+    headers,
   });
 };

@@ -36,8 +36,9 @@ describe("airtable", () => {
         themes: [],
         ratings: [],
         images: [],
-        schedules: [],
+        availibility: [],
         setsMetadata: [],
+        assetTypes: [],
         dimensions: {
           affiliates: [],
           customerTypes: [],

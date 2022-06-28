@@ -77,6 +77,7 @@ describe("skylark.sets", () => {
       genres: [],
       themes: [],
       imageTypes: [],
+      assetTypes: [],
       ratings: [],
       roles: [],
       people: [],
@@ -129,6 +130,7 @@ describe("skylark.sets", () => {
       set_type_slug: homePageSlider.set_type_slug,
       set_type_url: `/api/set-types/set-type-1`,
       self: "/api/sets/set_1",
+      schedule_urls: ["/api/schedules/1"],
     };
 
     const genres = [
@@ -162,12 +164,12 @@ describe("skylark.sets", () => {
 
       // Assert.
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      const { set_type_url, slug, title } = set;
+      const { set_type_url, slug, title, schedule_urls } = set;
       expect(axiosRequest).toBeCalledWith(
         expect.objectContaining({
           url: "https://skylarkplatform.io/api/sets/",
           method: "POST",
-          data: { uid: "", self: "", set_type_url, slug, title },
+          data: { uid: "", self: "", set_type_url, slug, title, schedule_urls },
         })
       );
     });

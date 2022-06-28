@@ -76,8 +76,9 @@ export const getAllTables = async (): Promise<Airtables> => {
     "themes",
     "ratings",
     "images",
-    "schedules",
+    "availibility",
     "sets-metadata",
+    "asset-types",
   ];
   const [
     brands,
@@ -91,8 +92,9 @@ export const getAllTables = async (): Promise<Airtables> => {
     themes,
     ratings,
     images,
-    schedules,
+    availibility,
     setsMetadata,
+    assetTypes,
   ] = await Promise.all(tables.map((table) => getTable(table)));
 
   return {
@@ -117,7 +119,8 @@ export const getAllTables = async (): Promise<Airtables> => {
     themes,
     ratings,
     images,
-    schedules,
+    availibility,
     setsMetadata,
+    assetTypes,
   };
 };

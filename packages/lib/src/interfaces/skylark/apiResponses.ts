@@ -149,3 +149,7 @@ export interface ApiDynamicObject extends ApiBaseObject {
 export interface ApiDimension extends ApiBaseObject {
   name: string;
 }
+
+export interface ApiAssetType extends ApiBaseObject {
+  name: string;
+}

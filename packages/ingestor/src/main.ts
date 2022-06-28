@@ -3,6 +3,7 @@ import "./env";
 import Amplify from "@aws-amplify/core";
 import {
   amplifyConfig,
+  ApiAssetType,
   ApiEntertainmentObject,
   ApiImageType,
   ApiPerson,
@@ -23,6 +24,7 @@ import {
   createOrUpdateAirtableObjectsInSkylarkBySlug,
   createOrUpdateAirtableObjectsInSkylarkByTitle,
   getResources,
+  authenticatedSkylarkRequest,
 } from "./lib/skylark";
 import { getAllTables } from "./lib/airtable";
 import { Airtables, Metadata } from "./interfaces";
@@ -48,6 +50,19 @@ const config = amplifyConfig({
 
 Amplify.configure(config);
 
+const wakeUpSkylarkLambdas = async () => {
+  // eslint-disable-next-line no-console
+  console.log("Waking up Skylark Lambdas");
+  await authenticatedSkylarkRequest("/api/about-skylark/", {
+    headers: { "Cache-Control": "" },
+  });
+  await new Promise((resolve) => {
+    setTimeout(resolve, 10000);
+  });
+  // eslint-disable-next-line no-console
+  console.log("Starting ingest");
+};
+
 const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
   const [alwaysSchedule, imageTypes, setTypes, dimensions] = await Promise.all([
     getAlwaysSchedule(),
@@ -56,7 +71,7 @@ const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
     createOrUpdateScheduleDimensions(airtable.dimensions),
   ]);
   const createdSchedules = await createOrUpdateSchedules(
-    airtable.schedules,
+    airtable.availibility,
     dimensions
   );
   // eslint-disable-next-line no-console
@@ -68,6 +83,7 @@ const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
       all: createdSchedules,
     },
     imageTypes,
+    assetTypes: [],
     people: [],
     roles: [],
     genres: [],
@@ -81,6 +97,13 @@ const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
     },
     dimensions,
   };
+
+  metadata.assetTypes =
+    await createOrUpdateAirtableObjectsInSkylarkBySlug<ApiAssetType>(
+      "asset-types",
+      airtable.assetTypes,
+      metadata
+    );
 
   metadata.roles = await createOrUpdateAirtableObjectsInSkylarkByTitle<ApiRole>(
     "roles",
@@ -169,6 +192,8 @@ const createAdditionalObjects = async (metadata: Metadata) => {
 
 const main = async () => {
   await signInToCognito();
+
+  await wakeUpSkylarkLambdas();
 
   const airtable = await getAllTables();
 
