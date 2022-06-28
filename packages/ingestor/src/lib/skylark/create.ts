@@ -17,8 +17,8 @@ import {
 import { authenticatedSkylarkRequest } from "./api";
 import { getResourceByProperty } from "./get";
 
-const createOrUpdateObject = async <T extends ApiBaseObject>(
-  type: ApiObjectType,
+export const createOrUpdateObject = async <T extends ApiBaseObject>(
+  type: string,
   lookup: {
     property: "slug" | "title" | "name";
     value: string;
@@ -51,7 +51,7 @@ export const createOrUpdateDynamicObject = (
     self: "",
     name,
     url: `/api/${resource}/?order=-created&q=${query}`,
-    schedule_urls: [metadata.schedules.always.self],
+    schedule_urls: [metadata.schedules.default.self],
   };
   return createOrUpdateObject<ApiDynamicObject>(
     "computed-scheduled-items",
@@ -62,40 +62,58 @@ export const createOrUpdateDynamicObject = (
 };
 
 export const parseAirtableImagesAndUploadToSkylark = <T extends ApiBaseObject>(
-  fields: FieldSet,
+  imagesAsAirtableIds: string[],
   objectToAttachTo: T,
   metadata: Metadata
 ) =>
   Promise.all(
-    Object.keys(fields)
-      .filter((key) => key.startsWith("image__"))
-      .map((key) => {
-        const [airtableImage] = fields[key] as Attachment[];
-        const imageSlug = key.replace("image__", "");
-        const imageType = metadata.imageTypes.find(
-          ({ slug }) => slug === imageSlug
-        );
-        if (!imageType) {
-          throw new Error(
-            `Invalid image type "${imageSlug}" (${key} field on Airtable)`
-          );
-        }
+    imagesAsAirtableIds.map((airtableId) => {
+      const airtableImage = metadata.airtableImages.find(
+        (record) => record.id === airtableId
+      );
+      if (!airtableImage) {
+        throw new Error(`Image not found for ID: ${airtableId}`);
+      }
+      const {
+        title,
+        type,
+        image: [image],
+        schedules,
+      } = airtableImage.fields as {
+        title: string;
+        type: string;
+        image: Attachment[];
+        schedules: string[];
+      };
+      const imageType = metadata.imageTypes.find(({ slug }) => slug === type);
+      if (!imageType) {
+        throw new Error(`Invalid image type "${type}"`);
+      }
 
-        const imageData = {
-          image_type_url: imageType.self,
-          title: airtableImage.filename,
-          schedule_urls: [metadata.schedules.always.self],
-          image_location: airtableImage.url,
-          content_url: objectToAttachTo.self,
-        };
+      const scheduleUrls =
+        schedules && schedules.length > 0
+          ? metadata.schedules.all
+              .filter(({ airtableId: scheduleAirtableId }) =>
+                schedules.includes(scheduleAirtableId)
+              )
+              .map(({ self }) => self)
+          : [metadata.schedules.default.self];
 
-        return createOrUpdateObject<ApiImage>(
-          "images",
-          { property: "title", value: airtableImage.filename },
-          imageData,
-          "PUT"
-        );
-      })
+      const imageData = {
+        image_type_url: imageType.self,
+        title,
+        schedule_urls: scheduleUrls,
+        image_location: image.url,
+        content_url: objectToAttachTo.self,
+      };
+
+      return createOrUpdateObject<ApiImage>(
+        "images",
+        { property: "title", value: title },
+        imageData,
+        "PUT"
+      );
+    })
   );
 
 const getPeopleAndRoleUrlsFromCredit = (
@@ -153,14 +171,25 @@ const getUrlsFromField = (
 };
 
 export const convertAirtableFieldsToSkylarkObject = (
+  airtableId: string,
   fields: FieldSet,
   metadata: Metadata,
   parents?: ApiEntertainmentObjectWithAirtableId[]
 ) => {
   const parentObject = parents?.find(
-    ({ airtableId }) =>
-      fields.parent && (fields.parent as string[])[0] === airtableId
+    ({ airtableId: parentAirtableId }) =>
+      fields.parent && (fields.parent as string[])[0] === parentAirtableId
   );
+
+  const schedules = fields.schedules as string[];
+  const scheduleUrls =
+    schedules && schedules.length > 0
+      ? metadata.schedules.all
+          .filter(({ airtableId: scheduleAirtableId }) =>
+            schedules.includes(scheduleAirtableId)
+          )
+          .map(({ self }) => self)
+      : [metadata.schedules.default.self];
 
   const object: ApiSkylarkObjectWithAllPotentialFields = {
     uid: "",
@@ -176,11 +205,14 @@ export const convertAirtableFieldsToSkylarkObject = (
     synopsis_long: fields?.synopsis_long as string,
     release_date: fields?.release_date as string,
     parent_url: parentObject?.self,
-    schedule_urls: [metadata.schedules.always.self],
+    schedule_urls: scheduleUrls,
     season_number: fields?.season_number as number,
     number_of_episodes: fields?.number_of_episodes as number,
     episode_number: fields?.episode_number as number,
     value: fields?.value as string,
+    is_data_source: true,
+    data_source_id: airtableId,
+    data_source_fields: ["name", "title", "slug"],
   };
 
   // Only add Credits if there are any so we don't clear any
@@ -226,6 +258,7 @@ const createOrUpdateAirtableObjectsInSkylark = <T extends ApiBaseObject>(
   const promises = airtableRecords.map(
     async ({ fields, id }): Promise<T & { airtableId: string }> => {
       const object = convertAirtableFieldsToSkylarkObject(
+        id,
         fields,
         metadata,
         parents
@@ -238,11 +271,13 @@ const createOrUpdateAirtableObjectsInSkylark = <T extends ApiBaseObject>(
         "PATCH"
       );
 
-      const imageUrls = await parseAirtableImagesAndUploadToSkylark<T>(
-        fields,
-        createdObject,
-        metadata
-      );
+      const imageUrls = fields.images
+        ? await parseAirtableImagesAndUploadToSkylark<T>(
+            fields.images as string[],
+            createdObject,
+            metadata
+          )
+        : [];
 
       return {
         ...createdObject,

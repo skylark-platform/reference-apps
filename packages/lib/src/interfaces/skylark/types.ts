@@ -21,3 +21,13 @@ export type DeviceTypes = "smartphone" | "pc";
 export type TitleTypes = "short" | "medium" | "long";
 
 export type SynopsisTypes = TitleTypes;
+
+export type DimensionTypes =
+  | "affiliates"
+  | "customer-types"
+  | "device-types"
+  | "locales"
+  | "languages"
+  | "operating-systems"
+  | "regions"
+  | "viewing-context";

@@ -43,6 +43,27 @@ const getTable = async (name: string): Promise<Record<FieldSet>[]> => {
  * @returns Object containing Airtable tables
  */
 export const getAllTables = async (): Promise<Airtables> => {
+  const dimensionTables = [
+    "affiliates",
+    "customer-types",
+    "device-types",
+    "languages",
+    "locales",
+    "operating-systems",
+    "regions",
+    "viewing-context",
+  ];
+  const [
+    affiliates,
+    customerTypes,
+    deviceTypes,
+    languages,
+    locales,
+    operatingSystems,
+    regions,
+    viewingContext,
+  ] = await Promise.all(dimensionTables.map((table) => getTable(table)));
+
   const tables = [
     "brands",
     "seasons",
@@ -54,6 +75,8 @@ export const getAllTables = async (): Promise<Airtables> => {
     "genres",
     "themes",
     "ratings",
+    "images",
+    "schedules",
     "sets-metadata",
   ];
   const [
@@ -67,9 +90,22 @@ export const getAllTables = async (): Promise<Airtables> => {
     genres,
     themes,
     ratings,
+    images,
+    schedules,
     setsMetadata,
   ] = await Promise.all(tables.map((table) => getTable(table)));
+
   return {
+    dimensions: {
+      affiliates,
+      customerTypes,
+      deviceTypes,
+      languages,
+      locales,
+      operatingSystems,
+      regions,
+      viewingContext,
+    },
     brands,
     seasons,
     episodes,
@@ -80,6 +116,8 @@ export const getAllTables = async (): Promise<Airtables> => {
     genres,
     themes,
     ratings,
+    images,
+    schedules,
     setsMetadata,
   };
 };

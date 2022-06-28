@@ -35,8 +35,24 @@ describe("airtable", () => {
         genres: [],
         themes: [],
         ratings: [],
+        images: [],
+        schedules: [],
         setsMetadata: [],
+        dimensions: {
+          affiliates: [],
+          customerTypes: [],
+          deviceTypes: [],
+          languages: [],
+          locales: [],
+          operatingSystems: [],
+          regions: [],
+          viewingContext: [],
+        },
       };
+
+      // -1 as dimensions isn't a table
+      const numTables =
+        Object.keys(tables).length - 1 + Object.keys(tables.dimensions).length;
 
       // Act.
       await getAllTables();
@@ -46,7 +62,7 @@ describe("airtable", () => {
         "https://api.airtable.com/v0/base-id/brands",
         { headers: { Authorization: "Bearer api-key" } }
       );
-      expect(mockedGet).toBeCalledTimes(Object.keys(tables).length);
+      expect(mockedGet).toBeCalledTimes(numTables);
     });
 
     it("returns the fields from records returned by Airtable", async () => {

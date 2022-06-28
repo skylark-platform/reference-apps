@@ -20,7 +20,7 @@ import {
 const createOrUpdateSet = async (
   setConfig: SetConfig,
   metadata: Metadata,
-  additionalProperties?: FieldSet
+  airtableProperties?: { id: string; fields: FieldSet }
 ) => {
   const { title, slug, set_type_slug: setTypeSlug } = setConfig;
   const setType = metadata.set.types.find(
@@ -33,9 +33,10 @@ const createOrUpdateSet = async (
   );
 
   let object = {};
-  if (additionalProperties) {
+  if (airtableProperties) {
     object = convertAirtableFieldsToSkylarkObject(
-      additionalProperties,
+      airtableProperties.id,
+      airtableProperties.fields,
       metadata
     );
   }
@@ -77,7 +78,7 @@ const createOrUpdateSetItem = async (
     data: {
       content_url: contentUrl,
       position,
-      schedule_urls: [metadata.schedules.always.self],
+      schedule_urls: [metadata.schedules.default.self],
     },
   });
 };
@@ -86,8 +87,8 @@ export const createOrUpdateSetAndContents = async (
   setConfig: SetConfig,
   metadata: Metadata
 ) => {
-  const additionalAirtableProperties = metadata.set.additionalFields.find(
-    ({ slug: metadataSlug }) => metadataSlug === setConfig.slug
+  const additionalAirtableProperties = metadata.set.additionalRecords.find(
+    ({ fields: { slug: metadataSlug } }) => metadataSlug === setConfig.slug
   );
 
   const set = await createOrUpdateSet(
@@ -96,9 +97,12 @@ export const createOrUpdateSetAndContents = async (
     additionalAirtableProperties
   );
 
-  if (additionalAirtableProperties) {
+  if (
+    additionalAirtableProperties &&
+    additionalAirtableProperties.fields?.images
+  ) {
     await parseAirtableImagesAndUploadToSkylark(
-      additionalAirtableProperties,
+      additionalAirtableProperties.fields.images as string[],
       set,
       metadata
     );

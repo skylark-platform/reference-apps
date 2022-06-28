@@ -4,9 +4,11 @@ import Amplify from "@aws-amplify/core";
 import {
   amplifyConfig,
   ApiEntertainmentObject,
+  ApiImageType,
   ApiPerson,
   ApiRating,
   ApiRole,
+  ApiSetType,
   ApiThemeGenre,
 } from "@skylark-reference-apps/lib";
 import {
@@ -16,13 +18,11 @@ import {
 } from "./lib/constants";
 import { signInToCognito } from "./lib/cognito";
 import {
-  getAlwaysSchedule,
-  getImageTypes,
-  getSetTypes,
   createOrUpdateDynamicObject,
   createOrUpdateSetAndContents,
   createOrUpdateAirtableObjectsInSkylarkBySlug,
   createOrUpdateAirtableObjectsInSkylarkByTitle,
+  getResources,
 } from "./lib/skylark";
 import { getAllTables } from "./lib/airtable";
 import { Airtables, Metadata } from "./interfaces";
@@ -34,6 +34,11 @@ import {
   tarantinoMoviesCollection,
 } from "./additional-objects/sets";
 import { quentinTarantinoMovies } from "./additional-objects/dynamicObjects";
+import {
+  createOrUpdateSchedules,
+  createOrUpdateScheduleDimensions,
+  getAlwaysSchedule,
+} from "./lib/skylark/availability";
 
 const config = amplifyConfig({
   region: COGNITO_REGION,
@@ -44,13 +49,23 @@ const config = amplifyConfig({
 Amplify.configure(config);
 
 const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
-  const alwaysSchedule = await getAlwaysSchedule();
-  const imageTypes = await getImageTypes();
-  const setTypes = await getSetTypes();
+  const [alwaysSchedule, imageTypes, setTypes, dimensions] = await Promise.all([
+    getAlwaysSchedule(),
+    getResources<ApiImageType>("image-types"),
+    getResources<ApiSetType>("set-types"),
+    createOrUpdateScheduleDimensions(airtable.dimensions),
+  ]);
+  const createdSchedules = await createOrUpdateSchedules(
+    airtable.schedules,
+    dimensions
+  );
+  // eslint-disable-next-line no-console
+  console.log("Schedule objects created");
 
   const metadata: Metadata = {
     schedules: {
-      always: alwaysSchedule,
+      default: alwaysSchedule,
+      all: createdSchedules,
     },
     imageTypes,
     people: [],
@@ -59,10 +74,12 @@ const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
     themes: [],
     ratings: [],
     airtableCredits: airtable.credits,
+    airtableImages: airtable.images,
     set: {
       types: setTypes,
-      additionalFields: airtable.setsMetadata.map(({ fields }) => fields),
+      additionalRecords: airtable.setsMetadata,
     },
+    dimensions,
   };
 
   metadata.roles = await createOrUpdateAirtableObjectsInSkylarkByTitle<ApiRole>(
@@ -161,7 +178,8 @@ const main = async () => {
 
   await createAdditionalObjects(metadata);
 
-  console.log("clean");
+  // eslint-disable-next-line no-console
+  console.log("great success");
 };
 
 main().catch((err) => {

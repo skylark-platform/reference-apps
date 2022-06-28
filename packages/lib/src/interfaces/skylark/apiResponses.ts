@@ -4,6 +4,9 @@ export interface ApiBaseObject {
   uid: string;
   self: string;
   slug: string;
+  is_data_source?: boolean;
+  data_source_id?: string;
+  data_source_fields?: string[];
   schedule_urls?: string[];
 }
 
@@ -104,8 +107,17 @@ export interface ApiPlaybackResponse {
 }
 
 export interface ApiSchedule extends ApiBaseObject {
-  status: string;
   title: string;
+  rights: boolean;
+  affiliate_urls: string[];
+  device_type_urls: string[];
+  language_urls: string[];
+  locale_urls: string[];
+  region_urls: string[];
+  customer_type_urls: string[];
+  operating_system_urls: string[];
+  viewing_context_urls: string[];
+  status: string;
 }
 
 export interface ApiImageType extends ApiBaseObject {
@@ -132,4 +144,8 @@ export interface ApiDynamicObject extends ApiBaseObject {
   name: string;
   url: string;
   description: string;
+}
+
+export interface ApiDimension extends ApiBaseObject {
+  name: string;
 }

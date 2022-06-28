@@ -1,5 +1,5 @@
 import Auth from "@aws-amplify/auth";
-import { Attachment } from "airtable";
+import { Attachment, FieldSet, Record } from "airtable";
 import axios, { AxiosRequestConfig } from "axios";
 import { convertAirtableFieldsToSkylarkObject } from ".";
 import { Metadata, SetConfig } from "../../interfaces";
@@ -40,8 +40,40 @@ describe("skylark.sets", () => {
       ],
     };
 
+    const imageAttachment: Attachment = {
+      id: "airtable-image-1",
+      url: "https://download-this-image.jpg",
+      filename: "download-this-image",
+      size: 12,
+      type: "idk",
+    };
+
+    const airtableImageWithValidType: object = {
+      id: "image-1",
+      fields: {
+        title: imageAttachment.filename,
+        image: [imageAttachment],
+        type: "main",
+        schedule_urls: [],
+      },
+    };
+
+    const airtableImageWithInvalidType: object = {
+      id: "image-2",
+      fields: {
+        title: imageAttachment.filename,
+        image: [imageAttachment],
+        type: "invalid",
+        schedule_urls: [],
+      },
+    };
+
     const metadata: Metadata = {
       airtableCredits: [],
+      airtableImages: [
+        airtableImageWithValidType as Record<FieldSet>,
+        airtableImageWithInvalidType as Record<FieldSet>,
+      ],
       genres: [],
       themes: [],
       imageTypes: [],
@@ -57,16 +89,36 @@ describe("skylark.sets", () => {
             self: "/api/set-types/set-type-1",
           },
         ],
-        additionalFields: [],
+        additionalRecords: [],
       },
       schedules: {
-        always: {
+        default: {
           uid: "1",
           slug: "always-schedule",
           title: "Always",
+          rights: false,
           status: "active",
           self: "/api/schedules/1",
+          affiliate_urls: [],
+          customer_type_urls: [],
+          device_type_urls: [],
+          language_urls: [],
+          locale_urls: [],
+          operating_system_urls: [],
+          region_urls: [],
+          viewing_context_urls: [],
         },
+        all: [],
+      },
+      dimensions: {
+        affiliates: [],
+        customerTypes: [],
+        deviceTypes: [],
+        languages: [],
+        locales: [],
+        operatingSystems: [],
+        regions: [],
+        viewingContext: [],
       },
     };
 
@@ -97,14 +149,6 @@ describe("skylark.sets", () => {
         self: "/api/image-types/image-type-1",
       },
     ];
-
-    const image: Attachment = {
-      id: "airtable-image-1",
-      url: "https://download-this-image.jpg",
-      filename: "download-this-image",
-      size: 12,
-      type: "idk",
-    };
 
     it("creates the set when the set doesn't exist in Skylark", async () => {
       // Arrange.
@@ -202,10 +246,13 @@ describe("skylark.sets", () => {
         genres,
         set: {
           ...metadata.set,
-          additionalFields: [
+          additionalRecords: [
             {
-              slug: set.slug,
-              genres: [genres[0].airtableId],
+              id: "1",
+              fields: {
+                slug: set.slug,
+                genres: [genres[0].airtableId],
+              },
             },
           ],
         },
@@ -228,7 +275,8 @@ describe("skylark.sets", () => {
           method: "POST",
           data: {
             ...convertAirtableFieldsToSkylarkObject(
-              metadataWithGenres.set.additionalFields[0],
+              "1",
+              metadataWithGenres.set.additionalRecords[0].fields,
               metadataWithGenres
             ),
             genre_urls: [genres[0].self],
@@ -249,10 +297,13 @@ describe("skylark.sets", () => {
         imageTypes,
         set: {
           ...metadata.set,
-          additionalFields: [
+          additionalRecords: [
             {
-              slug: set.slug,
-              image__main: [image],
+              id: "1",
+              fields: {
+                slug: homePageSlider.slug,
+                images: ["image-1"],
+              },
             },
           ],
         },
@@ -302,10 +353,13 @@ describe("skylark.sets", () => {
         ...metadata,
         set: {
           ...metadata.set,
-          additionalFields: [
+          additionalRecords: [
             {
-              slug: homePageSlider.slug,
-              image__main: [image],
+              id: "1",
+              fields: {
+                slug: homePageSlider.slug,
+                images: ["image-2"],
+              },
             },
           ],
         },
@@ -318,9 +372,7 @@ describe("skylark.sets", () => {
           { ...homePageSlider, contents: [] },
           metadataWithImages
         )
-      ).rejects.toThrow(
-        `Invalid image type "main" (image__main field on Airtable)`
-      );
+      ).rejects.toThrow(`Invalid image type "invalid"`);
     });
 
     it("should request existing set items when the setConfig has contents", async () => {

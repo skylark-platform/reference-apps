@@ -1,21 +1,14 @@
 import Auth from "@aws-amplify/auth";
-import {
-  ApiEntertainmentObject,
-  ApiImage,
-  ApiSchedule,
-  ApiSetType,
-} from "@skylark-reference-apps/lib";
+import { ApiEntertainmentObject, ApiImage } from "@skylark-reference-apps/lib";
 import axios from "axios";
 import {
   getResourceBySlug,
-  getSetTypes,
-  getAlwaysSchedule,
-  getImageTypes,
   getResourceByName,
   getResourceByProperty,
   getResourceByTitle,
   getSetBySlug,
   getSetItems,
+  getResources,
 } from "./get";
 
 jest.mock("axios");
@@ -38,6 +31,37 @@ describe("skylark.get", () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  describe("getResources", () => {
+    it("calls /api/image-types", async () => {
+      axiosRequest.mockResolvedValue({ data: {} });
+      await getResources("image-types");
+
+      expect(axiosRequest).toBeCalledWith(
+        expect.objectContaining({
+          url: "https://skylarkplatform.io/api/image-types/",
+        })
+      );
+    });
+
+    it("returns image types", async () => {
+      const imageTypes: Partial<ApiImage>[] = [
+        { title: "image1", uid: "1", url: "http://image.com/1" },
+        { title: "image2", uid: "2", url: "http://image.com/2" },
+      ];
+      axiosRequest.mockResolvedValue({ data: { objects: imageTypes } });
+      const got = await getResources("image-types");
+
+      expect(got).toEqual(imageTypes);
+    });
+
+    it("returns an empty array when no objects are returned", async () => {
+      axiosRequest.mockResolvedValue({ data: {} });
+      const got = await getResources("image-types");
+
+      expect(got).toEqual([]);
+    });
   });
 
   describe("getResourceByProperty", () => {
@@ -136,92 +160,6 @@ describe("skylark.get", () => {
         },
         headers: expect.any(Object) as object,
       });
-    });
-  });
-
-  describe("getAlwaysSchedule", () => {
-    it("returns the always schedule when it is found", async () => {
-      const schedule: ApiSchedule = {
-        uid: "1",
-        self: "/api/schedule/1",
-        slug: "always",
-        title: "always-scheduled",
-        status: "enabled",
-      };
-      axiosRequest.mockResolvedValue({ data: { objects: [schedule] } });
-      const got = await getAlwaysSchedule();
-
-      expect(got).toEqual(schedule);
-    });
-
-    it("throws an error when the schedule is not found", async () => {
-      axiosRequest.mockResolvedValue({ data: { objects: [] } });
-
-      await expect(getAlwaysSchedule()).rejects.toThrow(
-        "Always schedule not found"
-      );
-    });
-  });
-
-  describe("getImageTypes", () => {
-    it("calls /api/image-types", async () => {
-      axiosRequest.mockResolvedValue({ data: {} });
-      await getImageTypes();
-
-      expect(axiosRequest).toBeCalledWith(
-        expect.objectContaining({
-          url: "https://skylarkplatform.io/api/image-types/",
-        })
-      );
-    });
-
-    it("returns image types", async () => {
-      const imageTypes: Partial<ApiImage>[] = [
-        { title: "image1", uid: "1", url: "http://image.com/1" },
-        { title: "image2", uid: "2", url: "http://image.com/2" },
-      ];
-      axiosRequest.mockResolvedValue({ data: { objects: imageTypes } });
-      const got = await getImageTypes();
-
-      expect(got).toEqual(imageTypes);
-    });
-
-    it("returns an empty array when no objects are returned", async () => {
-      axiosRequest.mockResolvedValue({ data: {} });
-      const got = await getImageTypes();
-
-      expect(got).toEqual([]);
-    });
-  });
-
-  describe("getSetTypes", () => {
-    it("calls /api/set-types", async () => {
-      axiosRequest.mockResolvedValue({ data: {} });
-      await getSetTypes();
-
-      expect(axiosRequest).toBeCalledWith(
-        expect.objectContaining({
-          url: "https://skylarkplatform.io/api/set-types/",
-        })
-      );
-    });
-
-    it("returns set types", async () => {
-      const setTypes: Partial<ApiSetType>[] = [
-        { title: "image1", uid: "1" },
-        { title: "image2", uid: "2" },
-      ];
-      axiosRequest.mockResolvedValue({ data: { objects: setTypes } });
-      const got = await getSetTypes();
-
-      expect(got).toEqual(setTypes);
-    });
-
-    it("returns an empty array when no objects are returned", async () => {
-      axiosRequest.mockResolvedValue({ data: {} });
-      const got = await getSetTypes();
-
-      expect(got).toEqual([]);
     });
   });
 
