@@ -11,7 +11,7 @@ const fields = {
   uid: {},
 };
 
-export const genresSetFetcher = (endpoint: string) => {
+export const themeGenresFetcher = (endpoint: string) => {
   const apiQuery = createSkylarkApiQuery({
     fieldsToExpand: {},
     fields,
@@ -26,10 +26,10 @@ export const genresSetFetcher = (endpoint: string) => {
     .then(({ data }) => data.objects);
 };
 
-export const useAllGenres = (type: string) => {
+export const useAllGenres = () => {
   const { data, error } = useSWR<ApiThemeGenre[], Error>(
-    [type],
-    genresSetFetcher
+    ["genres"],
+    themeGenresFetcher
   );
 
   return {

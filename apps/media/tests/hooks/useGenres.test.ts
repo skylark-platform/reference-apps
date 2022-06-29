@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 import axios from "axios";
-import { genresSetFetcher } from "../../hooks/useGenres";
+import { themeGenresFetcher } from "../../hooks/useGenres";
 
 jest.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -18,7 +18,7 @@ describe("useGenre hook tests", () => {
 
     // Act
     mockedAxios.get.mockResolvedValueOnce({ data: { objects: mockData } });
-    const res = await genresSetFetcher("genres");
+    const res = await themeGenresFetcher("genres");
 
     // Assert
     expect(res).toEqual(mockData);
@@ -26,14 +26,17 @@ describe("useGenre hook tests", () => {
 
   it("should throw an error if data is incorrect", async () => {
     // Arrange
-    const mockData = "War";
+    const handlePromise = () =>
+      new Promise((resolve, reject) => {
+        reject(new Error("axios error"));
+      });
 
     // Act
-    mockedAxios.get.mockResolvedValueOnce({ error: mockData });
+
+    const handle = handlePromise();
+    mockedAxios.get.mockResolvedValueOnce(handle);
 
     // Assert
-    await expect(genresSetFetcher("genre")).rejects.toThrow(
-      "Cannot read properties of undefined (reading 'objects')"
-    );
+    await expect(themeGenresFetcher("genres")).rejects.toThrow("axios error");
   });
 });
