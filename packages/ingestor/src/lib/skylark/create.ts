@@ -16,8 +16,19 @@ import {
 } from "../../interfaces";
 import { authenticatedSkylarkRequest } from "./api";
 import { getResourceByProperty } from "./get";
-import { getScheduleUrlsFromMetadata } from "./utils";
+import {
+  getScheduleUrlsFromMetadata,
+  removeUndefinedPropertiesFromObject,
+} from "./utils";
 
+/**
+ * createOrUpdateObject - creates or updates an object in Skylark
+ * @param type - the Skylark object endpoint
+ * @param lookup - an object containing a property and value to use to find the object in Skylark
+ * @param data - additional data to add to the object
+ * @param updateMethod - HTTP method to use to update the object in Skylark
+ * @returns data returned by the Skylark API
+ */
 export const createOrUpdateObject = async <T extends ApiBaseObject>(
   type: string,
   lookup: {
@@ -43,6 +54,12 @@ export const createOrUpdateObject = async <T extends ApiBaseObject>(
   return res.data as T;
 };
 
+/**
+ * createOrUpdateDynamicObject - creates or updates a dynamic object in Skylark
+ * @param dynamicObjectConfig
+ * @param metadata
+ * @returns data returned from Skylark
+ */
 export const createOrUpdateDynamicObject = (
   { name, resource, query }: DynamicObjectConfig,
   metadata: Metadata
@@ -62,6 +79,13 @@ export const createOrUpdateDynamicObject = (
   );
 };
 
+/**
+ * parseAirtableImagesAndUploadToSkylark - Uploads an image and connects a Skylark object
+ * @param imagesAsAirtableIds - The images to connect to the object represented by their Airtable ID
+ * @param objectToAttachTo - The Skylark object to attach the image to
+ * @param metadata
+ * @returns
+ */
 export const parseAirtableImagesAndUploadToSkylark = <T extends ApiBaseObject>(
   imagesAsAirtableIds: string[],
   objectToAttachTo: T,
@@ -113,6 +137,14 @@ export const parseAirtableImagesAndUploadToSkylark = <T extends ApiBaseObject>(
     })
   );
 
+/**
+ * getPeopleAndRoleUrlsFromCredit - returns a Skylark API Credit object
+ * uses the Credits, People and Roles Airtables to map a Credit to its Skylark people and role URLs
+ * @param { credit } - The credit to find the people and role URLs for
+ * @param people - People returned by the Skylark API with their Airtable IDs
+ * @param roles - Roles returned by the Skylark API with their Airtable IDs
+ * @returns
+ */
 const getPeopleAndRoleUrlsFromCredit = (
   { fields: credit }: Record<FieldSet>,
   people: (ApiPerson & { airtableId: string })[],
@@ -131,6 +163,12 @@ const getPeopleAndRoleUrlsFromCredit = (
   return null;
 };
 
+/**
+ * getCreditsFromField - given a credit field, returns the Skylark Credit object containing a people_url and role_url
+ * @param fieldCredits - array of Airtable IDs that match entries in the Credits table
+ * @param metadata
+ * @returns
+ */
 const getCreditsFromField = (
   fieldCredits: string[] | null,
   metadata: Metadata
@@ -153,6 +191,12 @@ const getCreditsFromField = (
   return apiCredits;
 };
 
+/**
+ * getUrlsFromField - gets Skylark object URLs from a given field array
+ * @param field - String array containing Airtable IDs that are found in the SkylarkData variable
+ * @param skylarkData - object containing Airtable IDs and a Skylark object's self field
+ * @returns array of Skylark object URLs
+ */
 const getUrlsFromField = (
   field: string[] | null,
   skylarkData: { airtableId: string; self: string }[]
@@ -167,6 +211,14 @@ const getUrlsFromField = (
   return urls;
 };
 
+/**
+ * convertAirtableFieldsToSkylarkObject - Converts an Airtable entry into a Skylark object
+ * @param airtableId - Airtable ID of the object
+ * @param fields - Fields in Airtable
+ * @param metadata
+ * @param parents - All possible parents of the Skylark object
+ * @returns a Skylark object
+ */
 export const convertAirtableFieldsToSkylarkObject = (
   airtableId: string,
   fields: FieldSet,
@@ -178,9 +230,8 @@ export const convertAirtableFieldsToSkylarkObject = (
       fields.parent && (fields.parent as string[])[0] === parentAirtableId
   );
 
-  const schedules = fields.schedules as string[];
   const scheduleUrls = getScheduleUrlsFromMetadata(
-    schedules,
+    fields.schedules as string[],
     metadata.schedules
   );
 
@@ -208,7 +259,6 @@ export const convertAirtableFieldsToSkylarkObject = (
     data_source_fields: ["name", "title", "slug"],
   };
 
-  // Only add Credits if there are any so we don't clear any
   const credits = getCreditsFromField(fields.credits as string[], metadata);
   if (credits) {
     object.credits = credits;
@@ -238,9 +288,20 @@ export const convertAirtableFieldsToSkylarkObject = (
     object.rating_urls = ratingUrls;
   }
 
-  return object;
+  return removeUndefinedPropertiesFromObject<ApiSkylarkObjectWithAllPotentialFields>(
+    object
+  );
 };
 
+/**
+ * createOrUpdateAirtableObjectsInSkylark - creates or updates objects in Skylark using Records from Airtable
+ * @param type - The Skylark object
+ * @param airtableRecords - Airtable records from a table of the given type
+ * @param metadata
+ * @param parents - Potential parents for the objects
+ * @param lookupProperty - property to use to check whether the object exists in Skylark
+ * @returns
+ */
 const createOrUpdateAirtableObjectsInSkylark = <T extends ApiBaseObject>(
   type: ApiObjectType,
   airtableRecords: Records<FieldSet>,
@@ -283,6 +344,14 @@ const createOrUpdateAirtableObjectsInSkylark = <T extends ApiBaseObject>(
   return Promise.all(promises);
 };
 
+/**
+ * createOrUpdateAirtableObjectsInSkylarkBySlug - wrapper for createOrUpdateAirtableObjectsInSkylark that uses the slug to lookup existing objects
+ * @param type - The Skylark object
+ * @param airtableRecords - Airtable records from a table of the given type
+ * @param metadata
+ * @param parents - Potential parents for the objects
+ * @returns
+ */
 export const createOrUpdateAirtableObjectsInSkylarkBySlug = <
   T extends ApiBaseObject
 >(
@@ -299,6 +368,14 @@ export const createOrUpdateAirtableObjectsInSkylarkBySlug = <
     "slug"
   );
 
+/**
+ * createOrUpdateAirtableObjectsInSkylarkByTitle - wrapper for createOrUpdateAirtableObjectsInSkylark that uses the title to lookup existing objects
+ * @param type - The Skylark object
+ * @param airtableRecords - Airtable records from a table of the given type
+ * @param metadata
+ * @param parents - Potential parents for the objects
+ * @returns
+ */
 export const createOrUpdateAirtableObjectsInSkylarkByTitle = <
   T extends ApiBaseObject
 >(

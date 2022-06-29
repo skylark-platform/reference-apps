@@ -60,9 +60,9 @@ export type ApiObjectType =
   | "genres"
   | "themes"
   | "ratings"
-  | "image-types"
-  | "asset-types"
   | "computed-scheduled-items";
+
+export type ApiContentObjectType = "image-types" | "asset-types";
 
 type AllApiObjects = Partial<
   ApiEntertainmentObject &
@@ -114,7 +114,7 @@ export interface Metadata {
     all: (ApiSchedule & ApiAirtableFields)[];
   };
   imageTypes: ApiImageType[];
-  assetTypes: ApiAssetType[];
+  assetTypes: (ApiAssetType & ApiAirtableFields)[];
   set: {
     types: ApiSetType[];
     additionalRecords: { id: string; fields: FieldSet }[];

@@ -1,5 +1,8 @@
 import { Metadata } from "../../interfaces";
-import { getScheduleUrlsFromMetadata } from "./utils";
+import {
+  getScheduleUrlsFromMetadata,
+  removeUndefinedPropertiesFromObject,
+} from "./utils";
 
 describe("utils", () => {
   describe("getScheduleUrlsFromMetadata", () => {
@@ -91,6 +94,28 @@ describe("utils", () => {
         metadataSchedules.all[0].self,
         metadataSchedules.all[1].self,
       ]);
+    });
+  });
+
+  describe("removeUndefinedPropertiesFromObject", () => {
+    it("removes any properties with undefined values from an object", () => {
+      const obj = {
+        title: "a title",
+        undefinedProperty: undefined,
+        nullProperty: null,
+      };
+
+      const got = removeUndefinedPropertiesFromObject(obj);
+
+      expect(obj).toEqual({
+        title: obj.title,
+        nullProperty: obj.nullProperty,
+        undefinedProperty: obj.undefinedProperty,
+      });
+      expect(got).toEqual({
+        title: obj.title,
+        nullProperty: obj.nullProperty,
+      });
     });
   });
 });

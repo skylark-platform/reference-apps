@@ -12,6 +12,7 @@ import {
   ApiSetType,
   ApiThemeGenre,
 } from "@skylark-reference-apps/lib";
+import axios from "axios";
 import {
   COGNITO_REGION,
   COGNITO_USER_POOL_CLIENT_ID,
@@ -40,6 +41,7 @@ import {
   createOrUpdateScheduleDimensions,
   getAlwaysSchedule,
 } from "./lib/skylark/availability";
+import { createOrUpdateContentTypes } from "./lib/skylark/content-types";
 
 const config = amplifyConfig({
   region: COGNITO_REGION,
@@ -84,12 +86,11 @@ const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
     dimensions,
   };
 
-  metadata.assetTypes =
-    await createOrUpdateAirtableObjectsInSkylarkBySlug<ApiAssetType>(
-      "asset-types",
-      airtable.assetTypes,
-      metadata
-    );
+  metadata.assetTypes = await createOrUpdateContentTypes<ApiAssetType>(
+    "asset-types",
+    airtable.assetTypes,
+    metadata
+  );
 
   metadata.roles = await createOrUpdateAirtableObjectsInSkylarkByTitle<ApiRole>(
     "roles",
@@ -196,5 +197,9 @@ main().catch((err) => {
   console.error("Error while ingesting to Skylark");
   // eslint-disable-next-line no-console
   console.error(err);
+  if (axios.isAxiosError(err) && err.response) {
+    // eslint-disable-next-line no-console
+    console.log("Axios response status: ", err.response.status);
+  }
   process.exit(1);
 });

@@ -63,8 +63,8 @@ runs:
         COGNITO_CLIENT_ID: ${{ inputs.cognito-client-id }}
         COGNITO_USER_POOL_ID: ${{ inputs.cognito-user-pool-id }}
       with:
-        timeout_minutes: 5
-        retry_wait_seconds: 20
-        max_attempts: 10
+        timeout_minutes: 20
+        retry_wait_seconds: 10
+        max_attempts: 20
         retry_on: error
         command: cd ./packages/ingestor && yarn ingest

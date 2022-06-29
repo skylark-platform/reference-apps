@@ -31,6 +31,12 @@ export const getAlwaysSchedule = async (): Promise<ApiSchedule> => {
   return schedule;
 };
 
+/**
+ * createOrUpdateDimensions - creates or updates a dimension within Skylark
+ * @param type
+ * @param table
+ * @returns all dimensions from a given table
+ */
 const createOrUpdateDimensions = (
   type: DimensionTypes,
   table: Record<FieldSet>[]
@@ -56,6 +62,11 @@ const createOrUpdateDimensions = (
     )
   );
 
+/**
+ * createOrUpdateScheduleDimensions - creates or updates all scheduling dimensions from Airtable to Skylark
+ * @param airtable
+ * @returns all scheduling dimensions in the metadata object
+ */
 export const createOrUpdateScheduleDimensions = async (
   airtable: Airtables["dimensions"]
 ): Promise<Metadata["dimensions"]> => {
@@ -94,6 +105,12 @@ export const createOrUpdateScheduleDimensions = async (
   };
 };
 
+/**
+ * createOrUpdateSchedules - creates or updates schedules from Airtable in Skylark
+ * @param schedules - schedules from Airtable
+ * @param dimensions - All dimensions known in Airtable and created in Skylark
+ * @returns
+ */
 export const createOrUpdateSchedules = (
   schedules: Record<FieldSet>[],
   dimensions: Metadata["dimensions"]

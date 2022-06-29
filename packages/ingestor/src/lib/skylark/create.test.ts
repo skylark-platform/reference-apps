@@ -1,9 +1,23 @@
 import Auth from "@aws-amplify/auth";
-import { ApiImage } from "@skylark-reference-apps/lib";
-import { Attachment, FieldSet, Record } from "airtable";
-import axios from "axios";
-import { DynamicObjectConfig, Metadata } from "../../interfaces";
 import {
+  ApiCreditUnexpanded,
+  ApiImage,
+  ApiRole,
+} from "@skylark-reference-apps/lib";
+import { Attachment, FieldSet, Record } from "airtable";
+import axios, { AxiosRequestConfig } from "axios";
+import {
+  convertAirtableFieldsToSkylarkObject,
+  createOrUpdateAirtableObjectsInSkylarkBySlug,
+} from ".";
+import {
+  ApiAirtableFields,
+  ApiEntertainmentObjectWithAirtableId,
+  DynamicObjectConfig,
+  Metadata,
+} from "../../interfaces";
+import {
+  createOrUpdateAirtableObjectsInSkylarkByTitle,
   createOrUpdateDynamicObject,
   createOrUpdateObject,
   parseAirtableImagesAndUploadToSkylark,
@@ -430,5 +444,398 @@ describe("skylark.sets", () => {
     });
   });
 
-  describe("convertAirtableFieldsToSkylarkObject", () => {});
+  describe("convertAirtableFieldsToSkylarkObject", () => {
+    const parent: ApiEntertainmentObjectWithAirtableId = {
+      airtableId: "parent-1",
+      uid: "parent_1",
+      title: "Parent",
+      self: "/api/parent_1",
+      slug: "parent-1",
+    };
+
+    it("returns the default object structure when no fields, metadata or parents are given", () => {
+      const expected = {
+        uid: "",
+        self: "",
+        schedule_urls: [metadata.schedules.default.self],
+        is_data_source: true,
+        data_source_id: "1",
+        data_source_fields: ["name", "title", "slug"],
+      };
+
+      const skylarkObject = convertAirtableFieldsToSkylarkObject(
+        "1",
+        {},
+        metadata
+      );
+
+      expect(skylarkObject).toEqual(expected);
+    });
+
+    it("removes undefined properties from the object when the Airtable field isn't supplied", () => {
+      const skylarkObject = convertAirtableFieldsToSkylarkObject(
+        "1",
+        {},
+        metadata
+      );
+      expect(skylarkObject).not.toHaveProperty("title");
+      expect(skylarkObject).not.toHaveProperty("name");
+    });
+
+    it("adds the parent Skylark uid to the object when a parent is found", () => {
+      const expected = {
+        uid: "",
+        self: "",
+        schedule_urls: [metadata.schedules.default.self],
+        is_data_source: true,
+        data_source_id: "1",
+        data_source_fields: ["name", "title", "slug"],
+        parent_url: parent.self,
+      };
+
+      const skylarkObject = convertAirtableFieldsToSkylarkObject(
+        "1",
+        {
+          parent: [parent.airtableId],
+        },
+        metadata,
+        [parent]
+      );
+
+      expect(skylarkObject).toEqual(expected);
+    });
+
+    it("adds credits using the credits, people and roles tables", () => {
+      const metadataWithCredits: Metadata = {
+        ...metadata,
+        people: [
+          {
+            airtableId: "airtable-person-1",
+            name: "person-1",
+            uid: "people_1",
+            slug: "person-1",
+            self: "/api/people/people_1",
+          },
+        ],
+        roles: [
+          {
+            airtableId: "airtable-role-1",
+            title: "role-1",
+            uid: "role_1",
+            self: "/api/roles/role_1",
+          } as unknown as ApiRole & ApiAirtableFields,
+        ],
+        airtableCredits: [
+          {
+            id: "airtable-credit-1",
+            fields: {
+              person: ["airtable-person-1"],
+              role: ["airtable-role-1"],
+            } as object,
+          } as Record<FieldSet>,
+        ],
+      };
+      const expectedCredits: ApiCreditUnexpanded[] = [
+        {
+          people_url: metadataWithCredits.people[0].self,
+          role_url: metadataWithCredits.roles[0].self,
+        },
+      ];
+
+      const skylarkObject = convertAirtableFieldsToSkylarkObject(
+        "1",
+        {
+          credits: ["airtable-credit-1"],
+        },
+        metadataWithCredits
+      );
+
+      expect(skylarkObject.credits).toEqual(expectedCredits);
+    });
+
+    it("adds genre_urls using the genres table", () => {
+      const metadataWithGenres: Metadata = {
+        ...metadata,
+        genres: [
+          {
+            airtableId: "airtable-genre-1",
+            name: "genre-1",
+            uid: "genre_1",
+            slug: "genre-1",
+            self: "/api/genres/genre_1",
+          },
+          {
+            airtableId: "airtable-genre-2",
+            name: "genre-2",
+            uid: "genre_2",
+            slug: "genre-2",
+            self: "/api/genres/genre_2",
+          },
+        ],
+      };
+      const expectedGenres: string[] = [metadataWithGenres.genres[0].self];
+
+      const skylarkObject = convertAirtableFieldsToSkylarkObject(
+        "1",
+        {
+          genres: ["airtable-genre-1"],
+        },
+        metadataWithGenres
+      );
+
+      expect(skylarkObject.genre_urls).toEqual(expectedGenres);
+    });
+
+    it("adds theme_urls using the themes table", () => {
+      const metadataWithThemes: Metadata = {
+        ...metadata,
+        themes: [
+          {
+            airtableId: "airtable-theme-1",
+            name: "theme-1",
+            uid: "theme_1",
+            slug: "theme-1",
+            self: "/api/themes/theme_1",
+          },
+          {
+            airtableId: "airtable-theme-2",
+            name: "theme-2",
+            uid: "theme_2",
+            slug: "theme-2",
+            self: "/api/themes/theme_2",
+          },
+        ],
+      };
+      const expected: string[] = [metadataWithThemes.themes[0].self];
+
+      const skylarkObject = convertAirtableFieldsToSkylarkObject(
+        "1",
+        {
+          themes: ["airtable-theme-1"],
+        },
+        metadataWithThemes
+      );
+
+      expect(skylarkObject.theme_urls).toEqual(expected);
+    });
+
+    it("adds rating_urls using the ratings table", () => {
+      const metadataWithRatings: Metadata = {
+        ...metadata,
+        ratings: [
+          {
+            airtableId: "airtable-rating-1",
+            title: "rating-1",
+            uid: "rating_1",
+            slug: "rating-1",
+            self: "/api/ratings/rating_1",
+          },
+          {
+            airtableId: "airtable-rating-2",
+            title: "rating-2",
+            uid: "rating_2",
+            slug: "rating-2",
+            self: "/api/ratings/rating_2",
+          },
+        ],
+      };
+      const expected: string[] = [metadataWithRatings.ratings[0].self];
+
+      const skylarkObject = convertAirtableFieldsToSkylarkObject(
+        "1",
+        {
+          ratings: ["airtable-rating-1"],
+        },
+        metadataWithRatings
+      );
+
+      expect(skylarkObject.rating_urls).toEqual(expected);
+    });
+  });
+
+  describe("createOrUpdateAirtableObjectsInSkylarkBySlug", () => {
+    const airtableEpisodeRecords: Partial<Record<FieldSet>>[] = [
+      {
+        id: "airtable-episode-1",
+        fields: { slug: "episode-1", title_short: "short title" },
+      },
+      {
+        id: "airtable-episode-2",
+        fields: { slug: "episode-2", synopsis_short: "short synopsis" },
+      },
+    ];
+
+    it("Makes a GET request to check if the Airtable records match objects that exist in Skylark using the slug property", async () => {
+      // Arrange.
+      axiosRequest.mockImplementation(() => ({ data: {} }));
+
+      // Act.
+      await createOrUpdateAirtableObjectsInSkylarkBySlug(
+        "episodes",
+        airtableEpisodeRecords as Record<FieldSet>[],
+        metadata
+      );
+
+      // Assert.
+      expect(axiosRequest).toBeCalledWith(
+        expect.objectContaining({
+          method: "GET",
+          url: "https://skylarkplatform.io/api/episodes/?slug=episode-1",
+        })
+      );
+      expect(axiosRequest).toBeCalledWith(
+        expect.objectContaining({
+          method: "GET",
+          url: "https://skylarkplatform.io/api/episodes/?slug=episode-2",
+        })
+      );
+    });
+
+    it("Makes a POST request to create records that don't match existing objects in Skylark", async () => {
+      // Arrange.
+      axiosRequest.mockImplementation(() => ({ data: {} }));
+
+      // Act.
+      await createOrUpdateAirtableObjectsInSkylarkBySlug(
+        "episodes",
+        airtableEpisodeRecords as Record<FieldSet>[],
+        metadata
+      );
+
+      // Assert.
+      expect(axiosRequest).toBeCalledWith(
+        expect.objectContaining({
+          method: "POST",
+          url: "https://skylarkplatform.io/api/episodes/",
+          data: {
+            data_source_id: airtableEpisodeRecords[0].id,
+            data_source_fields: ["name", "title", "slug"],
+            is_data_source: true,
+            schedule_urls: [metadata.schedules.default.self],
+            uid: "",
+            self: "",
+            slug: airtableEpisodeRecords[0].fields?.slug,
+            title_short: airtableEpisodeRecords[0].fields?.title_short,
+          },
+        })
+      );
+      expect(axiosRequest).toBeCalledWith(
+        expect.objectContaining({
+          method: "POST",
+          url: "https://skylarkplatform.io/api/episodes/",
+          data: {
+            data_source_id: airtableEpisodeRecords[1].id,
+            data_source_fields: ["name", "title", "slug"],
+            is_data_source: true,
+            schedule_urls: [metadata.schedules.default.self],
+            uid: "",
+            self: "",
+            slug: airtableEpisodeRecords[1].fields?.slug,
+            synopsis_short: airtableEpisodeRecords[1].fields?.synopsis_short,
+          },
+        })
+      );
+    });
+
+    it("Makes a PATCH request to update records that match existing objects in Skylark", async () => {
+      // Arrange.
+      axiosRequest.mockImplementation(({ url }: AxiosRequestConfig) => {
+        if (url?.endsWith("?slug=episode-1")) {
+          return {
+            data: {
+              objects: [
+                {
+                  ...airtableEpisodeRecords[0].fields,
+                  uid: "episode-1",
+                  self: "/api/episodes/episode-1",
+                },
+              ],
+            },
+          };
+        }
+        return { data: {} };
+      });
+
+      // Act.
+      await createOrUpdateAirtableObjectsInSkylarkBySlug(
+        "episodes",
+        airtableEpisodeRecords as Record<FieldSet>[],
+        metadata
+      );
+
+      // Assert.
+      expect(axiosRequest).toBeCalledWith(
+        expect.objectContaining({
+          method: "PATCH",
+          url: "https://skylarkplatform.io/api/episodes/episode-1",
+          data: {
+            data_source_id: airtableEpisodeRecords[0].id,
+            data_source_fields: ["name", "title", "slug"],
+            is_data_source: true,
+            schedule_urls: [metadata.schedules.default.self],
+            uid: "",
+            self: "",
+            slug: airtableEpisodeRecords[0].fields?.slug,
+            title_short: airtableEpisodeRecords[0].fields?.title_short,
+          },
+        })
+      );
+      expect(axiosRequest).toHaveBeenNthCalledWith(
+        4,
+        expect.objectContaining({
+          method: "POST",
+          url: "https://skylarkplatform.io/api/episodes/",
+          data: {
+            data_source_id: airtableEpisodeRecords[1].id,
+            data_source_fields: ["name", "title", "slug"],
+            is_data_source: true,
+            schedule_urls: [metadata.schedules.default.self],
+            uid: "",
+            self: "",
+            slug: airtableEpisodeRecords[1].fields?.slug,
+            synopsis_short: airtableEpisodeRecords[1].fields?.synopsis_short,
+          },
+        })
+      );
+    });
+  });
+
+  describe("createOrUpdateAirtableObjectsInSkylarkByTitle", () => {
+    const airtableRoleRecords: Partial<Record<FieldSet>>[] = [
+      {
+        id: "airtable-role-1",
+        fields: { title: "role-1", title_short: "short title" },
+      },
+      {
+        id: "airtable-role-2",
+        fields: { title: "role-2", synopsis_short: "short synopsis" },
+      },
+    ];
+
+    it("Makes a GET request to check if the Airtable records match objects that exist in Skylark using the title property", async () => {
+      // Arrange.
+      axiosRequest.mockImplementation(() => ({ data: {} }));
+
+      // Act.
+      await createOrUpdateAirtableObjectsInSkylarkByTitle(
+        "roles",
+        airtableRoleRecords as Record<FieldSet>[],
+        metadata
+      );
+
+      // Assert.
+      expect(axiosRequest).toBeCalledWith(
+        expect.objectContaining({
+          method: "GET",
+          url: "https://skylarkplatform.io/api/roles/?title=role-1",
+        })
+      );
+      expect(axiosRequest).toBeCalledWith(
+        expect.objectContaining({
+          method: "GET",
+          url: "https://skylarkplatform.io/api/roles/?title=role-2",
+        })
+      );
+    });
+  });
 });

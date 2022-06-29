@@ -17,6 +17,13 @@ import {
   getSetItems,
 } from "./get";
 
+/**
+ * createOrUpdateSet - creates or updates a set in Skylark using its slug
+ * @param setConfig
+ * @param metadata
+ * @param airtableProperties
+ * @returns the set returned by Skylark
+ */
 const createOrUpdateSet = async (
   setConfig: SetConfig,
   metadata: Metadata,
@@ -60,6 +67,14 @@ const createOrUpdateSet = async (
   return set;
 };
 
+/**
+ * createOrUpdateSetItem - creates or updates a set item in Skylark
+ * @param setUid - uid of the set in Skylark
+ * @param contentUrl - the URL of the set item
+ * @param position - the position this item should be in the set
+ * @param existingSetItems - all existing set items, used to check if this item is already in the set
+ * @param metadata
+ */
 const createOrUpdateSetItem = async (
   setUid: string,
   contentUrl: string,
@@ -84,10 +99,15 @@ const createOrUpdateSetItem = async (
   });
 };
 
+/**
+ * createOrUpdateSetAndContents - Creates or updates a set and its contents
+ * @param setConfig
+ * @param metadata
+ */
 export const createOrUpdateSetAndContents = async (
   setConfig: SetConfig,
   metadata: Metadata
-) => {
+): Promise<void> => {
   const additionalAirtableProperties = metadata.set.additionalRecords.find(
     ({ fields: { slug: metadataSlug } }) => metadataSlug === setConfig.slug
   );

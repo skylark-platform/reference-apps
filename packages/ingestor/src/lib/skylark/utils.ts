@@ -20,3 +20,20 @@ export const getScheduleUrlsFromMetadata = (
       : [metadataSchedules.default.self];
   return scheduleUrls;
 };
+
+/**
+ * Removes undefined properties from an object
+ * The TypeScript around this is a bit awkward because its designed to be generic
+ * @param object - An object which may have properties that are undefined
+ * @returns - An object that has no undefined keys
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const removeUndefinedPropertiesFromObject = <T>(object: {
+  [key: string]: any;
+}) => {
+  // eslint-disable-next-line no-param-reassign
+  Object.keys(object).forEach(
+    (key) => object[key] === undefined && delete object[key]
+  );
+  return object as unknown as T;
+};
