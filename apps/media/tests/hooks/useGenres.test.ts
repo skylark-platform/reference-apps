@@ -32,7 +32,6 @@ describe("useGenre hook tests", () => {
       });
 
     // Act
-
     const handle = handlePromise();
     mockedAxios.get.mockResolvedValueOnce(handle);
 
