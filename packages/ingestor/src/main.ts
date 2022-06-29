@@ -24,7 +24,6 @@ import {
   createOrUpdateAirtableObjectsInSkylarkBySlug,
   createOrUpdateAirtableObjectsInSkylarkByTitle,
   getResources,
-  authenticatedSkylarkRequest,
 } from "./lib/skylark";
 import { getAllTables } from "./lib/airtable";
 import { Airtables, Metadata } from "./interfaces";
@@ -49,19 +48,6 @@ const config = amplifyConfig({
 });
 
 Amplify.configure(config);
-
-const wakeUpSkylarkLambdas = async () => {
-  // eslint-disable-next-line no-console
-  console.log("Waking up Skylark Lambdas");
-  await authenticatedSkylarkRequest("/api/about-skylark/", {
-    headers: { "Cache-Control": "" },
-  });
-  await new Promise((resolve) => {
-    setTimeout(resolve, 20000);
-  });
-  // eslint-disable-next-line no-console
-  console.log("Starting ingest");
-};
 
 const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
   const [alwaysSchedule, imageTypes, setTypes, dimensions] = await Promise.all([
@@ -192,8 +178,6 @@ const createAdditionalObjects = async (metadata: Metadata) => {
 
 const main = async () => {
   await signInToCognito();
-
-  await wakeUpSkylarkLambdas();
 
   const airtable = await getAllTables();
 

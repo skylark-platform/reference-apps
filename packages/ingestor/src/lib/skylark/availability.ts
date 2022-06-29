@@ -105,6 +105,8 @@ export const createOrUpdateSchedules = (
           title,
           slug,
           type,
+          starts,
+          ends,
           devices,
           affiliates,
           customers,
@@ -117,6 +119,8 @@ export const createOrUpdateSchedules = (
           title: string;
           slug: string;
           type: string;
+          starts: string;
+          ends: string;
           affiliates: string[];
           devices: string[];
           customers: string[];
@@ -129,6 +133,8 @@ export const createOrUpdateSchedules = (
         const data: Partial<ApiSchedule> = {
           title,
           slug,
+          starts,
+          ends,
           rights: type === "license",
           affiliate_urls: convertDimensionsToUrls(
             dimensions.affiliates,

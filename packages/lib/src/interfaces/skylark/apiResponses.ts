@@ -109,6 +109,8 @@ export interface ApiPlaybackResponse {
 export interface ApiSchedule extends ApiBaseObject {
   title: string;
   rights: boolean;
+  starts: string;
+  ends: string;
   affiliate_urls: string[];
   device_type_urls: string[];
   language_urls: string[];

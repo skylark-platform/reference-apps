@@ -144,6 +144,8 @@ describe("skylark.availibility", () => {
         uid: "1",
         self: "/api/schedule/1",
         rights: false,
+        starts: "1/1/2000",
+        ends: "1/1/2000",
         slug: "always",
         title: "always-scheduled",
         status: "enabled",

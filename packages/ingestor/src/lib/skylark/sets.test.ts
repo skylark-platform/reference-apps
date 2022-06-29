@@ -97,6 +97,8 @@ describe("skylark.sets", () => {
           uid: "1",
           slug: "always-schedule",
           title: "Always",
+          starts: "1/1/2000",
+          ends: "1/1/2000",
           rights: false,
           status: "active",
           self: "/api/schedules/1",
