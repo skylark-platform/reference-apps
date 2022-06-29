@@ -44,9 +44,7 @@ const Movies: NextPage = () => {
       </div>
       {!movies ||
         (movies.length === 0 && (
-          <h2>
-            <TextThumbnail text="There are no movies listed under this genre" />
-          </h2>
+          <TextThumbnail text="There are no movies listed under this genre" />
         ))}
       <Skeleton show={isLoading}>
         <div className="grid grid-cols-2 gap-x-4 gap-y-6 px-gutter sm:px-sm-gutter md:grid-cols-3 lg:grid-cols-4 lg:px-lg-gutter xl:px-xl-gutter 2xl:grid-cols-6">
