@@ -53,7 +53,6 @@ runs:
     #     yarn ingest
     - name: Run ingestor (with retry)
       uses: nick-fields/retry@v2
-      working-directory: ${{ github.action_path }}/../../../packages/ingestor
       env:
         AIRTABLE_API_KEY: ${{ inputs.airtable-api-key }}
         AIRTABLE_BASE_ID: ${{ inputs.airtable-base-id }}
@@ -67,4 +66,4 @@ runs:
         timeout_seconds: 30
         max_attempts: 3
         retry_on: error
-        command: yarn ingest
+        command: cd ./packages/ingestor && yarn ingest
