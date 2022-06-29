@@ -46,6 +46,7 @@ const createOrUpdateSet = async (
     await authenticatedSkylarkRequest<ApiEntertainmentObject>(url, {
       method: existingSet ? "PUT" : "POST",
       data: {
+        schedule_urls: [metadata.schedules.default.self],
         ...existingSet,
         ...object,
         uid: existingSet?.uid || "",
@@ -53,7 +54,6 @@ const createOrUpdateSet = async (
         title,
         slug,
         set_type_url: setType?.self,
-        schedule_urls: [metadata.schedules.default.self],
       },
     });
 

@@ -16,6 +16,7 @@ import {
 } from "../../interfaces";
 import { authenticatedSkylarkRequest } from "./api";
 import { getResourceByProperty } from "./get";
+import { getScheduleUrlsFromMetadata } from "./utils";
 
 export const createOrUpdateObject = async <T extends ApiBaseObject>(
   type: string,
@@ -90,14 +91,10 @@ export const parseAirtableImagesAndUploadToSkylark = <T extends ApiBaseObject>(
         throw new Error(`Invalid image type "${type}"`);
       }
 
-      const scheduleUrls =
-        schedules && schedules.length > 0
-          ? metadata.schedules.all
-              .filter(({ airtableId: scheduleAirtableId }) =>
-                schedules.includes(scheduleAirtableId)
-              )
-              .map(({ self }) => self)
-          : [metadata.schedules.default.self];
+      const scheduleUrls = getScheduleUrlsFromMetadata(
+        schedules,
+        metadata.schedules
+      );
 
       const imageData = {
         image_type_url: imageType.self,
@@ -182,14 +179,10 @@ export const convertAirtableFieldsToSkylarkObject = (
   );
 
   const schedules = fields.schedules as string[];
-  const scheduleUrls =
-    schedules && schedules.length > 0
-      ? metadata.schedules.all
-          .filter(({ airtableId: scheduleAirtableId }) =>
-            schedules.includes(scheduleAirtableId)
-          )
-          .map(({ self }) => self)
-      : [metadata.schedules.default.self];
+  const scheduleUrls = getScheduleUrlsFromMetadata(
+    schedules,
+    metadata.schedules
+  );
 
   const object: ApiSkylarkObjectWithAllPotentialFields = {
     uid: "",

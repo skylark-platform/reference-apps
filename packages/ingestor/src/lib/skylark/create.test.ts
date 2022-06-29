@@ -1,4 +1,5 @@
 import Auth from "@aws-amplify/auth";
+import { ApiImage } from "@skylark-reference-apps/lib";
 import { Attachment, FieldSet, Record } from "airtable";
 import axios from "axios";
 import { DynamicObjectConfig, Metadata } from "../../interfaces";
@@ -66,7 +67,14 @@ describe("skylark.sets", () => {
     ],
     genres: [],
     themes: [],
-    imageTypes: [],
+    imageTypes: [
+      {
+        name: "Main",
+        slug: "main",
+        uid: "image_type_1",
+        self: "/api/image-types/image_type_1",
+      },
+    ],
     assetTypes: [],
     ratings: [],
     roles: [],
@@ -342,6 +350,83 @@ describe("skylark.sets", () => {
           metadata
         )
       ).toThrow('Invalid image type "invalid"');
+    });
+
+    it("makes a GET request to check if the image already exists using its title property", async () => {
+      // Arrange.
+      axiosRequest.mockImplementation(() => ({ data: {} }));
+
+      // Act.
+      await parseAirtableImagesAndUploadToSkylark(
+        ["image-1"],
+        objectToAttachImageTo,
+        metadata
+      );
+
+      // Assert.
+      expect(axiosRequest).toBeCalledWith(
+        expect.objectContaining({
+          method: "GET",
+          url: `https://skylarkplatform.io/api/images/?title=${imageAttachment.filename}`,
+        })
+      );
+    });
+
+    it("makes a POST request to create the image", async () => {
+      // Arrange.
+      axiosRequest.mockImplementation(() => ({ data: {} }));
+
+      // Act.
+      await parseAirtableImagesAndUploadToSkylark(
+        ["image-1"],
+        objectToAttachImageTo,
+        metadata
+      );
+
+      // Assert.
+      expect(axiosRequest).toBeCalledWith(
+        expect.objectContaining({
+          method: "POST",
+          url: `https://skylarkplatform.io/api/images/`,
+          data: {
+            content_url: objectToAttachImageTo.self,
+            image_location: imageAttachment.url,
+            image_type_url: metadata.imageTypes[0].self,
+            schedule_urls: [metadata.schedules.default.self],
+            title: imageAttachment.filename,
+          },
+        })
+      );
+    });
+
+    it("makes a PUT request to update the image", async () => {
+      // Arrange.
+      const image: Partial<ApiImage> = {
+        uid: "image_1",
+        content_url: objectToAttachImageTo.self,
+        image_location: imageAttachment.url,
+        image_type_url: metadata.imageTypes[0].self,
+        schedule_urls: [metadata.schedules.default.self],
+        title: imageAttachment.filename,
+        url: "https://image-location-in-skylark",
+      };
+      axiosRequest.mockImplementation(() => ({ data: { objects: [image] } }));
+
+      // Act.
+      await parseAirtableImagesAndUploadToSkylark(
+        ["image-1"],
+        objectToAttachImageTo,
+        metadata
+      );
+
+      // Assert.
+      expect(axiosRequest).toBeCalledWith(
+        expect.objectContaining({
+          method: "PUT",
+          url: `https://skylarkplatform.io/api/images/${image.uid as string}`,
+          data: image,
+        })
+      );
     });
   });
 });
