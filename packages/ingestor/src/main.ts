@@ -57,7 +57,7 @@ const wakeUpSkylarkLambdas = async () => {
     headers: { "Cache-Control": "" },
   });
   await new Promise((resolve) => {
-    setTimeout(resolve, 10000);
+    setTimeout(resolve, 20000);
   });
   // eslint-disable-next-line no-console
   console.log("Starting ingest");
