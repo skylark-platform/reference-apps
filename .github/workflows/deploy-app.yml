@@ -84,27 +84,27 @@ jobs:
           cognito-email: ${{ secrets.COGNITO_EMAIL }}
           cognito-password: ${{ secrets.COGNITO_PASSWORD }}
 
-  signal:
-    name: Signal
-    runs-on: ubuntu-latest
-    needs: [deploy, ingestor]
-    if: always()
-    steps:
-      - uses: actions/github-script@v6
-        id: additional-urls
-        with:
-          result-encoding: string
-          script: |
-            const json = JSON.stringify([
-              { label: "Media", value: "${{ needs.deploy.outputs.url }}" },
-            ]);
-            return json;
-      - uses: technote-space/workflow-conclusion-action@v2
-      - name: Comment status on PR
-        uses: ostmodern/comment-url-on-pr@v1
-        with:
-          title: ${{ env.pr-comment-title }}
-          comment_id: ${{ env.pr-comment-id }}
-          status: ${{ env.WORKFLOW_CONCLUSION }}
-          github_token: ${{ github.token }}
-          additional_urls: ${{ steps.additional-urls.outputs.result }}
+  # signal:
+  #   name: Signal
+  #   runs-on: ubuntu-latest
+  #   needs: [deploy, ingestor]
+  #   if: always()
+  #   steps:
+  #     - uses: actions/github-script@v6
+  #       id: additional-urls
+  #       with:
+  #         result-encoding: string
+  #         script: |
+  #           const json = JSON.stringify([
+  #             { label: "Media", value: "${{ needs.deploy.outputs.url }}" },
+  #           ]);
+  #           return json;
+  #     - uses: technote-space/workflow-conclusion-action@v2
+  #     - name: Comment status on PR
+  #       uses: ostmodern/comment-url-on-pr@v1
+  #       with:
+  #         title: ${{ env.pr-comment-title }}
+  #         comment_id: ${{ env.pr-comment-id }}
+  #         status: ${{ env.WORKFLOW_CONCLUSION }}
+  #         github_token: ${{ github.token }}
+  #         additional_urls: ${{ steps.additional-urls.outputs.result }}
