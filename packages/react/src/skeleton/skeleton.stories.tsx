@@ -1,14 +1,14 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { LoadingScreen } from "./loading-screen.component";
+import { Skeleton } from "./skeleton.component";
 
 export default {
-  title: "React/LoadingScreen",
-  component: LoadingScreen,
-} as ComponentMeta<typeof LoadingScreen>;
+  title: "React/Skeleton",
+  component: Skeleton,
+} as ComponentMeta<typeof Skeleton>;
 
-const Template: ComponentStory<typeof LoadingScreen> = (args) => (
-  <LoadingScreen {...args} />
+const Template: ComponentStory<typeof Skeleton> = (args) => (
+  <Skeleton {...args} />
 );
 
 export const Default = Template.bind({});
@@ -22,7 +22,7 @@ Default.parameters = {
 export const WithTitle = Template.bind({});
 WithTitle.args = {
   ...Default.args,
-  title: "StreamTV",
+  // title: "StreamTV",
 };
 WithTitle.parameters = {
   chromatic: { delay: 5000 }, // To let animation finish

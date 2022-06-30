@@ -53,7 +53,7 @@ export interface ApiEntertainmentObject {
   set_type_slug?: SetTypes;
   items?: string[] | (ApiEntertainmentObject | ApiSetObject)[];
   episode_number?: number;
-  year?: number;
+  release_date?: string;
   season_number?: number;
   number_of_episodes?: number;
   title_sort?: string;
@@ -67,4 +67,16 @@ export interface ApiSetObject {
 
 export interface ApiMultipleEntertainmentObjects {
   objects: ApiEntertainmentObject[];
+}
+
+export interface ApiViewingsResponse {
+  objects?: {
+    mux: { tokenised_url: string };
+  }[];
+  error?: string;
+}
+
+export interface ApiPlaybackResponse {
+  playback_url: string;
+  error?: string;
 }

@@ -90,6 +90,7 @@ export interface SkylarkObject {
   synopsis: {
     [key in SynopsisTypes]: string;
   };
+  releaseDate: string;
   tags: string[];
   titleSort: string;
   credits?: Credits | UnexpandedObjects;
@@ -118,7 +119,6 @@ export interface Season extends SkylarkObject {
   type: "season";
   numberOfEpisodes?: number;
   number?: number;
-  year?: number;
 }
 
 export interface Brand extends SkylarkObject {

@@ -4,6 +4,7 @@ import { wrap } from "popmotion";
 import {
   convertEntertainmentTypeToString,
   EntertainmentType,
+  formatYear,
 } from "@skylark-reference-apps/lib";
 import { MdAdd, MdPlayCircleFilled } from "react-icons/md";
 import { CarouselButton } from "./carousel-button.component";
@@ -134,7 +135,7 @@ export const Carousel: React.FC<CarouselProps> = ({
               <List
                 contents={[
                   duration,
-                  releaseDate,
+                  formatYear(releaseDate),
                   convertEntertainmentTypeToString(type),
                 ]}
                 highlightFirst
