@@ -31,8 +31,8 @@ export const getScheduleUrlsFromMetadata = (
 export const removeUndefinedPropertiesFromObject = <T>(object: {
   [key: string]: any;
 }) => {
-  // eslint-disable-next-line no-param-reassign
   Object.keys(object).forEach(
+    // eslint-disable-next-line no-param-reassign
     (key) => object[key] === undefined && delete object[key]
   );
   return object as unknown as T;
