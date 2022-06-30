@@ -1,5 +1,12 @@
 import { SetTypes } from "./types";
 
+export interface ApiBatchResponse {
+  id: string;
+  code: number;
+  header: object;
+  body: string;
+}
+
 export interface ApiBaseObject {
   uid: string;
   self: string;

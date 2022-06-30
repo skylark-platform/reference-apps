@@ -76,7 +76,11 @@ export type ApiSkylarkObjectWithAllPotentialFields = Omit<
   AllApiObjects,
   "slug"
 > &
-  ApiBaseObject & { title: string; name: string; data_source_fields: string[] };
+  ApiBaseObject & {
+    title?: string;
+    name?: string;
+    data_source_fields?: string[];
+  };
 export interface SetConfig extends Partial<ApiEntertainmentObject> {
   title: string;
   slug: string;

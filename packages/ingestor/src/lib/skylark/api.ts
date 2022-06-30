@@ -1,5 +1,9 @@
-import { SKYLARK_API } from "@skylark-reference-apps/lib";
-import axios, { AxiosRequestConfig, AxiosRequestHeaders } from "axios";
+import { ApiBatchResponse, SKYLARK_API } from "@skylark-reference-apps/lib";
+import axios, {
+  AxiosError,
+  AxiosRequestConfig,
+  AxiosRequestHeaders,
+} from "axios";
 import { getToken } from "../cognito";
 
 /**
@@ -26,4 +30,38 @@ export const authenticatedSkylarkRequest = async <T>(
     url,
     headers,
   });
+};
+
+/**
+ * checkBatchRequestWasSuccessful - helper function to check whether an individual batch operation was succesful
+ * @param { code, body }
+ */
+const checkBatchRequestWasSuccessful = ({ code, body }: ApiBatchResponse) => {
+  if (code < 200 || code > 299) {
+    throw new AxiosError(body, `${code}`);
+  }
+};
+
+/**
+ * batchSkylarkRequest - uses the Skylark batch API endpoint to make bulk operations within Skylark
+ * @param data - the batch data to execute with Skylark
+ * @returns
+ */
+export const batchSkylarkRequest = async <T>(
+  data: object[]
+): Promise<{ batchRequestId: string; data: T }[]> => {
+  const batchRes = await authenticatedSkylarkRequest<ApiBatchResponse[]>(
+    "/api/batch/",
+    {
+      method: "POST",
+      data,
+    }
+  );
+
+  batchRes.data.forEach(checkBatchRequestWasSuccessful);
+
+  return batchRes.data.map(({ id, body }) => ({
+    batchRequestId: id,
+    data: JSON.parse(body) as T,
+  }));
 };

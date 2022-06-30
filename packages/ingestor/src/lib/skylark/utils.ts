@@ -27,8 +27,8 @@ export const getScheduleUrlsFromMetadata = (
  * @param object - An object which may have properties that are undefined
  * @returns - An object that has no undefined keys
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const removeUndefinedPropertiesFromObject = <T>(object: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }) => {
   Object.keys(object).forEach(

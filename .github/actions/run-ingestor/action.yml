@@ -51,7 +51,7 @@ runs:
     #     COGNITO_USER_POOL_ID: ${{ inputs.cognito-user-pool-id }}
     #   run: |
     #     yarn ingest
-    - name: Run ingestor (with retry)
+    - name: Run ingestor (with retry in case of random Skylark error)
       uses: nick-fields/retry@v2
       env:
         AIRTABLE_API_KEY: ${{ inputs.airtable-api-key }}
@@ -65,6 +65,6 @@ runs:
       with:
         timeout_minutes: 20
         retry_wait_seconds: 10
-        max_attempts: 20
+        max_attempts: 3
         retry_on: error
         command: cd ./packages/ingestor && yarn ingest

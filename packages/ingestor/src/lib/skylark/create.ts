@@ -14,7 +14,7 @@ import {
   DynamicObjectConfig,
   Metadata,
 } from "../../interfaces";
-import { authenticatedSkylarkRequest } from "./api";
+import { authenticatedSkylarkRequest, batchSkylarkRequest } from "./api";
 import { getResourceByProperty } from "./get";
 import {
   getScheduleUrlsFromMetadata,
@@ -52,6 +52,61 @@ export const createOrUpdateObject = async <T extends ApiBaseObject>(
     },
   });
   return res.data as T;
+};
+
+/**
+ * bulkCreateOrUpdateObjects - creates or updates an array of objects in Skylark using the bulk
+ * @param type - the Skylark object endpoint
+ * @param lookupProperty - the property to use to find the object in Skylark
+ * @param objects - the objects to create or update in Skylark
+ * @param updateMethod - HTTP method to use to update the object in Skylark
+ * @returns
+ */
+export const bulkCreateOrUpdateObjects = async <T extends ApiBaseObject>(
+  type: string,
+  lookupProperty: "slug" | "title" | "name",
+  objects: ApiSkylarkObjectWithAllPotentialFields[],
+  updateMethod: "PUT" | "PATCH"
+) => {
+  const getBatchRequestData = objects.map((object) => {
+    const lookupValue = object[lookupProperty] as string;
+    return {
+      id: object.data_source_id,
+      method: "GET",
+      url: `/api/${type}/?${lookupProperty}=${lookupValue}`,
+    };
+  });
+  const getBatchResponseData = await batchSkylarkRequest<{ objects?: T[] }>(
+    getBatchRequestData
+  );
+
+  const createOrUpdateBatchRequestData = objects.map((object) => {
+    const matchingBatchResponse = getBatchResponseData.find(
+      ({ batchRequestId }) => batchRequestId === object.data_source_id
+    );
+
+    const existingObject = matchingBatchResponse?.data.objects?.[0];
+    const url = existingObject ? existingObject.self : `/api/${type}/`;
+    return {
+      id: object.data_source_id,
+      method: existingObject ? updateMethod : "POST",
+      url,
+      data: JSON.stringify({
+        ...existingObject,
+        ...object,
+        uid: existingObject?.uid || "",
+        self: existingObject?.self || "",
+      }),
+    };
+  });
+  const createOrUpdateBatchResponseData = await batchSkylarkRequest<T>(
+    createOrUpdateBatchRequestData
+  );
+
+  return createOrUpdateBatchResponseData.map(({ data, batchRequestId }) => ({
+    ...data,
+    data_source_id: batchRequestId,
+  }));
 };
 
 /**
@@ -302,46 +357,54 @@ export const convertAirtableFieldsToSkylarkObject = (
  * @param lookupProperty - property to use to check whether the object exists in Skylark
  * @returns
  */
-const createOrUpdateAirtableObjectsInSkylark = <T extends ApiBaseObject>(
+const createOrUpdateAirtableObjectsInSkylark = async <T extends ApiBaseObject>(
   type: ApiObjectType,
   airtableRecords: Records<FieldSet>,
   metadata: Metadata,
   parents: ApiEntertainmentObjectWithAirtableId[],
   lookupProperty: "slug" | "title"
 ) => {
-  const promises = airtableRecords.map(
-    async ({ fields, id }): Promise<T & { airtableId: string }> => {
-      const object = convertAirtableFieldsToSkylarkObject(
-        id,
-        fields,
-        metadata,
-        parents
-      );
+  const objects = airtableRecords.map(({ fields, id }) => {
+    const object = convertAirtableFieldsToSkylarkObject(
+      id,
+      fields,
+      metadata,
+      parents
+    );
+    return object;
+  });
 
-      const createdObject = await createOrUpdateObject<T>(
-        type,
-        { property: lookupProperty, value: object[lookupProperty] },
-        object,
-        "PATCH"
-      );
-
-      const imageUrls = fields.images
-        ? await parseAirtableImagesAndUploadToSkylark<T>(
-            fields.images as string[],
-            createdObject,
-            metadata
-          )
-        : [];
-
-      return {
-        ...createdObject,
-        airtableId: id,
-        image_urls: imageUrls,
-      };
-    }
+  const createOrUpdateBatchResponseData = await bulkCreateOrUpdateObjects<T>(
+    type,
+    lookupProperty,
+    objects,
+    "PATCH"
   );
 
-  return Promise.all(promises);
+  const parseObjectsAndCreateImages = await Promise.all(
+    createOrUpdateBatchResponseData.map(
+      async (data): Promise<T & { airtableId: string }> => {
+        const airtableFields = airtableRecords.find(
+          ({ id }) => id === data.data_source_id
+        );
+        const imageUrls = airtableFields?.fields?.images
+          ? await parseAirtableImagesAndUploadToSkylark<T>(
+              airtableFields.fields.images as string[],
+              data,
+              metadata
+            )
+          : [];
+
+        return {
+          ...data,
+          airtableId: data.data_source_id,
+          image_urls: imageUrls,
+        };
+      }
+    )
+  );
+
+  return parseObjectsAndCreateImages;
 };
 
 /**
