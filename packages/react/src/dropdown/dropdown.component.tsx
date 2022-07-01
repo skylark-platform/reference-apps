@@ -14,11 +14,6 @@ export const Dropdown: React.FC<DropdownProps> = ({
 }) => {
   const [isOpen, setOpen] = useState(false);
   const [selected, setSelected] = useState("");
-  const orderedItems = items.sort((a, b) => {
-    if (a < b) return -1;
-    if (a > b) return 1;
-    return 0;
-  });
 
   const handleOnClick = (item: string) => {
     onChange(item);
@@ -55,7 +50,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
       </div>
       {isOpen && (
         <ul className="xl:h-62 absolute z-40 h-44 w-full overflow-y-auto sm:h-48 md:h-52 lg:h-72">
-          {orderedItems.map((item) => (
+          {items.map((item) => (
             <li key={item}>
               <button
                 className="

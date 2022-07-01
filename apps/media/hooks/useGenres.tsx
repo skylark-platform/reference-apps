@@ -11,14 +11,14 @@ const fields = {
   uid: {},
 };
 
-export const themeGenresFetcher = (endpoint: string) => {
+export const themeGenresFetcher = (endpoint: "genres" | "themes") => {
   const apiQuery = createSkylarkApiQuery({
     fieldsToExpand: {},
     fields,
   });
   return axios
     .get<{ objects: ApiThemeGenre[] }>(
-      `${SKYLARK_API}/api/${endpoint}/?${apiQuery}`,
+      `${SKYLARK_API}/api/${endpoint}/?order=name&${apiQuery}`,
       {
         headers: { "Accept-Language": "en-gb" },
       }

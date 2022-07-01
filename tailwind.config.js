@@ -80,9 +80,9 @@ module.exports = {
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
       },
-    },
-    minWidth: {
-      56: "14rem",
+      minWidth: {
+        56: "14rem",
+      },
     },
   },
   corePlugins: {

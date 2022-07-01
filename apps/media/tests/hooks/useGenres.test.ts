@@ -7,7 +7,7 @@ import { themeGenresFetcher } from "../../hooks/useGenres";
 jest.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-describe("useGenre hook tests", () => {
+describe("useGenres hook tests", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -15,9 +15,9 @@ describe("useGenre hook tests", () => {
   it("Should get the correct data", async () => {
     // Arrange
     const mockData = ["War", "Crime"];
+    mockedAxios.get.mockResolvedValueOnce({ data: { objects: mockData } });
 
     // Act
-    mockedAxios.get.mockResolvedValueOnce({ data: { objects: mockData } });
     const res = await themeGenresFetcher("genres");
 
     // Assert
@@ -31,11 +31,9 @@ describe("useGenre hook tests", () => {
         reject(new Error("axios error"));
       });
 
-    // Act
+    // Assert
     const handle = handlePromise();
     mockedAxios.get.mockResolvedValueOnce(handle);
-
-    // Assert
     await expect(themeGenresFetcher("genres")).rejects.toThrow("axios error");
   });
 });
