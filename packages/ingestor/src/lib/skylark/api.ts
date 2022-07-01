@@ -1,9 +1,5 @@
 import { ApiBatchResponse, SKYLARK_API } from "@skylark-reference-apps/lib";
-import axios, {
-  AxiosError,
-  AxiosRequestConfig,
-  AxiosRequestHeaders,
-} from "axios";
+import axios, { AxiosRequestConfig, AxiosRequestHeaders } from "axios";
 import { getToken } from "../cognito";
 
 /**
@@ -36,9 +32,15 @@ export const authenticatedSkylarkRequest = async <T>(
  * checkBatchRequestWasSuccessful - helper function to check whether an individual batch operation was succesful
  * @param { code, body }
  */
-const checkBatchRequestWasSuccessful = ({ code, body }: ApiBatchResponse) => {
+const checkBatchRequestWasSuccessful = ({
+  id,
+  code,
+  body,
+}: ApiBatchResponse) => {
   if (code < 200 || code > 299) {
-    throw new AxiosError(body, `${code}`);
+    throw new Error(
+      `Batch request "${id}" failed with ${code}. Response body: ${body}`
+    );
   }
 };
 

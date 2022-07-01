@@ -44,33 +44,33 @@ jobs:
           echo "::set-output name=ref::$GitRef"
           echo "::set-output name=branch::$GitBranch"
 
-  # deploy:
-  #   name: Deploy
-  #   runs-on: ubuntu-latest
-  #   needs: prepare
-  #   outputs:
-  #     url: ${{ steps.cdk.outputs.url }}
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: ./.github/actions/deploy
-  #       id: cdk
-  #       with:
-  #         git-branch: ${{ needs.prepare.outputs.git-branch }}
-  #         # hardcode domains until more accounts are supported
-  #         base-domain: skylark-dev.skylarkplatform.io
-  #         skylark-api-url: https://api.showcase-test.eng-james-wallis.skylarkplatform.io
-  #         cognito-aws-region: ${{ secrets.NEXT_PUBLIC_COGNITO_AWS_REGION }}
-  #         cognito-client-id: ${{ secrets.NEXT_PUBLIC_COGNITO_CLIENT_ID }}
-  #         cognito-user-pool-id: ${{ secrets.NEXT_PUBLIC_COGNITO_USER_POOL_ID }}
-  #         cognito-email: ${{ secrets.COGNITO_EMAIL }}
-  #         cognito-password: ${{ secrets.COGNITO_PASSWORD }}
-  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_SKYLARK_DEV }}
-  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_SKYLARK_DEV }}
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: prepare
+    outputs:
+      url: ${{ steps.cdk.outputs.url }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/deploy
+        id: cdk
+        with:
+          git-branch: ${{ needs.prepare.outputs.git-branch }}
+          # hardcode domains until more accounts are supported
+          base-domain: skylark-dev.skylarkplatform.io
+          skylark-api-url: https://api.showcase-test.eng-james-wallis.skylarkplatform.io
+          cognito-aws-region: ${{ secrets.NEXT_PUBLIC_COGNITO_AWS_REGION }}
+          cognito-client-id: ${{ secrets.NEXT_PUBLIC_COGNITO_CLIENT_ID }}
+          cognito-user-pool-id: ${{ secrets.NEXT_PUBLIC_COGNITO_USER_POOL_ID }}
+          cognito-email: ${{ secrets.COGNITO_EMAIL }}
+          cognito-password: ${{ secrets.COGNITO_PASSWORD }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_SKYLARK_DEV }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_SKYLARK_DEV }}
 
   ingestor:
     name: Content Ingestor
     runs-on: ubuntu-latest
-    needs: [prepare]
+    needs: [prepare, deploy]
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/run-ingestor
@@ -84,27 +84,27 @@ jobs:
           cognito-email: ${{ secrets.COGNITO_EMAIL }}
           cognito-password: ${{ secrets.COGNITO_PASSWORD }}
 
-  # signal:
-  #   name: Signal
-  #   runs-on: ubuntu-latest
-  #   needs: [deploy, ingestor]
-  #   if: always()
-  #   steps:
-  #     - uses: actions/github-script@v6
-  #       id: additional-urls
-  #       with:
-  #         result-encoding: string
-  #         script: |
-  #           const json = JSON.stringify([
-  #             { label: "Media", value: "${{ needs.deploy.outputs.url }}" },
-  #           ]);
-  #           return json;
-  #     - uses: technote-space/workflow-conclusion-action@v2
-  #     - name: Comment status on PR
-  #       uses: ostmodern/comment-url-on-pr@v1
-  #       with:
-  #         title: ${{ env.pr-comment-title }}
-  #         comment_id: ${{ env.pr-comment-id }}
-  #         status: ${{ env.WORKFLOW_CONCLUSION }}
-  #         github_token: ${{ github.token }}
-  #         additional_urls: ${{ steps.additional-urls.outputs.result }}
+  signal:
+    name: Signal
+    runs-on: ubuntu-latest
+    needs: [deploy, ingestor]
+    if: always()
+    steps:
+      - uses: actions/github-script@v6
+        id: additional-urls
+        with:
+          result-encoding: string
+          script: |
+            const json = JSON.stringify([
+              { label: "Media", value: "${{ needs.deploy.outputs.url }}" },
+            ]);
+            return json;
+      - uses: technote-space/workflow-conclusion-action@v2
+      - name: Comment status on PR
+        uses: ostmodern/comment-url-on-pr@v1
+        with:
+          title: ${{ env.pr-comment-title }}
+          comment_id: ${{ env.pr-comment-id }}
+          status: ${{ env.WORKFLOW_CONCLUSION }}
+          github_token: ${{ github.token }}
+          additional_urls: ${{ steps.additional-urls.outputs.result }}

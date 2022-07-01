@@ -36,22 +36,8 @@ runs:
       shell: bash
       working-directory: ${{ github.action_path }}/../../../
       run: yarn
-    # - name: Run ingestor (attempt 1)
-    #   id: ingestor-attempt-1
-    #   shell: bash
-    #   working-directory: ${{ github.action_path }}/../../../packages/ingestor
-    #   env:
-    #     AIRTABLE_API_KEY: ${{ inputs.airtable-api-key }}
-    #     AIRTABLE_BASE_ID: ${{ inputs.airtable-base-id }}
-    #     SKYLARK_API_URL: ${{ inputs.skylark-api-url }}
-    #     COGNITO_EMAIL: ${{ inputs.cognito-email }}
-    #     COGNITO_PASSWORD: ${{ inputs.cognito-password }}
-    #     COGNITO_AWS_REGION: ${{ inputs.cognito-aws-region }}
-    #     COGNITO_CLIENT_ID: ${{ inputs.cognito-client-id }}
-    #     COGNITO_USER_POOL_ID: ${{ inputs.cognito-user-pool-id }}
-    #   run: |
-    #     yarn ingest
-    - name: Run ingestor (with retry in case of random Skylark error)
+    # Uses a retry action in case of a random Skylark error
+    - name: Run ingestor
       uses: nick-fields/retry@v2
       env:
         AIRTABLE_API_KEY: ${{ inputs.airtable-api-key }}

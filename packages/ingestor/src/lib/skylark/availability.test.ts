@@ -1,5 +1,5 @@
 import Auth from "@aws-amplify/auth";
-import { ApiSchedule } from "@skylark-reference-apps/lib";
+import { ApiBatchResponse, ApiSchedule } from "@skylark-reference-apps/lib";
 import { FieldSet, Record } from "airtable";
 import axios, { AxiosRequestConfig } from "axios";
 import { Airtables, Metadata } from "../../interfaces";
@@ -32,7 +32,7 @@ const fields = {
 };
 
 const record: object = {
-  id: "",
+  id: "batch-id",
   fields,
 };
 
@@ -175,47 +175,16 @@ describe("skylark.availibility", () => {
 
   describe("createOrUpdateScheduleDimensions", () => {
     it("makes a GET request to every dimension endpoint", async () => {
-      await createOrUpdateScheduleDimensions(airtableDimensions);
-
-      // eslint-disable-next-line no-restricted-syntax
-      for (const dimension of dimensions) {
-        expect(axiosRequest).toBeCalledWith(
-          expect.objectContaining({
-            url: `https://skylarkplatform.io/api/dimensions/${dimension}/?slug=slug`,
-            method: "GET",
-          })
-        );
-      }
-    });
-
-    it("makes a POST request to every dimension endpoint when the dimension doesn't exist", async () => {
-      await createOrUpdateScheduleDimensions(airtableDimensions);
-
-      // eslint-disable-next-line no-restricted-syntax
-      for (const dimension of dimensions) {
-        expect(axiosRequest).toBeCalledWith(
-          expect.objectContaining({
-            url: `https://skylarkplatform.io/api/dimensions/${dimension}/`,
-            data: fields,
-            method: "POST",
-          })
-        );
-      }
-    });
-
-    it("makes a PUT request to every dimension endpoint when the dimension already exists in Skylark", async () => {
       // Arrange.
-      axiosRequest.mockImplementation(({ method }: AxiosRequestConfig) => {
-        if (method === "GET") {
-          return {
-            data: {
-              objects: [{ id: "1", self: "/api/1", ...fields }],
-            },
-          };
-        }
-
-        return { data: {} };
-      });
+      const data: ApiBatchResponse[] = [
+        {
+          code: 200,
+          id: "id",
+          header: {},
+          body: "{}",
+        },
+      ];
+      axiosRequest.mockImplementation(() => ({ data }));
 
       // Act.
       await createOrUpdateScheduleDimensions(airtableDimensions);
@@ -225,13 +194,107 @@ describe("skylark.availibility", () => {
       for (const dimension of dimensions) {
         expect(axiosRequest).toBeCalledWith(
           expect.objectContaining({
-            url: `https://skylarkplatform.io/api/dimensions/${dimension}/`,
-            data: {
-              self: "/api/1",
-              id: "1",
-              ...fields,
-            },
-            method: "PUT",
+            method: "POST",
+            url: "https://skylarkplatform.io/api/batch/",
+            data: [
+              {
+                id: "batch-id",
+                method: "GET",
+                url: `/api/dimensions/${dimension}/?slug=slug`,
+              },
+            ],
+          })
+        );
+      }
+    });
+
+    it("makes a POST request to every dimension endpoint when the dimension doesn't exist", async () => {
+      // Arrange.
+      const data: ApiBatchResponse[] = [
+        {
+          code: 200,
+          id: "id",
+          header: {},
+          body: "{}",
+        },
+      ];
+      axiosRequest.mockImplementation(() => ({ data }));
+
+      // Act.
+      await createOrUpdateScheduleDimensions(airtableDimensions);
+
+      // Assert.
+      // eslint-disable-next-line no-restricted-syntax
+      for (const dimension of dimensions) {
+        expect(axiosRequest).toBeCalledWith(
+          expect.objectContaining({
+            method: "POST",
+            url: "https://skylarkplatform.io/api/batch/",
+            data: [
+              {
+                data: JSON.stringify({
+                  uid: "",
+                  self: "",
+                  data_source_id: "batch-id",
+                  name: "dimension",
+                  slug: "slug",
+                }),
+                id: "batch-id",
+                method: "POST",
+                url: `/api/dimensions/${dimension}/`,
+              },
+            ],
+          })
+        );
+      }
+    });
+
+    it("makes a PUT request to every dimension endpoint when the dimension already exists in Skylark", async () => {
+      // Arrange.
+      const data: ApiBatchResponse[] = [
+        {
+          code: 200,
+          id: "batch-id",
+          header: {},
+          body: JSON.stringify({
+            objects: [
+              {
+                uid: "uid-1",
+                self: "/api/dimensions/uid-1",
+                data_source_id: "batch-id",
+                slug: "slug",
+              },
+            ],
+          }),
+        },
+      ];
+      axiosRequest.mockImplementation(() => ({ data }));
+
+      // Act.
+      await createOrUpdateScheduleDimensions(airtableDimensions);
+
+      // Assert.
+      // eslint-disable-next-line no-restricted-syntax
+      for (let index = 0; index < dimensions.length; index += 1) {
+        expect(axiosRequest).nthCalledWith(
+          14,
+          expect.objectContaining({
+            method: "POST",
+            url: "https://skylarkplatform.io/api/batch/",
+            data: [
+              {
+                data: JSON.stringify({
+                  uid: "uid-1",
+                  self: "/api/dimensions/uid-1",
+                  data_source_id: "batch-id",
+                  slug: "slug",
+                  name: "dimension",
+                }),
+                id: "batch-id",
+                method: "PUT",
+                url: "/api/dimensions/uid-1",
+              },
+            ],
           })
         );
       }
