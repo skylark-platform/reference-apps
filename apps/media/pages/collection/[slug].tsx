@@ -10,6 +10,7 @@ import {
   formatYear,
   getImageSrc,
   getTitleByOrder,
+  getSynopsisByOrder,
   getImageSrcAndSizeByWindow,
 } from "@skylark-reference-apps/lib";
 
@@ -20,8 +21,6 @@ import { useCollectionBySlug } from "../../hooks/useCollectionBySlug";
 const CollectionPage: NextPage = () => {
   const { query } = useRouter();
   const { collection, error } = useCollectionBySlug(query?.slug as string);
-
-  console.log("collection", collection);
 
   const collectionObjects = collection?.items?.isExpanded
     ? collection.items.objects
@@ -42,11 +41,7 @@ const CollectionPage: NextPage = () => {
         <div className="-mt-48"></div>
         <Hero bgImage={getImageSrcAndSizeByWindow(collection?.images, "Main")}>
           <Header
-            description={
-              collection?.synopsis.long ||
-              collection?.synopsis.medium ||
-              collection?.synopsis.short
-            }
+            description={getSynopsisByOrder(collection?.synopsis)}
             numberOfItems={collection?.items?.objects.length || 0}
             rating={
               collection?.ratings?.isExpanded
@@ -63,7 +58,7 @@ const CollectionPage: NextPage = () => {
             <StandardThumbnail
               backgroundImage={getImageSrc(item.images, "Thumbnail", "384x216")}
               contentLocation="below"
-              description={item?.synopsis?.short || item?.synopsis?.medium}
+              description={getSynopsisByOrder(item?.synopsis)}
               duration="1h 59m"
               href={item.type && item.slug ? `/${item.type}/${item.slug}` : ""}
               key={item.objectTitle || item.uid || item.slug}

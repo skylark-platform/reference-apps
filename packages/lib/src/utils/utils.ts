@@ -7,6 +7,7 @@ import {
   ImageUrls,
   TitleTypes,
   UnexpandedObjects,
+  SynopsisTypes,
 } from "../interfaces";
 
 /**
@@ -32,6 +33,25 @@ export const getTitleByOrder = (
     return null;
   });
   return foundType ? titles[foundType] : objectTitle || "";
+};
+
+/**
+ * Returns the synopsis from the titles object using a given order of priority. Defaults long to short.
+ * @param synopsis the synopsis object
+ * @param priority optional order of priority
+ * @returns {string}
+ */
+export const getSynopsisByOrder = (
+  synopsis: { [s in SynopsisTypes]: string } | undefined,
+  priority: SynopsisTypes[] = ["long", "medium", "short"]
+): string => {
+  if (!synopsis) {
+    return "";
+  }
+
+  const foundType = priority?.find((type) => synopsis[type] || null);
+
+  return foundType ? synopsis[foundType] : "";
 };
 
 /**
