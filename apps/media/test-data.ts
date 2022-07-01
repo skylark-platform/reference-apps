@@ -254,7 +254,7 @@ export const collectionThumbnails: ThumbnailProps[] = [
     tags: ["Genres", "Themes"],
   },
   {
-    href: "/",
+    href: "/collection/tarantino",
     title: "Tarantino",
     backgroundImage: "/collections/Brand%20-%20Tarantino.png",
     tags: ["Genres", "Themes"],

@@ -1,18 +1,19 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import { BrandHeader } from "./brand-header.component";
+import { Header } from "./header.component";
 
-describe("BrandHeader component", () => {
+describe("Header component", () => {
   it("the component renders correctly", () => {
     render(
-      <BrandHeader
+      <Header
         description={
           "Summers span decades. Winters can last a lifetime. And the struggle for the Iron Throne begins"
         }
-        numberOfSeasons={8}
+        numberOfItems={8}
         rating={"18+"}
-        releaseDate={2011}
+        releaseDate={"2011"}
         title={"Game of Thrones"}
+        typeOfItems={"Seasons"}
       />
     );
     expect(screen.getByText(/Game of Thrones/)).toBeTruthy();
