@@ -22,21 +22,15 @@ export const getTitleByOrder = (
   priority: TitleTypes[],
   objectTitle?: string
 ): string => {
-  if (!titles) {
-    return objectTitle || "";
-  }
+  if (!titles) return objectTitle || "";
 
-  const foundType = priority.find((type) => {
-    if (titles[type]) {
-      return titles[type];
-    }
-    return null;
-  });
+  const foundType = priority.find((type) => titles[type] || null);
+
   return foundType ? titles[foundType] : objectTitle || "";
 };
 
 /**
- * Returns the synopsis from the titles object using a given order of priority. Defaults long to short.
+ * Returns the synopsis from the synopsis object using a given order of priority. Defaults long to short.
  * @param synopsis the synopsis object
  * @param priority optional order of priority
  * @returns {string}
@@ -45,9 +39,7 @@ export const getSynopsisByOrder = (
   synopsis: { [s in SynopsisTypes]: string } | undefined,
   priority: SynopsisTypes[] = ["long", "medium", "short"]
 ): string => {
-  if (!synopsis) {
-    return "";
-  }
+  if (!synopsis) return "";
 
   const foundType = priority?.find((type) => synopsis[type] || null);
 

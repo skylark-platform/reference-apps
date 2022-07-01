@@ -5,6 +5,7 @@ import {
   CertificateValidation,
   DnsValidatedCertificate,
 } from "aws-cdk-lib/aws-certificatemanager";
+import { CachePolicy } from "aws-cdk-lib/aws-cloudfront";
 
 export interface StackProps extends cdk.StackProps {
   app: string;

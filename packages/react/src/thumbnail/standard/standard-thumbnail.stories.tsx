@@ -4,7 +4,7 @@ import { StandardThumbnail as StandardThumbnailComponent } from "./standard-thum
 import { allMovieBackgroundImages } from "../../rail/rail.fixtures";
 
 export default {
-  title: "React/Thumbnails/Movie",
+  title: "React/Thumbnails/Standard",
   component: StandardThumbnailComponent,
   argTypes: {
     backgroundImage: {

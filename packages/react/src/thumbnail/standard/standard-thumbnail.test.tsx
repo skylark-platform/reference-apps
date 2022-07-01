@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { StandardThumbnail } from "./standard-thumbnail.component";
 
-describe("MovieThumbnail component", () => {
+describe("StandardThumbnail component", () => {
   it("the component renders correctly", () => {
     render(
       <StandardThumbnail

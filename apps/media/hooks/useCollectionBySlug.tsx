@@ -127,7 +127,7 @@ export const useCollectionBySlug = (slug: string) => {
 
   return {
     collection: data as Set | undefined,
-    notFound: error?.message === "Brand not found",
+    notFound: error?.message === "Collection not found",
     error,
   };
 };

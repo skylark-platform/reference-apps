@@ -8,6 +8,7 @@ import {
 } from "@skylark-reference-apps/react";
 import {
   formatYear,
+  formatReleaseDate,
   getImageSrc,
   getTitleByOrder,
   getSynopsisByOrder,
@@ -48,7 +49,7 @@ const CollectionPage: NextPage = () => {
                 ? collection?.ratings?.items?.[0]?.title
                 : ""
             }
-            releaseDate={""}
+            releaseDate={formatReleaseDate(collection?.releaseDate)}
             title={titleLongToShort}
             typeOfItems="Movies"
           />
