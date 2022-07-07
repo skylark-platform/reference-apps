@@ -49,6 +49,7 @@ export type ApiCredits = string[] | ApiCreditUnexpanded[] | ApiCredit[];
 
 export interface ApiThemeGenre extends ApiBaseObject {
   name: string;
+  uid: string;
 }
 
 export type ApiThemesAndGenres = string[] | ApiThemeGenre[];
