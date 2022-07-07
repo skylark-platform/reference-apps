@@ -5,6 +5,7 @@ import {
   CertificateValidation,
   DnsValidatedCertificate,
 } from "aws-cdk-lib/aws-certificatemanager";
+import { CachePolicy } from "aws-cdk-lib/aws-cloudfront";
 
 export interface StackProps extends cdk.StackProps {
   app: string;
@@ -45,6 +46,10 @@ export class SkylarkReferenceAppStack extends cdk.Stack {
         hostedZone: parentHostedZone,
         certificate,
       },
+      // Use a default cache policy so we don't hit the limit of 20 cache policies per AWS account
+      // Not recommended for production deployments
+      nextImageCachePolicy: CachePolicy.CACHING_DISABLED as CachePolicy,
+      nextLambdaCachePolicy: CachePolicy.CACHING_DISABLED as CachePolicy,
     });
     // https://github.com/serverless-nextjs/serverless-next.js/issues/2432
     const defaultLambda = nextJsApp.defaultNextLambda.node
