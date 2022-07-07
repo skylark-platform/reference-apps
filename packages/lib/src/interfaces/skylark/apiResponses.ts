@@ -23,6 +23,7 @@ export type ApiCredits = string[] | ApiCredit[];
 
 export interface ApiThemeGenre {
   name: string;
+  uid: string;
 }
 
 export type ApiThemesAndGenres = string[] | ApiThemeGenre[];
