@@ -47,12 +47,9 @@ export const moviesSetFetcher = ([endpoint, genreUid]: [
     : `${SKYLARK_API}/api/${endpoint}/?${apiQuery}`;
 
   return axios
-    .get<ApiMultipleEntertainmentObjects>(
-      getSelectedGenreMovieEndpoint,
-      {
-        headers: { "Accept-Language": "en-gb" },
-      }
-    )
+    .get<ApiMultipleEntertainmentObjects>(getSelectedGenreMovieEndpoint, {
+      headers: { "Accept-Language": "en-gb" },
+    })
     .then(({ data }) => {
       const { objects: movies } = data;
       return movies.map((movie) => parseSkylarkObject(movie));

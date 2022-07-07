@@ -86,7 +86,7 @@ const apiQuery = createSkylarkApiQuery({
   fields,
 });
 
-const singleObjectFetcher = ([endpoint, slug]: [
+export const singleObjectFetcher = ([endpoint, slug]: [
   endpoint: string,
   slug: string
 ]) =>
