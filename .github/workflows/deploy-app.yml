@@ -75,7 +75,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/run-ingestor
         with:
-          airtable-api-key: ${{ secrets.AIRTABLE_API_KEY }}
+          airtable-api-key: ${{ secrets.AIRTABLE_SUPPORT_KEY }}
           airtable-base-id: ${{ secrets.AIRTABLE_BASE_ID }}
           skylark-api-url: https://api.showcase-test.eng-james-wallis.skylarkplatform.io
           cognito-aws-region: ${{ secrets.NEXT_PUBLIC_COGNITO_AWS_REGION }}
