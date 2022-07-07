@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MdArrowDropDown } from "react-icons/md";
+import { MdArrowDropDown, MdOutlineClose } from "react-icons/md";
 
 interface DropdownProps {
   label: string;
@@ -45,7 +45,16 @@ export const Dropdown: React.FC<DropdownProps> = ({
           {selected || label}
         </button>
         <div className="sm: flex w-full justify-end pr-1 pt-2 text-white">
-          <MdArrowDropDown size={25} />
+          {!selected && <MdArrowDropDown size={25} />}
+          {selected && (
+            <div
+              className="mr-1 mt-0.5"
+              data-testid="close-genre"
+              onClick={() => handleOnClick("")}
+            >
+              <MdOutlineClose size={20} />{" "}
+            </div>
+          )}
         </div>
       </div>
       {isOpen && (
@@ -66,6 +75,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                   hover:text-purple-500
                   md:text-sm
                   "
+                data-testid={item}
                 type="button"
                 onClick={() => handleOnClick(item)}
               >
