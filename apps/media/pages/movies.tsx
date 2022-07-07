@@ -9,7 +9,7 @@ import {
   Skeleton,
   H4,
 } from "@skylark-reference-apps/react";
-import { getImageSrc, formatYear, getImageSrc } from "@skylark-reference-apps/lib";
+import { getImageSrc, formatYear } from "@skylark-reference-apps/lib";
 import { useAllMovies } from "../hooks/useMoviesSet";
 import { useAllGenres } from "../hooks/useGenres";
 
