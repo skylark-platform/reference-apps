@@ -1,4 +1,9 @@
-export type SetTypes = "slider" | "rail" | "collection";
+export type SetTypes =
+  | "slider"
+  | "rail"
+  | "collection"
+  | "homepage"
+  | "generic";
 export type EntertainmentType =
   | "movie"
   | "episode"
@@ -16,3 +21,13 @@ export type DeviceTypes = "smartphone" | "pc";
 export type TitleTypes = "short" | "medium" | "long";
 
 export type SynopsisTypes = TitleTypes;
+
+export type DimensionTypes =
+  | "affiliates"
+  | "customer-types"
+  | "device-types"
+  | "locales"
+  | "languages"
+  | "operating-systems"
+  | "regions"
+  | "viewing-context";

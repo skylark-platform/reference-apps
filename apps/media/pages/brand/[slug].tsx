@@ -6,13 +6,13 @@ import {
   BrandHeader,
   CallToAction,
   Hero,
+  getImageSrcAndSizeByWindow,
   Skeleton,
 } from "@skylark-reference-apps/react";
 import {
   Episode,
   formatReleaseDate,
   getImageSrc,
-  getImageSrcAndSizeByWindow,
   getTitleByOrder,
   Season,
 } from "@skylark-reference-apps/lib";
@@ -105,7 +105,7 @@ const BrandPage: NextPage = () => {
 
         {brand &&
           brand.items?.isExpanded &&
-          (brand.items.objects as Season[]).map(
+          seasons.map(
             (season) =>
               season.isExpanded &&
               season.type === "season" && (
