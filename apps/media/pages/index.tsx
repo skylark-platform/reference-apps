@@ -6,6 +6,7 @@ import {
   EpisodeThumbnail,
   MovieThumbnail,
   Rail,
+  getImageSrcAndSizeByWindow,
   Skeleton,
 } from "@skylark-reference-apps/react";
 import { useRouter } from "next/router";
@@ -14,7 +15,6 @@ import {
   EntertainmentType,
   getImageSrc,
   getTitleByOrder,
-  getImageSrcAndSizeByWindow,
 } from "@skylark-reference-apps/lib";
 
 import { useHomepageSet } from "../hooks/useHomepageSet";
