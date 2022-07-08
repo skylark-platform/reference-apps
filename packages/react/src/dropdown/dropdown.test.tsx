@@ -5,6 +5,7 @@ import { Dropdown } from "./dropdown.component";
 
 describe("Dropdown component", () => {
   const onChange = jest.fn();
+
   it("the component renders correctly while clicked", () => {
     render(
       <Dropdown
@@ -79,5 +80,31 @@ describe("Dropdown component", () => {
     fireEvent.mouseOver(screen.getByText(/Genres/i));
     userEvent.click(screen.getByText(/Children & Family/i));
     expect(screen.getByTestId(/close-genre/)).toBeTruthy();
+  });
+
+  it("the component renders correctly when genre is cleared", () => {
+    render(
+      <Dropdown
+        items={[
+          "Action & Adventure",
+          "Children & Family",
+          "Comedy",
+          "Drama",
+          "Horror",
+          "Romantic",
+          "Sci-fi & Fantasy",
+          "Sports",
+          "Thrillers",
+          "TV Shows",
+        ]}
+        label={"Genres"}
+        onChange={onChange}
+      />
+    );
+    fireEvent.mouseOver(screen.getByText(/Genres/i));
+    userEvent.click(screen.getByText(/Children & Family/i));
+    expect(screen.getByTestId(/close-genre/)).toBeTruthy();
+    userEvent.click(screen.getByTestId(/close-genre/));
+    expect(screen.queryByTestId(/close-genre/)).toBeFalsy();
   });
 });
