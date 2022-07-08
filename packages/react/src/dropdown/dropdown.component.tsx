@@ -48,7 +48,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
           {!selected && <MdArrowDropDown size={25} />}
           {selected && (
             <div
-              className="pointer mr-1 mt-0.5"
+              className="mr-1 mt-0.5 cursor-pointer"
               data-testid="close-genre"
               onClick={() => handleOnClick("")}
             >
