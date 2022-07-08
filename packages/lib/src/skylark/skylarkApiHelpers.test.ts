@@ -101,12 +101,14 @@ describe("skylarkApiHelpers", () => {
     it("parses Image URLs when they are expanded", () => {
       const imageUrls = parseSkylarkImageUrls([
         {
+          uid: "1",
           self: "/api/images/1",
           url: "skylark.com/image/1.jpg",
           url_path: "/image/1.jpg",
           image_type: "Thumbnail",
         },
         {
+          uid: "2",
           self: "/api/images/2",
           url: "skylark.com/image/2.jpg",
           url_path: "/image/2.jpg",

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { MdRefresh } from "react-icons/md";
@@ -8,8 +9,7 @@ import {
   Skeleton,
   H4,
 } from "@skylark-reference-apps/react";
-import { getImageSrc } from "@skylark-reference-apps/lib";
-import { useState } from "react";
+import { getImageSrc, formatYear } from "@skylark-reference-apps/lib";
 import { useAllMovies } from "../hooks/useMoviesSet";
 import { useAllGenres } from "../hooks/useGenres";
 
@@ -62,7 +62,7 @@ const Movies: NextPage = () => {
                 movie.type && movie.slug ? `/${movie.type}/${movie.slug}` : ""
               }
               key={movie.objectTitle || movie.uid || movie.slug}
-              releaseDate="2020"
+              releaseDate={formatYear(movie.releaseDate)}
               title={movie.title?.short || ""}
             />
           ))}
