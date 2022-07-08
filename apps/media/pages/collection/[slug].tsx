@@ -5,6 +5,7 @@ import {
   StandardThumbnail,
   Hero,
   Skeleton,
+  getImageSrcAndSizeByWindow,
 } from "@skylark-reference-apps/react";
 import {
   formatYear,
@@ -12,7 +13,6 @@ import {
   getImageSrc,
   getTitleByOrder,
   getSynopsisByOrder,
-  getImageSrcAndSizeByWindow,
 } from "@skylark-reference-apps/lib";
 
 import { useRouter } from "next/router";
