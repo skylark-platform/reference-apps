@@ -6,13 +6,13 @@ import {
   Header,
   CallToAction,
   Hero,
+  getImageSrcAndSizeByWindow,
   Skeleton,
 } from "@skylark-reference-apps/react";
 import {
   Episode,
   formatReleaseDate,
   getImageSrc,
-  getImageSrcAndSizeByWindow,
   getTitleByOrder,
   Season,
 } from "@skylark-reference-apps/lib";

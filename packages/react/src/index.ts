@@ -21,4 +21,5 @@ export * from "./metadata-panel";
 export * from "./information-panel";
 export * from "./list";
 export * from "./hero";
+export * from "./lib";
 export * from "./skeleton";
