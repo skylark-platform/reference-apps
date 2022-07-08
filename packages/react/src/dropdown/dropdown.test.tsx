@@ -55,7 +55,7 @@ describe("Dropdown component", () => {
     expect(screen.getAllByText(/Children & Family/)).toBeTruthy();
   });
 
-  it("the component renders correctly while clicking a genre", () => {
+  it("the component renders correctly when genre is clicked", () => {
     render(
       <Dropdown
         items={[
@@ -75,9 +75,9 @@ describe("Dropdown component", () => {
       />
     );
     expect(screen.getByText(/Genres/)).toBeTruthy();
-    expect(screen.queryByTestId("close-genre")).toBeFalsy();
+    expect(screen.queryByTestId(/close-genre/)).toBeFalsy();
     fireEvent.mouseOver(screen.getByText(/Genres/i));
-    userEvent.click(screen.getByTestId(/Children & Family/i));
+    userEvent.click(screen.getByText(/Children & Family/i));
     expect(screen.getByTestId(/close-genre/)).toBeTruthy();
   });
 });

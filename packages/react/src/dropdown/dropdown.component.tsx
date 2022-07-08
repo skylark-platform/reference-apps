@@ -52,7 +52,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
               data-testid="close-genre"
               onClick={() => handleOnClick("")}
             >
-              <MdOutlineClose size={20} />{" "}
+              <MdOutlineClose size={20} />
             </div>
           )}
         </div>
@@ -75,7 +75,6 @@ export const Dropdown: React.FC<DropdownProps> = ({
                   hover:text-purple-500
                   md:text-sm
                   "
-                data-testid={item}
                 type="button"
                 onClick={() => handleOnClick(item)}
               >
