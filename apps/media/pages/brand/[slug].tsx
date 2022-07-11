@@ -3,7 +3,7 @@ import Head from "next/head";
 import {
   EpisodeThumbnail,
   Rail,
-  BrandHeader,
+  Header,
   CallToAction,
   Hero,
   getImageSrcAndSizeByWindow,
@@ -56,13 +56,13 @@ const BrandPage: NextPage = () => {
         <div className="-mt-48">
           <Hero bgImage={getImageSrcAndSizeByWindow(brand?.images, "Main")}>
             <div className="flex flex-col">
-              <BrandHeader
+              <Header
                 description={
                   brand?.synopsis.long ||
                   brand?.synopsis.medium ||
                   brand?.synopsis.short
                 }
-                numberOfSeasons={seasons.length}
+                numberOfItems={seasons.length}
                 rating={
                   brand?.ratings?.isExpanded
                     ? brand.ratings.items?.[0].title
@@ -74,6 +74,7 @@ const BrandPage: NextPage = () => {
                   ["long", "medium", "short"],
                   brand?.objectTitle
                 )}
+                typeOfItems="Seasons"
               />
               <CallToAction
                 episodeNumber={1}

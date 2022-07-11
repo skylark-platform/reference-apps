@@ -1,5 +1,6 @@
 export * from "./link";
 export * from "./button";
+export * from "./header";
 export * from "./label";
 export * from "./title-screen";
 export * from "./loading-screen";
@@ -13,7 +14,6 @@ export * from "./app-header";
 export * from "./app-background-gradient";
 export * from "./navigation";
 export * from "./player";
-export * from "./brand-header";
 export * from "./call-to-action";
 export * from "./dropdown";
 export * from "./hooks";
