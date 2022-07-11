@@ -18,26 +18,17 @@ Its purpose is to import content required for the StreamTV demo application.
 
 ## Running
 
-1. Target your Skylark instance by adding the following properties to a `.env.local` file in `app/media`:
+1. Target your Skylark instance by adding the following properties to a `.env.local` file in `app/media` - the contents are on the main repository README.
 
-```
+2. Add the following properties to your `.env.local` file:
+
+```bash
 # Airtable API key and base ID
 AIRTABLE_API_KEY=
 AIRTABLE_BASE_ID=
-# URL to your Skylark's API endpoint (usually `https://api.` followed by the Skylark URL)
-NEXT_PUBLIC_SKYLARK_API_URL=
-# Deployed URL for your app
-NEXT_PUBLIC_APP_URL=
-# Configuration for AWS Cognito
-COGNITO_AWS_REGION=
-COGNITO_CLIENT_ID=
-COGNITO_USER_POOL_ID=
-# Email and password for a user in your Cognito pool
-COGNITO_EMAIL=
-COGNITO_PASSWORD=
 ```
 
-2. Install NPM dependencies and run:
+3. Install NPM dependencies and run:
 
 ```bash
 yarn && yarn ingest

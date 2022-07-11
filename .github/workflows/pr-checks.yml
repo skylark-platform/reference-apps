@@ -35,7 +35,6 @@ jobs:
     name: Build and test ${{ matrix.tests.app }} app
     strategy:
       matrix:
-        # app: [media]
         tests: [{ app: "media", percy_secret: "PERCY_MEDIA_APP_TOKEN" }]
     steps:
       - uses: actions/checkout@v2
@@ -45,6 +44,8 @@ jobs:
           cache: yarn
       - run: yarn
       - run: yarn build
+        env:
+          NEXT_PUBLIC_SKYLARK_API_URL: https://api.showcase-test.eng-james-wallis.skylarkplatform.io
         working-directory: apps/${{ matrix.tests.app }}
       - run: yarn test:percy
         working-directory: apps/${{ matrix.tests.app }}
