@@ -1,22 +1,22 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { BrandHeader } from "./brand-header.component";
+import { Header } from "./header.component";
 
 export default {
-  title: "React/BrandHeader",
-  component: BrandHeader,
-} as ComponentMeta<typeof BrandHeader>;
+  title: "React/Header",
+  component: Header,
+} as ComponentMeta<typeof Header>;
 
-const Template: ComponentStory<typeof BrandHeader> = (args) => (
+const Template: ComponentStory<typeof Header> = (args) => (
   <div className="bg-gray-900">
-    <BrandHeader {...args} />
+    <Header {...args} />
   </div>
 );
 
 export const Default = Template.bind({});
 Default.args = {
   title: "Game of Thrones",
-  numberOfSeasons: 8,
+  numberOfItems: 8,
   releaseDate: "2011",
   rating: "18+",
   description:
