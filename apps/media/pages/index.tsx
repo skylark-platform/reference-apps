@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-import Head from "next/head";
 import {
   Carousel,
   CollectionThumbnail,
@@ -29,10 +28,6 @@ const Home: NextPage = () => {
 
   return (
     <div className="mb-20 mt-48 flex min-h-screen flex-col items-center bg-gray-900">
-      <Head>
-        <title>{`Home - StreamTV`}</title>
-      </Head>
-
       <Skeleton show={!homepage}>
         {homepage?.isExpanded &&
           homepage?.items?.isExpanded &&

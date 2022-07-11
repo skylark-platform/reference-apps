@@ -5,6 +5,7 @@ import "@fontsource/outfit/700.css";
 import "@fontsource/inter/500.css";
 import "@fontsource/inter/600.css";
 import type { AppProps } from "next/app";
+import { DefaultSeo } from "next-seo";
 import {
   AppBackgroundGradient,
   AppHeader,
@@ -15,6 +16,7 @@ import {
 import { useRouter } from "next/router";
 import { MdAccountCircle, MdStream } from "react-icons/md";
 import Link from "next/link";
+import createDefaultSeo from "../next-seo.config";
 
 const appTitle = "StreamTV";
 
@@ -28,6 +30,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const { asPath } = useRouter();
   return (
     <div className="relative">
+      <DefaultSeo {...createDefaultSeo(appTitle)} />
       <TitleScreen
         exitBackgroundColor="#5B45CE"
         logo={

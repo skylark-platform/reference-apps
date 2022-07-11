@@ -74,6 +74,8 @@ export const convertObjectTypeToSkylarkEndpoint = (
       return "seasons";
     case "brand":
       return "brands";
+    case "collection":
+      return "collections";
     default:
       throw new Error("Unknown type provided");
   }

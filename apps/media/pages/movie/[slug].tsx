@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import {
   InformationPanel,
   MetadataPanel,
@@ -13,7 +13,7 @@ import {
   Movie,
 } from "@skylark-reference-apps/lib";
 import { useRouter } from "next/router";
-import Head from "next/head";
+import { NextSeo } from "next-seo";
 import {
   MdRecentActors,
   MdMovie,
@@ -22,8 +22,21 @@ import {
 } from "react-icons/md";
 import { useSingleObjectBySlug } from "../../hooks/useSingleObjectBySlug";
 import { useAssetPlaybackUrl } from "../../hooks/useAssetPlaybackUrl";
+import {
+  getSeoDataForObject,
+  SeoObjectData,
+} from "../../lib/getSeoDataForObject";
 
-const MoviePage: NextPage = () => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const seo = await getSeoDataForObject("movie", context.query.slug as string);
+  return {
+    props: {
+      seo,
+    },
+  };
+};
+
+const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
   const { data } = useSingleObjectBySlug("movie", query?.slug as string);
   const assetUid = data?.items?.isExpanded ? data?.items?.objects[0]?.uid : "";
@@ -58,9 +71,11 @@ const MoviePage: NextPage = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-start pb-20 md:pt-64">
-      <Head>
-        <title>{`${titleShortToLong || "Movie page"} - StreamTV`}</title>
-      </Head>
+      <NextSeo
+        description={seo.synopsis}
+        openGraph={{ images: seo.images }}
+        title={titleLongToShort || seo.title}
+      />
       <Skeleton show={!movie}>
         <div className="flex h-full w-full justify-center pb-10 md:pb-16">
           <Player

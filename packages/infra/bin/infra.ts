@@ -42,6 +42,9 @@ const main = async () => {
   const builder = new Builder(appPath, "./build", {
     args: ["build"],
     cwd: appPath,
+    env: {
+      NEXT_PUBLIC_APP_URL: `https://${primaryDomain}`,
+    },
   });
 
   await builder.build();

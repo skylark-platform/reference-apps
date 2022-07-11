@@ -1,5 +1,5 @@
-import type { NextPage } from "next";
-import Head from "next/head";
+import type { GetServerSideProps, NextPage } from "next";
+import { NextSeo } from "next-seo";
 import {
   EpisodeThumbnail,
   Rail,
@@ -18,11 +18,24 @@ import {
 } from "@skylark-reference-apps/lib";
 import { useRouter } from "next/router";
 import { useBrandWithSeasonBySlug } from "../../hooks/useBrandWithSeasonBySlug";
+import {
+  getSeoDataForObject,
+  SeoObjectData,
+} from "../../lib/getSeoDataForObject";
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const seo = await getSeoDataForObject("brand", context.query.slug as string);
+  return {
+    props: {
+      seo,
+    },
+  };
+};
 
 const sortEpisodesByNumber = (a: Episode, b: Episode) =>
   (a.number || 0) > (b.number || 0) ? 1 : -1;
 
-const BrandPage: NextPage = () => {
+const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
 
   const { brand, notFound, error } = useBrandWithSeasonBySlug(
@@ -48,10 +61,11 @@ const BrandPage: NextPage = () => {
 
   return (
     <div className="mb-20 mt-48 flex min-h-screen flex-col items-center bg-gray-900">
-      <Head>
-        <title>{`${titleShortToLong || "Brand page"} - StreamTV`}</title>
-      </Head>
-
+      <NextSeo
+        description={seo.synopsis}
+        openGraph={{ images: seo.images }}
+        title={titleShortToLong || seo.title}
+      />
       <Skeleton show={!brand && !error}>
         <div className="-mt-48">
           <Hero bgImage={getImageSrcAndSizeByWindow(brand?.images, "Main")}>

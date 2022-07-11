@@ -1,5 +1,5 @@
-import type { NextPage } from "next";
-import Head from "next/head";
+import type { GetServerSideProps, NextPage } from "next";
+import { NextSeo } from "next-seo";
 import {
   InformationPanel,
   MetadataPanel,
@@ -23,8 +23,24 @@ import {
 } from "react-icons/md";
 import { useSingleObjectBySlug } from "../../hooks/useSingleObjectBySlug";
 import { useAssetPlaybackUrl } from "../../hooks/useAssetPlaybackUrl";
+import {
+  getSeoDataForObject,
+  SeoObjectData,
+} from "../../lib/getSeoDataForObject";
 
-const EpisodePage: NextPage = () => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const seo = await getSeoDataForObject(
+    "episode",
+    context.query.slug as string
+  );
+  return {
+    props: {
+      seo,
+    },
+  };
+};
+
+const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
   const { data } = useSingleObjectBySlug("episode", query?.slug as string);
   const assetUid = data?.items?.isExpanded ? data?.items?.objects[0]?.uid : "";
@@ -60,9 +76,11 @@ const EpisodePage: NextPage = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-start pb-20 md:pt-64">
-      <Head>
-        <title>{`${titleShortToLong || "Episode page"} - StreamTV`}</title>
-      </Head>
+      <NextSeo
+        description={seo.synopsis}
+        openGraph={{ images: seo.images }}
+        title={titleLongToShort || seo.title}
+      />
       <Skeleton show={!episode}>
         <div className="flex h-full w-full justify-center pb-10 md:pb-16">
           <Player
