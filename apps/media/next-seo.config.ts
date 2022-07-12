@@ -6,7 +6,7 @@ const createDefaultSeo = (appTitle: string): DefaultSeoProps => ({
   dangerouslySetAllPagesToNoFollow: true,
   dangerouslySetAllPagesToNoIndex: true,
   defaultTitle: appTitle,
-  titleTemplate: `${appTitle} | %s`,
+  titleTemplate: `%s | ${appTitle}`,
   description: `${appTitle} - A showcase application build to demonstrate the power of Skylark. Visit https://www.skylarkplatform.com to learn more.`,
   openGraph: {
     type: "website",

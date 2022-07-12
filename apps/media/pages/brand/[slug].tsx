@@ -18,10 +18,7 @@ import {
 } from "@skylark-reference-apps/lib";
 import { useRouter } from "next/router";
 import { useBrandWithSeasonBySlug } from "../../hooks/useBrandWithSeasonBySlug";
-import {
-  getSeoDataForObject,
-  SeoObjectData,
-} from "../../lib/getSeoDataForObject";
+import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject("brand", context.query.slug as string);

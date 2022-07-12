@@ -23,10 +23,7 @@ import {
 } from "react-icons/md";
 import { useSingleObjectBySlug } from "../../hooks/useSingleObjectBySlug";
 import { useAssetPlaybackUrl } from "../../hooks/useAssetPlaybackUrl";
-import {
-  getSeoDataForObject,
-  SeoObjectData,
-} from "../../lib/getSeoDataForObject";
+import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject(

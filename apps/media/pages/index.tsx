@@ -18,7 +18,7 @@ import {
 } from "@skylark-reference-apps/lib";
 
 import { homepageSlug, useHomepageSet } from "../hooks/useHomepageSet";
-import { getSeoDataForSet, SeoObjectData } from "../lib/getSeoDataForObject";
+import { getSeoDataForSet, SeoObjectData } from "../lib/getPageSeoData";
 
 export const getStaticProps: GetStaticProps = async () => {
   const seo = await getSeoDataForSet("homepage", homepageSlug);

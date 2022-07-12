@@ -18,7 +18,7 @@ import {
 import { useRouter } from "next/router";
 
 import { useCollectionBySlug } from "../../hooks/useCollectionBySlug";
-import { getSeoDataForSet, SeoObjectData } from "../../lib/getSeoDataForObject";
+import { getSeoDataForSet, SeoObjectData } from "../../lib/getPageSeoData";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForSet(
