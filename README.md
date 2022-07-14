@@ -1,46 +1,49 @@
 # Skylark Reference Apps
 
-## Usage
+Home to StreamTV, a web app designed to demonstrate [Skylark's](https://www.skylarkplatform.com/) features.
 
-Running apps in `dev` mode works out of the box.
+## Overview
 
-## Tech
+We use Lerna and Yarn Workspaces to re-use local packages in multiple projects.
 
-### Core tech
+### Apps (`app/`)
 
-- Next.js
-- Tailwind CSS
-- Typescript
+- Media (StreamTV) - Demo application for the Skylark Media Data Model
+- Storybook - React component library
 
-### Monorepo tools
+#### Running
 
-- Yarn workspaces
-- Lerna?
-- next-transpile-modules
+Create a `.env.local` in the `apps/media` directory containing:
 
-### Additional packages
+```bash
+# URL to your Skylark's API endpoint (usually `https://api.` followed by the Skylark URL)
+NEXT_PUBLIC_SKYLARK_API_URL=
+# Deployed URL for your app
+NEXT_PUBLIC_APP_URL=
+# Configuration for AWS Cognito
+COGNITO_AWS_REGION=
+COGNITO_CLIENT_ID=
+COGNITO_USER_POOL_ID=
+# Email and password for a user in your Cognito pool
+COGNITO_EMAIL=
+COGNITO_PASSWORD=
+```
 
-- Storybook (and Chromatic?)
-- next-seo
-- @aws-amplify/auth
-- @aws-amplify/core
-- react-icons
+```bash
+# Install workspace dependencies
+yarn
 
-### Code standard tools
+# Run all apps
+yarn dev
+```
 
-- ESlint
-- Prettier
-- Lint-staged & Husky (used together)
+### Packages (`packages/`)
 
-### Testing
+- `@skylark-reference-apps/infra` - AWS CDK used to deploy the Next.js apps to an AWS account that contains a running Skylark to connect to
+- `@skylark-reference-apps/ingestor` - A content ingestor that helps you load large amounts of content into Skylark
+- `@skylark-reference-apps/lib` - Helper functions to communicate with the Skylark API, Cognito etc
+- `@skylark-reference-apps/react` - React components
 
-- Jest
-  - react-testing-library?
-  - babel.config.js in packages is required for Jest testing only
-- Cypress
+### Running tests
 
-### Deployment
-
-- AWS Amplify for Next.js
-- Serverless Next.js
-- GitHub Actions
+From the root directory run `yarn test`

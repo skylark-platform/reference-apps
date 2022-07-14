@@ -1,5 +1,5 @@
-import type { NextPage } from "next";
-import Head from "next/head";
+import type { GetServerSideProps, NextPage } from "next";
+import { NextSeo } from "next-seo";
 import {
   Header,
   StandardThumbnail,
@@ -18,8 +18,21 @@ import {
 import { useRouter } from "next/router";
 
 import { useCollectionBySlug } from "../../hooks/useCollectionBySlug";
+import { getSeoDataForSet, SeoObjectData } from "../../lib/getPageSeoData";
 
-const CollectionPage: NextPage = () => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const seo = await getSeoDataForSet(
+    "collection",
+    context.query.slug as string
+  );
+  return {
+    props: {
+      seo,
+    },
+  };
+};
+
+const CollectionPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
   const { collection, error } = useCollectionBySlug(query?.slug as string);
 
@@ -35,9 +48,11 @@ const CollectionPage: NextPage = () => {
 
   return (
     <div className="mb-20 mt-48 flex min-h-screen flex-col items-center bg-gray-900">
-      <Head>
-        <title>{`${titleLongToShort || "Collection page"} - StreamTV`}</title>
-      </Head>
+      <NextSeo
+        description={seo.synopsis}
+        openGraph={{ images: seo.images }}
+        title={titleLongToShort || seo.title}
+      />
       <Skeleton show={!collection && !error}>
         <div className="-mt-48"></div>
         <Hero bgImage={getImageSrcAndSizeByWindow(collection?.images, "Main")}>

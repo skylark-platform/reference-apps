@@ -68,7 +68,7 @@ const fields = {
 };
 
 const homepageSwrKey = "homepage-set";
-const homepageSlug = "media-reference-homepage";
+export const homepageSlug = "media-reference-homepage";
 
 export const homepageSetFetcher = (
   params?: [key: string, deviceType: string]

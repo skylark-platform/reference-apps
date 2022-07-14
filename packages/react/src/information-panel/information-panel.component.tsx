@@ -50,7 +50,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
               />
             </div>
           )}
-          <div className="pt-2 text-2xl md:text-3xl">{title}</div>
+          <h1 className="pt-2 text-2xl md:text-3xl">{title}</h1>
           <span className="mt-4 mb-2 hidden w-36 border-b border-gray-800 md:flex" />
           <List
             contents={[
