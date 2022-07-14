@@ -39,15 +39,15 @@ const main = async () => {
   );
   const description = `${app} Skylark Reference App deployed via CDK`;
 
-  const builder = new Builder(appPath, "./build", {
-    args: ["build"],
-    cwd: appPath,
-    env: {
-      NEXT_PUBLIC_APP_URL: `https://${primaryDomain}`,
-    },
-  });
+  // const builder = new Builder(appPath, "./build", {
+  //   args: ["build"],
+  //   cwd: appPath,
+  //   env: {
+  //     NEXT_PUBLIC_APP_URL: `https://${primaryDomain}`,
+  //   },
+  // });
 
-  await builder.build();
+  // await builder.build();
 
   const cdkApp = new cdk.App();
   new SkylarkReferenceAppStack(
