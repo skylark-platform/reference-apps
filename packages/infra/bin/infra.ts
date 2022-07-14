@@ -4,61 +4,39 @@ import * as cdk from "aws-cdk-lib";
 import { Builder } from "@sls-next/lambda-at-edge";
 import { pathExists } from "fs-extra";
 import { SkylarkReferenceAppStack } from "../lib/stack";
-
-const app = process.env.APP || "media";
-const gitBranch = process.env.GIT_BRANCH;
-const baseDomain = process.env.BASE_DOMAIN_NAME;
-
-if (!baseDomain) {
-  throw new Error(`Must provide environment variable "BASE_DOMAIN_NAME".`);
-}
-
-const strFromArr = (arr: any[], separator: string) =>
-  arr.filter((item) => !!item).join(separator);
+import { APP, BASE_DOMAIN, PRIMARY_DOMAIN, STACK_DESCRIPTION, STACK_ID, STACK_NAME } from "../lib/vars";
 
 const main = async () => {
-  const appPath = `../../apps/${app}`;
-  const appExists = await pathExists(appPath);
-  if (!appExists) {
-    throw new Error(`App ${app} does not exist in apps directory`);
+  if (!BASE_DOMAIN) {
+    throw new Error(`Must provide environment variable "BASE_DOMAIN_NAME".`);
   }
 
-  const sanitzedGitBranch =
-    gitBranch && gitBranch.toLowerCase().replace(/[^A-Za-z0-9]/g, "-");
-  const stackName =
-    process.env.STACK_NAME ||
-    strFromArr(["sl-ref-apps", app, sanitzedGitBranch], "-");
-  const primaryDomain = strFromArr(
-    [
-      app,
-      sanitzedGitBranch !== "main" && sanitzedGitBranch,
-      "apps",
-      baseDomain,
-    ],
-    "."
-  );
-  const description = `${app} Skylark Reference App deployed via CDK`;
+  const appPath = `../../apps/${APP}`;
+  const appExists = await pathExists(appPath);
+  if (!appExists) {
+    throw new Error(`App ${APP} does not exist in apps directory`);
+  }
 
-  // const builder = new Builder(appPath, "./build", {
-  //   args: ["build"],
-  //   cwd: appPath,
-  //   env: {
-  //     NEXT_PUBLIC_APP_URL: `https://${primaryDomain}`,
-  //   },
-  // });
+  const builder = new Builder(appPath, "./build", {
+    args: ["build"],
+    cwd: appPath,
+    env: {
+      NEXT_PUBLIC_APP_URL: `https://${PRIMARY_DOMAIN}`,
+    },
+  });
 
-  // await builder.build();
+  await builder.build();
 
   const cdkApp = new cdk.App();
   new SkylarkReferenceAppStack(
     cdkApp,
-    strFromArr([sanitzedGitBranch, app, "skylark-reference-apps"], "-"),
+    STACK_ID,
     {
-      app,
-      stackName,
-      description,
-      primaryDomain,
-      baseDomain,
+      app: APP,
+      stackName: STACK_NAME,
+      description: STACK_DESCRIPTION,
+      primaryDomain: PRIMARY_DOMAIN,
+      baseDomain: BASE_DOMAIN,
       env: {
         account: process.env.CDK_DEFAULT_ACCOUNT,
         region: "us-east-1",
@@ -66,12 +44,16 @@ const main = async () => {
     }
   );
 
-  console.log(`::set-output name=stack-name::${stackName}`);
-  console.log(`::set-output name=app::${app}`);
-  console.log(`::set-output name=domain::${primaryDomain}`);
+  // eslint-disable-next-line no-console
+  console.log(`::set-output name=stack-name::${STACK_NAME}`);
+  // eslint-disable-next-line no-console
+  console.log(`::set-output name=app::${APP}`);
+  // eslint-disable-next-line no-console
+  console.log(`::set-output name=domain::${PRIMARY_DOMAIN}`);
 };
 
 main().catch((err) => {
+  // eslint-disable-next-line no-console
   console.error(err);
   process.exit(1);
 });

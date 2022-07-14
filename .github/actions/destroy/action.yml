@@ -38,15 +38,21 @@ runs:
     - name: Install deps
       shell: bash
       run: yarn
-    - name: Bootstrap and deploy CDK
+    - name: Output stack-name
+      # If inputs.stack-name isn't given, this will generate it using the app and git-branch
       shell: bash
-      id: cdk
+      id: sanitize-stack-name
       working-directory: packages/infra
       env:
         APP: ${{ inputs.app }}
         STACK_NAME: ${{ inputs.stack-name }}
         GIT_BRANCH: ${{ inputs.git-branch }}
-        BASE_DOMAIN_NAME: ${{ inputs.base-domain }}
+      run: yarn output-stack-name
+    - name: Delete stack via Cloudformation
+      # Use native Cloudformation to avoid having to build the Next.js app
+      shell: bash -o nounset {0}
       run: |
-        yarn cdk bootstrap
-        yarn cdk destroy --force
+        aws cloudformation delete-stack --stack-name ${{ steps.sanitize-stack-name.outputs.stack-name }} \
+          --region us-east-1
+        aws cloudformation wait stack-delete-complete --stack-name ${{ steps.sanitize-stack-name.outputs.stack-name }} \
+          --region us-east-1
