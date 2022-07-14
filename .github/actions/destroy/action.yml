@@ -8,11 +8,6 @@ inputs:
   stack-name:
     description: The name of the stack to delete, optional
     required: false
-  base-domain:
-    description: |
-      The domain connected to an AWS zone used to connect the app domain to the deployed app
-      E.g. passing in "skylark-dev.skylarkplatform.io" could result in "media.apps.skylark-dev.skylarkplatform.io"
-    required: true
   git-branch:
     description: Used to prefix the deployment stack name
     required: false
