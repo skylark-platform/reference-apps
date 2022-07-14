@@ -62,9 +62,15 @@ export const getImageSrc = (
     return "";
   }
 
-  let image = images.items.find((img) => img.type === type);
+  // Filter any Images with an empty URL
+  const imagesWithUrls = images.items.filter((img) => !!img?.url);
+  if (imagesWithUrls.length === 0) {
+    return "";
+  }
 
-  if (!image) [image] = images.items;
+  // Default to first image if no matching type is found
+  const image =
+    imagesWithUrls.find((img) => img.type === type) || imagesWithUrls[0];
 
   const urlWithoutExtension = image.url.replace(/\.[^/.]+$/, "");
   return size
