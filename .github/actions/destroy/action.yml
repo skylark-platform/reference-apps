@@ -8,11 +8,6 @@ inputs:
   stack-name:
     description: The name of the stack to delete, optional
     required: false
-  base-domain:
-    description: |
-      The domain connected to an AWS zone used to connect the app domain to the deployed app
-      E.g. passing in "skylark-dev.skylarkplatform.io" could result in "media.apps.skylark-dev.skylarkplatform.io"
-    required: true
   git-branch:
     description: Used to prefix the deployment stack name
     required: false
@@ -38,15 +33,21 @@ runs:
     - name: Install deps
       shell: bash
       run: yarn
-    - name: Bootstrap and deploy CDK
+    - name: Output stack-name
+      # If inputs.stack-name isn't given, this will generate it using the app and git-branch
       shell: bash
-      id: cdk
+      id: sanitize-stack-name
       working-directory: packages/infra
       env:
         APP: ${{ inputs.app }}
         STACK_NAME: ${{ inputs.stack-name }}
         GIT_BRANCH: ${{ inputs.git-branch }}
-        BASE_DOMAIN_NAME: ${{ inputs.base-domain }}
+      run: yarn output-stack-name
+    - name: Delete stack via Cloudformation
+      # Use native Cloudformation to avoid having to build the Next.js app
+      shell: bash -o nounset {0}
       run: |
-        yarn cdk bootstrap
-        yarn cdk destroy --force
+        aws cloudformation delete-stack --stack-name ${{ steps.sanitize-stack-name.outputs.stack-name }} \
+          --region us-east-1
+        aws cloudformation wait stack-delete-complete --stack-name ${{ steps.sanitize-stack-name.outputs.stack-name }} \
+          --region us-east-1

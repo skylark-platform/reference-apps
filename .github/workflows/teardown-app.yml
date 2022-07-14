@@ -7,10 +7,6 @@ on:
         type: string
         required: true
         description: The name of the environment to delete
-      launcher-url:
-        type: string
-        required: true
-        description: The Launcher URL for the Skylark instance
       aws-access-key-id:
         type: string
         required: false
@@ -63,11 +59,6 @@ jobs:
 
           echo "::set-output name=ref::$GitRef"
           echo "::set-output name=branch::$GitBranch"
-      - uses: ./.github/actions/parse-domain-from-url
-        if: ${{ inputs.launcher-url != '' }}
-        id: sanitize-url
-        with:
-          url: ${{ inputs.launcher-url }}
 
   teardown:
     name: Teardown
@@ -82,6 +73,5 @@ jobs:
         with:
           stack-name: ${{ github.event.inputs.stack-name || '' }}
           git-branch: ${{ !inputs.launcher-url && needs.prepare.outputs.git-branch || '' }}
-          base-domain: ${{ needs.prepare.outputs.domain || 'skylark-dev.skylarkplatform.io' }}
           aws-access-key-id: ${{ steps.mask.outputs.aws-access-key-id || secrets.AWS_ACCESS_KEY_ID_SKYLARK_DEV }}
           aws-secret-access-key: ${{ steps.mask.outputs.aws-secret-access-key || secrets.AWS_SECRET_ACCESS_KEY_SKYLARK_DEV }}
