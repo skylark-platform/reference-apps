@@ -7,6 +7,7 @@ import {
   ImageUrls,
   TitleTypes,
   UnexpandedObjects,
+  SynopsisTypes,
 } from "../interfaces";
 
 /**
@@ -21,17 +22,28 @@ export const getTitleByOrder = (
   priority: TitleTypes[],
   objectTitle?: string
 ): string => {
-  if (!titles) {
-    return objectTitle || "";
-  }
+  if (!titles) return objectTitle || "";
 
-  const foundType = priority.find((type) => {
-    if (titles[type]) {
-      return titles[type];
-    }
-    return null;
-  });
+  const foundType = priority.find((type) => titles[type] || null);
+
   return foundType ? titles[foundType] : objectTitle || "";
+};
+
+/**
+ * Returns the synopsis from the synopsis object using a given order of priority. Defaults long to short.
+ * @param synopsis the synopsis object
+ * @param priority optional order of priority
+ * @returns {string}
+ */
+export const getSynopsisByOrder = (
+  synopsis: { [s in SynopsisTypes]: string } | undefined,
+  priority: SynopsisTypes[] = ["long", "medium", "short"]
+): string => {
+  if (!synopsis) return "";
+
+  const foundType = priority?.find((type) => synopsis[type] || null);
+
+  return foundType ? synopsis[foundType] : "";
 };
 
 /**
@@ -50,9 +62,15 @@ export const getImageSrc = (
     return "";
   }
 
-  let image = images.items.find((img) => img.type === type);
+  // Filter any Images with an empty URL
+  const imagesWithUrls = images.items.filter((img) => !!img?.url);
+  if (imagesWithUrls.length === 0) {
+    return "";
+  }
 
-  if (!image) [image] = images.items;
+  // Default to first image if no matching type is found
+  const image =
+    imagesWithUrls.find((img) => img.type === type) || imagesWithUrls[0];
 
   const urlWithoutExtension = image.url.replace(/\.[^/.]+$/, "");
   return size

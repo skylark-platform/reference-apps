@@ -1,5 +1,5 @@
-import type { NextPage } from "next";
-import Head from "next/head";
+import type { GetStaticProps, NextPage } from "next";
+import { NextSeo } from "next-seo";
 import {
   Carousel,
   CollectionThumbnail,
@@ -17,9 +17,20 @@ import {
   getTitleByOrder,
 } from "@skylark-reference-apps/lib";
 
-import { useHomepageSet } from "../hooks/useHomepageSet";
+import { homepageSlug, useHomepageSet } from "../hooks/useHomepageSet";
+import { getSeoDataForSet, SeoObjectData } from "../lib/getPageSeoData";
 
-const Home: NextPage = () => {
+export const getStaticProps: GetStaticProps = async () => {
+  const seo = await getSeoDataForSet("homepage", homepageSlug);
+  return {
+    revalidate: 300,
+    props: {
+      seo,
+    },
+  };
+};
+
+const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
   const { homepage } = useHomepageSet();
 
@@ -29,10 +40,7 @@ const Home: NextPage = () => {
 
   return (
     <div className="mb-20 mt-48 flex min-h-screen flex-col items-center bg-gray-900">
-      <Head>
-        <title>{`Home - StreamTV`}</title>
-      </Head>
-
+      <NextSeo openGraph={{ images: seo.images }} />
       <Skeleton show={!homepage}>
         {homepage?.isExpanded &&
           homepage?.items?.isExpanded &&

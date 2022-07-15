@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { NextPage } from "next";
-import Head from "next/head";
+import { NextSeo } from "next-seo";
 import { MdRefresh } from "react-icons/md";
 import {
   Button,
@@ -21,9 +21,7 @@ const Movies: NextPage = () => {
 
   return (
     <div className="flex w-full flex-col justify-center py-20">
-      <Head>
-        <title>{`Skylark Media Reference App`}</title>
-      </Head>
+      <NextSeo title="Movies" />
       <div className="px-gutter sm:px-sm-gutter md:pt-20 lg:px-lg-gutter xl:px-xl-gutter">
         <div className="my-10 text-white">
           <h1 className="text-[40px] font-medium md:text-[56px]">{"Movies"}</h1>

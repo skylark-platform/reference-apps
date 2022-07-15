@@ -6,7 +6,8 @@
     "infra": "bin/infra.js"
   },
   "scripts": {
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "output-stack-name": "ts-node ./bin/output-stack-name"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",

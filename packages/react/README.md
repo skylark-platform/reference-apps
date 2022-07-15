@@ -1,3 +1,3 @@
-# `@skylark/react`
+# `@skylark-reference-apps/react`
 
-React Components for Skylark
+React Components for Skylark Reference Apps

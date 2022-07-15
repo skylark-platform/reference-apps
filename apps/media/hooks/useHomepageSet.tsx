@@ -46,6 +46,7 @@ const fields = {
           synopsis_short: {},
           synopsis_medium: {},
           episode_number: {},
+          set_type_slug: {},
         },
         self: {},
         slug: {},
@@ -61,13 +62,14 @@ const fields = {
         synopsis_short: {},
         synopsis_medium: {},
         episode_number: {},
+        set_type_slug: {},
       },
     },
   },
 };
 
 const homepageSwrKey = "homepage-set";
-const homepageSlug = "media-reference-homepage";
+export const homepageSlug = "media-reference-homepage";
 
 export const homepageSetFetcher = (
   params?: [key: string, deviceType: string]
