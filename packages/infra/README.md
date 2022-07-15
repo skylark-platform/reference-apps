@@ -1,13 +1,80 @@
 # @skylark-reference-apps/infra
 
-Deploys a given app to AWS using CDK and [serverless-nextjs](https://serverless-nextjs.com/docs/cdkconstruct/)
+Deploys a given app to AWS using CDK and [serverless-nextjs][serverless-nextjs-cdk]
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+## Usage
 
-## Useful commands
+1. Install dependencies
 
-- `npm run build` compile typescript to js
-- `npm run watch` watch for changes and compile
-- `cdk deploy` deploy this stack to your default AWS account/region
-- `cdk diff` compare deployed stack with current state
-- `cdk synth` emits the synthesized CloudFormation template
+```bash
+yarn
+```
+
+2. Configure your terminal to be authenticated with the target AWS account
+
+3. Export required environment variables
+
+```bash
+export APP=media
+export BASE_DOMAIN_NAME=
+export NEXT_PUBLIC_SKYLARK_API_URL=
+export COGNITO_EMAIL=
+export COGNITO_PASSWORD=
+export COGNITO_AWS_REGION=
+export COGNITO_CLIENT_ID=
+export COGNITO_USER_POOL_ID=
+```
+
+_Information about these can be found in the [Environment Variables document][environment-variables]._
+
+4. Bootstrap and deploy CDK
+
+```
+yarn cdk bootstrap && yarn cdk deploy
+```
+
+5. Delete the stack (you can also do this via Cloudformation)
+
+```
+yarn cdk destroy
+```
+
+### With GitHub Actions
+
+We have a composite GitHub Action which will deploy a reference app into the AWS account where your Skylark resides.
+
+[Deploy GitHub Action][deploy-github-action].
+
+```yaml
+- uses: actions/checkout@v3
+  with:
+    repository: ostmodern/skylark-reference-apps
+    ref: main
+- uses: ./.github/actions/deploy
+  with:
+    base-domain: ${{ SECRETS.SKYLARK_BASE_DOMAIN }}
+    skylark-api-url: ${{ secrets.SKYLARK_API_URL }}
+    aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    cognito-aws-region: ${{ secrets.COGNITO_AWS_REGION }}
+    cognito-client-id: ${{ secrets.COGNITO_CLIENT_ID }}
+    cognito-user-pool-id: ${{ secrets.COGNITO_USER_POOL_ID }}
+    cognito-email: ${{ secrets.COGNITO_EMAIL }}
+    cognito-password: ${{ secrets.COGNITO_PASSWORD }}
+```
+
+_Note: Information on how to get the values for the `secrets.` variables are found in the [Environment Variables document][environment-variables]._
+
+## Commands
+
+- `yarn build` - Compile TypeScript to js
+- `yarn watch` - Watch for changes and compile
+- `yarn cdk bootstrap` - Deploys the CDK Toolkit staging stack
+- `yarn cdk deploy` - Deploys the stack
+
+Find all `cdk` commands in the [AWS documentation][cdk-commands].
+
+[serverless-nextjs-cdk]: https://serverless-nextjs.com/docs/cdkconstruct/
+[cdk-commands]: https://docs.aws.amazon.com/cdk/v2/guide/cli.html
+[deploy-github-action]: ../../.github/actions/deploy/action.yml
+[environment-variables]: ../../docs/environment-variables.md
