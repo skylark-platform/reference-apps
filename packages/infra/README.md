@@ -1,6 +1,19 @@
 # @skylark-reference-apps/infra
 
-Deploys a given app to AWS using CDK and [serverless-nextjs][serverless-nextjs-cdk]
+## Description
+
+`@skylark-reference-apps/infra` is designed to deploy a Next.js app to AWS in the same account as Skylark is deployed.
+
+This requirement exists because:
+
+- We use the [Route 53 Hosted Zone][route-53-hosted-zone] that the Skylark has deployed for the apps domain
+- A `[app].apps.` entry is added to the Skylark's DNS settings
+- A DNS validated [Certificate][route-53-certificate] using the Hosted Zone is created for the new domain
+
+Removing this requirement would require little work, you would need to either:
+
+1. Remove the custom domain from the Serverless Next.js's CDK, meaning it would use an auto generated Cloudfront URL
+2. Create/supply your own [Hosted Zone][route-53-hosted-zone] and [Certificate][route-53-certificate]
 
 ## Usage
 
@@ -78,3 +91,5 @@ Find all `cdk` commands in the [AWS documentation][cdk-commands].
 [cdk-commands]: https://docs.aws.amazon.com/cdk/v2/guide/cli.html
 [deploy-github-action]: ../../.github/actions/deploy/action.yml
 [environment-variables]: ../../docs/environment-variables.md
+[route-53-hosted-zone]: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-route53-hostedzone.html
+[route-53-certificate]: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-certificatemanager-certificate.html

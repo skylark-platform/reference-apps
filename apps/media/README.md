@@ -58,5 +58,5 @@ Use the [`@skylark-reference-apps/infra`][infra-project] package to deploy to AW
 [vercel-deploy-button]: https://git-scm.com
 [serverless-nextjs-cdk]: https://serverless-nextjs.com/docs/cdkconstruct/
 [infra-project]: ../../packages/infra/
-[infra-project-more-info]: ../../packages/infra/README.md#
+[infra-project-more-info]: ../../packages/infra/README.md#Description
 [environment-variables]: ../../docs/environment-variables.md
