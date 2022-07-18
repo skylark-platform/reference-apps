@@ -42,7 +42,7 @@ By using it, you will deploy StreamTV into your Vercel account and receive promp
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fostmodern%2Fskylark-reference-apps%2Ftree%2Fmain%2Fapps%2Fmedia&env=NEXT_PUBLIC_SKYLARK_API_URL,NEXT_PUBLIC_APP_URL,COGNITO_AWS_REGION,COGNITO_CLIENT_ID,COGNITO_USER_POOL_ID,COGNITO_EMAIL,COGNITO_PASSWORD&envDescription=Environment%20variables%20needed%20to%20run%20the%20app&envLink=https%3A%2F%2Fgithub.com%2Fostmodern%2Fskylark-reference-apps%2Fblob%2Fmain%2Fdocs%2Fenvironment-variables.md&project-name=skylark-stream-tv&repo-name=skylark-reference-apps&demo-title=StreamTV%20Showcase&demo-description=StreamTV%20deployed%20connected%20to%20Skylark's%20Showcase%20environment&demo-url=https%3A%2F%2Fmedia.apps.showcase.skylarkplatform.io&demo-image=https%3A%2F%2Fgithub.com%2Fostmodern%2Fskylark-reference-apps%2Fblob%2Fmain%2Fdocs%2Fimages%2Fstreamtv-homepage.png%3Fraw%3Dtrue)
 
-<!-- Generated with https://vercel.com/docs/deploy-button -->
+<!-- Generated using https://vercel.com/docs/deploy-button -->
 
 ### AWS
 
@@ -55,7 +55,7 @@ Use the [`@skylark-reference-apps/infra`][infra-project] package to deploy to AW
 
 [skylark]: https://www.skylarkplatform.com/
 [vercel]: https://vercel.com/
-[vercel-deploy-button]: https://git-scm.com
+[vercel-deploy-button]: https://vercel.com/docs/deploy-button
 [serverless-nextjs-cdk]: https://serverless-nextjs.com/docs/cdkconstruct/
 [infra-project]: ../../packages/infra/
 [infra-project-more-info]: ../../packages/infra/README.md#Description
