@@ -54,10 +54,11 @@ const fetchPlaybackUrl = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   // when I use axios instead of above fetch the `apps/media/tests/api/assetId.test.ts` HTTP Responses (second 'describe' ) tests fails, just that needs to be fixed.
-  // const response = await axios.post<ApiViewingsResponse>(url,  body, {
-  //   headers,
-  // })
+  // const response =  await axios.post<ApiViewingsResponse>(url, body, {headers}).then(viewingsRes=> viewingsRes)
+  // using axios
+  // const {data} = response ;
 
+  // using fetch
   const data = (await response.json()) as ApiViewingsResponse;
   const { error } = data;
 
