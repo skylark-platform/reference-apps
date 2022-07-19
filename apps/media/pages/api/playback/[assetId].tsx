@@ -6,6 +6,7 @@ import {
 import { NextApiRequest, NextApiResponse } from "next";
 import Amplify from "@aws-amplify/core";
 import Auth from "@aws-amplify/auth";
+import axios from "axios";
 
 const fetchPlaybackUrl = async (req: NextApiRequest, res: NextApiResponse) => {
   const { assetId } = req.query;
@@ -47,18 +48,10 @@ const fetchPlaybackUrl = async (req: NextApiRequest, res: NextApiResponse) => {
     Authorization: `Bearer ${token}`,
   };
 
-  const response = await fetch(url, {
-    method: "POST",
+  const { data } = await axios.post<ApiViewingsResponse>(url, body, {
     headers,
-    body: JSON.stringify(body),
   });
 
-  // when I use axios instead of above fetch the `apps/media/tests/api/assetId.test.ts` HTTP Responses (second 'describe' ) tests fails, just that needs to be fixed.
-  // const response = await axios.post<ApiViewingsResponse>(url,  body, {
-  //   headers,
-  // })
-
-  const data = (await response.json()) as ApiViewingsResponse;
   const { error } = data;
 
   if (error) {
