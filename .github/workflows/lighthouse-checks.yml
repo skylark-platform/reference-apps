@@ -12,6 +12,7 @@ jobs:
       - name: Lighthouse
         uses: foo-software/lighthouse-check-action@master
         with:
+          type: "all"
           urls: "https://media.feature-add-axios.apps.skylark-dev.skylarkplatform.io/"
           gitHubAccessToken: ${{ github.token }}
           slackWebhookUrl: ${{ secrets.SLACK_ALERTS_CYPRESS_PERCY_CHROMATIC_WEBHOOK_URL }}
@@ -19,8 +20,8 @@ jobs:
         uses: foo-software/lighthouse-check-status-action@master
         with:
           lighthouseCheckResults: ${{ steps.lighthouseCheck.outputs.lighthouseCheckResults }}
-          minAccessibilityScore: "40"
-          minBestPracticesScore: "40"
-          minPerformanceScore: "40"
-          minProgressiveWebAppScore: "40"
-          minSeoScore: "40"
+          minAccessibilityScore: "80"
+          minBestPracticesScore: "90"
+          minPerformanceScore: "55"
+          minProgressiveWebAppScore: "55"
+          minSeoScore: "80"
