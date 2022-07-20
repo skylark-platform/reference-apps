@@ -11,6 +11,7 @@ jobs:
       - uses: actions/checkout@master
       - name: Lighthouse
         uses: foo-software/lighthouse-check-action@master
+        id: skylarkReferenceApp
         with:
           type: "all"
           urls: "https://media.feature-add-axios.apps.skylark-dev.skylarkplatform.io/"
@@ -19,7 +20,7 @@ jobs:
       - name: Verify Lighthouse Check results
         uses: foo-software/lighthouse-check-status-action@master
         with:
-          lighthouseCheckResults: ${{ steps.lighthouseCheck.outputs.lighthouseCheckResults }}
+          lighthouseCheckResults: ${{ steps.skylarkReferenceApp.outputs.skylarkReferenceAppResults }}
           minAccessibilityScore: "80"
           minBestPracticesScore: "90"
           minPerformanceScore: "55"
