@@ -13,4 +13,5 @@ jobs:
         uses: foo-software/lighthouse-check-action@master
         with:
           urls: "https://media.feature-add-axios.apps.skylark-dev.skylarkplatform.io/"
+          gitHubAccessToken: ${{ github.token }}
           slackWebhookUrl: ${{ secrets.SLACK_ALERTS_CYPRESS_PERCY_CHROMATIC_WEBHOOK_URL }}
