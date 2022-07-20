@@ -1,6 +1,6 @@
 # Skylark Reference Apps
 
-Home to StreamTV, a web app designed to demonstrate [Skylark's](https://www.skylarkplatform.com/) features.
+Home to StreamTV, a web app designed to demonstrate [Skylark's][skylark] features.
 
 ## Overview
 
@@ -13,21 +13,9 @@ We use Lerna and Yarn Workspaces to re-use local packages in multiple projects.
 
 #### Running
 
-Create a `.env.local` in the `apps/media` directory containing:
+Create a `.env.local` in the `apps/media` directory containing the corresponding environment variables found in the [Environment Variables document][environment-variables].
 
-```bash
-# URL to your Skylark's API endpoint (usually `https://api.` followed by the Skylark URL)
-NEXT_PUBLIC_SKYLARK_API_URL=
-# Deployed URL for your app
-NEXT_PUBLIC_APP_URL=
-# Configuration for AWS Cognito
-COGNITO_AWS_REGION=
-COGNITO_CLIENT_ID=
-COGNITO_USER_POOL_ID=
-# Email and password for a user in your Cognito pool
-COGNITO_EMAIL=
-COGNITO_PASSWORD=
-```
+Then run:
 
 ```bash
 # Install workspace dependencies
@@ -47,3 +35,6 @@ yarn dev
 ### Running tests
 
 From the root directory run `yarn test`
+
+[skylark]: https://www.skylarkplatform.com/
+[environment-variables]: ./docs/environment-variables.md
