@@ -5,7 +5,7 @@ on:
     branches:
       - main
 jobs:
-  lighthouse:
+  lighthouse-check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -15,3 +15,12 @@ jobs:
           urls: "https://media.feature-add-axios.apps.skylark-dev.skylarkplatform.io/"
           gitHubAccessToken: ${{ github.token }}
           slackWebhookUrl: ${{ secrets.SLACK_ALERTS_CYPRESS_PERCY_CHROMATIC_WEBHOOK_URL }}
+      - name: Verify Lighthouse Check results
+        uses: foo-software/lighthouse-check-status-action@master
+        with:
+          lighthouseCheckResults: ${{ steps.lighthouseCheck.outputs.lighthouseCheckResults }}
+          minAccessibilityScore: "40"
+          minBestPracticesScore: "40"
+          minPerformanceScore: "40"
+          minProgressiveWebAppScore: "40"
+          minSeoScore: "40"
