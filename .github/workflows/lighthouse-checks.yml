@@ -12,7 +12,7 @@ jobs:
       - name: Lighthouse
         uses: foo-software/lighthouse-check-action@master
         with:
-          type: "all"
+          device: "all"
           urls: "https://media.feature-add-axios.apps.skylark-dev.skylarkplatform.io/"
           gitHubAccessToken: ${{ github.token }}
           slackWebhookUrl: ${{ secrets.SLACK_ALERTS_FE_TESTING }}
