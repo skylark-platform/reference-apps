@@ -28,14 +28,6 @@ jobs:
           name: Frontend Unit Test Results
           path: "!(node_modules)/**/reports/jest-junit.xml"
           reporter: jest-junit
-  lighthouse:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - name: Lighthouse
-        uses: foo-software/lighthouse-check-action@master
-        with:
-          urls: "https://media.feature-add-axios.apps.skylark-dev.skylarkplatform.io/"
 
   build-and-test:
     needs: lint
