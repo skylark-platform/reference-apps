@@ -108,3 +108,20 @@ jobs:
           status: ${{ env.WORKFLOW_CONCLUSION }}
           github_token: ${{ github.token }}
           additional_urls: ${{ steps.additional-urls.outputs.result }}
+
+  lighthouse-check:
+    name: Lighthouse
+    runs-on: ubuntu-latest
+    needs: [deploy, ingestor]
+    steps:
+      - uses: actions/checkout@master
+      - name: Lighthouse
+        uses: foo-software/lighthouse-check-action@master
+        with:
+          device: "all"
+          urls: ${{ needs.deploy.outputs.url }},${{ needs.deploy.outputs.url }}/movies
+          gitHubAccessToken: ${{ github.token }}
+          slackWebhookUrl: ${{ secrets.SLACK_ALERTS_FE_TESTING }}
+          gitAuthor: ${{ github.actor }}
+          gitBranch: ${{ github.ref }}
+          prCommentEnabled: true
