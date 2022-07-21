@@ -16,3 +16,6 @@ jobs:
           urls: "https://media.feature-add-axios.apps.skylark-dev.skylarkplatform.io/"
           gitHubAccessToken: ${{ github.token }}
           slackWebhookUrl: ${{ secrets.SLACK_ALERTS_FE_TESTING }}
+          gitAuthor: ${{ github.actor }}
+          gitBranch: ${{ github.ref }}
+          prCommentEnabled: true
