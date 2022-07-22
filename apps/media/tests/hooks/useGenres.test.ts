@@ -28,12 +28,14 @@ describe("useGenres hook tests", () => {
     // Arrange
     const handlePromise = () =>
       new Promise((resolve, reject) => {
-        reject(new Error("axios error"));
+        reject(new Error("useGenres axios error"));
       });
 
     // Assert
     const handle = handlePromise();
     mockedAxios.get.mockResolvedValueOnce(handle);
-    await expect(themeGenresFetcher("genres")).rejects.toThrow("axios error");
+    await expect(themeGenresFetcher("genres")).rejects.toThrow(
+      "useGenres axios error"
+    );
   });
 });
