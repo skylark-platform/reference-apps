@@ -4,14 +4,14 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { createMocks, RequestMethod } from "node-mocks-http";
 import type { NextApiRequest, NextApiResponse } from "next";
-// eslint-disable-next-line import/no-extraneous-dependencies
-import fetchMock from "jest-fetch-mock";
 import Amplify from "@aws-amplify/core";
 import Auth from "@aws-amplify/auth";
+import axios from "axios";
 import fetchPlaybackUrl from "../../pages/api/playback/[assetId]";
 
 jest.mock("@aws-amplify/core");
 jest.mock("@aws-amplify/auth");
+jest.mock("axios");
 
 // Add field that exists on node-mocks-http
 // https://www.paigeniedringhaus.com/blog/how-to-unit-test-next-js-api-routes-with-typescript
@@ -20,6 +20,8 @@ interface MockedApiResponse extends NextApiResponse {
 }
 
 describe("/api/gateways/[gatewayUID] API Endpoint", () => {
+  const axiosPostMock = axios.post as jest.Mock;
+
   function mockRequestResponse(method: RequestMethod = "GET") {
     const assetId = 123;
     const { req, res }: { req: NextApiRequest; res: MockedApiResponse } =
@@ -40,17 +42,17 @@ describe("/api/gateways/[gatewayUID] API Endpoint", () => {
     process.env.COGNITO_PASSWORD = "password";
     process.env.NEXT_PUBLIC_SKYLARK_API_URL = "http://skylark.com";
     jest.clearAllMocks();
-    fetchMock.resetMocks();
+    axiosPostMock.mockReset();
   });
 
   describe("AWS amplify", () => {
     it("configures amplify with the correct config", async () => {
       // Arrange
       const mockConfigure = Amplify.configure as jest.Mock;
+      axiosPostMock.mockResolvedValue({ data: { test: "data", error: null } });
+      const { req, res } = mockRequestResponse();
 
       // Act.
-      const { req, res } = mockRequestResponse();
-      fetchMock.mockOnce(JSON.stringify({ test: "data" }));
       await fetchPlaybackUrl(req, res);
 
       // Assert.
@@ -67,10 +69,10 @@ describe("/api/gateways/[gatewayUID] API Endpoint", () => {
     it("Sign in is called with email and password from environment", async () => {
       // Arrange.
       const mockSignIn = Auth.signIn as jest.Mock;
+      axiosPostMock.mockResolvedValue({ data: { test: "data", error: null } });
+      const { req, res } = mockRequestResponse();
 
       // Act.
-      const { req, res } = mockRequestResponse();
-      fetchMock.mockOnce(JSON.stringify({ test: "data" }));
       await fetchPlaybackUrl(req, res);
 
       // Assert.
@@ -84,15 +86,16 @@ describe("/api/gateways/[gatewayUID] API Endpoint", () => {
           getJwtToken: jest.fn().mockReturnValue("my-token"),
         }),
       });
+      axiosPostMock.mockResolvedValue({ data: { test: "data", error: null } });
+      const { req, res } = mockRequestResponse();
 
       // Act.
-      const { req, res } = mockRequestResponse();
-      fetchMock.mockOnce(JSON.stringify({ test: "data" }));
       await fetchPlaybackUrl(req, res);
 
       // Assert.
-      expect(fetchMock).toHaveBeenCalledWith(
+      expect(axiosPostMock).toHaveBeenCalledWith(
         expect.any(String),
+        expect.any(Object),
         expect.objectContaining({
           headers: {
             Authorization: "Bearer my-token",
@@ -104,11 +107,13 @@ describe("/api/gateways/[gatewayUID] API Endpoint", () => {
 
   describe("HTTP responses", () => {
     it("should return 200 successful response", async () => {
-      // Act.
+      // Assert.
+      axiosPostMock.mockResolvedValue({
+        data: { objects: [{ mux: { tokenised_url: "data" } }], error: null },
+      });
       const { req, res } = mockRequestResponse();
-      fetchMock.mockOnce(
-        JSON.stringify({ objects: [{ mux: { tokenised_url: "data" } }] })
-      );
+
+      // Act.
       await fetchPlaybackUrl(req, res);
 
       // Assert.
@@ -123,9 +128,9 @@ describe("/api/gateways/[gatewayUID] API Endpoint", () => {
       // Arrange
       const mockSignIn = Auth.signIn as jest.Mock;
       mockSignIn.mockRejectedValueOnce(new TypeError("error message"));
+      const { req, res } = mockRequestResponse();
 
       // Act.
-      const { req, res } = mockRequestResponse();
       await fetchPlaybackUrl(req, res);
 
       // Assert.
@@ -140,9 +145,9 @@ describe("/api/gateways/[gatewayUID] API Endpoint", () => {
       // Arrange
       const mockSignIn = Auth.signIn as jest.Mock;
       mockSignIn.mockRejectedValueOnce("error message");
+      const { req, res } = mockRequestResponse();
 
       // Act.
-      const { req, res } = mockRequestResponse();
       await fetchPlaybackUrl(req, res);
 
       // Assert.
@@ -153,10 +158,12 @@ describe("/api/gateways/[gatewayUID] API Endpoint", () => {
       });
     });
 
-    it("should return a 500 if there's an error", async () => {
-      // Act.
+    it("should return a 500 if there's an error making the request to Skylark", async () => {
+      // Arrange.
       const { req, res } = mockRequestResponse();
-      fetchMock.mockOnce(JSON.stringify({ error: "error" }));
+      axiosPostMock.mockResolvedValue({ data: { error: "error" } });
+
+      // Act.
       await fetchPlaybackUrl(req, res);
 
       // Assert.
@@ -166,9 +173,11 @@ describe("/api/gateways/[gatewayUID] API Endpoint", () => {
     });
 
     it("should return a 400 if Asset ID is missing", async () => {
-      // Act.
+      // Arrange.
       const { req, res } = mockRequestResponse();
       req.query = {};
+
+      // Act.
       await fetchPlaybackUrl(req, res);
 
       // Assert.
@@ -180,9 +189,13 @@ describe("/api/gateways/[gatewayUID] API Endpoint", () => {
     });
 
     it("should return a 405 if HTTP method is not GET", async () => {
-      // Act.
+      // Arrange.
       const { req, res } = mockRequestResponse("POST");
-      fetchMock.mockOnce(JSON.stringify({ assetId: "test" }));
+      axiosPostMock.mockResolvedValue({
+        data: { assetId: "test", error: null },
+      });
+
+      // Act.
       await fetchPlaybackUrl(req, res);
 
       // Assert.
@@ -193,9 +206,11 @@ describe("/api/gateways/[gatewayUID] API Endpoint", () => {
     });
 
     it("should return a 404 if response data is empty", async () => {
-      // Act.
+      // Arrange.
       const { req, res } = mockRequestResponse();
-      fetchMock.mockOnce(JSON.stringify({}));
+      axiosPostMock.mockResolvedValue({ data: { error: null } });
+
+      // Act.
       await fetchPlaybackUrl(req, res);
 
       // Assert.
@@ -207,9 +222,11 @@ describe("/api/gateways/[gatewayUID] API Endpoint", () => {
     });
 
     it("should return a 404 if objects is empty", async () => {
-      // Act.
+      // Arrange.
       const { req, res } = mockRequestResponse();
-      fetchMock.mockOnce(JSON.stringify({ objects: [] }));
+      axiosPostMock.mockResolvedValue({ data: { objects: [], error: null } });
+
+      // Act.
       await fetchPlaybackUrl(req, res);
 
       // Assert.
@@ -221,9 +238,13 @@ describe("/api/gateways/[gatewayUID] API Endpoint", () => {
     });
 
     it("should return a 404 if the first object doesn't have tokenised_url", async () => {
-      // Act.
+      // Arrange.
       const { req, res } = mockRequestResponse();
-      fetchMock.mockOnce(JSON.stringify({ objects: [{ mux: {} }] }));
+      axiosPostMock.mockResolvedValue({
+        data: { objects: [{ mux: {} }], error: null },
+      });
+
+      // Act.
       await fetchPlaybackUrl(req, res);
 
       // Assert.

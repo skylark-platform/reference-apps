@@ -1,3 +1,4 @@
+import axios from "axios";
 import useSWR from "swr";
 import {
   createSkylarkApiQuery,
@@ -85,17 +86,21 @@ const apiQuery = createSkylarkApiQuery({
   fields,
 });
 
-const singleObjectFetcher = ([endpoint, slug]: [
+export const singleObjectFetcher = ([endpoint, slug]: [
   endpoint: string,
   slug: string
 ]) =>
-  fetch(`${SKYLARK_API}/api/${endpoint}/?slug=${slug}&${apiQuery}`, {
-    headers: { "Accept-Language": "en-gb" },
-  })
-    .then((r) => r.json())
-    .then(({ objects: [object] }: ApiMultipleEntertainmentObjects) =>
-      parseSkylarkObject(object)
-    );
+  axios
+    .get<ApiMultipleEntertainmentObjects>(
+      `${SKYLARK_API}/api/${endpoint}/?slug=${slug}&${apiQuery}`,
+      { headers: { "Accept-Language": "en-gb" } }
+    )
+    .then(({ data }) => {
+      const {
+        objects: [object],
+      } = data;
+      return parseSkylarkObject(object);
+    });
 
 export const useSingleObjectBySlug = (
   type: EntertainmentType,

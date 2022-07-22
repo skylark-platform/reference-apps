@@ -8,6 +8,7 @@ import {
 } from "@skylark-reference-apps/lib";
 import { useDeviceType } from "@skylark-reference-apps/react/src/hooks";
 import useSWR from "swr";
+import axios from "axios";
 
 const fieldsToExpand = {
   image_urls: {},
@@ -99,21 +100,20 @@ export const collectionFetcher = ([slug, deviceType]: [
     deviceTypes: [deviceType],
   });
 
-  return fetch(
-    `${SKYLARK_API}/api/sets/?slug=${slug}&set_type_slug=collection&${apiQuery}`,
-    {
-      headers: { "Accept-Language": "en-gb" },
-    }
-  )
-    .then((r) => r.json())
-    .then(({ objects }: ApiMultipleEntertainmentObjects) => {
+  return axios
+    .get<ApiMultipleEntertainmentObjects>(
+      `${SKYLARK_API}/api/sets/?slug=${slug}&set_type_slug=collection&${apiQuery}`,
+      { headers: { "Accept-Language": "en-gb" } }
+    )
+    .then(({ data }) => {
+      const { objects } = data;
       if (!objects || objects.length === 0) {
         throw new Error("Collection not found");
       }
       return objects;
     })
-    .then(([item]: ApiMultipleEntertainmentObjects["objects"]) =>
-      parseSkylarkObject(item)
+    .then(([brand]: ApiMultipleEntertainmentObjects["objects"]) =>
+      parseSkylarkObject(brand)
     );
 };
 
