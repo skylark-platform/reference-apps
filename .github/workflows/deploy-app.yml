@@ -123,6 +123,5 @@ jobs:
           gitHubAccessToken: ${{ github.token }}
           slackWebhookUrl: ${{ secrets.SLACK_ALERTS_FE_TESTING }}
           gitAuthor: ${{ github.actor }}
-          gitBranch: ${{ github.ref }}
-          gitRefName: ${{ github.head_ref	}}
+          gitBranch: ${{ github.ref }} ${{ github.head_ref	}}
           prCommentEnabled: true
