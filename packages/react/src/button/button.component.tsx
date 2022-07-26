@@ -66,10 +66,10 @@ text-white disabled:text-gray-300 font-body rounded-sm cursor-pointer
   if (href && !disabled) {
     return (
       <Link href={href}>
-        <div className={className}>
+        <a aria-label="sign-in-icon" className={className}>
           {icon && <span className={iconClassName}>{icon}</span>}
           {text && <span>{text}</span>}
-        </div>
+        </a>
       </Link>
     );
   }
