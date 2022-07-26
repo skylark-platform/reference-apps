@@ -47,6 +47,7 @@ export interface Airtables {
   availibility: Record<FieldSet>[];
   setsMetadata: Record<FieldSet>[];
   assetTypes: Record<FieldSet>[];
+  imageTypes: Record<FieldSet>[];
 }
 
 export type ApiObjectType =

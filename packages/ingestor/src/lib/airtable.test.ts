@@ -39,6 +39,7 @@ describe("airtable", () => {
         availibility: [],
         setsMetadata: [],
         assetTypes: [],
+        imageTypes: [],
         dimensions: {
           affiliates: [],
           customerTypes: [],
