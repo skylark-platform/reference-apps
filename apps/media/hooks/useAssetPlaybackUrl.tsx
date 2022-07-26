@@ -2,7 +2,7 @@ import { ApiPlaybackResponse } from "@skylark-reference-apps/lib";
 import axios from "axios";
 import useSWR from "swr";
 
-const assetUrlFetcher = (uid: string) =>
+export const assetUrlFetcher = (uid: string) =>
   axios
     .get<ApiPlaybackResponse>(`/api/playback/${uid}`)
     .then((res) => res.data);

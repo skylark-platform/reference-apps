@@ -7,7 +7,6 @@ const createJestConfig = nextJest({
 
 const customJestConfig = {
   ...base,
-  setupFilesAfterEnv: ["./setup-jest.js"],
 };
 
 module.exports = createJestConfig(customJestConfig);

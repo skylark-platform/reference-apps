@@ -1,3 +1,5 @@
+import axios from "axios";
+import useSWR from "swr";
 import {
   createSkylarkApiQuery,
   SKYLARK_API,
@@ -7,7 +9,6 @@ import {
   ApiMultipleEntertainmentObjects,
 } from "@skylark-reference-apps/lib";
 import { useDeviceType } from "@skylark-reference-apps/react/src/hooks";
-import useSWR from "swr";
 
 const fieldsToExpand = {
   image_urls: {},
@@ -98,11 +99,13 @@ export const brandWithSeasonFetcher = ([slug, deviceType]: [
     deviceTypes: [deviceType],
   });
 
-  return fetch(`${SKYLARK_API}/api/brands/?slug=${slug}&${apiQuery}`, {
-    headers: { "Accept-Language": "en-gb" },
-  })
-    .then((r) => r.json())
-    .then(({ objects }: ApiMultipleEntertainmentObjects) => {
+  return axios
+    .get<ApiMultipleEntertainmentObjects>(
+      `${SKYLARK_API}/api/brands/?slug=${slug}&${apiQuery}`,
+      { headers: { "Accept-Language": "en-gb" } }
+    )
+    .then(({ data }) => {
+      const { objects } = data;
       if (!objects || objects.length === 0) {
         throw new Error("Brand not found");
       }

@@ -6,6 +6,7 @@ import {
 import { NextApiRequest, NextApiResponse } from "next";
 import Amplify from "@aws-amplify/core";
 import Auth from "@aws-amplify/auth";
+import axios from "axios";
 
 const fetchPlaybackUrl = async (req: NextApiRequest, res: NextApiResponse) => {
   const { assetId } = req.query;
@@ -46,13 +47,11 @@ const fetchPlaybackUrl = async (req: NextApiRequest, res: NextApiResponse) => {
   const headers = {
     Authorization: `Bearer ${token}`,
   };
-  const response = await fetch(url, {
-    method: "POST",
+
+  const { data } = await axios.post<ApiViewingsResponse>(url, body, {
     headers,
-    body: JSON.stringify(body),
   });
 
-  const data = (await response.json()) as ApiViewingsResponse;
   const { error } = data;
 
   if (error) {
