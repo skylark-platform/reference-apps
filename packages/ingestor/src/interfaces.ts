@@ -118,7 +118,7 @@ export interface Metadata {
     default: ApiSchedule;
     all: (ApiSchedule & ApiAirtableFields)[];
   };
-  imageTypes: ApiImageType[];
+  imageTypes: (ApiImageType & ApiAirtableFields)[];
   assetTypes: (ApiAssetType & ApiAirtableFields)[];
   set: {
     types: ApiSetType[];

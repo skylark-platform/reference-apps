@@ -40,6 +40,16 @@ describe("skylark.sets", () => {
       ],
     };
 
+    const imageTypes = [
+      {
+        name: "main",
+        slug: "main",
+        uid: "image-type-1",
+        self: "/api/image-types/image-type-1",
+        airtableId: "image_type_1",
+      },
+    ];
+
     const imageAttachment: Attachment = {
       id: "airtable-image-1",
       url: "https://download-this-image.jpg",
@@ -53,7 +63,7 @@ describe("skylark.sets", () => {
       fields: {
         title: imageAttachment.filename,
         image: [imageAttachment],
-        type: "main",
+        type: imageTypes[0].airtableId,
         schedule_urls: [],
       },
     };
@@ -76,7 +86,7 @@ describe("skylark.sets", () => {
       ],
       genres: [],
       themes: [],
-      imageTypes: [],
+      imageTypes,
       assetTypes: [],
       ratings: [],
       roles: [],
@@ -142,15 +152,6 @@ describe("skylark.sets", () => {
         name: "Action",
         slug: "action",
         airtableId: "genre-1-airtable",
-      },
-    ];
-
-    const imageTypes = [
-      {
-        name: "main",
-        slug: "main",
-        uid: "image-type-1",
-        self: "/api/image-types/image-type-1",
       },
     ];
 

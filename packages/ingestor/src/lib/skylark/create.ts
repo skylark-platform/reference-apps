@@ -165,7 +165,9 @@ export const parseAirtableImagesAndUploadToSkylark = <T extends ApiBaseObject>(
         image: Attachment[];
         schedules: string[];
       };
-      const imageType = metadata.imageTypes.find(({ slug }) => slug === type);
+      const imageType = metadata.imageTypes.find(
+        ({ airtableId: imageTypeAirtableId }) => imageTypeAirtableId === type
+      );
       if (!imageType) {
         throw new Error(`Invalid image type "${type}"`);
       }
