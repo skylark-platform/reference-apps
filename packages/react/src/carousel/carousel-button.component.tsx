@@ -27,7 +27,12 @@ export const CarouselButton: React.FC<CarouselButtonProps> = ({
   };
 
   return (
-    <button data-testid="carousel-button" type="button" onClick={onClick}>
+    <button
+      aria-label="carousel-button"
+      data-testid="carousel-button"
+      type="button"
+      onClick={onClick}
+    >
       <motion.svg className="w-8" viewBox="0 0 100 100">
         <motion.circle
           animate={active ? { scale: 1 } : { scale: 0.45 }}
