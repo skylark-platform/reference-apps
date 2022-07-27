@@ -161,13 +161,19 @@ export const parseAirtableImagesAndUploadToSkylark = <T extends ApiBaseObject>(
         schedules,
       } = airtableImage.fields as {
         title: string;
-        type: string;
+        type: string[];
         image: Attachment[];
         schedules: string[];
       };
-      const imageType = metadata.imageTypes.find(({ slug }) => slug === type);
+
+      if (!type || type.length === 0) {
+        throw new Error(`No image types given for image "${title}"`);
+      }
+      const imageType = metadata.imageTypes.find(
+        ({ airtableId: imageTypeAirtableId }) => imageTypeAirtableId === type[0]
+      );
       if (!imageType) {
-        throw new Error(`Invalid image type "${type}"`);
+        throw new Error(`Invalid image type "${type[0]}" for image "${title}"`);
       }
 
       const scheduleUrls = getScheduleUrlsFromMetadata(
