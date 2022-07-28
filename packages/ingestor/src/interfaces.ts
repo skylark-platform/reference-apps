@@ -47,6 +47,7 @@ export interface Airtables {
   availibility: Record<FieldSet>[];
   setsMetadata: Record<FieldSet>[];
   assetTypes: Record<FieldSet>[];
+  imageTypes: Record<FieldSet>[];
 }
 
 export type ApiObjectType =
@@ -117,7 +118,7 @@ export interface Metadata {
     default: ApiSchedule;
     all: (ApiSchedule & ApiAirtableFields)[];
   };
-  imageTypes: ApiImageType[];
+  imageTypes: (ApiImageType & ApiAirtableFields)[];
   assetTypes: (ApiAssetType & ApiAirtableFields)[];
   set: {
     types: ApiSetType[];

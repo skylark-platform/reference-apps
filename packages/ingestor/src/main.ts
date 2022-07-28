@@ -52,9 +52,8 @@ const config = amplifyConfig({
 Amplify.configure(config);
 
 const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
-  const [alwaysSchedule, imageTypes, setTypes, dimensions] = await Promise.all([
+  const [alwaysSchedule, setTypes, dimensions] = await Promise.all([
     getAlwaysSchedule(),
-    getResources<ApiImageType>("image-types"),
     getResources<ApiSetType>("set-types"),
     createOrUpdateScheduleDimensions(airtable.dimensions),
   ]);
@@ -70,7 +69,7 @@ const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
       default: alwaysSchedule,
       all: createdSchedules,
     },
-    imageTypes,
+    imageTypes: [],
     assetTypes: [],
     people: [],
     roles: [],
@@ -89,6 +88,12 @@ const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
   metadata.assetTypes = await createOrUpdateContentTypes<ApiAssetType>(
     "asset-types",
     airtable.assetTypes,
+    metadata
+  );
+
+  metadata.imageTypes = await createOrUpdateContentTypes<ApiImageType>(
+    "image-types",
+    airtable.imageTypes,
     metadata
   );
 
