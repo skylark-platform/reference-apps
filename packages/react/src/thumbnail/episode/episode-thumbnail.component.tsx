@@ -23,10 +23,10 @@ export const EpisodeThumbnail: React.FC<EpisodeThumbnailProps> = (props) => {
       }}
       contentLocation="below"
     >
-      <h4 className="font-lighter mt-2 mb-1 text-xs text-white line-clamp-1 sm:text-sm md:text-base md:line-clamp-1">
+      <p className="font-lighter mt-2 mb-1 text-xs text-white line-clamp-1 sm:text-sm md:text-base md:line-clamp-1">
         <span className="mr-0.5">{`${number}.`}</span>
         {title}
-      </h4>
+      </p>
       <p className="mt-0.5 mb-3 text-xs text-gray-400 line-clamp-4 md:text-sm">
         {description}
       </p>
