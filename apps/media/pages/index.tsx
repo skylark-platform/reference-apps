@@ -78,7 +78,7 @@ const MainRail: FC<{ item: AllEntertainment }> = ({ item }) => {
   const items = item?.items?.isExpanded ? item.items.objects : [];
 
   return (
-    <>
+    <Rail displayCount header={item.title?.medium || item.title?.short}>
       {items.map((movie) => (
         <MovieThumbnail
           backgroundImage={getImageSrc(movie.images, "Thumbnail", "384x216")}
@@ -89,7 +89,7 @@ const MainRail: FC<{ item: AllEntertainment }> = ({ item }) => {
           title={movie.title?.short || ""}
         />
       ))}
-    </>
+    </Rail>
   );
 };
 
@@ -97,7 +97,7 @@ const CollectionRail: FC<{ item: AllEntertainment }> = ({ item }) => {
   const items = item?.items?.isExpanded ? item.items.objects : [];
 
   return (
-    <>
+    <Rail displayCount header={item.title?.medium || item.title?.short}>
       {items.map((collectionItem) => (
         <CollectionThumbnail
           backgroundImage={getImageSrc(
@@ -119,7 +119,7 @@ const CollectionRail: FC<{ item: AllEntertainment }> = ({ item }) => {
           title={getTitleByOrder(collectionItem.title, ["short", "medium"])}
         />
       ))}
-    </>
+    </Rail>
   );
 };
 
@@ -127,7 +127,7 @@ const SeasonRail: FC<{ item: AllEntertainment }> = ({ item }) => {
   const items = item?.items?.isExpanded ? item.items.objects : [];
 
   return (
-    <>
+    <Rail displayCount header={item.title?.medium || item.title?.short}>
       {(items as Episode[])
         .sort((a: Episode, b: Episode) =>
           (a.number || 0) > (b.number || 0) ? 1 : -1
@@ -157,7 +157,7 @@ const SeasonRail: FC<{ item: AllEntertainment }> = ({ item }) => {
             title={episode.title?.short || ""}
           />
         ))}
-    </>
+    </Rail>
   );
 };
 
@@ -183,20 +183,15 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
 
             return (
               <div className="my-6 w-full" key={key}>
-                <Rail
-                  displayCount
-                  header={item.title?.medium || item.title?.short}
-                >
-                  {item.type === "rail" && item?.items?.isExpanded && (
-                    <MainRail item={item} key={key} />
-                  )}
-                  {item.type === "collection" && item?.items?.isExpanded && (
-                    <CollectionRail item={item} key={key} />
-                  )}
-                  {item.type === "season" && item?.items?.isExpanded && (
-                    <SeasonRail item={item} key={key} />
-                  )}
-                </Rail>
+                {item.type === "rail" && item?.items?.isExpanded && (
+                  <MainRail item={item} />
+                )}
+                {item.type === "collection" && item?.items?.isExpanded && (
+                  <CollectionRail item={item} />
+                )}
+                {item.type === "season" && item?.items?.isExpanded && (
+                  <SeasonRail item={item} />
+                )}
               </div>
             );
           }
