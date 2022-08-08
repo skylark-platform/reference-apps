@@ -11,7 +11,7 @@ export const DimensionToggle: React.FC<DimensionToggleProps> = ({
   onClick,
 }) => (
   <button
-    aria-label="dimension-toggle"
+    aria-label="dimension-settings-toggle"
     className="flex h-10 items-center justify-center rounded-t-full bg-white px-2 pt-1"
     type="button"
     onClick={onClick}

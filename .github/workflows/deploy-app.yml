@@ -5,6 +5,7 @@ on:
       - main
   pull_request:
 concurrency:
+  group: deploy-app-${{ github.ref }}
 env:
   pr-comment-id: reference-apps-deployment
   pr-comment-title: "Reference Apps Deployment"

@@ -98,7 +98,7 @@ export const Rail: React.FC<RailProps> = ({
         {numChildren > numChildrenOnScreen && (
           <>
             <button
-              aria-label="previous-button"
+              aria-label="previous-rail-elements-button"
               className={`left-0 bg-gradient-to-r ${directionArrowClassName} ${
                 showPreviousButton ? "opacity-100" : "opacity-0"
               }`}
@@ -109,7 +109,7 @@ export const Rail: React.FC<RailProps> = ({
               <MdArrowBack className="transition-all md:group-hover:scale-110" />
             </button>
             <button
-              aria-label="forward-button"
+              aria-label="next-rail-elements-button"
               className={`right-0 bg-gradient-to-l ${directionArrowClassName} ${
                 showNextButton ? "opacity-100" : "opacity-0"
               }`}
