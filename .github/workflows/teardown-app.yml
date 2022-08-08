@@ -1,6 +1,8 @@
 name: Teardown App
 on:
-  delete:
+  pull_request:
+    types:
+      - closed
   workflow_dispatch:
     inputs:
       stack-name:

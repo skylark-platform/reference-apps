@@ -80,7 +80,7 @@ export const BaseThumbnailWithLink: React.FC<BaseThumbnailWithLinkProps> = (
   props
 ) => (
   <Link href={props.href}>
-    <a className="group">
+    <a aria-label={"base-thumbnail-with-link"} className="group">
       <BaseThumbnail {...props} />
     </a>
   </Link>
