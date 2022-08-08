@@ -125,6 +125,7 @@ jobs:
           device: "all"
           urls: ${{ needs.deploy.outputs.url }},${{ needs.deploy.outputs.url }}/movies
           gitHubAccessToken: ${{ github.token }}
+          githubRepositoryUrl: ${{ github.repositoryUrl }}
           slackWebhookUrl: ${{ secrets.SLACK_ALERTS_FE_TESTING }}
           gitAuthor: ${{ github.actor }}
           gitBranch: ${{ github.ref }}
