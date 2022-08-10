@@ -82,6 +82,7 @@ export interface ApiEntertainmentObject extends ApiBaseObject {
   number_of_episodes?: number;
   title_sort?: string;
   content_url?: never;
+  asset_type_url?: string;
   parent_url?: ApiEntertainmentObject | string;
 }
 

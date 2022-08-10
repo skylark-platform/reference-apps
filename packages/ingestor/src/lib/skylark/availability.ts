@@ -4,7 +4,7 @@ import {
   ApiSchedule,
 } from "@skylark-reference-apps/lib";
 import { Record, FieldSet } from "airtable";
-import { bulkCreateOrUpdateObjects, createOrUpdateObject } from "./create";
+import { bulkCreateOrUpdateObjectsWithLookup, createOrUpdateObject } from "./create";
 import { Airtables, ApiAirtableFields, Metadata } from "../../interfaces";
 import { getResourceBySlug } from "./get";
 
@@ -38,7 +38,6 @@ export const getAlwaysSchedule = async (): Promise<ApiSchedule> => {
  * @returns all dimensions from a given table
  */
 const createOrUpdateDimensions = async (
-  type: DimensionTypes,
   table: Record<FieldSet>[]
 ) => {
   const objectData = table.map(({ fields, id }) => ({
@@ -49,16 +48,20 @@ const createOrUpdateDimensions = async (
     slug: fields.slug as string,
   }));
 
-  const dimensions = await bulkCreateOrUpdateObjects<ApiDimension>(
-    `dimensions/${type}`,
-    "slug",
+  const objectTypes: { [id: string]: string } = {};
+  table.forEach(({ id, _table }) => {
+    objectTypes[id] =  `dimensions/${_table.name}`
+  })
+
+  const dimensions = await bulkCreateOrUpdateObjectsWithLookup<ApiDimension>(
     objectData,
-    "PUT"
+    objectTypes,
+    "slug",
   );
 
   return dimensions.map((data) => ({
     ...data,
-    airtableId: data.data_source_id,
+    airtableId: data.data_source_id as string,
   }));
 };
 
@@ -91,7 +94,7 @@ export const createOrUpdateScheduleDimensions = async (
     regions,
     viewingContext,
   ] = await Promise.all(
-    dimensions.map(({ type, data }) => createOrUpdateDimensions(type, data))
+    dimensions.map(({ data }) => createOrUpdateDimensions(data))
   );
   return {
     affiliates,
@@ -184,7 +187,6 @@ export const createOrUpdateSchedules = (
           "schedules",
           { property: "slug", value: fields.slug as string },
           data,
-          "PUT"
         );
         return {
           ...createdDimension,

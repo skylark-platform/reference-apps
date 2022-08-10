@@ -3,6 +3,7 @@ import {
   ApiEntertainmentObject,
   SetTypes,
 } from "@skylark-reference-apps/lib";
+import axios from "axios";
 import { authenticatedSkylarkRequest } from "./api";
 
 /**
@@ -15,6 +16,35 @@ export const getResources = async <T>(resource: string): Promise<T[]> => {
     `/api/${resource}/`
   );
   return res.data?.objects || [];
+};
+
+/**
+ * getResourceByDataSourceId - Queries a Skylark resource using its data_source_id
+ * @param resource - the Skylark API resource to query
+ * @param value - the data source ID
+ * @returns The object returned, null if it doesn't exist
+ */
+export const getResourceByDataSourceId = async <T>(
+  resource: string,
+  dataSourceId: string
+) => {
+  try {
+    const res = await authenticatedSkylarkRequest<T>(
+      `/api/${resource}/versions/data-source/${dataSourceId}/`,
+      {
+        method: "GET",
+        params: {
+          all: true,
+        },
+      }
+    );
+    return res.data;
+  } catch(err) {
+    if (axios.isAxiosError(err) && err.response?.status === 404) {
+      return null;
+    }
+    throw err;
+  }
 };
 
 /**

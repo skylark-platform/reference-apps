@@ -4,6 +4,15 @@ interface IAmplifyParams {
   region: string;
   userPoolId: string;
   userPoolWebClientId: string;
+  identityPoolId: string;
+  storageBucket: string;
+}
+
+interface IAmplifyStorage {
+  AWSS3: {
+    bucket: string;
+    // region: string;
+  };
 }
 
 export interface IAmplifyConfig extends AuthOptions {
@@ -11,16 +20,20 @@ export interface IAmplifyConfig extends AuthOptions {
     region: string;
     userPoolId: string;
     userPoolWebClientId: string;
+    identityPoolId: string;
     authenticationFlowType: string;
   };
+  Storage: IAmplifyStorage;
 }
 
 export const amplifyConfig = ({
   region,
   userPoolId,
   userPoolWebClientId,
+  identityPoolId,
+  storageBucket: bucket,
 }: IAmplifyParams) => {
-  if (!region || !userPoolId || !userPoolWebClientId) {
+  if (!region || !userPoolId || !userPoolWebClientId || !identityPoolId || !bucket) {
     throw new Error("Invalid Amplify config supplied");
   }
 
@@ -29,7 +42,14 @@ export const amplifyConfig = ({
       region,
       userPoolId,
       userPoolWebClientId,
+      identityPoolId,
       authenticationFlowType: "USER_SRP_AUTH",
+    },
+    Storage: {
+      AWSS3: {
+        bucket,
+        // region,
+      },
     },
   };
 

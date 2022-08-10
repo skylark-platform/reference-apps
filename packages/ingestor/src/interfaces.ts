@@ -37,12 +37,14 @@ export interface Airtables {
   seasons: Record<FieldSet>[];
   episodes: Record<FieldSet>[];
   movies: Record<FieldSet>[];
+  mediaObjects: Record<FieldSet>[];
   roles: Record<FieldSet>[];
   people: Record<FieldSet>[];
   credits: Record<FieldSet>[];
   genres: Record<FieldSet>[];
   themes: Record<FieldSet>[];
   ratings: Record<FieldSet>[];
+  assets: Record<FieldSet>[];
   images: Record<FieldSet>[];
   availibility: Record<FieldSet>[];
   setsMetadata: Record<FieldSet>[];
@@ -61,7 +63,8 @@ export type ApiObjectType =
   | "genres"
   | "themes"
   | "ratings"
-  | "computed-scheduled-items";
+  | "computed-scheduled-items"
+  | "assets";
 
 export type ApiContentObjectType = "image-types" | "asset-types";
 
@@ -71,8 +74,7 @@ type AllApiObjects = Partial<
     ApiRole &
     ApiPerson &
     ApiRating &
-    ApiCredit
->;
+    ApiCredit >;
 export type ApiSkylarkObjectWithAllPotentialFields = Omit<
   AllApiObjects,
   "slug"
@@ -81,6 +83,7 @@ export type ApiSkylarkObjectWithAllPotentialFields = Omit<
     title?: string;
     name?: string;
     data_source_fields?: string[];
+    data_source_id: string;
   };
 export interface SetConfig extends Partial<ApiEntertainmentObject> {
   title: string;

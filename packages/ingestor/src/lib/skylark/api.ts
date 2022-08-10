@@ -1,6 +1,7 @@
 import { ApiBatchResponse, SKYLARK_API } from "@skylark-reference-apps/lib";
 import axios, { AxiosRequestConfig, AxiosRequestHeaders } from "axios";
-import { getToken } from "../cognito";
+import { chunk } from "lodash";
+import { getToken } from "../amplify";
 
 /**
  * authenticatedSkylarkRequest - makes a request to Skylark using the Bearer token from Amplify
@@ -36,8 +37,9 @@ const checkBatchRequestWasSuccessful = ({
   id,
   code,
   body,
-}: ApiBatchResponse) => {
+}: ApiBatchResponse, ignore404s: boolean) => {
   if (code < 200 || code > 299) {
+    if (ignore404s && code === 404) return
     throw new Error(
       `Batch request "${id}" failed with ${code}. Response body: ${body}`
     );
@@ -50,20 +52,27 @@ const checkBatchRequestWasSuccessful = ({
  * @returns
  */
 export const batchSkylarkRequest = async <T>(
-  data: object[]
-): Promise<{ batchRequestId: string; data: T }[]> => {
-  const batchRes = await authenticatedSkylarkRequest<ApiBatchResponse[]>(
+  data: object[],
+  ignore404s?: boolean,
+): Promise<{ batchRequestId: string; data: T, code: number }[]> => {
+  const chunks = chunk(data, 10);
+
+  const batchResArr = await Promise.all(chunks.map((chunkedData) => authenticatedSkylarkRequest<ApiBatchResponse[]>(
     "/api/batch/",
     {
       method: "POST",
-      data,
+      data: chunkedData,
+      // timeout: 30000,
     }
-  );
+  )))
 
-  batchRes.data.forEach(checkBatchRequestWasSuccessful);
+  const batchResData = batchResArr.flatMap((val) => val.data);
 
-  return batchRes.data.map(({ id, body }) => ({
+  batchResData.forEach((res) => checkBatchRequestWasSuccessful(res, !!ignore404s));
+
+  return batchResData.map(({ id, body, code }) => ({
     batchRequestId: id,
-    data: JSON.parse(body) as T,
+    code,
+    data: code !== 404 ? JSON.parse(body) as T : {} as T,
   }));
 };
