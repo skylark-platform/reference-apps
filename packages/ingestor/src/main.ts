@@ -17,9 +17,14 @@ import {
   createOrUpdateAirtableObjectsInSkylark,
   getResources,
   createOrUpdateAirtableObjectsInSkylarkWithParentsInSameTable,
+  createTranslationsForObjects,
 } from "./lib/skylark";
 import { getAllTables } from "./lib/airtable";
-import { Airtables, ApiEntertainmentObjectWithAirtableId, Metadata } from "./interfaces";
+import {
+  Airtables,
+  ApiEntertainmentObjectWithAirtableId,
+  Metadata,
+} from "./interfaces";
 import {
   spotlightMovies,
   homePageSlider,
@@ -34,7 +39,11 @@ import {
   getAlwaysSchedule,
 } from "./lib/skylark/availability";
 import { createOrUpdateContentTypes } from "./lib/skylark/content-types";
-import { signInToCognito, upload } from "./lib/amplify";
+import {
+  configureAmplify,
+  signInToCognito,
+  uploadToWorkflowServiceWatchBucket,
+} from "./lib/amplify";
 
 const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
   const [alwaysSchedule, setTypes, dimensions] = await Promise.all([
@@ -87,101 +96,86 @@ const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
     metadata
   );
 
-  metadata.people =
-    await createOrUpdateAirtableObjectsInSkylark<ApiPerson>(
-      airtable.people,
-      metadata
-    );
+  metadata.people = await createOrUpdateAirtableObjectsInSkylark<ApiPerson>(
+    airtable.people,
+    metadata
+  );
 
-  metadata.genres =
-    await createOrUpdateAirtableObjectsInSkylark<ApiThemeGenre>(
-      airtable.genres,
-      metadata
-    );
+  metadata.genres = await createOrUpdateAirtableObjectsInSkylark<ApiThemeGenre>(
+    airtable.genres,
+    metadata
+  );
 
-  metadata.themes =
-    await createOrUpdateAirtableObjectsInSkylark<ApiThemeGenre>(
-      airtable.themes,
-      metadata
-    );
+  metadata.themes = await createOrUpdateAirtableObjectsInSkylark<ApiThemeGenre>(
+    airtable.themes,
+    metadata
+  );
 
-  metadata.ratings =
-    await createOrUpdateAirtableObjectsInSkylark<ApiRating>(
-      airtable.ratings,
-      metadata
-    );
+  metadata.ratings = await createOrUpdateAirtableObjectsInSkylark<ApiRating>(
+    airtable.ratings,
+    metadata
+  );
 
   // eslint-disable-next-line no-console
   console.log("Metadata objects created");
   return metadata;
 };
 
-const createMediaObjects = async (table: Airtables["mediaObjects"], metadata: Metadata) => {
-  const mediaObjects = await createOrUpdateAirtableObjectsInSkylarkWithParentsInSameTable(table, metadata);
+const createMediaObjects = async (airtable: Airtables, metadata: Metadata) => {
+  const mediaObjects =
+    await createOrUpdateAirtableObjectsInSkylarkWithParentsInSameTable(
+      airtable.mediaObjects,
+      metadata
+    );
+
+  await createTranslationsForObjects(
+    mediaObjects,
+    airtable.translations.mediaObjects,
+    metadata
+  );
 
   // eslint-disable-next-line no-console
   console.log("Media objects created");
 
   return mediaObjects;
-}
+};
 
-const createAndUploadAssets = async (table: Airtables["mediaObjects"], mediaObjects: ApiEntertainmentObjectWithAirtableId[], metadata: Metadata) => {
-  // await createOrUpdateAirtableObjectsInSkylark(
-  //   table,
-  //   metadata,
-  //   mediaObjects
-  // );
+const createAndUploadAssets = async (
+  table: Airtables["mediaObjects"],
+  mediaObjects: ApiEntertainmentObjectWithAirtableId[]
+) => {
+  const assets = mediaObjects.filter((obj) =>
+    obj.self.startsWith("/api/assets/")
+  );
 
-  // eslint-disable-next-line no-console
-  // console.log("Assets created");
+  await Promise.all(
+    assets.map(async (asset) => {
+      const airtableAsset = table.find(
+        (record) => record.id === asset.airtableId
+      );
+      const files = (airtableAsset?.fields?.file as Attachment[]) || [];
+      if (!airtableAsset || files.length === 0) {
+        return;
+      }
+      const [file] = files;
+      const response = await axios.get<string>(file.url, {
+        responseType: "arraybuffer",
+        decompress: false,
+      });
 
-  const assets = mediaObjects.filter((obj) => obj.self.startsWith("/api/assets/"));
-  // const assetsAirtableIds = assets.map((asset) => asset.airtableId);
-  // const airtableAssets = table.filter((record) => assetsAirtableIds.includes(record.id));
-
-  console.log(assets, metadata);
-
-  await Promise.all(assets.map(async(asset) => {
-    const airtableAsset = table.find((record) => record.id === asset.airtableId);
-    const files = airtableAsset?.fields?.file as Attachment[] || [];
-    if(!airtableAsset || files.length === 0) {
-      return;
-    }
-    const [file] = files;
-    const response = await axios.get<string>(file.url, { responseType: "arraybuffer", responseEncoding: "binary" })
-  //   const params = {
-  //     ContentType: response.headers["content-type"],
-  //     ContentLength: response.data.length.toString(), // or response.header["content-length"] if available for the type of file downloaded
-  //     Body: response.data,
-  //     Key: file.filename,
-  //   };
-
-    await upload(file.filename, response.data, {
-      metadata: {
-        asset: JSON.stringify({
-          uid: asset.uid,
-        }),
-        "encoded-original-filename": encodeURIComponent(file.filename),
-        "upload-method": "skylark-ingestor",
-      },
-      contentType: response.headers["content-type"],
-      // completeCallback: (event) => {
-      //   console.log(`Successfully uploaded ${event.key}`);
-      // },
-      // progressCallback: (progress) => {
-      //     console.log(`Uploaded: ${progress as string}`);
-      // },
-      // errorCallback: (err) => {
-      //     console.error('Unexpected error while uploading', err);
-      // }
+      await uploadToWorkflowServiceWatchBucket(
+        file.filename,
+        response.data,
+        asset.uid
+      );
     })
-  }))
+  );
 
   // Upload asset to S3 with the id in the metadata
 
   // eslint-disable-next-line no-console
   console.log("Assets uploaded to S3");
-}
+};
 
 const createAdditionalObjects = async (metadata: Metadata) => {
   await createOrUpdateDynamicObject(quentinTarantinoMovies, metadata);
@@ -199,15 +193,17 @@ const createAdditionalObjects = async (metadata: Metadata) => {
 };
 
 const main = async () => {
+  configureAmplify();
+
   await signInToCognito();
 
   const airtable = await getAllTables();
 
   const metadata = await createMetadata(airtable);
 
-  const mediaObjects = await createMediaObjects(airtable.mediaObjects, metadata);
+  const mediaObjects = await createMediaObjects(airtable, metadata);
 
-  await createAndUploadAssets(airtable.mediaObjects, mediaObjects, metadata);
+  await createAndUploadAssets(airtable.mediaObjects, mediaObjects);
 
   await createAdditionalObjects(metadata);
 

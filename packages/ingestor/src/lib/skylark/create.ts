@@ -7,6 +7,7 @@ import {
   ApiPerson,
 } from "@skylark-reference-apps/lib";
 import { Attachment, FieldSet, Records, Record } from "airtable";
+import { flatten } from "lodash";
 import {
   ApiEntertainmentObjectWithAirtableId,
   ApiSkylarkObjectWithAllPotentialFields,
@@ -34,13 +35,12 @@ export const createOrUpdateObject = async <T extends ApiBaseObject>(
     property: "slug" | "title" | "name" | "data_source_id";
     value: string;
   },
-  data: object,
+  data: object
 ) => {
-  const existingObject = lookup.property === "data_source_id" ? await getResourceByDataSourceId<T>(type, lookup.value) : await getResourceByProperty<T>(
-    type,
-    lookup.property,
-    lookup.value
-  );
+  const existingObject =
+    lookup.property === "data_source_id"
+      ? await getResourceByDataSourceId<T>(type, lookup.value)
+      : await getResourceByProperty<T>(type, lookup.property, lookup.value);
 
   // Patch method is safer when updating objects, but the /api/images endpoint doesn't implement it
   const updateMethod = type === "images" ? "PUT" : "PATCH";
@@ -64,7 +64,9 @@ export const createOrUpdateObject = async <T extends ApiBaseObject>(
  * @param updateMethod - HTTP method to use to update the object in Skylark
  * @returns
  */
-export const bulkCreateOrUpdateObjectsWithLookup = async <T extends ApiBaseObject>(
+export const bulkCreateOrUpdateObjectsWithLookup = async <
+  T extends ApiBaseObject
+>(
   objects: ApiSkylarkObjectWithAllPotentialFields[],
   objectTypes: { [id: string]: string },
   lookupMethod: "slug"
@@ -83,7 +85,7 @@ export const bulkCreateOrUpdateObjectsWithLookup = async <T extends ApiBaseObjec
   });
   const getBatchResponseData = await batchSkylarkRequest<{ objects?: T[] }>(
     getBatchRequestData,
-    true,
+    { ignore404s: true }
   );
 
   const createOrUpdateBatchRequestData = objects.map(({ ...object }) => {
@@ -111,12 +113,14 @@ export const bulkCreateOrUpdateObjectsWithLookup = async <T extends ApiBaseObjec
     createOrUpdateBatchRequestData
   );
 
-  return createOrUpdateBatchResponseData.map(({ data }) => (data));
+  return createOrUpdateBatchResponseData.map(({ data }) => data);
 };
 
-export const bulkCreateOrUpdateObjectsUsingDataSourceId = async <T extends ApiBaseObject>(
+export const bulkCreateOrUpdateObjectsUsingDataSourceId = async <
+  T extends ApiBaseObject
+>(
   objects: ApiSkylarkObjectWithAllPotentialFields[],
-  objectTypes: { [id: string]: string },
+  objectTypes: { [id: string]: string }
 ) => {
   const getBatchRequestData = objects.map((object) => {
     const type = objectTypes[object.data_source_id];
@@ -132,7 +136,7 @@ export const bulkCreateOrUpdateObjectsUsingDataSourceId = async <T extends ApiBa
 
   const getBatchResponseData = await batchSkylarkRequest<T>(
     getBatchRequestData,
-    true,
+    { ignore404s: true }
   );
 
   const createOrUpdateBatchRequestData = objects.map(({ ...object }) => {
@@ -140,7 +144,8 @@ export const bulkCreateOrUpdateObjectsUsingDataSourceId = async <T extends ApiBa
       ({ batchRequestId }) => batchRequestId === object.data_source_id
     );
 
-    const existingObject = matchingBatchResponse?.code !== 404 ? matchingBatchResponse?.data : null;
+    const existingObject =
+      matchingBatchResponse?.code !== 404 ? matchingBatchResponse?.data : null;
     const type = objectTypes[object.data_source_id];
     const url = existingObject ? existingObject.self : `/api/${type}/`;
     const method = existingObject ? "PATCH" : "POST";
@@ -160,8 +165,8 @@ export const bulkCreateOrUpdateObjectsUsingDataSourceId = async <T extends ApiBa
     createOrUpdateBatchRequestData
   );
 
-  return createOrUpdateBatchResponseData.map(({ data }) => (data));
-}
+  return createOrUpdateBatchResponseData.map(({ data }) => data);
+};
 
 /**
  * createOrUpdateDynamicObject - creates or updates a dynamic object in Skylark
@@ -183,7 +188,7 @@ export const createOrUpdateDynamicObject = (
   return createOrUpdateObject<ApiDynamicObject>(
     "computed-scheduled-items",
     { property: "name", value: name },
-    data,
+    data
   );
 };
 
@@ -248,7 +253,7 @@ export const parseAirtableImagesAndUploadToSkylark = <T extends ApiBaseObject>(
       return createOrUpdateObject<ApiImage>(
         "images",
         { property: "data_source_id", value: dataSourceId },
-        imageData,
+        imageData
       );
     })
   );
@@ -404,20 +409,21 @@ export const convertAirtableFieldsToSkylarkObject = (
     object.rating_urls = ratingUrls;
   }
 
-  const [assetType] = getUrlsFromField(
-    fields.asset_type as string[],
-    metadata.assetTypes
-  ) || [];
+  const [assetType] =
+    getUrlsFromField(fields.asset_type as string[], metadata.assetTypes) || [];
   if (assetType) {
     object.asset_type_url = assetType;
   }
 
-  // Add data_source_fields last so that all fields are captured
-  object.data_source_fields = Object.keys(object);
+  const sanitizedObject =
+    removeUndefinedPropertiesFromObject<ApiSkylarkObjectWithAllPotentialFields>(
+      object
+    );
 
-  return removeUndefinedPropertiesFromObject<ApiSkylarkObjectWithAllPotentialFields>(
-    object
-  );
+  // Add data_source_fields last so that all fields are captured
+  sanitizedObject.data_source_fields = Object.keys(sanitizedObject);
+
+  return sanitizedObject;
 };
 
 /**
@@ -429,10 +435,12 @@ export const convertAirtableFieldsToSkylarkObject = (
  * @param lookupProperty - property to use to check whether the object exists in Skylark
  * @returns
  */
-export const createOrUpdateAirtableObjectsInSkylark = async <T extends ApiBaseObject>(
+export const createOrUpdateAirtableObjectsInSkylark = async <
+  T extends ApiBaseObject
+>(
   airtableRecords: Records<FieldSet>,
   metadata: Metadata,
-  parents?: ApiEntertainmentObjectWithAirtableId[],
+  parents?: ApiEntertainmentObjectWithAirtableId[]
 ) => {
   const objectData = airtableRecords.map(({ fields, id }) => {
     const object = convertAirtableFieldsToSkylarkObject(
@@ -446,13 +454,14 @@ export const createOrUpdateAirtableObjectsInSkylark = async <T extends ApiBaseOb
 
   const objectTypes: { [id: string]: string } = {};
   airtableRecords.forEach(({ id, fields, _table }) => {
-    objectTypes[id] =  fields.skylark_object_type as string || _table.name
-  })
+    objectTypes[id] = (fields.skylark_object_type as string) || _table.name;
+  });
 
-  const createOrUpdateBatchResponseData = await bulkCreateOrUpdateObjectsUsingDataSourceId<T>(
-    objectData,
-    objectTypes,
-  );
+  const createOrUpdateBatchResponseData =
+    await bulkCreateOrUpdateObjectsUsingDataSourceId<T>(
+      objectData,
+      objectTypes
+    );
 
   const parseObjectsAndCreateImages = await Promise.all(
     createOrUpdateBatchResponseData.map(
@@ -480,38 +489,102 @@ export const createOrUpdateAirtableObjectsInSkylark = async <T extends ApiBaseOb
   return parseObjectsAndCreateImages;
 };
 
-export const createOrUpdateAirtableObjectsInSkylarkWithParentsInSameTable = async(
-  airtableRecords: Records<FieldSet>,
-  metadata: Metadata,
-): Promise<ApiEntertainmentObjectWithAirtableId[]> => {
-  const createdMediaObjects: ApiEntertainmentObjectWithAirtableId[] = [];
-  while (createdMediaObjects.length < airtableRecords.length) {
-    const objectsToCreateUpdate = airtableRecords.filter((record) => {
-      // Filter out any records that have already been created
-      const alreadyCreated = createdMediaObjects.find((createdRecord) => record.id === createdRecord.airtableId);
-      if(alreadyCreated) {
-        return false;
-      }
+export const createOrUpdateAirtableObjectsInSkylarkWithParentsInSameTable =
+  async (
+    airtableRecords: Records<FieldSet>,
+    metadata: Metadata
+  ): Promise<ApiEntertainmentObjectWithAirtableId[]> => {
+    const createdMediaObjects: ApiEntertainmentObjectWithAirtableId[] = [];
+    while (createdMediaObjects.length < airtableRecords.length) {
+      const objectsToCreateUpdate = airtableRecords.filter((record) => {
+        // Filter out any records that have already been created
+        const alreadyCreated = createdMediaObjects.find(
+          (createdRecord) => record.id === createdRecord.airtableId
+        );
+        if (alreadyCreated) {
+          return false;
+        }
 
-      // If the record doesn't have a parent, we can create it without dependencies on other objects
-      if(!record.fields.parent) {
-        return true;
-      }
+        // If the record doesn't have a parent, we can create it without dependencies on other objects
+        if (!record.fields.parent) {
+          return true;
+        }
 
-      // If the record has a parent, we need to ensure that its parent object has been created first
-      const found = createdMediaObjects.find((createdRecord) => (record.fields.parent as string[]).includes(createdRecord.airtableId));
-      return found;
-    });
+        // If the record has a parent, we need to ensure that its parent object has been created first
+        const found = createdMediaObjects.find((createdRecord) =>
+          (record.fields.parent as string[]).includes(createdRecord.airtableId)
+        );
+        return found;
+      });
 
-    // eslint-disable-next-line no-await-in-loop
-    const objs = await createOrUpdateAirtableObjectsInSkylark<ApiEntertainmentObjectWithAirtableId>(
-      objectsToCreateUpdate,
-      metadata,
-      createdMediaObjects,
+      // eslint-disable-next-line no-await-in-loop
+      const objs =
+        await createOrUpdateAirtableObjectsInSkylark<ApiEntertainmentObjectWithAirtableId>(
+          objectsToCreateUpdate,
+          metadata,
+          createdMediaObjects
+        );
+
+      createdMediaObjects.push(...objs);
+    }
+
+    return createdMediaObjects;
+  };
+
+export const createTranslationsForObjects = async (
+  originalObjects: ApiEntertainmentObjectWithAirtableId[],
+  translationsTable: Records<FieldSet>,
+  metadata: Metadata
+) => {
+  const languageCodes: { [key: string]: string } = {};
+  metadata.dimensions.languages.forEach(({ airtableId, iso_code }) => {
+    languageCodes[airtableId] = iso_code || "";
+  });
+
+  const translationObjectData = translationsTable.map(({ fields, id }) => {
+    const [objectAirtableId] = fields.object as string[];
+    const originalObject = originalObjects.find(
+      ({ airtableId }) => airtableId === objectAirtableId
     );
 
-    createdMediaObjects.push(...objs);
-  }
+    // if the original object doesn't exist
+    if (!originalObject) {
+      return [];
+    }
 
-  return createdMediaObjects;
-}
+    const object = convertAirtableFieldsToSkylarkObject(id, fields, metadata);
+
+    object.uid = originalObject.uid;
+    object.self = originalObject.self;
+
+    // Don't change any data source fields
+    object.data_source_id = originalObject.airtableId;
+    delete object.data_source_fields;
+    delete object.is_data_source;
+
+    // Schedules are global so don't update
+    delete object.schedule_urls;
+
+    const languages = fields.languages as string[];
+    return languages.map((languageAirtableId) => ({
+      method: "PATCH",
+      url: object.self,
+      headers: {
+        "Content-Language": languageCodes[languageAirtableId],
+      },
+      data: object,
+    }));
+  });
+
+  const batchRequestData = flatten(translationObjectData);
+
+  await Promise.all(
+    batchRequestData.map(({ method, url, headers, data }) =>
+      authenticatedSkylarkRequest(url, {
+        headers,
+        data,
+        method,
+      })
+    )
+  );
+};

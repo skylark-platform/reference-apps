@@ -1,6 +1,6 @@
 import Auth from "@aws-amplify/auth";
 import { ApiEntertainmentObject, ApiImage } from "@skylark-reference-apps/lib";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import {
   getResourceBySlug,
   getResourceByName,
@@ -9,6 +9,7 @@ import {
   getSetBySlug,
   getSetItems,
   getResources,
+  getResourceByDataSourceId,
 } from "./get";
 
 jest.mock("axios");
@@ -61,6 +62,61 @@ describe("skylark.get", () => {
       const got = await getResources("image-types");
 
       expect(got).toEqual([]);
+    });
+  });
+
+  describe("getResourceByDataSourceId", () => {
+    it("calls axios.request with expected config", async () => {
+      axiosRequest.mockResolvedValue({ data: [] });
+      await getResourceByDataSourceId("episodes", "data_source_id");
+
+      expect(axiosRequest).toBeCalledWith({
+        url: "https://skylarkplatform.io/api/episodes/versions/data-source/data_source_id/",
+        method: "GET",
+        params: {
+          all: true,
+        },
+        headers: expect.any(Object) as object,
+      });
+    });
+
+    it("returns null when an empty object is returned", async () => {
+      axiosRequest.mockResolvedValue({
+        data: {},
+      });
+      const resource = await getResourceByDataSourceId(
+        "episodes",
+        "data_source_id"
+      );
+
+      expect(resource).toBeNull();
+    });
+
+    it("returns the object returned in res.data", async () => {
+      axiosRequest.mockResolvedValue({
+        data: { uid: 1 },
+      });
+      const resource = await getResourceByDataSourceId(
+        "episodes",
+        "data_source_id"
+      );
+
+      expect(resource).toEqual({ uid: 1 });
+    });
+
+    it("returns null when the request returns a 404 code", async () => {
+      const mockedIsAxiosError = axios.isAxiosError as unknown as jest.Mock;
+      mockedIsAxiosError.mockReturnValue(true);
+      const err = {
+        response: { status: 404 },
+      } as AxiosError;
+      axiosRequest.mockRejectedValue(err);
+      const resource = await getResourceByDataSourceId(
+        "episodes",
+        "data_source_id"
+      );
+
+      expect(resource).toBeNull();
     });
   });
 

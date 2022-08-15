@@ -4,6 +4,7 @@ import {
   SetTypes,
 } from "@skylark-reference-apps/lib";
 import axios from "axios";
+import { isEmpty } from "lodash";
 import { authenticatedSkylarkRequest } from "./api";
 
 /**
@@ -38,8 +39,8 @@ export const getResourceByDataSourceId = async <T>(
         },
       }
     );
-    return res.data;
-  } catch(err) {
+    return isEmpty(res.data) ? null : res.data;
+  } catch (err) {
     if (axios.isAxiosError(err) && err.response?.status === 404) {
       return null;
     }

@@ -62,6 +62,12 @@ describe("/api/gateways/[gatewayUID] API Endpoint", () => {
           region: "eu-west-1",
           userPoolId: "user-pool",
           userPoolWebClientId: "client-id",
+          identityPoolId: "",
+        },
+        Storage: {
+          AWSS3: {
+            bucket: "",
+          },
         },
       });
     });

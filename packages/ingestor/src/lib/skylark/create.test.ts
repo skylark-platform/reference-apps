@@ -5,12 +5,8 @@ import {
   ApiImage,
   ApiRole,
 } from "@skylark-reference-apps/lib";
-import { Attachment, FieldSet, Record } from "airtable";
+import { Attachment, FieldSet, Record, Records, Table } from "airtable";
 import axios from "axios";
-import {
-  convertAirtableFieldsToSkylarkObject,
-  createOrUpdateAirtableObjectsInSkylarkBySlug,
-} from ".";
 import {
   ApiAirtableFields,
   ApiEntertainmentObjectWithAirtableId,
@@ -18,7 +14,8 @@ import {
   Metadata,
 } from "../../interfaces";
 import {
-  createOrUpdateAirtableObjectsInSkylarkByTitle,
+  convertAirtableFieldsToSkylarkObject,
+  createOrUpdateAirtableObjectsInSkylark,
   createOrUpdateDynamicObject,
   createOrUpdateObject,
   parseAirtableImagesAndUploadToSkylark,
@@ -150,8 +147,7 @@ describe("skylark.sets", () => {
       await createOrUpdateObject(
         "episode",
         { property: "slug", value: "episode-slug" },
-        {},
-        "PATCH"
+        {}
       );
 
       // Assert.
@@ -175,8 +171,7 @@ describe("skylark.sets", () => {
       await createOrUpdateObject(
         "episode",
         { property: "slug", value: "episode-slug" },
-        requestData,
-        "PATCH"
+        requestData
       );
 
       // Assert.
@@ -189,7 +184,7 @@ describe("skylark.sets", () => {
       );
     });
 
-    it("makes a PATCH request when the object exists in Skylark and PATCH is the given update method", async () => {
+    it("makes a PATCH request when the object exists in Skylark", async () => {
       // Arrange.
       axiosRequest.mockImplementation(() => ({
         data: { objects: [{ uid: "1" }] },
@@ -203,8 +198,7 @@ describe("skylark.sets", () => {
       await createOrUpdateObject(
         "episode",
         { property: "slug", value: "episode-slug" },
-        requestData,
-        "PATCH"
+        requestData
       );
 
       // Assert.
@@ -217,30 +211,27 @@ describe("skylark.sets", () => {
       );
     });
 
-    it("makes a PUT request when the object exists in Skylark and PUT is the given update method", async () => {
+    it("makes a PUT request when the object is an image and it exists", async () => {
       // Arrange.
       axiosRequest.mockImplementation(() => ({
         data: { objects: [{ uid: "1" }] },
       }));
       const requestData = {
-        uid: "1",
         slug: "slug",
       };
 
       // Act.
       await createOrUpdateObject(
-        "episode",
+        "images",
         { property: "slug", value: "episode-slug" },
-        requestData,
-        "PUT"
+        requestData
       );
 
       // Assert.
       expect(axiosRequest).toBeCalledWith(
         expect.objectContaining({
-          url: "https://skylarkplatform.io/api/episode/1",
+          url: "https://skylarkplatform.io/api/images/1",
           method: "PUT",
-          data: requestData,
         })
       );
     });
@@ -259,15 +250,14 @@ describe("skylark.sets", () => {
       await createOrUpdateObject(
         "episode",
         { property: "slug", value: "episode-slug" },
-        requestData,
-        "PUT"
+        requestData
       );
 
       // Assert.
       expect(axiosRequest).toBeCalledWith(
         expect.objectContaining({
           url: "https://skylarkplatform.io/api/episode/1",
-          method: "PUT",
+          method: "PATCH",
           data: requestData,
         })
       );
@@ -284,8 +274,7 @@ describe("skylark.sets", () => {
         createOrUpdateObject(
           "episode",
           { property: "slug", value: "episode-slug" },
-          {},
-          "PUT"
+          {}
         )
       ).rejects.toEqual(new Error("axios rejection"));
     });
@@ -385,7 +374,7 @@ describe("skylark.sets", () => {
       expect(axiosRequest).toBeCalledWith(
         expect.objectContaining({
           method: "GET",
-          url: `https://skylarkplatform.io/api/images/?title=${imageAttachment.filename}`,
+          url: `https://skylarkplatform.io/api/images/versions/data-source/image-1-episode_1/`,
         })
       );
     });
@@ -412,6 +401,7 @@ describe("skylark.sets", () => {
             image_type_url: metadata.imageTypes[0].self,
             schedule_urls: [metadata.schedules.default.self],
             title: imageAttachment.filename,
+            data_source_id: "image-1-episode_1",
           },
         })
       );
@@ -427,8 +417,9 @@ describe("skylark.sets", () => {
         schedule_urls: [metadata.schedules.default.self],
         title: imageAttachment.filename,
         url: "https://image-location-in-skylark",
+        data_source_id: "image-1-episode_1",
       };
-      axiosRequest.mockImplementation(() => ({ data: { objects: [image] } }));
+      axiosRequest.mockImplementation(() => ({ data: image }));
 
       // Act.
       await parseAirtableImagesAndUploadToSkylark(
@@ -464,7 +455,13 @@ describe("skylark.sets", () => {
         schedule_urls: [metadata.schedules.default.self],
         is_data_source: true,
         data_source_id: "1",
-        data_source_fields: ["name", "title", "slug"],
+        data_source_fields: [
+          "uid",
+          "self",
+          "schedule_urls",
+          "is_data_source",
+          "data_source_id",
+        ],
       };
 
       const skylarkObject = convertAirtableFieldsToSkylarkObject(
@@ -493,8 +490,15 @@ describe("skylark.sets", () => {
         schedule_urls: [metadata.schedules.default.self],
         is_data_source: true,
         data_source_id: "1",
-        data_source_fields: ["name", "title", "slug"],
         parent_url: parent.self,
+        data_source_fields: [
+          "uid",
+          "self",
+          "parent_url",
+          "schedule_urls",
+          "is_data_source",
+          "data_source_id",
+        ],
       };
 
       const skylarkObject = convertAirtableFieldsToSkylarkObject(
@@ -657,19 +661,22 @@ describe("skylark.sets", () => {
     });
   });
 
-  describe("createOrUpdateAirtableObjectsInSkylarkBySlug", () => {
+  describe("createOrUpdateAirtableObjectsInSkylark", () => {
+    const table = { name: "episodes" } as Table<FieldSet>;
     const airtableEpisodeRecords: Partial<Record<FieldSet>>[] = [
       {
         id: "airtable-episode-1",
+        _table: table,
         fields: { slug: "episode-1", title_short: "short title" },
       },
       {
         id: "airtable-episode-2",
+        _table: table,
         fields: { slug: "episode-2", synopsis_short: "short synopsis" },
       },
     ];
 
-    it("Makes a GET request to check if the Airtable records match objects that exist in Skylark using the slug property", async () => {
+    it("Makes a GET request to check if the Airtable records match objects that exist in Skylark", async () => {
       // Arrange.
       const data: ApiBatchResponse[] = airtableEpisodeRecords.map((record) => ({
         code: 200,
@@ -681,8 +688,7 @@ describe("skylark.sets", () => {
       axiosRequest.mockImplementation(() => ({ data }));
 
       // Act.
-      await createOrUpdateAirtableObjectsInSkylarkBySlug(
-        "episodes",
+      await createOrUpdateAirtableObjectsInSkylark(
         airtableEpisodeRecords as Record<FieldSet>[],
         metadata
       );
@@ -696,12 +702,12 @@ describe("skylark.sets", () => {
             {
               id: "airtable-episode-1",
               method: "GET",
-              url: "/api/episodes/?slug=episode-1",
+              url: "/api/episodes/versions/data-source/airtable-episode-1/",
             },
             {
               id: "airtable-episode-2",
               method: "GET",
-              url: "/api/episodes/?slug=episode-2",
+              url: "/api/episodes/versions/data-source/airtable-episode-2/",
             },
           ],
         })
@@ -710,19 +716,34 @@ describe("skylark.sets", () => {
 
     it("Makes a POST request to create records that don't match existing objects in Skylark", async () => {
       // Arrange.
-      const data: ApiBatchResponse[] = airtableEpisodeRecords.map((record) => ({
-        code: 200,
-        id: record.id as string,
-        header: {},
-        url: `/api/episodes/?slug=${record.fields?.slug as string}`,
-        body: "{}",
-      }));
-      axiosRequest.mockImplementation(() => ({ data }));
+      const getData: ApiBatchResponse[] = airtableEpisodeRecords.map(
+        (record) => ({
+          code: 404,
+          id: record.id as string,
+          header: {},
+          url: `/api/episodes/versions/data-source/${record.id as string}`,
+          body: "{}",
+        })
+      );
+      const postData: ApiBatchResponse[] = airtableEpisodeRecords.map(
+        (record) => ({
+          code: 200,
+          id: record.id as string,
+          header: {},
+          url: `/api/episodes/versions/data-source/${record.id as string}`,
+          body: "{}",
+        })
+      );
+      axiosRequest.mockImplementation(() => {
+        if (axiosRequest.mock.calls.length <= 1) {
+          return { data: getData };
+        }
+        return { data: postData };
+      });
 
       // Act.
-      await createOrUpdateAirtableObjectsInSkylarkBySlug(
-        "episodes",
-        airtableEpisodeRecords as Record<FieldSet>[],
+      await createOrUpdateAirtableObjectsInSkylark(
+        airtableEpisodeRecords as Records<FieldSet>,
         metadata
       );
 
@@ -742,9 +763,17 @@ describe("skylark.sets", () => {
                 schedule_urls: ["/api/schedules/1"],
                 is_data_source: true,
                 data_source_id: "airtable-episode-1",
-                data_source_fields: ["name", "title", "slug"],
+                data_source_fields: [
+                  "uid",
+                  "self",
+                  "slug",
+                  "title_short",
+                  "schedule_urls",
+                  "is_data_source",
+                  "data_source_id",
+                ],
               }),
-              id: "airtable-episode-1",
+              id: "POST-/api/episodes/",
               method: "POST",
               url: "/api/episodes/",
             },
@@ -757,9 +786,17 @@ describe("skylark.sets", () => {
                 schedule_urls: ["/api/schedules/1"],
                 is_data_source: true,
                 data_source_id: "airtable-episode-2",
-                data_source_fields: ["name", "title", "slug"],
+                data_source_fields: [
+                  "uid",
+                  "self",
+                  "slug",
+                  "synopsis_short",
+                  "schedule_urls",
+                  "is_data_source",
+                  "data_source_id",
+                ],
               }),
-              id: "airtable-episode-2",
+              id: "POST-/api/episodes/",
               method: "POST",
               url: "/api/episodes/",
             },
@@ -770,26 +807,37 @@ describe("skylark.sets", () => {
 
     it("Makes a PATCH request to update records that match existing objects in Skylark", async () => {
       // Arrange.
-      const data: ApiBatchResponse[] = airtableEpisodeRecords.map((record) => ({
-        code: 200,
-        id: record.id as string,
-        header: {},
-        url: `/api/episodes/?slug=${record.fields?.slug as string}`,
-        body: JSON.stringify({
-          objects: [
-            {
-              ...record.fields,
-              uid: record.fields?.slug,
-              self: `/api/episodes/${record.fields?.slug as string}`,
-            },
-          ],
-        }),
-      }));
-      axiosRequest.mockImplementation(() => ({ data }));
+      const getData: ApiBatchResponse[] = airtableEpisodeRecords.map(
+        (record) => ({
+          code: 200,
+          id: record.id as string,
+          header: {},
+          url: `/api/episodes/versions/data-source/${record.id as string}`,
+          body: JSON.stringify({
+            ...record.fields,
+            uid: record.fields?.slug,
+            self: `/api/episodes/${record.fields?.slug as string}`,
+          }),
+        })
+      );
+      const patchData: ApiBatchResponse[] = airtableEpisodeRecords.map(
+        (record) => ({
+          code: 200,
+          id: record.id as string,
+          header: {},
+          url: `/api/episodes/versions/data-source/${record.id as string}`,
+          body: "{}",
+        })
+      );
+      axiosRequest.mockImplementation(() => {
+        if (axiosRequest.mock.calls.length <= 1) {
+          return { data: getData };
+        }
+        return { data: patchData };
+      });
 
       // Act.
-      await createOrUpdateAirtableObjectsInSkylarkBySlug(
-        "episodes",
+      await createOrUpdateAirtableObjectsInSkylark(
         airtableEpisodeRecords as Record<FieldSet>[],
         metadata
       );
@@ -810,9 +858,17 @@ describe("skylark.sets", () => {
                 schedule_urls: ["/api/schedules/1"],
                 is_data_source: true,
                 data_source_id: "airtable-episode-1",
-                data_source_fields: ["name", "title", "slug"],
+                data_source_fields: [
+                  "uid",
+                  "self",
+                  "slug",
+                  "title_short",
+                  "schedule_urls",
+                  "is_data_source",
+                  "data_source_id",
+                ],
               }),
-              id: "airtable-episode-1",
+              id: "PATCH-/api/episodes/episode-1",
               method: "PATCH",
               url: "/api/episodes/episode-1",
             },
@@ -825,63 +881,19 @@ describe("skylark.sets", () => {
                 schedule_urls: ["/api/schedules/1"],
                 is_data_source: true,
                 data_source_id: "airtable-episode-2",
-                data_source_fields: ["name", "title", "slug"],
+                data_source_fields: [
+                  "uid",
+                  "self",
+                  "slug",
+                  "synopsis_short",
+                  "schedule_urls",
+                  "is_data_source",
+                  "data_source_id",
+                ],
               }),
-              id: "airtable-episode-2",
+              id: "PATCH-/api/episodes/episode-2",
               method: "PATCH",
               url: "/api/episodes/episode-2",
-            },
-          ],
-        })
-      );
-    });
-  });
-
-  describe("createOrUpdateAirtableObjectsInSkylarkByTitle", () => {
-    const airtableRoleRecords: Partial<Record<FieldSet>>[] = [
-      {
-        id: "airtable-role-1",
-        fields: { title: "role-1", title_short: "short title" },
-      },
-      {
-        id: "airtable-role-2",
-        fields: { title: "role-2", synopsis_short: "short synopsis" },
-      },
-    ];
-
-    it("Makes a GET request to check if the Airtable records match objects that exist in Skylark using the title property", async () => {
-      // Arrange.
-      const data: ApiBatchResponse[] = airtableRoleRecords.map((record) => ({
-        code: 200,
-        id: record.id as string,
-        header: {},
-        url: `/api/episodes/?slug=${record.fields?.slug as string}`,
-        body: "{}",
-      }));
-      axiosRequest.mockImplementation(() => ({ data }));
-
-      // Act.
-      await createOrUpdateAirtableObjectsInSkylarkByTitle(
-        "roles",
-        airtableRoleRecords as Record<FieldSet>[],
-        metadata
-      );
-
-      // Assert.
-      expect(axiosRequest).toBeCalledWith(
-        expect.objectContaining({
-          method: "POST",
-          url: "https://skylarkplatform.io/api/batch/",
-          data: [
-            {
-              id: "airtable-role-1",
-              method: "GET",
-              url: "/api/roles/?title=role-1",
-            },
-            {
-              id: "airtable-role-2",
-              method: "GET",
-              url: "/api/roles/?title=role-2",
             },
           ],
         })

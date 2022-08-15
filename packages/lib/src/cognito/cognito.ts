@@ -33,8 +33,12 @@ export const amplifyConfig = ({
   identityPoolId,
   storageBucket: bucket,
 }: IAmplifyParams) => {
-  if (!region || !userPoolId || !userPoolWebClientId || !identityPoolId || !bucket) {
+  if (!region || !userPoolId || !userPoolWebClientId) {
     throw new Error("Invalid Amplify config supplied");
+  }
+
+  if (bucket && !identityPoolId) {
+    throw new Error("Identity Pool ID must be given with Storage Bucket");
   }
 
   const config: IAmplifyConfig = {

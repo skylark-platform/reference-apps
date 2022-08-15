@@ -8,9 +8,15 @@ import { AIRTABLE_API_KEY, AIRTABLE_BASE_ID } from "./constants";
  * @param name - the table name
  * @returns table contents
  */
-const getTable = async (name: string, offset = ""): Promise<Record<FieldSet>[]> => {
+const getTable = async (
+  name: string,
+  offset = ""
+): Promise<Record<FieldSet>[]> => {
   try {
-    const res = await axios.get<{ records: Record<FieldSet>[], offset?: string }>(
+    const res = await axios.get<{
+      records: Record<FieldSet>[];
+      offset?: string;
+    }>(
       `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${name}?offset=${offset}`,
       {
         headers: {
@@ -28,14 +34,16 @@ const getTable = async (name: string, offset = ""): Promise<Record<FieldSet>[]> 
         )
     );
 
-    const parsedRecords: Record<FieldSet>[] = dataWithoutEmptyRecords.map((records) => ({
-      ...records,
-      _table: {
-        name
-      }
-    })) as Record<FieldSet>[]
+    const parsedRecords: Record<FieldSet>[] = dataWithoutEmptyRecords.map(
+      (records) => ({
+        ...records,
+        _table: {
+          name,
+        },
+      })
+    ) as Record<FieldSet>[];
 
-    if(res.data.offset) {
+    if (res.data.offset) {
       const otherRecords = await getTable(name, res.data.offset);
       return [...parsedRecords, ...otherRecords];
     }
@@ -79,18 +87,14 @@ export const getAllTables = async (): Promise<Airtables> => {
   ] = await Promise.all(dimensionTables.map((table) => getTable(table)));
 
   const tables = [
-    "brands",
-    "seasons",
-    "episodes",
-    "movies",
     "Media Content",
+    "Media Content - Translations",
     "roles",
     "people",
     "credits",
     "genres",
     "themes",
     "ratings",
-    "assets",
     "images",
     "availibility",
     "sets-metadata",
@@ -98,18 +102,14 @@ export const getAllTables = async (): Promise<Airtables> => {
     "image-types",
   ];
   const [
-    brands,
-    seasons,
-    episodes,
-    movies,
     mediaObjects,
+    mediaObjectsTranslations,
     roles,
     people,
     credits,
     genres,
     themes,
     ratings,
-    assets,
     images,
     availibility,
     setsMetadata,
@@ -128,10 +128,9 @@ export const getAllTables = async (): Promise<Airtables> => {
       regions,
       viewingContext,
     },
-    brands,
-    seasons,
-    episodes,
-    movies,
+    translations: {
+      mediaObjects: mediaObjectsTranslations,
+    },
     mediaObjects,
     roles,
     people,
@@ -139,7 +138,6 @@ export const getAllTables = async (): Promise<Airtables> => {
     genres,
     themes,
     ratings,
-    assets,
     images,
     availibility,
     setsMetadata,
