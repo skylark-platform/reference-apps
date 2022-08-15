@@ -428,11 +428,9 @@ export const convertAirtableFieldsToSkylarkObject = (
 
 /**
  * createOrUpdateAirtableObjectsInSkylark - creates or updates objects in Skylark using Records from Airtable
- * @param type - The Skylark object
  * @param airtableRecords - Airtable records from a table of the given type
  * @param metadata
  * @param parents - Potential parents for the objects
- * @param lookupProperty - property to use to check whether the object exists in Skylark
  * @returns
  */
 export const createOrUpdateAirtableObjectsInSkylark = async <
@@ -489,6 +487,13 @@ export const createOrUpdateAirtableObjectsInSkylark = async <
   return parseObjectsAndCreateImages;
 };
 
+/**
+ * createOrUpdateAirtableObjectsInSkylarkWithParentsInSameTable - creates or updates objects in Skylark using Records from Airtable
+ * Sets parent_urls when the logic for parents are within the same Airtable
+ * @param airtableRecords - Airtable records from a table of the given type
+ * @param metadata
+ * @returns
+ */
 export const createOrUpdateAirtableObjectsInSkylarkWithParentsInSameTable =
   async (
     airtableRecords: Records<FieldSet>,
@@ -536,6 +541,13 @@ export const createOrUpdateAirtableObjectsInSkylarkWithParentsInSameTable =
     return createdMediaObjects;
   };
 
+/**
+ * createTranslationsForObjects - creates translations for Skylark objects
+ * @param originalObjects - The objects created in Skylark in the default language
+ * @param translationsTable - Airtable with a link to an originalObject with translated metadata
+ * @param metadata
+ * @returns
+ */
 export const createTranslationsForObjects = async (
   originalObjects: ApiEntertainmentObjectWithAirtableId[],
   translationsTable: Records<FieldSet>,

@@ -20,6 +20,7 @@ import {
   createOrUpdateAirtableObjectsInSkylarkWithParentsInSameTable,
   createOrUpdateObject,
   parseAirtableImagesAndUploadToSkylark,
+  createTranslationsForObjects,
 } from "./create";
 
 jest.mock("axios");
@@ -131,7 +132,16 @@ describe("skylark.sets", () => {
       affiliates: [],
       customerTypes: [],
       deviceTypes: [],
-      languages: [],
+      languages: [
+        {
+          uid: "portugal",
+          self: "portugal",
+          slug: "portugal",
+          name: "Portugal",
+          iso_code: "pt-pt",
+          airtableId: "airtable-language-1",
+        },
+      ],
       locales: [],
       operatingSystems: [],
       regions: [],
@@ -1077,6 +1087,57 @@ describe("skylark.sets", () => {
 
       // Assert.
       expect(axiosRequest).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe("createTranslationsForObjects", () => {
+    const originalObjects: ApiEntertainmentObjectWithAirtableId[] = [
+      {
+        uid: "episode-1",
+        self: "/api/episodes/episode-1",
+        title: "episode 1",
+        slug: "episode-1",
+        airtableId: "airtable-episode-1",
+        title_short: "Episode 1",
+      },
+    ];
+    // const table = { name: "episodes" } as Table<FieldSet>;
+    const airtableTranslations: Partial<Record<FieldSet>>[] = [
+      {
+        id: "airtable-episode-1-pt-pt",
+        fields: {
+          object: ["airtable-episode-1"],
+          slug: "episode-1",
+          title_short: "título curto",
+          languages: [metadata.dimensions.languages[0].airtableId],
+        },
+      },
+    ];
+
+    it("calls Axios with the new language request", async () => {
+      await createTranslationsForObjects(
+        originalObjects,
+        airtableTranslations as Records<FieldSet>,
+        metadata
+      );
+      expect(axiosRequest).toHaveBeenCalledWith(
+        expect.objectContaining({
+          method: "PATCH",
+          url: "https://skylarkplatform.io/api/episodes/episode-1",
+          headers: {
+            "Accept-Language": "pt-pt",
+            Authorization: "Bearer token",
+            "Cache-Control": "no-cache",
+          },
+          data: {
+            data_source_id: "airtable-episode-1",
+            self: "/api/episodes/episode-1",
+            slug: "episode-1",
+            title_short: "título curto",
+            uid: "episode-1",
+          },
+        })
+      );
     });
   });
 });
