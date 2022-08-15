@@ -13,10 +13,7 @@ const fieldsToExpand = {
   items: {
     content_url: {
       items: {
-        content_url: {
-          image_urls: {},
-        },
-        image_urls: {},
+        content_url: {},
       },
     },
   },
@@ -32,21 +29,8 @@ const fields = {
       title_medium: {},
       items: {
         content_url: {
+          uid: {},
           self: {},
-          slug: {},
-          title: {},
-          image_urls: {
-            self: {},
-            url: {},
-            url_path: {},
-            image_type: {},
-          },
-          title_short: {},
-          title_medium: {},
-          synopsis_short: {},
-          synopsis_medium: {},
-          episode_number: {},
-          set_type_slug: {},
         },
         self: {},
         slug: {},

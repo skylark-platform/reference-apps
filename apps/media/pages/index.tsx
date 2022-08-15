@@ -1,6 +1,7 @@
 import { FC } from "react";
 import type { GetStaticProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
+import { useInView } from "react-intersection-observer";
 import {
   Carousel,
   CollectionThumbnail,
@@ -21,6 +22,7 @@ import {
 
 import { homepageSlug, useHomepageSet } from "../hooks/useHomepageSet";
 import { getSeoDataForSet, SeoObjectData } from "../lib/getPageSeoData";
+import { Card } from "../components/card";
 
 export const getStaticProps: GetStaticProps = async () => {
   const seo = await getSeoDataForSet("homepage", homepageSlug);
@@ -74,56 +76,61 @@ const Slider: FC<{ item: AllEntertainment; index: number; key: string }> = ({
   );
 };
 
-const MainRail: FC<{ item: AllEntertainment }> = ({ item }) => {
-  const items = item?.items?.isExpanded ? item.items.objects : [];
+const MainRail: FC<{ section: AllEntertainment }> = ({ section }) => {
+  const { inView } = useInView({ triggerOnce: true });
+  const items = section?.items?.isExpanded ? section.items.objects : [];
 
   return (
-    <Rail displayCount header={item.title?.medium || item.title?.short}>
-      {items.map((movie) => (
-        <MovieThumbnail
-          backgroundImage={getImageSrc(movie.images, "Thumbnail", "384x216")}
-          contentLocation="below"
-          href={movie.type && movie.slug ? `/${movie.type}/${movie.slug}` : ""}
-          key={movie.objectTitle || movie.uid || movie.slug}
-          releaseDate={movie.releaseDate}
-          title={movie.title?.short || ""}
-        />
+    <Rail displayCount header={section.title?.medium || section.title?.short}>
+      {items.map(({ self }, index) => (
+        <Card inView={inView} key={index} self={self}>
+          {(movie: AllEntertainment) => (
+            <MovieThumbnail
+              backgroundImage={getImageSrc(
+                movie.images,
+                "Thumbnail",
+                "384x216"
+              )}
+              contentLocation="below"
+              href={
+                movie.type && movie.slug ? `/${movie.type}/${movie.slug}` : ""
+              }
+              key={movie.objectTitle || movie.uid || movie.slug}
+              releaseDate={movie.releaseDate}
+              title={movie.title?.short || ""}
+            />
+          )}
+        </Card>
       ))}
     </Rail>
   );
 };
 
-const CollectionRail: FC<{ item: AllEntertainment }> = ({ item }) => {
-  const items = item?.items?.isExpanded ? item.items.objects : [];
+const CollectionRail: FC<{ section: AllEntertainment }> = ({ section }) => {
+  const { inView } = useInView({ triggerOnce: true });
+  const items = section?.items?.isExpanded ? section.items.objects : [];
 
   return (
-    <Rail displayCount header={item.title?.medium || item.title?.short}>
-      {items.map((collectionItem) => (
-        <CollectionThumbnail
-          backgroundImage={getImageSrc(
-            collectionItem.images,
-            "Thumbnail",
-            "350x350"
+    <Rail displayCount header={section.title?.medium || section.title?.short}>
+      {items.map(({ self }, index) => (
+        <Card inView={inView} key={index} self={self}>
+          {(item: AllEntertainment) => (
+            <CollectionThumbnail
+              backgroundImage={getImageSrc(item.images, "Thumbnail", "350x350")}
+              contentLocation="below"
+              href={item.type && item.slug ? `/${item.type}/${item.slug}` : ""}
+              key={item.objectTitle || item.uid || item.slug}
+              title={getTitleByOrder(item.title, ["short", "medium"])}
+            />
           )}
-          contentLocation="below"
-          href={
-            collectionItem.type && collectionItem.slug
-              ? `/${collectionItem.type}/${collectionItem.slug}`
-              : ""
-          }
-          key={
-            collectionItem.objectTitle ||
-            collectionItem.uid ||
-            collectionItem.slug
-          }
-          title={getTitleByOrder(collectionItem.title, ["short", "medium"])}
-        />
+        </Card>
       ))}
     </Rail>
   );
 };
 
 const SeasonRail: FC<{ item: AllEntertainment }> = ({ item }) => {
+  const { inView } = useInView({ triggerOnce: true });
   const items = item?.items?.isExpanded ? item.items.objects : [];
 
   return (
@@ -132,30 +139,34 @@ const SeasonRail: FC<{ item: AllEntertainment }> = ({ item }) => {
         .sort((a: Episode, b: Episode) =>
           (a.number || 0) > (b.number || 0) ? 1 : -1
         )
-        .map((episode) => (
-          <EpisodeThumbnail
-            backgroundImage={getImageSrc(
-              episode.images,
-              "Thumbnail",
-              "384x216"
+        .map(({ self }, index) => (
+          <Card inView={inView} key={index} self={self}>
+            {(episode: Episode) => (
+              <EpisodeThumbnail
+                backgroundImage={getImageSrc(
+                  episode.images,
+                  "Thumbnail",
+                  "384x216"
+                )}
+                contentLocation="below"
+                description={
+                  episode.synopsis?.short ||
+                  episode.synopsis?.medium ||
+                  episode.synopsis?.long ||
+                  ""
+                }
+                href={
+                  episode.type && episode.slug
+                    ? `/${episode.type}/${episode.slug}`
+                    : ""
+                }
+                key={episode.objectTitle || episode.uid || episode.slug}
+                number={episode.number || 0}
+                releaseDate={episode.releaseDate}
+                title={episode.title?.short || ""}
+              />
             )}
-            contentLocation="below"
-            description={
-              episode.synopsis?.short ||
-              episode.synopsis?.medium ||
-              episode.synopsis?.long ||
-              ""
-            }
-            href={
-              episode.type && episode.slug
-                ? `/${episode.type}/${episode.slug}`
-                : ""
-            }
-            key={episode.objectTitle || episode.uid || episode.slug}
-            number={episode.number || 0}
-            releaseDate={episode.releaseDate}
-            title={episode.title?.short || ""}
-          />
+          </Card>
         ))}
     </Rail>
   );
@@ -184,10 +195,10 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
             return (
               <div className="my-6 w-full" key={key}>
                 {item.type === "rail" && item?.items?.isExpanded && (
-                  <MainRail item={item} />
+                  <MainRail section={item} />
                 )}
                 {item.type === "collection" && item?.items?.isExpanded && (
-                  <CollectionRail item={item} />
+                  <CollectionRail section={item} />
                 )}
                 {item.type === "season" && item?.items?.isExpanded && (
                   <SeasonRail item={item} />
