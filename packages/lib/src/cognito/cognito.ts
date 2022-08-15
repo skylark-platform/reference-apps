@@ -11,7 +11,6 @@ interface IAmplifyParams {
 interface IAmplifyStorage {
   AWSS3: {
     bucket: string;
-    // region: string;
   };
 }
 
@@ -52,7 +51,6 @@ export const amplifyConfig = ({
     Storage: {
       AWSS3: {
         bucket,
-        // region,
       },
     },
   };
