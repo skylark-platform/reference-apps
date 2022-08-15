@@ -22,11 +22,13 @@ export const authenticatedSkylarkRequest = async <T>(
     Authorization: `Bearer ${token}`,
   };
 
-  return axios.request<T>({
+  const res = await axios.request<T>({
     ...config,
     url,
     headers,
   });
+
+  return res;
 };
 
 /**

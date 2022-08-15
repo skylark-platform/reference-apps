@@ -517,8 +517,13 @@ export const createOrUpdateAirtableObjectsInSkylarkWithParentsInSameTable =
         return found;
       });
 
-      // eslint-disable-next-line no-await-in-loop
+      // Stops infinite loop
+      if (objectsToCreateUpdate.length === 0) {
+        break;
+      }
+
       const objs =
+        // eslint-disable-next-line no-await-in-loop
         await createOrUpdateAirtableObjectsInSkylark<ApiEntertainmentObjectWithAirtableId>(
           objectsToCreateUpdate,
           metadata,
@@ -542,6 +547,10 @@ export const createTranslationsForObjects = async (
   });
 
   const translationObjectData = translationsTable.map(({ fields, id }) => {
+    if (!fields.object || !Array.isArray(fields.object)) {
+      return [];
+    }
+
     const [objectAirtableId] = fields.object as string[];
     const originalObject = originalObjects.find(
       ({ airtableId }) => airtableId === objectAirtableId
@@ -570,7 +579,7 @@ export const createTranslationsForObjects = async (
       method: "PATCH",
       url: object.self,
       headers: {
-        "Content-Language": languageCodes[languageAirtableId],
+        "Accept-Language": languageCodes[languageAirtableId],
       },
       data: object,
     }));

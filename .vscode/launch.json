@@ -12,15 +12,6 @@
       "runtimeExecutable": "yarn",
       "skipFiles": ["<node_internals>/**"],
       "type": "node"
-    },
-    {
-      "name": "Debug ingestor with asset upload",
-      "request": "launch",
-      "cwd": "${workspaceFolder}/packages/ingestor",
-      "runtimeArgs": ["ingest", "--"],
-      "runtimeExecutable": "yarn",
-      "skipFiles": ["<node_internals>/**"],
-      "type": "node"
     }
   ]
 }
