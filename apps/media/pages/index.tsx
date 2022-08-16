@@ -77,13 +77,12 @@ const Slider: FC<{ item: AllEntertainment; index: number; key: string }> = ({
 };
 
 const MainRail: FC<{ section: AllEntertainment }> = ({ section }) => {
-  const { inView } = useInView({ triggerOnce: true });
   const items = section?.items?.isExpanded ? section.items.objects : [];
 
   return (
     <Rail displayCount header={section.title?.medium || section.title?.short}>
       {items.map(({ self }, index) => (
-        <Card inView={inView} key={index} self={self}>
+        <Card key={index} self={self}>
           {(movie: AllEntertainment) => (
             <MovieThumbnail
               backgroundImage={getImageSrc(
