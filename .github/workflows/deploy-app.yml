@@ -63,9 +63,9 @@ jobs:
           # hardcode domains until more accounts are supported
           base-domain: skylark-dev.skylarkplatform.io
           skylark-api-url: https://api.showcase-test.eng-james-wallis.skylarkplatform.io
-          cognito-aws-region: ${{ secrets.NEXT_PUBLIC_COGNITO_AWS_REGION }}
-          cognito-client-id: ${{ secrets.NEXT_PUBLIC_COGNITO_CLIENT_ID }}
-          cognito-user-pool-id: ${{ secrets.NEXT_PUBLIC_COGNITO_USER_POOL_ID }}
+          cognito-aws-region: ${{ secrets.SHOWCASE_TEST_AWS_REGION }}
+          cognito-client-id: ${{ secrets.SHOWCASE_TEST_CLIENT_ID }}
+          cognito-user-pool-id: ${{ secrets.SHOWCASE_TEST_USER_POOL_ID }}
           cognito-email: ${{ secrets.COGNITO_EMAIL }}
           cognito-password: ${{ secrets.COGNITO_PASSWORD }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_SKYLARK_DEV }}
@@ -82,9 +82,11 @@ jobs:
           airtable-api-key: ${{ secrets.AIRTABLE_SUPPORT_KEY }}
           airtable-base-id: ${{ secrets.AIRTABLE_BASE_ID }}
           skylark-api-url: https://api.showcase-test.eng-james-wallis.skylarkplatform.io
-          cognito-aws-region: ${{ secrets.NEXT_PUBLIC_COGNITO_AWS_REGION }}
-          cognito-client-id: ${{ secrets.NEXT_PUBLIC_COGNITO_CLIENT_ID }}
-          cognito-user-pool-id: ${{ secrets.NEXT_PUBLIC_COGNITO_USER_POOL_ID }}
+          cognito-aws-region: ${{ secrets.SHOWCASE_TEST_AWS_REGION }}
+          cognito-client-id: ${{ secrets.SHOWCASE_TEST_CLIENT_ID }}
+          cognito-user-pool-id: ${{ secrets.SHOWCASE_TEST_USER_POOL_ID }}
+          cognito-identity-pool-id: ${{ secrets.SHOWCASE_TEST_IDENTITY_POOL_ID }}
+          amplify-storage-bucket: ${{ secrets.SHOWCASE_TEST_STORAGE_BUCKET }}
           cognito-email: ${{ secrets.COGNITO_EMAIL }}
           cognito-password: ${{ secrets.COGNITO_PASSWORD }}
 

@@ -1,4 +1,4 @@
-import { FieldSet, Record } from "airtable";
+import { FieldSet, Record, Table } from "airtable";
 import axios, { AxiosError } from "axios";
 import { Airtables } from "../interfaces";
 import { getAllTables } from "./airtable";
@@ -25,10 +25,7 @@ describe("airtable", () => {
       // Arrange.
       mockedGet.mockResolvedValue({ data: { records: [] } });
       const tables: Airtables = {
-        brands: [],
-        seasons: [],
-        episodes: [],
-        movies: [],
+        mediaObjects: [],
         roles: [],
         people: [],
         credits: [],
@@ -40,6 +37,9 @@ describe("airtable", () => {
         setsMetadata: [],
         assetTypes: [],
         imageTypes: [],
+        translations: {
+          mediaObjects: [],
+        },
         dimensions: {
           affiliates: [],
           customerTypes: [],
@@ -61,10 +61,58 @@ describe("airtable", () => {
 
       // Assert.
       expect(mockedGet).toBeCalledWith(
-        "https://api.airtable.com/v0/base-id/brands",
+        "https://api.airtable.com/v0/base-id/affiliates?offset=",
         { headers: { Authorization: "Bearer api-key" } }
       );
       expect(mockedGet).toBeCalledTimes(numTables);
+    });
+
+    it("makes a subsequent table request when an offset is returned in the airtable response", async () => {
+      // Arrange.
+      mockedGet.mockResolvedValueOnce({
+        data: { records: [], offset: "returnedoffset" },
+      });
+      const tables: Airtables = {
+        mediaObjects: [],
+        roles: [],
+        people: [],
+        credits: [],
+        genres: [],
+        themes: [],
+        ratings: [],
+        images: [],
+        availibility: [],
+        setsMetadata: [],
+        assetTypes: [],
+        imageTypes: [],
+        translations: {
+          mediaObjects: [],
+        },
+        dimensions: {
+          affiliates: [],
+          customerTypes: [],
+          deviceTypes: [],
+          languages: [],
+          locales: [],
+          operatingSystems: [],
+          regions: [],
+          viewingContext: [],
+        },
+      };
+
+      // -1 as dimensions isn't a table
+      const numTables =
+        Object.keys(tables).length - 1 + Object.keys(tables.dimensions).length;
+
+      // Act.
+      await getAllTables();
+
+      // Assert.
+      expect(mockedGet).toBeCalledWith(
+        "https://api.airtable.com/v0/base-id/affiliates?offset=returnedoffset",
+        { headers: { Authorization: "Bearer api-key" } }
+      );
+      expect(mockedGet).toBeCalledTimes(numTables + 1); // +1 for offset call
     });
 
     it("returns the fields from records returned by Airtable", async () => {
@@ -73,9 +121,10 @@ describe("airtable", () => {
         { name: "record1", slug: "record-1" },
         { name: "record2", slug: "record-2" },
       ];
+      const table = { name: "Media Content" } as Table<FieldSet>;
       const records: Partial<Record<FieldSet>>[] = [
-        { fields: fields[0] },
-        { fields: fields[1] },
+        { fields: fields[0], _table: table },
+        { fields: fields[1], _table: table },
       ];
       mockedGet.mockResolvedValue({ data: { records } });
 
@@ -83,7 +132,7 @@ describe("airtable", () => {
       const data = await getAllTables();
 
       // Assert.
-      expect(data.brands).toEqual(records);
+      expect(data.mediaObjects).toEqual(records);
     });
 
     it("filters out empty records", async () => {
@@ -93,10 +142,11 @@ describe("airtable", () => {
         {},
         { name: "record2", slug: "record-2" },
       ];
+      const table = { name: "Media Content" } as Table<FieldSet>;
       const records: Partial<Record<FieldSet>>[] = [
-        { fields: fields[0] },
-        { fields: fields[1] },
-        { fields: fields[2] },
+        { fields: fields[0], _table: table },
+        { fields: fields[1], _table: table },
+        { fields: fields[2], _table: table },
       ];
       mockedGet.mockResolvedValue({ data: { records } });
 
@@ -104,9 +154,9 @@ describe("airtable", () => {
       const data = await getAllTables();
 
       // Assert.
-      expect(data.brands).toEqual([
-        { fields: fields[0] },
-        { fields: fields[2] },
+      expect(data.mediaObjects).toEqual([
+        { fields: fields[0], _table: table },
+        { fields: fields[2], _table: table },
       ]);
     });
 
@@ -128,7 +178,7 @@ describe("airtable", () => {
       // Assert.
       // eslint-disable-next-line no-console
       expect(console.warn).toBeCalledWith(
-        `warn: Table "brands" does not exist`
+        `warn: Table "affiliates" does not exist`
       );
     });
 

@@ -31,20 +31,32 @@ const fields = {
   slug: "slug",
 };
 
-const record: object = {
+const record: Partial<Record<FieldSet>> = {
   id: "batch-id",
   fields,
 };
 
 const airtableDimensions: Airtables["dimensions"] = {
-  affiliates: [record as Record<FieldSet>],
-  customerTypes: [record as Record<FieldSet>],
-  deviceTypes: [record as Record<FieldSet>],
-  languages: [record as Record<FieldSet>],
-  locales: [record as Record<FieldSet>],
-  operatingSystems: [record as Record<FieldSet>],
-  regions: [record as Record<FieldSet>],
-  viewingContext: [record as Record<FieldSet>],
+  affiliates: [
+    { ...record, _table: { name: "affiliates" } },
+  ] as Record<FieldSet>[],
+  customerTypes: [
+    { ...record, _table: { name: "customer-types" } },
+  ] as Record<FieldSet>[],
+  deviceTypes: [
+    { ...record, _table: { name: "device-types" } },
+  ] as Record<FieldSet>[],
+  languages: [
+    { ...record, _table: { name: "languages" } },
+  ] as Record<FieldSet>[],
+  locales: [{ ...record, _table: { name: "locales" } }] as Record<FieldSet>[],
+  operatingSystems: [
+    { ...record, _table: { name: "operating-systems" } },
+  ] as Record<FieldSet>[],
+  regions: [{ ...record, _table: { name: "regions" } }] as Record<FieldSet>[],
+  viewingContext: [
+    { ...record, _table: { name: "viewing-context" } },
+  ] as Record<FieldSet>[],
 };
 
 const skylarkDimensions: Metadata["dimensions"] = {
@@ -122,7 +134,7 @@ const skylarkDimensions: Metadata["dimensions"] = {
   ],
 };
 
-describe("skylark.availibility", () => {
+describe("skylark.availability", () => {
   let axiosRequest: jest.Mock;
 
   beforeEach(() => {
@@ -226,7 +238,7 @@ describe("skylark.availibility", () => {
       // Assert.
       // eslint-disable-next-line no-restricted-syntax
       for (const dimension of dimensions) {
-        expect(axiosRequest).toBeCalledWith(
+        expect(axiosRequest).toHaveBeenCalledWith(
           expect.objectContaining({
             method: "POST",
             url: "https://skylarkplatform.io/api/batch/",
@@ -249,7 +261,7 @@ describe("skylark.availibility", () => {
       }
     });
 
-    it("makes a PUT request to every dimension endpoint when the dimension already exists in Skylark", async () => {
+    it("makes a PATCH request to every dimension endpoint when the dimension already exists in Skylark", async () => {
       // Arrange.
       const data: ApiBatchResponse[] = [
         {
@@ -291,7 +303,7 @@ describe("skylark.availibility", () => {
                   name: "dimension",
                 }),
                 id: "batch-id",
-                method: "PUT",
+                method: "PATCH",
                 url: "/api/dimensions/uid-1",
               },
             ],
@@ -376,7 +388,7 @@ describe("skylark.availibility", () => {
       expect(axiosRequest).toBeCalledWith(
         expect.objectContaining({
           url: `https://skylarkplatform.io/api/schedules/1`,
-          method: "PUT",
+          method: "PATCH",
         })
       );
     });
