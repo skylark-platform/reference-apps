@@ -43,6 +43,12 @@ export const getToken = async () => {
   return session.getIdToken().getJwtToken();
 };
 
+/**
+ * Uploads a file to the workflow service watchfolder S3 bucket
+ * @param filename - file name
+ * @param body - file contents
+ * @param assetId
+ */
 export const uploadToWorkflowServiceWatchBucket = async (
   filename: string,
   body: string,

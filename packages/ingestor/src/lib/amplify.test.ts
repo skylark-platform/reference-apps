@@ -1,4 +1,4 @@
-import Auth from "@aws-amplify/auth";
+import { Auth } from "@aws-amplify/auth";
 import { getToken, signInToCognito } from "./amplify";
 
 jest.mock("./constants", () => ({

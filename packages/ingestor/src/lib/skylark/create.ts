@@ -57,11 +57,10 @@ export const createOrUpdateObject = async <T extends ApiBaseObject>(
 };
 
 /**
- * bulkCreateOrUpdateObjects - creates or updates an array of objects in Skylark using the bulk
- * @param type - the Skylark object endpoint
- * @param lookupProperty - the property to use to find the object in Skylark
+ * bulkCreateOrUpdateObjectsWithLookup - creates or updates an array of objects in Skylark using an object field
  * @param objects - the objects to create or update in Skylark
- * @param updateMethod - HTTP method to use to update the object in Skylark
+ * @param objectTypes - The types of the objects to create (episodes, seasons)
+ * @param lookupMethod - method to find the object within Skylark
  * @returns
  */
 export const bulkCreateOrUpdateObjectsWithLookup = async <
@@ -69,12 +68,12 @@ export const bulkCreateOrUpdateObjectsWithLookup = async <
 >(
   objects: ApiSkylarkObjectWithAllPotentialFields[],
   objectTypes: { [id: string]: string },
-  lookupMethod: "slug"
+  lookupMethod: "slug" | "title"
 ) => {
   const getBatchRequestData = objects.map((object) => {
     const type = objectTypes[object.data_source_id];
 
-    const lookupValue = object[lookupMethod];
+    const lookupValue = object[lookupMethod] as string;
     const url = `/api/${type}/?${lookupMethod}=${lookupValue}`;
 
     return {
@@ -98,7 +97,7 @@ export const bulkCreateOrUpdateObjectsWithLookup = async <
     const url = existingObject ? existingObject.self : `/api/${type}/`;
     const method = existingObject ? "PATCH" : "POST";
     return {
-      id: `${method}-${url}`,
+      id: object.data_source_id,
       method,
       url,
       data: JSON.stringify({
@@ -113,9 +112,25 @@ export const bulkCreateOrUpdateObjectsWithLookup = async <
     createOrUpdateBatchRequestData
   );
 
-  return createOrUpdateBatchResponseData.map(({ data }) => data);
+  return createOrUpdateBatchResponseData.map(({ data, batchRequestId }) => {
+    if (!data.data_source_id) {
+      // Add data_source_id when one isn't returned (bugfix for roles)
+      return {
+        ...data,
+        data_source_id: batchRequestId,
+      };
+    }
+
+    return data;
+  });
 };
 
+/**
+ * bulkCreateOrUpdateObjectsUsingDataSourceId - creates or updates an array of objects in Skylark using the data_source_id
+ * @param objects - the objects to create or update in Skylark
+ * @param objectTypes - The types of the objects to create (episodes, seasons)
+ * @returns
+ */
 export const bulkCreateOrUpdateObjectsUsingDataSourceId = async <
   T extends ApiBaseObject
 >(
@@ -377,7 +392,6 @@ export const convertAirtableFieldsToSkylarkObject = (
     value: fields?.value as string,
     is_data_source: true,
     data_source_id: airtableId,
-    // data_source_fields: ["name", "title", "slug"],
   };
 
   const credits = getCreditsFromField(fields.credits as string[], metadata);
@@ -438,7 +452,8 @@ export const createOrUpdateAirtableObjectsInSkylark = async <
 >(
   airtableRecords: Records<FieldSet>,
   metadata: Metadata,
-  parents?: ApiEntertainmentObjectWithAirtableId[]
+  parents?: ApiEntertainmentObjectWithAirtableId[],
+  alternativeLookupMethod?: "title" | "slug"
 ) => {
   const objectData = airtableRecords.map(({ fields, id }) => {
     const object = convertAirtableFieldsToSkylarkObject(
@@ -455,11 +470,16 @@ export const createOrUpdateAirtableObjectsInSkylark = async <
     objectTypes[id] = (fields.skylark_object_type as string) || _table.name;
   });
 
-  const createOrUpdateBatchResponseData =
-    await bulkCreateOrUpdateObjectsUsingDataSourceId<T>(
-      objectData,
-      objectTypes
-    );
+  const createOrUpdateBatchResponseData = alternativeLookupMethod
+    ? await bulkCreateOrUpdateObjectsWithLookup<T>(
+        objectData,
+        objectTypes,
+        alternativeLookupMethod
+      )
+    : await bulkCreateOrUpdateObjectsUsingDataSourceId<T>(
+        objectData,
+        objectTypes
+      );
 
   const parseObjectsAndCreateImages = await Promise.all(
     createOrUpdateBatchResponseData.map(

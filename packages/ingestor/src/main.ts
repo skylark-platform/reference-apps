@@ -93,7 +93,9 @@ const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
 
   metadata.roles = await createOrUpdateAirtableObjectsInSkylark<ApiRole>(
     airtable.roles,
-    metadata
+    metadata,
+    [],
+    "title"
   );
 
   metadata.people = await createOrUpdateAirtableObjectsInSkylark<ApiPerson>(
