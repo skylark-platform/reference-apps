@@ -9,12 +9,12 @@ const Data: FC<{
   self: string;
 }> = ({ children, self }) => {
   const { data, isLoading } = useSingleObjectBySelf(self);
+
   return <>{!isLoading && data ? children(data) : <Skeleton show />}</>;
 };
 
 export const Card: FC<{
   children(data: AllEntertainment): ReactNode;
-  inView?: boolean;
   self: string;
 }> = (props) => {
   const { children, self } = props;

@@ -89,11 +89,7 @@ export const singleObjectFetcher = ([endpoint]: [endpoint: string]) =>
     .get<ApiEntertainmentObject>(`${SKYLARK_API}${endpoint}/?${apiQuery}`, {
       headers: { "Accept-Language": "en-gb" },
     })
-    .then(({ data }) => {
-      console.log("## data", data);
-
-      return parseSkylarkObject(data);
-    });
+    .then(({ data }) => parseSkylarkObject(data));
 
 export const useSingleObjectBySelf = (self: string) => {
   const { data, error } = useSWR<AllEntertainment, Error>(

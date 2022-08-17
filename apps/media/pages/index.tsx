@@ -1,28 +1,13 @@
-import { FC } from "react";
 import type { GetStaticProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
-import { useInView } from "react-intersection-observer";
-import {
-  Carousel,
-  CollectionThumbnail,
-  EpisodeThumbnail,
-  MovieThumbnail,
-  Rail,
-  getImageSrcAndSizeByWindow,
-  Skeleton,
-} from "@skylark-reference-apps/react";
-import { useRouter } from "next/router";
-import {
-  Episode,
-  EntertainmentType,
-  getImageSrc,
-  getTitleByOrder,
-  AllEntertainment,
-} from "@skylark-reference-apps/lib";
+import { Skeleton } from "@skylark-reference-apps/react";
 
 import { homepageSlug, useHomepageSet } from "../hooks/useHomepageSet";
 import { getSeoDataForSet, SeoObjectData } from "../lib/getPageSeoData";
-import { Card } from "../components/card";
+import { CollectionRail } from "../components/collectionRail";
+import { SeasonRail } from "../components/seasonRail";
+import { Slider } from "../components/slider";
+import { MainRail } from "../components/rail";
 
 export const getStaticProps: GetStaticProps = async () => {
   const seo = await getSeoDataForSet("homepage", homepageSlug);
@@ -32,143 +17,6 @@ export const getStaticProps: GetStaticProps = async () => {
       seo,
     },
   };
-};
-
-const Slider: FC<{ item: AllEntertainment; index: number; key: string }> = ({
-  item,
-  index,
-  key,
-}) => {
-  const { query } = useRouter();
-
-  const activeCarouselItem = query?.carousel_item
-    ? parseInt(query.carousel_item as string, 10)
-    : undefined;
-
-  const items = item?.items?.isExpanded ? item.items.objects : [];
-
-  return (
-    // If the carousel is the first item, add negative margin to make it appear through the navigation
-    <div
-      className={`h-[90vh] w-full md:h-[95vh] ${index === 0 ? "-mt-48" : ""}`}
-      key={key}
-    >
-      <Carousel
-        activeItem={activeCarouselItem}
-        changeInterval={8}
-        items={items.map((carouselItem) => ({
-          uid: carouselItem.uid || "",
-          title: getTitleByOrder(
-            carouselItem.title,
-            ["medium", "short"],
-            carouselItem.objectTitle
-          ),
-          href:
-            carouselItem.type && carouselItem.slug
-              ? `/${carouselItem.type}/${carouselItem.slug}`
-              : "",
-          image: getImageSrcAndSizeByWindow(carouselItem.images, "Main"),
-          type: carouselItem.type as EntertainmentType,
-          releaseDate: carouselItem.releaseDate,
-        }))}
-      />
-    </div>
-  );
-};
-
-const MainRail: FC<{ section: AllEntertainment }> = ({ section }) => {
-  const items = section?.items?.isExpanded ? section.items.objects : [];
-
-  return (
-    <Rail displayCount header={section.title?.medium || section.title?.short}>
-      {items.map(({ self }, index) => (
-        <Card key={index} self={self}>
-          {(movie: AllEntertainment) => (
-            <MovieThumbnail
-              backgroundImage={getImageSrc(
-                movie.images,
-                "Thumbnail",
-                "384x216"
-              )}
-              contentLocation="below"
-              href={
-                movie.type && movie.slug ? `/${movie.type}/${movie.slug}` : ""
-              }
-              key={movie.objectTitle || movie.uid || movie.slug}
-              releaseDate={movie.releaseDate}
-              title={movie.title?.short || ""}
-            />
-          )}
-        </Card>
-      ))}
-    </Rail>
-  );
-};
-
-const CollectionRail: FC<{ section: AllEntertainment }> = ({ section }) => {
-  const { inView } = useInView({ triggerOnce: true });
-  const items = section?.items?.isExpanded ? section.items.objects : [];
-
-  return (
-    <Rail displayCount header={section.title?.medium || section.title?.short}>
-      {items.map(({ self }, index) => (
-        <Card inView={inView} key={index} self={self}>
-          {(item: AllEntertainment) => (
-            <CollectionThumbnail
-              backgroundImage={getImageSrc(item.images, "Thumbnail", "350x350")}
-              contentLocation="below"
-              href={item.type && item.slug ? `/${item.type}/${item.slug}` : ""}
-              key={item.objectTitle || item.uid || item.slug}
-              title={getTitleByOrder(item.title, ["short", "medium"])}
-            />
-          )}
-        </Card>
-      ))}
-    </Rail>
-  );
-};
-
-const SeasonRail: FC<{ item: AllEntertainment }> = ({ item }) => {
-  const { inView } = useInView({ triggerOnce: true });
-  const items = item?.items?.isExpanded ? item.items.objects : [];
-
-  return (
-    <Rail displayCount header={item.title?.medium || item.title?.short}>
-      {(items as Episode[])
-        .sort((a: Episode, b: Episode) =>
-          (a.number || 0) > (b.number || 0) ? 1 : -1
-        )
-        .map(({ self }, index) => (
-          <Card inView={inView} key={index} self={self}>
-            {(episode: Episode) => (
-              <EpisodeThumbnail
-                backgroundImage={getImageSrc(
-                  episode.images,
-                  "Thumbnail",
-                  "384x216"
-                )}
-                contentLocation="below"
-                description={
-                  episode.synopsis?.short ||
-                  episode.synopsis?.medium ||
-                  episode.synopsis?.long ||
-                  ""
-                }
-                href={
-                  episode.type && episode.slug
-                    ? `/${episode.type}/${episode.slug}`
-                    : ""
-                }
-                key={episode.objectTitle || episode.uid || episode.slug}
-                number={episode.number || 0}
-                releaseDate={episode.releaseDate}
-                title={episode.title?.short || ""}
-              />
-            )}
-          </Card>
-        ))}
-    </Rail>
-  );
 };
 
 const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
