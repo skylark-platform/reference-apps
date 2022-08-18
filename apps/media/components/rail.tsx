@@ -3,7 +3,7 @@ import { FC } from "react";
 import { MovieThumbnail, Rail } from "@skylark-reference-apps/react";
 import { getImageSrc, AllEntertainment } from "@skylark-reference-apps/lib";
 
-import { Card } from "./card";
+import { DataFetcher } from "./dataFetcher";
 
 export const MainRail: FC<{ section: AllEntertainment }> = ({ section }) => {
   const items = section?.items?.isExpanded ? section.items.objects : [];
@@ -11,7 +11,7 @@ export const MainRail: FC<{ section: AllEntertainment }> = ({ section }) => {
   return (
     <Rail displayCount header={section.title?.medium || section.title?.short}>
       {items.map(({ self }, index) => (
-        <Card key={index} self={self}>
+        <DataFetcher key={index} self={self}>
           {(movie: AllEntertainment) => (
             <MovieThumbnail
               backgroundImage={getImageSrc(
@@ -28,7 +28,7 @@ export const MainRail: FC<{ section: AllEntertainment }> = ({ section }) => {
               title={movie.title?.short || ""}
             />
           )}
-        </Card>
+        </DataFetcher>
       ))}
     </Rail>
   );

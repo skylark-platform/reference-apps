@@ -7,7 +7,7 @@ import {
   AllEntertainment,
 } from "@skylark-reference-apps/lib";
 
-import { Card } from "./card";
+import { DataFetcher } from "./dataFetcher";
 
 export const CollectionRail: FC<{ section: AllEntertainment }> = ({
   section,
@@ -17,7 +17,7 @@ export const CollectionRail: FC<{ section: AllEntertainment }> = ({
   return (
     <Rail displayCount header={section.title?.medium || section.title?.short}>
       {items.map(({ self }, index) => (
-        <Card key={index} self={self}>
+        <DataFetcher key={index} self={self}>
           {(item: AllEntertainment) => (
             <CollectionThumbnail
               backgroundImage={getImageSrc(item.images, "Thumbnail", "350x350")}
@@ -27,7 +27,7 @@ export const CollectionRail: FC<{ section: AllEntertainment }> = ({
               title={getTitleByOrder(item.title, ["short", "medium"])}
             />
           )}
-        </Card>
+        </DataFetcher>
       ))}
     </Rail>
   );

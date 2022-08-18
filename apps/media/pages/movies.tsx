@@ -12,7 +12,7 @@ import { getImageSrc, formatYear } from "@skylark-reference-apps/lib";
 import { useAllMovies } from "../hooks/useMoviesSet";
 import { useAllGenres } from "../hooks/useGenres";
 
-import { Card } from "../components/card";
+import { DataFetcher } from "../components/dataFetcher";
 
 const Movies: NextPage = () => {
   const [genre, setGenre] = useState("");
@@ -49,7 +49,7 @@ const Movies: NextPage = () => {
       <Skeleton show={isLoading}>
         <div className="grid grid-cols-2 gap-x-4 gap-y-6 px-gutter sm:px-sm-gutter md:grid-cols-3 lg:grid-cols-4 lg:px-lg-gutter xl:px-xl-gutter 2xl:grid-cols-6">
           {movies?.map(({ self }, index) => (
-            <Card key={index} self={self}>
+            <DataFetcher key={index} self={self}>
               {(movie) => (
                 <MovieThumbnail
                   backgroundImage={getImageSrc(
@@ -69,7 +69,7 @@ const Movies: NextPage = () => {
                   title={movie.title?.short || ""}
                 />
               )}
-            </Card>
+            </DataFetcher>
           ))}
         </div>
       </Skeleton>

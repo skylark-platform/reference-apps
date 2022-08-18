@@ -13,7 +13,7 @@ const Data: FC<{
   return !isLoading && data ? <>{children(data)}</> : <Skeleton show />;
 };
 
-export const Card: FC<{
+export const DataFetcher: FC<{
   children(data: AllEntertainment): ReactNode;
   self: string;
 }> = (props) => {
