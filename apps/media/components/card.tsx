@@ -10,7 +10,7 @@ const Data: FC<{
 }> = ({ children, self }) => {
   const { data, isLoading } = useSingleObjectBySelf(self);
 
-  return <>{!isLoading && data ? children(data) : <Skeleton show />}</>;
+  return !isLoading && data ? <>{children(data)}</> : <Skeleton show />;
 };
 
 export const Card: FC<{

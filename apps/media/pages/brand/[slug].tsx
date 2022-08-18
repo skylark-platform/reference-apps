@@ -1,8 +1,6 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 import {
-  EpisodeThumbnail,
-  Rail,
   Header,
   CallToAction,
   Hero,
@@ -12,13 +10,14 @@ import {
 import {
   Episode,
   formatReleaseDate,
-  getImageSrc,
   getTitleByOrder,
   Season,
 } from "@skylark-reference-apps/lib";
 import { useRouter } from "next/router";
 import { useBrandWithSeasonBySlug } from "../../hooks/useBrandWithSeasonBySlug";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
+
+import { SeasonRail } from "../../components/seasonRail";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject("brand", context.query.slug as string);
@@ -125,32 +124,13 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                   className="my-6 w-full"
                   key={season.number || season.objectTitle || season.slug}
                 >
-                  <Rail displayCount header={`Season ${season.number || "-"}`}>
-                    {season.items?.isExpanded &&
-                      (season.items.objects as Episode[])
-                        .filter((ep) => ep.isExpanded && ep.type === "episode")
-                        .sort(sortEpisodesByNumber)
-                        .map((ep: Episode) => (
-                          <EpisodeThumbnail
-                            backgroundImage={getImageSrc(
-                              ep.images,
-                              "Thumbnail",
-                              "250x250"
-                            )}
-                            description={
-                              ep.synopsis?.medium || ep.synopsis?.short || ""
-                            }
-                            href={`/episode/${ep.slug}`}
-                            key={ep.objectTitle}
-                            number={ep.number || 0}
-                            title={getTitleByOrder(
-                              ep?.title,
-                              ["short", "medium"],
-                              ep.objectTitle
-                            )}
-                          />
-                        ))}
-                  </Rail>
+                  <SeasonRail
+                    episodeDescription={["medium", "short"]}
+                    episodeTitle={["short", "medium"]}
+                    header={`Season ${season.number || "-"}`}
+                    item={season}
+                    thumbnailSize="250x250"
+                  />
                 </div>
               )
           )}

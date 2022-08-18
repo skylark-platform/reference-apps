@@ -1,17 +1,18 @@
 import { useState } from "react";
 import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
-import { MdRefresh } from "react-icons/md";
 import {
-  Button,
   Dropdown,
   MovieThumbnail,
   Skeleton,
   H4,
 } from "@skylark-reference-apps/react";
+
 import { getImageSrc, formatYear } from "@skylark-reference-apps/lib";
 import { useAllMovies } from "../hooks/useMoviesSet";
 import { useAllGenres } from "../hooks/useGenres";
+
+import { Card } from "../components/card";
 
 const Movies: NextPage = () => {
   const [genre, setGenre] = useState("");
@@ -47,26 +48,29 @@ const Movies: NextPage = () => {
         ))}
       <Skeleton show={isLoading}>
         <div className="grid grid-cols-2 gap-x-4 gap-y-6 px-gutter sm:px-sm-gutter md:grid-cols-3 lg:grid-cols-4 lg:px-lg-gutter xl:px-xl-gutter 2xl:grid-cols-6">
-          {movies?.map((movie) => (
-            <MovieThumbnail
-              backgroundImage={getImageSrc(
-                movie?.images,
-                "Thumbnail",
-                "384x216"
+          {movies?.map(({ self }, index) => (
+            <Card key={index} self={self}>
+              {(movie) => (
+                <MovieThumbnail
+                  backgroundImage={getImageSrc(
+                    movie?.images,
+                    "Thumbnail",
+                    "384x216"
+                  )}
+                  contentLocation="below"
+                  duration="1h 59m"
+                  href={
+                    movie.type && movie.slug
+                      ? `/${movie.type}/${movie.slug}`
+                      : ""
+                  }
+                  key={movie.objectTitle || movie.uid || movie.slug}
+                  releaseDate={formatYear(movie.releaseDate)}
+                  title={movie.title?.short || ""}
+                />
               )}
-              contentLocation="below"
-              duration="1h 59m"
-              href={
-                movie.type && movie.slug ? `/${movie.type}/${movie.slug}` : ""
-              }
-              key={movie.objectTitle || movie.uid || movie.slug}
-              releaseDate={formatYear(movie.releaseDate)}
-              title={movie.title?.short || ""}
-            />
+            </Card>
           ))}
-        </div>
-        <div className="flex flex-row justify-center py-28">
-          <Button icon={<MdRefresh />} iconPlacement="left" text="Load more" />
         </div>
       </Skeleton>
     </div>

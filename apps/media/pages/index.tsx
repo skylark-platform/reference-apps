@@ -48,7 +48,11 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                   <CollectionRail section={item} />
                 )}
                 {item.type === "season" && item?.items?.isExpanded && (
-                  <SeasonRail item={item} />
+                  <SeasonRail
+                    episodeDescription={["short", "medium", "long"]}
+                    episodeTitle={["short"]}
+                    item={item}
+                  />
                 )}
               </div>
             );
