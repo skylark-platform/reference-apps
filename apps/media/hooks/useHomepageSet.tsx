@@ -23,6 +23,7 @@ const fields = {
   items: {
     content_url: {
       title: {},
+      slug: {},
       set_type_slug: {},
       self: {},
       title_short: {},

@@ -11,6 +11,7 @@ import {
   Episode,
   formatReleaseDate,
   getTitleByOrder,
+  getSynopsisByOrder,
   Season,
 } from "@skylark-reference-apps/lib";
 import { useRouter } from "next/router";
@@ -67,11 +68,11 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           <Hero bgImage={getImageSrcAndSizeByWindow(brand?.images, "Main")}>
             <div className="flex flex-col">
               <Header
-                description={
-                  brand?.synopsis.long ||
-                  brand?.synopsis.medium ||
-                  brand?.synopsis.short
-                }
+                description={getSynopsisByOrder(brand?.synopsis, [
+                  "long",
+                  "medium",
+                  "short",
+                ])}
                 numberOfItems={seasons.length}
                 rating={
                   brand?.ratings?.isExpanded
