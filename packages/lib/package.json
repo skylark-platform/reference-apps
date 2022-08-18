@@ -21,7 +21,7 @@
     "jest-junit": "^13.0.0"
   },
   "dependencies": {
-    "@aws-amplify/auth": "^4.4.1",
+    "@aws-amplify/auth": "^4.6.1",
     "amazon-cognito-identity-js": "^5.2.3",
     "dayjs": "^1.11.3"
   }

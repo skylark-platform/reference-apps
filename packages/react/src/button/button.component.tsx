@@ -66,7 +66,7 @@ text-white disabled:text-gray-300 font-body rounded-sm cursor-pointer
   if (href && !disabled) {
     return (
       <Link href={href}>
-        <a className={className}>
+        <a aria-label="sign-in-icon" className={className}>
           {icon && <span className={iconClassName}>{icon}</span>}
           {text && <span>{text}</span>}
         </a>
@@ -75,7 +75,12 @@ text-white disabled:text-gray-300 font-body rounded-sm cursor-pointer
   }
 
   return (
-    <button className={className} disabled={disabled} onClick={onClick}>
+    <button
+      aria-label="sign-in-icon"
+      className={className}
+      disabled={disabled}
+      onClick={onClick}
+    >
       {icon && <span className={iconClassName}>{icon}</span>}
       {text && <span>{text}</span>}
     </button>

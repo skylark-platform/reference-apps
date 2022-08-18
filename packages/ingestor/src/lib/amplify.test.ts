@@ -1,5 +1,5 @@
-import Auth from "@aws-amplify/auth";
-import { getToken, signInToCognito } from "./cognito";
+import { Auth } from "@aws-amplify/auth";
+import { getToken, signInToCognito } from "./amplify";
 
 jest.mock("./constants", () => ({
   COGNITO_EMAIL: "email",

@@ -332,7 +332,7 @@ describe("skylark.sets", () => {
       // Assert.
       expect(axiosRequest).toBeCalledWith(
         expect.objectContaining({
-          url: "https://skylarkplatform.io/api/images/?title=download-this-image",
+          url: "https://skylarkplatform.io/api/images/versions/data-source/image-1-set_1/",
           method: "GET",
         })
       );
@@ -347,6 +347,7 @@ describe("skylark.sets", () => {
             image_type_url: "/api/image-types/image-type-1",
             title: "download-this-image",
             schedule_urls: ["/api/schedules/1"],
+            data_source_id: "image-1-set_1",
           },
         })
       );

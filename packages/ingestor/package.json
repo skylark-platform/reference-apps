@@ -13,12 +13,15 @@
     "typescript": "^4.7.3"
   },
   "dependencies": {
-    "@aws-amplify/auth": "^4.5.6",
-    "@aws-amplify/core": "^4.5.6",
+    "@aws-amplify/auth": "^4.6.1",
+    "@aws-amplify/core": "^4.6.1",
+    "@aws-sdk/client-s3": "^3.145.0",
     "@skylark-reference-apps/lib": "*",
+    "@types/lodash": "^4.14.182",
     "airtable": "^0.11.4",
     "axios": "^0.27.2",
-    "dotenv": "^16.0.1"
+    "dotenv": "^16.0.1",
+    "lodash": "^4.17.21"
   },
   "scripts": {
     "tsc": "tsc",

@@ -1,6 +1,6 @@
 import React from "react";
 import { List } from "../../list";
-import { H4 } from "../../typography";
+
 import {
   MediaThumbnail,
   ThumbnailContentLocation,
@@ -27,7 +27,9 @@ export const MovieThumbnail: React.FC<MovieThumbnailProps> = (props) => {
       contentLocation={contentLocation || "inside"}
       duration={undefined}
     >
-      <H4 className="mt-2 mb-0.5 text-white">{title}</H4>
+      <p className="mt-2 mb-0.5 text-[16px] font-normal leading-[20px] text-white md:text-[18px] md:leading-[24px]">
+        {title}
+      </p>
       <List
         contents={[subtitle, ...(tags && tags.length > 0 ? tags : [])]}
         highlightFirst

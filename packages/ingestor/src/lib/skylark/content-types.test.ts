@@ -130,7 +130,15 @@ describe("content-types", () => {
             schedule_urls: [metadata.schedules.default.self],
             is_data_source: true,
             data_source_id: records[0].id,
-            data_source_fields: ["name", "title", "slug"],
+            data_source_fields: [
+              "uid",
+              "self",
+              "name",
+              "slug",
+              "schedule_urls",
+              "is_data_source",
+              "data_source_id",
+            ],
             ...records[0].fields,
           },
         })
@@ -161,7 +169,15 @@ describe("content-types", () => {
             schedule_urls: [metadata.schedules.default.self],
             is_data_source: true,
             data_source_id: records[0].id,
-            data_source_fields: ["name", "title", "slug"],
+            data_source_fields: [
+              "uid",
+              "self",
+              "name",
+              "slug",
+              "schedule_urls",
+              "is_data_source",
+              "data_source_id",
+            ],
             ...records[0].fields,
           },
         })

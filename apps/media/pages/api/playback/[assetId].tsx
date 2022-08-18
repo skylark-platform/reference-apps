@@ -4,8 +4,8 @@ import {
   ApiViewingsResponse,
 } from "@skylark-reference-apps/lib";
 import { NextApiRequest, NextApiResponse } from "next";
-import Amplify from "@aws-amplify/core";
-import Auth from "@aws-amplify/auth";
+import { Amplify } from "@aws-amplify/core";
+import { Auth } from "@aws-amplify/auth";
 import axios from "axios";
 
 const fetchPlaybackUrl = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -28,6 +28,8 @@ const fetchPlaybackUrl = async (req: NextApiRequest, res: NextApiResponse) => {
       region: process.env.COGNITO_AWS_REGION as string,
       userPoolId: process.env.COGNITO_USER_POOL_ID as string,
       userPoolWebClientId: process.env.COGNITO_CLIENT_ID as string,
+      identityPoolId: "",
+      storageBucket: "",
     });
     Amplify.configure(config);
     await Auth.signIn(email, password);

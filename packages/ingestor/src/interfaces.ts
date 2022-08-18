@@ -31,12 +31,14 @@ export interface DimensionAirtables {
   viewingContext: Record<FieldSet>[];
 }
 
+export interface TranslationAirtables {
+  mediaObjects: Record<FieldSet>[];
+}
+
 export interface Airtables {
   dimensions: DimensionAirtables;
-  brands: Record<FieldSet>[];
-  seasons: Record<FieldSet>[];
-  episodes: Record<FieldSet>[];
-  movies: Record<FieldSet>[];
+  translations: TranslationAirtables;
+  mediaObjects: Record<FieldSet>[];
   roles: Record<FieldSet>[];
   people: Record<FieldSet>[];
   credits: Record<FieldSet>[];
@@ -61,7 +63,8 @@ export type ApiObjectType =
   | "genres"
   | "themes"
   | "ratings"
-  | "computed-scheduled-items";
+  | "computed-scheduled-items"
+  | "assets";
 
 export type ApiContentObjectType = "image-types" | "asset-types";
 
@@ -81,6 +84,7 @@ export type ApiSkylarkObjectWithAllPotentialFields = Omit<
     title?: string;
     name?: string;
     data_source_fields?: string[];
+    data_source_id: string;
   };
 export interface SetConfig extends Partial<ApiEntertainmentObject> {
   title: string;

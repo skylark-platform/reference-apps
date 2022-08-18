@@ -29,29 +29,6 @@ jobs:
           path: "!(node_modules)/**/reports/jest-junit.xml"
           reporter: jest-junit
 
-  build-and-test:
-    needs: lint
-    runs-on: ubuntu-latest
-    name: Build and test ${{ matrix.tests.app }} app
-    strategy:
-      matrix:
-        tests: [{ app: "media", percy_secret: "PERCY_MEDIA_APP_TOKEN" }]
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 14
-          cache: yarn
-      - run: yarn
-      - run: yarn build
-        env:
-          NEXT_PUBLIC_SKYLARK_API_URL: https://api.showcase-test.eng-james-wallis.skylarkplatform.io
-        working-directory: apps/${{ matrix.tests.app }}
-      - run: yarn test:percy
-        working-directory: apps/${{ matrix.tests.app }}
-        env:
-          PERCY_TOKEN: ${{ secrets[matrix.tests.percy_secret] }}
-
   chromatic:
     needs: lint
     runs-on: ubuntu-latest
