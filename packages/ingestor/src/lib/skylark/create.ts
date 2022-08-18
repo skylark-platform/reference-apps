@@ -162,8 +162,8 @@ export const bulkCreateOrUpdateObjectsUsingDataSourceId = async <
     const existingObject =
       matchingBatchResponse?.code !== 404 ? matchingBatchResponse?.data : null;
     const type = objectTypes[object.data_source_id];
-    const url = existingObject ? existingObject.self : `/api/${type}/`;
-    const method = existingObject ? "PATCH" : "POST";
+    const url = `/api/${type}/versions/data-source/${object.data_source_id}/`;
+    const method = "PUT";
     return {
       id: `${method}-${url}`,
       method,
@@ -390,7 +390,6 @@ export const convertAirtableFieldsToSkylarkObject = (
     number_of_episodes: fields?.number_of_episodes as number,
     episode_number: fields?.episode_number as number,
     value: fields?.value as string,
-    is_data_source: true,
     data_source_id: airtableId,
   };
 
@@ -434,9 +433,6 @@ export const convertAirtableFieldsToSkylarkObject = (
       object
     );
 
-  // Add data_source_fields last so that all fields are captured
-  sanitizedObject.data_source_fields = Object.keys(sanitizedObject);
-
   return sanitizedObject;
 };
 
@@ -452,8 +448,7 @@ export const createOrUpdateAirtableObjectsInSkylark = async <
 >(
   airtableRecords: Records<FieldSet>,
   metadata: Metadata,
-  parents?: ApiEntertainmentObjectWithAirtableId[],
-  alternativeLookupMethod?: "title" | "slug"
+  parents?: ApiEntertainmentObjectWithAirtableId[]
 ) => {
   const objectData = airtableRecords.map(({ fields, id }) => {
     const object = convertAirtableFieldsToSkylarkObject(
@@ -470,16 +465,11 @@ export const createOrUpdateAirtableObjectsInSkylark = async <
     objectTypes[id] = (fields.skylark_object_type as string) || _table.name;
   });
 
-  const createOrUpdateBatchResponseData = alternativeLookupMethod
-    ? await bulkCreateOrUpdateObjectsWithLookup<T>(
-        objectData,
-        objectTypes,
-        alternativeLookupMethod
-      )
-    : await bulkCreateOrUpdateObjectsUsingDataSourceId<T>(
-        objectData,
-        objectTypes
-      );
+  const createOrUpdateBatchResponseData =
+    await bulkCreateOrUpdateObjectsUsingDataSourceId<T>(
+      objectData,
+      objectTypes
+    );
 
   const parseObjectsAndCreateImages = await Promise.all(
     createOrUpdateBatchResponseData.map(

@@ -464,15 +464,7 @@ describe("skylark.sets", () => {
         uid: "",
         self: "",
         schedule_urls: [metadata.schedules.default.self],
-        is_data_source: true,
         data_source_id: "1",
-        data_source_fields: [
-          "uid",
-          "self",
-          "schedule_urls",
-          "is_data_source",
-          "data_source_id",
-        ],
       };
 
       const skylarkObject = convertAirtableFieldsToSkylarkObject(
@@ -499,17 +491,8 @@ describe("skylark.sets", () => {
         uid: "",
         self: "",
         schedule_urls: [metadata.schedules.default.self],
-        is_data_source: true,
         data_source_id: "1",
         parent_url: parent.self,
-        data_source_fields: [
-          "uid",
-          "self",
-          "parent_url",
-          "schedule_urls",
-          "is_data_source",
-          "data_source_id",
-        ],
       };
 
       const skylarkObject = convertAirtableFieldsToSkylarkObject(
@@ -725,7 +708,7 @@ describe("skylark.sets", () => {
       );
     });
 
-    it("Makes a POST request to create records that don't match existing objects in Skylark", async () => {
+    it("Makes a PUT request to create records that don't match existing objects in Skylark", async () => {
       // Arrange.
       const getData: ApiBatchResponse[] = airtableEpisodeRecords.map(
         (record) => ({
@@ -772,21 +755,11 @@ describe("skylark.sets", () => {
                 slug: "episode-1",
                 title_short: "short title",
                 schedule_urls: ["/api/schedules/1"],
-                is_data_source: true,
                 data_source_id: "airtable-episode-1",
-                data_source_fields: [
-                  "uid",
-                  "self",
-                  "slug",
-                  "title_short",
-                  "schedule_urls",
-                  "is_data_source",
-                  "data_source_id",
-                ],
               }),
-              id: "POST-/api/episodes/",
-              method: "POST",
-              url: "/api/episodes/",
+              id: "PUT-/api/episodes/versions/data-source/airtable-episode-1/",
+              method: "PUT",
+              url: "/api/episodes/versions/data-source/airtable-episode-1/",
             },
             {
               data: JSON.stringify({
@@ -795,28 +768,18 @@ describe("skylark.sets", () => {
                 slug: "episode-2",
                 synopsis_short: "short synopsis",
                 schedule_urls: ["/api/schedules/1"],
-                is_data_source: true,
                 data_source_id: "airtable-episode-2",
-                data_source_fields: [
-                  "uid",
-                  "self",
-                  "slug",
-                  "synopsis_short",
-                  "schedule_urls",
-                  "is_data_source",
-                  "data_source_id",
-                ],
               }),
-              id: "POST-/api/episodes/",
-              method: "POST",
-              url: "/api/episodes/",
+              id: "PUT-/api/episodes/versions/data-source/airtable-episode-2/",
+              method: "PUT",
+              url: "/api/episodes/versions/data-source/airtable-episode-2/",
             },
           ],
         })
       );
     });
 
-    it("Makes a PATCH request to update records that match existing objects in Skylark", async () => {
+    it("Makes a PUT request to update records that match existing objects in Skylark", async () => {
       // Arrange.
       const getData: ApiBatchResponse[] = airtableEpisodeRecords.map(
         (record) => ({
@@ -867,21 +830,11 @@ describe("skylark.sets", () => {
                 uid: "episode-1",
                 self: "/api/episodes/episode-1",
                 schedule_urls: ["/api/schedules/1"],
-                is_data_source: true,
                 data_source_id: "airtable-episode-1",
-                data_source_fields: [
-                  "uid",
-                  "self",
-                  "slug",
-                  "title_short",
-                  "schedule_urls",
-                  "is_data_source",
-                  "data_source_id",
-                ],
               }),
-              id: "PATCH-/api/episodes/episode-1",
-              method: "PATCH",
-              url: "/api/episodes/episode-1",
+              id: "PUT-/api/episodes/versions/data-source/airtable-episode-1/",
+              method: "PUT",
+              url: "/api/episodes/versions/data-source/airtable-episode-1/",
             },
             {
               data: JSON.stringify({
@@ -890,21 +843,11 @@ describe("skylark.sets", () => {
                 uid: "episode-2",
                 self: "/api/episodes/episode-2",
                 schedule_urls: ["/api/schedules/1"],
-                is_data_source: true,
                 data_source_id: "airtable-episode-2",
-                data_source_fields: [
-                  "uid",
-                  "self",
-                  "slug",
-                  "synopsis_short",
-                  "schedule_urls",
-                  "is_data_source",
-                  "data_source_id",
-                ],
               }),
-              id: "PATCH-/api/episodes/episode-2",
-              method: "PATCH",
-              url: "/api/episodes/episode-2",
+              id: "PUT-/api/episodes/versions/data-source/airtable-episode-2/",
+              method: "PUT",
+              url: "/api/episodes/versions/data-source/airtable-episode-2/",
             },
           ],
         })
@@ -1028,22 +971,11 @@ describe("skylark.sets", () => {
                 synopsis_short: "short synopsis",
                 parent_url: "/api/episodes/episode-1",
                 schedule_urls: ["/api/schedules/1"],
-                is_data_source: true,
                 data_source_id: "airtable-episode-3",
-                data_source_fields: [
-                  "uid",
-                  "self",
-                  "slug",
-                  "synopsis_short",
-                  "parent_url",
-                  "schedule_urls",
-                  "is_data_source",
-                  "data_source_id",
-                ],
               }),
-              id: "POST-/api/episodes/",
-              method: "POST",
-              url: "/api/episodes/",
+              id: "PUT-/api/episodes/versions/data-source/airtable-episode-3/",
+              method: "PUT",
+              url: "/api/episodes/versions/data-source/airtable-episode-3/",
             },
           ],
         })
