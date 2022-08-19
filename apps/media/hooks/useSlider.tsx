@@ -117,7 +117,7 @@ export const setFetcher = ([slug, deviceType]: [
     );
 };
 
-export const useSetBySlug = (slug: string) => {
+export const useSlider = (slug: string) => {
   const deviceType = useDeviceType();
 
   const { data, error } = useSWR<AllEntertainment, Error>(
@@ -126,7 +126,7 @@ export const useSetBySlug = (slug: string) => {
   );
 
   return {
-    set: data as Set | undefined,
+    slider: data as Set | undefined,
     isLoading: !error && !data,
     notFound: error?.message === "Set not found",
     error,

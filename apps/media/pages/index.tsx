@@ -36,18 +36,18 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           if (item.isExpanded) {
             const key = `${item.self}-${item.slug}-${item.uid}-${item.objectTitle}`;
             if (item.type === "slider") {
-              return <Slider index={index} item={item} key={key} />;
+              return (
+                <Slider isFirstOnPage={index === 0} item={item} key={key} />
+              );
             }
 
             return (
               <div className="my-6 w-full" key={key}>
-                {item.type === "rail" && item?.items?.isExpanded && (
-                  <MainRail section={item} />
-                )}
-                {item.type === "collection" && item?.items?.isExpanded && (
+                {item.type === "rail" && <MainRail section={item} />}
+                {item.type === "collection" && (
                   <CollectionRail section={item} />
                 )}
-                {item.type === "season" && item?.items?.isExpanded && (
+                {item.type === "season" && (
                   <SeasonRail
                     episodeDescription={["short", "medium", "long"]}
                     episodeTitle={["short"]}

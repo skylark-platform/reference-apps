@@ -31,9 +31,7 @@ export const SeasonRail: FC<SeasonRailProps> = ({
   header = item.title?.medium || item.title?.short,
   thumbnailSize = "384x216",
 }) => {
-  const items = item?.items?.isExpanded
-    ? (item.items.objects as Episode[])
-    : [];
+  const items = item?.items ? (item.items.objects as Episode[]) : [];
 
   return (
     <Rail displayCount header={header}>

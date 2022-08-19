@@ -6,7 +6,8 @@ import { getImageSrc, AllEntertainment } from "@skylark-reference-apps/lib";
 import { DataFetcher } from "./dataFetcher";
 
 export const MainRail: FC<{ section: AllEntertainment }> = ({ section }) => {
-  const items = section?.items?.isExpanded ? section.items.objects : [];
+  console.log("section", section);
+  const items = section?.items ? section.items.objects : [];
 
   return (
     <Rail displayCount header={section.title?.medium || section.title?.short}>

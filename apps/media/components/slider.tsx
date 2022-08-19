@@ -12,14 +12,14 @@ import {
   AllEntertainment,
 } from "@skylark-reference-apps/lib";
 
-import { useSetBySlug } from "../hooks/useSetBySlug";
+import { useSlider } from "../hooks/useSlider";
 
 export const Slider: FC<{
   item: AllEntertainment;
-  index: number;
+  isFirstOnPage: boolean;
   key: string;
-}> = ({ item, index, key }) => {
-  const { set, isLoading } = useSetBySlug(item?.slug);
+}> = ({ item, isFirstOnPage, key }) => {
+  const { slider, isLoading } = useSlider(item?.slug);
 
   const { query } = useRouter();
 
@@ -27,12 +27,12 @@ export const Slider: FC<{
     ? parseInt(query.carousel_item as string, 10)
     : undefined;
 
-  const items = set?.items?.isExpanded ? set.items.objects : [];
+  const items = slider?.items?.isExpanded ? slider.items.objects : [];
 
   return (
     // If the carousel is the first item, add negative margin to make it appear through the navigation
     <div
-      className={`h-[90vh] w-full md:h-[95vh] ${index === 0 ? "-mt-48" : ""}`}
+      className={`h-[90vh] w-full md:h-[95vh] ${isFirstOnPage ? "-mt-48" : ""}`}
       key={key}
     >
       <Skeleton show={isLoading}>
