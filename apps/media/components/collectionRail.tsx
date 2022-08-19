@@ -12,7 +12,7 @@ import { DataFetcher } from "./dataFetcher";
 export const CollectionRail: FC<{ section: AllEntertainment }> = ({
   section,
 }) => {
-  const items = section?.items ? section.items.objects : [];
+  const items = section.items?.objects ?? [];
 
   return (
     <Rail displayCount header={section.title?.medium || section.title?.short}>
