@@ -40,21 +40,26 @@ const createOrUpdateSet = async (
   );
 
   let object = {};
+  let url = existingSet ? `/api/sets/${existingSet.uid}` : `/api/sets/`;
+  let method = existingSet ? "PUT" : "POST";
+
   if (airtableProperties) {
     object = convertAirtableFieldsToSkylarkObject(
       airtableProperties.id,
       airtableProperties.fields,
       metadata
     );
+
+    url = `/api/sets/versions/data-source/${airtableProperties.id}/`;
+    method = "PUT";
   }
 
-  const languages = ["", "pt-pt"];
+  const languages = [""];
 
-  const url = existingSet ? `/api/sets/${existingSet.uid}` : `/api/sets/`;
   const [{ data: firstSet }] = await Promise.all(
     languages.map((language) =>
       authenticatedSkylarkRequest<ApiEntertainmentObject>(url, {
-        method: existingSet ? "PUT" : "POST",
+        method,
         data: {
           schedule_urls: [metadata.schedules.default.self],
           ...existingSet,
