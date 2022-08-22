@@ -17,8 +17,7 @@ import { useSlider } from "../hooks/useSlider";
 export const Slider: FC<{
   item: AllEntertainment;
   isFirstOnPage: boolean;
-  key: string;
-}> = ({ item, isFirstOnPage, key }) => {
+}> = ({ item, isFirstOnPage }) => {
   const { slider, isLoading } = useSlider(item?.slug);
 
   const { query } = useRouter();
@@ -33,7 +32,6 @@ export const Slider: FC<{
     // If the carousel is the first item, add negative margin to make it appear through the navigation
     <div
       className={`h-[90vh] w-full md:h-[95vh] ${isFirstOnPage ? "-mt-48" : ""}`}
-      key={key}
     >
       <Skeleton show={isLoading}>
         <Carousel
