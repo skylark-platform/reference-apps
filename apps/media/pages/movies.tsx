@@ -4,7 +4,7 @@ import { NextSeo } from "next-seo";
 import {
   Dropdown,
   MovieThumbnail,
-  Skeleton,
+  SkeletonPage,
   H4,
 } from "@skylark-reference-apps/react";
 
@@ -46,7 +46,7 @@ const Movies: NextPage = () => {
             <H4 className="mt-2 mb-0.5 text-white">{`No movies found for Genre: ${genre}`}</H4>
           </div>
         ))}
-      <Skeleton show={isLoading}>
+      <SkeletonPage show={isLoading}>
         <div className="grid grid-cols-2 gap-x-4 gap-y-6 px-gutter sm:px-sm-gutter md:grid-cols-3 lg:grid-cols-4 lg:px-lg-gutter xl:px-xl-gutter 2xl:grid-cols-6">
           {movies?.map(({ self, slug }, index) => (
             <DataFetcher key={index} self={self} slug={slug}>
@@ -72,7 +72,7 @@ const Movies: NextPage = () => {
             </DataFetcher>
           ))}
         </div>
-      </Skeleton>
+      </SkeletonPage>
     </div>
   );
 };

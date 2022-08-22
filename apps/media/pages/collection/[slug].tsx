@@ -4,7 +4,7 @@ import {
   Header,
   StandardThumbnail,
   Hero,
-  Skeleton,
+  SkeletonPage,
   getImageSrcAndSizeByWindow,
 } from "@skylark-reference-apps/react";
 import {
@@ -53,7 +53,7 @@ const CollectionPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         openGraph={{ images: seo.images }}
         title={titleLongToShort || seo.title}
       />
-      <Skeleton show={!collection && !error}>
+      <SkeletonPage show={!collection && !error}>
         <div className="-mt-48"></div>
         <Hero bgImage={getImageSrcAndSizeByWindow(collection?.images, "Main")}>
           <Header
@@ -83,7 +83,7 @@ const CollectionPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
             />
           ))}
         </div>
-      </Skeleton>
+      </SkeletonPage>
     </div>
   );
 };

@@ -4,7 +4,7 @@ import {
   InformationPanel,
   MetadataPanel,
   Player,
-  Skeleton,
+  SkeletonPage,
 } from "@skylark-reference-apps/react";
 import {
   Episode,
@@ -21,7 +21,7 @@ import {
   MdMode,
   MdCalendarToday,
 } from "react-icons/md";
-import { useSingleObjectBySlug } from "../../hooks/useSingleObjectBySlug";
+import { useSingleObject } from "../../hooks/useSingleObject";
 import { useAssetPlaybackUrl } from "../../hooks/useAssetPlaybackUrl";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 
@@ -39,7 +39,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
-  const { data } = useSingleObjectBySlug("episode", query?.slug as string);
+  const { data } = useSingleObject("episode", query?.slug as string);
   const assetUid = data?.items?.isExpanded ? data?.items?.objects[0]?.uid : "";
   const { playbackUrl, isLoading } = useAssetPlaybackUrl(assetUid);
   // if no object has no items then default to static video
@@ -78,7 +78,7 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         openGraph={{ images: seo.images }}
         title={titleLongToShort || seo.title}
       />
-      <Skeleton show={!episode}>
+      <SkeletonPage show={!episode}>
         <div className="flex h-full w-full justify-center pb-10 md:pb-16">
           <Player
             poster={getImageSrc(episode?.images, "Thumbnail")}
@@ -164,7 +164,7 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
             </div>
           </div>
         )}
-      </Skeleton>
+      </SkeletonPage>
     </div>
   );
 };

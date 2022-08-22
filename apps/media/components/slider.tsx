@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import {
   Carousel,
   getImageSrcAndSizeByWindow,
-  Skeleton,
+  SkeletonPage,
 } from "@skylark-reference-apps/react";
 import {
   EntertainmentType,
@@ -33,7 +33,7 @@ export const Slider: FC<{
     <div
       className={`h-[90vh] w-full md:h-[95vh] ${isFirstOnPage ? "-mt-48" : ""}`}
     >
-      <Skeleton show={isLoading}>
+      <SkeletonPage show={isLoading}>
         <Carousel
           activeItem={activeCarouselItem}
           changeInterval={8}
@@ -53,7 +53,7 @@ export const Slider: FC<{
             releaseDate: carouselItem.releaseDate,
           }))}
         />
-      </Skeleton>
+      </SkeletonPage>
     </div>
   );
 };

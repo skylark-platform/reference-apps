@@ -1,6 +1,6 @@
 import type { GetStaticProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
-import { Skeleton } from "@skylark-reference-apps/react";
+import { SkeletonPage } from "@skylark-reference-apps/react";
 
 import { homepageSlug, useHomepageSet } from "../hooks/useHomepageSet";
 import { getSeoDataForSet, SeoObjectData } from "../lib/getPageSeoData";
@@ -31,7 +31,7 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   return (
     <div className="mb-20 mt-48 flex min-h-screen flex-col items-center bg-gray-900">
       <NextSeo openGraph={{ images: seo.images }} />
-      <Skeleton show={!homepage}>
+      <SkeletonPage show={!homepage}>
         {homepageItems.map((item, index) => {
           if (item.isExpanded) {
             const key = `${item.self}-${item.slug}-${item.uid}-${item.objectTitle}`;
@@ -60,7 +60,7 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
 
           return <>{item.isExpanded && item.objectTitle}</>;
         })}
-      </Skeleton>
+      </SkeletonPage>
     </div>
   );
 };

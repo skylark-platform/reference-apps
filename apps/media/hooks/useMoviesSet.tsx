@@ -16,6 +16,7 @@ const fieldsToExpand = {};
 const fields = {
   uid: {},
   self: {},
+  slug: {},
 };
 
 export const moviesSetFetcher = ([endpoint, genreUid]: [

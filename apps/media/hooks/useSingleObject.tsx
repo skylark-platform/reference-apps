@@ -103,7 +103,7 @@ export const singleObjectFetcher = ([endpoint, slug]: [
       return parseSkylarkObject(object);
     });
 
-export const useSingleObjectBySlug = (
+export const useSingleObject = (
   type: EntertainmentType | null,
   slug: string | undefined
 ) => {

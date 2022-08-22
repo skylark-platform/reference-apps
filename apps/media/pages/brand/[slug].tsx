@@ -5,7 +5,7 @@ import {
   CallToAction,
   Hero,
   getImageSrcAndSizeByWindow,
-  Skeleton,
+  SkeletonPage,
 } from "@skylark-reference-apps/react";
 import {
   Episode,
@@ -63,7 +63,7 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         openGraph={{ images: seo.images }}
         title={titleShortToLong || seo.title}
       />
-      <Skeleton show={!brand && !error}>
+      <SkeletonPage show={!brand && !error}>
         <div className="-mt-48">
           <Hero bgImage={getImageSrcAndSizeByWindow(brand?.images, "Main")}>
             <div className="flex flex-col">
@@ -135,7 +135,7 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                 </div>
               )
           )}
-      </Skeleton>
+      </SkeletonPage>
     </div>
   );
 };
