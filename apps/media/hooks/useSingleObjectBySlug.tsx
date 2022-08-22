@@ -8,7 +8,6 @@ import {
   EntertainmentType,
   convertObjectTypeToSkylarkEndpoint,
   ApiMultipleEntertainmentObjects,
-  ApiEntertainmentObject,
 } from "@skylark-reference-apps/lib";
 
 const fieldsToExpand = {
@@ -97,19 +96,11 @@ export const singleObjectFetcher = ([endpoint, slug]: [
       { headers: { "Accept-Language": "en-gb" } }
     )
     .then(({ data }) => {
-      console.log("DATTAAAA", data);
       const {
         objects: [object],
       } = data;
       return parseSkylarkObject(object);
     });
-
-export const singleSelfObjectFetcher = ([endpoint]: [endpoint: string]) =>
-  axios
-    .get<ApiEntertainmentObject>(`${SKYLARK_API}${endpoint}/?${apiQuery}`, {
-      headers: { "Accept-Language": "en-gb" },
-    })
-    .then(({ data }) => parseSkylarkObject(data));
 
 export const useSingleObjectBySlug = (
   type: EntertainmentType | null,
