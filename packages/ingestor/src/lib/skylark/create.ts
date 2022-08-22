@@ -7,7 +7,7 @@ import {
   ApiPerson,
 } from "@skylark-reference-apps/lib";
 import { Attachment, FieldSet, Records, Record } from "airtable";
-import { flatten } from "lodash";
+import { compact, flatten } from "lodash";
 import {
   ApiEntertainmentObjectWithAirtableId,
   ApiSkylarkObjectWithAllPotentialFields,
@@ -393,10 +393,11 @@ export const convertAirtableFieldsToSkylarkObject = (
     data_source_id: airtableId,
   };
 
-  const credits = getCreditsFromField(fields.credits as string[], metadata);
-  if (credits) {
-    object.credits = credits;
-  }
+  // Credits cannot be updated when using data source URLs. See SL-2204
+  // const credits = getCreditsFromField(fields.credits as string[], metadata);
+  // if (credits) {
+  //   object.credits = credits;
+  // }
 
   const genreUrls = getUrlsFromField(
     fields.genres as string[],
@@ -437,6 +438,41 @@ export const convertAirtableFieldsToSkylarkObject = (
 };
 
 /**
+ * updateCredits - updates Credits using an object's self property
+ * Workaround for SL-2204 using the normal object endpoints
+ */
+export const updateCredits = async <T extends ApiBaseObject>(
+  objects: T[],
+  records: Records<FieldSet>,
+  metadata: Metadata
+) => {
+  const updateCreditsBatchRequestData = objects.map((object) => {
+    const record = records.find(
+      ({ id }) => id === object.data_source_id
+    ) as Record<FieldSet>;
+    if (!record) {
+      return null;
+    }
+
+    const url = object.self;
+    const method = "PATCH"; // PATCH to not update other fields
+    const credits =
+      getCreditsFromField(record.fields.credits as string[], metadata) || [];
+
+    return {
+      id: `CREDITS-${object.uid}`,
+      method,
+      url,
+      data: JSON.stringify({
+        credits: credits || [],
+      }),
+    };
+  });
+
+  await batchSkylarkRequest<T>(compact(updateCreditsBatchRequestData));
+};
+
+/**
  * createOrUpdateAirtableObjectsInSkylark - creates or updates objects in Skylark using Records from Airtable
  * @param airtableRecords - Airtable records from a table of the given type
  * @param metadata
@@ -470,6 +506,12 @@ export const createOrUpdateAirtableObjectsInSkylark = async <
       objectData,
       objectTypes
     );
+
+  await updateCredits<T>(
+    createOrUpdateBatchResponseData,
+    airtableRecords,
+    metadata
+  );
 
   const parseObjectsAndCreateImages = await Promise.all(
     createOrUpdateBatchResponseData.map(

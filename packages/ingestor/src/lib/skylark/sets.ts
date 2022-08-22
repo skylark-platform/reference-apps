@@ -48,23 +48,31 @@ const createOrUpdateSet = async (
     );
   }
 
-  const url = existingSet ? `/api/sets/${existingSet.uid}` : `/api/sets/`;
-  const { data: set } =
-    await authenticatedSkylarkRequest<ApiEntertainmentObject>(url, {
-      method: existingSet ? "PUT" : "POST",
-      data: {
-        schedule_urls: [metadata.schedules.default.self],
-        ...existingSet,
-        ...object,
-        uid: existingSet?.uid || "",
-        self: existingSet?.self || "",
-        title,
-        slug,
-        set_type_url: setType?.self,
-      },
-    });
+  const languages = ["", "pt-pt"];
 
-  return set;
+  const url = existingSet ? `/api/sets/${existingSet.uid}` : `/api/sets/`;
+  const [{ data: firstSet }] = await Promise.all(
+    languages.map((language) =>
+      authenticatedSkylarkRequest<ApiEntertainmentObject>(url, {
+        method: existingSet ? "PUT" : "POST",
+        data: {
+          schedule_urls: [metadata.schedules.default.self],
+          ...existingSet,
+          ...object,
+          uid: existingSet?.uid || "",
+          self: existingSet?.self || "",
+          title,
+          slug,
+          set_type_url: setType?.self,
+        },
+        headers: {
+          "Accept-Language": language,
+        },
+      })
+    )
+  );
+
+  return firstSet;
 };
 
 /**
