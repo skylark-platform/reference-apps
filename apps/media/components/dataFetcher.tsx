@@ -25,8 +25,9 @@ export const DataFetcher: FC<{
   children(data: AllEntertainment): ReactNode;
   self: string;
   slug: string;
+  isVertical?: boolean;
 }> = (props) => {
-  const { children, self, slug } = props;
+  const { children, self, slug, isVertical = false } = props;
   const { ref, inView } = useInView({ triggerOnce: true });
 
   if (!self || !slug) return <></>;
@@ -38,7 +39,7 @@ export const DataFetcher: FC<{
           {children}
         </Data>
       ) : (
-        <Skeleton show />
+        <Skeleton isVertical={isVertical} show />
       )}
     </div>
   );

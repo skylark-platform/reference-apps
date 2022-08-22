@@ -3,6 +3,7 @@ import React from "react";
 
 interface SkeletonProps {
   show: boolean;
+  isVertical?: boolean;
 }
 
 const item = {
@@ -12,7 +13,10 @@ const item = {
   show: { opacity: 1, transition: { duration: 1 } },
 };
 
-export const Skeleton: React.FC<SkeletonProps> = ({ show = true }) => (
+export const Skeleton: React.FC<SkeletonProps> = ({
+  show = true,
+  isVertical,
+}) => (
   <>
     {show && (
       <motion.div
@@ -20,10 +24,12 @@ export const Skeleton: React.FC<SkeletonProps> = ({ show = true }) => (
         style={{ width: "100%" }}
         variants={item}
       >
-        <div className="aspect-w-16 aspect-h-9 animate-pulse rounded-sm bg-gray-700"></div>
+        <div
+          className={` ${
+            isVertical ? "aspect-h-16" : "aspect-h-9"
+          } aspect-w-16 animate-pulse rounded-sm bg-gray-700`}
+        ></div>
       </motion.div>
     )}
   </>
 );
-
-export default Skeleton;

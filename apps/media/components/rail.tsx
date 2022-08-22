@@ -24,7 +24,6 @@ export const MainRail: FC<{ section: AllEntertainment }> = ({ section }) => {
                 movie.type && movie.slug ? `/${movie.type}/${movie.slug}` : ""
               }
               key={movie.objectTitle || movie.uid || movie.slug}
-              releaseDate={movie.releaseDate}
               title={movie.title?.short || ""}
             />
           )}
