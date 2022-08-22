@@ -31,8 +31,11 @@ const fields = {
       items: {
         content_url: {
           self: {},
+          slug: {},
         },
         self: {},
+        episode_number: {},
+        slug: {},
       },
     },
   },

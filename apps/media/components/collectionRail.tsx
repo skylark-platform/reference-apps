@@ -12,12 +12,12 @@ import { DataFetcher } from "./dataFetcher";
 export const CollectionRail: FC<{ section: AllEntertainment }> = ({
   section,
 }) => {
-  const items = section.items?.objects ?? [];
+  const items = section.items?.isExpanded ? section.items?.objects : [];
 
   return (
     <Rail displayCount header={section.title?.medium || section.title?.short}>
-      {items.map(({ self }, index) => (
-        <DataFetcher key={index} self={self}>
+      {items.map(({ self, slug }, index) => (
+        <DataFetcher key={index} self={self} slug={slug}>
           {(item: AllEntertainment) => (
             <CollectionThumbnail
               backgroundImage={getImageSrc(item.images, "Thumbnail", "350x350")}

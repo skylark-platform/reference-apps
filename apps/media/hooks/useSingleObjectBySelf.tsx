@@ -25,6 +25,7 @@ const fieldsToExpand = {
 
 const fields = {
   self: {},
+  slug: {},
   title: {},
   image_urls: {
     self: {},

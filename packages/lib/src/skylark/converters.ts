@@ -88,7 +88,11 @@ export const convertObjectTypeToSkylarkEndpoint = (
  * @param self the URL for the object
  * @returns {ObjectTypes}
  */
-export const convertUrlToObjectType = (url: string): ObjectTypes => {
+export const convertUrlToObjectType = (
+  url: string
+): EntertainmentType | null => {
+  if (!url) throw new Error("Unknown url provided");
+
   if (url.startsWith("/api/episode")) {
     return "episode";
   }

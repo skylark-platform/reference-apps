@@ -1,14 +1,22 @@
 import React, { FC, ReactNode } from "react";
 import { useInView } from "react-intersection-observer";
-import { AllEntertainment } from "@skylark-reference-apps/lib";
+import {
+  AllEntertainment,
+  convertUrlToObjectType,
+} from "@skylark-reference-apps/lib";
 import { Skeleton } from "@skylark-reference-apps/react";
-import { useSingleObjectBySelf } from "../hooks/useSingleObjectBySelf";
+
+import { useSingleObjectBySlug } from "../hooks/useSingleObjectBySlug";
 
 const Data: FC<{
   children(data: AllEntertainment): ReactNode;
   self: string;
-}> = ({ children, self }) => {
-  const { data, isLoading } = useSingleObjectBySelf(self);
+  slug: string;
+}> = ({ children, self, slug }) => {
+  const { data, isLoading } = useSingleObjectBySlug(
+    convertUrlToObjectType(self),
+    slug
+  );
 
   return !isLoading && data ? <>{children(data)}</> : <Skeleton show />;
 };
@@ -16,13 +24,22 @@ const Data: FC<{
 export const DataFetcher: FC<{
   children(data: AllEntertainment): ReactNode;
   self: string;
+  slug: string;
 }> = (props) => {
-  const { children, self } = props;
+  const { children, self, slug } = props;
   const { ref, inView } = useInView({ triggerOnce: true });
+
+  if (!self || !slug) return <></>;
 
   return (
     <div ref={ref}>
-      {inView ? <Data self={self}>{children}</Data> : <Skeleton show />}
+      {inView ? (
+        <Data self={self} slug={slug}>
+          {children}
+        </Data>
+      ) : (
+        <Skeleton show />
+      )}
     </div>
   );
 };

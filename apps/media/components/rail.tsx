@@ -6,12 +6,12 @@ import { getImageSrc, AllEntertainment } from "@skylark-reference-apps/lib";
 import { DataFetcher } from "./dataFetcher";
 
 export const MainRail: FC<{ section: AllEntertainment }> = ({ section }) => {
-  const items = section.items?.objects ?? [];
+  const items = section.items?.isExpanded ? section.items?.objects : [];
 
   return (
     <Rail displayCount header={section.title?.medium || section.title?.short}>
-      {items.map(({ self }, index) => (
-        <DataFetcher key={index} self={self}>
+      {items.map(({ self, slug }, index) => (
+        <DataFetcher key={index} self={self} slug={slug}>
           {(movie: AllEntertainment) => (
             <MovieThumbnail
               backgroundImage={getImageSrc(
