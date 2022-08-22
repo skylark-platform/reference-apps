@@ -198,7 +198,7 @@ describe("skylark.sets", () => {
       );
 
       // Assert.
-      expect(axiosRequest).toBeCalledTimes(2);
+      expect(axiosRequest).toBeCalledTimes(3);
       expect(axiosRequest).toBeCalledWith(
         expect.objectContaining({
           url: "https://skylarkplatform.io/api/sets/set_1",
@@ -229,7 +229,7 @@ describe("skylark.sets", () => {
       );
 
       // Assert.
-      expect(axiosRequest).toBeCalledTimes(2);
+      expect(axiosRequest).toBeCalledTimes(3);
       expect(axiosRequest).not.toBeCalledWith(
         expect.objectContaining({
           url: "https://skylarkplatform.io/api/sets/1/items",
@@ -273,7 +273,7 @@ describe("skylark.sets", () => {
       // Assert.
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { set_type_url, slug, title } = set;
-      expect(axiosRequest).toBeCalledTimes(2);
+      expect(axiosRequest).toBeCalledTimes(3);
       expect(axiosRequest).toBeCalledWith(
         expect.objectContaining({
           url: "https://skylarkplatform.io/api/sets/",
@@ -337,7 +337,7 @@ describe("skylark.sets", () => {
         })
       );
       expect(axiosRequest).toHaveBeenNthCalledWith(
-        4,
+        5,
         expect.objectContaining({
           url: "https://skylarkplatform.io/api/images/",
           method: "POST",
@@ -413,7 +413,7 @@ describe("skylark.sets", () => {
       );
 
       // Assert.
-      expect(axiosRequest).toBeCalledTimes(5);
+      expect(axiosRequest).toBeCalledTimes(6);
       expect(axiosRequest).toBeCalledWith(
         expect.objectContaining({
           url: "https://skylarkplatform.io/api/sets/set_1/items/",
@@ -454,7 +454,7 @@ describe("skylark.sets", () => {
       );
 
       // Assert.
-      expect(axiosRequest).toBeCalledTimes(5);
+      expect(axiosRequest).toBeCalledTimes(6);
       expect(axiosRequest).toBeCalledWith(
         expect.objectContaining({
           url: "https://skylarkplatform.io/api/sets/set_1/items/",
@@ -505,7 +505,7 @@ describe("skylark.sets", () => {
       );
 
       // Assert.
-      expect(axiosRequest).toBeCalledTimes(5);
+      expect(axiosRequest).toBeCalledTimes(6);
       expect(axiosRequest).toBeCalledWith(
         expect.objectContaining({
           url: "https://skylarkplatform.io/api/sets/set_1/items/set_item_1/",
