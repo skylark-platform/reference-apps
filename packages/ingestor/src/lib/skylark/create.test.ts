@@ -537,6 +537,7 @@ describe("skylark.sets", () => {
             fields: {
               person: ["airtable-person-1"],
               role: ["airtable-role-1"],
+              character: "Johnny",
             } as object,
           } as Record<FieldSet>,
         ],
@@ -545,6 +546,7 @@ describe("skylark.sets", () => {
         {
           people_url: metadataWithCredits.people[0].self,
           role_url: metadataWithCredits.roles[0].self,
+          character: "Johnny",
         },
       ];
 
@@ -736,6 +738,7 @@ describe("skylark.sets", () => {
             fields: {
               person: ["airtable-person-1"],
               role: ["airtable-role-1"],
+              character: "character",
             } as object,
           } as Record<FieldSet>,
         ],
@@ -783,6 +786,7 @@ describe("skylark.sets", () => {
                   {
                     people_url: metadataWithCredits.people[0].self,
                     role_url: metadataWithCredits.roles[0].self,
+                    character: "character",
                   },
                 ],
               }),

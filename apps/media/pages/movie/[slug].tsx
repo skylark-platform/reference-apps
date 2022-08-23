@@ -6,6 +6,7 @@ import {
   Skeleton,
 } from "@skylark-reference-apps/react";
 import {
+  formatCredits,
   formatReleaseDate,
   getCreditsByType,
   getImageSrc,
@@ -120,22 +121,22 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                   {
                     icon: <MdRecentActors />,
                     header: "Key Cast",
-                    body: getCreditsByType(movie.credits, "Actor").map(
-                      (credit) => credit?.peopleUrl?.name || ""
+                    body: formatCredits(
+                      getCreditsByType(movie.credits, "Actor")
                     ),
                   },
                   {
                     icon: <MdMovie />,
                     header: "Directors",
-                    body: getCreditsByType(movie.credits, "Director").map(
-                      (credit) => credit?.peopleUrl?.name || ""
+                    body: formatCredits(
+                      getCreditsByType(movie.credits, "Director")
                     ),
                   },
                   {
                     icon: <MdMode />,
                     header: "Writers",
-                    body: getCreditsByType(movie.credits, "Writer").map(
-                      (credit) => credit?.peopleUrl?.name || ""
+                    body: formatCredits(
+                      getCreditsByType(movie.credits, "Writer")
                     ),
                   },
                   {
@@ -143,7 +144,7 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                     header: "Released",
                     body: formatReleaseDate(movie.releaseDate),
                   },
-                ]}
+                ].filter(({ body }) => body.length > 0)}
               />
             </div>
           </div>
