@@ -66,8 +66,8 @@ jobs:
           cognito-aws-region: ${{ secrets.SHOWCASE_TEST_AWS_REGION }}
           cognito-client-id: ${{ secrets.SHOWCASE_TEST_CLIENT_ID }}
           cognito-user-pool-id: ${{ secrets.SHOWCASE_TEST_USER_POOL_ID }}
-          cognito-email: ${{ secrets.COGNITO_EMAIL }}
-          cognito-password: ${{ secrets.COGNITO_PASSWORD }}
+          cognito-email: ${{ secrets.SHOWCASE_TEST_EMAIL }}
+          cognito-password: ${{ secrets.SHOWCASE_TEST_PASSWORD }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_SKYLARK_DEV }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_SKYLARK_DEV }}
 
@@ -87,8 +87,8 @@ jobs:
           cognito-user-pool-id: ${{ secrets.SHOWCASE_TEST_USER_POOL_ID }}
           cognito-identity-pool-id: ${{ secrets.SHOWCASE_TEST_IDENTITY_POOL_ID }}
           amplify-storage-bucket: ${{ secrets.SHOWCASE_TEST_STORAGE_BUCKET }}
-          cognito-email: ${{ secrets.COGNITO_EMAIL }}
-          cognito-password: ${{ secrets.COGNITO_PASSWORD }}
+          cognito-email: ${{ secrets.SHOWCASE_TEST_EMAIL }}
+          cognito-password: ${{ secrets.SHOWCASE_TEST_PASSWORD }}
 
   signal:
     name: Signal
