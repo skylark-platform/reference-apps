@@ -8,6 +8,7 @@ import {
 } from "@skylark-reference-apps/react";
 import {
   Episode,
+  formatCredits,
   formatReleaseDate,
   getCreditsByType,
   getImageSrc,
@@ -134,22 +135,22 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                   {
                     icon: <MdRecentActors />,
                     header: "Key Cast",
-                    body: getCreditsByType(episode.credits, "Actor").map(
-                      (credit) => credit?.peopleUrl?.name || ""
+                    body: formatCredits(
+                      getCreditsByType(episode.credits, "Actor")
                     ),
                   },
                   {
                     icon: <MdMovie />,
                     header: "Directors",
-                    body: getCreditsByType(episode.credits, "Director").map(
-                      (credit) => credit?.peopleUrl?.name || ""
+                    body: formatCredits(
+                      getCreditsByType(episode.credits, "Director")
                     ),
                   },
                   {
                     icon: <MdMode />,
                     header: "Writers",
-                    body: getCreditsByType(episode.credits, "Writer").map(
-                      (credit) => credit?.peopleUrl?.name || ""
+                    body: formatCredits(
+                      getCreditsByType(episode.credits, "Writer")
                     ),
                   },
                   {
@@ -159,7 +160,7 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                       ? formatReleaseDate(episode.releaseDate)
                       : "",
                   },
-                ]}
+                ].filter(({ body }) => body.length > 0)}
               />
             </div>
           </div>

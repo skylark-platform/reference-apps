@@ -1,5 +1,6 @@
-import { Credits, ImageUrls } from "../interfaces";
+import { Credit, Credits, ImageUrls } from "../interfaces";
 import {
+  formatCredits,
   formatReleaseDate,
   getCreditsByType,
   getImageSrc,
@@ -201,6 +202,90 @@ describe("utils", () => {
     it("returns an empty array as credits is undefined", () => {
       const got = getCreditsByType(undefined, "Actor");
       expect(got).toEqual([]);
+    });
+  });
+
+  describe("formatCredits", () => {
+    it("returns credit people names", () => {
+      const credits: Credit[] = Array.from({ length: 2 }, (_, index) => ({
+        peopleUrl: {
+          name: `person-${index + 1}`,
+        },
+        roleUrl: {
+          title: "Director",
+        },
+        character: "",
+      }));
+
+      const formattedCredits = formatCredits(credits);
+
+      expect(formattedCredits).toEqual(["person-1", "person-2"]);
+    });
+
+    it("filters credits that do not have a name", () => {
+      const credits: Credit[] = Array.from({ length: 2 }, (_, index) => ({
+        peopleUrl: {
+          name: `person-${index + 1}`,
+        },
+        roleUrl: {
+          title: "Director",
+        },
+        character: "",
+      }));
+      credits.push({
+        peopleUrl: {
+          name: "",
+        },
+        roleUrl: {
+          title: "Director",
+        },
+        character: "",
+      });
+
+      const formattedCredits = formatCredits(credits);
+
+      expect(formattedCredits).toEqual(["person-1", "person-2"]);
+    });
+
+    it("adds character name when 4 or less credits are given with character names", () => {
+      const credits: Credit[] = Array.from({ length: 2 }, (_, index) => ({
+        peopleUrl: {
+          name: `person-${index + 1}`,
+        },
+        roleUrl: {
+          title: "Director",
+        },
+        character: `character-${index + 1}`,
+      }));
+
+      const formattedCredits = formatCredits(credits);
+
+      expect(formattedCredits).toEqual([
+        "person-1 as character-1",
+        "person-2 as character-2",
+      ]);
+    });
+
+    it("does not add character names when 5 credits are given with character names", () => {
+      const credits: Credit[] = Array.from({ length: 5 }, (_, index) => ({
+        peopleUrl: {
+          name: `person-${index + 1}`,
+        },
+        roleUrl: {
+          title: "Director",
+        },
+        character: `character-${index + 1}`,
+      }));
+
+      const formattedCredits = formatCredits(credits);
+
+      expect(formattedCredits).toEqual([
+        "person-1",
+        "person-2",
+        "person-3",
+        "person-4",
+        "person-5",
+      ]);
     });
   });
 

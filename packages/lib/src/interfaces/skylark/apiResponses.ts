@@ -31,6 +31,7 @@ export interface ApiImage extends ApiBaseObject {
 export type ApiImageUrls = string[] | ApiImage[];
 
 export interface ApiCreditUnexpanded {
+  character: string;
   people_url: string;
   role_url: string;
 }

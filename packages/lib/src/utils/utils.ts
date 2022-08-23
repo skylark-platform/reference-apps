@@ -96,6 +96,27 @@ export const getCreditsByType = (
 };
 
 /**
+ * formatCredits - formats credits, adds character name if only a small amount of credits are given
+ * @param credits
+ * @returns string array
+ */
+export const formatCredits = (credits: Credit[]): string[] => {
+  const showCharacterName = credits.length <= 4;
+  return credits
+    .map((credit) => {
+      const name = credit?.peopleUrl?.name;
+      if (!credit || !name) {
+        return "";
+      }
+
+      return showCharacterName && credit.character
+        ? `${name} as ${credit.character}`
+        : name;
+    })
+    .filter((str) => !!str);
+};
+
+/**
  * formatReleaseDate - formats the release date
  * @param date date string
  * @param format optional format for the date
