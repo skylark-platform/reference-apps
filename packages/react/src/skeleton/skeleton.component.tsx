@@ -3,7 +3,7 @@ import React from "react";
 
 interface SkeletonProps {
   show: boolean;
-  isVertical?: boolean;
+  isPortrait?: boolean;
 }
 
 const item = {
@@ -15,7 +15,7 @@ const item = {
 
 export const Skeleton: React.FC<SkeletonProps> = ({
   show = true,
-  isVertical,
+  isPortrait,
 }) => (
   <>
     {show && (
@@ -26,7 +26,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
       >
         <div
           className={` ${
-            isVertical ? "aspect-h-16" : "aspect-h-9"
+            isPortrait ? "aspect-h-16" : "aspect-h-9"
           } aspect-w-16 animate-pulse rounded-sm bg-gray-700`}
         ></div>
       </motion.div>
