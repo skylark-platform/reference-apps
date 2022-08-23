@@ -1,5 +1,6 @@
 import Auth from "@aws-amplify/auth";
 import {
+  ApiBaseObject,
   ApiBatchResponse,
   ApiCreditUnexpanded,
   ApiImage,
@@ -21,6 +22,7 @@ import {
   createOrUpdateObject,
   parseAirtableImagesAndUploadToSkylark,
   createTranslationsForObjects,
+  updateCredits,
 } from "./create";
 
 jest.mock("axios");
@@ -464,15 +466,7 @@ describe("skylark.sets", () => {
         uid: "",
         self: "",
         schedule_urls: [metadata.schedules.default.self],
-        is_data_source: true,
         data_source_id: "1",
-        data_source_fields: [
-          "uid",
-          "self",
-          "schedule_urls",
-          "is_data_source",
-          "data_source_id",
-        ],
       };
 
       const skylarkObject = convertAirtableFieldsToSkylarkObject(
@@ -499,17 +493,8 @@ describe("skylark.sets", () => {
         uid: "",
         self: "",
         schedule_urls: [metadata.schedules.default.self],
-        is_data_source: true,
         data_source_id: "1",
         parent_url: parent.self,
-        data_source_fields: [
-          "uid",
-          "self",
-          "parent_url",
-          "schedule_urls",
-          "is_data_source",
-          "data_source_id",
-        ],
       };
 
       const skylarkObject = convertAirtableFieldsToSkylarkObject(
@@ -524,7 +509,9 @@ describe("skylark.sets", () => {
       expect(skylarkObject).toEqual(expected);
     });
 
-    it("adds credits using the credits, people and roles tables", () => {
+    // Unskip when SL-2204 is fixed
+    // eslint-disable-next-line jest/no-disabled-tests
+    it.skip("adds credits using the credits, people and roles tables", () => {
       const metadataWithCredits: Metadata = {
         ...metadata,
         people: [
@@ -672,6 +659,140 @@ describe("skylark.sets", () => {
     });
   });
 
+  describe("updateCredits", () => {
+    const objects = [
+      {
+        uid: "episode-1",
+        data_source_id: "airtable-episode-1",
+        self: "/api/episodes/episode-1",
+      },
+    ] as ApiBaseObject[];
+
+    it("sets the credits to [] when none exist in Airtable", async () => {
+      // Arrange
+      const record: Partial<Record<FieldSet>> = {
+        id: "airtable-episode-1",
+        _table: { name: "episodes" } as Table<FieldSet>,
+        fields: { uid: "episode-1", title_short: "short title" },
+      };
+      const data: ApiBatchResponse[] = [
+        {
+          code: 200,
+          id: record.id as string,
+          header: {},
+          // url: `/api/episodes/${record.fields?.uid as string}`,
+          body: "{}",
+        },
+      ];
+
+      axiosRequest.mockImplementation(() => ({ data }));
+
+      // Act
+      await updateCredits(objects, [record] as Record<FieldSet>[], metadata);
+
+      // Assert
+      expect(axiosRequest).toBeCalledWith(
+        expect.objectContaining({
+          method: "POST",
+          url: "https://skylarkplatform.io/api/batch/",
+          data: [
+            {
+              id: "CREDITS-episode-1",
+              method: "PATCH",
+              url: "/api/episodes/episode-1",
+              data: JSON.stringify({
+                credits: [],
+              }),
+            },
+          ],
+        })
+      );
+    });
+
+    it("adds credits when they exist in Airtable", async () => {
+      // Arrange
+      const metadataWithCredits: Metadata = {
+        ...metadata,
+        people: [
+          {
+            airtableId: "airtable-person-1",
+            name: "person-1",
+            uid: "people_1",
+            slug: "person-1",
+            self: "/api/people/people_1",
+          },
+        ],
+        roles: [
+          {
+            airtableId: "airtable-role-1",
+            title: "role-1",
+            uid: "role_1",
+            self: "/api/roles/role_1",
+          } as unknown as ApiRole & ApiAirtableFields,
+        ],
+        airtableCredits: [
+          {
+            id: "airtable-credit-1",
+            fields: {
+              person: ["airtable-person-1"],
+              role: ["airtable-role-1"],
+            } as object,
+          } as Record<FieldSet>,
+        ],
+      };
+      const record: Partial<Record<FieldSet>> = {
+        id: "airtable-episode-1",
+        _table: { name: "episodes" } as Table<FieldSet>,
+        fields: {
+          uid: "episode-1",
+          title_short: "short title",
+          credits: ["airtable-credit-1"],
+        },
+      };
+      const data: ApiBatchResponse[] = [
+        {
+          code: 200,
+          id: record.id as string,
+          header: {},
+          // url: `/api/episodes/${record.fields?.uid as string}`,
+          body: "{}",
+        },
+      ];
+
+      axiosRequest.mockImplementation(() => ({ data }));
+
+      // Act
+      await updateCredits(
+        objects,
+        [record] as Record<FieldSet>[],
+        metadataWithCredits
+      );
+
+      // Assert
+      expect(axiosRequest).toBeCalledWith(
+        expect.objectContaining({
+          method: "POST",
+          url: "https://skylarkplatform.io/api/batch/",
+          data: [
+            {
+              id: "CREDITS-episode-1",
+              method: "PATCH",
+              url: "/api/episodes/episode-1",
+              data: JSON.stringify({
+                credits: [
+                  {
+                    people_url: metadataWithCredits.people[0].self,
+                    role_url: metadataWithCredits.roles[0].self,
+                  },
+                ],
+              }),
+            },
+          ],
+        })
+      );
+    });
+  });
+
   describe("createOrUpdateAirtableObjectsInSkylark", () => {
     const table = { name: "episodes" } as Table<FieldSet>;
     const airtableEpisodeRecords: Partial<Record<FieldSet>>[] = [
@@ -725,7 +846,7 @@ describe("skylark.sets", () => {
       );
     });
 
-    it("Makes a POST request to create records that don't match existing objects in Skylark", async () => {
+    it("Makes a PUT request to create records that don't match existing objects in Skylark", async () => {
       // Arrange.
       const getData: ApiBatchResponse[] = airtableEpisodeRecords.map(
         (record) => ({
@@ -772,21 +893,11 @@ describe("skylark.sets", () => {
                 slug: "episode-1",
                 title_short: "short title",
                 schedule_urls: ["/api/schedules/1"],
-                is_data_source: true,
                 data_source_id: "airtable-episode-1",
-                data_source_fields: [
-                  "uid",
-                  "self",
-                  "slug",
-                  "title_short",
-                  "schedule_urls",
-                  "is_data_source",
-                  "data_source_id",
-                ],
               }),
-              id: "POST-/api/episodes/",
-              method: "POST",
-              url: "/api/episodes/",
+              id: "PUT-/api/episodes/versions/data-source/airtable-episode-1/",
+              method: "PUT",
+              url: "/api/episodes/versions/data-source/airtable-episode-1/",
             },
             {
               data: JSON.stringify({
@@ -795,28 +906,18 @@ describe("skylark.sets", () => {
                 slug: "episode-2",
                 synopsis_short: "short synopsis",
                 schedule_urls: ["/api/schedules/1"],
-                is_data_source: true,
                 data_source_id: "airtable-episode-2",
-                data_source_fields: [
-                  "uid",
-                  "self",
-                  "slug",
-                  "synopsis_short",
-                  "schedule_urls",
-                  "is_data_source",
-                  "data_source_id",
-                ],
               }),
-              id: "POST-/api/episodes/",
-              method: "POST",
-              url: "/api/episodes/",
+              id: "PUT-/api/episodes/versions/data-source/airtable-episode-2/",
+              method: "PUT",
+              url: "/api/episodes/versions/data-source/airtable-episode-2/",
             },
           ],
         })
       );
     });
 
-    it("Makes a PATCH request to update records that match existing objects in Skylark", async () => {
+    it("Makes a PUT request to update records that match existing objects in Skylark", async () => {
       // Arrange.
       const getData: ApiBatchResponse[] = airtableEpisodeRecords.map(
         (record) => ({
@@ -867,21 +968,11 @@ describe("skylark.sets", () => {
                 uid: "episode-1",
                 self: "/api/episodes/episode-1",
                 schedule_urls: ["/api/schedules/1"],
-                is_data_source: true,
                 data_source_id: "airtable-episode-1",
-                data_source_fields: [
-                  "uid",
-                  "self",
-                  "slug",
-                  "title_short",
-                  "schedule_urls",
-                  "is_data_source",
-                  "data_source_id",
-                ],
               }),
-              id: "PATCH-/api/episodes/episode-1",
-              method: "PATCH",
-              url: "/api/episodes/episode-1",
+              id: "PUT-/api/episodes/versions/data-source/airtable-episode-1/",
+              method: "PUT",
+              url: "/api/episodes/versions/data-source/airtable-episode-1/",
             },
             {
               data: JSON.stringify({
@@ -890,21 +981,11 @@ describe("skylark.sets", () => {
                 uid: "episode-2",
                 self: "/api/episodes/episode-2",
                 schedule_urls: ["/api/schedules/1"],
-                is_data_source: true,
                 data_source_id: "airtable-episode-2",
-                data_source_fields: [
-                  "uid",
-                  "self",
-                  "slug",
-                  "synopsis_short",
-                  "schedule_urls",
-                  "is_data_source",
-                  "data_source_id",
-                ],
               }),
-              id: "PATCH-/api/episodes/episode-2",
-              method: "PATCH",
-              url: "/api/episodes/episode-2",
+              id: "PUT-/api/episodes/versions/data-source/airtable-episode-2/",
+              method: "PUT",
+              url: "/api/episodes/versions/data-source/airtable-episode-2/",
             },
           ],
         })
@@ -977,7 +1058,7 @@ describe("skylark.sets", () => {
       expect(axiosRequest).toHaveBeenCalledTimes(2);
     });
 
-    it("calls Axios four times when one record has a parent", async () => {
+    it("calls Axios five times when one record has a parent", async () => {
       // Arrange.
       const data: ApiBatchResponse[] = airtableEpisodeRecords.map((record) => ({
         code: 200,
@@ -1013,9 +1094,9 @@ describe("skylark.sets", () => {
       );
 
       // Assert.
-      expect(axiosRequest).toHaveBeenCalledTimes(4);
+      expect(axiosRequest).toHaveBeenCalledTimes(5);
       expect(axiosRequest).toHaveBeenNthCalledWith(
-        4,
+        5,
         expect.objectContaining({
           method: "POST",
           url: "https://skylarkplatform.io/api/batch/",
@@ -1028,29 +1109,18 @@ describe("skylark.sets", () => {
                 synopsis_short: "short synopsis",
                 parent_url: "/api/episodes/episode-1",
                 schedule_urls: ["/api/schedules/1"],
-                is_data_source: true,
                 data_source_id: "airtable-episode-3",
-                data_source_fields: [
-                  "uid",
-                  "self",
-                  "slug",
-                  "synopsis_short",
-                  "parent_url",
-                  "schedule_urls",
-                  "is_data_source",
-                  "data_source_id",
-                ],
               }),
-              id: "POST-/api/episodes/",
-              method: "POST",
-              url: "/api/episodes/",
+              id: "PUT-/api/episodes/versions/data-source/airtable-episode-3/",
+              method: "PUT",
+              url: "/api/episodes/versions/data-source/airtable-episode-3/",
             },
           ],
         })
       );
     });
 
-    it("calls Axios twice when a Record with a parent is given, but the parent doesn't exist", async () => {
+    it("calls Axios thrice when a Record with a parent is given, but the parent doesn't exist", async () => {
       // Arrange.
       const data: ApiBatchResponse[] = airtableEpisodeRecords.map((record) => ({
         code: 200,
@@ -1086,7 +1156,7 @@ describe("skylark.sets", () => {
       );
 
       // Assert.
-      expect(axiosRequest).toHaveBeenCalledTimes(2);
+      expect(axiosRequest).toHaveBeenCalledTimes(3);
     });
   });
 

@@ -7,7 +7,7 @@ import {
   ApiPerson,
 } from "@skylark-reference-apps/lib";
 import { Attachment, FieldSet, Records, Record } from "airtable";
-import { flatten } from "lodash";
+import { compact, flatten } from "lodash";
 import {
   ApiEntertainmentObjectWithAirtableId,
   ApiSkylarkObjectWithAllPotentialFields,
@@ -162,8 +162,8 @@ export const bulkCreateOrUpdateObjectsUsingDataSourceId = async <
     const existingObject =
       matchingBatchResponse?.code !== 404 ? matchingBatchResponse?.data : null;
     const type = objectTypes[object.data_source_id];
-    const url = existingObject ? existingObject.self : `/api/${type}/`;
-    const method = existingObject ? "PATCH" : "POST";
+    const url = `/api/${type}/versions/data-source/${object.data_source_id}/`;
+    const method = "PUT";
     return {
       id: `${method}-${url}`,
       method,
@@ -390,14 +390,14 @@ export const convertAirtableFieldsToSkylarkObject = (
     number_of_episodes: fields?.number_of_episodes as number,
     episode_number: fields?.episode_number as number,
     value: fields?.value as string,
-    is_data_source: true,
     data_source_id: airtableId,
   };
 
-  const credits = getCreditsFromField(fields.credits as string[], metadata);
-  if (credits) {
-    object.credits = credits;
-  }
+  // Credits cannot be updated when using data source URLs. See SL-2204
+  // const credits = getCreditsFromField(fields.credits as string[], metadata);
+  // if (credits) {
+  //   object.credits = credits;
+  // }
 
   const genreUrls = getUrlsFromField(
     fields.genres as string[],
@@ -434,10 +434,42 @@ export const convertAirtableFieldsToSkylarkObject = (
       object
     );
 
-  // Add data_source_fields last so that all fields are captured
-  sanitizedObject.data_source_fields = Object.keys(sanitizedObject);
-
   return sanitizedObject;
+};
+
+/**
+ * updateCredits - updates Credits using an object's self property
+ * Workaround for SL-2204 using the normal object endpoints
+ */
+export const updateCredits = async <T extends ApiBaseObject>(
+  objects: T[],
+  records: Records<FieldSet>,
+  metadata: Metadata
+) => {
+  const updateCreditsBatchRequestData = objects.map((object) => {
+    const record = records.find(
+      ({ id }) => id === object.data_source_id
+    ) as Record<FieldSet>;
+    if (!record) {
+      return null;
+    }
+
+    const url = object.self;
+    const method = "PATCH"; // PATCH to not update other fields
+    const credits =
+      getCreditsFromField(record.fields.credits as string[], metadata) || [];
+
+    return {
+      id: `CREDITS-${object.uid}`,
+      method,
+      url,
+      data: JSON.stringify({
+        credits: credits || [],
+      }),
+    };
+  });
+
+  await batchSkylarkRequest<T>(compact(updateCreditsBatchRequestData));
 };
 
 /**
@@ -452,8 +484,7 @@ export const createOrUpdateAirtableObjectsInSkylark = async <
 >(
   airtableRecords: Records<FieldSet>,
   metadata: Metadata,
-  parents?: ApiEntertainmentObjectWithAirtableId[],
-  alternativeLookupMethod?: "title" | "slug"
+  parents?: ApiEntertainmentObjectWithAirtableId[]
 ) => {
   const objectData = airtableRecords.map(({ fields, id }) => {
     const object = convertAirtableFieldsToSkylarkObject(
@@ -470,16 +501,17 @@ export const createOrUpdateAirtableObjectsInSkylark = async <
     objectTypes[id] = (fields.skylark_object_type as string) || _table.name;
   });
 
-  const createOrUpdateBatchResponseData = alternativeLookupMethod
-    ? await bulkCreateOrUpdateObjectsWithLookup<T>(
-        objectData,
-        objectTypes,
-        alternativeLookupMethod
-      )
-    : await bulkCreateOrUpdateObjectsUsingDataSourceId<T>(
-        objectData,
-        objectTypes
-      );
+  const createOrUpdateBatchResponseData =
+    await bulkCreateOrUpdateObjectsUsingDataSourceId<T>(
+      objectData,
+      objectTypes
+    );
+
+  await updateCredits<T>(
+    createOrUpdateBatchResponseData,
+    airtableRecords,
+    metadata
+  );
 
   const parseObjectsAndCreateImages = await Promise.all(
     createOrUpdateBatchResponseData.map(

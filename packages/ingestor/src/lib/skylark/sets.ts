@@ -40,31 +40,44 @@ const createOrUpdateSet = async (
   );
 
   let object = {};
+  let url = existingSet ? `/api/sets/${existingSet.uid}` : `/api/sets/`;
+  let method = existingSet ? "PUT" : "POST";
+
   if (airtableProperties) {
     object = convertAirtableFieldsToSkylarkObject(
       airtableProperties.id,
       airtableProperties.fields,
       metadata
     );
+
+    url = `/api/sets/versions/data-source/${airtableProperties.id}/`;
+    method = "PUT";
   }
 
-  const url = existingSet ? `/api/sets/${existingSet.uid}` : `/api/sets/`;
-  const { data: set } =
-    await authenticatedSkylarkRequest<ApiEntertainmentObject>(url, {
-      method: existingSet ? "PUT" : "POST",
-      data: {
-        schedule_urls: [metadata.schedules.default.self],
-        ...existingSet,
-        ...object,
-        uid: existingSet?.uid || "",
-        self: existingSet?.self || "",
-        title,
-        slug,
-        set_type_url: setType?.self,
-      },
-    });
+  const languages = [""];
 
-  return set;
+  const [{ data: firstSet }] = await Promise.all(
+    languages.map((language) =>
+      authenticatedSkylarkRequest<ApiEntertainmentObject>(url, {
+        method,
+        data: {
+          schedule_urls: [metadata.schedules.default.self],
+          ...existingSet,
+          ...object,
+          uid: existingSet?.uid || "",
+          self: existingSet?.self || "",
+          title,
+          slug,
+          set_type_url: setType?.self,
+        },
+        headers: {
+          "Accept-Language": language,
+        },
+      })
+    )
+  );
+
+  return firstSet;
 };
 
 /**

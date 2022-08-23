@@ -143,6 +143,7 @@ describe("skylark.sets", () => {
       set_type_url: `/api/set-types/set-type-1`,
       self: "/api/sets/set_1",
       schedule_urls: ["/api/schedules/1"],
+      data_source_id: "set_1",
     };
 
     const genres = [
@@ -276,8 +277,8 @@ describe("skylark.sets", () => {
       expect(axiosRequest).toBeCalledTimes(2);
       expect(axiosRequest).toBeCalledWith(
         expect.objectContaining({
-          url: "https://skylarkplatform.io/api/sets/",
-          method: "POST",
+          url: "https://skylarkplatform.io/api/sets/versions/data-source/1/",
+          method: "PUT",
           data: {
             ...convertAirtableFieldsToSkylarkObject(
               "1",
@@ -314,7 +315,7 @@ describe("skylark.sets", () => {
         },
       };
       axiosRequest.mockImplementation(({ method }: AxiosRequestConfig) => {
-        if (method === "POST") {
+        if (method === "PUT") {
           return {
             data: set,
           };
