@@ -17,9 +17,7 @@ const fieldsToExpand = {
     people_url: {},
   },
   items: {
-    content_url: {
-      image_urls: {},
-    },
+    content_url: {},
   },
   rating_urls: {},
 };
@@ -56,36 +54,6 @@ const fields = {
     content_url: {
       self: {},
       slug: {},
-      title: {},
-      image_urls: {
-        self: {},
-        url: {},
-        url_path: {},
-        image_type: {},
-      },
-      title_short: {},
-      title_medium: {},
-      synopsis_short: {},
-      synopsis_medium: {},
-      season_number: {},
-      episode_number: {},
-      release_date: {},
-      items: {
-        self: {},
-        slug: {},
-        title: {},
-        image_urls: {
-          self: {},
-          url: {},
-          url_path: {},
-          image_type: {},
-        },
-        title_short: {},
-        title_medium: {},
-        synopsis_short: {},
-        synopsis_medium: {},
-        episode_number: {},
-      },
     },
   },
 };
