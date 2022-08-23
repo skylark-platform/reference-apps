@@ -61,7 +61,7 @@ jobs:
         with:
           git-branch: ${{ needs.prepare.outputs.git-branch }}
           # hardcode domains until more accounts are supported
-          base-domain: showcase.skylarkplatform.io
+          base-domain: skylark-dev.skylarkplatform.io
           skylark-api-url: https://api.dev.showcase.skylarkplatform.io
           cognito-aws-region: ${{ secrets.SHOWCASE_TEST_AWS_REGION }}
           cognito-client-id: ${{ secrets.SHOWCASE_TEST_CLIENT_ID }}
