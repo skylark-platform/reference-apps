@@ -7,7 +7,7 @@ import {
   ApiPerson,
 } from "@skylark-reference-apps/lib";
 import { Attachment, FieldSet, Records, Record } from "airtable";
-import { compact, flatten, isArray, isString } from "lodash";
+import { compact, flatten, isArray, isEmpty, isString } from "lodash";
 import {
   ApiEntertainmentObjectWithAirtableId,
   ApiSkylarkObjectWithAllPotentialFields,
@@ -615,9 +615,9 @@ export const createTranslationsForObjects = async (
   const translationObjectData = translationsTable.map(({ fields, id }) => {
     if (
       !fields.object ||
-      !Array.isArray(fields.object) ||
+      !isArray(fields.object) ||
       !isArray(fields.languages) ||
-      fields.languages.length === 0
+      isEmpty(fields.languages)
     ) {
       return [];
     }
