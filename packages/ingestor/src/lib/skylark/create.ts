@@ -7,7 +7,7 @@ import {
   ApiPerson,
 } from "@skylark-reference-apps/lib";
 import { Attachment, FieldSet, Records, Record } from "airtable";
-import { compact, flatten } from "lodash";
+import { compact, flatten, isArray, isEmpty, isString } from "lodash";
 import {
   ApiEntertainmentObjectWithAirtableId,
   ApiSkylarkObjectWithAllPotentialFields,
@@ -291,9 +291,11 @@ const getPeopleAndRoleUrlsFromCredit = (
   );
   const role = roles.find((r) => r.airtableId === (credit.role as string[])[0]);
   if (person && role) {
+    const character = isString(credit.character) ? credit.character : "";
     return {
       people_url: person?.self,
       role_url: role?.self,
+      character,
     };
   }
   return null;
@@ -611,7 +613,12 @@ export const createTranslationsForObjects = async (
   });
 
   const translationObjectData = translationsTable.map(({ fields, id }) => {
-    if (!fields.object || !Array.isArray(fields.object)) {
+    if (
+      !fields.object ||
+      !isArray(fields.object) ||
+      !isArray(fields.languages) ||
+      isEmpty(fields.languages)
+    ) {
       return [];
     }
 

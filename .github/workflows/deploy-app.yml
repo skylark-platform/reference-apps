@@ -62,12 +62,12 @@ jobs:
           git-branch: ${{ needs.prepare.outputs.git-branch }}
           # hardcode domains until more accounts are supported
           base-domain: skylark-dev.skylarkplatform.io
-          skylark-api-url: https://api.showcase-test.eng-james-wallis.skylarkplatform.io
+          skylark-api-url: https://api.dev.showcase.skylarkplatform.io
           cognito-aws-region: ${{ secrets.SHOWCASE_TEST_AWS_REGION }}
           cognito-client-id: ${{ secrets.SHOWCASE_TEST_CLIENT_ID }}
           cognito-user-pool-id: ${{ secrets.SHOWCASE_TEST_USER_POOL_ID }}
-          cognito-email: ${{ secrets.COGNITO_EMAIL }}
-          cognito-password: ${{ secrets.COGNITO_PASSWORD }}
+          cognito-email: ${{ secrets.SHOWCASE_TEST_EMAIL }}
+          cognito-password: ${{ secrets.SHOWCASE_TEST_PASSWORD }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_SKYLARK_DEV }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_SKYLARK_DEV }}
 
@@ -81,14 +81,14 @@ jobs:
         with:
           airtable-api-key: ${{ secrets.AIRTABLE_SUPPORT_KEY }}
           airtable-base-id: ${{ secrets.AIRTABLE_BASE_ID }}
-          skylark-api-url: https://api.showcase-test.eng-james-wallis.skylarkplatform.io
+          skylark-api-url: https://api.dev.showcase.skylarkplatform.io
           cognito-aws-region: ${{ secrets.SHOWCASE_TEST_AWS_REGION }}
           cognito-client-id: ${{ secrets.SHOWCASE_TEST_CLIENT_ID }}
           cognito-user-pool-id: ${{ secrets.SHOWCASE_TEST_USER_POOL_ID }}
           cognito-identity-pool-id: ${{ secrets.SHOWCASE_TEST_IDENTITY_POOL_ID }}
           amplify-storage-bucket: ${{ secrets.SHOWCASE_TEST_STORAGE_BUCKET }}
-          cognito-email: ${{ secrets.COGNITO_EMAIL }}
-          cognito-password: ${{ secrets.COGNITO_PASSWORD }}
+          cognito-email: ${{ secrets.SHOWCASE_TEST_EMAIL }}
+          cognito-password: ${{ secrets.SHOWCASE_TEST_PASSWORD }}
 
   signal:
     name: Signal
