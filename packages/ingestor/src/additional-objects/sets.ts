@@ -5,7 +5,18 @@
 import { SetConfig } from "../interfaces";
 import { quentinTarantinoMovies } from "./dynamicObjects";
 
-export const spotlightMovies: SetConfig = {
+const newTVReleases: SetConfig = {
+  title: "New TV Releases",
+  slug: "new-tv-releases",
+  set_type_slug: "rail",
+  title_short: "New TV Releases",
+  contents: [
+    { type: "brands", slug: "house-of-the-dragon" },
+    { type: "brands", slug: "better-call-saul" },
+  ],
+};
+
+const spotlightMovies: SetConfig = {
   title: "Spotlight movies",
   slug: "spotlight-movies",
   set_type_slug: "rail",
@@ -26,7 +37,7 @@ export const spotlightMovies: SetConfig = {
   ],
 };
 
-export const homePageSlider: SetConfig = {
+const homePageSlider: SetConfig = {
   title: "Home page hero",
   slug: "media-reference-home-page-hero",
   set_type_slug: "slider",
@@ -38,14 +49,14 @@ export const homePageSlider: SetConfig = {
   ],
 };
 
-export const tarantinoMoviesCollection: SetConfig = {
+const tarantinoMoviesCollection: SetConfig = {
   title: "Tarantino Movies Collection",
   slug: "tarantino-movies-collection",
   set_type_slug: "collection",
   contents: [{ type: "dynamic-object", name: quentinTarantinoMovies.name }],
 };
 
-export const discoverCollection: SetConfig = {
+const discoverCollection: SetConfig = {
   title: "Discover Collection",
   slug: "discover-collection",
   set_type_slug: "collection",
@@ -58,15 +69,27 @@ export const discoverCollection: SetConfig = {
   ],
 };
 
-export const mediaReferenceHomepage: SetConfig = {
+const mediaReferenceHomepage: SetConfig = {
   title: "Homepage",
   slug: "media-reference-homepage",
   set_type_slug: "homepage",
   contents: [
     { type: "set", set_type: "slider", slug: homePageSlider.slug },
     { type: "set", set_type: "rail", slug: spotlightMovies.slug },
+    { type: "set", set_type: "rail", slug: newTVReleases.slug },
     { type: "seasons", slug: "got-s01" },
     { type: "seasons", slug: "got-s02" },
     { type: "set", set_type: "collection", slug: discoverCollection.slug },
   ],
 };
+
+export const orderedSetsToCreate = [
+  newTVReleases,
+  spotlightMovies,
+  homePageSlider,
+  tarantinoMoviesCollection,
+  // discoverCollection needs the tarantinoMoviesCollection
+  discoverCollection,
+  // Order matters, homepage is last as it includes the rail and slider
+  mediaReferenceHomepage,
+];
