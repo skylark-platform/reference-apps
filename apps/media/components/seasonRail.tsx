@@ -6,28 +6,28 @@ import {
   getImageSrc,
   getTitleByOrder,
   getSynopsisByOrder,
-  AllEntertainment,
+  Season,
 } from "@skylark-reference-apps/lib";
 
 import { DataFetcher } from "./dataFetcher";
 
 interface SeasonRailProps {
-  item: AllEntertainment;
+  item: Season;
   header?: string;
 }
 
 const sortEpisodesByNumber = (a: Episode, b: Episode) =>
   (a?.number || 0) > (b?.number || 0) ? 1 : -1;
 
-export const SeasonRail: FC<SeasonRailProps> = ({
-  item,
-  header = item.title?.medium || item.title?.short,
-}) => {
-  const items = (item?.items?.objects as Episode[]) ?? [];
+export const SeasonRail: FC<SeasonRailProps> = ({ item, header }) => {
+  const episodes = (item?.items?.objects as Episode[]) ?? [];
 
   return (
-    <Rail displayCount header={header}>
-      {items.sort(sortEpisodesByNumber).map(({ self, slug }) => (
+    <Rail
+      displayCount
+      header={header || getTitleByOrder(item?.title, ["short", "medium"])}
+    >
+      {episodes.sort(sortEpisodesByNumber).map(({ self, slug }) => (
         <DataFetcher key={`episode-${slug}`} self={self} slug={slug}>
           {(episode: Episode) => (
             <EpisodeThumbnail

@@ -146,11 +146,10 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                                   "Thumbnail",
                                   "250x250"
                                 )}
-                                description={
-                                  episode.synopsis?.medium ||
-                                  episode.synopsis?.short ||
-                                  ""
-                                }
+                                description={getSynopsisByOrder(
+                                  episode?.synopsis,
+                                  ["medium", "short"]
+                                )}
                                 href={`/episode/${episode.slug}`}
                                 key={episode.objectTitle}
                                 number={episode.number || 0}
