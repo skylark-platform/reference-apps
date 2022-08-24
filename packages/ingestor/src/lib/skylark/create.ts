@@ -431,6 +431,12 @@ export const convertAirtableFieldsToSkylarkObject = (
     object.asset_type_url = assetType;
   }
 
+  // Add data_source_fields but don't include any fields related to data_source
+  object.data_source_fields = Object.keys(object).filter(
+    (str) =>
+      !["data_source_id", "is_data_source", "data_source_fields"].includes(str)
+  );
+
   const sanitizedObject =
     removeUndefinedPropertiesFromObject<ApiSkylarkObjectWithAllPotentialFields>(
       object

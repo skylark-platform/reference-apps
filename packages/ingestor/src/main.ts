@@ -25,13 +25,7 @@ import {
   ApiEntertainmentObjectWithAirtableId,
   Metadata,
 } from "./interfaces";
-import {
-  spotlightMovies,
-  homePageSlider,
-  mediaReferenceHomepage,
-  discoverCollection,
-  tarantinoMoviesCollection,
-} from "./additional-objects/sets";
+import { orderedSetsToCreate } from "./additional-objects/sets";
 import { quentinTarantinoMovies } from "./additional-objects/dynamicObjects";
 import {
   createOrUpdateSchedules,
@@ -180,13 +174,11 @@ const createAndUploadAssets = async (
 const createAdditionalObjects = async (metadata: Metadata) => {
   await createOrUpdateDynamicObject(quentinTarantinoMovies, metadata);
 
-  await createOrUpdateSetAndContents(spotlightMovies, metadata);
-  await createOrUpdateSetAndContents(homePageSlider, metadata);
-  await createOrUpdateSetAndContents(tarantinoMoviesCollection, metadata);
-  // discoverCollection needs the tarantinoMoviesCollection
-  await createOrUpdateSetAndContents(discoverCollection, metadata);
-  // Order matters, homepage is last as it includes the rail and slider
-  await createOrUpdateSetAndContents(mediaReferenceHomepage, metadata);
+  // eslint-disable-next-line no-restricted-syntax
+  for (const set of orderedSetsToCreate) {
+    // eslint-disable-next-line no-await-in-loop
+    await createOrUpdateSetAndContents(set, metadata);
+  }
 
   // eslint-disable-next-line no-console
   console.log("Additional objects created");
@@ -203,9 +195,9 @@ const main = async () => {
 
   const mediaObjects = await createMediaObjects(airtable, metadata);
 
-  await createAndUploadAssets(airtable.mediaObjects, mediaObjects);
-
   await createAdditionalObjects(metadata);
+
+  await createAndUploadAssets(airtable.mediaObjects, mediaObjects);
 
   // eslint-disable-next-line no-console
   console.log("great success");
