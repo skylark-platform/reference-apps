@@ -128,7 +128,6 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                   <SeasonRail
                     header={`Season ${season.number || "-"}`}
                     item={season}
-                    thumbnailSize="250x250"
                   />
                 </div>
               )

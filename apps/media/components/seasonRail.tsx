@@ -14,7 +14,6 @@ import { DataFetcher } from "./dataFetcher";
 interface SeasonRailProps {
   item: AllEntertainment;
   header?: string;
-  thumbnailSize?: string;
 }
 
 const sortEpisodesByNumber = (a: Episode, b: Episode) =>
@@ -23,7 +22,6 @@ const sortEpisodesByNumber = (a: Episode, b: Episode) =>
 export const SeasonRail: FC<SeasonRailProps> = ({
   item,
   header = item.title?.medium || item.title?.short,
-  thumbnailSize = "384x216",
 }) => {
   const items = (item?.items?.objects as Episode[]) ?? [];
 
@@ -36,7 +34,7 @@ export const SeasonRail: FC<SeasonRailProps> = ({
               backgroundImage={getImageSrc(
                 episode?.images,
                 "Thumbnail",
-                thumbnailSize
+                "384x216"
               )}
               contentLocation="below"
               description={getSynopsisByOrder(episode?.synopsis, [
