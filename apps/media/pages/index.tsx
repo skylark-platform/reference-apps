@@ -47,13 +47,7 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                 {item.type === "collection" && (
                   <CollectionRail section={item} />
                 )}
-                {item.type === "season" && (
-                  <SeasonRail
-                    episodeDescription={["short", "medium", "long"]}
-                    episodeTitle={["short"]}
-                    item={item}
-                  />
-                )}
+                {item.type === "season" && <SeasonRail season={item} />}
               </div>
             );
           }
