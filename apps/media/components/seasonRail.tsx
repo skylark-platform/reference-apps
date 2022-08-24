@@ -14,8 +14,8 @@ interface SeasonRailProps {
   header?: string;
 }
 
-const sortEpisodesByNumber = (a: Episode, b: Episode) =>
-  (a.number || 0) > (b.number || 0) ? 1 : -1;
+// const sortEpisodesByNumber = (a: Episode, b: Episode) =>
+//   (a.number || 0) > (b.number || 0) ? 1 : -1;
 
 export const SeasonRail: FC<SeasonRailProps> = ({ season, header }) => {
   const episodes = (season.items?.objects as Episode[]) ?? [];
@@ -32,7 +32,9 @@ export const SeasonRail: FC<SeasonRailProps> = ({ season, header }) => {
         )
       }
     >
-      {episodes.sort(sortEpisodesByNumber).map(({ self, slug }) => (
+      {console.log("episodes", episodes)}
+      <div>{test}</div>
+      {/* {episodes.sort(sortEpisodesByNumber).map(({ self, slug }) => (
         <div key={self}>{`${self}-${slug}`}</div>
         // <DataFetcher key={index} self={self} slug={slug}>
         //   {(episode: Episode) => (
@@ -58,7 +60,7 @@ export const SeasonRail: FC<SeasonRailProps> = ({ season, header }) => {
         //     />
         //   )}
         // </DataFetcher>
-      ))}
+      ))}  */}
     </Rail>
   );
 };
