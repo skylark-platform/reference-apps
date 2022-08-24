@@ -18,6 +18,8 @@ import { useRouter } from "next/router";
 import { useBrandWithSeasonBySlug } from "../../hooks/useBrandWithSeasonBySlug";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 
+import { SeasonRail } from "../../components/seasonRail";
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject("brand", context.query.slug as string);
   return {
@@ -122,7 +124,15 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                 <div
                   className="my-6 w-full"
                   key={season.number || season.objectTitle || season.slug}
-                ></div>
+                >
+                  <SeasonRail
+                    episodeDescription={["medium", "short"]}
+                    episodeTitle={["short", "medium"]}
+                    header={`Season ${season.number || "-"}`}
+                    item={season}
+                    thumbnailSize="250x250"
+                  />
+                </div>
               )
           )}
       </SkeletonPage>
