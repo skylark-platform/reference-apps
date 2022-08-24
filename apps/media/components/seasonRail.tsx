@@ -1,11 +1,7 @@
 import { FC } from "react";
 
 import { Rail } from "@skylark-reference-apps/react";
-import {
-  Episode,
-  getTitleByOrder,
-  Season,
-} from "@skylark-reference-apps/lib";
+import { Episode, Season } from "@skylark-reference-apps/lib";
 
 // import { DataFetcher } from "./dataFetcher";
 
@@ -17,7 +13,7 @@ interface SeasonRailProps {
 // const sortEpisodesByNumber = (a: Episode, b: Episode) =>
 //   (a.number || 0) > (b.number || 0) ? 1 : -1;
 
-export const SeasonRail: FC<SeasonRailProps> = ({ season, header }) => {
+export const SeasonRail: FC<SeasonRailProps> = ({ season }) => {
   const episodes = (season.items?.objects as Episode[]) ?? [];
   console.log(season);
   return (

@@ -1,6 +1,7 @@
 import type { GetStaticProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 import { SkeletonPage } from "@skylark-reference-apps/react";
+import { Season } from "@skylark-reference-apps/lib";
 
 import { homepageSlug, useHomepageSet } from "../hooks/useHomepageSet";
 import { getSeoDataForSet, SeoObjectData } from "../lib/getPageSeoData";
@@ -47,7 +48,9 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                 {item.type === "collection" && (
                   <CollectionRail section={item} />
                 )}
-                {item.type === "season" && <SeasonRail season={item} />}
+                {item.type === "season" && (
+                  <SeasonRail season={item as Season} />
+                )}
               </div>
             );
           }
