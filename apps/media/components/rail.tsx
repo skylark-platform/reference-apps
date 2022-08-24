@@ -10,8 +10,8 @@ export const MainRail: FC<{ section: AllEntertainment }> = ({ section }) => {
 
   return (
     <Rail displayCount header={section.title?.medium || section.title?.short}>
-      {items.map(({ self, slug }, index) => (
-        <DataFetcher key={index} self={self} slug={slug}>
+      {items.map(({ self, slug }) => (
+        <DataFetcher key={`movie-${slug}`} self={self} slug={slug}>
           {(movie: AllEntertainment) => (
             <MovieThumbnail
               backgroundImage={getImageSrc(

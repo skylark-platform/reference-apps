@@ -48,8 +48,8 @@ const Movies: NextPage = () => {
         ))}
       <SkeletonPage show={isLoading}>
         <div className="grid grid-cols-2 gap-x-4 gap-y-6 px-gutter sm:px-sm-gutter md:grid-cols-3 lg:grid-cols-4 lg:px-lg-gutter xl:px-xl-gutter 2xl:grid-cols-6">
-          {movies?.map(({ self, slug }, index) => (
-            <DataFetcher key={index} self={self} slug={slug}>
+          {movies?.map(({ self, slug }) => (
+            <DataFetcher key={`movie-${slug}`} self={self} slug={slug}>
               {(movie) => (
                 <MovieThumbnail
                   backgroundImage={getImageSrc(

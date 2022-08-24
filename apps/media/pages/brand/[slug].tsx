@@ -133,9 +133,9 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                       (season.items.objects as Episode[])
                         .filter((ep) => ep.isExpanded && ep.type === "episode")
                         .sort(sortEpisodesByNumber)
-                        .map((ep: Episode, index) => (
+                        .map((ep: Episode) => (
                           <DataFetcher
-                            key={index}
+                            key={`episode-${ep.slug}`}
                             self={ep.self}
                             slug={ep.slug}
                           >

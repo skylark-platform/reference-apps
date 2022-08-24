@@ -16,8 +16,13 @@ export const CollectionRail: FC<{ section: AllEntertainment }> = ({
 
   return (
     <Rail displayCount header={section.title?.medium || section.title?.short}>
-      {items.map(({ self, slug }, index) => (
-        <DataFetcher isPortrait key={index} self={self} slug={slug}>
+      {items.map(({ self, slug }) => (
+        <DataFetcher
+          isPortrait
+          key={`collection-thumbnail-${slug}`}
+          self={self}
+          slug={slug}
+        >
           {(item: AllEntertainment) => (
             <CollectionThumbnail
               backgroundImage={getImageSrc(item.images, "Thumbnail", "350x350")}

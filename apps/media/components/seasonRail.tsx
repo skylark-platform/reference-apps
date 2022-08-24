@@ -16,6 +16,9 @@ interface SeasonRailProps {
   header?: string;
 }
 
+const sortEpisodesByNumber = (a: Episode, b: Episode) =>
+  (a?.number || 0) > (b?.number || 0) ? 1 : -1;
+
 export const SeasonRail: FC<SeasonRailProps> = ({
   item,
   header = item.title?.medium || item.title?.short,
@@ -24,8 +27,8 @@ export const SeasonRail: FC<SeasonRailProps> = ({
 
   return (
     <Rail displayCount header={header}>
-      {items.map(({ self, slug }, index) => (
-        <DataFetcher key={index} self={self} slug={slug}>
+      {items.sort(sortEpisodesByNumber).map(({ self, slug }) => (
+        <DataFetcher key={`episode-${slug}`} self={self} slug={slug}>
           {(episode: Episode) => (
             <EpisodeThumbnail
               backgroundImage={getImageSrc(
