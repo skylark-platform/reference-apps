@@ -13,7 +13,7 @@ describe("Dimension Settings component", () => {
     expect(screen.getByText(/Demo v1.0/)).toBeTruthy();
     expect(screen.getByRole("link")).toHaveProperty(
       "href",
-      "mailto:hello@skylarkplatform.com?subject=Enquiry%20from%20demo%20app"
+      "mailto:hello@skylarkplatform.com?subject=Enquiry%20from%20StreamTV"
     );
   });
 });

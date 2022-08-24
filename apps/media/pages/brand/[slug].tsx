@@ -76,7 +76,7 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                 numberOfItems={seasons.length}
                 rating={
                   brand?.ratings?.isExpanded
-                    ? brand.ratings.items?.[0].title
+                    ? brand.ratings.items?.[0]?.title
                     : ""
                 }
                 releaseDate={formatReleaseDate(seasons?.[0]?.releaseDate)}
@@ -91,7 +91,7 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                 episodeNumber={1}
                 episodeTitle={
                   seasons.length && seasons[0].items?.isExpanded
-                    ? getTitleByOrder(seasons[0].items?.objects[0].title, [
+                    ? getTitleByOrder(seasons[0].items?.objects[0]?.title, [
                         "long",
                         "medium",
                         "short",
