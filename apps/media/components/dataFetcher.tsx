@@ -6,15 +6,23 @@ import {
 } from "@skylark-reference-apps/lib";
 import { Skeleton } from "@skylark-reference-apps/react";
 
+import { useSingleObject } from "../hooks/useSingleObject";
+
 const Data: FC<{
   children(data: AllEntertainment): ReactNode;
   self: string;
   slug: string;
-}> = ({ self, slug }) => {
+}> = ({ children, self, slug }) => {
   console.log("self", self);
   console.log("slug", slug);
   console.log("type", convertUrlToObjectType(self));
-  return <div />;
+
+  const { data, isLoading } = useSingleObject(
+    convertUrlToObjectType(self),
+    slug
+  );
+
+  return !isLoading && data ? <>{children(data)}</> : <Skeleton show />;
 };
 
 export const DataFetcher: FC<{
