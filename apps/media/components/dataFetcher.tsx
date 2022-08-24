@@ -12,13 +12,14 @@ const Data: FC<{
   children(data: AllEntertainment): ReactNode;
   self: string;
   slug: string;
-}> = ({ children, self, slug }) => {
-  const { data, isLoading } = useSingleObject(
-    convertUrlToObjectType(self),
-    slug
-  );
+}> = ({ self, slug }) => {
+  const { data } = useSingleObject(convertUrlToObjectType(self), slug);
 
-  return !isLoading && data ? <>{children(data)}</> : <Skeleton show />;
+  console.log("#", data);
+
+  return <Skeleton show />;
+
+  // return !isLoading && data ? <>{children(data)}</> : <Skeleton show />;
 };
 
 export const DataFetcher: FC<{

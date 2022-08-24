@@ -126,8 +126,6 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                   key={season.number || season.objectTitle || season.slug}
                 >
                   <SeasonRail
-                    episodeDescription={["medium", "short"]}
-                    episodeTitle={["short", "medium"]}
                     header={`Season ${season.number || "-"}`}
                     item={season}
                     thumbnailSize="250x250"
