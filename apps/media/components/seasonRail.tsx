@@ -4,13 +4,13 @@ import { Rail } from "@skylark-reference-apps/react";
 import {
   Episode,
   getTitleByOrder,
-  AllEntertainment,
+  Season,
 } from "@skylark-reference-apps/lib";
 
 // import { DataFetcher } from "./dataFetcher";
 
 interface SeasonRailProps {
-  season: AllEntertainment;
+  season: Season;
   header?: string;
 }
 
@@ -23,17 +23,17 @@ export const SeasonRail: FC<SeasonRailProps> = ({ season, header }) => {
   return (
     <Rail
       displayCount
-      header={
-        header ||
-        getTitleByOrder(
-          season?.title,
-          ["medium", "short", "long"],
-          season.objectTitle
-        )
-      }
+      // header={
+      //   header ||
+      //   getTitleByOrder(
+      //     season?.title,
+      //     ["medium", "short", "long"],
+      //     season.objectTitle
+      //   )
+      // }
     >
       {console.log("episodes", episodes)}
-      <div>{test}</div>
+      <div>{season}</div>
       {/* {episodes.sort(sortEpisodesByNumber).map(({ self, slug }) => (
         <div key={self}>{`${self}-${slug}`}</div>
         // <DataFetcher key={index} self={self} slug={slug}>

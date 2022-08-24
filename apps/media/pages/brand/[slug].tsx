@@ -126,7 +126,7 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                   key={season.number || season.objectTitle || season.slug}
                 >
                   <SeasonRail
-                    header={`Season ${season.number || "-"}`}
+                    // header={`Season ${season.number || "-"}`}
                     season={season}
                   />
                 </div>
