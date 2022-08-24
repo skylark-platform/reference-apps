@@ -51,7 +51,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                   <p className="text-gray-400">{`Demo v1.0 -`}</p>
                   <a
                     className="text-skylark-blue md:pl-1"
-                    href="mailto:hello@skylarkplatform.com?subject=Enquiry from demo app"
+                    href="mailto:hello@skylarkplatform.com?subject=Enquiry from StreamTV"
                     rel="noreferrer"
                     target="_blank"
                   >
@@ -76,32 +76,15 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
               </p>
               <p className="py-2 text-sm">{`Device type: ${deviceType}`}</p>
               <div className="grid grid-cols-1 gap-8 pt-7 md:grid-cols-2 md:pt-14 lg:grid-cols-4">
-                <DimensionContent label="Time">
-                  <DimensionRadioButton
-                    options={["Current", "Tomorrow"]}
-                    onChange={(value: string) => console.log(value)}
-                  />
-                </DimensionContent>
-                <DimensionContent label="Location">
-                  <DimensionRadioButton
-                    options={["UK", "South Amercia"]}
-                    onChange={(value: string) => console.log(value)}
-                  />
-                </DimensionContent>
                 <DimensionContent label="Language">
                   <DimensionRadioButton
-                    options={["English", "Spanish"]}
+                    options={["English", "Portuguese"]}
                     onChange={(value: string) => console.log(value)}
                   />
                 </DimensionContent>
                 <DimensionContent label="Customer Type">
                   <DimensionRadioButton
-                    options={[
-                      "Standard",
-                      "Premium",
-                      "Something else",
-                      "One more thing a bit longer",
-                    ]}
+                    options={["Standard", "Premium"]}
                     onChange={(value: string) => console.log(value)}
                   />
                 </DimensionContent>
