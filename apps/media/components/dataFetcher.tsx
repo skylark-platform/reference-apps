@@ -13,10 +13,6 @@ const Data: FC<{
   self: string;
   slug: string;
 }> = ({ children, self, slug }) => {
-  console.log("self", self);
-  console.log("slug", slug);
-  console.log("type", convertUrlToObjectType(self));
-
   const { data, isLoading } = useSingleObject(
     convertUrlToObjectType(self),
     slug

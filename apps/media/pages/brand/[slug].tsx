@@ -6,6 +6,8 @@ import {
   Hero,
   getImageSrcAndSizeByWindow,
   SkeletonPage,
+  Rail,
+  EpisodeThumbnail,
 } from "@skylark-reference-apps/react";
 import {
   Episode,
@@ -13,12 +15,13 @@ import {
   getTitleByOrder,
   getSynopsisByOrder,
   Season,
+  getImageSrc,
 } from "@skylark-reference-apps/lib";
 import { useRouter } from "next/router";
 import { useBrandWithSeasonBySlug } from "../../hooks/useBrandWithSeasonBySlug";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 
-import { SeasonRail } from "../../components/seasonRail";
+import { DataFetcher } from "../../components/dataFetcher";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject("brand", context.query.slug as string);
@@ -125,10 +128,42 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                   className="my-6 w-full"
                   key={season.number || season.objectTitle || season.slug}
                 >
-                  <SeasonRail
-                    header={`Season ${season.number || "-"}`}
-                    item={season}
-                  />
+                  <Rail displayCount header={`Season ${season.number || "-"}`}>
+                    {season.items?.isExpanded &&
+                      (season.items.objects as Episode[])
+                        .filter((ep) => ep.isExpanded && ep.type === "episode")
+                        .sort(sortEpisodesByNumber)
+                        .map((ep: Episode, index) => (
+                          <DataFetcher
+                            key={index}
+                            self={ep.self}
+                            slug={ep.slug}
+                          >
+                            {(episode: Episode) => (
+                              <EpisodeThumbnail
+                                backgroundImage={getImageSrc(
+                                  episode.images,
+                                  "Thumbnail",
+                                  "250x250"
+                                )}
+                                description={
+                                  episode.synopsis?.medium ||
+                                  episode.synopsis?.short ||
+                                  ""
+                                }
+                                href={`/episode/${episode.slug}`}
+                                key={episode.objectTitle}
+                                number={episode.number || 0}
+                                title={getTitleByOrder(
+                                  episode?.title,
+                                  ["short", "medium"],
+                                  episode.objectTitle
+                                )}
+                              />
+                            )}
+                          </DataFetcher>
+                        ))}
+                  </Rail>
                 </div>
               )
           )}
