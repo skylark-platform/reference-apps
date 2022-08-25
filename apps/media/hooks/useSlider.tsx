@@ -1,14 +1,14 @@
-import axios from "axios";
-import useSWR from "swr";
 import {
   createSkylarkApiQuery,
   SKYLARK_API,
   parseSkylarkObject,
   AllEntertainment,
-  Brand,
+  Set,
   ApiMultipleEntertainmentObjects,
 } from "@skylark-reference-apps/lib";
 import { useDeviceType } from "@skylark-reference-apps/react/src/hooks";
+import useSWR from "swr";
+import axios from "axios";
 
 const fieldsToExpand = {
   image_urls: {},
@@ -17,8 +17,7 @@ const fieldsToExpand = {
     people_url: {},
   },
   items: {
-    image_urls: {},
-    items: {
+    content_url: {
       image_urls: {},
     },
   },
@@ -54,31 +53,44 @@ const fields = {
     slug: {},
   },
   items: {
-    self: {},
-    slug: {},
-    title: {},
-    image_urls: {
-      self: {},
-      url: {},
-      url_path: {},
-      image_type: {},
-    },
-    title_short: {},
-    title_medium: {},
-    synopsis_short: {},
-    synopsis_medium: {},
-    season_number: {},
-    episode_number: {},
-    release_date: {},
-    items: {
+    content_url: {
       self: {},
       slug: {},
+      title: {},
+      image_urls: {
+        self: {},
+        url: {},
+        url_path: {},
+        image_type: {},
+      },
+      title_short: {},
+      title_medium: {},
+      synopsis_short: {},
+      synopsis_medium: {},
+      season_number: {},
       episode_number: {},
+      release_date: {},
+      items: {
+        self: {},
+        slug: {},
+        title: {},
+        image_urls: {
+          self: {},
+          url: {},
+          url_path: {},
+          image_type: {},
+        },
+        title_short: {},
+        title_medium: {},
+        synopsis_short: {},
+        synopsis_medium: {},
+        episode_number: {},
+      },
     },
   },
 };
 
-export const brandWithSeasonFetcher = ([slug, deviceType]: [
+export const setFetcher = ([slug, deviceType]: [
   slug: string,
   deviceType: string
 ]) => {
@@ -90,13 +102,13 @@ export const brandWithSeasonFetcher = ([slug, deviceType]: [
 
   return axios
     .get<ApiMultipleEntertainmentObjects>(
-      `${SKYLARK_API}/api/brands/?slug=${slug}&${apiQuery}`,
+      `${SKYLARK_API}/api/sets/?slug=${slug}&${apiQuery}`,
       { headers: { "Accept-Language": "en-gb" } }
     )
     .then(({ data }) => {
       const { objects } = data;
       if (!objects || objects.length === 0) {
-        throw new Error("Brand not found");
+        throw new Error("Set not found");
       }
       return objects;
     })
@@ -105,17 +117,18 @@ export const brandWithSeasonFetcher = ([slug, deviceType]: [
     );
 };
 
-export const useBrandWithSeasonBySlug = (slug: string) => {
+export const useSlider = (slug: string) => {
   const deviceType = useDeviceType();
 
   const { data, error } = useSWR<AllEntertainment, Error>(
     [slug, deviceType],
-    brandWithSeasonFetcher
+    setFetcher
   );
 
   return {
-    brand: data as Brand | undefined,
-    notFound: error?.message === "Brand not found",
+    slider: data as Set | undefined,
+    isLoading: !error && !data,
+    notFound: error?.message === "Set not found",
     error,
   };
 };

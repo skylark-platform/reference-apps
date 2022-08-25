@@ -11,27 +11,12 @@ import {
   EntertainmentType,
 } from "@skylark-reference-apps/lib";
 
-const fieldsToExpand = {
-  image_urls: {},
-  genre_urls: {},
-};
+const fieldsToExpand = {};
 
 const fields = {
-  title_short: {},
-  title_medium: {},
-  slug: {},
-  type: {},
+  uid: {},
   self: {},
-  release_date: {},
-  image_urls: {
-    self: {},
-    url: {},
-    url_path: {},
-    image_type: {},
-  },
-  genre_urls: {
-    name: {},
-  },
+  slug: {},
 };
 
 export const moviesSetFetcher = ([endpoint, genreUid]: [

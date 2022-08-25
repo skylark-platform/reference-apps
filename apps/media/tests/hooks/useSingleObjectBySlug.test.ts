@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 import axios from "axios";
-import { singleObjectFetcher } from "../../hooks/useSingleObjectBySlug";
+import { singleObjectFetcher } from "../../hooks/useSingleObject";
 
 jest.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;

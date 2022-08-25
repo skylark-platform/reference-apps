@@ -27,6 +27,8 @@ const fieldsToExpand = {
 
 const fields = {
   self: {},
+  slug: {},
+  set_type_slug: {},
   title: {},
   image_urls: {
     self: {},
@@ -102,11 +104,12 @@ export const singleObjectFetcher = ([endpoint, slug]: [
       return parseSkylarkObject(object);
     });
 
-export const useSingleObjectBySlug = (
-  type: EntertainmentType,
+export const useSingleObject = (
+  type: EntertainmentType | null,
   slug: string | undefined
 ) => {
-  const endpoint = convertObjectTypeToSkylarkEndpoint(type);
+  const endpoint = (type && convertObjectTypeToSkylarkEndpoint(type)) || "sets";
+
   const { data, error } = useSWR<AllEntertainment, Error>(
     [endpoint, slug],
     singleObjectFetcher

@@ -1,24 +1,27 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 import {
-  EpisodeThumbnail,
-  Rail,
   Header,
   CallToAction,
   Hero,
   getImageSrcAndSizeByWindow,
-  Skeleton,
+  SkeletonPage,
+  Rail,
+  EpisodeThumbnail,
 } from "@skylark-reference-apps/react";
 import {
   Episode,
   formatReleaseDate,
-  getImageSrc,
   getTitleByOrder,
+  getSynopsisByOrder,
   Season,
+  getImageSrc,
 } from "@skylark-reference-apps/lib";
 import { useRouter } from "next/router";
 import { useBrandWithSeasonBySlug } from "../../hooks/useBrandWithSeasonBySlug";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
+
+import { DataFetcher } from "../../components/dataFetcher";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject("brand", context.query.slug as string);
@@ -63,16 +66,16 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         openGraph={{ images: seo.images }}
         title={titleShortToLong || seo.title}
       />
-      <Skeleton show={!brand && !error}>
+      <SkeletonPage show={!brand && !error}>
         <div className="-mt-48">
           <Hero bgImage={getImageSrcAndSizeByWindow(brand?.images, "Main")}>
             <div className="flex flex-col">
               <Header
-                description={
-                  brand?.synopsis.long ||
-                  brand?.synopsis.medium ||
-                  brand?.synopsis.short
-                }
+                description={getSynopsisByOrder(brand?.synopsis, [
+                  "long",
+                  "medium",
+                  "short",
+                ])}
                 numberOfItems={seasons.length}
                 rating={
                   brand?.ratings?.isExpanded
@@ -131,30 +134,39 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                         .filter((ep) => ep.isExpanded && ep.type === "episode")
                         .sort(sortEpisodesByNumber)
                         .map((ep: Episode) => (
-                          <EpisodeThumbnail
-                            backgroundImage={getImageSrc(
-                              ep.images,
-                              "Thumbnail",
-                              "250x250"
+                          <DataFetcher
+                            key={`episode-${ep.slug}`}
+                            self={ep.self}
+                            slug={ep.slug}
+                          >
+                            {(episode: Episode) => (
+                              <EpisodeThumbnail
+                                backgroundImage={getImageSrc(
+                                  episode.images,
+                                  "Thumbnail",
+                                  "250x250"
+                                )}
+                                description={getSynopsisByOrder(
+                                  episode?.synopsis,
+                                  ["medium", "short"]
+                                )}
+                                href={`/episode/${episode.slug}`}
+                                key={episode.objectTitle}
+                                number={episode.number || 0}
+                                title={getTitleByOrder(
+                                  episode?.title,
+                                  ["short", "medium"],
+                                  episode.objectTitle
+                                )}
+                              />
                             )}
-                            description={
-                              ep.synopsis?.medium || ep.synopsis?.short || ""
-                            }
-                            href={`/episode/${ep.slug}`}
-                            key={ep.objectTitle}
-                            number={ep.number || 0}
-                            title={getTitleByOrder(
-                              ep?.title,
-                              ["short", "medium"],
-                              ep.objectTitle
-                            )}
-                          />
+                          </DataFetcher>
                         ))}
                   </Rail>
                 </div>
               )
           )}
-      </Skeleton>
+      </SkeletonPage>
     </div>
   );
 };

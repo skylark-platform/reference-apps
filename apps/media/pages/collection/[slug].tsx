@@ -4,7 +4,7 @@ import {
   Header,
   StandardThumbnail,
   Hero,
-  Skeleton,
+  SkeletonPage,
   getImageSrcAndSizeByWindow,
 } from "@skylark-reference-apps/react";
 import {
@@ -19,6 +19,8 @@ import { useRouter } from "next/router";
 
 import { useCollectionBySlug } from "../../hooks/useCollectionBySlug";
 import { getSeoDataForSet, SeoObjectData } from "../../lib/getPageSeoData";
+
+import { DataFetcher } from "../../components/dataFetcher";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForSet(
@@ -53,7 +55,7 @@ const CollectionPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         openGraph={{ images: seo.images }}
         title={titleLongToShort || seo.title}
       />
-      <Skeleton show={!collection && !error}>
+      <SkeletonPage show={!collection && !error}>
         <div className="-mt-48"></div>
         <Hero bgImage={getImageSrcAndSizeByWindow(collection?.images, "Main")}>
           <Header
@@ -71,19 +73,35 @@ const CollectionPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         </Hero>
         <div className="grid grid-cols-2 gap-x-4 gap-y-6 px-gutter sm:px-sm-gutter md:grid-cols-3 lg:grid-cols-4 lg:px-lg-gutter xl:px-xl-gutter 2xl:grid-cols-6">
           {collectionObjects.map((item) => (
-            <StandardThumbnail
-              backgroundImage={getImageSrc(item.images, "Thumbnail", "384x216")}
-              contentLocation="below"
-              description={getSynopsisByOrder(item?.synopsis)}
-              duration="1h 59m"
-              href={item.type && item.slug ? `/${item.type}/${item.slug}` : ""}
-              key={item.objectTitle || item.uid || item.slug}
-              releaseDate={formatYear(item.releaseDate)}
-              title={item.title?.short || ""}
-            />
+            <DataFetcher
+              key={`movie-${item.slug}`}
+              self={item.self}
+              slug={item.slug}
+            >
+              {(thumbnail) => (
+                <StandardThumbnail
+                  backgroundImage={getImageSrc(
+                    thumbnail.images,
+                    "Thumbnail",
+                    "384x216"
+                  )}
+                  contentLocation="below"
+                  description={getSynopsisByOrder(thumbnail?.synopsis)}
+                  duration="1h 59m"
+                  href={
+                    thumbnail.type && thumbnail.slug
+                      ? `/${thumbnail.type}/${thumbnail.slug}`
+                      : ""
+                  }
+                  key={thumbnail.objectTitle || thumbnail.uid || thumbnail.slug}
+                  releaseDate={formatYear(thumbnail.releaseDate)}
+                  title={thumbnail.title?.short || ""}
+                />
+              )}
+            </DataFetcher>
           ))}
         </div>
-      </Skeleton>
+      </SkeletonPage>
     </div>
   );
 };
