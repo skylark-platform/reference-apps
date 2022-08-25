@@ -60,16 +60,16 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   );
 
   return (
-    <div className="mb-20 mt-48 flex min-h-screen flex-col items-center bg-gray-900">
+    <div className="mb-20 mt-48 flex min-h-screen w-full flex-col items-center bg-gray-900">
       <NextSeo
         description={seo.synopsis}
         openGraph={{ images: seo.images }}
         title={titleShortToLong || seo.title}
       />
       <SkeletonPage show={!brand && !error}>
-        <div className="-mt-48">
+        <div className="-mt-48 w-full">
           <Hero bgImage={getImageSrcAndSizeByWindow(brand?.images, "Main")}>
-            <div className="flex flex-col">
+            <div className="flex w-full flex-col">
               <Header
                 description={getSynopsisByOrder(brand?.synopsis, [
                   "long",
@@ -90,25 +90,27 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                 )}
                 typeOfItems="Seasons"
               />
-              <CallToAction
-                episodeNumber={1}
-                episodeTitle={
-                  seasons.length && seasons[0].items?.isExpanded
-                    ? getTitleByOrder(seasons[0].items?.objects[0]?.title, [
-                        "long",
-                        "medium",
-                        "short",
-                      ])
-                    : ""
-                }
-                href={
-                  firstEpisodeOfFirstSeason
-                    ? `/${firstEpisodeOfFirstSeason.type}/${firstEpisodeOfFirstSeason.slug}`
-                    : ""
-                }
-                inProgress={false}
-                seasonNumber={1}
-              />
+              {firstEpisodeOfFirstSeason && (
+                <CallToAction
+                  episodeNumber={firstEpisodeOfFirstSeason.number || 1}
+                  episodeTitle={
+                    seasons.length && seasons[0].items?.isExpanded
+                      ? getTitleByOrder(seasons[0].items?.objects[0]?.title, [
+                          "long",
+                          "medium",
+                          "short",
+                        ])
+                      : ""
+                  }
+                  href={
+                    firstEpisodeOfFirstSeason
+                      ? `/${firstEpisodeOfFirstSeason.type}/${firstEpisodeOfFirstSeason.slug}`
+                      : ""
+                  }
+                  inProgress={false}
+                  seasonNumber={seasons[0].number || 1}
+                />
+              )}
             </div>
           </Hero>
         </div>

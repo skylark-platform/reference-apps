@@ -29,7 +29,7 @@ const links = [
 function MyApp({ Component, pageProps }: AppProps) {
   const { asPath } = useRouter();
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <DefaultSeo {...createDefaultSeo(appTitle)} />
       <TitleScreen
         exitBackgroundColor="#5B45CE"

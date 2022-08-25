@@ -43,7 +43,6 @@ export const SkeletonPage: React.FC<SkeletonProps> = ({
       {show && arr.length > 0 && (
         <motion.div
           animate="show"
-          // className="fixed inset-0 z-[999] pt-mobile-header md:pt-48 px-sm-gutter md:py-12 md:px-md-gutter w-full lg:px-lg-gutter xl:px-xl-gutter bg-gray-900"
           className="h-auto w-full px-sm-gutter md:px-md-gutter lg:px-lg-gutter xl:px-xl-gutter"
           exit="exit"
           initial=""

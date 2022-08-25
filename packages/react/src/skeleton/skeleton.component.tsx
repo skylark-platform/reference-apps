@@ -20,14 +20,14 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   <>
     {show && (
       <motion.div
-        className="inline-block  w-1/6"
+        className="inline-block w-1/6"
         style={{ width: "100%" }}
         variants={item}
       >
         <div
           className={` ${
-            isPortrait ? "aspect-h-16" : "aspect-h-9"
-          } aspect-w-16 animate-pulse rounded-sm bg-gray-700`}
+            isPortrait ? "aspect-h-4 aspect-w-3" : "aspect-h-9 aspect-w-16"
+          } animate-pulse rounded-sm bg-gray-700`}
         ></div>
       </motion.div>
     )}

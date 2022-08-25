@@ -1,29 +1,25 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { SkeletonPage } from "./skeletonPage.component";
+import { Skeleton } from "./skeleton.component";
 
 export default {
   title: "React/Skeleton",
-  component: SkeletonPage,
-} as ComponentMeta<typeof SkeletonPage>;
+  component: Skeleton,
+} as ComponentMeta<typeof Skeleton>;
 
-const Template: ComponentStory<typeof SkeletonPage> = (args) => (
-  <SkeletonPage {...args} />
+const Template: ComponentStory<typeof Skeleton> = (args) => (
+  <div className="w-32">
+    <Skeleton {...args} />
+  </div>
 );
 
 export const Default = Template.bind({});
 Default.args = {
   show: true,
 };
-Default.parameters = {
-  chromatic: { delay: 1000 }, // To let animation finish
-};
 
-export const WithTitle = Template.bind({});
-WithTitle.args = {
+export const Portrait = Template.bind({});
+Portrait.args = {
   ...Default.args,
-  // title: "StreamTV",
-};
-WithTitle.parameters = {
-  chromatic: { delay: 5000 }, // To let animation finish
+  isPortrait: true,
 };

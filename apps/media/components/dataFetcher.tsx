@@ -12,13 +12,18 @@ const Data: FC<{
   children(data: AllEntertainment): ReactNode;
   self: string;
   slug: string;
-}> = ({ children, self, slug }) => {
+  isPortrait: boolean;
+}> = ({ children, self, slug, isPortrait }) => {
   const { data, isLoading } = useSingleObject(
     convertUrlToObjectType(self),
     slug
   );
 
-  return !isLoading && data ? <>{children(data)}</> : <Skeleton show />;
+  return !isLoading && data ? (
+    <>{children(data)}</>
+  ) : (
+    <Skeleton isPortrait={isPortrait} show />
+  );
 };
 
 export const DataFetcher: FC<{
@@ -35,7 +40,7 @@ export const DataFetcher: FC<{
   return (
     <div ref={ref}>
       {inView ? (
-        <Data self={self} slug={slug}>
+        <Data isPortrait={isPortrait} self={self} slug={slug}>
           {children}
         </Data>
       ) : (
