@@ -13,6 +13,7 @@ const newTVReleases: SetConfig = {
   contents: [
     { type: "brands", slug: "house-of-the-dragon" },
     { type: "brands", slug: "better-call-saul" },
+    { type: "brands", slug: "obi-wan-kenobi" },
   ],
 };
 
