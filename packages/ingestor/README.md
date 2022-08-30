@@ -18,9 +18,11 @@ Its purpose is to import content required for the StreamTV demo application.
 
 ## Running
 
-1. Target your Skylark instance by adding the following properties to a `.env.local` file in `app/media` - the contents are on the main repository README.
+1. Clone this repository.
 
-2. Add the following properties to your `.env.local` file:
+1. Add a `.env.local` file which will contain environment variable for your Airtable and Skylark - follow the instructions in the [Environment Variables document][environment-variables]. This will also configure the ingestor to target your Skylark environment.
+
+1. Add these additional properties to your `.env.local` file:
 
 ```bash
 # Airtable API key and base ID
@@ -28,7 +30,7 @@ AIRTABLE_API_KEY=
 AIRTABLE_BASE_ID=
 ```
 
-3. Install NPM dependencies and run:
+1. Install NPM dependencies and run:
 
 ```bash
 yarn && yarn ingest
@@ -45,6 +47,8 @@ _These objects can be created or modified via the Ingestor_
   - Seasons
   - Episodes
   - Movies
+  - Assets
+- Media Objects (translations)
 - People
 - Roles
 - Credits (using People and Roles)
@@ -62,6 +66,7 @@ _These objects can be created or modified via the Ingestor_
   - Operating Systems
   - Regions
   - Viewing Contexts
+- Image types
 - Asset types
 
 ### Metadata only support
@@ -79,8 +84,9 @@ _These objects are defined in the Ingestor code, but we can add metadata through
 
 _These objects cannot be created by the Ingestor_
 
-- Assets
 - Tags
 - Channels
 - EPG Programmes
 - Parental Guidance
+
+[environment-variables]: ../../docs/environment-variables.md

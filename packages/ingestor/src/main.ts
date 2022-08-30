@@ -8,6 +8,7 @@ import {
   ApiRole,
   ApiSetType,
   ApiThemeGenre,
+  SKYLARK_API,
 } from "@skylark-reference-apps/lib";
 import axios from "axios";
 import { Attachment } from "airtable";
@@ -185,6 +186,9 @@ const createAdditionalObjects = async (metadata: Metadata) => {
 };
 
 const main = async () => {
+  // eslint-disable-next-line no-console
+  console.log(`Starting ingest to ${SKYLARK_API}`);
+
   configureAmplify();
 
   await signInToCognito();

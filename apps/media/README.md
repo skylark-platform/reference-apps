@@ -4,6 +4,10 @@
 
 A [Skylark][skylark] reference application built using Next.js and Tailwind CSS.
 
+## Notable implementation decisions
+
+1. In order to improve page performance, each Thumbnail in StreamTV loads its own data - all the data required to load the information page for that item. We do this so that the initial request to Skylark to gather the Set/Season/parent object is faster and we can display the structure for the page. Also only iformation from thumbnails on screen are fetched. Then, as we have loaded the data required for the information page for the object already, once the user navigates to the object's page, it loads instantly from the cache. To achieve this we use a custom hook to ensure that we send the same parameters when fetching an object ensuring - requests hit the cache.
+
 ## Running
 
 1. Create a `.env.local` and populate it using the instructions in the [Environment Variables document][environment-variables].
@@ -60,7 +64,3 @@ Use the [`@skylark-reference-apps/infra`][infra-project] package to deploy to AW
 [infra-project]: ../../packages/infra/
 [infra-project-more-info]: ../../packages/infra/README.md#Description
 [environment-variables]: ../../docs/environment-variables.md
-
-### Notable implementation decisions
-
-1. In order to improve page performance, each Thumbnail in StreamTV loads its own data - all the data required to load the information page for that item. We do this so that the initial request to Skylark to gather the Set/Season/parent object is faster and we can display the structure for the page. Also only iformation from thumbnails on screen are fetched. Then, as we have loaded the data required for the information page for the object already, once the user navigates to the object's page, it loads instantly from the cache. To achieve this we use a custom hook to ensure that we send the same parameters when fetching an object ensuring - requests hit the cache.
