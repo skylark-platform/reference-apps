@@ -20,7 +20,8 @@
     "prettier:check": "prettier . --check",
     "prepare": "husky install",
     "storybook": "lerna run --stream storybook",
-    "dev": "lerna run --parallel dev"
+    "dev": "lerna run --parallel dev",
+    "ingest": "lerna run --stream ingest"
   },
   "devDependencies": {
     "@lerna/exec": "^4.0.0",
