@@ -406,8 +406,8 @@ describe("skylark.sets", () => {
       // Assert.
       expect(axiosRequest).toBeCalledWith(
         expect.objectContaining({
-          method: "POST",
-          url: `https://skylarkplatform.io/api/images/`,
+          method: "PUT",
+          url: `https://skylarkplatform.io/api/images/versions/data-source/image-1-episode_1/`,
           data: {
             content_url: objectToAttachImageTo.self,
             image_location: imageAttachment.url,
@@ -445,7 +445,7 @@ describe("skylark.sets", () => {
       expect(axiosRequest).toBeCalledWith(
         expect.objectContaining({
           method: "PUT",
-          url: `https://skylarkplatform.io/api/images/${image.uid as string}`,
+          url: `https://skylarkplatform.io/api/images/versions/data-source/image-1-episode_1/`,
           data: image,
         })
       );

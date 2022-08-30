@@ -45,9 +45,16 @@ export const createOrUpdateObject = async <T extends ApiBaseObject>(
   // Patch method is safer when updating objects, but the /api/images endpoint doesn't implement it
   const updateMethod = type === "images" ? "PUT" : "PATCH";
 
-  const url = `/api/${type}/${existingObject?.uid || ""}`;
+  let method = existingObject ? updateMethod : "POST";
+  let url = `/api/${type}/${existingObject?.uid || ""}`;
+
+  if (lookup.property === "data_source_id") {
+    method = "PUT";
+    url = `/api/${type}/versions/data-source/${lookup.value}/`;
+  }
+
   const res = await authenticatedSkylarkRequest(url, {
-    method: existingObject ? updateMethod : "POST",
+    method,
     data: {
       ...existingObject,
       ...data,

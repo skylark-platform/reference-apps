@@ -340,8 +340,8 @@ describe("skylark.sets", () => {
       expect(axiosRequest).toHaveBeenNthCalledWith(
         4,
         expect.objectContaining({
-          url: "https://skylarkplatform.io/api/images/",
-          method: "POST",
+          url: "https://skylarkplatform.io/api/images/versions/data-source/image-1-set_1/",
+          method: "PUT",
           data: {
             content_url: set.self,
             image_location: "https://download-this-image.jpg",
