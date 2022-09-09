@@ -16,6 +16,7 @@ import {
 } from "@skylark-reference-apps/lib";
 
 import { useRouter } from "next/router";
+import useTranslation from "next-translate/useTranslation";
 
 import { useCollectionBySlug } from "../../hooks/useCollectionBySlug";
 import { getSeoDataForSet, SeoObjectData } from "../../lib/getPageSeoData";
@@ -49,6 +50,8 @@ const CollectionPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     collection?.objectTitle
   );
 
+  const { lang } = useTranslation("common");
+
   return (
     <div className="mb-20 mt-48 flex min-h-screen flex-col items-center bg-gray-900">
       <NextSeo
@@ -67,7 +70,7 @@ const CollectionPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                 ? collection?.ratings?.items?.[0]?.title
                 : ""
             }
-            releaseDate={formatReleaseDate(collection?.releaseDate)}
+            releaseDate={formatReleaseDate(collection?.releaseDate, lang)}
             title={titleLongToShort}
             typeOfItems="movie"
           />

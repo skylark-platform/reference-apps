@@ -22,7 +22,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 
 const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { homepage } = useHomepageSet();
-  console.log("homepage", homepage)
 
   const homepageItems =
     (homepage?.isExpanded &&

@@ -22,8 +22,6 @@ export const DimensionRadioButton: React.FC<RadioButtonProps> = ({
     onChange(newValue.value);
   };
 
-  console.log("active", active);
-
   return (
     <div className="flex flex-col">
       {options.map((option) => (

@@ -71,7 +71,6 @@ export const homepageSetFetcher = (
 export const useHomepageSet = () => {
   const [homepageData, setHomepageData] = useState<AllEntertainment | undefined>();
   const { dimensions } = useDimensions();
-  console.log("dimensions", dimensions)
 
   const { data, error } = useSWR<AllEntertainment, Error>(
     [homepageSwrKey, dimensions],

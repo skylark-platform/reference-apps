@@ -68,7 +68,7 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     ? movie.genres.items.map(({ name }) => name)
     : [];
 
-  const { t } = useTranslation("common");
+  const { t, lang } = useTranslation("common");
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-start pb-20 md:pt-64">
@@ -145,7 +145,7 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                   {
                     icon: <MdCalendarToday />,
                     header: t("released"),
-                    body: formatReleaseDate(movie.releaseDate),
+                    body: formatReleaseDate(movie.releaseDate, lang),
                   },
                 ].filter(({ body }) => body.length > 0)}
               />

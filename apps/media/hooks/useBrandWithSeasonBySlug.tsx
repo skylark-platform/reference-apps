@@ -108,7 +108,6 @@ export const brandWithSeasonFetcher = ([slug, dimensions]: [
 
 export const useBrandWithSeasonBySlug = (slug: string) => {
   const { dimensions } = useDimensions();
-  console.log("dimensions", dimensions)
 
   const { data, error } = useSWR<AllEntertainment, Error>(
     [slug, dimensions],

@@ -73,7 +73,7 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     ? episode.genres.items.map(({ name }) => name)
     : [];
 
-  const { t } = useTranslation("common");
+  const { t, lang } = useTranslation("common");
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-start pb-20 md:pt-64">
@@ -160,7 +160,7 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                     icon: <MdCalendarToday />,
                     header: t("released"),
                     body: episode.parent?.isExpanded
-                      ? formatReleaseDate(episode.releaseDate)
+                      ? formatReleaseDate(episode.releaseDate, lang)
                       : "",
                   },
                 ].filter(({ body }) => body.length > 0)}

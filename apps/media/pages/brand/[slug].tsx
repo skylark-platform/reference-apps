@@ -60,7 +60,7 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     brand?.objectTitle
   );
 
-  const { t } = useTranslation("common");
+  const { t, lang } = useTranslation("common");
 
   return (
     <div className="mb-20 mt-48 flex min-h-screen w-full flex-col items-center bg-gray-900">
@@ -85,7 +85,7 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                     ? brand.ratings.items?.[0]?.title
                     : ""
                 }
-                releaseDate={formatReleaseDate(seasons?.[0]?.releaseDate)}
+                releaseDate={formatReleaseDate(seasons?.[0]?.releaseDate, lang)}
                 title={getTitleByOrder(
                   brand?.title,
                   ["long", "medium", "short"],
