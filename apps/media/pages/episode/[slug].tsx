@@ -16,6 +16,7 @@ import {
   Season,
 } from "@skylark-reference-apps/lib";
 import { useRouter } from "next/router";
+import useTranslation from "next-translate/useTranslation";
 import {
   MdRecentActors,
   MdMovie,
@@ -71,6 +72,8 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const genres: string[] = episode?.genres?.isExpanded
     ? episode.genres.items.map(({ name }) => name)
     : [];
+
+  const { t } = useTranslation("common");
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-start pb-20 md:pt-64">
@@ -134,28 +137,28 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                 content={[
                   {
                     icon: <MdRecentActors />,
-                    header: "Key Cast",
+                    header: t("skylark.role.key-cast"),
                     body: formatCredits(
                       getCreditsByType(episode.credits, "Actor")
                     ),
                   },
                   {
                     icon: <MdMovie />,
-                    header: "Directors",
+                    header: t("skylark.role.directors"),
                     body: formatCredits(
                       getCreditsByType(episode.credits, "Director")
                     ),
                   },
                   {
                     icon: <MdMode />,
-                    header: "Writers",
+                    header: t("skylark.role.writers"),
                     body: formatCredits(
                       getCreditsByType(episode.credits, "Writer")
                     ),
                   },
                   {
                     icon: <MdCalendarToday />,
-                    header: "Released",
+                    header: t("released"),
                     body: episode.parent?.isExpanded
                       ? formatReleaseDate(episode.releaseDate)
                       : "",

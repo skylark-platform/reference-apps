@@ -137,3 +137,9 @@ export type AllEntertainment =
   | Movie
   | Brand
   | Set;
+
+export interface Dimensions {
+  language: string
+  customerType: string
+  deviceType: string
+}

@@ -13,7 +13,7 @@ describe("Header component", () => {
         rating={"18+"}
         releaseDate={"2011"}
         title={"Game of Thrones"}
-        typeOfItems={"Seasons"}
+        typeOfItems={"season"}
       />
     );
     expect(screen.getByText(/Game of Thrones/)).toBeTruthy();

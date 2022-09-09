@@ -34,6 +34,7 @@ import {
   UnexpandedSkylarkObjects,
   ExpandedSkylarkObjects,
   UnexpandedParentObject,
+  Dimensions,
 } from "../interfaces";
 
 /**
@@ -50,14 +51,14 @@ const determineIfExpanded = (items: string[] | object[]): boolean =>
  * @param {fieldsToExpand, fields} - object containing query parameters to be parsed
  * @returns URL query
  */
-export const createSkylarkApiQuery = ({
+export const createSkylarkRequestQueryAndHeaders = ({
   fieldsToExpand,
   fields,
-  deviceTypes,
+  dimensions,
 }: {
   fieldsToExpand: object;
   fields: object;
-  deviceTypes?: string[];
+  dimensions: Dimensions;
 }) => {
   const parsedFieldsToExpand = convertObjectToSkylarkApiFields(fieldsToExpand);
   const parsedFields = convertObjectToSkylarkApiFields(fields);
@@ -72,11 +73,22 @@ export const createSkylarkApiQuery = ({
     query.push(`fields=${parsedFields}`);
   }
 
-  if (deviceTypes && deviceTypes.length > 0) {
-    query.push(`device_types=${deviceTypes.join(",")}`);
+  if (dimensions?.deviceType) {
+    query.push(`device_types=${dimensions.deviceType}`);
   }
 
-  return query.join("&");
+  if (dimensions?.customerType) {
+    query.push(`customer_types=${dimensions.customerType}`);
+  }
+
+  const headers = {
+    "Accept-Language": dimensions && dimensions.language ? `${dimensions.language},*` : "en-gb"
+  }
+
+  return {
+    query: query.join("&"),
+    headers,
+  };
 };
 
 /**

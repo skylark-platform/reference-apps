@@ -1,3 +1,4 @@
+import useTranslation from "next-translate/useTranslation";
 import React, { useState } from "react";
 import { MdOutlineWatchLater } from "react-icons/md";
 import { List } from "../list";
@@ -27,6 +28,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
 }) => {
   const [isExpanded, setExpand] = useState(false);
   const [isTrunicated, setTrunicated] = useState(false);
+  const { t } = useTranslation("common");
 
   const setTrunicatedWrapper = (el: HTMLParagraphElement) => {
     const trunc = !!(el && el.clientHeight < el.scrollHeight);
@@ -42,7 +44,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
                 contents={
                   [
                     ...parentTitles,
-                    seasonNumber ? `Season ${seasonNumber}` : "",
+                    seasonNumber ? `${t("skylark.object.season")} ${seasonNumber}` : "",
                   ] || []
                 }
                 highlightAll
@@ -62,7 +64,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
                 {`${duration}m`}
               </span>,
               rating,
-              `Available for ${availableUntil} days`,
+              t("available-for", { days: availableUntil }),
             ]}
             highlightFirst
             textSize={"sm"}
@@ -80,7 +82,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
                   className="font-semibold underline"
                   onClick={() => setExpand(!isExpanded)}
                 >
-                  {isExpanded ? "Show less" : "Show more"}
+                  {isExpanded ? t("show-less") : t("show-more")}
                 </button>
               )}
             </div>

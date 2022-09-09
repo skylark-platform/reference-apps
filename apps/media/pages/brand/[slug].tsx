@@ -17,6 +17,7 @@ import {
   Season,
   getImageSrc,
 } from "@skylark-reference-apps/lib";
+import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
 import { useBrandWithSeasonBySlug } from "../../hooks/useBrandWithSeasonBySlug";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
@@ -59,6 +60,8 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     brand?.objectTitle
   );
 
+  const { t } = useTranslation("common");
+
   return (
     <div className="mb-20 mt-48 flex min-h-screen w-full flex-col items-center bg-gray-900">
       <NextSeo
@@ -88,7 +91,7 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                   ["long", "medium", "short"],
                   brand?.objectTitle
                 )}
-                typeOfItems="Seasons"
+                typeOfItems="season"
               />
               {firstEpisodeOfFirstSeason && (
                 <CallToAction
@@ -130,7 +133,7 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                   className="my-6 w-full"
                   key={season.number || season.objectTitle || season.slug}
                 >
-                  <Rail displayCount header={`Season ${season.number || "-"}`}>
+                  <Rail displayCount header={`${t("skylark.object.season")} ${season.number || "-"}`}>
                     {season.items?.isExpanded &&
                       (season.items.objects as Episode[])
                         .filter((ep) => ep.isExpanded && ep.type === "episode")

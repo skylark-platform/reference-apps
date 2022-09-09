@@ -4,7 +4,7 @@ import { DimensionContent } from "./dimension-content";
 import { DimensionToggle } from "./dimension-toggle";
 import { DimensionRadioButton } from "./dimension-radio-button";
 import { SkylarkBranding } from "../skylark-branding";
-import { useDeviceType } from "../hooks/useDeviceType";
+import { useDimensions } from "../contexts";
 
 interface DimensionSettingsProps {
   show?: boolean;
@@ -19,7 +19,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
   show: propShow = false,
 }) => {
   const [show, setShow] = useState(propShow);
-  const deviceType = useDeviceType();
+  const { dimensions, setLanguage, setCustomerType, setDeviceType } = useDimensions();
 
   return (
     <>
@@ -74,18 +74,26 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                   "not connected"
                 )}
               </p>
-              <p className="py-2 text-sm">{`Device type: ${deviceType}`}</p>
               <div className="grid grid-cols-1 gap-8 pt-7 md:grid-cols-2 md:pt-14 lg:grid-cols-4">
                 <DimensionContent label="Language">
                   <DimensionRadioButton
-                    options={["English", "Portuguese"]}
-                    onChange={(value: string) => console.log(value)}
+                    initial={dimensions.language}
+                    options={[{ text: "English", value: "en-gb" }, { text: "Portuguese", value: "pt-pt" }]}
+                    onChange={(value: string) => setLanguage(value)}
                   />
                 </DimensionContent>
                 <DimensionContent label="Customer Type">
                   <DimensionRadioButton
-                    options={["Standard", "Premium"]}
-                    onChange={(value: string) => console.log(value)}
+                    initial={dimensions.customerType}
+                    options={[{ text: "Standard", value: "standard" }, { text: "Premium", value: "premium" }]}
+                    onChange={(value: string) => setCustomerType(value)}
+                  />
+                </DimensionContent>
+                <DimensionContent label="Device Type">
+                  <DimensionRadioButton
+                    initial={dimensions.deviceType}
+                    options={[{ text: "Desktop", value: "pc" }, { text: "Phone", value: "smartphone" }]}
+                    onChange={(value: string) => setDeviceType(value)}
                   />
                 </DimensionContent>
               </div>

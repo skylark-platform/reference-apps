@@ -2,6 +2,7 @@ import { parseSkylarkObject, parseSkylarkThemesAndGenres } from ".";
 import {
   ApiEntertainmentObject,
   Credits,
+  Dimensions,
   ImageUrls,
   Ratings,
   SkylarkObject,
@@ -9,7 +10,7 @@ import {
   UnexpandedObjects,
 } from "../interfaces";
 import {
-  createSkylarkApiQuery,
+  createSkylarkRequestQueryAndHeaders,
   parseSkylarkImageUrls,
   parseSkylarkCredits,
   parseSkylarkRatings,
@@ -45,7 +46,7 @@ const fields = {
 };
 
 describe("skylarkApiHelpers", () => {
-  describe("createSkylarkApiQuery", () => {
+  describe("createSkylarkRequestQueryAndHeaders", () => {
     it("returns the expected query", () => {
       const parsedFieldsToExpand = [
         "items",
@@ -68,9 +69,12 @@ describe("skylarkApiHelpers", () => {
         "items__content_url__items__content_url__self",
       ].join(",");
 
-      const query = createSkylarkApiQuery({
+      const query = createSkylarkRequestQueryAndHeaders({
         fieldsToExpand,
         fields,
+        dimensions: {
+
+        } as Dimensions
       });
 
       expect(query).toEqual(

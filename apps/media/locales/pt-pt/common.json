@@ -1,0 +1,41 @@
+{
+  "cta": {
+    "subscribe": "30 dias de teste gratuito disponível. €12.99 um mês depois.",
+    "watch-free": "Assista gratuitamente",
+    "start-watching": "Comece a assistir",
+    "continue-watching": "Continuar assistindo"
+  },
+  "skylark": {
+    "object": {
+      "movie": "Filme",
+      "episode": "Episódio",
+      "season": "Temporada",
+      "brand": "Marca",
+      "asset": "De Ativos",
+      "count": {
+        "season_0": "0 Temporadas",
+        "season_one": "{{count}} Temporada",
+        "season_other": "{{count}} Temporadas",
+        "movie_0": "0 Filmes",
+        "movie_one": "{{count}} Filme",
+        "movie_other": "{{count}} Filmes"
+      }
+    },
+    "role": {
+      "key-cast": "Elenco",
+      "directors": "Diretores",
+      "writers": "Escritores"
+    }
+  },
+  "sign-in": "Entrar",
+  "register": "Registro",
+  "discover": "Descobrir",
+  "movies": "Filmes",
+  "tv-shows": "Televisão",
+  "movies-page-description": "Pesquise 100 dos melhores e mais recentes títulos, disponíveis para assistir em StreamTV",
+  "by-skylark": "Por Skylark",
+  "available-for": "Disponível para {{days}} dias",
+  "show-more": "Mostre mais",
+  "show-less": "Mostre menos",
+  "released": "Lançado"
+}

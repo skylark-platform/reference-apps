@@ -54,7 +54,7 @@ const createOrUpdateSet = async (
     method = "PUT";
   }
 
-  const languages = [""];
+  const languages = ["en-gb", "pt-pt"];
 
   const [{ data: firstSet }] = await Promise.all(
     languages.map((language) =>

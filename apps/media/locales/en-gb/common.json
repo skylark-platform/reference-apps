@@ -1,0 +1,41 @@
+{
+  "cta": {
+    "subscribe": "30 day free trial available. £12.99/mo after.",
+    "watch-free": "Watch for free",
+    "start-watching": "Start Watching",
+    "continue-watching": "Continue Watching"
+  },
+  "skylark": {
+    "object": {
+      "movie": "Movie",
+      "episode": "Episode",
+      "season": "Season",
+      "brand": "Brand",
+      "asset": "Asset",
+      "count": {
+        "season_0": "0 Seasons",
+        "season_one": "{{count}} Season",
+        "season_other": "{{count}} Seasons",
+        "movie_0": "0 Movie",
+        "movie_one": "{{count}} Movie",
+        "movie_other": "{{count}} Movies"
+      }
+    },
+    "role": {
+      "key-cast": "Key Cast",
+      "directors": "Directors",
+      "writers": "Writers"
+    }
+  },
+  "sign-in": "Sign in",
+  "register": "Register",
+  "discover": "Discover",
+  "movies": "Movies",
+  "tv-shows": "TV Shows",
+  "movies-page-description": "Search 100's of the latest and greatest titles, available to watch on StreamTV",
+  "by-skylark": "By Skylark",
+  "available-for": "Available for {{days}} days",
+  "show-more": "Show more",
+  "show-less": "Show less",
+  "released": "Released"
+}

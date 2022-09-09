@@ -199,6 +199,7 @@ const main = async () => {
 
   const mediaObjects = await createMediaObjects(airtable, metadata);
 
+  // Change to if `--additional-assets` given to add these
   await createAdditionalObjects(metadata);
 
   await createAndUploadAssets(airtable.mediaObjects, mediaObjects);

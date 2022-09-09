@@ -7,6 +7,7 @@ import {
   SkeletonPage,
   H4,
 } from "@skylark-reference-apps/react";
+import useTranslation from "next-translate/useTranslation";
 
 import { getImageSrc, formatYear } from "@skylark-reference-apps/lib";
 import { useAllMovies } from "../hooks/useMoviesSet";
@@ -19,16 +20,17 @@ const Movies: NextPage = () => {
   const { genres } = useAllGenres();
   const selectedGenreUid = genres?.find(({ name }) => name === genre);
   const { movies, isLoading } = useAllMovies("movie", selectedGenreUid?.uid);
+  const { t } = useTranslation("common");
 
   return (
     <div className="flex w-full flex-col justify-center py-20">
-      <NextSeo title="Movies" />
+      <NextSeo title={t('movies')} />
       <div className="px-gutter sm:px-sm-gutter md:pt-20 lg:px-lg-gutter xl:px-xl-gutter">
         <div className="my-10 text-white">
-          <h1 className="text-[40px] font-medium md:text-[56px]">{"Movies"}</h1>
+          <h1 className="text-[40px] font-medium md:text-[56px]">{t('movies')}</h1>
           <div className="text-[16px]">
             {
-              "Search 100's of the latest and greatest titles, available to watch of Stream TV"
+              t('movies-page-description')
             }
           </div>
         </div>

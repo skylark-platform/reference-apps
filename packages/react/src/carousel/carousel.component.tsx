@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { wrap } from "popmotion";
+import useTranslation from 'next-translate/useTranslation'
 import {
-  convertEntertainmentTypeToString,
   EntertainmentType,
   formatYear,
 } from "@skylark-reference-apps/lib";
@@ -95,6 +95,8 @@ export const Carousel: React.FC<CarouselProps> = ({
   const { image, title, releaseDate, type, duration, href } = items[itemIndex];
   const activeImageHasLoaded = areImagesLoaded || loadedImages.includes(image);
 
+  const { t } = useTranslation('common')
+
   return (
     <div
       className={`
@@ -136,7 +138,7 @@ export const Carousel: React.FC<CarouselProps> = ({
                 contents={[
                   duration,
                   formatYear(releaseDate),
-                  convertEntertainmentTypeToString(type),
+                  t(`skylark.object.${type}`)
                 ]}
                 highlightFirst
                 textSize="sm"
@@ -146,12 +148,12 @@ export const Carousel: React.FC<CarouselProps> = ({
                   href={href}
                   icon={<MdPlayCircleFilled size={25} />}
                   iconPlacement="right"
-                  text="Watch for free"
+                  text={t("cta.watch-free")}
                 />
                 <Button icon={<MdAdd size={25} />} variant="secondary" />
               </div>
               <p className="text-xs text-gray-300">
-                {`30 day free trial available. £12.99/mo after.`}
+                {t("cta.subscribe")}
               </p>
             </div>
           </div>
