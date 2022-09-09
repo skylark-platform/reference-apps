@@ -1,4 +1,7 @@
 {
+  "seo": {
+    "description": "Uma compilação de aplicativo de demonstração para demonstrar o poder do Skylark. Visite https://www.skylarkplatform.com para saber mais."
+  },
   "cta": {
     "subscribe": "30 dias de teste gratuito disponível. €12.99 um mês depois.",
     "watch-free": "Assista gratuitamente",

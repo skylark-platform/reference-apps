@@ -87,6 +87,7 @@ export type ApiSkylarkObjectWithAllPotentialFields = Omit<
     data_source_id: string;
   };
 export interface SetConfig extends Partial<ApiEntertainmentObject> {
+  dataSourceId: string;
   title: string;
   slug: string;
   set_type_slug: SetTypes;

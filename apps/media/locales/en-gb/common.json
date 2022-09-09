@@ -1,4 +1,7 @@
 {
+  "seo": {
+    "description": "A showcase application build to demonstrate the power of Skylark. Visit https://www.skylarkplatform.com to learn more."
+  },
   "cta": {
     "subscribe": "30 day free trial available. £12.99/mo after.",
     "watch-free": "Watch for free",

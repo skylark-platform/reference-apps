@@ -1,8 +1,8 @@
 import { Dimensions } from "@skylark-reference-apps/lib";
 import React, { createContext, useContext, useEffect, useReducer } from "react"
 import setLanguage from 'next-translate/setLanguage'
-import { useDeviceType } from "../hooks";
 import useTranslation from "next-translate/useTranslation";
+import { useDeviceType } from "../hooks";
 
 
 interface ReducerAction {

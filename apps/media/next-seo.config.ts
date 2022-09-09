@@ -2,12 +2,12 @@ import { DefaultSeoProps } from "next-seo";
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL || "";
 
-const createDefaultSeo = (appTitle: string): DefaultSeoProps => ({
+const createDefaultSeo = (appTitle: string, description: string): DefaultSeoProps => ({
   dangerouslySetAllPagesToNoFollow: true,
   dangerouslySetAllPagesToNoIndex: true,
   defaultTitle: appTitle,
   titleTemplate: `%s | ${appTitle}`,
-  description: `${appTitle} - A showcase application build to demonstrate the power of Skylark. Visit https://www.skylarkplatform.com to learn more.`,
+  description: `${appTitle} - ${description}`,
   openGraph: {
     type: "website",
     locale: "en_IE",

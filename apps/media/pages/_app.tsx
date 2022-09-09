@@ -36,7 +36,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <DimensionsContextProvider>
       <div className="relative w-full">
-        <DefaultSeo {...createDefaultSeo(appTitle)} />
+        <DefaultSeo {...createDefaultSeo(appTitle, t("seo.description"))} />
         <TitleScreen
           exitBackgroundColor="#5B45CE"
           logo={
