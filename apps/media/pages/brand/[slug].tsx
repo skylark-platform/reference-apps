@@ -25,7 +25,7 @@ import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 import { DataFetcher } from "../../components/dataFetcher";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const seo = await getSeoDataForObject("brand", context.query.slug as string);
+  const seo = await getSeoDataForObject("brand", context.query.slug as string, context.locale || "");
   return {
     props: {
       seo,

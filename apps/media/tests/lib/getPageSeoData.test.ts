@@ -25,7 +25,7 @@ describe("getPageSeoData", () => {
       mockedAxios.get.mockResolvedValueOnce({ data: { objects: [] } });
 
       // Act
-      await getSeoDataForObject("episode", "slug");
+      await getSeoDataForObject("episode", "slug", "en-gb");
 
       // Assert
       expect(axios.get).toBeCalledWith(
@@ -46,7 +46,7 @@ describe("getPageSeoData", () => {
       mockedAxios.get.mockResolvedValueOnce({ data: { objects: mockData } });
 
       // Act
-      const res = await getSeoDataForObject("episode", "slug");
+      const res = await getSeoDataForObject("episode", "slug", "en-gb");
 
       // Assert
       expect(res).toEqual({
@@ -68,7 +68,7 @@ describe("getPageSeoData", () => {
       mockedAxios.get.mockResolvedValueOnce({ data: { objects: mockData } });
 
       // Act
-      const res = await getSeoDataForObject("episode", "slug");
+      const res = await getSeoDataForObject("episode", "slug", "en-gb");
 
       // Assert
       expect(res).toEqual({
@@ -84,7 +84,7 @@ describe("getPageSeoData", () => {
       mockedAxios.get.mockResolvedValueOnce({ data: { objects: mockData } });
 
       // Act
-      const res = await getSeoDataForObject("episode", "slug");
+      const res = await getSeoDataForObject("episode", "slug", "en-gb");
 
       // Assert
       expect(res).toEqual({
@@ -106,7 +106,7 @@ describe("getPageSeoData", () => {
       mockedAxios.get.mockResolvedValueOnce({ data: { objects: mockData } });
 
       // Act
-      const res = await getSeoDataForObject("episode", "slug");
+      const res = await getSeoDataForObject("episode", "slug", "en-gb");
 
       // Assert
       expect(res).toEqual({
@@ -124,7 +124,7 @@ describe("getPageSeoData", () => {
       mockedAxios.get.mockResolvedValueOnce({ data: { objects: mockData } });
 
       // Act
-      const res = await getSeoDataForObject("episode", "slug");
+      const res = await getSeoDataForObject("episode", "slug", "en-gb");
 
       // Assert
       expect(res).toEqual({
@@ -144,7 +144,7 @@ describe("getPageSeoData", () => {
       // Assert
       const handle = handlePromise();
       mockedAxios.get.mockResolvedValueOnce(handle);
-      await expect(getSeoDataForObject("episode", "slug")).rejects.toThrow(
+      await expect(getSeoDataForObject("episode", "slug", "en-gb")).rejects.toThrow(
         "axios error"
       );
     });
@@ -156,7 +156,7 @@ describe("getPageSeoData", () => {
       mockedAxios.get.mockResolvedValueOnce({ data: { objects: [] } });
 
       // Act
-      await getSeoDataForSet("collection", "slug");
+      await getSeoDataForSet("collection", "slug", "en-gb");
 
       // Assert
       expect(axios.get).toBeCalledWith(

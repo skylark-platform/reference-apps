@@ -25,7 +25,8 @@ import { DataFetcher } from "../../components/dataFetcher";
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForSet(
     "collection",
-    context.query.slug as string
+    context.query.slug as string,
+    context.locale || ""
   );
   return {
     props: {

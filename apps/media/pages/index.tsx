@@ -10,8 +10,8 @@ import { SeasonRail } from "../components/seasonRail";
 import { Slider } from "../components/slider";
 import { MainRail } from "../components/rail";
 
-export const getStaticProps: GetStaticProps = async () => {
-  const seo = await getSeoDataForSet("homepage", homepageSlug);
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
+  const seo = await getSeoDataForSet("homepage", homepageSlug, locale || "");
   return {
     revalidate: 300,
     props: {

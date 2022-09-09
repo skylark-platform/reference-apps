@@ -46,13 +46,14 @@ export interface SeoObjectData {
  */
 const getSeoDataFromSkylark = async (
   endpoint: string,
-  query: string
+  query: string,
+  locale: string,
 ): Promise<SeoObjectData> => {
   const { query: apiQuery, headers } = createSkylarkRequestQueryAndHeaders({
     fieldsToExpand,
     fields,
     dimensions: {
-      language: "*",
+      language: locale || "",
       customerType: "",
       deviceType: "",
     }
@@ -98,10 +99,11 @@ const getSeoDataFromSkylark = async (
  */
 export const getSeoDataForObject = (
   type: EntertainmentType,
-  slug: string
+  slug: string,
+  locale: string,
 ): Promise<SeoObjectData> => {
   const endpointType = convertObjectTypeToSkylarkEndpoint(type);
-  return getSeoDataFromSkylark(`/api/${endpointType}`, `slug=${slug}`);
+  return getSeoDataFromSkylark(`/api/${endpointType}`, `slug=${slug}`, locale);
 };
 
 /**
@@ -112,11 +114,13 @@ export const getSeoDataForObject = (
  */
 export const getSeoDataForSet = (
   setType: SetTypes,
-  slug: string
+  slug: string,
+  locale: string
 ): Promise<SeoObjectData> => {
   const setTypeSlug = convertObjectTypeToSkylarkEndpoint(setType);
   return getSeoDataFromSkylark(
     `/api/sets`,
-    `set_type_slug=${setTypeSlug}&slug=${slug}`
+    `set_type_slug=${setTypeSlug}&slug=${slug}`,
+    locale
   );
 };
