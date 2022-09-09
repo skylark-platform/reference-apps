@@ -78,6 +78,7 @@ runs:
         COGNITO_AWS_REGION: ${{ inputs.cognito-aws-region }}
         COGNITO_CLIENT_ID: ${{ inputs.cognito-client-id }}
         COGNITO_USER_POOL_ID: ${{ inputs.cognito-user-pool-id }}
+        NEXT_TRANSLATE_PATH: "../../apps/media"
       run: |
         yarn cdk bootstrap
         yarn cdk deploy
