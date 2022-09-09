@@ -1,8 +1,9 @@
 import useSWR from "swr";
 import {
-  createSkylarkApiQuery,
+  createSkylarkRequestQueryAndHeaders,
   SKYLARK_API,
   ApiThemeGenre,
+  Dimensions,
 } from "@skylark-reference-apps/lib";
 import axios from "axios";
 
@@ -11,16 +12,17 @@ const fields = {
   uid: {},
 };
 
-export const themeGenresFetcher = (endpoint: "genres" | "themes") => {
-  const apiQuery = createSkylarkApiQuery({
+export const themeGenresFetcher = ([endpoint, dimensions]: [endpoint: "genres" | "themes", dimensions: Dimensions]) => {
+  const { query, headers } = createSkylarkRequestQueryAndHeaders({
     fieldsToExpand: {},
     fields,
+    dimensions
   });
   return axios
     .get<{ objects: ApiThemeGenre[] }>(
-      `${SKYLARK_API}/api/${endpoint}/?order=name&${apiQuery}`,
+      `${SKYLARK_API}/api/${endpoint}/?order=name&${query}`,
       {
-        headers: { "Accept-Language": "en-gb" },
+        headers,
       }
     )
     .then(({ data }) => data.objects);

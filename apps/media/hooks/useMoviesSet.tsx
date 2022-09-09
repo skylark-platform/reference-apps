@@ -1,7 +1,7 @@
 import axios from "axios";
 import useSWR from "swr";
 import {
-  createSkylarkApiQuery,
+  createSkylarkRequestQueryAndHeaders,
   SKYLARK_API,
   parseSkylarkObject,
   AllEntertainment,
@@ -9,6 +9,7 @@ import {
   ApiMultipleEntertainmentObjects,
   convertObjectTypeToSkylarkEndpoint,
   EntertainmentType,
+  Dimensions,
 } from "@skylark-reference-apps/lib";
 
 const fieldsToExpand = {};
@@ -19,22 +20,24 @@ const fields = {
   slug: {},
 };
 
-export const moviesSetFetcher = ([endpoint, genreUid]: [
+export const moviesSetFetcher = ([endpoint, genreUid, dimensions]: [
   endpoint: string,
-  genreUid: string
+  genreUid: string,
+  dimensions: Dimensions,
 ]) => {
-  const apiQuery = createSkylarkApiQuery({
+  const { query, headers } = createSkylarkRequestQueryAndHeaders({
     fieldsToExpand,
     fields,
+    dimensions,
   });
 
   const getSelectedGenreMovieEndpoint = genreUid
-    ? `${SKYLARK_API}/api/${endpoint}/?genres_url=${genreUid}&${apiQuery}`
-    : `${SKYLARK_API}/api/${endpoint}/?${apiQuery}`;
+    ? `${SKYLARK_API}/api/${endpoint}/?genres_url=${genreUid}&${query}`
+    : `${SKYLARK_API}/api/${endpoint}/?${query}`;
 
   return axios
     .get<ApiMultipleEntertainmentObjects>(getSelectedGenreMovieEndpoint, {
-      headers: { "Accept-Language": "en-gb" },
+      headers,
     })
     .then(({ data }) => {
       const { objects: movies } = data;

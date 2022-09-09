@@ -1,5 +1,5 @@
 import {
-  createSkylarkApiQuery,
+  createSkylarkRequestQueryAndHeaders,
   SKYLARK_API,
   parseSkylarkObject,
   ApiMultipleEntertainmentObjects,
@@ -48,9 +48,14 @@ const getSeoDataFromSkylark = async (
   endpoint: string,
   query: string
 ): Promise<SeoObjectData> => {
-  const apiQuery = createSkylarkApiQuery({
+  const { query: apiQuery, headers } = createSkylarkRequestQueryAndHeaders({
     fieldsToExpand,
     fields,
+    dimensions: {
+      language: "*",
+      customerType: "",
+      deviceType: "",
+    }
   });
 
   const {
@@ -58,7 +63,7 @@ const getSeoDataFromSkylark = async (
   } = await axios.get<ApiMultipleEntertainmentObjects>(
     `${SKYLARK_API}${endpoint}?${apiQuery}${`&${query}` || ""}`,
     {
-      headers: { "Accept-Language": "en-gb" },
+      headers,
     }
   );
 

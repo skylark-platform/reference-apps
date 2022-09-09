@@ -1,14 +1,15 @@
 import axios from "axios";
 import useSWR from "swr";
 import {
-  createSkylarkApiQuery,
+  createSkylarkRequestQueryAndHeaders,
   SKYLARK_API,
   parseSkylarkObject,
   AllEntertainment,
   Brand,
   ApiMultipleEntertainmentObjects,
+  Dimensions,
 } from "@skylark-reference-apps/lib";
-import { useDeviceType } from "@skylark-reference-apps/react/src/hooks";
+import { useDimensions } from "@skylark-reference-apps/react";
 
 const fieldsToExpand = {
   image_urls: {},
@@ -78,20 +79,20 @@ const fields = {
   },
 };
 
-export const brandWithSeasonFetcher = ([slug, deviceType]: [
+export const brandWithSeasonFetcher = ([slug, dimensions]: [
   slug: string,
-  deviceType: string
+  dimensions: Dimensions,
 ]) => {
-  const apiQuery = createSkylarkApiQuery({
+  const { query, headers } = createSkylarkRequestQueryAndHeaders({
     fieldsToExpand,
     fields,
-    deviceTypes: [deviceType],
+    dimensions,
   });
 
   return axios
     .get<ApiMultipleEntertainmentObjects>(
-      `${SKYLARK_API}/api/brands/?slug=${slug}&${apiQuery}`,
-      { headers: { "Accept-Language": "en-gb" } }
+      `${SKYLARK_API}/api/brands/?slug=${slug}&${query}`,
+      { headers }
     )
     .then(({ data }) => {
       const { objects } = data;
@@ -106,10 +107,11 @@ export const brandWithSeasonFetcher = ([slug, deviceType]: [
 };
 
 export const useBrandWithSeasonBySlug = (slug: string) => {
-  const deviceType = useDeviceType();
+  const { dimensions } = useDimensions();
+  console.log("dimensions", dimensions)
 
   const { data, error } = useSWR<AllEntertainment, Error>(
-    [slug, deviceType],
+    [slug, dimensions],
     brandWithSeasonFetcher
   );
 

@@ -1,14 +1,16 @@
 import axios from "axios";
 import useSWR from "swr";
 import {
-  createSkylarkApiQuery,
+  createSkylarkRequestQueryAndHeaders,
   SKYLARK_API,
   parseSkylarkObject,
   AllEntertainment,
   EntertainmentType,
   convertObjectTypeToSkylarkEndpoint,
   ApiMultipleEntertainmentObjects,
+  Dimensions,
 } from "@skylark-reference-apps/lib";
+import { useDimensions } from "@skylark-reference-apps/react";
 
 const fieldsToExpand = {
   parent_url: {
@@ -83,19 +85,22 @@ const fields = {
   items: {},
 };
 
-const apiQuery = createSkylarkApiQuery({
-  fieldsToExpand,
-  fields,
-});
 
-export const singleObjectFetcher = ([endpoint, slug]: [
+export const singleObjectFetcher = ([endpoint, slug, dimensions]: [
   endpoint: string,
-  slug: string
-]) =>
-  axios
+  slug: string,
+  dimensions: Dimensions
+]) => {
+  const { query, headers } = createSkylarkRequestQueryAndHeaders({
+    fieldsToExpand,
+    fields,
+    dimensions,
+  });
+
+  return axios
     .get<ApiMultipleEntertainmentObjects>(
-      `${SKYLARK_API}/api/${endpoint}/?slug=${slug}&${apiQuery}`,
-      { headers: { "Accept-Language": "en-gb" } }
+      `${SKYLARK_API}/api/${endpoint}/?slug=${slug}&${query}`,
+      { headers }
     )
     .then(({ data }) => {
       const {
@@ -103,15 +108,17 @@ export const singleObjectFetcher = ([endpoint, slug]: [
       } = data;
       return parseSkylarkObject(object);
     });
+}
 
 export const useSingleObject = (
   type: EntertainmentType | null,
   slug: string | undefined
 ) => {
   const endpoint = (type && convertObjectTypeToSkylarkEndpoint(type)) || "sets";
+  const { dimensions } = useDimensions();
 
   const { data, error } = useSWR<AllEntertainment, Error>(
-    [endpoint, slug],
+    [endpoint, slug, dimensions],
     singleObjectFetcher
   );
 
