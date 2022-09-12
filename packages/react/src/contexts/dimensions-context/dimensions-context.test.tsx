@@ -1,5 +1,5 @@
 import React from "react";
-import { fireEvent, render, RenderOptions, screen } from "../../test-utils";
+import { fireEvent, render, RenderOptions, screen } from "../../../test-utils";
 import { DimensionsContextProvider, useDimensions } from "./dimensions-context";
 
 const customRender = (ui: React.ReactElement, renderOptions?: RenderOptions) =>

@@ -17,7 +17,6 @@ import {
 import { useRouter } from "next/router";
 import { MdAccountCircle, MdStream } from "react-icons/md";
 import Link from "next/link";
-// import { appWithTranslation, useTranslation } from "next-i18next";
 import useTranslation from "next-translate/useTranslation";
 import createDefaultSeo from "../next-seo.config";
 
