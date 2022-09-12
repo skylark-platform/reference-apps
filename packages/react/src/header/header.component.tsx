@@ -46,7 +46,7 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex">
           <List
             contents={[
-              numberOfItems ? (
+              typeOfItems && numberOfItems ? (
                 <span className="flex items-center" key={"duration-icon"}>
                   <Icon
                     className="mt-0 mr-2 h-6 w-7"

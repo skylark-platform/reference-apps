@@ -17,6 +17,7 @@ export const Default = Template.bind({});
 Default.args = {
   title: "Game of Thrones",
   numberOfItems: 8,
+  typeOfItems: "season",
   releaseDate: "2011",
   rating: "18+",
   description:
