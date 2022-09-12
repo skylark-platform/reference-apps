@@ -2,7 +2,10 @@ import { DefaultSeoProps } from "next-seo";
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL || "";
 
-const createDefaultSeo = (appTitle: string, description: string): DefaultSeoProps => ({
+const createDefaultSeo = (
+  appTitle: string,
+  description: string
+): DefaultSeoProps => ({
   dangerouslySetAllPagesToNoFollow: true,
   dangerouslySetAllPagesToNoIndex: true,
   defaultTitle: appTitle,

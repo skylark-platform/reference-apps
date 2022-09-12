@@ -24,15 +24,13 @@ const Movies: NextPage = () => {
 
   return (
     <div className="flex w-full flex-col justify-center py-20">
-      <NextSeo title={t('movies')} />
+      <NextSeo title={t("movies")} />
       <div className="px-gutter sm:px-sm-gutter md:pt-20 lg:px-lg-gutter xl:px-xl-gutter">
         <div className="my-10 text-white">
-          <h1 className="text-[40px] font-medium md:text-[56px]">{t('movies')}</h1>
-          <div className="text-[16px]">
-            {
-              t('movies-page-description')
-            }
-          </div>
+          <h1 className="text-[40px] font-medium md:text-[56px]">
+            {t("movies")}
+          </h1>
+          <div className="text-[16px]">{t("movies-page-description")}</div>
         </div>
         <div className="flex flex-row gap-x-2 pb-8 md:pb-20 xl:pb-24">
           <Dropdown

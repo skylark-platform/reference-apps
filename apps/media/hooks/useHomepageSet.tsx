@@ -46,9 +46,10 @@ const fields = {
 const homepageSwrKey = "homepage-set";
 export const homepageSlug = "media-reference-homepage";
 
-export const homepageSetFetcher = (
-  [, dimensions]: [key: string, dimensions: Dimensions]
-) => {
+export const homepageSetFetcher = ([, dimensions]: [
+  key: string,
+  dimensions: Dimensions
+]) => {
   const { query, headers } = createSkylarkRequestQueryAndHeaders({
     fieldsToExpand,
     fields,
@@ -69,7 +70,9 @@ export const homepageSetFetcher = (
 };
 
 export const useHomepageSet = () => {
-  const [homepageData, setHomepageData] = useState<AllEntertainment | undefined>();
+  const [homepageData, setHomepageData] = useState<
+    AllEntertainment | undefined
+  >();
   const { dimensions } = useDimensions();
 
   const { data, error } = useSWR<AllEntertainment, Error>(
@@ -78,9 +81,8 @@ export const useHomepageSet = () => {
   );
 
   useEffect(() => {
-    if (data)
-      setHomepageData(data);
-  }, [data])
+    if (data) setHomepageData(data);
+  }, [data]);
 
   return {
     homepage: data,

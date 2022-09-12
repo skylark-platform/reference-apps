@@ -13,6 +13,9 @@ const Template: ComponentStory<typeof DimensionRadioButton> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-  options: [{ text: "Current", value: "current" }, { text: "Tomorrow", value: "tomorrow" }],
+  options: [
+    { text: "Current", value: "current" },
+    { text: "Tomorrow", value: "tomorrow" },
+  ],
   onChange: (value: string) => console.log(value),
 };

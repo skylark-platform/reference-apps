@@ -30,7 +30,8 @@ import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject(
     "episode",
-    context.query.slug as string, context.locale || ""
+    context.query.slug as string,
+    context.locale || ""
   );
   return {
     props: {

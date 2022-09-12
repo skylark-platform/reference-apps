@@ -25,7 +25,7 @@ const appTitle = "StreamTV";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { asPath } = useRouter();
-  const { t } = useTranslation('common');
+  const { t } = useTranslation("common");
 
   const links = [
     { text: t("discover"), href: "/" },
@@ -66,8 +66,8 @@ function MyApp({ Component, pageProps }: AppProps) {
             </span>
           </div>
           <div className="hidden gap-1 md:flex">
-            <Button icon={<MdAccountCircle size={25} />} text={t('sign-in')} />
-            <Button text={t('register')} variant="tertiary" />
+            <Button icon={<MdAccountCircle size={25} />} text={t("sign-in")} />
+            <Button text={t("register")} variant="tertiary" />
           </div>
         </AppHeader>
         <div className="relative z-10 h-full w-full pt-mobile-header md:pt-0">

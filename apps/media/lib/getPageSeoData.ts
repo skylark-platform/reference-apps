@@ -47,7 +47,7 @@ export interface SeoObjectData {
 const getSeoDataFromSkylark = async (
   endpoint: string,
   query: string,
-  locale: string,
+  locale: string
 ): Promise<SeoObjectData> => {
   const { query: apiQuery, headers } = createSkylarkRequestQueryAndHeaders({
     fieldsToExpand,
@@ -56,7 +56,7 @@ const getSeoDataFromSkylark = async (
       language: locale || "",
       customerType: "",
       deviceType: "",
-    }
+    },
   });
 
   const {
@@ -100,7 +100,7 @@ const getSeoDataFromSkylark = async (
 export const getSeoDataForObject = (
   type: EntertainmentType,
   slug: string,
-  locale: string,
+  locale: string
 ): Promise<SeoObjectData> => {
   const endpointType = convertObjectTypeToSkylarkEndpoint(type);
   return getSeoDataFromSkylark(`/api/${endpointType}`, `slug=${slug}`, locale);

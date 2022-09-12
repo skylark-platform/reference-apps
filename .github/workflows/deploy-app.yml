@@ -89,6 +89,7 @@ jobs:
           amplify-storage-bucket: ${{ secrets.SHOWCASE_TEST_STORAGE_BUCKET }}
           cognito-email: ${{ secrets.SHOWCASE_TEST_EMAIL }}
           cognito-password: ${{ secrets.SHOWCASE_TEST_PASSWORD }}
+          create-additional-objects: "true"
 
   signal:
     name: Signal

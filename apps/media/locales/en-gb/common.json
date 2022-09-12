@@ -16,12 +16,16 @@
       "brand": "Brand",
       "asset": "Asset",
       "count": {
-        "season_0": "0 Seasons",
-        "season_one": "{{count}} Season",
-        "season_other": "{{count}} Seasons",
-        "movie_0": "0 Movie",
-        "movie_one": "{{count}} Movie",
-        "movie_other": "{{count}} Movies"
+        "season": {
+          "0": "0 Seasons",
+          "one": "{{count}} Season",
+          "other": "{{count}} Seasons"
+        },
+        "movie": {
+          "0": "0 Movies",
+          "one": "{{count}} Movie",
+          "other": "{{count}} Movies"
+        }
       }
     },
     "role": {

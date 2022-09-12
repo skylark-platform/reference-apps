@@ -49,7 +49,7 @@ const createOrUpdateSet = async (
     // due to this, we create sets in a synchronous order
     // eslint-disable-next-line no-restricted-syntax
     for (const metadataTranslation of airtableMetadataTranslations) {
-      const { fields }: { fields: { language?: string,  } } = metadataTranslation;
+      const { fields }: { fields: { language?: string } } = metadataTranslation;
       const object = convertAirtableFieldsToSkylarkObject(
         dataSourceId,
         fields,
@@ -62,41 +62,45 @@ const createOrUpdateSet = async (
       });
 
       // eslint-disable-next-line no-await-in-loop
-      const set = await authenticatedSkylarkRequest<ApiEntertainmentObject>(url, {
-        method,
-        data: {
-          schedule_urls: [metadata.schedules.default.self],
-          ...existingSet,
-          ...object,
-          data_source_id: dataSourceId,
-          uid: existingSet?.uid || "",
-          self: existingSet?.self || "",
-          title,
-          slug,
-          set_type_url: setType?.self,
-        },
-        headers: {
-          "Accept-Language": fields.language ? languageCodes[fields.language] : "",
+      const set = await authenticatedSkylarkRequest<ApiEntertainmentObject>(
+        url,
+        {
+          method,
+          data: {
+            schedule_urls: [metadata.schedules.default.self],
+            ...existingSet,
+            ...object,
+            data_source_id: dataSourceId,
+            uid: existingSet?.uid || "",
+            self: existingSet?.self || "",
+            title,
+            slug,
+            set_type_url: setType?.self,
+          },
+          headers: {
+            "Accept-Language": fields.language
+              ? languageCodes[fields.language]
+              : "",
+          },
         }
-      })
+      );
       sets.push(set);
     }
 
     return sets[0].data;
   }
 
-  const { data: set } = await authenticatedSkylarkRequest<ApiEntertainmentObject>(url, {
-    method,
-    data: {
-      schedule_urls: [metadata.schedules.default.self],
-      ...existingSet,
-      uid: existingSet?.uid || "",
-      self: existingSet?.self || "",
-      title,
-      slug,
-      set_type_url: setType?.self,
-    },
-  })
+  const { data: set } =
+    await authenticatedSkylarkRequest<ApiEntertainmentObject>(url, {
+      method,
+      data: {
+        schedule_urls: [metadata.schedules.default.self],
+        ...existingSet,
+        title,
+        slug,
+        set_type_url: setType?.self,
+      },
+    });
 
   return set;
 };
@@ -153,7 +157,8 @@ export const createOrUpdateSetAndContents = async (
   );
 
   if (
-    airtableTranslations && airtableTranslations.length > 0 &&
+    airtableTranslations &&
+    airtableTranslations.length > 0 &&
     airtableTranslations[0].fields?.images
   ) {
     await parseAirtableImagesAndUploadToSkylark(

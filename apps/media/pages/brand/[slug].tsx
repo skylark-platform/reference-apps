@@ -25,7 +25,11 @@ import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 import { DataFetcher } from "../../components/dataFetcher";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const seo = await getSeoDataForObject("brand", context.query.slug as string, context.locale || "");
+  const seo = await getSeoDataForObject(
+    "brand",
+    context.query.slug as string,
+    context.locale || ""
+  );
   return {
     props: {
       seo,
@@ -133,7 +137,12 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                   className="my-6 w-full"
                   key={season.number || season.objectTitle || season.slug}
                 >
-                  <Rail displayCount header={`${t("skylark.object.season")} ${season.number || "-"}`}>
+                  <Rail
+                    displayCount
+                    header={`${t("skylark.object.season")} ${
+                      season.number || "-"
+                    }`}
+                  >
                     {season.items?.isExpanded &&
                       (season.items.objects as Episode[])
                         .filter((ep) => ep.isExpanded && ep.type === "episode")

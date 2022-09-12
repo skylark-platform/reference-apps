@@ -12,11 +12,14 @@ const fields = {
   uid: {},
 };
 
-export const themeGenresFetcher = ([endpoint, dimensions]: [endpoint: "genres" | "themes", dimensions: Dimensions]) => {
+export const themeGenresFetcher = ([endpoint, dimensions]: [
+  endpoint: "genres" | "themes",
+  dimensions: Dimensions
+]) => {
   const { query, headers } = createSkylarkRequestQueryAndHeaders({
     fieldsToExpand: {},
     fields,
-    dimensions
+    dimensions,
   });
   return axios
     .get<{ objects: ApiThemeGenre[] }>(

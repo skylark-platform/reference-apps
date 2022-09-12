@@ -31,6 +31,9 @@ inputs:
   cognito-password:
     description: The Cognito Password
     required: true
+  create-additional-objects:
+    description: Whether to create additional objects (sets and dynamic objects) which StreamTV requires to run
+    required: true
 runs:
   using: composite
   steps:
@@ -56,6 +59,7 @@ runs:
         COGNITO_USER_POOL_ID: ${{ inputs.cognito-user-pool-id }}
         COGNITO_IDENTITY_POOL_ID: ${{ inputs.cognito-identity-pool-id }}
         AMPLIFY_STORAGE_BUCKET: ${{ inputs.amplify-storage-bucket }}
+        CREATE_SETS: ${{ inputs.create-additional-objects }}
       with:
         timeout_minutes: 20
         retry_wait_seconds: 10

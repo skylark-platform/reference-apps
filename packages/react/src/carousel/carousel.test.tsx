@@ -1,6 +1,6 @@
 import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
+import { fireEvent, render, screen } from "../../test-utils";
 import { Carousel } from "./carousel.component";
 import { heros } from "./carousel.fixtures";
 
@@ -16,6 +16,10 @@ describe("Carousel component", () => {
   it("the component renders correctly", () => {
     render(<Carousel items={heros} />);
     expect(screen.getByText(heros[0].title)).toBeTruthy();
+    expect(
+      screen.getByText("30 day free trial available. £12.99/mo after.")
+    ).toBeTruthy();
+    expect(screen.getByText("Watch for free")).toBeTruthy();
   });
 
   it("the image changes when a CarouselButton is clicked", () => {

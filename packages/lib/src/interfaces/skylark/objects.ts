@@ -139,7 +139,7 @@ export type AllEntertainment =
   | Set;
 
 export interface Dimensions {
-  language: string
-  customerType: string
-  deviceType: string
+  language: string;
+  customerType: string;
+  deviceType: string;
 }

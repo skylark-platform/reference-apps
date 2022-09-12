@@ -10,7 +10,7 @@ import {
   SynopsisTypes,
 } from "../interfaces";
 
-import "dayjs/locale/pt"
+import "dayjs/locale/pt";
 
 /**
  * Returns the title from the titles object using a given order of priority
@@ -135,4 +135,5 @@ export const formatReleaseDate = (
  * @param date date string
  * @returns string, empty if the date is empty
  */
-export const formatYear = (date?: string, locale?: string) => formatReleaseDate(date, locale, "YYYY");
+export const formatYear = (date?: string, locale?: string) =>
+  formatReleaseDate(date, locale, "YYYY");

@@ -27,7 +27,11 @@ import { useAssetPlaybackUrl } from "../../hooks/useAssetPlaybackUrl";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const seo = await getSeoDataForObject("movie", context.query.slug as string, context.locale || "");
+  const seo = await getSeoDataForObject(
+    "movie",
+    context.query.slug as string,
+    context.locale || ""
+  );
   return {
     props: {
       seo,

@@ -23,7 +23,7 @@ const fields = {
 export const moviesSetFetcher = ([endpoint, genreUid, dimensions]: [
   endpoint: string,
   genreUid: string,
-  dimensions: Dimensions,
+  dimensions: Dimensions
 ]) => {
   const { query, headers } = createSkylarkRequestQueryAndHeaders({
     fieldsToExpand,

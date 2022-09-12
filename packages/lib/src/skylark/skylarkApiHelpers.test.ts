@@ -1,6 +1,7 @@
 import { parseSkylarkObject, parseSkylarkThemesAndGenres } from ".";
 import {
   ApiEntertainmentObject,
+  ApiImage,
   Credits,
   Dimensions,
   ImageUrls,
@@ -69,17 +70,65 @@ describe("skylarkApiHelpers", () => {
         "items__content_url__items__content_url__self",
       ].join(",");
 
-      const query = createSkylarkRequestQueryAndHeaders({
+      const { query } = createSkylarkRequestQueryAndHeaders({
         fieldsToExpand,
         fields,
-        dimensions: {
-
-        } as Dimensions
+        dimensions: {} as Dimensions,
       });
 
       expect(query).toEqual(
         `fields_to_expand=${parsedFieldsToExpand}&fields=${parsedFields}`
       );
+    });
+
+    it("returns the expected query with customer type and device type from Dimensions", () => {
+      const parsedFieldsToExpand = [
+        "items",
+        "items__content_url",
+        "items__content_url__items",
+        "items__content_url__items__content_url",
+        "items__content_url__items__content_url__image_urls",
+        "items__content_url__items__image_urls",
+      ].join(",");
+
+      const parsedFields = [
+        "items",
+        "items__content_url",
+        "items__content_url__set_type_slug",
+        "items__content_url__self",
+        "items__content_url__items",
+        "items__content_url__items__content_url",
+        "items__content_url__items__content_url__image_urls",
+        "items__content_url__items__content_url__title_short",
+        "items__content_url__items__content_url__self",
+      ].join(",");
+
+      const { query } = createSkylarkRequestQueryAndHeaders({
+        fieldsToExpand,
+        fields,
+        dimensions: {
+          customerType: "premium",
+          deviceType: "pc",
+        } as Dimensions,
+      });
+
+      expect(query).toEqual(
+        `fields_to_expand=${parsedFieldsToExpand}&fields=${parsedFields}&device_types=pc&customer_types=premium`
+      );
+    });
+
+    it("returns the expected headers from Dimensions", () => {
+      const { headers } = createSkylarkRequestQueryAndHeaders({
+        fieldsToExpand,
+        fields,
+        dimensions: {
+          language: "en-gb",
+        } as Dimensions,
+      });
+
+      expect(headers).toEqual({
+        "Accept-Language": "en-gb,*",
+      });
     });
   });
 
@@ -107,18 +156,26 @@ describe("skylarkApiHelpers", () => {
         {
           uid: "1",
           self: "/api/images/1",
+          title: "image-1",
           url: "skylark.com/image/1.jpg",
           url_path: "/image/1.jpg",
           image_type: "Thumbnail",
+          image_type_url: "/api/image-types/image-type-1",
+          image_location: "top",
+          content_url: "/api/brands/brand-1",
         },
         {
           uid: "2",
           self: "/api/images/2",
+          title: "image-2",
           url: "skylark.com/image/2.jpg",
           url_path: "/image/2.jpg",
           image_type: "Main",
+          image_type_url: "/api/image-types/image-type-2",
+          image_location: "top",
+          content_url: "/api/brands/brand-1",
         },
-      ]);
+      ] as ApiImage[]);
 
       const expected: ImageUrls = {
         isExpanded: true,
@@ -238,9 +295,15 @@ describe("skylarkApiHelpers", () => {
     it("parses Themes when they are expanded", () => {
       const themeGenres = parseSkylarkThemesAndGenres([
         {
+          uid: "theme-1",
+          slug: "theme-1",
+          self: "/api/themes/theme-1",
           name: "Horror",
         },
         {
+          uid: "theme-2",
+          slug: "theme-2",
+          self: "/api/themes/theme-2",
           name: "Action",
         },
       ]);
@@ -284,10 +347,16 @@ describe("skylarkApiHelpers", () => {
     it("parses Rating when they are expanded", () => {
       const ratings = parseSkylarkRatings([
         {
+          uid: "rating-1",
+          slug: "rating-1",
+          self: "/api/ratings/rating-1",
           value: "12",
           title: "twelve",
         },
         {
+          uid: "rating-2",
+          slug: "rating-2",
+          self: "/api/ratings/rating-2",
           value: "15",
           title: "fifteen",
         },

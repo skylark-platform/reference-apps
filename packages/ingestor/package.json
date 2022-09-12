@@ -8,6 +8,7 @@
     "@tsconfig/node16": "^1.0.3",
     "@types/jest": "^26.0.10",
     "@types/node": "^17.0.43",
+    "cross-env": "^7.0.3",
     "jest": "^26.4.2",
     "ts-node": "^10.8.1",
     "typescript": "^4.7.3"
@@ -26,6 +27,7 @@
   "scripts": {
     "tsc": "tsc",
     "ingest": "ts-node src/main.ts",
+    "ingest:with-sets": "cross-env CREATE_SETS=true yarn ingest",
     "test": "jest --config=jest.config.js",
     "lint": "eslint -c .eslintrc.js ."
   }

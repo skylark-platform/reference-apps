@@ -44,7 +44,9 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
                 contents={
                   [
                     ...parentTitles,
-                    seasonNumber ? `${t("skylark.object.season")} ${seasonNumber}` : "",
+                    seasonNumber
+                      ? `${t("skylark.object.season")} ${seasonNumber}`
+                      : "",
                   ] || []
                 }
                 highlightAll

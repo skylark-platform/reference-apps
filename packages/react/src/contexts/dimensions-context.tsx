@@ -1,9 +1,8 @@
 import { Dimensions } from "@skylark-reference-apps/lib";
-import React, { createContext, useContext, useEffect, useReducer } from "react"
-import setLanguage from 'next-translate/setLanguage'
+import React, { createContext, useContext, useEffect, useReducer } from "react";
+import setLanguage from "next-translate/setLanguage";
 import useTranslation from "next-translate/useTranslation";
 import { useDeviceType } from "../hooks";
-
 
 interface ReducerAction {
   type: "language" | "customerType" | "deviceType";
@@ -12,24 +11,27 @@ interface ReducerAction {
 
 export type DimensionsContextType = {
   dimensions: Dimensions;
-  setLanguage: (language: Dimensions['language']) => void;
-  setCustomerType: (customerType: Dimensions['customerType']) => void;
-  setDeviceType: (deviceType: Dimensions['deviceType']) => void;
+  setLanguage: (language: Dimensions["language"]) => void;
+  setCustomerType: (customerType: Dimensions["customerType"]) => void;
+  setDeviceType: (deviceType: Dimensions["deviceType"]) => void;
 };
 
-const dimensionsReducer = (state: Dimensions, action: ReducerAction): Dimensions => {
+const dimensionsReducer = (
+  state: Dimensions,
+  action: ReducerAction
+): Dimensions => {
   switch (action.type) {
-    case 'language':
+    case "language":
       return {
         ...state,
         language: action.value,
       };
-    case 'customerType':
+    case "customerType":
       return {
         ...state,
         customerType: action.value,
       };
-    case 'deviceType':
+    case "deviceType":
       return {
         ...state,
         deviceType: action.value,
@@ -37,7 +39,7 @@ const dimensionsReducer = (state: Dimensions, action: ReducerAction): Dimensions
     default:
       throw new Error();
   }
-}
+};
 
 const DimensionsContext = createContext<DimensionsContextType>({
   dimensions: {
@@ -48,12 +50,11 @@ const DimensionsContext = createContext<DimensionsContextType>({
   setLanguage: () => {},
   setCustomerType: () => {},
   setDeviceType: () => {},
-})
+});
 
 export const DimensionsContextProvider: React.FC = ({ children }) => {
   const deviceType = useDeviceType();
-  const { lang } = useTranslation()
-
+  const { lang } = useTranslation();
 
   const [dimensions, dispatch] = useReducer(dimensionsReducer, {
     language: lang,
@@ -63,25 +64,27 @@ export const DimensionsContextProvider: React.FC = ({ children }) => {
 
   // Automatically updates device type dimension depending on screen size
   useEffect(() => {
-    dispatch({ type: "deviceType", value: deviceType })
-  }, [deviceType])
+    dispatch({ type: "deviceType", value: deviceType });
+  }, [deviceType]);
 
   useEffect(() => {
-    dispatch({ type: "language", value: lang })
-  }, [lang])
+    dispatch({ type: "language", value: lang });
+  }, [lang]);
 
   return (
-    <DimensionsContext.Provider value={{
-      dimensions,
-      setCustomerType: (value) => dispatch({ type: "customerType", value }),
-      setLanguage: (value) => {
-        void setLanguage(value)
-      },
-      setDeviceType: (value) => dispatch({ type: "deviceType", value }),
-    }}>
+    <DimensionsContext.Provider
+      value={{
+        dimensions,
+        setCustomerType: (value) => dispatch({ type: "customerType", value }),
+        setLanguage: (value) => {
+          void setLanguage(value);
+        },
+        setDeviceType: (value) => dispatch({ type: "deviceType", value }),
+      }}
+    >
       {children}
     </DimensionsContext.Provider>
-  )
-}
+  );
+};
 
-export const useDimensions = () => useContext(DimensionsContext)
+export const useDimensions = () => useContext(DimensionsContext);

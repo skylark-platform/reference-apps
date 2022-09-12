@@ -1,6 +1,7 @@
 /**
  * @jest-environment node
  */
+import { Dimensions } from "@skylark-reference-apps/lib";
 import axios from "axios";
 import { homepageSetFetcher } from "../../hooks/useHomepageSet";
 
@@ -32,10 +33,31 @@ describe("homepageSetFetcher hook tests", () => {
     jest.clearAllMocks();
   });
 
+  it("adds the Skylark Dimension Settings to the request", async () => {
+    // Act
+    mockedAxios.get.mockResolvedValueOnce({ data: { objects: "mockData" } });
+    await homepageSetFetcher([
+      "key",
+      {
+        language: "pt-pt",
+        deviceType: "pc",
+        customerType: "standard",
+      } as Dimensions,
+    ]);
+    // Assert
+    expect(mockedAxios.get).toBeCalledWith(
+      expect.stringContaining("device_types=pc&customer_types=standard"),
+      { headers: { "Accept-Language": "pt-pt,*" } }
+    );
+  });
+
   it("Should get the correct homepage", async () => {
     // Act
     mockedAxios.get.mockResolvedValueOnce({ data: { objects: "mockData" } });
-    const res = await homepageSetFetcher();
+    const res = await homepageSetFetcher([
+      "key",
+      { language: "en-gb" } as Dimensions,
+    ]);
 
     // Assert
     expect(res).toEqual(successResponse);
@@ -51,8 +73,8 @@ describe("homepageSetFetcher hook tests", () => {
     // Assert
     const handle = handlePromise();
     mockedAxios.get.mockResolvedValueOnce(handle);
-    await expect(homepageSetFetcher()).rejects.toThrow(
-      "homepageSetFetcher axios error"
-    );
+    await expect(
+      homepageSetFetcher(["key", { language: "en-gb" } as Dimensions])
+    ).rejects.toThrow("homepageSetFetcher axios error");
   });
 });

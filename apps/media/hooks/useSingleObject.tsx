@@ -85,7 +85,6 @@ const fields = {
   items: {},
 };
 
-
 export const singleObjectFetcher = ([endpoint, slug, dimensions]: [
   endpoint: string,
   slug: string,
@@ -108,7 +107,7 @@ export const singleObjectFetcher = ([endpoint, slug, dimensions]: [
       } = data;
       return parseSkylarkObject(object);
     });
-}
+};
 
 export const useSingleObject = (
   type: EntertainmentType | null,

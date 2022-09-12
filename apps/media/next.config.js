@@ -4,7 +4,7 @@ const withTM = require("next-transpile-modules")([
   "@skylark-reference-apps/lib",
   "@skylark-reference-apps/react",
 ]);
-const nextTranslate = require('next-translate')
+const nextTranslate = require("next-translate");
 
 const moduleExports = {
   reactStrictMode: true,

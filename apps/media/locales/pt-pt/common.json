@@ -16,12 +16,16 @@
       "brand": "Marca",
       "asset": "De Ativos",
       "count": {
-        "season_0": "0 Temporadas",
-        "season_one": "{{count}} Temporada",
-        "season_other": "{{count}} Temporadas",
-        "movie_0": "0 Filmes",
-        "movie_one": "{{count}} Filme",
-        "movie_other": "{{count}} Filmes"
+        "season": {
+          "0": "0 Temporadas",
+          "one": "{{count}} Temporada",
+          "other": "{{count}} Temporadas"
+        },
+        "movie": {
+          "0": "0 Filmes",
+          "one": "{{count}} Filme",
+          "other": "{{count}} Filmes"
+        }
       }
     },
     "role": {

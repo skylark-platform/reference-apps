@@ -19,7 +19,8 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
   show: propShow = false,
 }) => {
   const [show, setShow] = useState(propShow);
-  const { dimensions, setLanguage, setCustomerType, setDeviceType } = useDimensions();
+  const { dimensions, setLanguage, setCustomerType, setDeviceType } =
+    useDimensions();
 
   return (
     <>
@@ -78,21 +79,30 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                 <DimensionContent label="Language">
                   <DimensionRadioButton
                     initial={dimensions.language}
-                    options={[{ text: "English", value: "en-gb" }, { text: "Portuguese", value: "pt-pt" }]}
+                    options={[
+                      { text: "English", value: "en-gb" },
+                      { text: "Portuguese", value: "pt-pt" },
+                    ]}
                     onChange={(value: string) => setLanguage(value)}
                   />
                 </DimensionContent>
                 <DimensionContent label="Customer Type">
                   <DimensionRadioButton
                     initial={dimensions.customerType}
-                    options={[{ text: "Standard", value: "standard" }, { text: "Premium", value: "premium" }]}
+                    options={[
+                      { text: "Premium", value: "premium" },
+                      { text: "Standard", value: "standard" },
+                    ]}
                     onChange={(value: string) => setCustomerType(value)}
                   />
                 </DimensionContent>
                 <DimensionContent label="Device Type">
                   <DimensionRadioButton
                     initial={dimensions.deviceType}
-                    options={[{ text: "Desktop", value: "pc" }, { text: "Phone", value: "smartphone" }]}
+                    options={[
+                      { text: "Desktop", value: "pc" },
+                      { text: "Phone", value: "smartphone" },
+                    ]}
                     onChange={(value: string) => setDeviceType(value)}
                   />
                 </DimensionContent>

@@ -144,9 +144,9 @@ describe("getPageSeoData", () => {
       // Assert
       const handle = handlePromise();
       mockedAxios.get.mockResolvedValueOnce(handle);
-      await expect(getSeoDataForObject("episode", "slug", "en-gb")).rejects.toThrow(
-        "axios error"
-      );
+      await expect(
+        getSeoDataForObject("episode", "slug", "en-gb")
+      ).rejects.toThrow("axios error");
     });
   });
 

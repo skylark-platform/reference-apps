@@ -36,18 +36,25 @@ export const Header: React.FC<HeaderProps> = ({
   rating,
   description,
 }) => {
-  const { t } = useTranslation("common")
+  const { t } = useTranslation("common");
   return (
     <div className="w-full text-white sm:w-2/3 md:w-3/5 xl:w-1/2">
       <div className="left flex w-full flex-col gap-3">
-        <h1 className="text-3xl md:text-5xl lg:text-5xl xl:text-6xl">{title}</h1>
+        <h1 className="text-3xl md:text-5xl lg:text-5xl xl:text-6xl">
+          {title}
+        </h1>
         <div className="flex">
           <List
             contents={[
               numberOfItems ? (
                 <span className="flex items-center" key={"duration-icon"}>
-                  <Icon className="mt-0 mr-2 h-6 w-7" typeOfItems={typeOfItems} />
-                  {t(`skylark.object.count.${typeOfItems}`, { count: numberOfItems })}
+                  <Icon
+                    className="mt-0 mr-2 h-6 w-7"
+                    typeOfItems={typeOfItems}
+                  />
+                  {t(`skylark.object.count.${typeOfItems}`, {
+                    count: numberOfItems,
+                  })}
                 </span>
               ) : undefined,
               formatYear(releaseDate),
@@ -65,6 +72,6 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
     </div>
   );
-}
+};
 
 export default Header;

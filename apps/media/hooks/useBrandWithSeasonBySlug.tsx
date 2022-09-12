@@ -81,7 +81,7 @@ const fields = {
 
 export const brandWithSeasonFetcher = ([slug, dimensions]: [
   slug: string,
-  dimensions: Dimensions,
+  dimensions: Dimensions
 ]) => {
   const { query, headers } = createSkylarkRequestQueryAndHeaders({
     fieldsToExpand,

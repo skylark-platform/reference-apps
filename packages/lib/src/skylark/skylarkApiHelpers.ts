@@ -82,8 +82,9 @@ export const createSkylarkRequestQueryAndHeaders = ({
   }
 
   const headers = {
-    "Accept-Language": dimensions && dimensions.language ? `${dimensions.language},*` : "en-gb"
-  }
+    "Accept-Language":
+      dimensions && dimensions.language ? `${dimensions.language},*` : "en-gb",
+  };
 
   return {
     query: query.join("&"),
