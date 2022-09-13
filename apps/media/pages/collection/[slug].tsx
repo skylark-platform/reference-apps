@@ -16,6 +16,7 @@ import {
 } from "@skylark-reference-apps/lib";
 
 import { useRouter } from "next/router";
+import useTranslation from "next-translate/useTranslation";
 
 import { useCollectionBySlug } from "../../hooks/useCollectionBySlug";
 import { getSeoDataForSet, SeoObjectData } from "../../lib/getPageSeoData";
@@ -25,7 +26,8 @@ import { DataFetcher } from "../../components/dataFetcher";
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForSet(
     "collection",
-    context.query.slug as string
+    context.query.slug as string,
+    context.locale || ""
   );
   return {
     props: {
@@ -48,6 +50,8 @@ const CollectionPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     collection?.objectTitle
   );
 
+  const { lang } = useTranslation("common");
+
   return (
     <div className="mb-20 mt-48 flex min-h-screen flex-col items-center bg-gray-900">
       <NextSeo
@@ -66,9 +70,9 @@ const CollectionPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                 ? collection?.ratings?.items?.[0]?.title
                 : ""
             }
-            releaseDate={formatReleaseDate(collection?.releaseDate)}
+            releaseDate={formatReleaseDate(collection?.releaseDate, lang)}
             title={titleLongToShort}
-            typeOfItems="Movies"
+            typeOfItems="movie"
           />
         </Hero>
         <div className="grid grid-cols-2 gap-x-4 gap-y-6 px-gutter sm:px-sm-gutter md:grid-cols-3 lg:grid-cols-4 lg:px-lg-gutter xl:px-xl-gutter 2xl:grid-cols-6">

@@ -1,6 +1,7 @@
 /**
  * @jest-environment node
  */
+import { Dimensions } from "@skylark-reference-apps/lib";
 import axios from "axios";
 import { collectionFetcher } from "../../hooks/useCollectionBySlug";
 
@@ -34,6 +35,24 @@ describe("collectionFetcher hook tests", () => {
     jest.clearAllMocks();
   });
 
+  it("adds the Skylark Dimension Settings to the request", async () => {
+    // Act
+    mockedAxios.get.mockResolvedValueOnce({ data: { objects: "mockData" } });
+    await collectionFetcher([
+      "key",
+      {
+        language: "pt-pt",
+        deviceType: "pc",
+        customerType: "standard",
+      } as Dimensions,
+    ]);
+    // Assert
+    expect(mockedAxios.get).toBeCalledWith(
+      expect.stringContaining("device_types=pc&customer_types=standard"),
+      { headers: { "Accept-Language": "pt-pt,*" } }
+    );
+  });
+
   it("Should successfully get data", async () => {
     // Arrange.
     mockedAxios.get.mockResolvedValueOnce({
@@ -41,7 +60,7 @@ describe("collectionFetcher hook tests", () => {
     });
 
     // Act.
-    const res = await collectionFetcher([slug, ""]);
+    const res = await collectionFetcher([slug, {} as Dimensions]);
 
     // Assert
     expect(res).toEqual(successResponse);
@@ -52,7 +71,7 @@ describe("collectionFetcher hook tests", () => {
     mockedAxios.get.mockResolvedValueOnce({ data: { objects: [] } });
 
     // Assert
-    await expect(collectionFetcher([slug, ""])).rejects.toThrow(
+    await expect(collectionFetcher([slug, {} as Dimensions])).rejects.toThrow(
       "Collection not found"
     );
   });
@@ -62,7 +81,7 @@ describe("collectionFetcher hook tests", () => {
     mockedAxios.get.mockResolvedValueOnce({ data: {} });
 
     // Assert
-    await expect(collectionFetcher([slug, ""])).rejects.toThrow(
+    await expect(collectionFetcher([slug, {} as Dimensions])).rejects.toThrow(
       "Collection not found"
     );
   });
@@ -77,7 +96,7 @@ describe("collectionFetcher hook tests", () => {
     mockedAxios.get.mockResolvedValueOnce(handle);
 
     // Assert
-    await expect(collectionFetcher([slug, ""])).rejects.toThrow(
+    await expect(collectionFetcher([slug, {} as Dimensions])).rejects.toThrow(
       "collectionFetcher axios error"
     );
   });

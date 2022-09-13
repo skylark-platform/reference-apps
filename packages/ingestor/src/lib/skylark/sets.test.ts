@@ -29,6 +29,7 @@ describe("skylark.sets", () => {
 
   describe("createOrUpdateSetAndContents", () => {
     const homePageSlider: SetConfig = {
+      dataSourceId: "home-page-slider",
       title: "Home page hero",
       slug: "media-reference-home-page-hero",
       set_type_slug: "slider",
@@ -171,9 +172,9 @@ describe("skylark.sets", () => {
       const { set_type_url, slug, title, schedule_urls } = set;
       expect(axiosRequest).toBeCalledWith(
         expect.objectContaining({
-          url: "https://skylarkplatform.io/api/sets/",
-          method: "POST",
-          data: { uid: "", self: "", set_type_url, slug, title, schedule_urls },
+          url: "https://skylarkplatform.io/api/sets/versions/data-source/home-page-slider/",
+          method: "PUT",
+          data: { set_type_url, slug, title, schedule_urls },
         })
       );
     });
@@ -202,7 +203,7 @@ describe("skylark.sets", () => {
       expect(axiosRequest).toBeCalledTimes(2);
       expect(axiosRequest).toBeCalledWith(
         expect.objectContaining({
-          url: "https://skylarkplatform.io/api/sets/set_1",
+          url: "https://skylarkplatform.io/api/sets/versions/data-source/home-page-slider/",
           method: "PUT",
           data: set,
         })
@@ -277,11 +278,11 @@ describe("skylark.sets", () => {
       expect(axiosRequest).toBeCalledTimes(2);
       expect(axiosRequest).toBeCalledWith(
         expect.objectContaining({
-          url: "https://skylarkplatform.io/api/sets/versions/data-source/1/",
+          url: "https://skylarkplatform.io/api/sets/versions/data-source/home-page-slider/",
           method: "PUT",
           data: {
             ...convertAirtableFieldsToSkylarkObject(
-              "1",
+              homePageSlider.dataSourceId,
               metadataWithGenres.set.additionalRecords[0].fields,
               metadataWithGenres
             ),
@@ -385,7 +386,7 @@ describe("skylark.sets", () => {
     it("should request existing set items when the setConfig has contents", async () => {
       // Arrange.
       axiosRequest.mockImplementation(({ method, url }: AxiosRequestConfig) => {
-        if (method === "POST") {
+        if (method === "PUT") {
           return {
             data: set,
           };
@@ -426,7 +427,7 @@ describe("skylark.sets", () => {
     it("should make a POST request to add the item to the set", async () => {
       // Arrange.
       axiosRequest.mockImplementation(({ method, url }: AxiosRequestConfig) => {
-        if (method === "POST") {
+        if (method === "PUT") {
           return {
             data: set,
           };
@@ -467,7 +468,7 @@ describe("skylark.sets", () => {
     it("should make a PUT request to update the item in the set when it already exists in it", async () => {
       // Arrange.
       axiosRequest.mockImplementation(({ method, url }: AxiosRequestConfig) => {
-        if (method === "POST") {
+        if (method === "PUT") {
           return {
             data: set,
           };

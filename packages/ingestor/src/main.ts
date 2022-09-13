@@ -166,8 +166,6 @@ const createAndUploadAssets = async (
     })
   );
 
-  // Upload asset to S3 with the id in the metadata
-
   // eslint-disable-next-line no-console
   console.log("Assets uploaded to S3");
 };
@@ -189,6 +187,14 @@ const main = async () => {
   // eslint-disable-next-line no-console
   console.log(`Starting ingest to ${SKYLARK_API}`);
 
+  const shouldCreateAdditionalObjects = process.env.CREATE_SETS === "true";
+  // eslint-disable-next-line no-console
+  console.log(
+    `With additional StreamTV sets / dynamic objects creation ${
+      shouldCreateAdditionalObjects ? "enabled" : "disabled"
+    }`
+  );
+
   configureAmplify();
 
   await signInToCognito();
@@ -199,7 +205,9 @@ const main = async () => {
 
   const mediaObjects = await createMediaObjects(airtable, metadata);
 
-  await createAdditionalObjects(metadata);
+  if (shouldCreateAdditionalObjects) {
+    await createAdditionalObjects(metadata);
+  }
 
   await createAndUploadAssets(airtable.mediaObjects, mediaObjects);
 

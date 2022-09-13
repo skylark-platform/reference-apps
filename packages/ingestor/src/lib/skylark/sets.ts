@@ -27,9 +27,9 @@ import {
 const createOrUpdateSet = async (
   setConfig: SetConfig,
   metadata: Metadata,
-  airtableProperties?: { id: string; fields: FieldSet }
+  airtableMetadataTranslations?: { id: string; fields: FieldSet }[]
 ) => {
-  const { title, slug, set_type_slug: setTypeSlug } = setConfig;
+  const { dataSourceId, title, slug, set_type_slug: setTypeSlug } = setConfig;
   const setType = metadata.set.types.find(
     ({ slug: metadataSlug }) => metadataSlug === setTypeSlug
   );
@@ -39,45 +39,70 @@ const createOrUpdateSet = async (
     slug
   );
 
-  let object = {};
-  let url = existingSet ? `/api/sets/${existingSet.uid}` : `/api/sets/`;
-  let method = existingSet ? "PUT" : "POST";
+  const url = `/api/sets/versions/data-source/${dataSourceId}/`;
+  const method = "PUT";
 
-  if (airtableProperties) {
-    object = convertAirtableFieldsToSkylarkObject(
-      airtableProperties.id,
-      airtableProperties.fields,
-      metadata
-    );
+  if (airtableMetadataTranslations && airtableMetadataTranslations.length > 0) {
+    const sets = [];
 
-    url = `/api/sets/versions/data-source/${airtableProperties.id}/`;
-    method = "PUT";
+    // Creating sets with the same data_source_id in parallel does not work as we need to create the set first before adding additional translations
+    // due to this, we create sets in a synchronous order
+    // eslint-disable-next-line no-restricted-syntax
+    for (const metadataTranslation of airtableMetadataTranslations) {
+      const { fields }: { fields: { language?: string } } = metadataTranslation;
+      const object = convertAirtableFieldsToSkylarkObject(
+        dataSourceId,
+        fields,
+        metadata
+      );
+
+      const languageCodes: { [key: string]: string } = {};
+      metadata.dimensions.languages.forEach(({ airtableId, iso_code }) => {
+        languageCodes[airtableId] = iso_code || "";
+      });
+
+      // eslint-disable-next-line no-await-in-loop
+      const set = await authenticatedSkylarkRequest<ApiEntertainmentObject>(
+        url,
+        {
+          method,
+          data: {
+            schedule_urls: [metadata.schedules.default.self],
+            ...existingSet,
+            ...object,
+            data_source_id: dataSourceId,
+            uid: existingSet?.uid || "",
+            self: existingSet?.self || "",
+            title,
+            slug,
+            set_type_url: setType?.self,
+          },
+          headers: {
+            "Accept-Language": fields.language
+              ? languageCodes[fields.language]
+              : "",
+          },
+        }
+      );
+      sets.push(set);
+    }
+
+    return sets[0].data;
   }
 
-  const languages = [""];
+  const { data: set } =
+    await authenticatedSkylarkRequest<ApiEntertainmentObject>(url, {
+      method,
+      data: {
+        schedule_urls: [metadata.schedules.default.self],
+        ...existingSet,
+        title,
+        slug,
+        set_type_url: setType?.self,
+      },
+    });
 
-  const [{ data: firstSet }] = await Promise.all(
-    languages.map((language) =>
-      authenticatedSkylarkRequest<ApiEntertainmentObject>(url, {
-        method,
-        data: {
-          schedule_urls: [metadata.schedules.default.self],
-          ...existingSet,
-          ...object,
-          uid: existingSet?.uid || "",
-          self: existingSet?.self || "",
-          title,
-          slug,
-          set_type_url: setType?.self,
-        },
-        headers: {
-          "Accept-Language": language,
-        },
-      })
-    )
-  );
-
-  return firstSet;
+  return set;
 };
 
 /**
@@ -121,22 +146,23 @@ export const createOrUpdateSetAndContents = async (
   setConfig: SetConfig,
   metadata: Metadata
 ): Promise<void> => {
-  const additionalAirtableProperties = metadata.set.additionalRecords.find(
+  const airtableTranslations = metadata.set.additionalRecords.filter(
     ({ fields: { slug: metadataSlug } }) => metadataSlug === setConfig.slug
   );
 
   const set = await createOrUpdateSet(
     setConfig,
     metadata,
-    additionalAirtableProperties
+    airtableTranslations
   );
 
   if (
-    additionalAirtableProperties &&
-    additionalAirtableProperties.fields?.images
+    airtableTranslations &&
+    airtableTranslations.length > 0 &&
+    airtableTranslations[0].fields?.images
   ) {
     await parseAirtableImagesAndUploadToSkylark(
-      additionalAirtableProperties.fields.images as string[],
+      airtableTranslations[0].fields.images as string[],
       set,
       metadata
     );

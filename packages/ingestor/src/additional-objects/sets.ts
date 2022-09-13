@@ -5,11 +5,13 @@
 import { SetConfig } from "../interfaces";
 import { quentinTarantinoMovies } from "./dynamicObjects";
 
+const createDataSourceId = (id: string) => `ingestor-set-${id}`;
+
 const newTVReleases: SetConfig = {
+  dataSourceId: createDataSourceId("new-tv-releases"),
   title: "New TV Releases",
   slug: "new-tv-releases",
   set_type_slug: "rail",
-  title_short: "New TV Releases",
   contents: [
     { type: "brands", slug: "house-of-the-dragon" },
     { type: "brands", slug: "better-call-saul" },
@@ -18,10 +20,10 @@ const newTVReleases: SetConfig = {
 };
 
 const spotlightMovies: SetConfig = {
+  dataSourceId: createDataSourceId("spotlight-movies"),
   title: "Spotlight movies",
   slug: "spotlight-movies",
   set_type_slug: "rail",
-  title_short: "Spotlight movies",
   contents: [
     { type: "movies", slug: "the-hustle" },
     { type: "movies", slug: "the-kid-who-would-be-king" },
@@ -39,6 +41,7 @@ const spotlightMovies: SetConfig = {
 };
 
 const homePageSlider: SetConfig = {
+  dataSourceId: createDataSourceId("home-page-slider"),
   title: "Home page hero",
   slug: "media-reference-home-page-hero",
   set_type_slug: "slider",
@@ -51,6 +54,7 @@ const homePageSlider: SetConfig = {
 };
 
 const tarantinoMoviesCollection: SetConfig = {
+  dataSourceId: createDataSourceId("tarantino-movies"),
   title: "Tarantino Movies Collection",
   slug: "tarantino-movies-collection",
   set_type_slug: "collection",
@@ -58,6 +62,7 @@ const tarantinoMoviesCollection: SetConfig = {
 };
 
 const discoverCollection: SetConfig = {
+  dataSourceId: createDataSourceId("discover-collection"),
   title: "Discover Collection",
   slug: "discover-collection",
   set_type_slug: "collection",
@@ -71,6 +76,7 @@ const discoverCollection: SetConfig = {
 };
 
 const mediaReferenceHomepage: SetConfig = {
+  dataSourceId: createDataSourceId("media-reference-homepage"),
   title: "Homepage",
   slug: "media-reference-homepage",
   set_type_slug: "homepage",

@@ -1,14 +1,15 @@
 import {
-  createSkylarkApiQuery,
+  createSkylarkRequestQueryAndHeaders,
   SKYLARK_API,
   parseSkylarkObject,
   AllEntertainment,
   Set,
   ApiMultipleEntertainmentObjects,
+  Dimensions,
 } from "@skylark-reference-apps/lib";
-import { useDeviceType } from "@skylark-reference-apps/react/src/hooks";
 import useSWR from "swr";
 import axios from "axios";
+import { useDimensions } from "@skylark-reference-apps/react";
 
 const fieldsToExpand = {
   image_urls: {},
@@ -58,20 +59,20 @@ const fields = {
   },
 };
 
-export const collectionFetcher = ([slug, deviceType]: [
+export const collectionFetcher = ([slug, dimensions]: [
   slug: string,
-  deviceType: string
+  dimensions: Dimensions
 ]) => {
-  const apiQuery = createSkylarkApiQuery({
+  const { query, headers } = createSkylarkRequestQueryAndHeaders({
     fieldsToExpand,
     fields,
-    deviceTypes: [deviceType],
+    dimensions,
   });
 
   return axios
     .get<ApiMultipleEntertainmentObjects>(
-      `${SKYLARK_API}/api/sets/?slug=${slug}&set_type_slug=collection&${apiQuery}`,
-      { headers: { "Accept-Language": "en-gb" } }
+      `${SKYLARK_API}/api/sets/?slug=${slug}&set_type_slug=collection&${query}`,
+      { headers }
     )
     .then(({ data }) => {
       const { objects } = data;
@@ -86,10 +87,10 @@ export const collectionFetcher = ([slug, deviceType]: [
 };
 
 export const useCollectionBySlug = (slug: string) => {
-  const deviceType = useDeviceType();
+  const { dimensions } = useDimensions();
 
   const { data, error } = useSWR<AllEntertainment, Error>(
-    [slug, deviceType],
+    [slug, dimensions],
     collectionFetcher
   );
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen } from "../../test-utils";
 import { CallToAction } from "./call-to-action.component";
 
 describe("CallToAction component", () => {

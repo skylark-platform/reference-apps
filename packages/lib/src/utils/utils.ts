@@ -10,6 +10,8 @@ import {
   SynopsisTypes,
 } from "../interfaces";
 
+import "dayjs/locale/pt";
+
 /**
  * Returns the title from the titles object using a given order of priority
  * @param titles the titles object
@@ -124,12 +126,14 @@ export const formatCredits = (credits: Credit[]): string[] => {
  */
 export const formatReleaseDate = (
   date?: string,
+  locale = "en-gb",
   format = "MMMM D, YYYY"
-): string => (date ? dayjs(date).format(format) : "");
+): string => (date ? dayjs(date).locale(locale).format(format) : "");
 
 /**
  * formatYear - takes a date, returns the year
  * @param date date string
  * @returns string, empty if the date is empty
  */
-export const formatYear = (date?: string) => formatReleaseDate(date, "YYYY");
+export const formatYear = (date?: string, locale?: string) =>
+  formatReleaseDate(date, locale, "YYYY");

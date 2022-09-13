@@ -298,13 +298,18 @@ describe("utils", () => {
     });
 
     it("returns date in the given format when a format is given", () => {
-      const formattedDate = formatReleaseDate(date, "YYYY");
+      const formattedDate = formatReleaseDate(date, "en-gb", "YYYY");
       expect(formattedDate).toEqual("2000");
     });
 
     it("returns empty string when date is undefined", () => {
       const formattedDate = formatReleaseDate(undefined);
       expect(formattedDate).toEqual("");
+    });
+
+    it("translates release date to the given locale", () => {
+      const formattedDate = formatReleaseDate(date, "pt-pt");
+      expect(formattedDate).toEqual("janeiro 1, 2000");
     });
   });
 });

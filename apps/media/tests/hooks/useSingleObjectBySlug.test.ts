@@ -1,6 +1,7 @@
 /**
  * @jest-environment node
  */
+import { Dimensions } from "@skylark-reference-apps/lib";
 import axios from "axios";
 import { singleObjectFetcher } from "../../hooks/useSingleObject";
 
@@ -32,10 +33,29 @@ describe("singleObjectFetcher hook tests", () => {
     jest.clearAllMocks();
   });
 
+  it("adds the Skylark Dimension Settings to the request", async () => {
+    // Act
+    mockedAxios.get.mockResolvedValueOnce({ data: { objects: "mockData" } });
+    await singleObjectFetcher([
+      "movie",
+      "slug",
+      {
+        language: "pt-pt",
+        deviceType: "pc",
+        customerType: "standard",
+      } as Dimensions,
+    ]);
+    // Assert
+    expect(mockedAxios.get).toBeCalledWith(
+      expect.stringContaining("device_types=pc&customer_types=standard"),
+      { headers: { "Accept-Language": "pt-pt,*" } }
+    );
+  });
+
   it("Should get the single object by slug", async () => {
     // Act
     mockedAxios.get.mockResolvedValueOnce({ data: { objects: ["movie-one"] } });
-    const res = await singleObjectFetcher(["movie", "slug"]);
+    const res = await singleObjectFetcher(["movie", "slug", {} as Dimensions]);
 
     // Assert
     expect(res).toEqual(successResponse);
@@ -51,8 +71,8 @@ describe("singleObjectFetcher hook tests", () => {
     // Assert
     const handle = handlePromise();
     mockedAxios.get.mockResolvedValueOnce(handle);
-    await expect(singleObjectFetcher(["movie", "slug"])).rejects.toThrow(
-      "singleObjectFetcher axios error"
-    );
+    await expect(
+      singleObjectFetcher(["movie", "slug", {} as Dimensions])
+    ).rejects.toThrow("singleObjectFetcher axios error");
   });
 });

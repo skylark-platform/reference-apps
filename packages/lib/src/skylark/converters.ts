@@ -34,30 +34,6 @@ export const convertObjectToSkylarkApiFields = (
 };
 
 /**
- * Converts an EntertainmentType into a readable string
- * @param type
- * @returns string
- */
-export const convertEntertainmentTypeToString = (
-  type: EntertainmentType
-): string => {
-  switch (type) {
-    case "movie":
-      return "Movie";
-    case "episode":
-      return "Episode";
-    case "season":
-      return "Season";
-    case "brand":
-      return "Brand";
-    case "asset":
-      return "Asset";
-    default:
-      throw new Error("Unknown EntertainmentType");
-  }
-};
-
-/**
  * Converts an ObjectType to a valid Skylark Endpoint
  * @param type The object type to convert
  * @returns string, the endpoint

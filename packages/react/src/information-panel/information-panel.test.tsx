@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen } from "../../test-utils";
 import { InformationPanel } from "./information-panel.component";
 
 describe("InformationPanel component", () => {
@@ -21,5 +21,7 @@ describe("InformationPanel component", () => {
     expect(screen.getByText(/1. Winter is Coming/)).toBeTruthy();
     expect(screen.getByText(/Drama/)).toBeTruthy();
     expect(screen.getByText(/Action/)).toBeTruthy();
+    expect(screen.getByText("Available for 12 days")).toBeTruthy();
+    expect(screen.getByText("Season 1")).toBeTruthy();
   });
 });

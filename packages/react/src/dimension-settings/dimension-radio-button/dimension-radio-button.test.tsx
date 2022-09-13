@@ -5,7 +5,10 @@ import { DimensionRadioButton } from "./dimension-radio-button.component";
 describe("Skylark Branding component", () => {
   it("the component renders correctly", () => {
     render(
-      <DimensionRadioButton options={["radio test"]} onChange={jest.fn} />
+      <DimensionRadioButton
+        options={[{ text: "radio test", value: "" }]}
+        onChange={jest.fn}
+      />
     );
     expect(screen.getByText(/radio test/i)).toBeTruthy();
   });
@@ -14,11 +17,14 @@ describe("Skylark Branding component", () => {
     const onChange = jest.fn();
     render(
       <DimensionRadioButton
-        options={["test", "another test"]}
+        options={[
+          { text: "test", value: "test" },
+          { text: "another test", value: "another-test" },
+        ]}
         onChange={onChange}
       />
     );
     fireEvent.click(screen.getByText(/another test/i));
-    expect(onChange).toBeCalledWith("another test");
+    expect(onChange).toBeCalledWith("another-test");
   });
 });

@@ -1,6 +1,7 @@
 /**
  * @jest-environment node
  */
+import { Dimensions } from "@skylark-reference-apps/lib";
 import axios from "axios";
 import { moviesSetFetcher } from "../../hooks/useMoviesSet";
 
@@ -54,12 +55,33 @@ describe("moviesSetFetcher hook tests", () => {
     jest.clearAllMocks();
   });
 
+  it("adds the Skylark Dimension Settings to the request", async () => {
+    // Act
+    mockedAxios.get.mockResolvedValueOnce({
+      data: { objects: ["movie one", "movie two"] },
+    });
+    await moviesSetFetcher([
+      "movie",
+      "",
+      {
+        language: "pt-pt",
+        deviceType: "pc",
+        customerType: "standard",
+      } as Dimensions,
+    ]);
+    // Assert
+    expect(mockedAxios.get).toBeCalledWith(
+      expect.stringContaining("device_types=pc&customer_types=standard"),
+      { headers: { "Accept-Language": "pt-pt,*" } }
+    );
+  });
+
   it("Should get the correct movies set", async () => {
     // Act
     mockedAxios.get.mockResolvedValueOnce({
       data: { objects: ["movie one", "movie two"] },
     });
-    const res = await moviesSetFetcher(["movie", ""]);
+    const res = await moviesSetFetcher(["movie", "", {} as Dimensions]);
 
     // Assert
     expect(res).toEqual(successResponse);
@@ -75,8 +97,8 @@ describe("moviesSetFetcher hook tests", () => {
     // Assert
     const handle = handlePromise();
     mockedAxios.get.mockResolvedValueOnce(handle);
-    await expect(moviesSetFetcher(["movie", ""])).rejects.toThrow(
-      "moviesSetFetcher axios error"
-    );
+    await expect(
+      moviesSetFetcher(["movie", "", {} as Dimensions])
+    ).rejects.toThrow("moviesSetFetcher axios error");
   });
 });

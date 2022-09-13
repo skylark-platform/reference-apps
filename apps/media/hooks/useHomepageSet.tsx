@@ -1,13 +1,15 @@
 import axios from "axios";
 import useSWR from "swr";
 import {
-  createSkylarkApiQuery,
   SKYLARK_API,
   parseSkylarkObject,
   AllEntertainment,
   ApiMultipleEntertainmentObjects,
+  createSkylarkRequestQueryAndHeaders,
+  Dimensions,
 } from "@skylark-reference-apps/lib";
-import { useDeviceType } from "@skylark-reference-apps/react/src/hooks";
+import { useDimensions } from "@skylark-reference-apps/react";
+import { useEffect, useState } from "react";
 
 const fieldsToExpand = {
   items: {
@@ -44,19 +46,20 @@ const fields = {
 const homepageSwrKey = "homepage-set";
 export const homepageSlug = "media-reference-homepage";
 
-export const homepageSetFetcher = (
-  params?: [key: string, deviceType: string]
-) => {
-  const apiQuery = createSkylarkApiQuery({
+export const homepageSetFetcher = ([, dimensions]: [
+  key: string,
+  dimensions: Dimensions
+]) => {
+  const { query, headers } = createSkylarkRequestQueryAndHeaders({
     fieldsToExpand,
     fields,
-    deviceTypes: params?.[1] ? [params?.[1]] : [],
+    dimensions,
   });
 
   return axios
     .get<ApiMultipleEntertainmentObjects>(
-      `${SKYLARK_API}/api/sets/?slug=${homepageSlug}&set_type_slug=homepage&${apiQuery}`,
-      { headers: { "Accept-Language": "en-gb" } }
+      `${SKYLARK_API}/api/sets/?slug=${homepageSlug}&set_type_slug=homepage&${query}`,
+      { headers }
     )
     .then(({ data }) => {
       const {
@@ -67,16 +70,23 @@ export const homepageSetFetcher = (
 };
 
 export const useHomepageSet = () => {
-  const deviceType = useDeviceType();
+  const [homepageData, setHomepageData] = useState<
+    AllEntertainment | undefined
+  >();
+  const { dimensions } = useDimensions();
 
   const { data, error } = useSWR<AllEntertainment, Error>(
-    [homepageSwrKey, deviceType],
+    [homepageSwrKey, dimensions],
     homepageSetFetcher
   );
 
+  useEffect(() => {
+    if (data) setHomepageData(data);
+  }, [data]);
+
   return {
     homepage: data,
-    isLoading: !error && !data,
+    isLoading: !error && !homepageData,
     isError: error,
   };
 };

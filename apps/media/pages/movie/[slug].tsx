@@ -21,12 +21,17 @@ import {
   MdMode,
   MdCalendarToday,
 } from "react-icons/md";
+import useTranslation from "next-translate/useTranslation";
 import { useSingleObject } from "../../hooks/useSingleObject";
 import { useAssetPlaybackUrl } from "../../hooks/useAssetPlaybackUrl";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const seo = await getSeoDataForObject("movie", context.query.slug as string);
+  const seo = await getSeoDataForObject(
+    "movie",
+    context.query.slug as string,
+    context.locale || ""
+  );
   return {
     props: {
       seo,
@@ -66,6 +71,8 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const genres: string[] = movie?.genres?.isExpanded
     ? movie.genres.items.map(({ name }) => name)
     : [];
+
+  const { t, lang } = useTranslation("common");
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-start pb-20 md:pt-64">
@@ -120,29 +127,29 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                 content={[
                   {
                     icon: <MdRecentActors />,
-                    header: "Key Cast",
+                    header: t("skylark.role.key-cast"),
                     body: formatCredits(
                       getCreditsByType(movie.credits, "Actor")
                     ),
                   },
                   {
                     icon: <MdMovie />,
-                    header: "Directors",
+                    header: t("skylark.role.directors"),
                     body: formatCredits(
                       getCreditsByType(movie.credits, "Director")
                     ),
                   },
                   {
                     icon: <MdMode />,
-                    header: "Writers",
+                    header: t("skylark.role.writers"),
                     body: formatCredits(
                       getCreditsByType(movie.credits, "Writer")
                     ),
                   },
                   {
                     icon: <MdCalendarToday />,
-                    header: "Released",
-                    body: formatReleaseDate(movie.releaseDate),
+                    header: t("released"),
+                    body: formatReleaseDate(movie.releaseDate, lang),
                   },
                 ].filter(({ body }) => body.length > 0)}
               />
