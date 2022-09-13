@@ -1,4 +1,4 @@
-# OTT Reference Apps
+# StreamTV OTT Reference App
 
 Home to StreamTV, a web app designed to demonstrate the features of [Skylark][skylark], a headless CMS designed to enable customers to build and scale world-class streaming products.
 
