@@ -1,6 +1,6 @@
-# Skylark Reference Apps
+# OTT Reference Apps
 
-Home to StreamTV, a web app designed to demonstrate [Skylark's][skylark] features.
+Home to StreamTV, a web app designed to demonstrate the features of [Skylark][skylark], a headless CMS designed to enable customers to build and scale world-class streaming products.
 
 ## Overview
 
