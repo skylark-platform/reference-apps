@@ -1,0 +1,31 @@
+flags:
+  streamTV:
+    paths:
+      - apps/media/
+  ingestor:
+    paths:
+      - packages/ingestor/
+  lib:
+    paths:
+      - packages/lib/
+  react:
+    paths:
+      - packages/react/
+
+coverage:
+  status:
+    project:
+      default:
+        flags:
+          - lib
+          - react
+        target: 80%
+        threshold: 1%
+      streamTV:
+        flags:
+          - streamTV
+        target: 80%
+      ingestor:
+        flags:
+          - ingestor
+        target: 90%
