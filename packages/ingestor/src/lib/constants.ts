@@ -10,3 +10,5 @@ export const COGNITO_EMAIL = process.env.COGNITO_EMAIL as string;
 export const COGNITO_PASSWORD = process.env.COGNITO_PASSWORD as string;
 export const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY as string;
 export const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID as string;
+export const UNLICENSED_BY_DEFAULT =
+  (process.env.DEFAULT_UNLICENSED as string) === "true";

@@ -31,6 +31,25 @@ jest.mock("@skylark-reference-apps/lib", () => ({
   SKYLARK_API: "https://skylarkplatform.io",
 }));
 
+const alwaysSchedule = {
+  uid: "1",
+  slug: "always-schedule",
+  title: "Always",
+  starts: "1/1/2000",
+  ends: "1/1/2000",
+  rights: false,
+  status: "active",
+  self: "/api/schedules/1",
+  affiliate_urls: [],
+  customer_type_urls: [],
+  device_type_urls: [],
+  language_urls: [],
+  locale_urls: [],
+  operating_system_urls: [],
+  region_urls: [],
+  viewing_context_urls: [],
+};
+
 describe("skylark.sets", () => {
   let axiosRequest: jest.Mock;
 
@@ -95,7 +114,9 @@ describe("skylark.sets", () => {
     themes: [],
     imageTypes,
     assetTypes: [],
+    tagTypes: [],
     ratings: [],
+    tags: [],
     roles: [],
     people: [],
     set: {
@@ -110,24 +131,8 @@ describe("skylark.sets", () => {
       additionalRecords: [],
     },
     schedules: {
-      default: {
-        uid: "1",
-        slug: "always-schedule",
-        title: "Always",
-        starts: "1/1/2000",
-        ends: "1/1/2000",
-        rights: false,
-        status: "active",
-        self: "/api/schedules/1",
-        affiliate_urls: [],
-        customer_type_urls: [],
-        device_type_urls: [],
-        language_urls: [],
-        locale_urls: [],
-        operating_system_urls: [],
-        region_urls: [],
-        viewing_context_urls: [],
-      },
+      default: alwaysSchedule,
+      always: alwaysSchedule,
       all: [],
     },
     dimensions: {
@@ -337,7 +342,7 @@ describe("skylark.sets", () => {
             self: "",
             name: dynamicObject.name,
             url: `/api/${dynamicObject.resource}/?order=-created&q=${dynamicObject.query}`,
-            schedule_urls: [metadata.schedules.default.self],
+            schedule_urls: [metadata.schedules.always.self],
           },
         })
       );
@@ -412,7 +417,7 @@ describe("skylark.sets", () => {
             content_url: objectToAttachImageTo.self,
             image_location: imageAttachment.url,
             image_type_url: metadata.imageTypes[0].self,
-            schedule_urls: [metadata.schedules.default.self],
+            schedule_urls: [metadata.schedules.always.self],
             title: imageAttachment.filename,
             data_source_id: "image-1-episode_1",
           },
@@ -427,7 +432,7 @@ describe("skylark.sets", () => {
         content_url: objectToAttachImageTo.self,
         image_location: imageAttachment.url,
         image_type_url: metadata.imageTypes[0].self,
-        schedule_urls: [metadata.schedules.default.self],
+        schedule_urls: [metadata.schedules.always.self],
         title: imageAttachment.filename,
         url: "https://image-location-in-skylark",
         data_source_id: "image-1-episode_1",
@@ -465,7 +470,7 @@ describe("skylark.sets", () => {
       const expected = {
         uid: "",
         self: "",
-        schedule_urls: [metadata.schedules.default.self],
+        schedule_urls: [metadata.schedules.always.self],
         data_source_id: "1",
         data_source_fields: [
           "uid",
@@ -512,7 +517,7 @@ describe("skylark.sets", () => {
       const expected = {
         uid: "",
         self: "",
-        schedule_urls: [metadata.schedules.default.self],
+        schedule_urls: [metadata.schedules.always.self],
         data_source_id: "1",
         parent_url: parent.self,
         data_source_fields: [
@@ -1194,6 +1199,7 @@ describe("skylark.sets", () => {
           data_source_id: record.id,
           uid: record.fields?.slug,
           self: `/api/episodes/${record.fields?.slug as string}`,
+          credits: [],
         }),
       }));
       axiosRequest.mockImplementation(() => ({ data }));
@@ -1276,6 +1282,7 @@ describe("skylark.sets", () => {
           data_source_id: record.id,
           uid: record.fields?.slug,
           self: `/api/episodes/${record.fields?.slug as string}`,
+          credits: [],
         }),
       }));
       axiosRequest.mockImplementation(() => ({ data }));

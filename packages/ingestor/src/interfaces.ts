@@ -10,6 +10,7 @@ import {
   ApiRole,
   ApiSchedule,
   ApiSetType,
+  ApiTag,
   ApiThemeGenre,
   SetTypes,
 } from "@skylark-reference-apps/lib";
@@ -45,11 +46,13 @@ export interface Airtables {
   genres: Record<FieldSet>[];
   themes: Record<FieldSet>[];
   ratings: Record<FieldSet>[];
+  tags: Record<FieldSet>[];
   images: Record<FieldSet>[];
   availibility: Record<FieldSet>[];
   setsMetadata: Record<FieldSet>[];
   assetTypes: Record<FieldSet>[];
   imageTypes: Record<FieldSet>[];
+  tagTypes: Record<FieldSet>[];
 }
 
 export type ApiObjectType =
@@ -66,7 +69,10 @@ export type ApiObjectType =
   | "computed-scheduled-items"
   | "assets";
 
-export type ApiContentObjectType = "image-types" | "asset-types";
+export type ApiContentObjectType =
+  | "image-types"
+  | "asset-types"
+  | "tag-categories";
 
 type AllApiObjects = Partial<
   ApiEntertainmentObject &
@@ -74,7 +80,8 @@ type AllApiObjects = Partial<
     ApiRole &
     ApiPerson &
     ApiRating &
-    ApiCredit
+    ApiCredit &
+    ApiTag
 >;
 export type ApiSkylarkObjectWithAllPotentialFields = Omit<
   AllApiObjects,
@@ -120,11 +127,13 @@ export interface ApiAirtableFields {
 
 export interface Metadata {
   schedules: {
-    default: ApiSchedule;
+    default?: ApiSchedule;
+    always: ApiSchedule;
     all: (ApiSchedule & ApiAirtableFields)[];
   };
   imageTypes: (ApiImageType & ApiAirtableFields)[];
   assetTypes: (ApiAssetType & ApiAirtableFields)[];
+  tagTypes: (ApiAssetType & ApiAirtableFields)[];
   set: {
     types: ApiSetType[];
     additionalRecords: { id: string; fields: FieldSet }[];
@@ -136,6 +145,7 @@ export interface Metadata {
   genres: (ApiThemeGenre & ApiAirtableFields)[];
   themes: (ApiThemeGenre & ApiAirtableFields)[];
   ratings: (ApiRating & ApiAirtableFields)[];
+  tags: (ApiTag & ApiAirtableFields)[];
   dimensions: {
     affiliates: (ApiDimension & ApiAirtableFields)[];
     deviceTypes: (ApiDimension & ApiAirtableFields)[];

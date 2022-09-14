@@ -7,6 +7,8 @@ import {
   ApiRating,
   ApiRole,
   ApiSetType,
+  ApiTag,
+  ApiTagCategory,
   ApiThemeGenre,
   SKYLARK_API,
 } from "@skylark-reference-apps/lib";
@@ -39,6 +41,7 @@ import {
   signInToCognito,
   uploadToWorkflowServiceWatchBucket,
 } from "./lib/amplify";
+import { UNLICENSED_BY_DEFAULT } from "./lib/constants";
 
 const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
   const [alwaysSchedule, setTypes, dimensions] = await Promise.all([
@@ -52,19 +55,30 @@ const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
   );
   // eslint-disable-next-line no-console
   console.log("Schedule objects created");
+  // eslint-disable-next-line no-console
+  console.log(
+    `Default license: ${
+      UNLICENSED_BY_DEFAULT
+        ? "undefined"
+        : `${alwaysSchedule.title} (${alwaysSchedule.self})`
+    }`
+  );
 
   const metadata: Metadata = {
     schedules: {
-      default: alwaysSchedule,
+      default: UNLICENSED_BY_DEFAULT ? undefined : alwaysSchedule,
+      always: alwaysSchedule,
       all: createdSchedules,
     },
     imageTypes: [],
     assetTypes: [],
+    tagTypes: [],
     people: [],
     roles: [],
     genres: [],
     themes: [],
     ratings: [],
+    tags: [],
     airtableCredits: airtable.credits,
     airtableImages: airtable.images,
     set: {
@@ -83,6 +97,12 @@ const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
   metadata.imageTypes = await createOrUpdateContentTypes<ApiImageType>(
     "image-types",
     airtable.imageTypes,
+    metadata
+  );
+
+  metadata.tagTypes = await createOrUpdateContentTypes<ApiTagCategory>(
+    "tag-categories",
+    airtable.tagTypes,
     metadata
   );
 
@@ -108,6 +128,11 @@ const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
 
   metadata.ratings = await createOrUpdateAirtableObjectsInSkylark<ApiRating>(
     airtable.ratings,
+    metadata
+  );
+
+  metadata.tags = await createOrUpdateAirtableObjectsInSkylark<ApiTag>(
+    airtable.tags,
     metadata
   );
 

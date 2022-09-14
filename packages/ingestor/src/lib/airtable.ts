@@ -95,11 +95,13 @@ export const getAllTables = async (): Promise<Airtables> => {
     "genres",
     "themes",
     "ratings",
+    "tags",
     "images",
     "availibility",
     "sets-metadata",
     "asset-types",
     "image-types",
+    "tag-categories",
   ];
   const [
     mediaObjects,
@@ -110,11 +112,13 @@ export const getAllTables = async (): Promise<Airtables> => {
     genres,
     themes,
     ratings,
+    tags,
     images,
     availibility,
     setsMetadata,
     assetTypes,
     imageTypes,
+    tagTypes,
   ] = await Promise.all(tables.map((table) => getTable(table)));
 
   return {
@@ -138,10 +142,12 @@ export const getAllTables = async (): Promise<Airtables> => {
     genres,
     themes,
     ratings,
+    tags,
     images,
     availibility,
     setsMetadata,
     assetTypes,
     imageTypes,
+    tagTypes,
   };
 };

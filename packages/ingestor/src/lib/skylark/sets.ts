@@ -67,7 +67,9 @@ const createOrUpdateSet = async (
         {
           method,
           data: {
-            schedule_urls: [metadata.schedules.default.self],
+            schedule_urls: metadata.schedules.default
+              ? [metadata.schedules.default.self]
+              : [],
             ...existingSet,
             ...object,
             data_source_id: dataSourceId,
@@ -94,7 +96,9 @@ const createOrUpdateSet = async (
     await authenticatedSkylarkRequest<ApiEntertainmentObject>(url, {
       method,
       data: {
-        schedule_urls: [metadata.schedules.default.self],
+        schedule_urls: metadata.schedules.default
+          ? [metadata.schedules.default.self]
+          : [],
         ...existingSet,
         title,
         slug,
@@ -132,7 +136,9 @@ const createOrUpdateSetItem = async (
     data: {
       content_url: contentUrl,
       position,
-      schedule_urls: [metadata.schedules.default.self],
+      schedule_urls: metadata.schedules.default
+        ? [metadata.schedules.default.self]
+        : [],
     },
   });
 };

@@ -205,7 +205,7 @@ export const createOrUpdateDynamicObject = (
     self: "",
     name,
     url: `/api/${resource}/?order=-created&q=${query}`,
-    schedule_urls: [metadata.schedules.default.self],
+    schedule_urls: [metadata.schedules.always.self],
   };
   return createOrUpdateObject<ApiDynamicObject>(
     "computed-scheduled-items",
@@ -432,6 +432,24 @@ export const convertAirtableFieldsToSkylarkObject = (
     object.rating_urls = ratingUrls;
   }
 
+  const tagUrls = getUrlsFromField(fields.tags as string[], metadata.tags);
+  if (tagUrls) {
+    object.tags = tagUrls.map((tag_url) => ({
+      tag_url,
+      schedule_urls: [metadata.schedules.always.self],
+    }));
+  }
+
+  // The category_url field only exists on the Tag object
+  const tagCategoryUrls = getUrlsFromField(
+    fields.category as string[],
+    metadata.tagTypes
+  );
+  if (tagCategoryUrls && tagCategoryUrls?.length > 0) {
+    const [categoryUrl] = tagCategoryUrls;
+    object.category_url = categoryUrl;
+  }
+
   const [assetType] =
     getUrlsFromField(fields.asset_type as string[], metadata.assetTypes) || [];
   if (assetType) {
@@ -522,11 +540,16 @@ export const createOrUpdateAirtableObjectsInSkylark = async <
       objectTypes
     );
 
-  await updateCredits<T>(
-    createOrUpdateBatchResponseData,
-    airtableRecords,
-    metadata
+  const hasCredits = createOrUpdateBatchResponseData.some((object) =>
+    Object.prototype.hasOwnProperty.call(object, "credits")
   );
+  if (hasCredits) {
+    await updateCredits<T>(
+      createOrUpdateBatchResponseData,
+      airtableRecords,
+      metadata
+    );
+  }
 
   const parseObjectsAndCreateImages = await Promise.all(
     createOrUpdateBatchResponseData.map(
