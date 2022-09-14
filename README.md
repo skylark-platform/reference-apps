@@ -38,5 +38,5 @@ From the root directory run `yarn test`
 
 [skylark]: https://www.skylarkplatform.com/
 [environment-variables]: ./docs/environment-variables.md
-[storybook]: https://63219df2e93c0d4a4ed861cf-lawtpqeveb.chromatic.com/
+[storybook]: https://main--63219df2e93c0d4a4ed861cf.chromatic.com/
 [v8-app]: https://media.apps.showcase.skylarkplatform.io/
