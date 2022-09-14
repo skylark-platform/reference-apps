@@ -134,6 +134,7 @@ describe("content-types", () => {
             self: "",
             schedule_urls: [metadata.schedules.always.self],
             data_source_id: records[0].id,
+            tags: [],
             data_source_fields: [
               "uid",
               "self",
@@ -153,6 +154,7 @@ describe("content-types", () => {
               "number_of_episodes",
               "episode_number",
               "value",
+              "tags",
             ],
             ...records[0].fields,
           },
@@ -183,6 +185,7 @@ describe("content-types", () => {
             self: "",
             schedule_urls: [metadata.schedules.always.self],
             data_source_id: records[0].id,
+            tags: [],
             data_source_fields: [
               "uid",
               "self",
@@ -202,6 +205,7 @@ describe("content-types", () => {
               "number_of_episodes",
               "episode_number",
               "value",
+              "tags",
             ],
             ...records[0].fields,
           },

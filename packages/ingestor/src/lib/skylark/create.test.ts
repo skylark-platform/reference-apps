@@ -50,7 +50,7 @@ const alwaysSchedule = {
   viewing_context_urls: [],
 };
 
-describe("skylark.sets", () => {
+describe("skylark.create", () => {
   let axiosRequest: jest.Mock;
 
   beforeEach(() => {
@@ -472,6 +472,7 @@ describe("skylark.sets", () => {
         self: "",
         schedule_urls: [metadata.schedules.always.self],
         data_source_id: "1",
+        tags: [],
         data_source_fields: [
           "uid",
           "self",
@@ -491,6 +492,7 @@ describe("skylark.sets", () => {
           "number_of_episodes",
           "episode_number",
           "value",
+          "tags",
         ],
       };
 
@@ -520,6 +522,7 @@ describe("skylark.sets", () => {
         schedule_urls: [metadata.schedules.always.self],
         data_source_id: "1",
         parent_url: parent.self,
+        tags: [],
         data_source_fields: [
           "uid",
           "self",
@@ -539,6 +542,7 @@ describe("skylark.sets", () => {
           "number_of_episodes",
           "episode_number",
           "value",
+          "tags",
         ],
       };
 
@@ -943,6 +947,7 @@ describe("skylark.sets", () => {
                 title_short: "short title",
                 schedule_urls: ["/api/schedules/1"],
                 data_source_id: "airtable-episode-1",
+                tags: [],
                 data_source_fields: [
                   "uid",
                   "self",
@@ -962,6 +967,7 @@ describe("skylark.sets", () => {
                   "number_of_episodes",
                   "episode_number",
                   "value",
+                  "tags",
                 ],
               }),
               id: "PUT-/api/episodes/versions/data-source/airtable-episode-1/",
@@ -976,6 +982,7 @@ describe("skylark.sets", () => {
                 synopsis_short: "short synopsis",
                 schedule_urls: ["/api/schedules/1"],
                 data_source_id: "airtable-episode-2",
+                tags: [],
                 data_source_fields: [
                   "uid",
                   "self",
@@ -995,6 +1002,7 @@ describe("skylark.sets", () => {
                   "number_of_episodes",
                   "episode_number",
                   "value",
+                  "tags",
                 ],
               }),
               id: "PUT-/api/episodes/versions/data-source/airtable-episode-2/",
@@ -1058,6 +1066,7 @@ describe("skylark.sets", () => {
                 self: "/api/episodes/episode-1",
                 schedule_urls: ["/api/schedules/1"],
                 data_source_id: "airtable-episode-1",
+                tags: [],
                 data_source_fields: [
                   "uid",
                   "self",
@@ -1077,6 +1086,7 @@ describe("skylark.sets", () => {
                   "number_of_episodes",
                   "episode_number",
                   "value",
+                  "tags",
                 ],
               }),
               id: "PUT-/api/episodes/versions/data-source/airtable-episode-1/",
@@ -1091,6 +1101,7 @@ describe("skylark.sets", () => {
                 self: "/api/episodes/episode-2",
                 schedule_urls: ["/api/schedules/1"],
                 data_source_id: "airtable-episode-2",
+                tags: [],
                 data_source_fields: [
                   "uid",
                   "self",
@@ -1110,6 +1121,7 @@ describe("skylark.sets", () => {
                   "number_of_episodes",
                   "episode_number",
                   "value",
+                  "tags",
                 ],
               }),
               id: "PUT-/api/episodes/versions/data-source/airtable-episode-2/",
@@ -1240,6 +1252,7 @@ describe("skylark.sets", () => {
                 parent_url: "/api/episodes/episode-1",
                 schedule_urls: ["/api/schedules/1"],
                 data_source_id: "airtable-episode-3",
+                tags: [],
                 data_source_fields: [
                   "uid",
                   "self",
@@ -1259,6 +1272,7 @@ describe("skylark.sets", () => {
                   "number_of_episodes",
                   "episode_number",
                   "value",
+                  "tags",
                 ],
               }),
               id: "PUT-/api/episodes/versions/data-source/airtable-episode-3/",

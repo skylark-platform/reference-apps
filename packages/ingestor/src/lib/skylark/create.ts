@@ -433,12 +433,12 @@ export const convertAirtableFieldsToSkylarkObject = (
   }
 
   const tagUrls = getUrlsFromField(fields.tags as string[], metadata.tags);
-  if (tagUrls) {
-    object.tags = tagUrls.map((tag_url) => ({
-      tag_url,
-      schedule_urls: [metadata.schedules.always.self],
-    }));
-  }
+  object.tags = tagUrls
+    ? tagUrls.map((tag_url) => ({
+        tag_url,
+        schedule_urls: [metadata.schedules.always.self],
+      }))
+    : [];
 
   // The category_url field only exists on the Tag object
   const tagCategoryUrls = getUrlsFromField(
@@ -648,7 +648,7 @@ export const createTranslationsForObjects = async (
     languageCodes[airtableId] = iso_code || "";
   });
 
-  const translationObjectData = translationsTable.map(({ fields, id }) => {
+  const translationObjectData = translationsTable.map(({ fields }) => {
     if (
       !fields.object ||
       !isArray(fields.object) ||
@@ -668,18 +668,25 @@ export const createTranslationsForObjects = async (
       return [];
     }
 
-    const object = convertAirtableFieldsToSkylarkObject(id, fields, metadata);
-
-    object.uid = originalObject.uid;
-    object.self = originalObject.self;
-
-    // Don't change any data source fields
-    object.data_source_id = originalObject.airtableId;
-    delete object.data_source_fields;
-    delete object.is_data_source;
-
-    // Schedules are global so don't update
-    delete object.schedule_urls;
+    const object: ApiSkylarkObjectWithAllPotentialFields =
+      removeUndefinedPropertiesFromObject({
+        uid: originalObject.uid,
+        self: originalObject.self,
+        // Don't change any data source fields
+        data_source_id: originalObject.airtableId,
+        name: fields?.name as string,
+        title: fields?.title as string,
+        slug: fields?.slug as string,
+        title_short: fields?.title_short as string,
+        title_medium: fields?.title_medium as string,
+        title_long: fields?.title_long as string,
+        synopsis_short: fields?.synopsis_short as string,
+        synopsis_medium: fields?.synopsis_medium as string,
+        synopsis_long: fields?.synopsis_long as string,
+        release_date: fields?.release_date as string,
+        season_number: fields?.season_number as number,
+        value: fields?.value as string,
+      });
 
     const languages = fields.languages as string[];
     return languages.map((languageAirtableId) => ({

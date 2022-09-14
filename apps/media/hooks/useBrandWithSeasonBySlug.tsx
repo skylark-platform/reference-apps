@@ -24,6 +24,7 @@ const fieldsToExpand = {
     },
   },
   rating_urls: {},
+  tags: {},
 };
 
 const fields = {
@@ -53,6 +54,9 @@ const fields = {
   rating_urls: {
     title: {},
     slug: {},
+  },
+  tags: {
+    name: {},
   },
   items: {
     self: {},

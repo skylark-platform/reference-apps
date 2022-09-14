@@ -413,7 +413,7 @@ describe("skylarkApiHelpers", () => {
         long: "Long synopsis",
       },
       type: null,
-      tags: [],
+      tags: undefined,
       titleSort: "",
       themes: undefined,
       ratings: undefined,

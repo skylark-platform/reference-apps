@@ -68,7 +68,7 @@ export interface ApiTag extends ApiBaseObject {
   category_url: string;
 }
 
-export type ApiTags = { tag_url: string }[] | { tag_url: ApiTag }[];
+export type ApiTags = { tag_url: string }[] | ApiTag[];
 
 export interface ApiEntertainmentObject extends ApiBaseObject {
   title: string;
