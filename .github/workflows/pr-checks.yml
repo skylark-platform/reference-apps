@@ -21,6 +21,8 @@ jobs:
       - run: yarn lint
       - run: yarn prettier:check
       - run: yarn test:ci
+      - name: Upload coverage reports to Codecov with GitHub Action
+        uses: codecov/codecov-action@v3
       - name: Test Report
         uses: dorny/test-reporter@v1
         if: success() || failure()
