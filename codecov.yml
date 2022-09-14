@@ -24,7 +24,7 @@ coverage:
       streamTV:
         flags:
           - streamTV
-        target: 50%
+        target: 80%
       ingestor:
         flags:
           - ingestor
