@@ -75,6 +75,15 @@ describe("utils", () => {
       expect(schedules).toEqual([metadataSchedules.always.self]);
     });
 
+    it("returns no schedule when there are no schedules on Airtable and there is no default schedule", () => {
+      const schedules = getScheduleUrlsFromMetadata([], {
+        ...metadataSchedules,
+        default: undefined,
+      });
+
+      expect(schedules).toEqual([]);
+    });
+
     it("returns no schedule when there are an Airtable schedule is given but there are no schedules returned by Airtable", () => {
       const schedules = getScheduleUrlsFromMetadata(
         [metadataSchedules.all[0].airtableId],

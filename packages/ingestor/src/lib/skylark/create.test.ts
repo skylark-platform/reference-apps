@@ -708,6 +708,72 @@ describe("skylark.create", () => {
 
       expect(skylarkObject.rating_urls).toEqual(expected);
     });
+
+    it("adds tags using the tags table", () => {
+      const metadataWithTags: Metadata = {
+        ...metadata,
+        tags: [
+          {
+            airtableId: "airtable-tag-1",
+            name: "tag-1",
+            uid: "tag",
+            slug: "tag-1",
+            self: "/api/tags/tag-1",
+            category_url: "/api/tag-categories/category-1",
+          },
+          {
+            airtableId: "airtable-tag-2",
+            name: "tag-2",
+            uid: "tag",
+            slug: "tag-2",
+            self: "/api/tags/tag-2",
+            category_url: "/api/tag-categories/category-1",
+          },
+        ],
+      };
+      const expected = [
+        {
+          schedule_urls: [alwaysSchedule.self],
+          tag_url: metadataWithTags.tags[0].self,
+        },
+      ];
+
+      const skylarkObject = convertAirtableFieldsToSkylarkObject(
+        "1",
+        {
+          tags: ["airtable-tag-1"],
+        },
+        metadataWithTags
+      );
+
+      expect(skylarkObject.tags).toEqual(expected);
+    });
+
+    it("adds tag-categories using the tag-categories table", () => {
+      const metadataWithTagCategories: Metadata = {
+        ...metadata,
+        tagTypes: [
+          {
+            airtableId: "airtable-tag-category-1",
+            name: "tag-category-1",
+            uid: "tag-category-1",
+            slug: "tag-category-1",
+            self: "/api/tag-categories/tag-category-1",
+          },
+        ],
+      };
+      const expected = metadataWithTagCategories.tagTypes[0].self;
+
+      const skylarkObject = convertAirtableFieldsToSkylarkObject(
+        "1",
+        {
+          category: ["airtable-tag-category-1"],
+        },
+        metadataWithTagCategories
+      );
+
+      expect(skylarkObject.category_url).toEqual(expected);
+    });
   });
 
   describe("updateCredits", () => {
@@ -1336,7 +1402,7 @@ describe("skylark.create", () => {
         title_short: "Episode 1",
       },
     ];
-    // const table = { name: "episodes" } as Table<FieldSet>;
+
     const airtableTranslations: Partial<Record<FieldSet>>[] = [
       {
         id: "airtable-episode-1-pt-pt",
@@ -1364,6 +1430,36 @@ describe("skylark.create", () => {
             Authorization: "Bearer token",
             "Cache-Control": "no-cache",
           },
+          data: {
+            data_source_id: "airtable-episode-1",
+            self: "/api/episodes/episode-1",
+            slug: "episode-1",
+            title_short: "título curto",
+            uid: "episode-1",
+          },
+        })
+      );
+    });
+
+    it("does not update relationships", async () => {
+      await createTranslationsForObjects(
+        originalObjects,
+        [
+          {
+            ...airtableTranslations[0],
+            fields: {
+              ...airtableTranslations[0].fields,
+              themes: ["theme"],
+              tags: ["tags"],
+              genres: ["genres"],
+            },
+          },
+        ] as Records<FieldSet>,
+        metadata
+      );
+
+      expect(axiosRequest).toHaveBeenCalledWith(
+        expect.objectContaining({
           data: {
             data_source_id: "airtable-episode-1",
             self: "/api/episodes/episode-1",

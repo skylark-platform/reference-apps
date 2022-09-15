@@ -668,6 +668,7 @@ export const createTranslationsForObjects = async (
       return [];
     }
 
+    // Don't update relationships for translations
     const object: ApiSkylarkObjectWithAllPotentialFields =
       removeUndefinedPropertiesFromObject({
         uid: originalObject.uid,

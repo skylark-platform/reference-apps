@@ -7,6 +7,7 @@ import {
   ImageUrls,
   Ratings,
   SkylarkObject,
+  Tags,
   ThemesAndGenres,
   UnexpandedObjects,
 } from "../interfaces";
@@ -15,6 +16,7 @@ import {
   parseSkylarkImageUrls,
   parseSkylarkCredits,
   parseSkylarkRatings,
+  parseSkylarkTags,
 } from "./skylarkApiHelpers";
 
 const fieldsToExpand = {
@@ -378,6 +380,63 @@ describe("skylarkApiHelpers", () => {
 
       expect(ratings).toHaveProperty("isExpanded", true);
       expect(ratings).toEqual(expected);
+    });
+  });
+
+  describe("parseSkylarkTags", () => {
+    it("parses Tags when they are not expanded", () => {
+      const tags = parseSkylarkTags([
+        { tag_url: "/api/tag/1" },
+        { tag_url: "/api/tag/2" },
+      ]);
+
+      const expected: UnexpandedObjects = {
+        isExpanded: false,
+        items: [
+          {
+            self: "/api/tag/1",
+          },
+          {
+            self: "/api/tag/2",
+          },
+        ],
+      };
+
+      expect(tags).toEqual(expected);
+    });
+
+    it("parses Tags when they are expanded", () => {
+      const tags = parseSkylarkTags([
+        {
+          uid: "tag-1",
+          slug: "tag-1",
+          self: "/api/tags/tag-1",
+          name: "Status",
+          category_url: "/api/tag-category-1",
+        },
+        {
+          uid: "tag-2",
+          slug: "tag-2",
+          self: "/api/tags/tag-2",
+          name: "Music Video",
+          category_url: "/api/tag-category-1",
+        },
+      ]);
+
+      const expected: Tags = {
+        isExpanded: true,
+        items: [
+          {
+            name: "Status",
+          },
+          {
+            name: "Music Video",
+          },
+        ],
+      };
+
+      expect(tags).toHaveProperty("isExpanded", true);
+      expect(tags).toEqual(expected);
     });
   });
 
