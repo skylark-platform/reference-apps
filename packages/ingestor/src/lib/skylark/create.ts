@@ -205,7 +205,7 @@ export const createOrUpdateDynamicObject = (
     self: "",
     name,
     url: `/api/${resource}/?order=-created&q=${query}`,
-    schedule_urls: [metadata.schedules.default.self],
+    schedule_urls: [metadata.schedules.always.self],
   };
   return createOrUpdateObject<ApiDynamicObject>(
     "computed-scheduled-items",
@@ -432,6 +432,24 @@ export const convertAirtableFieldsToSkylarkObject = (
     object.rating_urls = ratingUrls;
   }
 
+  const tagUrls = getUrlsFromField(fields.tags as string[], metadata.tags);
+  object.tags = tagUrls
+    ? tagUrls.map((tag_url) => ({
+        tag_url,
+        schedule_urls: [metadata.schedules.always.self],
+      }))
+    : [];
+
+  // The category_url field only exists on the Tag object
+  const tagCategoryUrls = getUrlsFromField(
+    fields.category as string[],
+    metadata.tagTypes
+  );
+  if (tagCategoryUrls && tagCategoryUrls?.length > 0) {
+    const [categoryUrl] = tagCategoryUrls;
+    object.category_url = categoryUrl;
+  }
+
   const [assetType] =
     getUrlsFromField(fields.asset_type as string[], metadata.assetTypes) || [];
   if (assetType) {
@@ -522,11 +540,16 @@ export const createOrUpdateAirtableObjectsInSkylark = async <
       objectTypes
     );
 
-  await updateCredits<T>(
-    createOrUpdateBatchResponseData,
-    airtableRecords,
-    metadata
+  const hasCredits = createOrUpdateBatchResponseData.some((object) =>
+    Object.prototype.hasOwnProperty.call(object, "credits")
   );
+  if (hasCredits) {
+    await updateCredits<T>(
+      createOrUpdateBatchResponseData,
+      airtableRecords,
+      metadata
+    );
+  }
 
   const parseObjectsAndCreateImages = await Promise.all(
     createOrUpdateBatchResponseData.map(
@@ -625,7 +648,7 @@ export const createTranslationsForObjects = async (
     languageCodes[airtableId] = iso_code || "";
   });
 
-  const translationObjectData = translationsTable.map(({ fields, id }) => {
+  const translationObjectData = translationsTable.map(({ fields }) => {
     if (
       !fields.object ||
       !isArray(fields.object) ||
@@ -645,18 +668,26 @@ export const createTranslationsForObjects = async (
       return [];
     }
 
-    const object = convertAirtableFieldsToSkylarkObject(id, fields, metadata);
-
-    object.uid = originalObject.uid;
-    object.self = originalObject.self;
-
-    // Don't change any data source fields
-    object.data_source_id = originalObject.airtableId;
-    delete object.data_source_fields;
-    delete object.is_data_source;
-
-    // Schedules are global so don't update
-    delete object.schedule_urls;
+    // Don't update relationships for translations
+    const object: ApiSkylarkObjectWithAllPotentialFields =
+      removeUndefinedPropertiesFromObject({
+        uid: originalObject.uid,
+        self: originalObject.self,
+        // Don't change any data source fields
+        data_source_id: originalObject.airtableId,
+        name: fields?.name as string,
+        title: fields?.title as string,
+        slug: fields?.slug as string,
+        title_short: fields?.title_short as string,
+        title_medium: fields?.title_medium as string,
+        title_long: fields?.title_long as string,
+        synopsis_short: fields?.synopsis_short as string,
+        synopsis_medium: fields?.synopsis_medium as string,
+        synopsis_long: fields?.synopsis_long as string,
+        release_date: fields?.release_date as string,
+        season_number: fields?.season_number as number,
+        value: fields?.value as string,
+      });
 
     const languages = fields.languages as string[];
     return languages.map((languageAirtableId) => ({

@@ -62,6 +62,14 @@ export interface ApiRating extends ApiBaseObject {
 
 export type ApiRatings = string[] | ApiRating[];
 
+export interface ApiTag extends ApiBaseObject {
+  name: string;
+  slug: string;
+  category_url: string;
+}
+
+export type ApiTags = { tag_url: string }[] | ApiTag[];
+
 export interface ApiEntertainmentObject extends ApiBaseObject {
   title: string;
   title_short?: string;
@@ -75,6 +83,7 @@ export interface ApiEntertainmentObject extends ApiBaseObject {
   image_urls?: ApiImage[] | string[];
   credits?: ApiCredit[] | ApiCreditUnexpanded[];
   rating_urls?: ApiRatings;
+  tags?: ApiTags;
   set_type_slug?: SetTypes;
   items?: string[] | (ApiEntertainmentObject | ApiSetObject)[];
   episode_number?: number;
@@ -133,6 +142,10 @@ export interface ApiSchedule extends ApiBaseObject {
 }
 
 export interface ApiImageType extends ApiBaseObject {
+  name: string;
+}
+
+export interface ApiTagCategory extends ApiBaseObject {
   name: string;
 }
 

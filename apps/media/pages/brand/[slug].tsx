@@ -11,7 +11,6 @@ import {
 } from "@skylark-reference-apps/react";
 import {
   Episode,
-  formatReleaseDate,
   getTitleByOrder,
   getSynopsisByOrder,
   Season,
@@ -64,7 +63,7 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     brand?.objectTitle
   );
 
-  const { t, lang } = useTranslation("common");
+  const { t } = useTranslation("common");
 
   return (
     <div className="mb-20 mt-48 flex min-h-screen w-full flex-col items-center bg-gray-900">
@@ -89,7 +88,12 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                     ? brand.ratings.items?.[0]?.title
                     : ""
                 }
-                releaseDate={formatReleaseDate(seasons?.[0]?.releaseDate, lang)}
+                releaseDate={seasons?.[0]?.releaseDate}
+                tags={
+                  brand?.tags?.isExpanded
+                    ? brand.tags.items.map(({ name }) => name)
+                    : []
+                }
                 title={getTitleByOrder(
                   brand?.title,
                   ["long", "medium", "short"],

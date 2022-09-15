@@ -27,6 +27,25 @@ describe("skylark.sets", () => {
     jest.clearAllMocks();
   });
 
+  const alwaysSchedule = {
+    uid: "1",
+    slug: "always-schedule",
+    title: "Always",
+    starts: "1/1/2000",
+    ends: "1/1/2000",
+    rights: false,
+    status: "active",
+    self: "/api/schedules/1",
+    affiliate_urls: [],
+    customer_type_urls: [],
+    device_type_urls: [],
+    language_urls: [],
+    locale_urls: [],
+    operating_system_urls: [],
+    region_urls: [],
+    viewing_context_urls: [],
+  };
+
   describe("createOrUpdateSetAndContents", () => {
     const homePageSlider: SetConfig = {
       dataSourceId: "home-page-slider",
@@ -87,8 +106,10 @@ describe("skylark.sets", () => {
       ],
       genres: [],
       themes: [],
+      tags: [],
       imageTypes,
       assetTypes: [],
+      tagTypes: [],
       ratings: [],
       roles: [],
       people: [],
@@ -104,24 +125,8 @@ describe("skylark.sets", () => {
         additionalRecords: [],
       },
       schedules: {
-        default: {
-          uid: "1",
-          slug: "always-schedule",
-          title: "Always",
-          starts: "1/1/2000",
-          ends: "1/1/2000",
-          rights: false,
-          status: "active",
-          self: "/api/schedules/1",
-          affiliate_urls: [],
-          customer_type_urls: [],
-          device_type_urls: [],
-          language_urls: [],
-          locale_urls: [],
-          operating_system_urls: [],
-          region_urls: [],
-          viewing_context_urls: [],
-        },
+        default: alwaysSchedule,
+        always: alwaysSchedule,
         all: [],
       },
       dimensions: {

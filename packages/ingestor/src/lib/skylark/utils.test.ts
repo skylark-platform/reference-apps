@@ -6,25 +6,28 @@ import {
 
 describe("utils", () => {
   describe("getScheduleUrlsFromMetadata", () => {
+    const alwaysLicense = {
+      uid: "1",
+      slug: "always-schedule",
+      title: "Always",
+      starts: "1/1/2000",
+      ends: "1/1/2000",
+      rights: false,
+      status: "active",
+      self: "/api/schedules/1",
+      affiliate_urls: [],
+      customer_type_urls: [],
+      device_type_urls: [],
+      language_urls: [],
+      locale_urls: [],
+      operating_system_urls: [],
+      region_urls: [],
+      viewing_context_urls: [],
+    };
+
     const metadataSchedules: Metadata["schedules"] = {
-      default: {
-        uid: "1",
-        slug: "always-schedule",
-        title: "Always",
-        starts: "1/1/2000",
-        ends: "1/1/2000",
-        rights: false,
-        status: "active",
-        self: "/api/schedules/1",
-        affiliate_urls: [],
-        customer_type_urls: [],
-        device_type_urls: [],
-        language_urls: [],
-        locale_urls: [],
-        operating_system_urls: [],
-        region_urls: [],
-        viewing_context_urls: [],
-      },
+      default: alwaysLicense,
+      always: alwaysLicense,
       all: [
         {
           airtableId: "airtable-schedule-1",
@@ -69,7 +72,16 @@ describe("utils", () => {
     it("returns the default schedule when there are no schedules on Airtable", () => {
       const schedules = getScheduleUrlsFromMetadata([], metadataSchedules);
 
-      expect(schedules).toEqual([metadataSchedules.default.self]);
+      expect(schedules).toEqual([metadataSchedules.always.self]);
+    });
+
+    it("returns no schedule when there are no schedules on Airtable and there is no default schedule", () => {
+      const schedules = getScheduleUrlsFromMetadata([], {
+        ...metadataSchedules,
+        default: undefined,
+      });
+
+      expect(schedules).toEqual([]);
     });
 
     it("returns no schedule when there are an Airtable schedule is given but there are no schedules returned by Airtable", () => {

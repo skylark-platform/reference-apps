@@ -35,6 +35,11 @@ import {
   ExpandedSkylarkObjects,
   UnexpandedParentObject,
   Dimensions,
+  ApiTags,
+  Tags,
+  UnexpandedObject,
+  Tag,
+  ApiTag,
 } from "../interfaces";
 
 /**
@@ -204,6 +209,39 @@ export const parseSkylarkRatings = (
 };
 
 /**
+ * Parses the tags object from the Skylark API
+ * isExpanded depending on whether the object has been expanded
+ * @param tags the tags object from the Skylark API
+ * @returns {Tags}
+ */
+export const parseSkylarkTags = (tags: ApiTags): Tags | UnexpandedObjects => {
+  // When a tag is unexpanded it is in the format { tag_url } rather than returning just a self
+  if (
+    (tags as { tag_url: string }[]).every((tag: object) =>
+      Object.prototype.hasOwnProperty.call(tag, "tag_url")
+    )
+  ) {
+    return {
+      isExpanded: false,
+      items: (tags as { tag_url: string }[]).map(
+        (tag: { tag_url: string }): UnexpandedObject => ({ self: tag.tag_url })
+      ),
+    };
+  }
+
+  const parsedTags: Tag[] = (tags as ApiTag[]).map(
+    (item: ApiTag): Tag => ({
+      name: item.name || "",
+    })
+  );
+
+  return {
+    isExpanded: true,
+    items: parsedTags,
+  };
+};
+
+/**
  * Parses an object returned by the Skylark API
  * If the object contains child items, it will attempt to parse those too
  * @param obj
@@ -278,8 +316,7 @@ export const parseSkylarkObject = (
     ratings: obj.rating_urls ? parseSkylarkRatings(obj.rating_urls) : undefined,
     titleSort: obj.title_sort || "",
     releaseDate: obj.release_date || "",
-    // TODO add these
-    tags: [],
+    tags: obj.tags ? parseSkylarkTags(obj.tags) : undefined,
   };
 
   if (obj.self) {

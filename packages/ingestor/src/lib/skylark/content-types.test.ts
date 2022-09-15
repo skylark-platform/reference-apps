@@ -10,6 +10,25 @@ jest.mock("@skylark-reference-apps/lib", () => ({
   SKYLARK_API: "https://skylarkplatform.io",
 }));
 
+const alwaysSchedule = {
+  uid: "1",
+  slug: "always-schedule",
+  title: "Always",
+  starts: "1/1/2000",
+  ends: "1/1/2000",
+  rights: false,
+  status: "active",
+  self: "/api/schedules/1",
+  affiliate_urls: [],
+  customer_type_urls: [],
+  device_type_urls: [],
+  language_urls: [],
+  locale_urls: [],
+  operating_system_urls: [],
+  region_urls: [],
+  viewing_context_urls: [],
+};
+
 describe("content-types", () => {
   let axiosRequest: jest.Mock;
 
@@ -20,7 +39,9 @@ describe("content-types", () => {
     themes: [],
     imageTypes: [],
     assetTypes: [],
+    tagTypes: [],
     ratings: [],
+    tags: [],
     roles: [],
     people: [],
     set: {
@@ -35,24 +56,8 @@ describe("content-types", () => {
       additionalRecords: [],
     },
     schedules: {
-      default: {
-        uid: "1",
-        slug: "always-schedule",
-        title: "Always",
-        starts: "1/1/2000",
-        ends: "1/1/2000",
-        rights: false,
-        status: "active",
-        self: "/api/schedules/1",
-        affiliate_urls: [],
-        customer_type_urls: [],
-        device_type_urls: [],
-        language_urls: [],
-        locale_urls: [],
-        operating_system_urls: [],
-        region_urls: [],
-        viewing_context_urls: [],
-      },
+      default: alwaysSchedule,
+      always: alwaysSchedule,
       all: [],
     },
     dimensions: {
@@ -127,8 +132,9 @@ describe("content-types", () => {
           data: {
             uid: "",
             self: "",
-            schedule_urls: [metadata.schedules.default.self],
+            schedule_urls: [metadata.schedules.always.self],
             data_source_id: records[0].id,
+            tags: [],
             data_source_fields: [
               "uid",
               "self",
@@ -148,6 +154,7 @@ describe("content-types", () => {
               "number_of_episodes",
               "episode_number",
               "value",
+              "tags",
             ],
             ...records[0].fields,
           },
@@ -176,8 +183,9 @@ describe("content-types", () => {
           data: {
             uid: "content-type_1",
             self: "",
-            schedule_urls: [metadata.schedules.default.self],
+            schedule_urls: [metadata.schedules.always.self],
             data_source_id: records[0].id,
+            tags: [],
             data_source_fields: [
               "uid",
               "self",
@@ -197,6 +205,7 @@ describe("content-types", () => {
               "number_of_episodes",
               "episode_number",
               "value",
+              "tags",
             ],
             ...records[0].fields,
           },

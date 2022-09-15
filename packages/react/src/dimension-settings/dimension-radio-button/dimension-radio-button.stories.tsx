@@ -17,5 +17,6 @@ Default.args = {
     { text: "Current", value: "current" },
     { text: "Tomorrow", value: "tomorrow" },
   ],
+  // eslint-disable-next-line no-console
   onChange: (value: string) => console.log(value),
 };

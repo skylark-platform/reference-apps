@@ -31,7 +31,26 @@ jest.mock("@skylark-reference-apps/lib", () => ({
   SKYLARK_API: "https://skylarkplatform.io",
 }));
 
-describe("skylark.sets", () => {
+const alwaysSchedule = {
+  uid: "1",
+  slug: "always-schedule",
+  title: "Always",
+  starts: "1/1/2000",
+  ends: "1/1/2000",
+  rights: false,
+  status: "active",
+  self: "/api/schedules/1",
+  affiliate_urls: [],
+  customer_type_urls: [],
+  device_type_urls: [],
+  language_urls: [],
+  locale_urls: [],
+  operating_system_urls: [],
+  region_urls: [],
+  viewing_context_urls: [],
+};
+
+describe("skylark.create", () => {
   let axiosRequest: jest.Mock;
 
   beforeEach(() => {
@@ -95,7 +114,9 @@ describe("skylark.sets", () => {
     themes: [],
     imageTypes,
     assetTypes: [],
+    tagTypes: [],
     ratings: [],
+    tags: [],
     roles: [],
     people: [],
     set: {
@@ -110,24 +131,8 @@ describe("skylark.sets", () => {
       additionalRecords: [],
     },
     schedules: {
-      default: {
-        uid: "1",
-        slug: "always-schedule",
-        title: "Always",
-        starts: "1/1/2000",
-        ends: "1/1/2000",
-        rights: false,
-        status: "active",
-        self: "/api/schedules/1",
-        affiliate_urls: [],
-        customer_type_urls: [],
-        device_type_urls: [],
-        language_urls: [],
-        locale_urls: [],
-        operating_system_urls: [],
-        region_urls: [],
-        viewing_context_urls: [],
-      },
+      default: alwaysSchedule,
+      always: alwaysSchedule,
       all: [],
     },
     dimensions: {
@@ -337,7 +342,7 @@ describe("skylark.sets", () => {
             self: "",
             name: dynamicObject.name,
             url: `/api/${dynamicObject.resource}/?order=-created&q=${dynamicObject.query}`,
-            schedule_urls: [metadata.schedules.default.self],
+            schedule_urls: [metadata.schedules.always.self],
           },
         })
       );
@@ -412,7 +417,7 @@ describe("skylark.sets", () => {
             content_url: objectToAttachImageTo.self,
             image_location: imageAttachment.url,
             image_type_url: metadata.imageTypes[0].self,
-            schedule_urls: [metadata.schedules.default.self],
+            schedule_urls: [metadata.schedules.always.self],
             title: imageAttachment.filename,
             data_source_id: "image-1-episode_1",
           },
@@ -427,7 +432,7 @@ describe("skylark.sets", () => {
         content_url: objectToAttachImageTo.self,
         image_location: imageAttachment.url,
         image_type_url: metadata.imageTypes[0].self,
-        schedule_urls: [metadata.schedules.default.self],
+        schedule_urls: [metadata.schedules.always.self],
         title: imageAttachment.filename,
         url: "https://image-location-in-skylark",
         data_source_id: "image-1-episode_1",
@@ -465,8 +470,9 @@ describe("skylark.sets", () => {
       const expected = {
         uid: "",
         self: "",
-        schedule_urls: [metadata.schedules.default.self],
+        schedule_urls: [metadata.schedules.always.self],
         data_source_id: "1",
+        tags: [],
         data_source_fields: [
           "uid",
           "self",
@@ -486,6 +492,7 @@ describe("skylark.sets", () => {
           "number_of_episodes",
           "episode_number",
           "value",
+          "tags",
         ],
       };
 
@@ -512,9 +519,10 @@ describe("skylark.sets", () => {
       const expected = {
         uid: "",
         self: "",
-        schedule_urls: [metadata.schedules.default.self],
+        schedule_urls: [metadata.schedules.always.self],
         data_source_id: "1",
         parent_url: parent.self,
+        tags: [],
         data_source_fields: [
           "uid",
           "self",
@@ -534,6 +542,7 @@ describe("skylark.sets", () => {
           "number_of_episodes",
           "episode_number",
           "value",
+          "tags",
         ],
       };
 
@@ -698,6 +707,72 @@ describe("skylark.sets", () => {
       );
 
       expect(skylarkObject.rating_urls).toEqual(expected);
+    });
+
+    it("adds tags using the tags table", () => {
+      const metadataWithTags: Metadata = {
+        ...metadata,
+        tags: [
+          {
+            airtableId: "airtable-tag-1",
+            name: "tag-1",
+            uid: "tag",
+            slug: "tag-1",
+            self: "/api/tags/tag-1",
+            category_url: "/api/tag-categories/category-1",
+          },
+          {
+            airtableId: "airtable-tag-2",
+            name: "tag-2",
+            uid: "tag",
+            slug: "tag-2",
+            self: "/api/tags/tag-2",
+            category_url: "/api/tag-categories/category-1",
+          },
+        ],
+      };
+      const expected = [
+        {
+          schedule_urls: [alwaysSchedule.self],
+          tag_url: metadataWithTags.tags[0].self,
+        },
+      ];
+
+      const skylarkObject = convertAirtableFieldsToSkylarkObject(
+        "1",
+        {
+          tags: ["airtable-tag-1"],
+        },
+        metadataWithTags
+      );
+
+      expect(skylarkObject.tags).toEqual(expected);
+    });
+
+    it("adds tag-categories using the tag-categories table", () => {
+      const metadataWithTagCategories: Metadata = {
+        ...metadata,
+        tagTypes: [
+          {
+            airtableId: "airtable-tag-category-1",
+            name: "tag-category-1",
+            uid: "tag-category-1",
+            slug: "tag-category-1",
+            self: "/api/tag-categories/tag-category-1",
+          },
+        ],
+      };
+      const expected = metadataWithTagCategories.tagTypes[0].self;
+
+      const skylarkObject = convertAirtableFieldsToSkylarkObject(
+        "1",
+        {
+          category: ["airtable-tag-category-1"],
+        },
+        metadataWithTagCategories
+      );
+
+      expect(skylarkObject.category_url).toEqual(expected);
     });
   });
 
@@ -938,6 +1013,7 @@ describe("skylark.sets", () => {
                 title_short: "short title",
                 schedule_urls: ["/api/schedules/1"],
                 data_source_id: "airtable-episode-1",
+                tags: [],
                 data_source_fields: [
                   "uid",
                   "self",
@@ -957,6 +1033,7 @@ describe("skylark.sets", () => {
                   "number_of_episodes",
                   "episode_number",
                   "value",
+                  "tags",
                 ],
               }),
               id: "PUT-/api/episodes/versions/data-source/airtable-episode-1/",
@@ -971,6 +1048,7 @@ describe("skylark.sets", () => {
                 synopsis_short: "short synopsis",
                 schedule_urls: ["/api/schedules/1"],
                 data_source_id: "airtable-episode-2",
+                tags: [],
                 data_source_fields: [
                   "uid",
                   "self",
@@ -990,6 +1068,7 @@ describe("skylark.sets", () => {
                   "number_of_episodes",
                   "episode_number",
                   "value",
+                  "tags",
                 ],
               }),
               id: "PUT-/api/episodes/versions/data-source/airtable-episode-2/",
@@ -1053,6 +1132,7 @@ describe("skylark.sets", () => {
                 self: "/api/episodes/episode-1",
                 schedule_urls: ["/api/schedules/1"],
                 data_source_id: "airtable-episode-1",
+                tags: [],
                 data_source_fields: [
                   "uid",
                   "self",
@@ -1072,6 +1152,7 @@ describe("skylark.sets", () => {
                   "number_of_episodes",
                   "episode_number",
                   "value",
+                  "tags",
                 ],
               }),
               id: "PUT-/api/episodes/versions/data-source/airtable-episode-1/",
@@ -1086,6 +1167,7 @@ describe("skylark.sets", () => {
                 self: "/api/episodes/episode-2",
                 schedule_urls: ["/api/schedules/1"],
                 data_source_id: "airtable-episode-2",
+                tags: [],
                 data_source_fields: [
                   "uid",
                   "self",
@@ -1105,6 +1187,7 @@ describe("skylark.sets", () => {
                   "number_of_episodes",
                   "episode_number",
                   "value",
+                  "tags",
                 ],
               }),
               id: "PUT-/api/episodes/versions/data-source/airtable-episode-2/",
@@ -1194,6 +1277,7 @@ describe("skylark.sets", () => {
           data_source_id: record.id,
           uid: record.fields?.slug,
           self: `/api/episodes/${record.fields?.slug as string}`,
+          credits: [],
         }),
       }));
       axiosRequest.mockImplementation(() => ({ data }));
@@ -1234,6 +1318,7 @@ describe("skylark.sets", () => {
                 parent_url: "/api/episodes/episode-1",
                 schedule_urls: ["/api/schedules/1"],
                 data_source_id: "airtable-episode-3",
+                tags: [],
                 data_source_fields: [
                   "uid",
                   "self",
@@ -1253,6 +1338,7 @@ describe("skylark.sets", () => {
                   "number_of_episodes",
                   "episode_number",
                   "value",
+                  "tags",
                 ],
               }),
               id: "PUT-/api/episodes/versions/data-source/airtable-episode-3/",
@@ -1276,6 +1362,7 @@ describe("skylark.sets", () => {
           data_source_id: record.id,
           uid: record.fields?.slug,
           self: `/api/episodes/${record.fields?.slug as string}`,
+          credits: [],
         }),
       }));
       axiosRequest.mockImplementation(() => ({ data }));
@@ -1315,7 +1402,7 @@ describe("skylark.sets", () => {
         title_short: "Episode 1",
       },
     ];
-    // const table = { name: "episodes" } as Table<FieldSet>;
+
     const airtableTranslations: Partial<Record<FieldSet>>[] = [
       {
         id: "airtable-episode-1-pt-pt",
@@ -1343,6 +1430,36 @@ describe("skylark.sets", () => {
             Authorization: "Bearer token",
             "Cache-Control": "no-cache",
           },
+          data: {
+            data_source_id: "airtable-episode-1",
+            self: "/api/episodes/episode-1",
+            slug: "episode-1",
+            title_short: "título curto",
+            uid: "episode-1",
+          },
+        })
+      );
+    });
+
+    it("does not update relationships", async () => {
+      await createTranslationsForObjects(
+        originalObjects,
+        [
+          {
+            ...airtableTranslations[0],
+            fields: {
+              ...airtableTranslations[0].fields,
+              themes: ["theme"],
+              tags: ["tags"],
+              genres: ["genres"],
+            },
+          },
+        ] as Records<FieldSet>,
+        metadata
+      );
+
+      expect(axiosRequest).toHaveBeenCalledWith(
+        expect.objectContaining({
           data: {
             data_source_id: "airtable-episode-1",
             self: "/api/episodes/episode-1",

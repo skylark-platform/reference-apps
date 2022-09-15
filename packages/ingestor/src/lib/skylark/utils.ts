@@ -10,6 +10,9 @@ export const getScheduleUrlsFromMetadata = (
   schedules: string[],
   metadataSchedules: Metadata["schedules"]
 ): string[] => {
+  const defaultSchedule: string[] = metadataSchedules.default
+    ? [metadataSchedules.default.self]
+    : [];
   const scheduleUrls =
     schedules && schedules.length > 0
       ? metadataSchedules.all
@@ -17,7 +20,7 @@ export const getScheduleUrlsFromMetadata = (
             schedules.includes(scheduleAirtableId)
           )
           .map(({ self }) => self)
-      : [metadataSchedules.default.self];
+      : defaultSchedule;
   return scheduleUrls;
 };
 

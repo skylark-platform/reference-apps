@@ -77,6 +77,14 @@ export interface Ratings extends ExpandedObjects {
   items: Rating[];
 }
 
+export interface Tag {
+  name: string;
+}
+
+export interface Tags extends ExpandedObjects {
+  items: Tag[];
+}
+
 export interface SkylarkObject {
   self: string;
   type: ObjectTypes;
@@ -91,7 +99,7 @@ export interface SkylarkObject {
     [key in SynopsisTypes]: string;
   };
   releaseDate: string;
-  tags: string[];
+  tags?: Tags | UnexpandedObjects;
   titleSort: string;
   credits?: Credits | UnexpandedObjects;
   ratings?: Ratings | UnexpandedObjects;

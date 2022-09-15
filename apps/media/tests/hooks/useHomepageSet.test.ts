@@ -20,7 +20,7 @@ const successResponse = {
   self: "",
   slug: "",
   synopsis: { long: "", medium: "", short: "" },
-  tags: [],
+  tags: undefined,
   themes: undefined,
   title: { long: "", medium: "", short: "" },
   titleSort: "",

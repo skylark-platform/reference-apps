@@ -22,4 +22,5 @@ Default.args = {
   rating: "18+",
   description:
     "Summers span decades. Winters can last a lifetime. And the struggle for the Iron Throne begins.",
+  tags: ["New release every week"],
 };
