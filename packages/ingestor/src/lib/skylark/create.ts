@@ -769,9 +769,9 @@ export const connectExternallyCreatedAssetToMediaObject = async (
       );
       const assetParent = createdMediaObjects.find(
         ({ data_source_id }) => data_source_id === assetParentAirtableRecord?.id
-      ) as ApiEntertainmentObjectWithAirtableId;
+      );
 
-      if (asset?.parent_url === assetParent.self) {
+      if (!assetParent || asset?.parent_url === assetParent.self) {
         return {};
       }
 

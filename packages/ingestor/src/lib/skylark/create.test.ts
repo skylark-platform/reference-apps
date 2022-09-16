@@ -23,6 +23,7 @@ import {
   parseAirtableImagesAndUploadToSkylark,
   createTranslationsForObjects,
   updateCredits,
+  connectExternallyCreatedAssetToMediaObject,
 } from "./create";
 
 jest.mock("axios");
@@ -1469,6 +1470,175 @@ describe("skylark.create", () => {
           },
         })
       );
+    });
+  });
+
+  describe("connectExternallyCreatedAssetToMediaObject", () => {
+    const externalAssetDataSourceId = "asset-1";
+
+    const episode: ApiEntertainmentObjectWithAirtableId = {
+      airtableId: "airtable-episode-1",
+      data_source_id: "airtable-episode-1",
+      uid: "episode-1",
+      self: "/api/episodes/episode-1",
+      slug: "episode-1",
+      title: "Episode 1",
+    };
+
+    const records: Partial<Record<FieldSet>>[] = [
+      {
+        id: episode.airtableId,
+        fields: {
+          title: "airtable-episode-with-external-asset",
+          external_asset_data_source_id: "asset-1",
+        },
+      },
+      {
+        id: "airtable-episode-2",
+        fields: {
+          title: "airtable-episode-without-external-asset",
+        },
+      },
+    ];
+
+    it("makes with a GET request to check if the external_asset_data_source_id exists in Skylark", async () => {
+      const data: ApiBatchResponse[] = [
+        {
+          code: 200,
+          id: `GET-${externalAssetDataSourceId}`,
+          header: {},
+          body: JSON.stringify({
+            data_source_id: externalAssetDataSourceId,
+            uid: "asset-1",
+            self: "/api/asset/asset-1",
+          }),
+        },
+      ];
+      axiosRequest.mockImplementation(() => ({ data }));
+
+      await connectExternallyCreatedAssetToMediaObject(
+        records as Records<FieldSet>,
+        [],
+        metadata
+      );
+
+      expect(axiosRequest).toBeCalledTimes(1);
+      expect(axiosRequest).toBeCalledWith(
+        expect.objectContaining({
+          method: "POST",
+          url: "https://skylarkplatform.io/api/batch/",
+          data: [
+            {
+              id: `GET-${externalAssetDataSourceId}`,
+              method: "GET",
+              url: `/api/assets/versions/data-source/${externalAssetDataSourceId}/`,
+            },
+          ],
+        })
+      );
+    });
+
+    it("makes a PATCH request", async () => {
+      const data: ApiBatchResponse[] = [
+        {
+          code: 200,
+          id: `GET-${externalAssetDataSourceId}`,
+          header: {},
+          body: JSON.stringify({
+            data_source_id: externalAssetDataSourceId,
+            uid: "asset-1",
+            self: "/api/asset/asset-1",
+          }),
+        },
+      ];
+      axiosRequest.mockImplementation(() => ({ data }));
+
+      await connectExternallyCreatedAssetToMediaObject(
+        records as Records<FieldSet>,
+        [episode],
+        metadata
+      );
+
+      expect(axiosRequest).toBeCalledTimes(2);
+      expect(axiosRequest).toBeCalledWith(
+        expect.objectContaining({
+          method: "POST",
+          url: "https://skylarkplatform.io/api/batch/",
+          data: [
+            {
+              id: `PATCH-${externalAssetDataSourceId}-${episode.self}`,
+              method: "PATCH",
+              url: `/api/assets/versions/data-source/${externalAssetDataSourceId}/`,
+              data: JSON.stringify({
+                parent_url: episode.self,
+                schedule_urls: [metadata.schedules.always.self],
+              }),
+            },
+          ],
+        })
+      );
+    });
+
+    it("does not make a PATCH request when the parent_url for the asset is already correct", async () => {
+      const data: ApiBatchResponse[] = [
+        {
+          code: 200,
+          id: `GET-${externalAssetDataSourceId}`,
+          header: {},
+          body: JSON.stringify({
+            data_source_id: externalAssetDataSourceId,
+            uid: "asset-1",
+            self: "/api/asset/asset-1",
+            parent_url: episode.self,
+          }),
+        },
+      ];
+      axiosRequest.mockImplementation(() => ({ data }));
+
+      await connectExternallyCreatedAssetToMediaObject(
+        records as Records<FieldSet>,
+        [episode],
+        metadata
+      );
+
+      expect(axiosRequest).toBeCalledTimes(1);
+      expect(axiosRequest).not.toBeCalledWith(
+        expect.objectContaining({
+          method: "POST",
+          url: "https://skylarkplatform.io/api/batch/",
+          data: [
+            {
+              id: `PATCH-${externalAssetDataSourceId}-${episode.self}`,
+              method: "PATCH",
+              url: `/api/assets/versions/data-source/${externalAssetDataSourceId}/`,
+              data: JSON.stringify({
+                parent_url: episode.self,
+                schedule_urls: [metadata.schedules.always.self],
+              }),
+            },
+          ],
+        })
+      );
+    });
+
+    it("does not make a PATCH request when an asset matching the external_asset_data_source_id exists in Skylark", async () => {
+      const data: ApiBatchResponse[] = [
+        {
+          code: 404,
+          id: `GET-${externalAssetDataSourceId}`,
+          header: {},
+          body: "",
+        },
+      ];
+      axiosRequest.mockImplementation(() => ({ data }));
+
+      await connectExternallyCreatedAssetToMediaObject(
+        records as Records<FieldSet>,
+        [episode],
+        metadata
+      );
+
+      expect(axiosRequest).toBeCalledTimes(1);
     });
   });
 });
