@@ -7,7 +7,7 @@ import {
   ApiPerson,
 } from "@skylark-reference-apps/lib";
 import { Attachment, FieldSet, Records, Record } from "airtable";
-import { compact, flatten, isArray, isEmpty, isString } from "lodash";
+import { compact, flatten, has, isArray, isEmpty, isString } from "lodash";
 import {
   ApiEntertainmentObjectWithAirtableId,
   ApiSkylarkObjectWithAllPotentialFields,
@@ -541,7 +541,7 @@ export const createOrUpdateAirtableObjectsInSkylark = async <
     );
 
   const hasCredits = createOrUpdateBatchResponseData.some((object) =>
-    Object.prototype.hasOwnProperty.call(object, "credits")
+    has(object, "credits")
   );
   if (hasCredits) {
     await updateCredits<T>(
@@ -617,15 +617,22 @@ export const createOrUpdateAirtableObjectsInSkylarkWithParentsInSameTable =
         break;
       }
 
+      // Limit the objects to 40 due to the API + to get output from the console.log below
+      const limitedObjectsToCreate = objectsToCreateUpdate.slice(0, 40);
+
       const objs =
         // eslint-disable-next-line no-await-in-loop
         await createOrUpdateAirtableObjectsInSkylark<ApiEntertainmentObjectWithAirtableId>(
-          objectsToCreateUpdate,
+          limitedObjectsToCreate,
           metadata,
           createdMediaObjects
         );
 
       createdMediaObjects.push(...objs);
+      // eslint-disable-next-line no-console
+      console.log(
+        `Media objects uploaded: ${createdMediaObjects.length}/${airtableRecords.length}`
+      );
     }
 
     return createdMediaObjects;
@@ -711,4 +718,86 @@ export const createTranslationsForObjects = async (
       })
     )
   );
+};
+
+/**
+ * connectExternallyCreatedAssetToMediaObject - connects assets that have been added via the workflow-service to their intended parents
+ * @param records - Airtable records containing the parent data + asset's data_source_id used for linking
+ * @param createdMediaObjects - Media Objects that exist in Skylark, created via Airtable
+ * @param metadata
+ * @returns
+ */
+export const connectExternallyCreatedAssetToMediaObject = async (
+  records: Records<FieldSet>,
+  createdMediaObjects: ApiEntertainmentObjectWithAirtableId[],
+  metadata: Metadata
+) => {
+  const recordsWithExternalAsset = records.filter(
+    ({ fields }) =>
+      has(fields, "external_asset_data_source_id") &&
+      isString(fields.external_asset_data_source_id)
+  );
+
+  const getBatchRequestData = recordsWithExternalAsset.map(({ fields }) => {
+    const url = `/api/assets/versions/data-source/${
+      fields.external_asset_data_source_id as string
+    }/`;
+
+    return {
+      id: `GET-${fields.external_asset_data_source_id as string}`,
+      method: "GET",
+      url,
+    };
+  });
+
+  const getBatchResponseData =
+    await batchSkylarkRequest<ApiEntertainmentObjectWithAirtableId>(
+      getBatchRequestData,
+      { ignore404s: true }
+    );
+
+  const assetsThatExistInSkylark = getBatchResponseData
+    .filter(({ code }) => code !== 404)
+    .map(({ data }) => data);
+
+  const batchRequestData = assetsThatExistInSkylark
+    .map((asset) => {
+      const assetDataSourceId = asset.data_source_id as string;
+      const assetParentAirtableRecord = recordsWithExternalAsset.find(
+        ({ fields }) =>
+          fields.external_asset_data_source_id === assetDataSourceId
+      );
+      const assetParent = createdMediaObjects.find(
+        ({ data_source_id }) => data_source_id === assetParentAirtableRecord?.id
+      ) as ApiEntertainmentObjectWithAirtableId;
+
+      if (asset?.parent_url === assetParent.self) {
+        return {};
+      }
+
+      const data: Partial<ApiEntertainmentObjectWithAirtableId> = {
+        parent_url: assetParent.self,
+        schedule_urls: metadata.schedules.default
+          ? [metadata.schedules.default.self]
+          : asset.schedule_urls,
+      };
+
+      return {
+        id: `PATCH-${assetDataSourceId}-${assetParent.self}`,
+        method: "PATCH",
+        url: `/api/assets/versions/data-source/${assetDataSourceId}/`,
+        data: JSON.stringify(data),
+      };
+
+      // Filter out any objects which already have the correct parent_url
+    })
+    .filter((request) => !isEmpty(request));
+
+  const batchResponseData =
+    await batchSkylarkRequest<ApiEntertainmentObjectWithAirtableId>(
+      batchRequestData,
+      { ignore404s: true }
+    );
+
+  return batchResponseData;
 };

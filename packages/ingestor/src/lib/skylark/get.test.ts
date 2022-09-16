@@ -251,13 +251,13 @@ describe("skylark.get", () => {
   });
 
   describe("getSetItems", () => {
-    it("calls /api/sets/?set_type_slug=", async () => {
+    it("calls /api/cms-sets/?set_type_slug=", async () => {
       axiosRequest.mockResolvedValue({ data: {} });
       await getSetItems("set-1");
 
       expect(axiosRequest).toBeCalledWith(
         expect.objectContaining({
-          url: "https://skylarkplatform.io/api/sets/set-1/items/",
+          url: "https://skylarkplatform.io/api/cms-sets/set-1/items/",
         })
       );
     });

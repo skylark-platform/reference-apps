@@ -58,16 +58,23 @@ export const batchSkylarkRequest = async <T>(
     ignore404s?: boolean;
   }
 ): Promise<{ batchRequestId: string; data: T; code: number }[]> => {
-  const chunks = chunk(data, 10);
+  const chunks = chunk(data, 20);
 
-  const batchResArr = await Promise.all(
-    chunks.map((chunkedData) =>
-      authenticatedSkylarkRequest<ApiBatchResponse[]>("/api/batch/", {
+  // Use a for loop here to limit the number of requests made at once
+  // May want to improve to allow up to 5 requests happen at once in the future
+  const batchResArr = [];
+  for (let i = 0; i < chunks.length; i += 1) {
+    const chunkedData = chunks[i];
+    // eslint-disable-next-line no-await-in-loop
+    const res = await authenticatedSkylarkRequest<ApiBatchResponse[]>(
+      "/api/batch/",
+      {
         method: "POST",
         data: chunkedData,
-      })
-    )
-  );
+      }
+    );
+    batchResArr.push(res);
+  }
 
   const batchResData = batchResArr.flatMap((val) => val.data);
 
