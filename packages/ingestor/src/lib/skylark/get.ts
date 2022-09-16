@@ -114,11 +114,12 @@ export const getSetBySlug = async (
 
 /**
  * getSetItems - Gets the items for a set using its ID
+ * Uses the cms-sets endpoint so that dynamic objects are not expanded
  * @param setUid - Set ID
  * @returns set items
  */
 export const getSetItems = async (setUid: string) => {
-  const url = `/api/sets/${setUid}/items/`;
+  const url = `/api/cms-sets/${setUid}/items/`;
   const res = await authenticatedSkylarkRequest<{ objects?: ApiSetItem[] }>(
     url,
     {

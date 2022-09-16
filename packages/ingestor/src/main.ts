@@ -21,6 +21,7 @@ import {
   getResources,
   createOrUpdateAirtableObjectsInSkylarkWithParentsInSameTable,
   createTranslationsForObjects,
+  connectExternallyCreatedAssetToMediaObject,
 } from "./lib/skylark";
 import { getAllTables } from "./lib/airtable";
 import {
@@ -148,6 +149,18 @@ const createMediaObjects = async (airtable: Airtables, metadata: Metadata) => {
       metadata
     );
 
+  // eslint-disable-next-line no-console
+  console.log("Media objects created");
+
+  await connectExternallyCreatedAssetToMediaObject(
+    airtable.mediaObjects,
+    mediaObjects,
+    metadata
+  );
+
+  // eslint-disable-next-line no-console
+  console.log("Media objects linked to external assets");
+
   await createTranslationsForObjects(
     mediaObjects,
     airtable.translations.mediaObjects,
@@ -155,7 +168,7 @@ const createMediaObjects = async (airtable: Airtables, metadata: Metadata) => {
   );
 
   // eslint-disable-next-line no-console
-  console.log("Media objects created");
+  console.log("Media objects translated");
 
   return mediaObjects;
 };
@@ -210,6 +223,8 @@ const createAdditionalObjects = async (metadata: Metadata) => {
 
 const main = async () => {
   // eslint-disable-next-line no-console
+  console.time("Completed in:");
+  // eslint-disable-next-line no-console
   console.log(`Starting ingest to ${SKYLARK_API}`);
 
   const shouldCreateAdditionalObjects = process.env.CREATE_SETS === "true";
@@ -236,6 +251,8 @@ const main = async () => {
 
   await createAndUploadAssets(airtable.mediaObjects, mediaObjects);
 
+  // eslint-disable-next-line no-console
+  console.timeEnd("Completed in:");
   // eslint-disable-next-line no-console
   console.log("great success");
 };

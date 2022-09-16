@@ -423,7 +423,7 @@ describe("skylark.sets", () => {
       expect(axiosRequest).toBeCalledTimes(5);
       expect(axiosRequest).toBeCalledWith(
         expect.objectContaining({
-          url: "https://skylarkplatform.io/api/sets/set_1/items/",
+          url: "https://skylarkplatform.io/api/cms-sets/set_1/items/",
           method: "GET",
         })
       );
@@ -462,7 +462,8 @@ describe("skylark.sets", () => {
 
       // Assert.
       expect(axiosRequest).toBeCalledTimes(5);
-      expect(axiosRequest).toBeCalledWith(
+      expect(axiosRequest).toHaveBeenNthCalledWith(
+        5,
         expect.objectContaining({
           url: "https://skylarkplatform.io/api/sets/set_1/items/",
           method: "POST",
@@ -488,7 +489,7 @@ describe("skylark.sets", () => {
             };
           }
 
-          if (url?.includes("/api/sets/set_1/items/")) {
+          if (url?.includes("/api/cms-sets/set_1/items/")) {
             return {
               data: {
                 objects: [
@@ -513,7 +514,8 @@ describe("skylark.sets", () => {
 
       // Assert.
       expect(axiosRequest).toBeCalledTimes(5);
-      expect(axiosRequest).toBeCalledWith(
+      expect(axiosRequest).toHaveBeenNthCalledWith(
+        5,
         expect.objectContaining({
           url: "https://skylarkplatform.io/api/sets/set_1/items/set_item_1/",
           method: "PUT",
