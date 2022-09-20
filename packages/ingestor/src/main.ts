@@ -27,6 +27,7 @@ import { getAllTables } from "./lib/airtable";
 import {
   Airtables,
   ApiEntertainmentObjectWithAirtableId,
+  GraphQLMetadata,
   Metadata,
 } from "./interfaces";
 import { orderedSetsToCreate } from "./additional-objects/sets";
@@ -43,6 +44,7 @@ import {
   uploadToWorkflowServiceWatchBucket,
 } from "./lib/amplify";
 import { UNLICENSED_BY_DEFAULT } from "./lib/constants";
+import { createGraphQLCredits, createGraphQLMediaObjects, createGraphQlObjectsUsingIntrospection, createSet } from "./lib/skylark/saas/create";
 
 const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
   const [alwaysSchedule, setTypes, dimensions] = await Promise.all([
@@ -235,21 +237,48 @@ const main = async () => {
     }`
   );
 
-  configureAmplify();
+  // configureAmplify();
 
-  await signInToCognito();
+  // await signInToCognito();
 
   const airtable = await getAllTables();
 
-  const metadata = await createMetadata(airtable);
+  const metadata: GraphQLMetadata = {
+    people: [],
+    roles: [],
+    genres: [],
+    themes: [],
+    ratings: [],
+    tags: [],
+    credits: [],
+    airtableImages: airtable.images,
+  };
 
-  const mediaObjects = await createMediaObjects(airtable, metadata);
+  metadata.themes = await createGraphQlObjectsUsingIntrospection("Theme", airtable.themes)
+  metadata.genres = await createGraphQlObjectsUsingIntrospection("Genre", airtable.genres)
+  metadata.ratings = await createGraphQlObjectsUsingIntrospection("Rating", airtable.ratings)
+  metadata.tags = await createGraphQlObjectsUsingIntrospection("Tag", airtable.tags)
+  metadata.people = await createGraphQlObjectsUsingIntrospection("Person", airtable.people)
+  metadata.roles = await createGraphQlObjectsUsingIntrospection("Role", airtable.roles)
+  metadata.credits = await createGraphQLCredits(airtable.credits, metadata);
 
-  if (shouldCreateAdditionalObjects) {
-    await createAdditionalObjects(metadata);
-  }
 
-  await createAndUploadAssets(airtable.mediaObjects, mediaObjects);
+  const mediaObjects = await createGraphQLMediaObjects(airtable.mediaObjects.filter(({ fields }) => fields.skylark_object_type !== "assets"), metadata)
+
+
+  await createSet(orderedSetsToCreate[0], mediaObjects, metadata)
+
+
+
+  // const metadata = await createMetadata(airtable);
+
+  // const mediaObjects = await createMediaObjects(airtable, metadata);
+
+  // if (shouldCreateAdditionalObjects) {
+  //   await createAdditionalObjects(metadata);
+  // }
+
+  // await createAndUploadAssets(airtable.mediaObjects, mediaObjects);
 
   // eslint-disable-next-line no-console
   console.timeEnd("Completed in:");
