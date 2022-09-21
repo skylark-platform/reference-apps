@@ -1568,7 +1568,7 @@ describe("skylark.create", () => {
             {
               id: `PATCH-${externalAssetDataSourceId}-${episode.self}`,
               method: "PATCH",
-              url: `/api/assets/versions/data-source/${externalAssetDataSourceId}/`,
+              url: `/api/asset/asset-1`,
               data: JSON.stringify({
                 parent_url: episode.self,
                 schedule_urls: [metadata.schedules.always.self],
