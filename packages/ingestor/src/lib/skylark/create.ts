@@ -785,7 +785,7 @@ export const connectExternallyCreatedAssetToMediaObject = async (
       return {
         id: `PATCH-${assetDataSourceId}-${assetParent.self}`,
         method: "PATCH",
-        url: `/api/assets/versions/data-source/${assetDataSourceId}/`,
+        url: asset.self,
         data: JSON.stringify(data),
       };
 
