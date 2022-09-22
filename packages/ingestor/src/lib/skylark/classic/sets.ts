@@ -4,7 +4,7 @@ import {
   ApiSetItem,
 } from "@skylark-reference-apps/lib";
 import { FieldSet } from "airtable";
-import { SetConfig, Metadata } from "../../interfaces";
+import { SetConfig, Metadata } from "../../../interfaces";
 import { authenticatedSkylarkRequest } from "./api";
 import {
   convertAirtableFieldsToSkylarkObject,

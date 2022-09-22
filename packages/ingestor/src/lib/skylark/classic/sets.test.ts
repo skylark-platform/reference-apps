@@ -2,7 +2,7 @@ import Auth from "@aws-amplify/auth";
 import { Attachment, FieldSet, Record } from "airtable";
 import axios, { AxiosRequestConfig } from "axios";
 import { convertAirtableFieldsToSkylarkObject } from ".";
-import { Metadata, SetConfig } from "../../interfaces";
+import { Metadata, SetConfig } from "../../../interfaces";
 import { createOrUpdateSetAndContents } from "./sets";
 
 jest.mock("axios");

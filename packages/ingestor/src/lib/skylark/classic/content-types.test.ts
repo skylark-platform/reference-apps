@@ -1,7 +1,7 @@
 import Auth from "@aws-amplify/auth";
 import { FieldSet, Record } from "airtable";
 import axios from "axios";
-import { Metadata } from "../../interfaces";
+import { Metadata } from "../../../interfaces";
 import { createOrUpdateContentTypes } from "./content-types";
 
 jest.mock("axios");

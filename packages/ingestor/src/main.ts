@@ -22,7 +22,11 @@ import {
   createOrUpdateAirtableObjectsInSkylarkWithParentsInSameTable,
   createTranslationsForObjects,
   connectExternallyCreatedAssetToMediaObject,
-} from "./lib/skylark";
+  createOrUpdateSchedules,
+  createOrUpdateScheduleDimensions,
+  getAlwaysSchedule,
+  createOrUpdateContentTypes,
+} from "./lib/skylark/classic";
 import { getAllTables } from "./lib/airtable";
 import {
   Airtables,
@@ -36,12 +40,6 @@ import {
   orderedSetsToCreateWithoutDynamicObject,
 } from "./additional-objects/sets";
 import { quentinTarantinoMovies } from "./additional-objects/dynamicObjects";
-import {
-  createOrUpdateSchedules,
-  createOrUpdateScheduleDimensions,
-  getAlwaysSchedule,
-} from "./lib/skylark/availability";
-import { createOrUpdateContentTypes } from "./lib/skylark/content-types";
 import {
   configureAmplify,
   signInToCognito,
@@ -246,80 +244,86 @@ const main = async () => {
     }`
   );
 
-  // configureAmplify();
-
-  // await signInToCognito();
-
   const airtable = await getAllTables();
 
-  const metadata: GraphQLMetadata = {
-    people: [],
-    roles: [],
-    genres: [],
-    themes: [],
-    ratings: [],
-    tags: [],
-    credits: [],
-    airtableImages: airtable.images,
-  };
+  if (process.env.SAAS_SKYLARK) {
+    const metadata: GraphQLMetadata = {
+      people: [],
+      roles: [],
+      genres: [],
+      themes: [],
+      ratings: [],
+      tags: [],
+      credits: [],
+      airtableImages: airtable.images,
+    };
 
-  metadata.themes = await createOrUpdateGraphQlObjectsUsingIntrospection(
-    "Theme",
-    airtable.themes
-  );
-  metadata.genres = await createOrUpdateGraphQlObjectsUsingIntrospection(
-    "Genre",
-    airtable.genres
-  );
-  metadata.ratings = await createOrUpdateGraphQlObjectsUsingIntrospection(
-    "Rating",
-    airtable.ratings
-  );
-  metadata.tags = await createOrUpdateGraphQlObjectsUsingIntrospection(
-    "Tag",
-    airtable.tags
-  );
-  metadata.people = await createOrUpdateGraphQlObjectsUsingIntrospection(
-    "Person",
-    airtable.people
-  );
-  metadata.roles = await createOrUpdateGraphQlObjectsUsingIntrospection(
-    "Role",
-    airtable.roles
-  );
-  metadata.credits = await createOrUpdateGraphQLCredits(
-    airtable.credits,
-    metadata
-  );
+    metadata.themes = await createOrUpdateGraphQlObjectsUsingIntrospection(
+      "Theme",
+      airtable.themes
+    );
+    metadata.genres = await createOrUpdateGraphQlObjectsUsingIntrospection(
+      "Genre",
+      airtable.genres
+    );
+    metadata.ratings = await createOrUpdateGraphQlObjectsUsingIntrospection(
+      "Rating",
+      airtable.ratings
+    );
+    metadata.tags = await createOrUpdateGraphQlObjectsUsingIntrospection(
+      "Tag",
+      airtable.tags
+    );
+    metadata.people = await createOrUpdateGraphQlObjectsUsingIntrospection(
+      "Person",
+      airtable.people
+    );
+    metadata.roles = await createOrUpdateGraphQlObjectsUsingIntrospection(
+      "Role",
+      airtable.roles
+    );
+    metadata.credits = await createOrUpdateGraphQLCredits(
+      airtable.credits,
+      metadata
+    );
 
-  const mediaObjects = await createGraphQLMediaObjects(
-    airtable.mediaObjects.filter(
-      ({ fields }) => fields.skylark_object_type !== "assets"
-    ),
-    metadata
-  );
+    const mediaObjects = await createGraphQLMediaObjects(
+      airtable.mediaObjects.filter(
+        ({ fields }) => fields.skylark_object_type !== "assets"
+      ),
+      metadata
+    );
 
-  const createdSets: GraphQLBaseObject[] = [];
+    const createdSets: GraphQLBaseObject[] = [];
 
-  for (let i = 0; i < orderedSetsToCreateWithoutDynamicObject.length; i += 1) {
-    const setConfig = orderedSetsToCreateWithoutDynamicObject[i];
-    // eslint-disable-next-line no-await-in-loop
-    const set = await createOrUpdateSet(setConfig, [
-      ...mediaObjects,
-      ...createdSets,
-    ]);
-    createdSets.push(set);
+    for (
+      let i = 0;
+      i < orderedSetsToCreateWithoutDynamicObject.length;
+      i += 1
+    ) {
+      const setConfig = orderedSetsToCreateWithoutDynamicObject[i];
+      // eslint-disable-next-line no-await-in-loop
+      const set = await createOrUpdateSet(setConfig, [
+        ...mediaObjects,
+        ...createdSets,
+      ]);
+      createdSets.push(set);
+    }
+  } else {
+    configureAmplify();
+
+    await signInToCognito();
+
+    const metadata = await createMetadata(airtable);
+
+    const mediaObjects = await createMediaObjects(airtable, metadata);
+
+    if (shouldCreateAdditionalObjects) {
+      await createAdditionalObjects(metadata);
+    }
+
+    await createAndUploadAssets(airtable.mediaObjects, mediaObjects);
   }
-
-  // const metadata = await createMetadata(airtable);
-
-  // const mediaObjects = await createMediaObjects(airtable, metadata);
-
-  // if (shouldCreateAdditionalObjects) {
-  //   await createAdditionalObjects(metadata);
-  // }
-
-  // await createAndUploadAssets(airtable.mediaObjects, mediaObjects);
 
   // eslint-disable-next-line no-console
   console.timeEnd("Completed in:");

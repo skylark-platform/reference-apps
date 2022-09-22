@@ -335,8 +335,8 @@ export const createGraphQLMediaObjects = async (
           );
 
           if (parent) {
-            // eslint-disable-next-line no-underscore-dangle
             const { relName } = gqlObjectMeta(
+              // eslint-disable-next-line no-underscore-dangle
               parent?.__typename as MediaObjectTypes
             );
             relationships[relName] = { link: parent.uid };

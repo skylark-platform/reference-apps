@@ -1,4 +1,4 @@
-import { Metadata } from "../../interfaces";
+import { Metadata } from "../../../interfaces";
 
 /**
  * getScheduleUrlsFromMetadata - returns an array of schedules using their Airtable IDs, defaults to the default schedule if none are found

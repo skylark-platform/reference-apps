@@ -13,7 +13,7 @@ import {
   ApiSkylarkObjectWithAllPotentialFields,
   DynamicObjectConfig,
   Metadata,
-} from "../../interfaces";
+} from "../../../interfaces";
 import { authenticatedSkylarkRequest, batchSkylarkRequest } from "./api";
 import { getResourceByDataSourceId, getResourceByProperty } from "./get";
 import {
