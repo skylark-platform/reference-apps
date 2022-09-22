@@ -27,10 +27,14 @@ import { getAllTables } from "./lib/airtable";
 import {
   Airtables,
   ApiEntertainmentObjectWithAirtableId,
+  GraphQLBaseObject,
   GraphQLMetadata,
   Metadata,
 } from "./interfaces";
-import { orderedSetsToCreate } from "./additional-objects/sets";
+import {
+  orderedSetsToCreate,
+  orderedSetsToCreateWithoutDynamicObject,
+} from "./additional-objects/sets";
 import { quentinTarantinoMovies } from "./additional-objects/dynamicObjects";
 import {
   createOrUpdateSchedules,
@@ -44,7 +48,12 @@ import {
   uploadToWorkflowServiceWatchBucket,
 } from "./lib/amplify";
 import { UNLICENSED_BY_DEFAULT } from "./lib/constants";
-import { createGraphQLCredits, createGraphQLMediaObjects, createGraphQlObjectsUsingIntrospection, createSet } from "./lib/skylark/saas/create";
+import {
+  createGraphQLMediaObjects,
+  createOrUpdateGraphQLCredits,
+  createOrUpdateGraphQlObjectsUsingIntrospection,
+  createOrUpdateSet,
+} from "./lib/skylark/saas/create";
 
 const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
   const [alwaysSchedule, setTypes, dimensions] = await Promise.all([
@@ -254,21 +263,53 @@ const main = async () => {
     airtableImages: airtable.images,
   };
 
-  metadata.themes = await createGraphQlObjectsUsingIntrospection("Theme", airtable.themes)
-  metadata.genres = await createGraphQlObjectsUsingIntrospection("Genre", airtable.genres)
-  metadata.ratings = await createGraphQlObjectsUsingIntrospection("Rating", airtable.ratings)
-  metadata.tags = await createGraphQlObjectsUsingIntrospection("Tag", airtable.tags)
-  metadata.people = await createGraphQlObjectsUsingIntrospection("Person", airtable.people)
-  metadata.roles = await createGraphQlObjectsUsingIntrospection("Role", airtable.roles)
-  metadata.credits = await createGraphQLCredits(airtable.credits, metadata);
+  metadata.themes = await createOrUpdateGraphQlObjectsUsingIntrospection(
+    "Theme",
+    airtable.themes
+  );
+  metadata.genres = await createOrUpdateGraphQlObjectsUsingIntrospection(
+    "Genre",
+    airtable.genres
+  );
+  metadata.ratings = await createOrUpdateGraphQlObjectsUsingIntrospection(
+    "Rating",
+    airtable.ratings
+  );
+  metadata.tags = await createOrUpdateGraphQlObjectsUsingIntrospection(
+    "Tag",
+    airtable.tags
+  );
+  metadata.people = await createOrUpdateGraphQlObjectsUsingIntrospection(
+    "Person",
+    airtable.people
+  );
+  metadata.roles = await createOrUpdateGraphQlObjectsUsingIntrospection(
+    "Role",
+    airtable.roles
+  );
+  metadata.credits = await createOrUpdateGraphQLCredits(
+    airtable.credits,
+    metadata
+  );
 
+  const mediaObjects = await createGraphQLMediaObjects(
+    airtable.mediaObjects.filter(
+      ({ fields }) => fields.skylark_object_type !== "assets"
+    ),
+    metadata
+  );
 
-  const mediaObjects = await createGraphQLMediaObjects(airtable.mediaObjects.filter(({ fields }) => fields.skylark_object_type !== "assets"), metadata)
+  const createdSets: GraphQLBaseObject[] = [];
 
-
-  await createSet(orderedSetsToCreate[0], mediaObjects, metadata)
-
-
+  for (let i = 0; i < orderedSetsToCreateWithoutDynamicObject.length; i += 1) {
+    const setConfig = orderedSetsToCreateWithoutDynamicObject[i];
+    // eslint-disable-next-line no-await-in-loop
+    const set = await createOrUpdateSet(setConfig, [
+      ...mediaObjects,
+      ...createdSets,
+    ]);
+    createdSets.push(set);
+  }
 
   // const metadata = await createMetadata(airtable);
 

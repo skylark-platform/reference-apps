@@ -67,7 +67,8 @@ export type ApiObjectType =
   | "themes"
   | "ratings"
   | "computed-scheduled-items"
-  | "assets";
+  | "assets"
+  | "sets";
 
 export type ApiContentObjectType =
   | "image-types"
@@ -94,7 +95,8 @@ export type ApiSkylarkObjectWithAllPotentialFields = Omit<
     data_source_id: string;
   };
 export interface SetConfig extends Partial<ApiEntertainmentObject> {
-  dataSourceId: string;
+  dataSourceId: string; // V8
+  externalId: string; // SaaS (GraphQL)
   title: string;
   slug: string;
   set_type_slug: SetTypes;
@@ -159,19 +161,19 @@ export interface Metadata {
 }
 
 export interface GraphQLBaseObject {
-  __typename?: string
-  uid: string
-  external_id: string
-  slug: string
+  __typename?: string;
+  uid: string;
+  external_id: string;
+  slug: string;
 }
 
 export interface GraphQLMetadata {
   airtableImages: Record<FieldSet>[];
-  roles: GraphQLBaseObject[]
-  people: GraphQLBaseObject[]
-  themes: GraphQLBaseObject[]
-  genres: GraphQLBaseObject[]
-  ratings: GraphQLBaseObject[]
-  tags: GraphQLBaseObject[]
+  roles: GraphQLBaseObject[];
+  people: GraphQLBaseObject[];
+  themes: GraphQLBaseObject[];
+  genres: GraphQLBaseObject[];
+  ratings: GraphQLBaseObject[];
+  tags: GraphQLBaseObject[];
   credits: GraphQLBaseObject[];
 }
