@@ -2,11 +2,8 @@ import { ApiBaseObject } from "@skylark-reference-apps/lib";
 import { Record, FieldSet } from "airtable";
 import { authenticatedSkylarkRequest } from "./api";
 import { convertAirtableFieldsToSkylarkObject } from "./create";
-import {
-  ApiAirtableFields,
-  ApiContentObjectType,
-  Metadata,
-} from "../../../interfaces";
+import { ApiAirtableFields, Metadata } from "../../interfaces";
+import { ApiContentObjectType } from "../../types";
 
 /**
  * getContentTypes - retrieves all content types of the given type from Skylark

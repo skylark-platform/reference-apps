@@ -13,7 +13,7 @@ import {
   ApiEntertainmentObjectWithAirtableId,
   DynamicObjectConfig,
   Metadata,
-} from "../../../interfaces";
+} from "../../interfaces";
 import {
   convertAirtableFieldsToSkylarkObject,
   createOrUpdateAirtableObjectsInSkylark,

@@ -2,7 +2,7 @@ import Auth from "@aws-amplify/auth";
 import { ApiBatchResponse, ApiSchedule } from "@skylark-reference-apps/lib";
 import { FieldSet, Record } from "airtable";
 import axios, { AxiosRequestConfig } from "axios";
-import { Airtables, Metadata } from "../../../interfaces";
+import { Airtables, Metadata } from "../../interfaces";
 import {
   createOrUpdateScheduleDimensions,
   createOrUpdateSchedules,

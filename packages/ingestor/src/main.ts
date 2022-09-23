@@ -34,7 +34,7 @@ import {
   GraphQLBaseObject,
   GraphQLMetadata,
   Metadata,
-} from "./interfaces";
+} from "./lib/interfaces";
 import {
   orderedSetsToCreate,
   orderedSetsToCreateWithoutDynamicObject,
@@ -50,8 +50,8 @@ import {
   createGraphQLMediaObjects,
   createOrUpdateGraphQLCredits,
   createOrUpdateGraphQlObjectsUsingIntrospection,
-  createOrUpdateSet,
 } from "./lib/skylark/saas/create";
+import { createOrUpdateGraphQLSet } from "./lib/skylark/saas/sets";
 
 const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
   const [alwaysSchedule, setTypes, dimensions] = await Promise.all([
@@ -246,7 +246,9 @@ const main = async () => {
 
   const airtable = await getAllTables();
 
-  if (process.env.SAAS_SKYLARK) {
+  // eslint-disable-next-line no-constant-condition
+  if (process.env.SAAS_SKYLARK || true) {
+    console.log("GRAPHQL");
     const metadata: GraphQLMetadata = {
       people: [],
       roles: [],
@@ -303,7 +305,7 @@ const main = async () => {
     ) {
       const setConfig = orderedSetsToCreateWithoutDynamicObject[i];
       // eslint-disable-next-line no-await-in-loop
-      const set = await createOrUpdateSet(setConfig, [
+      const set = await createOrUpdateGraphQLSet(setConfig, [
         ...mediaObjects,
         ...createdSets,
       ]);

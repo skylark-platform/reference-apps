@@ -8,7 +8,7 @@ import {
   bulkCreateOrUpdateObjectsWithLookup,
   createOrUpdateObject,
 } from "./create";
-import { Airtables, ApiAirtableFields, Metadata } from "../../../interfaces";
+import { Airtables, ApiAirtableFields, Metadata } from "../../interfaces";
 import { getResourceBySlug } from "./get";
 
 const convertDimensionsToUrls = (

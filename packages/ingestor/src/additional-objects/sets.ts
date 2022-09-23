@@ -2,7 +2,7 @@
  * Specs for Sets that are created by the ingestor outside of Airtable
  * (Usually you'd create these through the CMS)
  */
-import { SetConfig } from "../interfaces";
+import { SetConfig } from "../lib/interfaces";
 import { quentinTarantinoMovies } from "./dynamicObjects";
 
 const createDataSourceId = (id: string) => `ingestor-set-${id}`;
