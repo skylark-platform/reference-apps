@@ -1,14 +1,16 @@
 import { GraphQLClient } from "graphql-request";
-
-const endpoint =
-  "https://snjp62qr4fbvzfpf6xwlnpit54.appsync-api.eu-west-1.amazonaws.com/graphql";
+import {
+  SAAS_ACCOUNT_ID,
+  SAAS_API_ENDPOINT,
+  SAAS_API_KEY,
+} from "../../constants";
 
 const account = new Date().toISOString();
 // const account = "test13"
 
-export const graphQLClient = new GraphQLClient(endpoint, {
+export const graphQLClient = new GraphQLClient(SAAS_API_ENDPOINT, {
   headers: {
-    "x-api-key": "da2-ql6uljkn4vabjblyq4ty2sijhu",
-    "x-account-id": account,
+    "x-api-key": SAAS_API_KEY,
+    "x-account-id": SAAS_ACCOUNT_ID || account,
   },
 });

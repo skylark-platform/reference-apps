@@ -2,13 +2,9 @@ import { FieldSet } from "airtable";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import { SetConfig, GraphQLBaseObject } from "../../interfaces";
 import { ApiObjectType, SetRelationshipsLink } from "../../types";
-import {
-  getValidPropertiesForObject,
-  getValidFields,
-  getExistingObjects,
-} from "./get";
+import { getValidPropertiesForObject, getExistingObjects } from "./get";
 import { graphQLClient } from "./graphql";
-import { gqlObjectMeta } from "./utils";
+import { gqlObjectMeta, getValidFields } from "./utils";
 
 interface SetItem {
   uid: string;

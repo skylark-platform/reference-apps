@@ -1,3 +1,5 @@
+import { FieldSet } from "airtable";
+import { has, isArray } from "lodash";
 import { GraphQLBaseObject } from "../../interfaces";
 import { ApiObjectType, MediaObjectTypes } from "../../types";
 
@@ -73,4 +75,24 @@ export const gqlObjectMeta = (
         relName: "brands",
       };
   }
+};
+
+export const getValidFields = (
+  fields: FieldSet,
+  validProperties: string[]
+): { [key: string]: string | number | boolean } => {
+  const validObjectFields = validProperties.filter((property) =>
+    has(fields, property)
+  );
+  const validFields = validObjectFields.reduce((obj, property) => {
+    const val = isArray(fields[property])
+      ? (fields[property] as string[])[0]
+      : fields[property];
+    return {
+      ...obj,
+      [property]: val as string | number | boolean,
+    };
+  }, {} as { [key: string]: string | number | boolean });
+
+  return validFields;
 };

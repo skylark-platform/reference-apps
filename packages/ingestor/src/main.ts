@@ -45,7 +45,11 @@ import {
   signInToCognito,
   uploadToWorkflowServiceWatchBucket,
 } from "./lib/amplify";
-import { UNLICENSED_BY_DEFAULT } from "./lib/constants";
+import {
+  SAAS_ACCOUNT_ID,
+  SAAS_API_ENDPOINT,
+  UNLICENSED_BY_DEFAULT,
+} from "./lib/constants";
 import {
   createGraphQLMediaObjects,
   createOrUpdateGraphQLCredits,
@@ -233,13 +237,11 @@ const createAdditionalObjects = async (metadata: Metadata) => {
 const main = async () => {
   // eslint-disable-next-line no-console
   console.time("Completed in:");
-  // eslint-disable-next-line no-console
-  console.log(`Starting ingest to ${SKYLARK_API}`);
 
   const shouldCreateAdditionalObjects = process.env.CREATE_SETS === "true";
   // eslint-disable-next-line no-console
   console.log(
-    `With additional StreamTV sets / dynamic objects creation ${
+    `Additional StreamTV sets / dynamic objects creation ${
       shouldCreateAdditionalObjects ? "enabled" : "disabled"
     }`
   );
@@ -247,8 +249,12 @@ const main = async () => {
   const airtable = await getAllTables();
 
   // eslint-disable-next-line no-constant-condition
-  if (process.env.SAAS_SKYLARK || true) {
-    console.log("GRAPHQL");
+  if (process.env.INGEST_TO_SAAS_SKYLARK === "true" || true) {
+    // eslint-disable-next-line no-console
+    console.log(
+      `Starting ingest to Saas Skylark: ${SAAS_API_ENDPOINT} (account: ${SAAS_ACCOUNT_ID})`
+    );
+
     const metadata: GraphQLMetadata = {
       people: [],
       roles: [],
@@ -312,6 +318,9 @@ const main = async () => {
       createdSets.push(set);
     }
   } else {
+    // eslint-disable-next-line no-console
+    console.log(`Starting ingest to V8 Skylark: ${SKYLARK_API}`);
+
     configureAmplify();
 
     await signInToCognito();

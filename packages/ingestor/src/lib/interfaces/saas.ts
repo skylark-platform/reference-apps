@@ -17,3 +17,16 @@ export interface GraphQLMetadata {
   tags: GraphQLBaseObject[];
   credits: GraphQLBaseObject[];
 }
+
+export interface GraphQLIntrospection {
+  __type: {
+    name: string;
+    fields: {
+      name: string;
+      type: {
+        name: string;
+        kind: string;
+      };
+    }[];
+  };
+}

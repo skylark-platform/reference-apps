@@ -9,13 +9,14 @@ import {
   RelationshipsLink,
   ValidMediaObjectRelationships,
 } from "../../types";
-import {
-  getValidPropertiesForObject,
-  getExistingObjects,
-  getValidFields,
-} from "./get";
+import { getValidPropertiesForObject, getExistingObjects } from "./get";
 import { graphQLClient } from "./graphql";
-import { getExtId, gqlObjectMeta, getUidsFromField } from "./utils";
+import {
+  getExtId,
+  gqlObjectMeta,
+  getUidsFromField,
+  getValidFields,
+} from "./utils";
 
 const createOrUpdateMultipleObjects = async (
   mutation: string

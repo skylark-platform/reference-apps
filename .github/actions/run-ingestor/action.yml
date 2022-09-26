@@ -34,6 +34,16 @@ inputs:
   create-additional-objects:
     description: Whether to create additional objects (sets and dynamic objects) which StreamTV requires to run
     required: true
+  saas-ingest:
+    description: Whether to target Saas Skylark or not
+    required: false
+    default: "false"
+  saas-api-token:
+    description: Access token to use in API Requests, SaaS only
+    required: false
+  saas-account-id:
+    description: The Skylark account to use, SaaS only
+    required: false
 runs:
   using: composite
   steps:
@@ -60,6 +70,10 @@ runs:
         COGNITO_IDENTITY_POOL_ID: ${{ inputs.cognito-identity-pool-id }}
         AMPLIFY_STORAGE_BUCKET: ${{ inputs.amplify-storage-bucket }}
         CREATE_SETS: ${{ inputs.create-additional-objects }}
+        INGEST_TO_SAAS_SKYLARK: ${{ inputs.saas-ingest }}
+        SAAS_API_ENDPOINT: ${{ inputs.skylark-api-url }}
+        SAAS_API_KEY: ${{ inputs.saas-api-token }}
+        SAAS_ACCOUNT_ID: ${{ inputs.saas-account-id }}
       with:
         timeout_minutes: 20
         retry_wait_seconds: 10
