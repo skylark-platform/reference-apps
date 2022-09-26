@@ -7,6 +7,7 @@ import {
   MediaObjectTypes,
   GraphQLObjectTypes,
   RelationshipsLink,
+  ValidMediaObjectRelationships,
 } from "../../types";
 import {
   getValidPropertiesForObject,
@@ -174,6 +175,39 @@ export const createOrUpdateGraphQLCredits = async (
   return data;
 };
 
+const getMediaObjectRelationships = (
+  fields: FieldSet,
+  metadata: GraphQLMetadata
+) => {
+  const relationshipNames: ValidMediaObjectRelationships[] = [
+    "themes",
+    "genres",
+    "ratings",
+    "tags",
+    "credits",
+  ];
+
+  const relationships = relationshipNames.reduce(
+    (previousRelationships, name) => {
+      const uids = getUidsFromField(fields[name] as string[], metadata[name]);
+
+      if (!uids || uids.length <= 0) {
+        return previousRelationships;
+      }
+
+      return {
+        ...previousRelationships,
+        [name]: {
+          link: uids,
+        },
+      };
+    },
+    {}
+  );
+
+  return relationships;
+};
+
 export const createGraphQLMediaObjects = async (
   airtableRecords: Records<FieldSet>,
   metadata: GraphQLMetadata
@@ -246,7 +280,10 @@ export const createGraphQLMediaObjects = async (
           validObjectProperties[objectType]
         );
 
-        const relationships: RelationshipsLink = {};
+        const relationships: RelationshipsLink = getMediaObjectRelationships(
+          fields,
+          metadata
+        );
 
         const parentField = fields.parent as string[];
         if (parentField && parentField.length > 0) {
@@ -261,46 +298,6 @@ export const createGraphQLMediaObjects = async (
             );
             relationships[relName] = { link: parent.uid };
           }
-        }
-
-        const themeUids = getUidsFromField(
-          fields.themes as string[],
-          metadata.themes
-        );
-        if (themeUids && themeUids.length > 0) {
-          relationships.themes = { link: themeUids };
-        }
-
-        const genreUids = getUidsFromField(
-          fields.genres as string[],
-          metadata.genres
-        );
-        if (genreUids && genreUids.length > 0) {
-          relationships.genres = { link: genreUids };
-        }
-
-        const ratingUids = getUidsFromField(
-          fields.ratings as string[],
-          metadata.ratings
-        );
-        if (ratingUids && ratingUids.length > 0) {
-          relationships.ratings = { link: ratingUids };
-        }
-
-        const tagUids = getUidsFromField(
-          fields.tags as string[],
-          metadata.tags
-        );
-        if (tagUids && tagUids.length > 0) {
-          relationships.tags = { link: tagUids };
-        }
-
-        const creditUids = getUidsFromField(
-          fields.credits as string[],
-          metadata.credits
-        );
-        if (creditUids && creditUids.length > 0) {
-          relationships.credits = { link: creditUids };
         }
 
         const updatedOperations: { [key: string]: object } = {

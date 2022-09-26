@@ -4,6 +4,7 @@ export type MediaObjectTypes =
   | "Episode"
   | "Movie"
   | "Asset";
+
 export type GraphQLObjectTypes =
   | MediaObjectTypes
   | "Theme"
@@ -15,7 +16,15 @@ export type GraphQLObjectTypes =
   | "Credit"
   | "Set";
 
+export type ValidMediaObjectRelationships =
+  | "themes"
+  | "genres"
+  | "tags"
+  | "credits"
+  | "ratings";
+
 export type RelationshipsLink = { [key: string]: { link: string | string[] } };
+
 export type SetRelationshipsLink = Omit<
   Record<
     MediaObjectTypes | "Set",
