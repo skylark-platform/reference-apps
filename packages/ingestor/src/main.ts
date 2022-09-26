@@ -252,7 +252,7 @@ const main = async () => {
   if (process.env.INGEST_TO_SAAS_SKYLARK === "true" || true) {
     // eslint-disable-next-line no-console
     console.log(
-      `Starting ingest to Saas Skylark: ${SAAS_API_ENDPOINT} (account: ${SAAS_ACCOUNT_ID})`
+      `Starting ingest to SaaS Skylark: ${SAAS_API_ENDPOINT} (account: ${SAAS_ACCOUNT_ID})`
     );
 
     const metadata: GraphQLMetadata = {

@@ -35,7 +35,7 @@ inputs:
     description: Whether to create additional objects (sets and dynamic objects) which StreamTV requires to run
     required: true
   saas-ingest:
-    description: Whether to target Saas Skylark or not
+    description: Whether to target SaaS Skylark or not
     required: false
     default: "false"
   saas-api-token:

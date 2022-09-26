@@ -87,7 +87,7 @@ jobs:
         with:
           airtable-api-key: ${{ secrets.AIRTABLE_SUPPORT_KEY }}
           airtable-base-id: ${{ secrets.AIRTABLE_BASE_ID }}
-          skylark-api-url: ${{ matrix.saas-ingest == 'SaaS' && secrets.SHOWCASE_SAAS_GRAPHQL_ENDPOINT || 'https://api.dev.showcase.skylarkplatform.io' }}
+          skylark-api-url: ${{ matrix.version == 'SaaS' && secrets.SHOWCASE_SAAS_GRAPHQL_ENDPOINT || 'https://api.dev.showcase.skylarkplatform.io' }}
           cognito-aws-region: ${{ secrets.SHOWCASE_TEST_AWS_REGION }}
           cognito-client-id: ${{ secrets.SHOWCASE_TEST_CLIENT_ID }}
           cognito-user-pool-id: ${{ secrets.SHOWCASE_TEST_USER_POOL_ID }}
@@ -96,7 +96,7 @@ jobs:
           cognito-email: ${{ secrets.SHOWCASE_TEST_EMAIL }}
           cognito-password: ${{ secrets.SHOWCASE_TEST_PASSWORD }}
           create-additional-objects: "true"
-          saas-ingest: ${{ matrix.saas-ingest == 'SaaS' && 'true' || 'false' }}
+          saas-ingest: ${{ matrix.version == 'SaaS' && 'true' || 'false' }}
           saas-api-token: ${{ secrets.SHOWCASE_SAAS_API_KEY }}
           saas-account-id: ${{ secrets.SHOWCASE_SAAS_ACCOUNT_ID }}
 

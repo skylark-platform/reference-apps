@@ -25,12 +25,7 @@ const createOrUpdateMultipleObjects = async (
     [key: string]: GraphQLBaseObject;
   }>(mutation);
 
-  console.log(JSON.stringify(data, undefined, 2));
-
   const arr = values(data);
-
-  console.log(arr);
-
   return arr;
 };
 
@@ -88,7 +83,7 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
     },
   };
 
-  const graphQLMutation = jsonToGraphQLQuery(mutation, { pretty: true });
+  const graphQLMutation = jsonToGraphQLQuery(mutation);
 
   const data = await createOrUpdateMultipleObjects(graphQLMutation);
 
@@ -169,7 +164,7 @@ export const createOrUpdateGraphQLCredits = async (
     },
   };
 
-  const graphQLMutation = jsonToGraphQLQuery(mutation, { pretty: true });
+  const graphQLMutation = jsonToGraphQLQuery(mutation);
 
   const data = await createOrUpdateMultipleObjects(graphQLMutation);
 
@@ -339,14 +334,11 @@ export const createGraphQLMediaObjects = async (
       },
     };
 
-    console.log("mutation", mutation);
-
-    const graphQLMutation = jsonToGraphQLQuery(mutation, { pretty: true });
+    const graphQLMutation = jsonToGraphQLQuery(mutation);
 
     // eslint-disable-next-line no-await-in-loop
     const arr = await createOrUpdateMultipleObjects(graphQLMutation);
     createdMediaObjects.push(...arr);
-    console.log("first", createdMediaObjects[0]);
   }
 
   return createdMediaObjects;
