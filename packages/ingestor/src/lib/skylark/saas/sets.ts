@@ -89,7 +89,7 @@ export const createOrUpdateGraphQLSet = async (
     },
   };
 
-  const graphQLMutation = jsonToGraphQLQuery(mutation, { pretty: true });
+  const graphQLMutation = jsonToGraphQLQuery(mutation);
 
   const data = await graphQLClient.request<{
     createSet: GraphQLBaseObject;
