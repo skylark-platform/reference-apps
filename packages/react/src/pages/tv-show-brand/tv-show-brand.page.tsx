@@ -9,7 +9,7 @@ import {
   CallToAction,
 } from "../../components";
 
-export interface BrandPageEpisode {
+export interface BrandPageParsedEpisode {
   number?: number;
   slug: string;
   uid: string;
@@ -41,7 +41,7 @@ interface Props {
     slug: string;
     self: string;
     uid: string;
-    children(data: BrandPageEpisode): React.ReactNode;
+    children(data: BrandPageParsedEpisode): React.ReactNode;
   }>;
 }
 
@@ -108,7 +108,7 @@ export const TVShowBrandPage: React.FC<Props> = ({
                   slug={ep.slug}
                   uid={ep.uid}
                 >
-                  {(episode: BrandPageEpisode) => (
+                  {(episode: BrandPageParsedEpisode) => (
                     <EpisodeThumbnail
                       backgroundImage={episode.image}
                       description={episode.synopsis}

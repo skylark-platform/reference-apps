@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
 import {
   getImageSrcAndSizeByWindow,
-  BrandPageEpisode,
+  BrandPageParsedEpisode,
   TVShowBrandPage,
 } from "@skylark-reference-apps/react";
 import {
@@ -22,7 +22,7 @@ import { DataFetcher } from "../../components/dataFetcher";
 const EpisodeDataFetcher: React.FC<{
   slug: string;
   self: string;
-  children(data: BrandPageEpisode): ReactNode;
+  children(data: BrandPageParsedEpisode): ReactNode;
 }> = ({ slug, self, children }) => (
   <DataFetcher self={self} slug={slug}>
     {(episode: Episode) => (

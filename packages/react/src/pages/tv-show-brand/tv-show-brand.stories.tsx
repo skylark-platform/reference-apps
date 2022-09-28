@@ -1,6 +1,6 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { BrandPageEpisode, TVShowBrandPage } from "./tv-show-brand.page";
+import { BrandPageParsedEpisode, TVShowBrandPage } from "./tv-show-brand.page";
 
 export default {
   title: "Pages/TVShowBrandPage",
@@ -15,10 +15,10 @@ const EpisodeDataFetcher: React.FC<{
   slug: string;
   self: string;
   uid: string;
-  children(data: BrandPageEpisode): React.ReactNode;
+  children(data: BrandPageParsedEpisode): React.ReactNode;
 }> = ({ children, slug, uid, self }) => {
   // Using the self to get the episode number into the data fetcher
-  const data: BrandPageEpisode = {
+  const data: BrandPageParsedEpisode = {
     uid,
     slug,
     title: "GOT Episode",
