@@ -88,6 +88,33 @@ describe("saas/create.ts", () => {
         'mutation createOrUpdateBrands { updateBrandbrand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1"}) { uid external_id } }'
       );
     });
+
+    it("makes two requests when more than 20 records are sent", async () => {
+      const manyRecords: Partial<Record<FieldSet>>[] = Array.from(
+        { length: 30 },
+        (_, index) => ({
+          id: `brand_${index + 1}`,
+          fields: {
+            title: `Brand ${index + 1}`,
+            slug: `brand-${index + 1}`,
+          },
+        })
+      );
+
+      await createOrUpdateGraphQlObjectsUsingIntrospection(
+        "Brand",
+        manyRecords as Records<FieldSet>
+      );
+      expect(graphQlRequest).toHaveBeenCalledTimes(4);
+      expect(graphQlRequest).toHaveBeenNthCalledWith(
+        3,
+        expect.stringContaining("mutation createOrUpdateBrands_chunk_1")
+      );
+      expect(graphQlRequest).toHaveBeenNthCalledWith(
+        4,
+        expect.stringContaining("mutation createOrUpdateBrands_chunk_2")
+      );
+    });
   });
 
   describe("createOrUpdateGraphQLCredits", () => {

@@ -1,6 +1,6 @@
 import { FieldSet, Records } from "airtable";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
-import { flatten, has, isString, values } from "lodash";
+import { chunk, flatten, has, isString, values } from "lodash";
 import { GraphQLBaseObject, GraphQLMetadata } from "../../interfaces";
 import {
   ApiObjectType,
@@ -19,20 +19,53 @@ import {
 } from "./utils";
 
 const createOrUpdateMultipleObjects = async (
-  mutation: string
+  name: string,
+  mutations: { [key: string]: object }
 ): Promise<GraphQLBaseObject[]> => {
-  const data = await graphQLClient.request<{
-    [key: string]: GraphQLBaseObject;
-  }>(mutation);
+  // Smaller requests are better as each is handled by a single lambda
+  const chunks = chunk(Object.keys(mutations), 20);
 
-  const arr = values(data);
-  return arr;
+  const chunkedData = await Promise.all(
+    chunks.map(async (keys, i): Promise<GraphQLBaseObject[]> => {
+      const splitMutations = keys.reduce(
+        (previousObj, key) => ({
+          ...previousObj,
+          [key]: mutations[key],
+        }),
+        {}
+      );
+
+      const mutation = {
+        mutation: {
+          __name: chunks.length > 1 ? `${name}_chunk_${i + 1}` : name,
+          ...splitMutations,
+        },
+      };
+
+      const graphQLMutation = jsonToGraphQLQuery(mutation);
+
+      const data = await graphQLClient.request<{
+        [key: string]: GraphQLBaseObject;
+      }>(graphQLMutation);
+
+      const arr = values(data);
+      return arr;
+    })
+  );
+
+  const allData = flatten(chunkedData);
+
+  return allData;
 };
 
 export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
   objectType: GraphQLObjectTypes,
   airtableRecords: Records<FieldSet>
 ): Promise<GraphQLBaseObject[]> => {
+  if (airtableRecords.length === 0) {
+    return [];
+  }
+
   const validProperties = await getValidPropertiesForObject(objectType);
 
   const externalIds = airtableRecords.map(({ id }) => id);
@@ -76,16 +109,10 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
     {} as { [key: string]: object }
   );
 
-  const mutation = {
-    mutation: {
-      __name: `createOrUpdate${objectType}s`,
-      ...operations,
-    },
-  };
-
-  const graphQLMutation = jsonToGraphQLQuery(mutation);
-
-  const data = await createOrUpdateMultipleObjects(graphQLMutation);
+  const data = await createOrUpdateMultipleObjects(
+    `createOrUpdate${objectType}s`,
+    operations
+  );
 
   return data;
 };
@@ -99,7 +126,7 @@ export const createOrUpdateGraphQLCredits = async (
   const externalIds = airtableRecords.map(({ id }) => id);
   const existingObjects = await getExistingObjects("Credit", externalIds);
 
-  const operations = [airtableRecords[0]].reduce(
+  const operations = airtableRecords.reduce(
     (previousOperations, { id, fields }) => {
       const validFields = getValidFields(fields, validProperties);
 
@@ -157,16 +184,10 @@ export const createOrUpdateGraphQLCredits = async (
     {} as { [key: string]: object }
   );
 
-  const mutation = {
-    mutation: {
-      __name: "createOrUpdateCredits",
-      ...operations,
-    },
-  };
-
-  const graphQLMutation = jsonToGraphQLQuery(mutation);
-
-  const data = await createOrUpdateMultipleObjects(graphQLMutation);
+  const data = await createOrUpdateMultipleObjects(
+    "createOrUpdateCredits",
+    operations
+  );
 
   return data;
 };
@@ -327,17 +348,11 @@ export const createGraphQLMediaObjects = async (
       {} as { [key: string]: object }
     );
 
-    const mutation = {
-      mutation: {
-        __name: "createMediaObjects",
-        ...operations,
-      },
-    };
-
-    const graphQLMutation = jsonToGraphQLQuery(mutation);
-
     // eslint-disable-next-line no-await-in-loop
-    const arr = await createOrUpdateMultipleObjects(graphQLMutation);
+    const arr = await createOrUpdateMultipleObjects(
+      "createMediaObjects",
+      operations
+    );
     createdMediaObjects.push(...arr);
   }
 

@@ -295,6 +295,9 @@ const main = async () => {
       metadata
     );
 
+    // eslint-disable-next-line no-console
+    console.log("Metadata objects created");
+
     const mediaObjects = await createGraphQLMediaObjects(
       airtable.mediaObjects.filter(
         ({ fields }) => fields.skylark_object_type !== "assets"
@@ -302,20 +305,28 @@ const main = async () => {
       metadata
     );
 
-    const createdSets: GraphQLBaseObject[] = [];
+    // eslint-disable-next-line no-console
+    console.log("Media objects created");
 
-    for (
-      let i = 0;
-      i < orderedSetsToCreateWithoutDynamicObject.length;
-      i += 1
-    ) {
-      const setConfig = orderedSetsToCreateWithoutDynamicObject[i];
-      // eslint-disable-next-line no-await-in-loop
-      const set = await createOrUpdateGraphQLSet(setConfig, [
-        ...mediaObjects,
-        ...createdSets,
-      ]);
-      createdSets.push(set);
+    if (shouldCreateAdditionalObjects) {
+      const createdSets: GraphQLBaseObject[] = [];
+
+      for (
+        let i = 0;
+        i < orderedSetsToCreateWithoutDynamicObject.length;
+        i += 1
+      ) {
+        const setConfig = orderedSetsToCreateWithoutDynamicObject[i];
+        // eslint-disable-next-line no-await-in-loop
+        const set = await createOrUpdateGraphQLSet(setConfig, [
+          ...mediaObjects,
+          ...createdSets,
+        ]);
+        createdSets.push(set);
+      }
+
+      // eslint-disable-next-line no-console
+      console.log("Additional objects created");
     }
   } else {
     // eslint-disable-next-line no-console
