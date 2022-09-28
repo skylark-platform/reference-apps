@@ -29,9 +29,19 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
-  const { data } = useSingleObject("movie", query?.slug as string);
+  const { data, isError } = useSingleObject("movie", query?.slug as string);
   const assetUid = data?.items?.isExpanded ? data?.items?.objects[0]?.uid : "";
   const { playbackUrl, isLoading } = useAssetPlaybackUrl(assetUid);
+
+  if (isError) {
+    return (
+      <div className="flex h-screen flex-col items-center justify-center text-white">
+        <p>{`Error fetching movie: ${(query?.slug as string) || ""}`}</p>
+        <pre>{isError.message}</pre>
+      </div>
+    );
+  }
+
   // if no object has no items then default to static video
   const playerSrc =
     !isLoading || (data && !assetUid)

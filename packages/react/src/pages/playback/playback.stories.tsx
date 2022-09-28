@@ -11,32 +11,6 @@ const Template: ComponentStory<typeof PlaybackPage> = (args) => (
   <PlaybackPage {...args} />
 );
 
-export const Default = Template.bind({});
-Default.args = {
-  brand: {
-    title: "Marvel's Avengers",
-  },
-  credits: {
-    actors: [""],
-    writers: [""],
-    directors: [""],
-  },
-  genres: [],
-  number: undefined,
-  player: {
-    assetId: "asset_1",
-    poster: "",
-    src: "",
-    duration: 10,
-  },
-  rating: undefined,
-  releaseDate: undefined,
-  season: undefined,
-  synopsis: "",
-  themes: [],
-  title: "Iron Man",
-};
-
 export const Episode = Template.bind({});
 Episode.args = {
   brand: {

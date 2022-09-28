@@ -120,7 +120,6 @@ export const useBrandWithSeasonBySlug = (slug: string) => {
 
   return {
     brand: data as Brand | undefined,
-    notFound: error?.message === "Brand not found",
     error,
   };
 };

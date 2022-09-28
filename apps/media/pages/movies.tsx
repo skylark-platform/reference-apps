@@ -45,8 +45,20 @@ const Movies: NextPage = () => {
   const [genre, setGenre] = useState("");
   const { genres } = useAllGenres();
   const selectedGenreUid = genres?.find(({ name }) => name === genre);
-  const { movies, isLoading } = useAllMovies("movie", selectedGenreUid?.uid);
+  const { movies, isLoading, isError } = useAllMovies(
+    "movie",
+    selectedGenreUid?.uid
+  );
   const { t } = useTranslation("common");
+
+  if (isError) {
+    return (
+      <div className="flex h-screen flex-col items-center justify-center text-white">
+        <p>{`Error fetching movies`}</p>
+        <pre>{isError.message}</pre>
+      </div>
+    );
+  }
 
   return (
     <>

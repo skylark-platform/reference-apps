@@ -61,9 +61,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
 
-  const { brand, notFound, error } = useBrandWithSeasonBySlug(
-    query?.slug as string
-  );
+  const { brand, error } = useBrandWithSeasonBySlug(query?.slug as string);
 
   const brandObjects = brand?.items?.isExpanded ? brand.items.objects : [];
   const seasons = (brandObjects as Season[])
@@ -72,16 +70,12 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
       (a.number || 0) > (b.number || 0) ? 1 : -1
     );
 
-  if (notFound) {
-    return <p>{`Brand ${(query?.slug as string) || ""} not found`}</p>;
-  }
-
   if (error) {
     return (
-      <>
+      <div className="flex h-screen flex-col items-center justify-center text-white">
         <p>{`Error fetching brand: ${(query?.slug as string) || ""}`}</p>
-        <pre>{error}</pre>
-      </>
+        <pre>{error.message}</pre>
+      </div>
     );
   }
 
