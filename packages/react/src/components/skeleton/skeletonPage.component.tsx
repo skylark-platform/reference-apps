@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import React from "react";
-import { useNumberOfThumbnailsByBreakpoint } from "../hooks";
+import { useNumberOfThumbnailsByBreakpoint } from "../../hooks";
 
 interface SkeletonProps {
   show: boolean;

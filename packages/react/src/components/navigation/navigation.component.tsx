@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import React, { useState } from "react";
-import { useTailwindBreakpoint } from "../hooks";
+import { useTailwindBreakpoint } from "../../hooks";
 import { NavigationToggle } from "./navigation-toggle";
 
 export interface NavigationProps {
