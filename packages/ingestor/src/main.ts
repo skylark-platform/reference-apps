@@ -22,27 +22,40 @@ import {
   createOrUpdateAirtableObjectsInSkylarkWithParentsInSameTable,
   createTranslationsForObjects,
   connectExternallyCreatedAssetToMediaObject,
-} from "./lib/skylark";
+  createOrUpdateSchedules,
+  createOrUpdateScheduleDimensions,
+  getAlwaysSchedule,
+  createOrUpdateContentTypes,
+} from "./lib/skylark/classic";
 import { getAllTables } from "./lib/airtable";
 import {
   Airtables,
   ApiEntertainmentObjectWithAirtableId,
+  GraphQLBaseObject,
+  GraphQLMetadata,
   Metadata,
-} from "./interfaces";
-import { orderedSetsToCreate } from "./additional-objects/sets";
-import { quentinTarantinoMovies } from "./additional-objects/dynamicObjects";
+} from "./lib/interfaces";
 import {
-  createOrUpdateSchedules,
-  createOrUpdateScheduleDimensions,
-  getAlwaysSchedule,
-} from "./lib/skylark/availability";
-import { createOrUpdateContentTypes } from "./lib/skylark/content-types";
+  orderedSetsToCreate,
+  orderedSetsToCreateWithoutDynamicObject,
+} from "./additional-objects/sets";
+import { quentinTarantinoMovies } from "./additional-objects/dynamicObjects";
 import {
   configureAmplify,
   signInToCognito,
   uploadToWorkflowServiceWatchBucket,
 } from "./lib/amplify";
-import { UNLICENSED_BY_DEFAULT } from "./lib/constants";
+import {
+  SAAS_ACCOUNT_ID,
+  SAAS_API_ENDPOINT,
+  UNLICENSED_BY_DEFAULT,
+} from "./lib/constants";
+import {
+  createGraphQLMediaObjects,
+  createOrUpdateGraphQLCredits,
+  createOrUpdateGraphQlObjectsUsingIntrospection,
+} from "./lib/skylark/saas/create";
+import { createOrUpdateGraphQLSet } from "./lib/skylark/saas/sets";
 
 const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
   const [alwaysSchedule, setTypes, dimensions] = await Promise.all([
@@ -224,32 +237,115 @@ const createAdditionalObjects = async (metadata: Metadata) => {
 const main = async () => {
   // eslint-disable-next-line no-console
   console.time("Completed in:");
-  // eslint-disable-next-line no-console
-  console.log(`Starting ingest to ${SKYLARK_API}`);
 
   const shouldCreateAdditionalObjects = process.env.CREATE_SETS === "true";
   // eslint-disable-next-line no-console
   console.log(
-    `With additional StreamTV sets / dynamic objects creation ${
+    `Additional StreamTV sets / dynamic objects creation ${
       shouldCreateAdditionalObjects ? "enabled" : "disabled"
     }`
   );
 
-  configureAmplify();
-
-  await signInToCognito();
-
   const airtable = await getAllTables();
 
-  const metadata = await createMetadata(airtable);
+  // eslint-disable-next-line no-constant-condition
+  if (process.env.INGEST_TO_SAAS_SKYLARK === "true") {
+    // eslint-disable-next-line no-console
+    console.log(
+      `Starting ingest to SaaS Skylark: ${SAAS_API_ENDPOINT} (account: ${SAAS_ACCOUNT_ID})`
+    );
 
-  const mediaObjects = await createMediaObjects(airtable, metadata);
+    const metadata: GraphQLMetadata = {
+      people: [],
+      roles: [],
+      genres: [],
+      themes: [],
+      ratings: [],
+      tags: [],
+      credits: [],
+      airtableImages: airtable.images,
+    };
 
-  if (shouldCreateAdditionalObjects) {
-    await createAdditionalObjects(metadata);
+    metadata.themes = await createOrUpdateGraphQlObjectsUsingIntrospection(
+      "Theme",
+      airtable.themes
+    );
+    metadata.genres = await createOrUpdateGraphQlObjectsUsingIntrospection(
+      "Genre",
+      airtable.genres
+    );
+    metadata.ratings = await createOrUpdateGraphQlObjectsUsingIntrospection(
+      "Rating",
+      airtable.ratings
+    );
+    metadata.tags = await createOrUpdateGraphQlObjectsUsingIntrospection(
+      "Tag",
+      airtable.tags
+    );
+    metadata.people = await createOrUpdateGraphQlObjectsUsingIntrospection(
+      "Person",
+      airtable.people
+    );
+    metadata.roles = await createOrUpdateGraphQlObjectsUsingIntrospection(
+      "Role",
+      airtable.roles
+    );
+    metadata.credits = await createOrUpdateGraphQLCredits(
+      airtable.credits,
+      metadata
+    );
+
+    // eslint-disable-next-line no-console
+    console.log("Metadata objects created");
+
+    const mediaObjects = await createGraphQLMediaObjects(
+      airtable.mediaObjects.filter(
+        ({ fields }) => fields.skylark_object_type !== "assets"
+      ),
+      metadata
+    );
+
+    // eslint-disable-next-line no-console
+    console.log("Media objects created");
+
+    if (shouldCreateAdditionalObjects) {
+      const createdSets: GraphQLBaseObject[] = [];
+
+      for (
+        let i = 0;
+        i < orderedSetsToCreateWithoutDynamicObject.length;
+        i += 1
+      ) {
+        const setConfig = orderedSetsToCreateWithoutDynamicObject[i];
+        // eslint-disable-next-line no-await-in-loop
+        const set = await createOrUpdateGraphQLSet(setConfig, [
+          ...mediaObjects,
+          ...createdSets,
+        ]);
+        createdSets.push(set);
+      }
+
+      // eslint-disable-next-line no-console
+      console.log("Additional objects created");
+    }
+  } else {
+    // eslint-disable-next-line no-console
+    console.log(`Starting ingest to V8 Skylark: ${SKYLARK_API}`);
+
+    configureAmplify();
+
+    await signInToCognito();
+
+    const metadata = await createMetadata(airtable);
+
+    const mediaObjects = await createMediaObjects(airtable, metadata);
+
+    if (shouldCreateAdditionalObjects) {
+      await createAdditionalObjects(metadata);
+    }
+
+    await createAndUploadAssets(airtable.mediaObjects, mediaObjects);
   }
-
-  await createAndUploadAssets(airtable.mediaObjects, mediaObjects);
 
   // eslint-disable-next-line no-console
   console.timeEnd("Completed in:");

@@ -49,6 +49,7 @@ describe("skylark.sets", () => {
   describe("createOrUpdateSetAndContents", () => {
     const homePageSlider: SetConfig = {
       dataSourceId: "home-page-slider",
+      externalId: "home_page_slider",
       title: "Home page hero",
       slug: "media-reference-home-page-hero",
       set_type_slug: "slider",

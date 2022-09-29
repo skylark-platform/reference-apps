@@ -1,7 +1,7 @@
 import { ApiBatchResponse, SKYLARK_API } from "@skylark-reference-apps/lib";
 import axios, { AxiosRequestConfig, AxiosRequestHeaders } from "axios";
 import { chunk } from "lodash";
-import { getToken } from "../amplify";
+import { getToken } from "../../amplify";
 
 /**
  * authenticatedSkylarkRequest - makes a request to Skylark using the Bearer token from Amplify

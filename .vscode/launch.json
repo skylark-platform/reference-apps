@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug ingestor",
+      "name": "Debug ingestor - Classic",
       "request": "launch",
       "cwd": "${workspaceFolder}/packages/ingestor",
       "runtimeArgs": ["ingest"],
@@ -13,7 +13,21 @@
       "skipFiles": ["<node_internals>/**"],
       "type": "node",
       "env": {
-        "CREATE_SETS": "true"
+        "CREATE_SETS": "true",
+        "INGEST_TO_SAAS_SKYLARK": "false"
+      }
+    },
+    {
+      "name": "Debug ingestor - SaaS",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/packages/ingestor",
+      "runtimeArgs": ["ingest"],
+      "runtimeExecutable": "yarn",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node",
+      "env": {
+        "CREATE_SETS": "true",
+        "INGEST_TO_SAAS_SKYLARK": "true"
       }
     }
   ]

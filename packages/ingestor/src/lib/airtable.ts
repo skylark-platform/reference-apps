@@ -1,6 +1,6 @@
 import { Record, FieldSet } from "airtable";
 import axios from "axios";
-import { Airtables } from "../interfaces";
+import { Airtables } from "./interfaces";
 import { AIRTABLE_API_KEY, AIRTABLE_BASE_ID } from "./constants";
 
 /**
