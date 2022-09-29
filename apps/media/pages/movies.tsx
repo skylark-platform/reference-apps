@@ -29,7 +29,7 @@ const MovieDataFetcher: React.FC<{
             ["short", "medium"],
             movie.objectTitle
           ),
-          image: getImageSrc(movie.images, "Thumbnail", "250x250"),
+          image: getImageSrc(movie.images, "Thumbnail", "300x300"),
           slug: movie.slug,
           uid: movie.uid,
           href: `/movies/${movie.slug}`,

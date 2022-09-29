@@ -10,6 +10,7 @@ import {
   getImageSrc,
   getSynopsisByOrder,
   getTitleByOrder,
+  sortObjectByNumberProperty,
 } from "@skylark-reference-apps/lib";
 import { ReactNode } from "react";
 import { homepageSlug, useHomepageSet } from "../hooks/useHomepageSet";
@@ -72,19 +73,34 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         )
       : [];
 
-  const parsedItems = homepageItems.map((item) => ({
-    uid: item.uid,
-    type: item.type,
-    slug: item.slug,
-    self: item.self,
-    title: getTitleByOrder(item.title, ["short", "medium"]),
-    content: item.items?.isExpanded
-      ? item.items.objects.map((contentItem) => ({
-          self: contentItem.self,
-          slug: contentItem.slug,
-        }))
-      : [],
-  }));
+  const parsedItems = homepageItems.map((item) => {
+    let content: AllEntertainment[] = [];
+    if (item.items?.isExpanded) {
+      if (
+        item.items.objects.some((obj) =>
+          Object.prototype.hasOwnProperty.call(obj, "number")
+        )
+      ) {
+        content = (
+          item.items.objects as (AllEntertainment & { number?: number })[]
+        ).sort(sortObjectByNumberProperty);
+      } else {
+        content = item.items.objects;
+      }
+    }
+
+    return {
+      uid: item.uid,
+      type: item.type,
+      slug: item.slug,
+      self: item.self,
+      title: getTitleByOrder(item.title, ["short", "medium"]),
+      content: content.map((contentItem) => ({
+        self: contentItem.self,
+        slug: contentItem.slug,
+      })),
+    };
+  });
 
   return (
     <>
