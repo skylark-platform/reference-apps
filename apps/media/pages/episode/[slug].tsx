@@ -1,28 +1,16 @@
 import type { GetServerSideProps, NextPage } from "next";
-import { NextSeo } from "next-seo";
-import {
-  InformationPanel,
-  MetadataPanel,
-  Player,
-  SkeletonPage,
-} from "@skylark-reference-apps/react";
+import { PlaybackPage } from "@skylark-reference-apps/react";
 import {
   Episode,
   formatCredits,
-  formatReleaseDate,
   getCreditsByType,
   getImageSrc,
+  getSynopsisByOrder,
   getTitleByOrder,
   Season,
 } from "@skylark-reference-apps/lib";
 import { useRouter } from "next/router";
-import useTranslation from "next-translate/useTranslation";
-import {
-  MdRecentActors,
-  MdMovie,
-  MdMode,
-  MdCalendarToday,
-} from "react-icons/md";
+import { NextSeo } from "next-seo";
 import { useSingleObject } from "../../hooks/useSingleObject";
 import { useAssetPlaybackUrl } from "../../hooks/useAssetPlaybackUrl";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
@@ -42,7 +30,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
-  const { data } = useSingleObject("episode", query?.slug as string);
+  const { data, isError } = useSingleObject("episode", query?.slug as string);
+
+  if (isError) {
+    return (
+      <div className="flex h-screen flex-col items-center justify-center text-white">
+        <p>{`Error fetching episode: ${(query?.slug as string) || ""}`}</p>
+        <pre>{isError.message}</pre>
+      </div>
+    );
+  }
+
   const assetUid = data?.items?.isExpanded ? data?.items?.objects[0]?.uid : "";
   const { playbackUrl, isLoading } = useAssetPlaybackUrl(assetUid);
   // if no object has no items then default to static video
@@ -52,20 +50,27 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
       : "";
   const episode = data as Episode | undefined;
 
-  const titleShortToLong = getTitleByOrder(
-    episode?.title,
-    ["short", "medium", "long"],
-    episode?.objectTitle
-  );
   const titleLongToShort = getTitleByOrder(
     episode?.title,
     ["long", "medium", "short"],
     episode?.objectTitle
   );
-  const parentParentTitle =
-    episode?.parent?.isExpanded &&
-    episode?.parent.parent?.isExpanded &&
-    episode.parent.parent.title;
+  const brandTitleObject =
+    (episode?.parent?.isExpanded &&
+      episode?.parent.parent?.isExpanded &&
+      episode.parent.parent.title) ||
+    undefined;
+  const brandTitle = getTitleByOrder(brandTitleObject, [
+    "long",
+    "medium",
+    "short",
+  ]);
+
+  const synopsis = getSynopsisByOrder(episode?.synopsis, [
+    "long",
+    "medium",
+    "short",
+  ]);
 
   const themes: string[] = episode?.themes?.isExpanded
     ? episode.themes.items.map(({ name }) => name)
@@ -74,103 +79,48 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     ? episode.genres.items.map(({ name }) => name)
     : [];
 
-  const { t, lang } = useTranslation("common");
-
   return (
-    <div className="flex min-h-screen flex-col items-center justify-start pb-20 md:pt-64">
+    <>
       <NextSeo
         description={seo.synopsis}
         openGraph={{ images: seo.images }}
         title={titleLongToShort || seo.title}
       />
-      <SkeletonPage show={!episode}>
-        <div className="flex h-full w-full justify-center pb-10 md:pb-16">
-          <Player
-            poster={getImageSrc(episode?.images, "Thumbnail")}
-            src={playerSrc}
-            videoId={"1"}
-            videoTitle={titleShortToLong}
-          />
-        </div>
-        {episode && (
-          <div className="flex w-full flex-col px-gutter sm:px-sm-gutter md:flex-row md:py-2 lg:px-lg-gutter xl:px-xl-gutter">
-            <div className="h-full w-full pb-4 md:w-7/12">
-              <InformationPanel
-                availableUntil={12}
-                description={
-                  episode.synopsis.long ||
-                  episode.synopsis.medium ||
-                  episode.synopsis.short
-                }
-                duration={57}
-                genres={genres}
-                parentTitles={[
-                  getTitleByOrder(parentParentTitle || undefined, [
-                    "long",
-                    "medium",
-                    "short",
-                  ]),
-                ]}
-                rating={
-                  episode?.ratings?.isExpanded
-                    ? episode.ratings.items?.[0]?.title
-                    : undefined
-                }
-                seasonNumber={
-                  episode.parent?.isExpanded
-                    ? (episode.parent as Season)?.number
-                    : ""
-                }
-                themes={themes}
-                title={
-                  episode.number
-                    ? `${episode.number}. ${titleLongToShort}`
-                    : titleLongToShort
-                }
-              />
-            </div>
-            <span className="flex border-gray-800 bg-gray-900 md:mx-3 md:border-r" />
-            <div className="h-full w-full pl-1 sm:pl-5 md:w-5/12">
-              <div className="flex justify-center">
-                <span className="mb-4 w-4/5 border-b border-gray-800 md:hidden" />
-              </div>
-              <MetadataPanel
-                content={[
-                  {
-                    icon: <MdRecentActors />,
-                    header: t("skylark.role.key-cast"),
-                    body: formatCredits(
-                      getCreditsByType(episode.credits, "Actor")
-                    ),
-                  },
-                  {
-                    icon: <MdMovie />,
-                    header: t("skylark.role.directors"),
-                    body: formatCredits(
-                      getCreditsByType(episode.credits, "Director")
-                    ),
-                  },
-                  {
-                    icon: <MdMode />,
-                    header: t("skylark.role.writers"),
-                    body: formatCredits(
-                      getCreditsByType(episode.credits, "Writer")
-                    ),
-                  },
-                  {
-                    icon: <MdCalendarToday />,
-                    header: t("released"),
-                    body: episode.parent?.isExpanded
-                      ? formatReleaseDate(episode.releaseDate, lang)
-                      : "",
-                  },
-                ].filter(({ body }) => body.length > 0)}
-              />
-            </div>
-          </div>
-        )}
-      </SkeletonPage>
-    </div>
+      <PlaybackPage
+        brand={{
+          title: brandTitle,
+        }}
+        credits={{
+          actors: formatCredits(getCreditsByType(episode?.credits, "Actor")),
+          writers: formatCredits(getCreditsByType(episode?.credits, "Writer")),
+          directors: formatCredits(
+            getCreditsByType(episode?.credits, "Director")
+          ),
+        }}
+        genres={genres}
+        number={episode?.number}
+        player={{
+          assetId: assetUid,
+          poster: getImageSrc(episode?.images, "Thumbnail"),
+          src: playerSrc,
+          duration: 58, // TODO read this from asset
+        }}
+        rating={
+          episode?.ratings?.isExpanded
+            ? episode.ratings.items?.[0]?.title
+            : undefined
+        }
+        releaseDate={episode?.releaseDate}
+        season={{
+          number: episode?.parent?.isExpanded
+            ? (episode.parent as Season)?.number
+            : undefined,
+        }}
+        synopsis={synopsis}
+        themes={themes}
+        title={titleLongToShort}
+      />
+    </>
   );
 };
 
