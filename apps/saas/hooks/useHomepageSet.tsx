@@ -1,22 +1,8 @@
-/*
-import axios from "axios";
-import useSWR from "swr";
-import {
-  SKYLARK_API,
-  parseSkylarkObject,
-  AllEntertainment,
-  ApiMultipleEntertainmentObjects,
-  createSkylarkRequestQueryAndHeaders,
-  Dimensions,
-} from "@skylark-reference-apps/lib";
-import { useDimensions } from "@skylark-reference-apps/react";
-import { useEffect, useState } from "react";
-*/
-
 import { GraphQLClient, gql } from "graphql-request";
 import useSWR from "swr";
+import { GQLMultipleEntertainmentObjects } from "@skylark-reference-apps/lib";
 
-const queryG = gql`
+const queryGQL = gql`
   query MyQuery {
     getSet(
       ignore_availability: true
@@ -58,11 +44,7 @@ const queryG = gql`
   }
 `;
 
-// const homepageSwrKey = "homepage-set";
-export const homepageSlug = "media-reference-homepage";
-
-const fetcher = (query) => {
-  console.log(query);
+const fetcher = (query: string) => {
   const endpoint =
     "https://qr6ydgprtjajhk4g6grz64i2yi.appsync-api.eu-west-1.amazonaws.com/graphql";
 
@@ -73,59 +55,20 @@ const fetcher = (query) => {
     },
   });
 
-  return graphQLClient.request(queryG);
+  return graphQLClient
+    .request<{ getSet: GQLMultipleEntertainmentObjects }>(query)
+    .then((data) => data.getSet);
 };
-
-/*
-export const homepageSetFetcher = ([, dimensions]: [
-  key: string,
-  dimensions: Dimensions
-]) => {
-  const { query, headers } = createSkylarkRequestQueryAndHeaders({
-    fieldsToExpand,
-    fields,
-    dimensions,
-  });
-
-  return axios
-    .get<ApiMultipleEntertainmentObjects>(
-      `${SKYLARK_API}/api/sets/?slug=${homepageSlug}&set_type_slug=homepage&${query}`,
-      { headers }
-    )
-    .then(({ data }) => {
-      const {
-        objects: [homepage],
-      } = data;
-      return parseSkylarkObject(homepage);
-    });
-};
-
-*/
 
 export const useHomepageSet = () => {
-  const { data, error } = useSWR(queryG, fetcher);
-  console.log("party data", data?.getSet?.content);
-  return data;
-  /*
-  const [homepageData, setHomepageData] = useState<
-    AllEntertainment | undefined
-  >();
-  const { dimensions } = useDimensions();
-
-  const { data, error } = useSWR<AllEntertainment, Error>(
-    [homepageSwrKey, dimensions],
-    homepageSetFetcher
+  const { data, error } = useSWR<GQLMultipleEntertainmentObjects, Error>(
+    queryGQL,
+    fetcher
   );
-
-  useEffect(() => {
-    if (data) setHomepageData(data);
-  }, [data]);
 
   return {
     homepage: data,
-    isLoading: !error && !homepageData,
+    isLoading: !error && !data,
     isError: error,
   };
-
-  */
 };
