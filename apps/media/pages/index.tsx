@@ -1,14 +1,51 @@
 import type { GetStaticProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
-import { SkeletonPage } from "@skylark-reference-apps/react";
-import { Season } from "@skylark-reference-apps/lib";
-
+import {
+  HomePage,
+  HomePageParsedRailItem,
+} from "@skylark-reference-apps/react";
+import {
+  AllEntertainment,
+  Episode,
+  getImageSrc,
+  getSynopsisByOrder,
+  getTitleByOrder,
+} from "@skylark-reference-apps/lib";
+import { ReactNode } from "react";
 import { homepageSlug, useHomepageSet } from "../hooks/useHomepageSet";
 import { getSeoDataForSet, SeoObjectData } from "../lib/getPageSeoData";
-import { CollectionRail } from "../components/collectionRail";
-import { SeasonRail } from "../components/seasonRail";
-import { Slider } from "../components/slider";
-import { MainRail } from "../components/rail";
+import { DataFetcher, SliderDataFetcher } from "../components/dataFetcher";
+
+const RailItemDataFetcher: React.FC<{
+  slug: string;
+  self: string;
+  isPortrait: boolean;
+  children(data: HomePageParsedRailItem): ReactNode;
+}> = ({ slug, self, isPortrait, children }) => (
+  <DataFetcher self={self} slug={slug}>
+    {(item: AllEntertainment) => (
+      <>
+        {children({
+          title: getTitleByOrder(item.title, ["short", "medium"]),
+          synopsis: getSynopsisByOrder(item.synopsis, [
+            "short",
+            "medium",
+            "long",
+          ]),
+          image: getImageSrc(
+            item.images,
+            "Thumbnail",
+            isPortrait ? "350x350" : "384x216"
+          ),
+          slug: item.slug,
+          uid: item.uid,
+          href: item.type && item.slug ? `/${item.type}/${item.slug}` : "",
+          number: (item.type === "episode" && (item as Episode).number) || 0,
+        })}
+      </>
+    )}
+  </DataFetcher>
+);
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const seo = await getSeoDataForSet("homepage", homepageSlug, locale || "");
@@ -24,39 +61,40 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { homepage } = useHomepageSet();
 
   const homepageItems =
-    (homepage?.isExpanded &&
-      homepage?.items?.isExpanded &&
-      homepage.items.objects) ||
-    [];
+    homepage?.isExpanded &&
+    homepage?.items?.isExpanded &&
+    homepage.items.objects
+      ? homepage.items.objects.filter(
+          (item) =>
+            item.isExpanded &&
+            item.items?.isExpanded &&
+            item.items.objects.every((objectItem) => objectItem.isExpanded)
+        )
+      : [];
+
+  const parsedItems = homepageItems.map((item) => ({
+    uid: item.uid,
+    type: item.type,
+    slug: item.slug,
+    self: item.self,
+    title: getTitleByOrder(item.title, ["short", "medium"]),
+    content: item.items?.isExpanded
+      ? item.items.objects.map((contentItem) => ({
+          self: contentItem.self,
+          slug: contentItem.slug,
+        }))
+      : [],
+  }));
 
   return (
-    <div className="mb-20 mt-48 flex min-h-screen flex-col items-center bg-gray-900">
+    <>
       <NextSeo openGraph={{ images: seo.images }} />
-      <SkeletonPage show={!homepage}>
-        {homepageItems.map((item, index) => {
-          if (item.isExpanded) {
-            const key = `${item.self}-${item.slug}-${item.uid}-${item.objectTitle}`;
-            if (item.type === "slider") {
-              return (
-                <Slider isFirstOnPage={index === 0} item={item} key={key} />
-              );
-            }
-
-            return (
-              <div className="my-6 w-full" key={key}>
-                {item.type === "rail" && <MainRail section={item} />}
-                {item.type === "collection" && (
-                  <CollectionRail section={item} />
-                )}
-                {item.type === "season" && <SeasonRail item={item as Season} />}
-              </div>
-            );
-          }
-
-          return <>{item.isExpanded && item.objectTitle}</>;
-        })}
-      </SkeletonPage>
-    </div>
+      <HomePage
+        RailItemDataFetcher={RailItemDataFetcher}
+        SliderDataFetcher={SliderDataFetcher}
+        items={parsedItems}
+      />
+    </>
   );
 };
 

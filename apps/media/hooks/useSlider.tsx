@@ -4,8 +4,8 @@ import {
   parseSkylarkObject,
   AllEntertainment,
   Set,
-  ApiMultipleEntertainmentObjects,
   Dimensions,
+  ApiEntertainmentObject,
 } from "@skylark-reference-apps/lib";
 import useSWR from "swr";
 import axios from "axios";
@@ -55,6 +55,7 @@ const fields = {
   },
   items: {
     content_url: {
+      uid: {},
       self: {},
       slug: {},
       title: {},
@@ -91,7 +92,7 @@ const fields = {
   },
 };
 
-export const setFetcher = ([slug, dimensions]: [
+export const setFetcher = ([self, dimensions]: [
   slug: string,
   dimensions: Dimensions
 ]) => {
@@ -102,34 +103,21 @@ export const setFetcher = ([slug, dimensions]: [
   });
 
   return axios
-    .get<ApiMultipleEntertainmentObjects>(
-      `${SKYLARK_API}/api/sets/?slug=${slug}&${query}`,
-      { headers }
-    )
-    .then(({ data }) => {
-      const { objects } = data;
-      if (!objects || objects.length === 0) {
-        throw new Error("Set not found");
-      }
-      return objects;
-    })
-    .then(([brand]: ApiMultipleEntertainmentObjects["objects"]) =>
-      parseSkylarkObject(brand)
-    );
+    .get<ApiEntertainmentObject>(`${SKYLARK_API}${self}?${query}`, { headers })
+    .then(({ data }) => parseSkylarkObject(data));
 };
 
-export const useSlider = (slug: string) => {
+export const useSlider = (self: string) => {
   const { dimensions } = useDimensions();
 
   const { data, error } = useSWR<AllEntertainment, Error>(
-    [slug, dimensions],
+    [self, dimensions],
     setFetcher
   );
 
   return {
     slider: data as Set | undefined,
     isLoading: !error && !data,
-    notFound: error?.message === "Set not found",
     error,
   };
 };

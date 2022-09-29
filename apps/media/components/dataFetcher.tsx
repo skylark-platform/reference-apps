@@ -3,10 +3,17 @@ import { useInView } from "react-intersection-observer";
 import {
   AllEntertainment,
   convertUrlToObjectType,
+  EntertainmentType,
+  getTitleByOrder,
 } from "@skylark-reference-apps/lib";
-import { Skeleton } from "@skylark-reference-apps/react";
+import {
+  getImageSrcAndSizeByWindow,
+  Skeleton,
+  CarouselItem,
+} from "@skylark-reference-apps/react";
 
 import { useSingleObject } from "../hooks/useSingleObject";
+import { useSlider } from "../hooks/useSlider";
 
 const Data: FC<{
   children(data: AllEntertainment): ReactNode;
@@ -45,6 +52,51 @@ export const DataFetcher: FC<{
         </Data>
       ) : (
         <Skeleton isPortrait={isPortrait} show />
+      )}
+    </div>
+  );
+};
+
+export const SliderDataFetcher: FC<{
+  children(data: CarouselItem[]): ReactNode;
+  self: string;
+}> = (props) => {
+  const { children, self } = props;
+  const { ref, inView } = useInView({ triggerOnce: true });
+
+  const { slider, isLoading } = useSlider(self);
+
+  if (!self) return <></>;
+
+  const items =
+    !isLoading && slider?.items?.isExpanded ? slider.items.objects : [];
+
+  return (
+    <div className="h-full w-full" ref={ref}>
+      {inView ? (
+        <>
+          {!isLoading &&
+            slider &&
+            children(
+              items.map((carouselItem) => ({
+                uid: carouselItem.uid,
+                title: getTitleByOrder(
+                  carouselItem.title,
+                  ["medium", "short"],
+                  carouselItem.objectTitle
+                ),
+                href:
+                  carouselItem.type && carouselItem.slug
+                    ? `/${carouselItem.type}/${carouselItem.slug}`
+                    : "",
+                image: getImageSrcAndSizeByWindow(carouselItem.images, "Main"),
+                type: carouselItem.type as EntertainmentType,
+                releaseDate: carouselItem.releaseDate,
+              }))
+            )}
+        </>
+      ) : (
+        <Skeleton show />
       )}
     </div>
   );
