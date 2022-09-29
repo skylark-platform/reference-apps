@@ -10,10 +10,10 @@ import { Attachment, FieldSet, Records, Record } from "airtable";
 import { compact, flatten, has, isArray, isEmpty, isString } from "lodash";
 import {
   ApiEntertainmentObjectWithAirtableId,
-  ApiSkylarkObjectWithAllPotentialFields,
   DynamicObjectConfig,
   Metadata,
 } from "../../interfaces";
+import { ApiSkylarkObjectWithAllPotentialFields } from "../../types";
 import { authenticatedSkylarkRequest, batchSkylarkRequest } from "./api";
 import { getResourceByDataSourceId, getResourceByProperty } from "./get";
 import {

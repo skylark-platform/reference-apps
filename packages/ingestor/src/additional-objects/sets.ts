@@ -2,13 +2,17 @@
  * Specs for Sets that are created by the ingestor outside of Airtable
  * (Usually you'd create these through the CMS)
  */
-import { SetConfig } from "../interfaces";
+import { SetConfig } from "../lib/interfaces";
 import { quentinTarantinoMovies } from "./dynamicObjects";
 
 const createDataSourceId = (id: string) => `ingestor-set-${id}`;
 
+// Data source but for V10 - GraphQL doesn't like "-"
+const createExternalId = (id: string) => `ingestor_set_${id}`;
+
 const newTVReleases: SetConfig = {
   dataSourceId: createDataSourceId("new-tv-releases"),
+  externalId: createExternalId("new_tv_releases"),
   title: "New TV Releases",
   slug: "new-tv-releases",
   set_type_slug: "rail",
@@ -21,6 +25,7 @@ const newTVReleases: SetConfig = {
 
 const spotlightMovies: SetConfig = {
   dataSourceId: createDataSourceId("spotlight-movies"),
+  externalId: createExternalId("spotlight_movies"),
   title: "Spotlight movies",
   slug: "spotlight-movies",
   set_type_slug: "rail",
@@ -42,6 +47,7 @@ const spotlightMovies: SetConfig = {
 
 const homePageSlider: SetConfig = {
   dataSourceId: createDataSourceId("home-page-slider"),
+  externalId: createExternalId("home_page_slider"),
   title: "Home page hero",
   slug: "media-reference-home-page-hero",
   set_type_slug: "slider",
@@ -55,14 +61,37 @@ const homePageSlider: SetConfig = {
 
 const tarantinoMoviesCollection: SetConfig = {
   dataSourceId: createDataSourceId("tarantino-movies"),
+  externalId: createExternalId("tarantino_movies"),
   title: "Tarantino Movies Collection",
   slug: "tarantino-movies-collection",
   set_type_slug: "collection",
   contents: [{ type: "dynamic-object", name: quentinTarantinoMovies.name }],
 };
 
+// SaaS Skylark does not support dynamic objects yet
+const tarantinoMoviesCollectionWithoutDynamicObject: SetConfig = {
+  ...tarantinoMoviesCollection,
+  contents: [
+    { type: "movies", slug: "once-upon-a-time-in-hollywood" },
+    { type: "movies", slug: "the-hateful-eight" },
+    { type: "movies", slug: "jackie-brown" },
+    { type: "movies", slug: "pulp-fiction" },
+    { type: "movies", slug: "reservoir-dogs" },
+    { type: "movies", slug: "kill-bill-vol-1" },
+    { type: "movies", slug: "kill-bill-vol-2" },
+    { type: "movies", slug: "deathproof" },
+    { type: "movies", slug: "planet-terror" },
+    { type: "movies", slug: "from-dusk-till-dawn" },
+    { type: "movies", slug: "django-unchained" },
+    { type: "movies", slug: "four-rooms" },
+    { type: "movies", slug: "true-romance" },
+    { type: "movies", slug: "inglorious-basterds" },
+  ],
+};
+
 const discoverCollection: SetConfig = {
   dataSourceId: createDataSourceId("discover-collection"),
+  externalId: createExternalId("discover_collection"),
   title: "Discover Collection",
   slug: "discover-collection",
   set_type_slug: "collection",
@@ -77,6 +106,7 @@ const discoverCollection: SetConfig = {
 
 const mediaReferenceHomepage: SetConfig = {
   dataSourceId: createDataSourceId("media-reference-homepage"),
+  externalId: createExternalId("media_reference_homepage"),
   title: "Homepage",
   slug: "media-reference-homepage",
   set_type_slug: "homepage",
@@ -95,6 +125,17 @@ export const orderedSetsToCreate = [
   spotlightMovies,
   homePageSlider,
   tarantinoMoviesCollection,
+  // discoverCollection needs the tarantinoMoviesCollection
+  discoverCollection,
+  // Order matters, homepage is last as it includes the rail and slider
+  mediaReferenceHomepage,
+];
+
+export const orderedSetsToCreateWithoutDynamicObject = [
+  newTVReleases,
+  spotlightMovies,
+  homePageSlider,
+  tarantinoMoviesCollectionWithoutDynamicObject,
   // discoverCollection needs the tarantinoMoviesCollection
   discoverCollection,
   // Order matters, homepage is last as it includes the rail and slider

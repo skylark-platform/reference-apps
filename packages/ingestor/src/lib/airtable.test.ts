@@ -1,6 +1,6 @@
 import { FieldSet, Record, Table } from "airtable";
 import axios, { AxiosError } from "axios";
-import { Airtables } from "../interfaces";
+import { Airtables } from "./interfaces";
 import { getAllTables } from "./airtable";
 
 jest.mock("axios");
