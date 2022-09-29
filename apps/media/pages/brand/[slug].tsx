@@ -1,13 +1,11 @@
+import { ReactNode } from "react";
 import type { GetServerSideProps, NextPage } from "next";
+import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
 import {
-  Header,
-  CallToAction,
-  Hero,
   getImageSrcAndSizeByWindow,
-  SkeletonPage,
-  Rail,
-  EpisodeThumbnail,
+  BrandPageParsedEpisode,
+  TVShowBrandPage,
 } from "@skylark-reference-apps/react";
 import {
   Episode,
@@ -16,12 +14,36 @@ import {
   Season,
   getImageSrc,
 } from "@skylark-reference-apps/lib";
-import useTranslation from "next-translate/useTranslation";
-import { useRouter } from "next/router";
 import { useBrandWithSeasonBySlug } from "../../hooks/useBrandWithSeasonBySlug";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 
 import { DataFetcher } from "../../components/dataFetcher";
+
+const EpisodeDataFetcher: React.FC<{
+  slug: string;
+  self: string;
+  children(data: BrandPageParsedEpisode): ReactNode;
+}> = ({ slug, self, children }) => (
+  <DataFetcher self={self} slug={slug}>
+    {(episode: Episode) => (
+      <>
+        {children({
+          title: getTitleByOrder(
+            episode?.title,
+            ["short", "medium"],
+            episode.objectTitle
+          ),
+          synopsis: getSynopsisByOrder(episode?.synopsis, ["medium", "short"]),
+          image: getImageSrc(episode.images, "Thumbnail", "250x250"),
+          slug: episode.slug,
+          number: episode?.number,
+          uid: episode.uid,
+          href: `/episodes/${episode.slug}`,
+        })}
+      </>
+    )}
+  </DataFetcher>
+);
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject(
@@ -36,15 +58,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
 };
 
-const sortEpisodesByNumber = (a: Episode, b: Episode) =>
-  (a.number || 0) > (b.number || 0) ? 1 : -1;
-
 const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
 
-  const { brand, notFound, error } = useBrandWithSeasonBySlug(
-    query?.slug as string
-  );
+  const { brand, error } = useBrandWithSeasonBySlug(query?.slug as string);
 
   const brandObjects = brand?.items?.isExpanded ? brand.items.objects : [];
   const seasons = (brandObjects as Season[])
@@ -53,139 +70,60 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
       (a.number || 0) > (b.number || 0) ? 1 : -1
     );
 
-  const [firstEpisodeOfFirstSeason] = seasons?.[0]?.items?.isExpanded
-    ? (seasons[0].items.objects as Episode[]).sort(sortEpisodesByNumber)
-    : [];
+  if (error) {
+    return (
+      <div className="flex h-screen flex-col items-center justify-center text-white">
+        <p>{`Error fetching brand: ${(query?.slug as string) || ""}`}</p>
+        <pre>{error.message}</pre>
+      </div>
+    );
+  }
 
-  const titleShortToLong = getTitleByOrder(
+  const title = getTitleByOrder(
     brand?.title,
-    ["short", "medium", "long"],
+    ["long", "medium", "short"],
     brand?.objectTitle
   );
 
-  const { t } = useTranslation("common");
-
   return (
-    <div className="mb-20 mt-48 flex min-h-screen w-full flex-col items-center bg-gray-900">
+    <>
       <NextSeo
         description={seo.synopsis}
         openGraph={{ images: seo.images }}
-        title={titleShortToLong || seo.title}
+        title={title || seo.title}
       />
-      <SkeletonPage show={!brand && !error}>
-        <div className="-mt-48 w-full">
-          <Hero bgImage={getImageSrcAndSizeByWindow(brand?.images, "Main")}>
-            <div className="flex w-full flex-col">
-              <Header
-                description={getSynopsisByOrder(brand?.synopsis, [
-                  "long",
-                  "medium",
-                  "short",
-                ])}
-                numberOfItems={seasons.length}
-                rating={
-                  brand?.ratings?.isExpanded
-                    ? brand.ratings.items?.[0]?.title
-                    : ""
-                }
-                releaseDate={seasons?.[0]?.releaseDate}
-                tags={
-                  brand?.tags?.isExpanded
-                    ? brand.tags.items.map(({ name }) => name)
-                    : []
-                }
-                title={getTitleByOrder(
-                  brand?.title,
-                  ["long", "medium", "short"],
-                  brand?.objectTitle
-                )}
-                typeOfItems="season"
-              />
-              {firstEpisodeOfFirstSeason && (
-                <CallToAction
-                  episodeNumber={firstEpisodeOfFirstSeason.number || 1}
-                  episodeTitle={
-                    seasons.length && seasons[0].items?.isExpanded
-                      ? getTitleByOrder(seasons[0].items?.objects[0]?.title, [
-                          "long",
-                          "medium",
-                          "short",
-                        ])
-                      : ""
-                  }
-                  href={
-                    firstEpisodeOfFirstSeason
-                      ? `/${firstEpisodeOfFirstSeason.type}/${firstEpisodeOfFirstSeason.slug}`
-                      : ""
-                  }
-                  inProgress={false}
-                  seasonNumber={seasons[0].number || 1}
-                />
-              )}
-            </div>
-          </Hero>
-        </div>
-
-        {notFound && <p>{`Brand ${query?.slug as string} not found`}</p>}
-        {error && !notFound && (
-          <p>{`Error fetching brand: ${error.message}`}</p>
-        )}
-
-        {brand &&
-          brand.items?.isExpanded &&
-          seasons.map(
-            (season) =>
-              season.isExpanded &&
-              season.type === "season" && (
-                <div
-                  className="my-6 w-full"
-                  key={season.number || season.objectTitle || season.slug}
-                >
-                  <Rail
-                    displayCount
-                    header={`${t("skylark.object.season")} ${
-                      season.number || "-"
-                    }`}
-                  >
-                    {season.items?.isExpanded &&
-                      (season.items.objects as Episode[])
-                        .filter((ep) => ep.isExpanded && ep.type === "episode")
-                        .sort(sortEpisodesByNumber)
-                        .map((ep: Episode) => (
-                          <DataFetcher
-                            key={`episode-${ep.slug}`}
-                            self={ep.self}
-                            slug={ep.slug}
-                          >
-                            {(episode: Episode) => (
-                              <EpisodeThumbnail
-                                backgroundImage={getImageSrc(
-                                  episode.images,
-                                  "Thumbnail",
-                                  "250x250"
-                                )}
-                                description={getSynopsisByOrder(
-                                  episode?.synopsis,
-                                  ["medium", "short"]
-                                )}
-                                href={`/episode/${episode.slug}`}
-                                key={episode.objectTitle}
-                                number={episode.number || 0}
-                                title={getTitleByOrder(
-                                  episode?.title,
-                                  ["short", "medium"],
-                                  episode.objectTitle
-                                )}
-                              />
-                            )}
-                          </DataFetcher>
-                        ))}
-                  </Rail>
-                </div>
-              )
-          )}
-      </SkeletonPage>
-    </div>
+      <TVShowBrandPage
+        EpisodeDataFetcher={EpisodeDataFetcher}
+        bgImage={getImageSrcAndSizeByWindow(brand?.images, "Main")}
+        loading={!brand}
+        rating={
+          brand?.ratings?.isExpanded ? brand.ratings.items?.[0]?.title : ""
+        }
+        seasons={seasons.map(({ number, items }) => ({
+          number,
+          episodes: items?.isExpanded
+            ? items.objects.map((ep) => ({
+                uid: ep.uid,
+                self: ep.self,
+                slug: ep.slug,
+                number: (ep as Episode).number,
+                title: ep.objectTitle,
+              }))
+            : [],
+        }))}
+        synopsis={getSynopsisByOrder(brand?.synopsis, [
+          "long",
+          "medium",
+          "short",
+        ])}
+        tags={
+          brand?.tags?.isExpanded
+            ? brand.tags.items.map(({ name }) => name)
+            : []
+        }
+        title={title}
+      />
+    </>
   );
 };
 

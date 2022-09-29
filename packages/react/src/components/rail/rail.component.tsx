@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { MdArrowForward, MdArrowBack } from "react-icons/md";
 import { useDebouncedCallback } from "use-debounce";
-import { useNumberOfThumbnailsByBreakpoint } from "../hooks";
+import { useNumberOfThumbnailsByBreakpoint } from "../../hooks";
 
 interface RailProps {
   initial?: number;

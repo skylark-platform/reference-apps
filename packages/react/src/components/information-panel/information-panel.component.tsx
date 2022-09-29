@@ -4,7 +4,7 @@ import { MdOutlineWatchLater } from "react-icons/md";
 import { List } from "../list";
 
 interface InformationPanelProps {
-  parentTitles?: string[];
+  parentTitle?: string;
   title: string;
   seasonNumber?: string | number;
   duration: number;
@@ -16,7 +16,7 @@ interface InformationPanelProps {
 }
 
 export const InformationPanel: React.FC<InformationPanelProps> = ({
-  parentTitles,
+  parentTitle,
   title,
   duration,
   rating,
@@ -38,12 +38,12 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
     <div className="h-full w-full bg-gray-900">
       <div className="p-2 text-white">
         <div className="left flex w-full flex-col gap-3">
-          {parentTitles && (
+          {parentTitle && (
             <div className="hidden md:flex">
               <List
                 contents={
                   [
-                    ...parentTitles,
+                    parentTitle,
                     seasonNumber
                       ? `${t("skylark.object.season")} ${seasonNumber}`
                       : "",

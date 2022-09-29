@@ -1,6 +1,6 @@
 import React from "react";
 import { act } from "react-dom/test-utils";
-import { fireEvent, render, screen } from "../../test-utils";
+import { fireEvent, render, screen } from "../../../test-utils";
 import { Carousel } from "./carousel.component";
 import { heros } from "./carousel.fixtures";
 

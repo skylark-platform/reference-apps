@@ -4,7 +4,7 @@ import { DimensionContent } from "./dimension-content";
 import { DimensionToggle } from "./dimension-toggle";
 import { DimensionRadioButton } from "./dimension-radio-button";
 import { SkylarkBranding } from "../skylark-branding";
-import { useDimensions } from "../contexts";
+import { useDimensions } from "../../contexts";
 
 interface DimensionSettingsProps {
   show?: boolean;

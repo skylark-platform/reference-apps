@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "../../test-utils";
+import { render, screen } from "../../../test-utils";
 import { InformationPanel } from "./information-panel.component";
 
 describe("InformationPanel component", () => {
@@ -10,7 +10,7 @@ describe("InformationPanel component", () => {
         description="Series Premiere. Lord Stark is troubled by disturbing reports from a Night's Watch deserter."
         duration={57}
         genres={["Drama", "Mythical", "Based on a book"]}
-        parentTitles={["Game of Thrones"]}
+        parentTitle={"Game of Thrones"}
         rating="18+"
         seasonNumber={1}
         themes={["Action", "Adventure"]}
