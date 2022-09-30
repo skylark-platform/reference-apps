@@ -376,7 +376,7 @@ export const convertAirtableFieldsToSkylarkObject = (
   );
 
   const scheduleUrls = getScheduleUrlsFromMetadata(
-    fields.schedules as string[],
+    (fields.schedules || fields.availability) as string[],
     metadata.schedules
   );
 

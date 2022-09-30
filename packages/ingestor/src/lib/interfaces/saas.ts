@@ -1,5 +1,3 @@
-import { Record, FieldSet } from "airtable";
-
 export interface GraphQLBaseObject {
   __typename?: string;
   uid: string;
@@ -8,7 +6,7 @@ export interface GraphQLBaseObject {
 }
 
 export interface GraphQLMetadata {
-  airtableImages: Record<FieldSet>[];
+  images: GraphQLBaseObject[];
   roles: GraphQLBaseObject[];
   people: GraphQLBaseObject[];
   themes: GraphQLBaseObject[];
@@ -16,6 +14,21 @@ export interface GraphQLMetadata {
   ratings: GraphQLBaseObject[];
   tags: GraphQLBaseObject[];
   credits: GraphQLBaseObject[];
+  availability: {
+    default?: GraphQLBaseObject;
+    always?: GraphQLBaseObject;
+    all: GraphQLBaseObject[];
+  };
+  dimensions: {
+    affiliates: GraphQLBaseObject[];
+    deviceTypes: GraphQLBaseObject[];
+    customerTypes: GraphQLBaseObject[];
+    languages: GraphQLBaseObject[];
+    locales: GraphQLBaseObject[];
+    operatingSystems: GraphQLBaseObject[];
+    regions: GraphQLBaseObject[];
+    viewingContext: GraphQLBaseObject[];
+  };
 }
 
 export interface GraphQLIntrospection {
@@ -28,5 +41,15 @@ export interface GraphQLIntrospection {
         kind: string;
       };
     }[];
+  };
+}
+
+export interface GraphQLDimension {
+  uid: string;
+  title: string;
+  slug: string;
+  description?: string;
+  _meta: {
+    values: GraphQLBaseObject[];
   };
 }

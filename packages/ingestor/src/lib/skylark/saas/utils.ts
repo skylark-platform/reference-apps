@@ -1,7 +1,11 @@
 import { FieldSet } from "airtable";
 import { has, isArray } from "lodash";
-import { GraphQLBaseObject } from "../../interfaces";
-import { ApiObjectType, MediaObjectTypes } from "../../types";
+import { GraphQLBaseObject, GraphQLMetadata } from "../../interfaces";
+import {
+  ApiObjectType,
+  GraphQLObjectTypes,
+  MediaObjectTypes,
+} from "../../types";
 
 export const getExtId = (externalId: string) =>
   externalId.substring(externalId.indexOf("#") + 1);
@@ -95,4 +99,43 @@ export const getValidFields = (
   }, {} as { [key: string]: string | number | boolean });
 
   return validFields;
+};
+
+export const createGraphQLOperation = (
+  objectType: GraphQLObjectTypes,
+  objectExists: boolean,
+  args: { [key: string]: string | number | boolean | object },
+  updateLookupFields: { [key: string]: string }
+) => {
+  const method = objectExists ? `update${objectType}` : `create${objectType}`;
+
+  const operation = {
+    __aliasFor: method,
+    __args: objectExists
+      ? {
+          ...updateLookupFields,
+          ...args,
+        }
+      : {
+          ...args,
+        },
+    uid: true,
+    slug: true,
+    external_id: true,
+  };
+
+  return { operation, method };
+};
+
+export const getGraphQLObjectAvailability = (
+  availabilityMetadata: GraphQLMetadata["availability"],
+  availabilityField?: string[]
+): { link: string[] } => {
+  const { all, default: defaultAvailability } = availabilityMetadata;
+  if (!availabilityField) {
+    return { link: defaultAvailability ? [defaultAvailability.uid] : [] };
+  }
+
+  const uids = getUidsFromField(availabilityField, all);
+  return { link: uids || [] };
 };

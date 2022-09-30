@@ -16,17 +16,19 @@ import {
   gqlObjectMeta,
   getUidsFromField,
   getValidFields,
+  createGraphQLOperation,
+  getGraphQLObjectAvailability,
 } from "./utils";
 
-const createOrUpdateMultipleObjects = async (
+export const mutateMultipleObjects = async <T>(
   name: string,
   mutations: { [key: string]: object }
-): Promise<GraphQLBaseObject[]> => {
+): Promise<T[]> => {
   // Smaller requests are better as each is handled by a single lambda
   const chunks = chunk(Object.keys(mutations), 20);
 
   const chunkedData = await Promise.all(
-    chunks.map(async (keys, i): Promise<GraphQLBaseObject[]> => {
+    chunks.map(async (keys, i): Promise<T[]> => {
       const splitMutations = keys.reduce(
         (previousObj, key) => ({
           ...previousObj,
@@ -45,7 +47,7 @@ const createOrUpdateMultipleObjects = async (
       const graphQLMutation = jsonToGraphQLQuery(mutation);
 
       const data = await graphQLClient.request<{
-        [key: string]: GraphQLBaseObject;
+        [key: string]: T;
       }>(graphQLMutation);
 
       const arr = values(data);
@@ -77,28 +79,18 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
       const validFields = getValidFields(fields, validProperties);
 
       const objectExists = existingObjects.includes(id);
-      const method = objectExists
-        ? `update${objectType}`
-        : `create${objectType}`;
 
-      const operation = {
-        __aliasFor: method,
-        __args: objectExists
-          ? {
-              external_id: id,
-              [objectType.toLowerCase()]: {
-                ...validFields,
-              },
-            }
-          : {
-              [objectType.toLowerCase()]: {
-                ...validFields,
-                external_id: id,
-              },
-            },
-        uid: true,
-        external_id: true,
+      const args = {
+        [objectType.toLowerCase()]: objectExists
+          ? validFields
+          : { ...validFields, external_id: id },
       };
+      const { operation, method } = createGraphQLOperation(
+        objectType,
+        objectExists,
+        args,
+        { external_id: id }
+      );
 
       const updatedOperations = {
         ...previousOperations,
@@ -109,7 +101,7 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
     {} as { [key: string]: object }
   );
 
-  const data = await createOrUpdateMultipleObjects(
+  const data = await mutateMultipleObjects<GraphQLBaseObject>(
     `createOrUpdate${objectType}s`,
     operations
   );
@@ -146,9 +138,9 @@ export const createOrUpdateGraphQLCredits = async (
       }
 
       const creditExists = existingObjects.includes(id);
-      const method = creditExists ? `updateCredit` : `createCredit`;
 
       const credit = {
+        ...validFields,
         relationships: {
           people: {
             link: person.uid,
@@ -157,34 +149,27 @@ export const createOrUpdateGraphQLCredits = async (
             link: role.uid,
           },
         },
-        ...validFields,
       };
 
-      const operation = {
-        ...previousOperations,
-        [`${method}${id}`]: {
-          __aliasFor: method,
-          __args: creditExists
-            ? {
-                external_id: id,
-                credit,
-              }
-            : {
-                credit: {
-                  ...credit,
-                  external_id: id,
-                },
-              },
-          uid: true,
-          external_id: true,
-        },
+      const args = {
+        credit: creditExists ? credit : { ...credit, external_id: id },
       };
-      return operation;
+      const { operation, method } = createGraphQLOperation(
+        "Credit",
+        creditExists,
+        args,
+        { external_id: id }
+      );
+
+      return {
+        ...previousOperations,
+        [`${method}${id}`]: operation,
+      };
     },
     {} as { [key: string]: object }
   );
 
-  const data = await createOrUpdateMultipleObjects(
+  const data = await mutateMultipleObjects<GraphQLBaseObject>(
     "createOrUpdateCredits",
     operations
   );
@@ -202,6 +187,7 @@ const getMediaObjectRelationships = (
     "ratings",
     "tags",
     "credits",
+    "images",
   ];
 
   const relationships = relationshipNames.reduce(
@@ -302,6 +288,11 @@ export const createGraphQLMediaObjects = async (
           metadata
         );
 
+        const availability = getGraphQLObjectAvailability(
+          metadata.availability,
+          fields.availability as string[]
+        );
+
         const parentField = fields.parent as string[];
         if (parentField && parentField.length > 0) {
           const parent = createdMediaObjects.find(
@@ -327,6 +318,7 @@ export const createGraphQLMediaObjects = async (
                   [argName]: {
                     ...validFields,
                     relationships,
+                    availability,
                   },
                 }
               : {
@@ -334,6 +326,7 @@ export const createGraphQLMediaObjects = async (
                     external_id: id,
                     ...validFields,
                     relationships,
+                    availability,
                   },
                 },
             __typename: true,
@@ -349,7 +342,7 @@ export const createGraphQLMediaObjects = async (
     );
 
     // eslint-disable-next-line no-await-in-loop
-    const arr = await createOrUpdateMultipleObjects(
+    const arr = await mutateMultipleObjects<GraphQLBaseObject>(
       "createMediaObjects",
       operations
     );

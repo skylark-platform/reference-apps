@@ -8,12 +8,17 @@ import {
   bulkCreateOrUpdateObjectsWithLookup,
   createOrUpdateObject,
 } from "./create";
-import { Airtables, ApiAirtableFields, Metadata } from "../../interfaces";
+import {
+  Airtables,
+  ApiAirtableFields,
+  AvailabilityTableFields,
+  Metadata,
+} from "../../interfaces";
 import { getResourceBySlug } from "./get";
 
 const convertDimensionsToUrls = (
   dimensions: (ApiDimension & ApiAirtableFields)[],
-  airtableDimensionIds: string[]
+  airtableDimensionIds?: string[]
 ) =>
   dimensions
     .filter(({ airtableId }) => airtableDimensionIds?.includes(airtableId))
@@ -45,7 +50,7 @@ const createOrUpdateDimensions = async (table: Record<FieldSet>[]) => {
     uid: "",
     self: "",
     data_source_id: id,
-    name: fields.name as string,
+    name: (fields.name || fields.title) as string,
     slug: fields.slug as string,
   }));
 
@@ -136,21 +141,7 @@ export const createOrUpdateSchedules = (
           "operating-systems": operatingSystems,
           regions,
           "viewing-context": viewingContext,
-        } = fields as {
-          title: string;
-          slug: string;
-          type: string;
-          starts: string;
-          ends: string;
-          affiliates: string[];
-          devices: string[];
-          customers: string[];
-          languages: string[];
-          locales: string[];
-          "operating-systems": string[];
-          regions: string[];
-          "viewing-context": string[];
-        };
+        } = fields as AvailabilityTableFields;
         const data: Partial<ApiSchedule> = {
           title,
           slug,
