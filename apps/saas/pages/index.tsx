@@ -7,9 +7,9 @@ const Home: NextPage = () => {
 
   return (
     <div>
-      {homepageItems?.map((item) => {
-        return <div key={`${item.slug}`}>{item?.slug}</div>;
-      })}
+      {homepageItems?.map((item) => (
+        <div key={`${item.slug}`}>{item?.slug}</div>
+      ))}
     </div>
   );
 };

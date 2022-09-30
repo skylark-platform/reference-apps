@@ -1,6 +1,11 @@
 import { GraphQLClient, gql } from "graphql-request";
 import useSWR from "swr";
 import { GQLMultipleEntertainmentObjects } from "@skylark-reference-apps/lib";
+import {
+  SAAS_ACCOUNT_ID,
+  SAAS_API_ENDPOINT,
+  SAAS_API_KEY,
+} from "../lib/constants";
 
 const queryGQL = gql`
   query MyQuery {
@@ -45,13 +50,10 @@ const queryGQL = gql`
 `;
 
 const fetcher = (query: string) => {
-  const endpoint =
-    "https://qr6ydgprtjajhk4g6grz64i2yi.appsync-api.eu-west-1.amazonaws.com/graphql";
-
-  const graphQLClient = new GraphQLClient(endpoint, {
+  const graphQLClient = new GraphQLClient(SAAS_API_ENDPOINT, {
     headers: {
-      "x-api-key": "da2-eebyrzq45zctlhnbadz3yudiuq",
-      "x-account-id": "2022-09-21T13:58:45.121Z",
+      "x-api-key": SAAS_API_KEY,
+      "x-account-id": SAAS_ACCOUNT_ID,
     },
   });
 
