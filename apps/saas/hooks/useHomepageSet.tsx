@@ -1,11 +1,7 @@
-import { GraphQLClient, gql } from "graphql-request";
+import { gql } from "graphql-request";
 import useSWR from "swr";
 import { GQLMultipleEntertainmentObjects } from "@skylark-reference-apps/lib";
-import {
-  SAAS_ACCOUNT_ID,
-  SAAS_API_ENDPOINT,
-  SAAS_API_KEY,
-} from "../lib/constants";
+import { graphQLClient } from "./graphql";
 
 const queryGQL = gql`
   query MyQuery {
@@ -49,18 +45,10 @@ const queryGQL = gql`
   }
 `;
 
-const fetcher = (query: string) => {
-  const graphQLClient = new GraphQLClient(SAAS_API_ENDPOINT, {
-    headers: {
-      "x-api-key": SAAS_API_KEY,
-      "x-account-id": SAAS_ACCOUNT_ID,
-    },
-  });
-
-  return graphQLClient
+const fetcher = (query: string) =>
+  graphQLClient
     .request<{ getSet: GQLMultipleEntertainmentObjects }>(query)
     .then((data) => data.getSet);
-};
 
 export const useHomepageSet = () => {
   const { data, error } = useSWR<GQLMultipleEntertainmentObjects, Error>(
