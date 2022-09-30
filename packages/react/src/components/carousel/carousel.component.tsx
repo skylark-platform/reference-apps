@@ -20,7 +20,6 @@ export interface CarouselItem {
 interface CarouselProps {
   items: CarouselItem[];
   changeInterval?: number;
-  activeItem?: number;
 }
 
 const variants = {
@@ -43,7 +42,6 @@ const variants = {
 export const Carousel: React.FC<CarouselProps> = ({
   items,
   changeInterval,
-  activeItem,
 }) => {
   const [loadedImages, setLoadedImages] = useState<string[]>([]);
   const [[page, direction], setPage] = useState([0, 0]);
@@ -72,25 +70,20 @@ export const Carousel: React.FC<CarouselProps> = ({
   }, [items]);
 
   useEffect(() => {
-    if (activeItem) {
-      const newActiveItem =
-        activeItem && activeItem < items.length ? activeItem : 0;
-      setPage([newActiveItem, direction]);
-    }
-  }, [activeItem]);
-
-  useEffect(() => {
-    if (changeInterval && activeItem === undefined && items.length > 1) {
+    if (changeInterval && items.length > 1) {
       const timeout = setTimeout(() => {
         paginate(1);
       }, changeInterval * 1000);
       return () => clearTimeout(timeout);
     }
     return undefined;
-  }, [page, changeInterval, activeItem, items.length]);
+  }, [page, changeInterval, items.length]);
 
-  const { image, title, releaseDate, type, duration, href } = items[itemIndex];
-  const activeImageHasLoaded = areImagesLoaded || loadedImages.includes(image);
+  const { image, title, releaseDate, type, duration, href } = items[
+    itemIndex
+  ] || { image: "", title: "", releaseDate: "", type: "", href: "" };
+  const activeImageHasLoaded =
+    (image !== "" && areImagesLoaded) || loadedImages.includes(image);
 
   const { t } = useTranslation("common");
 
@@ -135,7 +128,7 @@ export const Carousel: React.FC<CarouselProps> = ({
                 contents={[
                   duration,
                   formatYear(releaseDate),
-                  t(`skylark.object.${type}`),
+                  type && t(`skylark.object.${type}`),
                 ]}
                 highlightFirst
                 textSize="sm"
@@ -154,12 +147,12 @@ export const Carousel: React.FC<CarouselProps> = ({
           </div>
         </motion.div>
       </AnimatePresence>
-      <div className=" absolute bottom-5 z-50 flex items-start justify-center text-white md:bottom-20 md:right-lg-gutter">
+      <div className="absolute bottom-5 z-50 flex items-start justify-center text-white md:bottom-20 md:right-lg-gutter">
         {items.length > 1 &&
           items.map(({ title: itemTitle, image: itemImage }, i) => (
             <CarouselButton
               active={i === itemIndex}
-              duration={activeItem !== undefined ? undefined : changeInterval}
+              duration={changeInterval}
               key={`${itemTitle}-${itemImage}-carousel-button`}
               text={`${i + 1} / ${items.length}`}
               onClick={() => setPage([i, i > itemIndex ? 1 : -1])}

@@ -24,6 +24,7 @@ const fieldsToExpand = {
 const fields = {
   items: {
     content_url: {
+      uid: {},
       title: {},
       slug: {},
       set_type_slug: {},
