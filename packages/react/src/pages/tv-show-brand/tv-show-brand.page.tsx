@@ -1,3 +1,4 @@
+import { sortObjectByNumberProperty } from "@skylark-reference-apps/lib";
 import useTranslation from "next-translate/useTranslation";
 import React from "react";
 import {
@@ -44,9 +45,6 @@ interface Props {
     children(data: BrandPageParsedEpisode): React.ReactNode;
   }>;
 }
-
-const sortEpisodesByNumber = (a: { number?: number }, b: { number?: number }) =>
-  (a.number || 0) > (b.number || 0) ? 1 : -1;
 
 export const TVShowBrandPage: React.FC<Props> = ({
   loading,
@@ -101,7 +99,7 @@ export const TVShowBrandPage: React.FC<Props> = ({
               displayCount
               header={`${t("skylark.object.season")} ${season.number || "-"}`}
             >
-              {season.episodes?.sort(sortEpisodesByNumber).map((ep) => (
+              {season.episodes?.sort(sortObjectByNumberProperty).map((ep) => (
                 <EpisodeDataFetcher
                   key={`episode-${ep.slug}`}
                   self={ep.self}

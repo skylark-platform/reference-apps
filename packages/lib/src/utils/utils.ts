@@ -137,3 +137,12 @@ export const formatReleaseDate = (
  */
 export const formatYear = (date?: string, locale?: string) =>
   formatReleaseDate(date, locale, "YYYY");
+
+/**
+ * sortByNumber - to be passed into an array.sort
+ * Using the number property, returns the array in ascending order
+ */
+export const sortObjectByNumberProperty = (
+  a: { number?: number },
+  b: { number?: number }
+) => ((a.number || 0) > (b.number || 0) ? 1 : -1);
