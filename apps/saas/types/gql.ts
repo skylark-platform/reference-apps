@@ -642,6 +642,7 @@ export type Genre = CurationMetadata & {
   availability?: Maybe<AvailabilityListing>;
   external_id?: Maybe<Scalars["String"]>;
   metadata_source?: Maybe<Scalars["String"]>;
+  movies?: Maybe<MovieListing>;
   name?: Maybe<Scalars["String"]>;
   parents?: Maybe<EntertainmentListing>;
   sets?: Maybe<SetListing>;
@@ -656,6 +657,12 @@ export type Genre_MetaArgs = {
 };
 
 export type GenreAvailabilityArgs = {
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type GenreMoviesArgs = {
+  language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
   next_token?: InputMaybe<Scalars["String"]>;
 };

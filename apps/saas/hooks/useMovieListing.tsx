@@ -4,13 +4,6 @@ import { graphQLClient } from "@skylark-reference-apps/lib";
 import { MovieListing } from "../types/gql";
 
 const createGraphQLQuery = () => {
-  const fieldsToFetch: { [key: string]: boolean | object } = {
-    __typename: true,
-    objects: {
-      uid: true,
-    },
-  };
-
   const method = `listMovie`;
 
   const queryAsJson = {
@@ -20,7 +13,9 @@ const createGraphQLQuery = () => {
         __args: {
           ignore_availability: true,
         },
-        ...fieldsToFetch,
+        objects: {
+          uid: true,
+        },
       },
     },
   };
@@ -30,22 +25,23 @@ const createGraphQLQuery = () => {
   return { query, method };
 };
 
-const fetcher = () => {
+const movieListingFetcher = () => {
   const { query, method } = createGraphQLQuery();
   return graphQLClient
     .request<{ [key: string]: MovieListing }>(query)
     .then(({ [method]: data }): MovieListing => data);
 };
 
-export const useMovieListing = () => {
-  const { data, error } = useSWR<MovieListing, Error>(
-    ["MovieListing"],
-    fetcher
+export const useMovieListing = (disable = false) => {
+  const { data, error, isLoading } = useSWR<MovieListing, Error>(
+    // When disable is true, don't fetch
+    disable ? null : "MovieListing",
+    movieListingFetcher
   );
 
   return {
-    data,
-    isLoading: !error && !data,
+    movies: data,
+    isLoading,
     isError: error,
   };
 };

@@ -148,3 +148,10 @@ export const sortObjectByNumberProperty = (
   a: { number?: number },
   b: { number?: number }
 ) => ((a.number || 0) > (b.number || 0) ? 1 : -1);
+
+export const sortArrayIntoAlphabeticalOrder = (a: string, b: string) => {
+  const aUpper = a.toUpperCase();
+  const bUpper = b.toUpperCase();
+  // eslint-disable-next-line no-nested-ternary
+  return aUpper < bUpper ? -1 : aUpper > bUpper ? 1 : 0;
+};

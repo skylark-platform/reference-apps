@@ -6,10 +6,15 @@ import {
   MoviesPage,
 } from "@skylark-reference-apps/react";
 import useTranslation from "next-translate/useTranslation";
-import { getTitleByOrder } from "@skylark-reference-apps/lib";
+import {
+  getTitleByOrder,
+  sortArrayIntoAlphabeticalOrder,
+} from "@skylark-reference-apps/lib";
 import { useMovieListing } from "../hooks/useMovieListing";
 import { MediaObjectFetcher } from "../components/mediaObjectFetcher";
-import { Movie } from "../types/gql";
+import { Genre, Movie } from "../types/gql";
+import { useGenreListing } from "../hooks/useGenreListing";
+import { useMovieListingFromGenre } from "../hooks/useMovieListingFromGenre";
 
 const MovieDataFetcher: React.FC<{
   uid: string;
@@ -29,7 +34,7 @@ const MovieDataFetcher: React.FC<{
           ),
           image: movie?.images?.objects?.[0]?.image_url || "",
           uid: movie.uid,
-          href: `/movies/${movie.uid}`,
+          href: `/movie/${movie.uid}`,
           releaseDate: "",
           duration: "1hr 38m",
         })}
@@ -39,24 +44,23 @@ const MovieDataFetcher: React.FC<{
 );
 
 const Movies: NextPage = () => {
-  const [genre, setGenre] = useState("");
-  const { data, isError, isLoading } = useMovieListing();
+  const [genre, setGenre] = useState<Genre | null>(null);
+  const { genres, isError: isGenreError } = useGenreListing();
+  const unfilteredMovies = useMovieListing(!!genre);
+  const filteredMoviesByGenre = useMovieListingFromGenre(genre?.uid);
+  const {
+    movies,
+    isError: isMovieError,
+    isLoading,
+  } = genre ? filteredMoviesByGenre : unfilteredMovies;
 
-  console.log(data, genre);
-
-  // const { genres } = useAllGenres();
-  // const selectedGenreUid = genres?.find(({ name }) => name === genre);
-  // const { movies, isLoading, isError } = useAllMovies(
-  //   "movie",
-  //   selectedGenreUid?.uid
-  // );
   const { t } = useTranslation("common");
 
-  if (isError) {
+  if (isMovieError) {
     return (
       <div className="flex h-screen flex-col items-center justify-center text-white">
         <p>{`Error fetching movies`}</p>
-        <p>{isError.message}</p>
+        <p>{isMovieError.message}</p>
       </div>
     );
   }
@@ -66,17 +70,28 @@ const Movies: NextPage = () => {
       <NextSeo title={t("movies")} />
       <MoviesPage
         MovieDataFetcher={MovieDataFetcher}
-        genres={[]}
+        genres={genres
+          ?.map((g) => g?.name || "")
+          .sort(sortArrayIntoAlphabeticalOrder)}
         loading={isLoading}
         movies={
-          data?.objects?.map((movie) => ({
+          movies?.objects?.map((movie) => ({
             self: "",
             slug: "",
             uid: movie?.uid || "",
           })) || []
         }
-        onGenreChange={setGenre}
+        onGenreChange={(name) =>
+          setGenre(
+            genres.find(({ name: genreName }) => genreName === name) || null
+          )
+        }
       />
+      {isGenreError && (
+        <div className="flex flex-col items-center justify-center text-white">
+          <p>{`Error fetching genres: ${isGenreError.message || ""}`}</p>
+        </div>
+      )}
     </>
   );
 };

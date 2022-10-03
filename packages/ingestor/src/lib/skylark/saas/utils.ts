@@ -1,10 +1,11 @@
-import { GraphQLMediaObjectTypes, GraphQLObjectTypes } from "@skylark-reference-apps/lib";
+import {
+  GraphQLMediaObjectTypes,
+  GraphQLObjectTypes,
+} from "@skylark-reference-apps/lib";
 import { FieldSet } from "airtable";
 import { has, isArray } from "lodash";
 import { GraphQLBaseObject, GraphQLMetadata } from "../../interfaces";
-import {
-  ApiObjectType,
-} from "../../types";
+import { ApiObjectType } from "../../types";
 
 export const getExtId = (externalId: string) =>
   externalId.substring(externalId.indexOf("#") + 1);

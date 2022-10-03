@@ -48,4 +48,7 @@ export type GraphQLObjectTypes =
   | "Role"
   | "Tag"
   | "Credit"
-  | "Set";
+  | "Set"
+  | "DimensionValue"
+  | "Availability"
+  | "Image";
