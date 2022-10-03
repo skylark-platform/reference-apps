@@ -37,7 +37,7 @@ inputs:
   aws-secret-access-key:
     description: AWS secret access key
     required: true
-  saas-api-key:
+  saas-api-token:
     description: The API key to use to authenticate with SaaS Skylark
     required: false
   saas-account-id:
@@ -86,7 +86,7 @@ runs:
         COGNITO_USER_POOL_ID: ${{ inputs.cognito-user-pool-id }}
         NEXT_TRANSLATE_PATH: ${{ github.action_path }}/../../../apps/${{ inputs.app }}
         NEXT_PUBLIC_SAAS_API_ENDPOINT: ${{ inputs.skylark-api-url }}
-        NEXT_PUBLIC_SAAS_API_KEY: ${{ inputs.saas-api-key }}
+        NEXT_PUBLIC_SAAS_API_KEY: ${{ inputs.saas-api-token }}
         NEXT_PUBLIC_SAAS_ACCOUNT_ID: ${{ inputs.saas-account-id }}
       run: |
         yarn cdk bootstrap
