@@ -33,3 +33,19 @@ export interface Airtables {
   imageTypes: Record<FieldSet>[];
   tagTypes: Record<FieldSet>[];
 }
+
+export interface AvailabilityTableFields extends FieldSet {
+  title: string;
+  slug: string;
+  type: string;
+  starts?: string;
+  ends?: string;
+  affiliates?: string[];
+  devices?: string[];
+  customers?: string[];
+  languages?: string[];
+  locales?: string[];
+  "operating-systems"?: string[];
+  regions?: string[];
+  "viewing-context"?: string[];
+}

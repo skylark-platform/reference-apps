@@ -56,6 +56,11 @@ import {
   createOrUpdateGraphQlObjectsUsingIntrospection,
 } from "./lib/skylark/saas/create";
 import { createOrUpdateGraphQLSet } from "./lib/skylark/saas/sets";
+import {
+  createDimensions,
+  createOrUpdateAvailability,
+  createOrUpdateScheduleDimensionValues,
+} from "./lib/skylark/saas/availability";
 
 const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
   const [alwaysSchedule, setTypes, dimensions] = await Promise.all([
@@ -255,7 +260,36 @@ const main = async () => {
       `Starting ingest to SaaS Skylark: ${SAAS_API_ENDPOINT} (account: ${SAAS_ACCOUNT_ID})`
     );
 
+    await createDimensions();
+
+    const dimensions = await createOrUpdateScheduleDimensionValues(
+      airtable.dimensions
+    );
+
+    const availability = await createOrUpdateAvailability(
+      airtable.availibility,
+      dimensions
+    );
+    const alwaysSchedule = availability.find(
+      ({ slug }) => slug === "always-license"
+    );
+
+    // eslint-disable-next-line no-console
+    console.log(
+      `Default license: ${
+        UNLICENSED_BY_DEFAULT || !alwaysSchedule
+          ? "undefined"
+          : `${alwaysSchedule.slug} (${alwaysSchedule.external_id})`
+      }`
+    );
+
     const metadata: GraphQLMetadata = {
+      dimensions,
+      availability: {
+        all: availability,
+        always: alwaysSchedule,
+        default: UNLICENSED_BY_DEFAULT ? undefined : alwaysSchedule,
+      },
       people: [],
       roles: [],
       genres: [],
@@ -263,9 +297,13 @@ const main = async () => {
       ratings: [],
       tags: [],
       credits: [],
-      airtableImages: airtable.images,
+      images: [],
     };
 
+    metadata.images = await createOrUpdateGraphQlObjectsUsingIntrospection(
+      "Image",
+      airtable.images
+    );
     metadata.themes = await createOrUpdateGraphQlObjectsUsingIntrospection(
       "Theme",
       airtable.themes

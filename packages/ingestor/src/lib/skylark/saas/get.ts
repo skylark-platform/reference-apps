@@ -33,11 +33,15 @@ export const getValidPropertiesForObject = async (
     graphQLGetQuery
   );
 
+  const supportedObjects = ["availability"];
+
   // eslint-disable-next-line no-underscore-dangle
   const types = data.__type.fields
     .filter(
-      ({ type: { name, kind } }) =>
-        kind !== "OBJECT" || (name && name.startsWith("String"))
+      ({ name: fieldName, type: { name, kind } }) =>
+        supportedObjects.includes(fieldName) ||
+        kind !== "OBJECT" ||
+        (name && name.startsWith("String"))
     )
     .map(({ name }) => name);
 

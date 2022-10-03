@@ -14,14 +14,18 @@ export type GraphQLObjectTypes =
   | "Role"
   | "Tag"
   | "Credit"
-  | "Set";
+  | "Set"
+  | "Image"
+  | "DimensionValue"
+  | "Availability";
 
 export type ValidMediaObjectRelationships =
   | "themes"
   | "genres"
   | "tags"
   | "credits"
-  | "ratings";
+  | "ratings"
+  | "images";
 
 export type RelationshipsLink = { [key: string]: { link: string | string[] } };
 
