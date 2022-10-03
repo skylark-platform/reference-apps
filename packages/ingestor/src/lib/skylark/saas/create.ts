@@ -1,6 +1,8 @@
 import { FieldSet, Records } from "airtable";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import { chunk, flatten, has, isString, values } from "lodash";
+import { graphQLClient } from "@skylark-reference-apps/lib";
+
 import { GraphQLBaseObject, GraphQLMetadata } from "../../interfaces";
 import {
   ApiObjectType,
@@ -10,7 +12,6 @@ import {
   ValidMediaObjectRelationships,
 } from "../../types";
 import { getValidPropertiesForObject, getExistingObjects } from "./get";
-import { graphQLClient } from "./graphql";
 import {
   getExtId,
   gqlObjectMeta,

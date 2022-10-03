@@ -1,8 +1,9 @@
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import { has, isNull } from "lodash";
+import { graphQLClient } from "@skylark-reference-apps/lib";
+
 import { GraphQLBaseObject, GraphQLIntrospection } from "../../interfaces";
 import { GraphQLObjectTypes } from "../../types";
-import { graphQLClient } from "./graphql";
 
 export const getValidPropertiesForObject = async (
   objectType: GraphQLObjectTypes

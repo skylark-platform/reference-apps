@@ -1,7 +1,8 @@
-import { getExistingObjects, getValidPropertiesForObject } from "./get";
-import { graphQLClient } from "./graphql";
+import { graphQLClient } from "@skylark-reference-apps/lib";
 
-jest.mock("./graphql.ts");
+import { getExistingObjects, getValidPropertiesForObject } from "./get";
+
+jest.mock("@skylark-reference-apps/lib");
 
 describe("saas/get.ts", () => {
   let graphQlRequest: jest.Mock;
