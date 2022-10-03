@@ -35,7 +35,6 @@ const EpisodeDataFetcher: React.FC<{
           ),
           synopsis: getSynopsisByOrder(episode?.synopsis, ["medium", "short"]),
           image: getImageSrc(episode.images, "Thumbnail", "384x216"),
-          slug: episode.slug,
           number: episode?.number,
           uid: episode.uid,
           href: `/episode/${episode.slug}`,

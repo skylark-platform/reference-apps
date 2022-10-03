@@ -14,6 +14,7 @@ import "dayjs/locale/pt";
 
 /**
  * Returns the title from the titles object using a given order of priority
+ * Defaults to long, medium, short
  * @param titles the titles object
  * @param priority order of priority
  * @param objectTitle optional objectTitle
@@ -21,7 +22,7 @@ import "dayjs/locale/pt";
  */
 export const getTitleByOrder = (
   titles: { [k in TitleTypes]: string } | undefined,
-  priority: TitleTypes[],
+  priority: TitleTypes[] = ["long", "medium", "short"],
   objectTitle?: string
 ): string => {
   if (!titles) return objectTitle || "";
@@ -32,7 +33,8 @@ export const getTitleByOrder = (
 };
 
 /**
- * Returns the synopsis from the synopsis object using a given order of priority. Defaults long to short.
+ * Returns the synopsis from the synopsis object using a given order of priority
+ * Defaults to long, medium, short
  * @param synopsis the synopsis object
  * @param priority optional order of priority
  * @returns {string}

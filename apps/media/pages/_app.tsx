@@ -16,7 +16,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const { t } = useTranslation("common");
 
   return (
-    <StreamTVLayout appTitle={appTitle}>
+    <StreamTVLayout appTitle={appTitle} tvShowsHref="/brand/game-of-thrones">
       <DefaultSeo {...createDefaultSeo(appTitle, t("seo.description"))} />
       <Component {...pageProps} />
     </StreamTVLayout>

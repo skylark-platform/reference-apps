@@ -1,10 +1,9 @@
+import { GraphQLMediaObjectTypes, GraphQLObjectTypes } from "@skylark-reference-apps/lib";
 import { FieldSet } from "airtable";
 import { has, isArray } from "lodash";
 import { GraphQLBaseObject, GraphQLMetadata } from "../../interfaces";
 import {
   ApiObjectType,
-  GraphQLObjectTypes,
-  MediaObjectTypes,
 } from "../../types";
 
 export const getExtId = (externalId: string) =>
@@ -25,11 +24,11 @@ export const getUidsFromField = (
 };
 
 export const gqlObjectMeta = (
-  type: ApiObjectType | MediaObjectTypes
+  type: ApiObjectType | GraphQLMediaObjectTypes
 ): {
   createFunc: string;
   updateFunc: string;
-  objectType: MediaObjectTypes;
+  objectType: GraphQLMediaObjectTypes;
   argName: "brand" | "season" | "episode" | "movie" | "asset";
   relName: "brands" | "seasons" | "episodes" | "movies" | "assets";
 } => {

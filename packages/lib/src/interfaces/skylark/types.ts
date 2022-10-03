@@ -31,3 +31,21 @@ export type DimensionTypes =
   | "operating-systems"
   | "regions"
   | "viewing-context";
+
+export type GraphQLMediaObjectTypes =
+  | "Brand"
+  | "Season"
+  | "Episode"
+  | "Movie"
+  | "Asset";
+
+export type GraphQLObjectTypes =
+  | GraphQLMediaObjectTypes
+  | "Theme"
+  | "Genre"
+  | "Rating"
+  | "Person"
+  | "Role"
+  | "Tag"
+  | "Credit"
+  | "Set";

@@ -14,16 +14,21 @@ import { DimensionsContextProvider } from "../contexts";
 
 interface Props {
   appTitle: string;
+  tvShowsHref: string;
 }
 
-export const StreamTVLayout: React.FC<Props> = ({ appTitle, children }) => {
+export const StreamTVLayout: React.FC<Props> = ({
+  appTitle,
+  tvShowsHref,
+  children,
+}) => {
   const { asPath } = useRouter();
   const { t } = useTranslation("common");
 
   const links = [
     { text: t("discover"), href: "/" },
     { text: t("movies"), href: "/movies" },
-    { text: t("tv-shows"), href: "/brand/game-of-thrones" },
+    { text: t("tv-shows"), href: tvShowsHref },
   ];
 
   return (

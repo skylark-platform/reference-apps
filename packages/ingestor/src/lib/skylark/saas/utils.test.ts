@@ -1,5 +1,6 @@
+import { GraphQLMediaObjectTypes } from "@skylark-reference-apps/lib";
 import { GraphQLBaseObject } from "../../interfaces";
-import { ApiObjectType, MediaObjectTypes } from "../../types";
+import { ApiObjectType } from "../../types";
 import { getUidsFromField, getValidFields, gqlObjectMeta } from "./utils";
 
 describe("saas/utils.ts", () => {
@@ -30,7 +31,7 @@ describe("saas/utils.ts", () => {
   });
 
   describe("gqlObjectMeta", () => {
-    const mediaObjectTypes: MediaObjectTypes[] = [
+    const mediaObjectTypes: GraphQLMediaObjectTypes[] = [
       "Brand",
       "Season",
       "Episode",

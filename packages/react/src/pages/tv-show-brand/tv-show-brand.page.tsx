@@ -12,7 +12,6 @@ import {
 
 export interface BrandPageParsedEpisode {
   number?: number;
-  slug: string;
   uid: string;
   title: string;
   synopsis: string;
@@ -25,7 +24,7 @@ interface Props {
   bgImage: string;
   title: string;
   synopsis: string;
-  rating: string;
+  rating?: string;
   releaseDate?: string;
   tags: string[];
   seasons: {
@@ -38,12 +37,16 @@ interface Props {
       title: string;
     }[];
   }[];
-  EpisodeDataFetcher: React.FC<{
-    slug: string;
-    self: string;
-    uid: string;
-    children(data: BrandPageParsedEpisode): React.ReactNode;
-  }>;
+  EpisodeDataFetcher:
+    | React.FC<{
+        slug: string;
+        self: string;
+        children(data: BrandPageParsedEpisode): React.ReactNode;
+      }>
+    | React.FC<{
+        uid: string;
+        children(data: BrandPageParsedEpisode): React.ReactNode;
+      }>;
 }
 
 export const TVShowBrandPage: React.FC<Props> = ({
@@ -82,7 +85,10 @@ export const TVShowBrandPage: React.FC<Props> = ({
                   episodeTitle={firstEpisodeOfFirstSeason.title}
                   href={
                     firstEpisodeOfFirstSeason
-                      ? `/episode/${firstEpisodeOfFirstSeason.slug}`
+                      ? `/episode/${
+                          firstEpisodeOfFirstSeason.slug ||
+                          firstEpisodeOfFirstSeason.uid
+                        }`
                       : ""
                   }
                   inProgress={false}
@@ -101,7 +107,7 @@ export const TVShowBrandPage: React.FC<Props> = ({
             >
               {season.episodes?.sort(sortObjectByNumberProperty).map((ep) => (
                 <EpisodeDataFetcher
-                  key={`episode-${ep.slug}`}
+                  key={`episode-${ep.slug}-${ep.uid}`}
                   self={ep.self}
                   slug={ep.slug}
                   uid={ep.uid}

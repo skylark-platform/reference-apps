@@ -40,7 +40,7 @@ export interface ExpandedSkylarkObjects {
 export interface ImageUrl {
   self: string;
   url: string;
-  urlPath: string;
+  urlPath?: string;
   type: string;
 }
 
@@ -100,7 +100,7 @@ export interface SkylarkObject {
   };
   releaseDate: string;
   tags?: Tags | UnexpandedObjects;
-  titleSort: string;
+  titleSort?: string;
   credits?: Credits | UnexpandedObjects;
   ratings?: Ratings | UnexpandedObjects;
   themes?: ThemesAndGenres | UnexpandedObjects;

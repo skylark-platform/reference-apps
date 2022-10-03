@@ -1,13 +1,15 @@
+import {
+  GraphQLMediaObjectTypes,
+  GraphQLObjectTypes,
+  graphQLClient,
+} from "@skylark-reference-apps/lib";
 import { FieldSet, Records } from "airtable";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import { chunk, flatten, has, isString, values } from "lodash";
-import { graphQLClient } from "@skylark-reference-apps/lib";
 
 import { GraphQLBaseObject, GraphQLMetadata } from "../../interfaces";
 import {
   ApiObjectType,
-  MediaObjectTypes,
-  GraphQLObjectTypes,
   RelationshipsLink,
   ValidMediaObjectRelationships,
 } from "../../types";
@@ -216,19 +218,20 @@ export const createGraphQLMediaObjects = async (
   airtableRecords: Records<FieldSet>,
   metadata: GraphQLMetadata
 ) => {
-  const validObjectProperties: { [key in MediaObjectTypes]: string[] } = {
-    Episode: await getValidPropertiesForObject("Episode"),
-    Season: await getValidPropertiesForObject("Season"),
-    Brand: await getValidPropertiesForObject("Brand"),
-    Movie: await getValidPropertiesForObject("Movie"),
-    Asset: await getValidPropertiesForObject("Asset"),
-  };
+  const validObjectProperties: { [key in GraphQLMediaObjectTypes]: string[] } =
+    {
+      Episode: await getValidPropertiesForObject("Episode"),
+      Season: await getValidPropertiesForObject("Season"),
+      Brand: await getValidPropertiesForObject("Brand"),
+      Movie: await getValidPropertiesForObject("Movie"),
+      Asset: await getValidPropertiesForObject("Asset"),
+    };
 
   const externalIds = airtableRecords.map(({ id }) => id);
   const existingObjects = flatten(
     await Promise.all(
       ["Brand", "Season", "Episode", "Movie", "Asset"].map((objectType) =>
-        getExistingObjects(objectType as MediaObjectTypes, externalIds)
+        getExistingObjects(objectType as GraphQLMediaObjectTypes, externalIds)
       )
     )
   );
@@ -303,7 +306,7 @@ export const createGraphQLMediaObjects = async (
           if (parent) {
             const { relName } = gqlObjectMeta(
               // eslint-disable-next-line no-underscore-dangle
-              parent?.__typename as MediaObjectTypes
+              parent?.__typename as GraphQLMediaObjectTypes
             );
             relationships[relName] = { link: parent.uid };
           }
