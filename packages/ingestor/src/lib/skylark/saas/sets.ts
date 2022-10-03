@@ -1,9 +1,10 @@
 import { FieldSet } from "airtable";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
+import { graphQLClient } from "@skylark-reference-apps/lib";
+
 import { SetConfig, GraphQLBaseObject } from "../../interfaces";
 import { ApiObjectType, SetRelationshipsLink } from "../../types";
 import { getValidPropertiesForObject, getExistingObjects } from "./get";
-import { graphQLClient } from "./graphql";
 import { gqlObjectMeta, getValidFields } from "./utils";
 
 interface SetItem {

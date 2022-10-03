@@ -1,22 +1,30 @@
-import { GraphQLClient } from "graphql-request";
-import { graphQLClient } from "../../hooks/graphql";
+import { graphQLClient } from "@skylark-reference-apps/lib";
 
-jest.mock("../../lib/constants", () => ({
-  SAAS_ACCOUNT_ID: "account-id",
-  SAAS_API_ENDPOINT: "https://endpoint/graphql",
-  SAAS_API_KEY: "api-key",
-}));
+import { fetcher } from "../../hooks/useHomepageSet";
 
-describe("saas/graphql.ts", () => {
-  describe("graphQLClient", () => {
-    it("instantiates a new GraphQLClient", () => {
-      const client = new GraphQLClient("https://endpoint/graphql", {
-        headers: {
-          "x-account-id": "account-id",
-          "x-api-key": "api-key",
-        },
-      });
-      expect(graphQLClient).toEqual(client);
-    });
+jest.mock("@skylark-reference-apps/lib");
+
+describe("graphQLClient", () => {
+  let graphQlRequest: jest.Mock;
+
+  beforeEach(() => {
+    graphQlRequest = graphQLClient.request as jest.Mock;
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it("makes a request with the expected query", async () => {
+    const mockedGraphQLResponse = {
+      __type: {
+        fields: [],
+      },
+    };
+    graphQlRequest.mockResolvedValueOnce(mockedGraphQLResponse);
+
+    await fetcher("");
+
+    expect(graphQlRequest).toBeCalled();
   });
 });

@@ -23,6 +23,7 @@
   "dependencies": {
     "@aws-amplify/auth": "^4.6.1",
     "amazon-cognito-identity-js": "^5.2.3",
-    "dayjs": "^1.11.3"
+    "dayjs": "^1.11.3",
+    "graphql-request": "^5.0.0"
   }
 }

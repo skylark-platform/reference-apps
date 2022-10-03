@@ -1,7 +1,9 @@
 import { gql } from "graphql-request";
 import useSWR from "swr";
-import { GQLMultipleEntertainmentObjects } from "@skylark-reference-apps/lib";
-import { graphQLClient } from "./graphql";
+import {
+  GQLMultipleEntertainmentObjects,
+  graphQLClient,
+} from "@skylark-reference-apps/lib";
 
 const queryGQL = gql`
   query MyQuery {
@@ -45,7 +47,7 @@ const queryGQL = gql`
   }
 `;
 
-const fetcher = (query: string) =>
+export const fetcher = (query: string) =>
   graphQLClient
     .request<{ getSet: GQLMultipleEntertainmentObjects }>(query)
     .then((data) => data.getSet);
