@@ -3,7 +3,7 @@ import {
   SAAS_ACCOUNT_ID,
   SAAS_API_ENDPOINT,
   SAAS_API_KEY,
-} from "../../constants";
+} from "./skylark.constants";
 
 export const graphQLClient = new GraphQLClient(SAAS_API_ENDPOINT, {
   headers: {

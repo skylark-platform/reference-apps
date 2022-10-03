@@ -1,13 +1,14 @@
 import { FieldSet, Records, Record, Table } from "airtable";
+import { graphQLClient } from "@skylark-reference-apps/lib";
+
 import { GraphQLMetadata } from "../../interfaces";
 import {
   createGraphQLMediaObjects,
   createOrUpdateGraphQLCredits,
   createOrUpdateGraphQlObjectsUsingIntrospection,
 } from "./create";
-import { graphQLClient } from "./graphql";
 
-jest.mock("./graphql.ts");
+jest.mock("@skylark-reference-apps/lib");
 
 describe("saas/create.ts", () => {
   let graphQlRequest: jest.Mock;

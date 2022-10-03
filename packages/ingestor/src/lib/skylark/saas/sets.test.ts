@@ -1,9 +1,9 @@
+import { graphQLClient } from "@skylark-reference-apps/lib";
 import { GraphQLBaseObject, SetConfig } from "../../interfaces";
 import { ApiObjectType } from "../../types";
-import { graphQLClient } from "./graphql";
 import { createOrUpdateGraphQLSet } from "./sets";
 
-jest.mock("./graphql.ts");
+jest.mock("@skylark-reference-apps/lib");
 
 describe("saas/sets.ts", () => {
   let graphQlRequest: jest.Mock;
