@@ -1,4 +1,4 @@
-import { DimensionTypes } from "@skylark-reference-apps/lib";
+import { DimensionTypes, graphQLClient } from "@skylark-reference-apps/lib";
 import { Record, FieldSet } from "airtable";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import {
@@ -10,7 +10,6 @@ import {
 } from "../../interfaces";
 import { mutateMultipleObjects } from "./create";
 import { getValidPropertiesForObject } from "./get";
-import { graphQLClient } from "./graphql";
 import { createGraphQLOperation, getValidFields } from "./utils";
 
 const dimensionsConfig: { slug: DimensionTypes; title: string }[] = [
