@@ -69,7 +69,9 @@ export const MoviesPage: React.FC<Props> = ({
         (!movies ||
           (movies.length === 0 && (
             <div className="text-center">
-              <H4 className="mt-2 mb-0.5 text-white">{`No movies found for Genre: ${genre}`}</H4>
+              <H4 className="mt-2 mb-0.5 text-white">{`No movies found${
+                genre ? ` for Genre: ${genre}` : ""
+              }`}</H4>
             </div>
           )))}
       <SkeletonPage show={!!loading}>

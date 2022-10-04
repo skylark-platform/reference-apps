@@ -39,13 +39,10 @@ const getKey = (
   pageIndex: number,
   previousPageData: GenreListing | undefined
 ) => {
-  // reached the end
   if (previousPageData && !previousPageData.next_token) return null;
 
-  // first page, we don't have `previousPageData`
   if (pageIndex === 0) return ["GenreListing", ""];
 
-  // add the cursor to the API endpoint
   return ["GenreListing", previousPageData?.next_token];
 };
 
@@ -57,8 +54,6 @@ export const useGenreListing = () => {
   const genres: Genre[] = data
     ?.flatMap((genreListing) => genreListing.objects)
     .filter((genre) => !!genre) as Genre[];
-
-  console.log("genres", genres);
 
   return {
     genres,

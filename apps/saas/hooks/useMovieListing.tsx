@@ -1,9 +1,9 @@
-import useSWR from "swr";
+import useSWRInfinite from "swr/infinite";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import { graphQLClient } from "@skylark-reference-apps/lib";
-import { MovieListing } from "../types/gql";
+import { Movie, MovieListing } from "../types/gql";
 
-const createGraphQLQuery = () => {
+const createGraphQLQuery = (nextToken?: string) => {
   const method = `listMovie`;
 
   const queryAsJson = {
@@ -12,7 +12,9 @@ const createGraphQLQuery = () => {
       [method]: {
         __args: {
           ignore_availability: true,
+          next_token: nextToken || "",
         },
+        next_token: true,
         objects: {
           uid: true,
         },
@@ -25,22 +27,40 @@ const createGraphQLQuery = () => {
   return { query, method };
 };
 
-const movieListingFetcher = () => {
-  const { query, method } = createGraphQLQuery();
+const movieListingFetcher = ([, nextToken]: [
+  name: string,
+  nextToken?: string
+]) => {
+  const { query, method } = createGraphQLQuery(nextToken);
   return graphQLClient
     .request<{ [key: string]: MovieListing }>(query)
     .then(({ [method]: data }): MovieListing => data);
 };
 
+const getKey = (pageIndex: number, previousPageData: MovieListing | null) => {
+  if (previousPageData && !previousPageData.next_token) return null;
+
+  if (pageIndex === 0) return ["MovieListing", ""];
+
+  return ["MovieListing", previousPageData?.next_token];
+};
+
 export const useMovieListing = (disable = false) => {
-  const { data, error, isLoading } = useSWR<MovieListing, Error>(
-    // When disable is true, don't fetch
-    disable ? null : "MovieListing",
-    movieListingFetcher
+  const { data, error, isLoading } = useSWRInfinite<MovieListing, Error>(
+    (pageIndex, previousPageData: MovieListing) =>
+      disable ? null : getKey(pageIndex, previousPageData),
+    movieListingFetcher,
+    {
+      initialSize: 10,
+    }
   );
 
+  const movies: Movie[] = data
+    ?.flatMap((movieListing) => movieListing.objects)
+    .filter((movie) => !!movie) as Movie[];
+
   return {
-    movies: data,
+    movies,
     isLoading,
     isError: error,
   };

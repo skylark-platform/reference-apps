@@ -75,7 +75,7 @@ const Movies: NextPage = () => {
           .sort(sortArrayIntoAlphabeticalOrder)}
         loading={isLoading}
         movies={
-          movies?.objects?.map((movie) => ({
+          movies?.map((movie) => ({
             self: "",
             slug: "",
             uid: movie?.uid || "",

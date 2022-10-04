@@ -1,9 +1,9 @@
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
-import useSWR from "swr";
+import useSWRInfinite from "swr/infinite";
 import { graphQLClient } from "@skylark-reference-apps/lib";
-import { Genre, MovieListing } from "../types/gql";
+import { Genre, MovieListing, Movie } from "../types/gql";
 
-const createGraphQLQuery = (genreUid: string) => {
+const createGraphQLQuery = (genreUid: string, nextToken?: string) => {
   const method = `getGenre`;
 
   const queryAsJson = {
@@ -15,6 +15,10 @@ const createGraphQLQuery = (genreUid: string) => {
           ignore_availability: true,
         },
         movies: {
+          __args: {
+            next_token: nextToken || "",
+          },
+          next_token: true,
           objects: {
             uid: true,
           },
@@ -28,26 +32,46 @@ const createGraphQLQuery = (genreUid: string) => {
   return { query, method };
 };
 
-const movieListingFromGenreFetcher = ([, genreUid]: [
+const movieListingFromGenreFetcher = ([, genreUid, nextToken]: [
   key: string,
-  genreUid: string
+  genreUid: string,
+  nextToken?: string
 ]) => {
-  const { query, method } = createGraphQLQuery(genreUid);
+  const { query, method } = createGraphQLQuery(genreUid, nextToken);
   return graphQLClient
     .request<{ [key: string]: Genre }>(query)
     .then(({ [method]: data }): Genre => data)
     .then((genre) => genre.movies as MovieListing);
 };
 
+const getKey = (
+  pageIndex: number,
+  previousPageData: MovieListing | null,
+  genreUid: string
+) => {
+  if (previousPageData && !previousPageData.next_token) return null;
+
+  if (pageIndex === 0) return ["MovieListing", genreUid, ""];
+
+  return ["MovieListing", genreUid, previousPageData?.next_token];
+};
+
 export const useMovieListingFromGenre = (genreUid?: string) => {
-  const { data, error, isLoading } = useSWR<MovieListing, Error>(
-    // Don't fetch when genreUid is falsy
-    genreUid ? ["MovieListing", genreUid] : null,
-    movieListingFromGenreFetcher
+  const { data, error, isLoading } = useSWRInfinite<MovieListing, Error>(
+    (pageIndex, previousPageData: MovieListing) =>
+      genreUid ? getKey(pageIndex, previousPageData, genreUid) : null,
+    movieListingFromGenreFetcher,
+    {
+      initialSize: 10,
+    }
   );
 
+  const movies: Movie[] = data
+    ?.flatMap((movieListing) => movieListing.objects)
+    .filter((movie) => !!movie) as Movie[];
+
   return {
-    movies: data,
+    movies,
     isLoading,
     isError: error,
   };
