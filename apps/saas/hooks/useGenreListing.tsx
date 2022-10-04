@@ -28,8 +28,8 @@ const createGraphQLQuery = (nextToken?: string) => {
   return { query, method };
 };
 
-const fetcher = (input: [name: string, nextToken?: string]) => {
-  const { query, method } = createGraphQLQuery(input[1]);
+const fetcher = ([, nextToken]: [name: string, nextToken?: string]) => {
+  const { query, method } = createGraphQLQuery(nextToken);
   return graphQLClient
     .request<{ [key: string]: GenreListing }>(query)
     .then(({ [method]: data }): GenreListing => data);
@@ -55,9 +55,11 @@ export const useGenreListing = () => {
     }
   );
 
-  const genres: Genre[] = data
-    ?.flatMap((genreListing) => genreListing.objects)
-    .filter((genre) => !!genre) as Genre[];
+  const genres: Genre[] | undefined =
+    data &&
+    (data
+      .flatMap((genreListing) => genreListing.objects)
+      .filter((genre) => !!genre) as Genre[]);
 
   return {
     genres,

@@ -83,7 +83,7 @@ const Movies: NextPage = () => {
         }
         onGenreChange={(name) =>
           setGenre(
-            genres.find(({ name: genreName }) => genreName === name) || null
+            genres?.find(({ name: genreName }) => genreName === name) || null
           )
         }
       />

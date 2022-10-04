@@ -6,6 +6,16 @@ import {
 } from "@skylark-reference-apps/lib";
 import { Brand, Episode, Movie, Season } from "../types/gql";
 
+type ObjectType<T> = T extends "Episode"
+  ? Episode
+  : T extends "Movie"
+  ? Movie
+  : T extends "Brand"
+  ? Brand
+  : T extends "Season"
+  ? Season
+  : never;
+
 const createGraphQLQuery = (
   type: GraphQLMediaObjectTypes,
   lookupValue: string
@@ -134,18 +144,6 @@ const createGraphQLQuery = (
 
   return { query, method };
 };
-
-// This allows us to dynamically type what we're returning
-// https://stackoverflow.com/questions/54165536/typescript-function-return-type-based-on-input-parameter
-type ObjectType<T> = T extends "Episode"
-  ? Episode
-  : T extends "Movie"
-  ? Movie
-  : T extends "Brand"
-  ? Brand
-  : T extends "Season"
-  ? Season
-  : never;
 
 const fetcher = <T extends GraphQLMediaObjectTypes>([type, lookupValue]: [
   type: T,

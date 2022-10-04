@@ -2,9 +2,9 @@ import { graphQLClient } from "@skylark-reference-apps/lib";
 
 import { fetcher } from "../../hooks/useHomepageSet";
 
-jest.mock("@skylark-reference-apps/lib");
+jest.spyOn(graphQLClient, "request");
 
-describe("graphQLClient", () => {
+describe("useHomepageSet", () => {
   let graphQlRequest: jest.Mock;
 
   beforeEach(() => {

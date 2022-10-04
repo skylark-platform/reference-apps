@@ -149,7 +149,7 @@ jobs:
         uses: foo-software/lighthouse-check-action@master
         with:
           device: "desktop"
-          urls: ${{ needs.deploy.outputs.media-url }},${{ needs.deploy.outputs.media-url }}/movies,${{ needs.deploy.outputs.saas-url }},${{ needs.deploy.outputs.saas-url }}/movies,
+          urls: ${{ needs.deploy.outputs.media-url }},${{ needs.deploy.outputs.media-url }}/movies,${{ needs.deploy.outputs.saas-url }},${{ needs.deploy.outputs.saas-url }}/movies
           gitHubAccessToken: ${{ github.token }}
           slackWebhookUrl: ${{ secrets.SLACK_ALERTS_FE_TESTING }}
           gitAuthor: ${{ github.actor }}

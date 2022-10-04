@@ -55,9 +55,11 @@ export const useMovieListing = (disable = false) => {
     }
   );
 
-  const movies: Movie[] = data
-    ?.flatMap((movieListing) => movieListing.objects)
-    .filter((movie) => !!movie) as Movie[];
+  const movies: Movie[] | undefined =
+    data &&
+    (data
+      .flatMap((movieListing) => movieListing.objects)
+      .filter((movie) => !!movie) as Movie[]);
 
   return {
     movies,
