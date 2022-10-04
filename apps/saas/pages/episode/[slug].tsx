@@ -26,7 +26,7 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
   const { data: episode, isError } = useSingleObject(
     "Episode",
-    (query?.slug as string) || "recDNG460C7UWTXRi"
+    query?.slug as string
   );
 
   if (isError || !episode) {
@@ -37,9 +37,6 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
       </div>
     );
   }
-
-  // if no object has no items then default to static video
-  const playerSrc = "/mux-video-intro.mp4";
 
   const title = getTitleByOrder({
     short: episode?.title_short || "",
@@ -52,8 +49,6 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     medium: episode?.synopsis_medium || "",
     long: episode?.synopsis_long || "",
   });
-
-  console.log(episode?.credits);
 
   return (
     <>
@@ -114,7 +109,7 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                 (img) => img?.image_type === "Poster"
               ) || episode?.images?.objects?.[0]
             )?.image_url || "",
-          src: playerSrc,
+          src: "/mux-video-intro.mp4",
           duration: 58, // TODO read this from asset
         }}
         rating={episode?.ratings?.objects?.[0]?.value}

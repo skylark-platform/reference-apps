@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "test": "jest --config=jest.config.js",
     "tsc": "tsc",
-    "codegen": "graphql-codegen --config codegen.ts",
+    "codegen": "DOTENV_CONFIG_PATH=.env.local graphql-codegen -r dotenv/config --config codegen.ts",
     "prebuild": "yarn codegen",
     "predev": "yarn codegen"
   },

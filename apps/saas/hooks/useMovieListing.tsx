@@ -61,7 +61,7 @@ export const useMovieListing = (disable = false) => {
 
   return {
     movies,
-    isLoading,
+    isLoading: isLoading && !data,
     isError: error,
   };
 };

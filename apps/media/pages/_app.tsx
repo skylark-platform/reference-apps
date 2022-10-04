@@ -16,7 +16,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   const { t } = useTranslation("common");
 
   return (
-    <StreamTVLayout appTitle={appTitle} tvShowsHref="/brand/game-of-thrones">
+    <StreamTVLayout
+      appTitle={appTitle}
+      skylarkApiUrl={process.env.NEXT_PUBLIC_SKYLARK_API_URL}
+      tvShowsHref="/brand/game-of-thrones"
+    >
       <DefaultSeo {...createDefaultSeo(appTitle, t("seo.description"))} />
       <Component {...pageProps} />
     </StreamTVLayout>

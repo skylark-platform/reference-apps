@@ -15,11 +15,13 @@ import { DimensionsContextProvider } from "../contexts";
 interface Props {
   appTitle: string;
   tvShowsHref: string;
+  skylarkApiUrl?: string;
 }
 
 export const StreamTVLayout: React.FC<Props> = ({
   appTitle,
   tvShowsHref,
+  skylarkApiUrl,
   children,
 }) => {
   const { asPath } = useRouter();
@@ -70,7 +72,7 @@ export const StreamTVLayout: React.FC<Props> = ({
         <div className="relative z-10 h-full w-full pt-mobile-header md:pt-0">
           {children}
         </div>
-        <DimensionSettings />
+        <DimensionSettings skylarkApiUrl={skylarkApiUrl} />
       </div>
     </DimensionsContextProvider>
   );

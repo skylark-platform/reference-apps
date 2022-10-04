@@ -47,9 +47,13 @@ const getKey = (
 };
 
 export const useGenreListing = () => {
-  const { data, error } = useSWRInfinite<GenreListing, Error>(getKey, fetcher, {
-    initialSize: 3,
-  });
+  const { data, error, isLoading } = useSWRInfinite<GenreListing, Error>(
+    getKey,
+    fetcher,
+    {
+      initialSize: 3,
+    }
+  );
 
   const genres: Genre[] = data
     ?.flatMap((genreListing) => genreListing.objects)
@@ -57,7 +61,7 @@ export const useGenreListing = () => {
 
   return {
     genres,
-    isLoading: !error && !data,
+    isLoading: isLoading && !data,
     isError: error,
   };
 };

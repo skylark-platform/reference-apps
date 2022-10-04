@@ -5,8 +5,6 @@ import {
   SAAS_API_KEY,
 } from "./skylark.constants";
 
-console.log(SAAS_ACCOUNT_ID, SAAS_API_ENDPOINT, SAAS_API_KEY);
-
 export const graphQLClient = new GraphQLClient(SAAS_API_ENDPOINT, {
   headers: {
     "x-api-key": SAAS_API_KEY,

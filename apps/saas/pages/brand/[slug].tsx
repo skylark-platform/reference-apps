@@ -113,8 +113,6 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         })) || [],
   }));
 
-  console.log(seasons, formattedSeasonsWithEpisodes);
-
   return (
     <>
       <NextSeo

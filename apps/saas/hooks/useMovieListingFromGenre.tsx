@@ -72,7 +72,7 @@ export const useMovieListingFromGenre = (genreUid?: string) => {
 
   return {
     movies,
-    isLoading,
+    isLoading: isLoading && !data,
     isError: error,
   };
 };

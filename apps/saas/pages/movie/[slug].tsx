@@ -35,9 +35,6 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     );
   }
 
-  // if no object has no items then default to static video
-  const playerSrc = "/mux-video-intro.mp4";
-
   const title = getTitleByOrder({
     short: movie?.title_short || "",
     medium: movie?.title_medium || "",
@@ -120,7 +117,7 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                 (img) => img?.image_type === "Poster"
               ) || movie?.images?.objects?.[0]
             )?.image_url || "",
-          src: playerSrc,
+          src: "/mux-video-intro.mp4",
           duration: 58, // TODO read this from asset
         }}
         rating={movie?.ratings?.objects?.[0]?.value}

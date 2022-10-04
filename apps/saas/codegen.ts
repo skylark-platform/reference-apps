@@ -1,14 +1,14 @@
 import type { CodegenConfig } from "@graphql-codegen/cli";
+import { SAAS_API_ENDPOINT, SAAS_API_KEY } from "@skylark-reference-apps/lib";
 
 const config: CodegenConfig = {
   overwrite: true,
   schema: {
-    "https://snjp62qr4fbvzfpf6xwlnpit54.appsync-api.eu-west-1.amazonaws.com/graphql":
-      {
-        headers: {
-          "x-api-key": "da2-ql6uljkn4vabjblyq4ty2sijhu",
-        },
+    [SAAS_API_ENDPOINT]: {
+      headers: {
+        "x-api-key": SAAS_API_KEY,
       },
+    },
   },
   documents: [
     "components/**/*.tsx",
@@ -18,7 +18,6 @@ const config: CodegenConfig = {
   ],
   generates: {
     "./types/gql.ts": {
-      // preset: 'client',
       plugins: [
         "typescript",
         {
