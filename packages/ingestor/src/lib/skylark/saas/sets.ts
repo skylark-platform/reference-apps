@@ -19,7 +19,11 @@ export const createOrUpdateGraphQLSet = async (
 ): Promise<GraphQLBaseObject> => {
   const validProperties = await getValidPropertiesForObject("Set");
   const validFields = getValidFields(
-    { title: set.title, slug: set.slug } as FieldSet,
+    {
+      title: set.title,
+      slug: set.slug,
+      set_type: set.set_type_slug,
+    } as FieldSet,
     validProperties
   );
 
