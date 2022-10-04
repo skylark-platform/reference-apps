@@ -34,6 +34,7 @@ const createGraphQLQuery = (
     synopsis_short: true,
     synopsis_medium: true,
     synopsis_long: true,
+    release_date: true,
     images: {
       objects: {
         title: true,
@@ -106,6 +107,11 @@ const createGraphQLQuery = (
     fieldsToFetch.tags = {
       objects: {
         name: true,
+      },
+    };
+    fieldsToFetch.ratings = {
+      objects: {
+        value: true,
       },
     };
     fieldsToFetch.seasons = {

@@ -58,7 +58,7 @@ describe("useSingleObject", () => {
 
       expect(graphQlRequest).toBeCalledWith(
         expect.stringContaining(
-          "{ __typename uid title slug title_short title_medium title_long synopsis_short synopsis_medium synopsis_long images { objects { title image_type image_url } }"
+          "{ __typename uid title slug title_short title_medium title_long synopsis_short synopsis_medium synopsis_long release_date images { objects { title image_type image_url } }"
         )
       );
     });

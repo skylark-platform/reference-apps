@@ -79,7 +79,7 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           duration: 58, // TODO read this from asset
         }}
         rating={getFirstRatingValue(episode.ratings)}
-        releaseDate={undefined}
+        releaseDate={episode.release_date || ""}
         season={{
           number: episode?.seasons?.objects?.[0]?.season_number as number,
         }}

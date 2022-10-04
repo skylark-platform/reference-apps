@@ -11,6 +11,8 @@ import {
   ApiTagCategory,
   ApiThemeGenre,
   SKYLARK_API,
+  SAAS_ACCOUNT_ID,
+  SAAS_API_ENDPOINT,
 } from "@skylark-reference-apps/lib";
 import axios from "axios";
 import { Attachment } from "airtable";
@@ -45,11 +47,7 @@ import {
   signInToCognito,
   uploadToWorkflowServiceWatchBucket,
 } from "./lib/amplify";
-import {
-  SAAS_ACCOUNT_ID,
-  SAAS_API_ENDPOINT,
-  UNLICENSED_BY_DEFAULT,
-} from "./lib/constants";
+import { UNLICENSED_BY_DEFAULT } from "./lib/constants";
 import {
   createGraphQLMediaObjects,
   createOrUpdateGraphQLCredits,

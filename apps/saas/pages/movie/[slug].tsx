@@ -82,7 +82,7 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           duration: 58, // TODO read this from asset
         }}
         rating={getFirstRatingValue(movie?.ratings)}
-        // releaseDate={movie?.releaseDate}
+        releaseDate={movie?.release_date || ""}
         synopsis={synopsis}
         themes={convertObjectToName(movie?.themes)}
         title={title}
