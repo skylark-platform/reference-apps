@@ -15,6 +15,7 @@ import { MediaObjectFetcher } from "../components/mediaObjectFetcher";
 import { Genre, Movie } from "../types/gql";
 import { useGenreListing } from "../hooks/useGenreListing";
 import { useMovieListingFromGenre } from "../hooks/useMovieListingFromGenre";
+import { getGraphQLImageSrc } from "../lib/utils";
 
 const MovieDataFetcher: React.FC<{
   uid: string;
@@ -32,7 +33,7 @@ const MovieDataFetcher: React.FC<{
             },
             ["short", "medium"]
           ),
-          image: movie?.images?.objects?.[0]?.image_url || "",
+          image: getGraphQLImageSrc(movie?.images, "Thumbnail"),
           uid: movie.uid,
           href: `/movie/${movie.uid}`,
           releaseDate: "",

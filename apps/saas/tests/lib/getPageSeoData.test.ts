@@ -4,7 +4,7 @@ import { Episode } from "../../types/gql";
 
 jest.spyOn(graphQLClient, "request");
 
-describe("useGenreListing", () => {
+describe("getPageSeoData.ts", () => {
   let graphQlRequest: jest.Mock;
 
   beforeEach(() => {

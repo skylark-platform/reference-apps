@@ -8,6 +8,7 @@ import {
 import { useRouter } from "next/router";
 import { useSingleObject } from "../../hooks/useSingleObject";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
+import { convertObjectToName, formatGraphQLCredits, getFirstRatingValue, getGraphQLCreditsByType, getGraphQLImageSrc } from "../../lib/utils";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject(
@@ -64,65 +65,25 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
             "",
         }}
         credits={{
-          actors:
-            episode?.credits?.objects
-              ?.filter(
-                (credit) => credit?.roles?.objects?.[0]?.title === "Actor"
-              )
-              ?.map((credit) =>
-                credit?.character && credit?.people?.objects?.[0]?.name
-                  ? `${credit?.people?.objects?.[0]?.name} as ${credit?.character}`
-                  : credit?.people?.objects?.[0]?.name || ""
-              ) || [],
-          writers:
-            episode?.credits?.objects
-              ?.filter(
-                (credit) => credit?.roles?.objects?.[0]?.title === "Writer"
-              )
-              ?.map((credit) =>
-                credit?.character && credit?.people?.objects?.[0]?.name
-                  ? `${credit?.people?.objects?.[0]?.name} as ${credit?.character}`
-                  : credit?.people?.objects?.[0]?.name || ""
-              ) || [],
-          directors:
-            episode?.credits?.objects
-              ?.filter(
-                (credit) => credit?.roles?.objects?.[0]?.title === "Director"
-              )
-              ?.map((credit) =>
-                credit?.character && credit?.people?.objects?.[0]?.name
-                  ? `${credit?.people?.objects?.[0]?.name} as ${credit?.character}`
-                  : credit?.people?.objects?.[0]?.name || ""
-              ) || [],
+          actors: formatGraphQLCredits(getGraphQLCreditsByType(episode?.credits?.objects, "Actor")),
+          writers: formatGraphQLCredits(getGraphQLCreditsByType(episode?.credits?.objects, "Writer")),
+          directors: formatGraphQLCredits(getGraphQLCreditsByType(episode?.credits?.objects, "Director")),
         }}
-        genres={
-          episode?.genres?.objects?.map((genre) =>
-            genre && genre.name ? genre.name : ""
-          ) || []
-        }
+        genres={convertObjectToName(episode.genres)}
         number={episode?.episode_number || ""}
         player={{
           assetId: "1",
-          poster:
-            (
-              episode?.images?.objects?.find(
-                (img) => img?.image_type === "Poster"
-              ) || episode?.images?.objects?.[0]
-            )?.image_url || "",
+          poster: getGraphQLImageSrc(episode?.images, "Poster"),
           src: "/mux-video-intro.mp4",
           duration: 58, // TODO read this from asset
         }}
-        rating={episode?.ratings?.objects?.[0]?.value}
+        rating={getFirstRatingValue(episode.ratings)}
         releaseDate={undefined}
         season={{
           number: episode?.seasons?.objects?.[0]?.season_number as number,
         }}
         synopsis={synopsis}
-        themes={
-          episode?.themes?.objects?.map((themes) =>
-            themes && themes.name ? themes.name : ""
-          ) || []
-        }
+        themes={convertObjectToName(episode.themes)}
         title={title}
       />
     </>

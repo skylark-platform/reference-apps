@@ -14,6 +14,7 @@ import { useSingleObject } from "../../hooks/useSingleObject";
 import { Episode, Season } from "../../types/gql";
 import { MediaObjectFetcher } from "../../components/mediaObjectFetcher";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
+import { getGraphQLImageSrc } from "../../lib/utils";
 
 const EpisodeDataFetcher: React.FC<{
   uid: string;
@@ -39,7 +40,7 @@ const EpisodeDataFetcher: React.FC<{
             },
             ["medium", "short", "long"]
           ),
-          image: episode?.images?.objects?.[0]?.image_url || "",
+          image: getGraphQLImageSrc(episode?.images, "Thumbnail"),
           number: episode?.episode_number as number,
           uid: episode.uid,
           href: `/episode/${episode.uid}`,
@@ -122,7 +123,7 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
       />
       <TVShowBrandPage
         EpisodeDataFetcher={EpisodeDataFetcher}
-        bgImage={brand?.images?.objects?.[0]?.image_url || ""}
+        bgImage={getGraphQLImageSrc(brand?.images, "Main")}
         loading={!brand}
         rating={brand?.ratings?.objects?.[0]?.value}
         seasons={formattedSeasonsWithEpisodes || []}

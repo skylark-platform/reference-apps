@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
 import { useSingleObject } from "../../hooks/useSingleObject";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
+import { convertObjectToName, formatGraphQLCredits, getFirstRatingValue, getGraphQLCreditsByType, getGraphQLImageSrc } from "../../lib/utils";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject("Movie", context.query.slug as string);
@@ -72,62 +73,22 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           title: brandTitle,
         }}
         credits={{
-          actors:
-            movie?.credits?.objects
-              ?.filter(
-                (credit) => credit?.roles?.objects?.[0]?.title === "Actor"
-              )
-              ?.map((credit) =>
-                credit?.character && credit?.people?.objects?.[0]?.name
-                  ? `${credit?.people?.objects?.[0]?.name} as ${credit?.character}`
-                  : credit?.people?.objects?.[0]?.name || ""
-              ) || [],
-          writers:
-            movie?.credits?.objects
-              ?.filter(
-                (credit) => credit?.roles?.objects?.[0]?.title === "Writer"
-              )
-              ?.map((credit) =>
-                credit?.character && credit?.people?.objects?.[0]?.name
-                  ? `${credit?.people?.objects?.[0]?.name} as ${credit?.character}`
-                  : credit?.people?.objects?.[0]?.name || ""
-              ) || [],
-          directors:
-            movie?.credits?.objects
-              ?.filter(
-                (credit) => credit?.roles?.objects?.[0]?.title === "Director"
-              )
-              ?.map((credit) =>
-                credit?.character && credit?.people?.objects?.[0]?.name
-                  ? `${credit?.people?.objects?.[0]?.name} as ${credit?.character}`
-                  : credit?.people?.objects?.[0]?.name || ""
-              ) || [],
+          actors: formatGraphQLCredits(getGraphQLCreditsByType(movie?.credits?.objects, "Actor")),
+          writers: formatGraphQLCredits(getGraphQLCreditsByType(movie?.credits?.objects, "Writer")),
+          directors: formatGraphQLCredits(getGraphQLCreditsByType(movie?.credits?.objects, "Director")),
         }}
-        genres={
-          movie?.genres?.objects?.map((genre) =>
-            genre && genre.name ? genre.name : ""
-          ) || []
-        }
+        genres={convertObjectToName(movie?.genres)}
         loading={!movie}
         player={{
           assetId: "1",
-          poster:
-            (
-              movie?.images?.objects?.find(
-                (img) => img?.image_type === "Poster"
-              ) || movie?.images?.objects?.[0]
-            )?.image_url || "",
+          poster: getGraphQLImageSrc(movie?.images, "Poster"),
           src: "/mux-video-intro.mp4",
           duration: 58, // TODO read this from asset
         }}
-        rating={movie?.ratings?.objects?.[0]?.value}
+        rating={getFirstRatingValue(movie?.ratings)}
         // releaseDate={movie?.releaseDate}
         synopsis={synopsis}
-        themes={
-          movie?.themes?.objects?.map((genre) =>
-            genre && genre.name ? genre.name : ""
-          ) || []
-        }
+        themes={convertObjectToName(movie?.themes)}
         title={title}
       />
     </>
