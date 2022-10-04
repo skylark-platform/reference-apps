@@ -59,7 +59,8 @@ jobs:
           - "media"
           - "saas"
     outputs:
-      url: ${{ steps.cdk.outputs.url }}
+      media-url: ${{ steps.urls.outputs.media-url }}
+      saas-url: ${{ steps.urls.outputs.saas-url }}
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/deploy
@@ -79,6 +80,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_SKYLARK_DEV }}
           saas-api-token: ${{ secrets.SHOWCASE_SAAS_API_KEY }}
           saas-account-id: ${{ secrets.SHOWCASE_SAAS_ACCOUNT_ID }}
+      - id: urls
+        run: echo "::set-output name=${{ matrix.app }}-url::${{ steps.cdk.outputs.url }}"
+        shell: bash
 
   ingestor:
     name: Content Ingestor
@@ -121,7 +125,8 @@ jobs:
           result-encoding: string
           script: |
             const json = JSON.stringify([
-              { label: "Media", value: "${{ needs.deploy.outputs.url }}" },
+              { label: "Media", value: "${{ needs.deploy.outputs.media-url }}" },
+              { label: "SaaS", value: "${{ needs.deploy.outputs.saas-url }}" },
             ]);
             return json;
       - uses: technote-space/workflow-conclusion-action@v2
@@ -143,8 +148,8 @@ jobs:
       - name: Lighthouse
         uses: foo-software/lighthouse-check-action@master
         with:
-          device: "all"
-          urls: ${{ needs.deploy.outputs.url }},${{ needs.deploy.outputs.url }}/movies
+          device: "desktop"
+          urls: ${{ needs.deploy.outputs.media-url }},${{ needs.deploy.outputs.media-url }}/movies,${{ needs.deploy.outputs.saas-url }},${{ needs.deploy.outputs.saas-url }}/movies,
           gitHubAccessToken: ${{ github.token }}
           slackWebhookUrl: ${{ secrets.SLACK_ALERTS_FE_TESTING }}
           gitAuthor: ${{ github.actor }}
