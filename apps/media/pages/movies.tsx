@@ -32,7 +32,7 @@ const MovieDataFetcher: React.FC<{
           image: getImageSrc(movie.images, "Thumbnail", "300x300"),
           slug: movie.slug,
           uid: movie.uid,
-          href: `/movies/${movie.slug}`,
+          href: `/movie/${movie.slug}`,
           releaseDate: movie.releaseDate,
           duration: "1hr 38m",
         })}
