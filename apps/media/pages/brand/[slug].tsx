@@ -38,7 +38,7 @@ const EpisodeDataFetcher: React.FC<{
           slug: episode.slug,
           number: episode?.number,
           uid: episode.uid,
-          href: `/episodes/${episode.slug}`,
+          href: `/episode/${episode.slug}`,
         })}
       </>
     )}
