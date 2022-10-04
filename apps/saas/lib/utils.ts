@@ -108,9 +108,9 @@ export const getSynopsisByOrderForGraphQLObject = (
   }
   return getSynopsisByOrder(
     {
-      short: obj?.title_short || "",
-      medium: obj?.title_medium || "",
-      long: obj?.title_long || "",
+      short: obj?.synopsis_short || "",
+      medium: obj?.synopsis_medium || "",
+      long: obj?.synopsis_long || "",
     },
     priority
   );
