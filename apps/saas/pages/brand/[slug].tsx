@@ -6,15 +6,15 @@ import {
   BrandPageParsedEpisode,
   TVShowBrandPage,
 } from "@skylark-reference-apps/react";
-import {
-  getTitleByOrder,
-  getSynopsisByOrder,
-} from "@skylark-reference-apps/lib";
 import { useSingleObject } from "../../hooks/useSingleObject";
 import { Episode, Season } from "../../types/gql";
 import { MediaObjectFetcher } from "../../components/mediaObjectFetcher";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
-import { getGraphQLImageSrc } from "../../lib/utils";
+import {
+  getGraphQLImageSrc,
+  getSynopsisByOrderForGraphQLObject,
+  getTitleByOrderForGraphQLObject,
+} from "../../lib/utils";
 
 const EpisodeDataFetcher: React.FC<{
   uid: string;
@@ -24,22 +24,12 @@ const EpisodeDataFetcher: React.FC<{
     {(episode: Episode) => (
       <>
         {children({
-          title: getTitleByOrder(
-            {
-              short: episode?.title_short || "",
-              medium: episode?.title_medium || "",
-              long: episode?.title_long || "",
-            },
-            ["short", "medium"]
-          ),
-          synopsis: getSynopsisByOrder(
-            {
-              short: episode?.synopsis_short || "",
-              medium: episode?.synopsis_medium || "",
-              long: episode?.synopsis_long || "",
-            },
-            ["medium", "short", "long"]
-          ),
+          title: getTitleByOrderForGraphQLObject(episode, ["short", "medium"]),
+          synopsis: getSynopsisByOrderForGraphQLObject(episode, [
+            "medium",
+            "short",
+            "long",
+          ]),
           image: getGraphQLImageSrc(episode?.images, "Thumbnail"),
           number: episode?.episode_number as number,
           uid: episode.uid,
@@ -77,17 +67,8 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     );
   }
 
-  const title = getTitleByOrder({
-    short: brand?.title_short || "",
-    medium: brand?.title_medium || "",
-    long: brand?.title_long || "",
-  });
-
-  const synopsis = getSynopsisByOrder({
-    short: brand?.synopsis_short || "",
-    medium: brand?.synopsis_medium || "",
-    long: brand?.synopsis_long || "",
-  });
+  const title = getTitleByOrderForGraphQLObject(brand);
+  const synopsis = getSynopsisByOrderForGraphQLObject(brand);
 
   // eslint-disable-next-line no-underscore-dangle
   const seasons = brand?.seasons?.objects?.sort((s1, s2) =>
@@ -105,11 +86,7 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           uid: episode?.uid || "",
           slug: "",
           self: "",
-          title: getTitleByOrder({
-            short: brand?.title_short || "",
-            medium: brand?.title_medium || "",
-            long: brand?.title_long || "",
-          }),
+          title: getTitleByOrderForGraphQLObject(episode),
           number: episode?.episode_number as number,
         })) || [],
   }));

@@ -13,12 +13,15 @@ import "dayjs/locale/pt";
  */
 export const getTitleByOrder = (
   titles: { [k in TitleTypes]: string } | undefined,
-  priority: TitleTypes[] = ["long", "medium", "short"],
+  priority?: TitleTypes[],
   objectTitle?: string
 ): string => {
   if (!titles) return objectTitle || "";
 
-  const foundType = priority.find((type) => titles[type] || null);
+  const defaultPriority: TitleTypes[] = ["long", "medium", "short"];
+  const foundType = (priority || defaultPriority).find(
+    (type) => titles[type] || null
+  );
 
   return foundType ? titles[foundType] : objectTitle || "";
 };
@@ -32,11 +35,14 @@ export const getTitleByOrder = (
  */
 export const getSynopsisByOrder = (
   synopsis: { [s in SynopsisTypes]: string } | undefined,
-  priority: SynopsisTypes[] = ["long", "medium", "short"]
+  priority?: SynopsisTypes[]
 ): string => {
   if (!synopsis) return "";
 
-  const foundType = priority?.find((type) => synopsis[type] || null);
+  const defaultPriority: SynopsisTypes[] = ["long", "medium", "short"];
+  const foundType = (priority || defaultPriority).find(
+    (type) => synopsis[type] || null
+  );
 
   return foundType ? synopsis[foundType] : "";
 };

@@ -6,16 +6,16 @@ import {
   MoviesPage,
 } from "@skylark-reference-apps/react";
 import useTranslation from "next-translate/useTranslation";
-import {
-  getTitleByOrder,
-  sortArrayIntoAlphabeticalOrder,
-} from "@skylark-reference-apps/lib";
+import { sortArrayIntoAlphabeticalOrder } from "@skylark-reference-apps/lib";
 import { useMovieListing } from "../hooks/useMovieListing";
 import { MediaObjectFetcher } from "../components/mediaObjectFetcher";
 import { Genre, Movie } from "../types/gql";
 import { useGenreListing } from "../hooks/useGenreListing";
 import { useMovieListingFromGenre } from "../hooks/useMovieListingFromGenre";
-import { getGraphQLImageSrc } from "../lib/utils";
+import {
+  getGraphQLImageSrc,
+  getTitleByOrderForGraphQLObject,
+} from "../lib/utils";
 
 const MovieDataFetcher: React.FC<{
   uid: string;
@@ -25,14 +25,7 @@ const MovieDataFetcher: React.FC<{
     {(movie: Movie) => (
       <>
         {children({
-          title: getTitleByOrder(
-            {
-              short: movie.title_short || "",
-              medium: movie.title_medium || "",
-              long: movie.title_long || "",
-            },
-            ["short", "medium"]
-          ),
+          title: getTitleByOrderForGraphQLObject(movie, ["short", "medium"]),
           image: getGraphQLImageSrc(movie?.images, "Thumbnail"),
           uid: movie.uid,
           href: `/movie/${movie.uid}`,

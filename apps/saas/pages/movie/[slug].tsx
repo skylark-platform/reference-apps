@@ -1,14 +1,18 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { PlaybackPage } from "@skylark-reference-apps/react";
-import {
-  getSynopsisByOrder,
-  getTitleByOrder,
-} from "@skylark-reference-apps/lib";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
 import { useSingleObject } from "../../hooks/useSingleObject";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
-import { convertObjectToName, formatGraphQLCredits, getFirstRatingValue, getGraphQLCreditsByType, getGraphQLImageSrc } from "../../lib/utils";
+import {
+  convertObjectToName,
+  formatGraphQLCredits,
+  getFirstRatingValue,
+  getGraphQLCreditsByType,
+  getGraphQLImageSrc,
+  getSynopsisByOrderForGraphQLObject,
+  getTitleByOrderForGraphQLObject,
+} from "../../lib/utils";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject("Movie", context.query.slug as string);
@@ -36,30 +40,16 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     );
   }
 
-  const title = getTitleByOrder({
-    short: movie?.title_short || "",
-    medium: movie?.title_medium || "",
-    long: movie?.title_long || "",
-  });
-
   const firstBrand =
-    movie?.brands?.objects &&
-    movie?.brands?.objects.length > 0 &&
-    movie?.brands?.objects[0];
+    (movie?.brands?.objects &&
+      movie?.brands?.objects.length > 0 &&
+      movie?.brands?.objects[0]) ||
+    undefined;
 
-  const brandTitle = firstBrand
-    ? getTitleByOrder({
-        short: firstBrand.title_short || "",
-        medium: firstBrand.title_medium || "",
-        long: firstBrand.title_long || "",
-      })
-    : "";
+  const brandTitle = getTitleByOrderForGraphQLObject(firstBrand);
 
-  const synopsis = getSynopsisByOrder({
-    short: movie?.synopsis_short || "",
-    medium: movie?.synopsis_medium || "",
-    long: movie?.synopsis_long || "",
-  });
+  const title = getTitleByOrderForGraphQLObject(movie);
+  const synopsis = getSynopsisByOrderForGraphQLObject(movie);
 
   return (
     <>
@@ -73,9 +63,15 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           title: brandTitle,
         }}
         credits={{
-          actors: formatGraphQLCredits(getGraphQLCreditsByType(movie?.credits?.objects, "Actor")),
-          writers: formatGraphQLCredits(getGraphQLCreditsByType(movie?.credits?.objects, "Writer")),
-          directors: formatGraphQLCredits(getGraphQLCreditsByType(movie?.credits?.objects, "Director")),
+          actors: formatGraphQLCredits(
+            getGraphQLCreditsByType(movie?.credits?.objects, "Actor")
+          ),
+          writers: formatGraphQLCredits(
+            getGraphQLCreditsByType(movie?.credits?.objects, "Writer")
+          ),
+          directors: formatGraphQLCredits(
+            getGraphQLCreditsByType(movie?.credits?.objects, "Director")
+          ),
         }}
         genres={convertObjectToName(movie?.genres)}
         loading={!movie}

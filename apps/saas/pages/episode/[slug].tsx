@@ -1,14 +1,18 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 import { PlaybackPage } from "@skylark-reference-apps/react";
-import {
-  getSynopsisByOrder,
-  getTitleByOrder,
-} from "@skylark-reference-apps/lib";
 import { useRouter } from "next/router";
 import { useSingleObject } from "../../hooks/useSingleObject";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
-import { convertObjectToName, formatGraphQLCredits, getFirstRatingValue, getGraphQLCreditsByType, getGraphQLImageSrc } from "../../lib/utils";
+import {
+  convertObjectToName,
+  formatGraphQLCredits,
+  getFirstRatingValue,
+  getGraphQLCreditsByType,
+  getGraphQLImageSrc,
+  getSynopsisByOrderForGraphQLObject,
+  getTitleByOrderForGraphQLObject,
+} from "../../lib/utils";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject(
@@ -39,17 +43,8 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     );
   }
 
-  const title = getTitleByOrder({
-    short: episode?.title_short || "",
-    medium: episode?.title_medium || "",
-    long: episode?.title_long || "",
-  });
-
-  const synopsis = getSynopsisByOrder({
-    short: episode?.synopsis_short || "",
-    medium: episode?.synopsis_medium || "",
-    long: episode?.synopsis_long || "",
-  });
+  const title = getTitleByOrderForGraphQLObject(episode);
+  const synopsis = getSynopsisByOrderForGraphQLObject(episode);
 
   return (
     <>
@@ -60,14 +55,20 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
       />
       <PlaybackPage
         brand={{
-          title:
-            episode?.seasons?.objects?.[0]?.brands?.objects?.[0]?.title_short ||
-            "",
+          title: getTitleByOrderForGraphQLObject(
+            episode?.seasons?.objects?.[0]?.brands?.objects?.[0]
+          ),
         }}
         credits={{
-          actors: formatGraphQLCredits(getGraphQLCreditsByType(episode?.credits?.objects, "Actor")),
-          writers: formatGraphQLCredits(getGraphQLCreditsByType(episode?.credits?.objects, "Writer")),
-          directors: formatGraphQLCredits(getGraphQLCreditsByType(episode?.credits?.objects, "Director")),
+          actors: formatGraphQLCredits(
+            getGraphQLCreditsByType(episode?.credits?.objects, "Actor")
+          ),
+          writers: formatGraphQLCredits(
+            getGraphQLCreditsByType(episode?.credits?.objects, "Writer")
+          ),
+          directors: formatGraphQLCredits(
+            getGraphQLCreditsByType(episode?.credits?.objects, "Director")
+          ),
         }}
         genres={convertObjectToName(episode.genres)}
         number={episode?.episode_number || ""}
