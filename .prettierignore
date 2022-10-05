@@ -3,3 +3,4 @@ coverage
 build
 cdk.out
 dist
+outputs
