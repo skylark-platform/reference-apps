@@ -70,16 +70,16 @@ export const getGraphQLImageSrc = (
   }
 
   // Filter any Images with an empty URL
-  const imagesWithUrls = images.objects.filter((img) => !!img?.image_url);
+  const imagesWithUrls = images.objects.filter((img) => !!img?.url);
   if (imagesWithUrls.length === 0) {
     return "";
   }
 
   // Default to first image if no matching type is found
   const image =
-    imagesWithUrls.find((img) => img?.image_type === type) || imagesWithUrls[0];
+    imagesWithUrls.find((img) => img?.type === type) || imagesWithUrls[0];
 
-  return image?.image_url || "";
+  return image?.url || "";
 };
 
 export const getTitleByOrderForGraphQLObject = (

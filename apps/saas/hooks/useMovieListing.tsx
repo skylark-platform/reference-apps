@@ -55,6 +55,7 @@ export const useMovieListing = (disable = false) => {
     }
   );
 
+  // Allow movies to be undefined as an empty array is truthy and would break isLoading
   const movies: Movie[] | undefined =
     data &&
     (data

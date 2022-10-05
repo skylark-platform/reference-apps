@@ -1,4 +1,3 @@
-import { FieldSet } from "airtable";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import { graphQLClient } from "@skylark-reference-apps/lib";
 
@@ -22,8 +21,10 @@ export const createOrUpdateGraphQLSet = async (
     {
       title: set.title,
       slug: set.slug,
-      set_type: set.set_type_slug,
-    } as FieldSet,
+      // TODO Switch type to EnumType when its fixed
+      // type: new EnumType(set.graphQlSetType),
+      type: set.graphQlSetType,
+    },
     validProperties
   );
 

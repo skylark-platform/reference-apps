@@ -32,8 +32,8 @@ const credits: Credit[] = [
 
 const images: ImageListing = {
   objects: [
-    { uid: "image-1", image_url: "poster.jpg", image_type: "Poster" },
-    { uid: "image-1", image_url: "thumbnail.jpg", image_type: "Thumbnail" },
+    { uid: "image-1", url: "poster.jpg", type: "Poster" },
+    { uid: "image-1", url: "thumbnail.jpg", type: "Thumbnail" },
   ],
 };
 

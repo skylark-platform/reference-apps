@@ -7,6 +7,7 @@ export interface SetConfig extends Partial<ApiEntertainmentObject> {
   title: string;
   slug: string;
   set_type_slug: SetTypes;
+  graphQlSetType: "RAIL" | "COLLECTION" | "SLIDER" | "PAGE";
   contents: (
     | {
         type: ApiObjectType;

@@ -38,8 +38,8 @@ const createGraphQLQuery = (
     images: {
       objects: {
         title: true,
-        image_type: true,
-        image_url: true,
+        type: true,
+        url: true,
       },
     },
   };

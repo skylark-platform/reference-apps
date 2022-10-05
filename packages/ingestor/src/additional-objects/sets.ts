@@ -16,6 +16,7 @@ const newTVReleases: SetConfig = {
   title: "New TV Releases",
   slug: "new-tv-releases",
   set_type_slug: "rail",
+  graphQlSetType: "RAIL",
   contents: [
     { type: "brands", slug: "house-of-the-dragon" },
     { type: "brands", slug: "better-call-saul" },
@@ -29,6 +30,7 @@ const spotlightMovies: SetConfig = {
   title: "Spotlight movies",
   slug: "spotlight-movies",
   set_type_slug: "rail",
+  graphQlSetType: "RAIL",
   contents: [
     { type: "movies", slug: "the-hustle" },
     { type: "movies", slug: "the-kid-who-would-be-king" },
@@ -51,6 +53,7 @@ const homePageSlider: SetConfig = {
   title: "Home page hero",
   slug: "media-reference-home-page-hero",
   set_type_slug: "slider",
+  graphQlSetType: "SLIDER",
   contents: [
     { type: "brands", slug: "game-of-thrones" },
     { type: "movies", slug: "deadpool-2" },
@@ -65,6 +68,7 @@ const tarantinoMoviesCollection: SetConfig = {
   title: "Tarantino Movies Collection",
   slug: "tarantino-movies-collection",
   set_type_slug: "collection",
+  graphQlSetType: "COLLECTION",
   contents: [{ type: "dynamic-object", name: quentinTarantinoMovies.name }],
 };
 
@@ -95,6 +99,7 @@ const discoverCollection: SetConfig = {
   title: "Discover Collection",
   slug: "discover-collection",
   set_type_slug: "collection",
+  graphQlSetType: "COLLECTION",
   contents: [
     {
       type: "set",
@@ -110,6 +115,7 @@ const mediaReferenceHomepage: SetConfig = {
   title: "Homepage",
   slug: "media-reference-homepage",
   set_type_slug: "homepage",
+  graphQlSetType: "PAGE",
   contents: [
     { type: "set", set_type: "slider", slug: homePageSlider.slug },
     { type: "set", set_type: "rail", slug: spotlightMovies.slug },

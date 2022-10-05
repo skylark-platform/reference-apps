@@ -23,9 +23,7 @@ describe("getPageSeoData.ts", () => {
       synopsis_short: "short synopsis",
       synopsis_medium: "medium synopsis",
       images: {
-        objects: [
-          { uid: "image-1", image_url: "https://skylark.com/image.jpg" },
-        ],
+        objects: [{ uid: "image-1", url: "https://skylark.com/image.jpg" }],
       },
     };
     graphQlRequest.mockResolvedValueOnce({

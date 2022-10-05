@@ -46,8 +46,8 @@ export const getSeoDataForObject = async (
         images: {
           objects: {
             title: true,
-            image_type: true,
-            image_url: true,
+            type: true,
+            url: true,
           },
         },
       },
@@ -74,7 +74,7 @@ export const getSeoDataForObject = async (
 
   const images =
     data.images?.objects?.map(
-      (image): SeoObjectImage => ({ url: image?.image_url || "" })
+      (image): SeoObjectImage => ({ url: image?.url || "" })
     ) || [];
 
   return {

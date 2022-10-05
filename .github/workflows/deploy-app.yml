@@ -79,7 +79,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_SKYLARK_DEV }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_SKYLARK_DEV }}
           saas-api-token: ${{ secrets.SHOWCASE_SAAS_API_KEY }}
-          saas-account-id: ${{ secrets.SHOWCASE_SAAS_ACCOUNT_ID }}
+          saas-account-id: ${{ needs.prepare.outputs.git-branch }}
       - id: urls
         run: echo "::set-output name=${{ matrix.app }}-url::${{ steps.cdk.outputs.url }}"
         shell: bash
@@ -111,7 +111,7 @@ jobs:
           create-additional-objects: "true"
           saas-ingest: ${{ matrix.version == 'SaaS' && 'true' || 'false' }}
           saas-api-token: ${{ secrets.SHOWCASE_SAAS_API_KEY }}
-          saas-account-id: ${{ secrets.SHOWCASE_SAAS_ACCOUNT_ID }}
+          saas-account-id: ${{ needs.prepare.outputs.git-branch }}
 
   signal:
     name: Signal

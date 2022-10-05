@@ -28,7 +28,7 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
   const { data: movie, isError } = useSingleObject(
     "Movie",
-    (query?.slug as string) || "recLa35g2nEPBVqKp"
+    query?.slug as string
   );
 
   if (isError) {
