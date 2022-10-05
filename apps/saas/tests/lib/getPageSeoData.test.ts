@@ -5,6 +5,9 @@ import { Episode } from "../../types/gql";
 jest.spyOn(graphQLClient, "request");
 
 describe("getPageSeoData.ts", () => {
+
+  // TODO add test for throwing NotFound and generic errors
+
   let graphQlRequest: jest.Mock;
 
   beforeEach(() => {
@@ -30,7 +33,7 @@ describe("getPageSeoData.ts", () => {
       getEpisode: episode,
     });
 
-    const seo = await getSeoDataForObject("Episode", "uid");
+    const seo = await getSeoDataForObject("Episode", "uid", "");
 
     expect(seo).toEqual({
       title: "medium title",

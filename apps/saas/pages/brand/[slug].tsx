@@ -41,7 +41,7 @@ const EpisodeDataFetcher: React.FC<{
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const seo = await getSeoDataForObject("Brand", context.query.slug as string);
+  const seo = await getSeoDataForObject("Brand", context.query.slug as string, context.locale || "");
 
   return {
     props: {

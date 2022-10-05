@@ -22,6 +22,9 @@ describe("saas/create.ts", () => {
   });
 
   describe("createOrUpdateGraphQlObjectsUsingIntrospection", () => {
+
+    // TODO add test for the default license being added
+
     const records: Partial<Record<FieldSet>>[] = [
       {
         id: "brand_1",
@@ -51,7 +54,10 @@ describe("saas/create.ts", () => {
     it("makes a request to check whether the brand exists", async () => {
       await createOrUpdateGraphQlObjectsUsingIntrospection(
         "Brand",
-        records as Records<FieldSet>
+        records as Records<FieldSet>,
+        {
+          all: [],
+        }
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         2,
@@ -71,7 +77,10 @@ describe("saas/create.ts", () => {
 
       await createOrUpdateGraphQlObjectsUsingIntrospection(
         "Brand",
-        records as Records<FieldSet>
+        records as Records<FieldSet>,
+        {
+          all: [],
+        }
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         3,
@@ -82,7 +91,10 @@ describe("saas/create.ts", () => {
     it("makes a request to update the brand when it exists", async () => {
       await createOrUpdateGraphQlObjectsUsingIntrospection(
         "Brand",
-        records as Records<FieldSet>
+        records as Records<FieldSet>,
+        {
+          all: [],
+        }
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         3,
@@ -104,7 +116,10 @@ describe("saas/create.ts", () => {
 
       await createOrUpdateGraphQlObjectsUsingIntrospection(
         "Brand",
-        manyRecords as Records<FieldSet>
+        manyRecords as Records<FieldSet>,
+        {
+          all: [],
+        }
       );
       expect(graphQlRequest).toHaveBeenCalledTimes(4);
       expect(graphQlRequest).toHaveBeenNthCalledWith(
@@ -297,7 +312,6 @@ describe("saas/create.ts", () => {
       dimensions: {
         affiliates: [],
         customerTypes: [],
-        languages: [],
         deviceTypes: [],
         locales: [],
         operatingSystems: [],

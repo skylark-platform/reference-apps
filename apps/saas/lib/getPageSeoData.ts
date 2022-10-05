@@ -6,6 +6,7 @@ import {
 } from "@skylark-reference-apps/lib";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import { Entertainment } from "../types/gql";
+import { addDimensionsToGraphQLMutation } from "./utils";
 
 interface SeoObjectImage {
   url: string;
@@ -19,7 +20,8 @@ export interface SeoObjectData {
 
 export const getSeoDataForObject = async (
   type: GraphQLObjectTypes,
-  lookupValue: string
+  lookupValue: string,
+  language: string
 ): Promise<SeoObjectData> => {
   // Helper to use the external_id when an airtable record ID is given
   const lookupField = lookupValue.startsWith("rec") ? "external_id" : "uid";
@@ -32,7 +34,12 @@ export const getSeoDataForObject = async (
       [method]: {
         __args: {
           [lookupField]: lookupValue,
-          ignore_availability: true,
+          ...addDimensionsToGraphQLMutation({
+            language,
+            // TODO can we work out these before the client loads the page?
+            customerType: "premium",
+            deviceType: "pc",
+          })
         },
         uid: true,
         title: true,
@@ -56,30 +63,47 @@ export const getSeoDataForObject = async (
 
   const query = jsonToGraphQLQuery(queryAsJson);
 
-  const { [method]: data } = await graphQLClient.request<{
-    [key: string]: Entertainment;
-  }>(query);
+  try {
+    const { [method]: data } = await graphQLClient.request<{
+      [key: string]: Entertainment;
+    }>(query);
 
-  const title = getTitleByOrder({
-    short: data?.title_short || "",
-    medium: data?.title_medium || "",
-    long: data?.title_long || "",
-  });
+    const title = getTitleByOrder({
+      short: data?.title_short || "",
+      medium: data?.title_medium || "",
+      long: data?.title_long || "",
+    });
 
-  const synopsis = getSynopsisByOrder({
-    short: data?.synopsis_short || "",
-    medium: data?.synopsis_medium || "",
-    long: data?.synopsis_long || "",
-  });
+    const synopsis = getSynopsisByOrder({
+      short: data?.synopsis_short || "",
+      medium: data?.synopsis_medium || "",
+      long: data?.synopsis_long || "",
+    });
 
-  const images =
-    data.images?.objects?.map(
-      (image): SeoObjectImage => ({ url: image?.url || "" })
-    ) || [];
+    const images =
+      data.images?.objects?.map(
+        (image): SeoObjectImage => ({ url: image?.url || "" })
+      ) || [];
 
-  return {
-    title,
-    synopsis,
-    images,
-  };
+    return {
+      title,
+      synopsis,
+      images,
+    };
+  } catch(err) {
+    const error = err as { response?: { errors?: { errorType: string, message: string }[] } }
+    if(error && error?.response?.errors?.[0].errorType === "NotFound") {
+      return {
+        title: "Not found",
+        synopsis: error.response.errors?.[0].message,
+        images: [],
+      };
+    }
+
+    return {
+      title: "",
+      synopsis: "",
+      images: [],
+    };
+  }
 };

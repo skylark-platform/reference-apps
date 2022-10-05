@@ -1,9 +1,11 @@
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import useSWRInfinite from "swr/infinite";
-import { graphQLClient } from "@skylark-reference-apps/lib";
+import { Dimensions, graphQLClient } from "@skylark-reference-apps/lib";
+import { useDimensions } from "@skylark-reference-apps/react";
 import { Genre, MovieListing, Movie } from "../types/gql";
+import { addDimensionsToGraphQLMutation } from "../lib/utils";
 
-const createGraphQLQuery = (genreUid: string, nextToken?: string) => {
+const createGraphQLQuery = (genreUid: string, dimensions: Dimensions, nextToken?: string) => {
   const method = `getGenre`;
 
   const queryAsJson = {
@@ -12,7 +14,7 @@ const createGraphQLQuery = (genreUid: string, nextToken?: string) => {
       [method]: {
         __args: {
           uid: genreUid,
-          ignore_availability: true,
+          ...addDimensionsToGraphQLMutation(dimensions),
         },
         movies: {
           __args: {
@@ -32,12 +34,13 @@ const createGraphQLQuery = (genreUid: string, nextToken?: string) => {
   return { query, method };
 };
 
-const movieListingFromGenreFetcher = ([, genreUid, nextToken]: [
+const movieListingFromGenreFetcher = ([, genreUid, dimensions, nextToken]: [
   key: string,
   genreUid: string,
+  dimensions: Dimensions,
   nextToken?: string
 ]) => {
-  const { query, method } = createGraphQLQuery(genreUid, nextToken);
+  const { query, method } = createGraphQLQuery(genreUid, dimensions, nextToken);
   return graphQLClient
     .request<{ [key: string]: Genre }>(query)
     .then(({ [method]: data }): Genre => data)
@@ -47,19 +50,22 @@ const movieListingFromGenreFetcher = ([, genreUid, nextToken]: [
 const getKey = (
   pageIndex: number,
   previousPageData: MovieListing | null,
-  genreUid: string
+  genreUid: string,
+  dimensions: Dimensions
 ) => {
   if (previousPageData && !previousPageData.next_token) return null;
 
-  if (pageIndex === 0) return ["MovieListing", genreUid, ""];
+  if (pageIndex === 0) return ["MovieListing", genreUid, dimensions, ""];
 
-  return ["MovieListing", genreUid, previousPageData?.next_token];
+  return ["MovieListing", genreUid, dimensions, previousPageData?.next_token];
 };
 
 export const useMovieListingFromGenre = (genreUid?: string) => {
+  const { dimensions } = useDimensions();
+
   const { data, error, isLoading } = useSWRInfinite<MovieListing, Error>(
     (pageIndex, previousPageData: MovieListing) =>
-      genreUid ? getKey(pageIndex, previousPageData, genreUid) : null,
+      genreUid ? getKey(pageIndex, previousPageData, genreUid, dimensions) : null,
     movieListingFromGenreFetcher,
     {
       initialSize: 10,
