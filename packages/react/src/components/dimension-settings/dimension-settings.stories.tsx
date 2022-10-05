@@ -14,6 +14,9 @@ const Template: ComponentStory<typeof DimensionSettings> = (args) => (
 );
 
 export const Default = Template.bind({});
+Default.args = {
+  skylarkApiUrl: "https://skylark.com/api",
+};
 
 export const WithShow = Template.bind({});
 WithShow.args = {

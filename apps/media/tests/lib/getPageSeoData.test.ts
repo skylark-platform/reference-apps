@@ -7,6 +7,7 @@ import {
   getSeoDataForSet,
 } from "../../lib/getPageSeoData";
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock("@skylark-reference-apps/lib", () => ({
   ...jest.requireActual("@skylark-reference-apps/lib"),
   SKYLARK_API: "https://skylarkplatform.io",

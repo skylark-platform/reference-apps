@@ -1,11 +1,12 @@
-import { FieldSet } from "airtable";
+import {
+  GraphQLMediaObjectTypes,
+  GraphQLObjectTypes,
+} from "@skylark-reference-apps/lib";
+import { Attachment, Collaborator } from "airtable";
+import { EnumType } from "json-to-graphql-query";
 import { has, isArray } from "lodash";
 import { GraphQLBaseObject, GraphQLMetadata } from "../../interfaces";
-import {
-  ApiObjectType,
-  GraphQLObjectTypes,
-  MediaObjectTypes,
-} from "../../types";
+import { ApiObjectType } from "../../types";
 
 export const getExtId = (externalId: string) =>
   externalId.substring(externalId.indexOf("#") + 1);
@@ -25,11 +26,11 @@ export const getUidsFromField = (
 };
 
 export const gqlObjectMeta = (
-  type: ApiObjectType | MediaObjectTypes
+  type: ApiObjectType | GraphQLMediaObjectTypes
 ): {
   createFunc: string;
   updateFunc: string;
-  objectType: MediaObjectTypes;
+  objectType: GraphQLMediaObjectTypes;
   argName: "brand" | "season" | "episode" | "movie" | "asset";
   relName: "brands" | "seasons" | "episodes" | "movies" | "assets";
 } => {
@@ -82,9 +83,20 @@ export const gqlObjectMeta = (
 };
 
 export const getValidFields = (
-  fields: FieldSet,
+  fields: {
+    [key: string]:
+      | EnumType
+      | undefined
+      | string
+      | number
+      | boolean
+      | Collaborator
+      | ReadonlyArray<Collaborator>
+      | ReadonlyArray<string>
+      | ReadonlyArray<Attachment>;
+  },
   validProperties: string[]
-): { [key: string]: string | number | boolean } => {
+): { [key: string]: string | number | boolean | EnumType } => {
   const validObjectFields = validProperties.filter((property) =>
     has(fields, property)
   );
@@ -94,9 +106,9 @@ export const getValidFields = (
       : fields[property];
     return {
       ...obj,
-      [property]: val as string | number | boolean,
+      [property]: val as string | number | boolean | EnumType,
     };
-  }, {} as { [key: string]: string | number | boolean });
+  }, {} as { [key: string]: string | number | boolean | EnumType });
 
   return validFields;
 };

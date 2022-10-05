@@ -1,19 +1,11 @@
 import dayjs from "dayjs";
-import {
-  Credit,
-  Credits,
-  CreditTypes,
-  ImageTypes,
-  ImageUrls,
-  TitleTypes,
-  UnexpandedObjects,
-  SynopsisTypes,
-} from "../interfaces";
+import { TitleTypes, SynopsisTypes } from "../interfaces";
 
 import "dayjs/locale/pt";
 
 /**
  * Returns the title from the titles object using a given order of priority
+ * Defaults to long, medium, short
  * @param titles the titles object
  * @param priority order of priority
  * @param objectTitle optional objectTitle
@@ -21,101 +13,38 @@ import "dayjs/locale/pt";
  */
 export const getTitleByOrder = (
   titles: { [k in TitleTypes]: string } | undefined,
-  priority: TitleTypes[],
+  priority?: TitleTypes[],
   objectTitle?: string
 ): string => {
   if (!titles) return objectTitle || "";
 
-  const foundType = priority.find((type) => titles[type] || null);
+  const defaultPriority: TitleTypes[] = ["long", "medium", "short"];
+  const foundType = (priority || defaultPriority).find(
+    (type) => titles[type] || null
+  );
 
   return foundType ? titles[foundType] : objectTitle || "";
 };
 
 /**
- * Returns the synopsis from the synopsis object using a given order of priority. Defaults long to short.
+ * Returns the synopsis from the synopsis object using a given order of priority
+ * Defaults to long, medium, short
  * @param synopsis the synopsis object
  * @param priority optional order of priority
  * @returns {string}
  */
 export const getSynopsisByOrder = (
   synopsis: { [s in SynopsisTypes]: string } | undefined,
-  priority: SynopsisTypes[] = ["long", "medium", "short"]
+  priority?: SynopsisTypes[]
 ): string => {
   if (!synopsis) return "";
 
-  const foundType = priority?.find((type) => synopsis[type] || null);
+  const defaultPriority: SynopsisTypes[] = ["long", "medium", "short"];
+  const foundType = (priority || defaultPriority).find(
+    (type) => synopsis[type] || null
+  );
 
   return foundType ? synopsis[foundType] : "";
-};
-
-/**
- * getImageSrc - finds and returns the wanted type of image optionally with an added resize value
- * @param images {ImageUrls} - All images returned by Skylark
- * @param type {ImageTypes} - The image type to find and return
- * @param size {string} - Optional resize value in the form {height}x{width} e.g. (100x200)
- * @returns {string} the image URL or an empty string
- */
-export const getImageSrc = (
-  images: UnexpandedObjects | ImageUrls | undefined,
-  type: ImageTypes,
-  size?: string
-): string => {
-  if (!images || !images.isExpanded || images.items.length === 0) {
-    return "";
-  }
-
-  // Filter any Images with an empty URL
-  const imagesWithUrls = images.items.filter((img) => !!img?.url);
-  if (imagesWithUrls.length === 0) {
-    return "";
-  }
-
-  // Default to first image if no matching type is found
-  const image =
-    imagesWithUrls.find((img) => img.type === type) || imagesWithUrls[0];
-
-  const urlWithoutExtension = image.url.replace(/\.[^/.]+$/, "");
-  return size
-    ? `${urlWithoutExtension}-${size}.jpg`
-    : `${urlWithoutExtension}.jpg`;
-};
-
-/**
- * getCreditsByType - finds and returns all the credits that match a given type
- * @param credits {Credits}
- * @param type {CreditTypes}
- * @returns {Credit[]} an array of Credit
- */
-export const getCreditsByType = (
-  credits: UnexpandedObjects | Credits | undefined,
-  type: CreditTypes
-): Credit[] => {
-  if (!credits || !credits.isExpanded) {
-    return [];
-  }
-
-  return credits.items.filter((credit) => credit.roleUrl?.title === type);
-};
-
-/**
- * formatCredits - formats credits, adds character name if only a small amount of credits are given
- * @param credits
- * @returns string array
- */
-export const formatCredits = (credits: Credit[]): string[] => {
-  const showCharacterName = credits.length <= 4;
-  return credits
-    .map((credit) => {
-      const name = credit?.peopleUrl?.name;
-      if (!credit || !name) {
-        return "";
-      }
-
-      return showCharacterName && credit.character
-        ? `${name} as ${credit.character}`
-        : name;
-    })
-    .filter((str) => !!str);
 };
 
 /**
@@ -146,3 +75,14 @@ export const sortObjectByNumberProperty = (
   a: { number?: number },
   b: { number?: number }
 ) => ((a.number || 0) > (b.number || 0) ? 1 : -1);
+
+/**
+ * sortArrayIntoAlphabeticalOrder - to be passed into an array.sort
+ * Sorts strings into alphabetical order
+ */
+export const sortArrayIntoAlphabeticalOrder = (a: string, b: string) => {
+  const aUpper = a.toUpperCase();
+  const bUpper = b.toUpperCase();
+  // eslint-disable-next-line no-nested-ternary
+  return aUpper < bUpper ? -1 : aUpper > bUpper ? 1 : 0;
+};

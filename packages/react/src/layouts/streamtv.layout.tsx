@@ -14,16 +14,23 @@ import { DimensionsContextProvider } from "../contexts";
 
 interface Props {
   appTitle: string;
+  tvShowsHref: string;
+  skylarkApiUrl?: string;
 }
 
-export const StreamTVLayout: React.FC<Props> = ({ appTitle, children }) => {
+export const StreamTVLayout: React.FC<Props> = ({
+  appTitle,
+  tvShowsHref,
+  skylarkApiUrl,
+  children,
+}) => {
   const { asPath } = useRouter();
   const { t } = useTranslation("common");
 
   const links = [
     { text: t("discover"), href: "/" },
     { text: t("movies"), href: "/movies" },
-    { text: t("tv-shows"), href: "/brand/game-of-thrones" },
+    { text: t("tv-shows"), href: tvShowsHref },
   ];
 
   return (
@@ -65,7 +72,7 @@ export const StreamTVLayout: React.FC<Props> = ({ appTitle, children }) => {
         <div className="relative z-10 h-full w-full pt-mobile-header md:pt-0">
           {children}
         </div>
-        <DimensionSettings />
+        <DimensionSettings skylarkApiUrl={skylarkApiUrl} />
       </div>
     </DimensionsContextProvider>
   );

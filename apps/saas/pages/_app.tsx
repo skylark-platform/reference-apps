@@ -10,13 +10,17 @@ import { StreamTVLayout } from "@skylark-reference-apps/react";
 import useTranslation from "next-translate/useTranslation";
 import createDefaultSeo from "../next-seo.config";
 
-const appTitle = "StreamTV";
+const appTitle = "StreamTV (SaaS)";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { t } = useTranslation("common");
 
   return (
-    <StreamTVLayout appTitle={appTitle}>
+    <StreamTVLayout
+      appTitle={appTitle}
+      skylarkApiUrl={process.env.NEXT_PUBLIC_SAAS_API_ENDPOINT}
+      tvShowsHref="/brand/reculg97iNzbkEZCK"
+    >
       <DefaultSeo {...createDefaultSeo(appTitle, t("seo.description"))} />
       <Component {...pageProps} />
     </StreamTVLayout>

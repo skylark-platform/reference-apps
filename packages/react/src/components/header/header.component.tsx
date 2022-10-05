@@ -10,7 +10,7 @@ interface HeaderProps {
   numberOfItems: number;
   typeOfItems: EntertainmentType;
   releaseDate?: string;
-  rating: string;
+  rating?: string;
   description?: string;
   tags?: string[];
 }

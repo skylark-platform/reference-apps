@@ -11,9 +11,12 @@ import {
   ApiTagCategory,
   ApiThemeGenre,
   SKYLARK_API,
+  SAAS_ACCOUNT_ID,
+  SAAS_API_ENDPOINT,
 } from "@skylark-reference-apps/lib";
 import axios from "axios";
 import { Attachment } from "airtable";
+import { mkdir, writeFile } from "fs/promises";
 import {
   createOrUpdateDynamicObject,
   createOrUpdateSetAndContents,
@@ -45,11 +48,7 @@ import {
   signInToCognito,
   uploadToWorkflowServiceWatchBucket,
 } from "./lib/amplify";
-import {
-  SAAS_ACCOUNT_ID,
-  SAAS_API_ENDPOINT,
-  UNLICENSED_BY_DEFAULT,
-} from "./lib/constants";
+import { UNLICENSED_BY_DEFAULT } from "./lib/constants";
 import {
   createGraphQLMediaObjects,
   createOrUpdateGraphQLCredits,
@@ -346,9 +345,8 @@ const main = async () => {
     // eslint-disable-next-line no-console
     console.log("Media objects created");
 
+    const createdSets: GraphQLBaseObject[] = [];
     if (shouldCreateAdditionalObjects) {
-      const createdSets: GraphQLBaseObject[] = [];
-
       for (
         let i = 0;
         i < orderedSetsToCreateWithoutDynamicObject.length;
@@ -366,6 +364,25 @@ const main = async () => {
       // eslint-disable-next-line no-console
       console.log("Additional objects created");
     }
+
+    const dateStamp = new Date().toISOString();
+    const output = {
+      environment_meta: {
+        date_stamp: dateStamp,
+        endpoint: SAAS_API_ENDPOINT,
+        account: SAAS_ACCOUNT_ID,
+      },
+      airtable_data: airtable,
+      metadata,
+      media_objects: mediaObjects,
+      sets: createdSets,
+    };
+
+    await mkdir("./outputs", { recursive: true });
+    await writeFile(
+      `./outputs/${dateStamp}.json`,
+      JSON.stringify(output, null, 4)
+    );
   } else {
     // eslint-disable-next-line no-console
     console.log(`Starting ingest to V8 Skylark: ${SKYLARK_API}`);

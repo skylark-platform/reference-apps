@@ -8,6 +8,7 @@ import { useDimensions } from "../../contexts";
 
 interface DimensionSettingsProps {
   show?: boolean;
+  skylarkApiUrl?: string;
 }
 
 const variants = {
@@ -17,6 +18,7 @@ const variants = {
 
 export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
   show: propShow = false,
+  skylarkApiUrl,
 }) => {
   const [show, setShow] = useState(propShow);
   const { dimensions, setLanguage, setCustomerType, setDeviceType } =
@@ -62,14 +64,14 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
               </div>
               <p className="pt-2 text-sm">
                 {"Skylark API: "}
-                {process.env.NEXT_PUBLIC_SKYLARK_API_URL ? (
+                {skylarkApiUrl ? (
                   <a
                     className="text-skylark-blue"
-                    href={process.env.NEXT_PUBLIC_SKYLARK_API_URL}
+                    href={skylarkApiUrl}
                     rel="noreferrer"
                     target="_blank"
                   >
-                    {process.env.NEXT_PUBLIC_SKYLARK_API_URL}
+                    {skylarkApiUrl}
                   </a>
                 ) : (
                   "not connected"

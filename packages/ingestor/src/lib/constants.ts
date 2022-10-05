@@ -12,7 +12,3 @@ export const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY as string;
 export const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID as string;
 export const UNLICENSED_BY_DEFAULT =
   (process.env.DEFAULT_UNLICENSED as string) === "true";
-
-export const SAAS_API_ENDPOINT = process.env.SAAS_API_ENDPOINT as string;
-export const SAAS_API_KEY = process.env.SAAS_API_KEY as string;
-export const SAAS_ACCOUNT_ID = process.env.SAAS_ACCOUNT_ID as string;
