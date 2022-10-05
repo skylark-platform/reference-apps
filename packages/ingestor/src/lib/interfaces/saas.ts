@@ -16,14 +16,12 @@ export interface GraphQLMetadata {
   credits: GraphQLBaseObject[];
   availability: {
     default?: GraphQLBaseObject;
-    always?: GraphQLBaseObject;
     all: GraphQLBaseObject[];
   };
   dimensions: {
     affiliates: GraphQLBaseObject[];
     deviceTypes: GraphQLBaseObject[];
     customerTypes: GraphQLBaseObject[];
-    languages: GraphQLBaseObject[];
     locales: GraphQLBaseObject[];
     operatingSystems: GraphQLBaseObject[];
     regions: GraphQLBaseObject[];

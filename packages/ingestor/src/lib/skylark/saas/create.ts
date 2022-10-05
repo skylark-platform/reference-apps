@@ -5,7 +5,7 @@ import {
 } from "@skylark-reference-apps/lib";
 import { FieldSet, Records } from "airtable";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
-import { chunk, flatten, has, isString, values } from "lodash";
+import { chunk, flatten, has, isArray, isEmpty, isString, toString, values } from "lodash";
 
 import { GraphQLBaseObject, GraphQLMetadata } from "../../interfaces";
 import {
@@ -28,7 +28,7 @@ export const mutateMultipleObjects = async <T>(
   mutations: { [key: string]: object }
 ): Promise<T[]> => {
   // Smaller requests are better as each is handled by a single lambda
-  const chunks = chunk(Object.keys(mutations), 20);
+  const chunks = chunk(Object.keys(mutations), 10);
 
   const chunkedData = await Promise.all(
     chunks.map(async (keys, i): Promise<T[]> => {
@@ -65,7 +65,8 @@ export const mutateMultipleObjects = async <T>(
 
 export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
   objectType: GraphQLObjectTypes,
-  airtableRecords: Records<FieldSet>
+  airtableRecords: Records<FieldSet>,
+  metadataAvailability: GraphQLMetadata["availability"],
 ): Promise<GraphQLBaseObject[]> => {
   if (airtableRecords.length === 0) {
     return [];
@@ -83,11 +84,17 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
 
       const objectExists = existingObjects.includes(id);
 
+      const availability = getGraphQLObjectAvailability(
+        metadataAvailability,
+        fields.availability as string[],
+      );
+
       const args = {
         [objectType.toLowerCase()]: objectExists
-          ? validFields
-          : { ...validFields, external_id: id },
+          ? { ...validFields, availability, }
+          : { ...validFields, availability, external_id: id },
       };
+
       const { operation, method } = createGraphQLOperation(
         objectType,
         objectExists,
@@ -97,7 +104,9 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
 
       const updatedOperations = {
         ...previousOperations,
-        [`${method}${id}`]: operation,
+        [`${method}${id}`]: {
+          ...operation,
+        },
       };
       return updatedOperations;
     },
@@ -140,10 +149,16 @@ export const createOrUpdateGraphQLCredits = async (
         return previousOperations;
       }
 
+      const availability = getGraphQLObjectAvailability(
+        metadata.availability,
+        fields.availability as string[],
+      );
+
       const creditExists = existingObjects.includes(id);
 
       const credit = {
         ...validFields,
+        availability,
         relationships: {
           people: {
             link: person.uid,
@@ -354,4 +369,92 @@ export const createGraphQLMediaObjects = async (
   }
 
   return createdMediaObjects;
+};
+
+export const createTranslationsForGraphQLObjects = async (
+  originalObjects: GraphQLBaseObject[],
+  translationsTable: Records<FieldSet>,
+  languagesTable: Records<FieldSet>,
+) => {
+  const validObjectProperties: { [key in GraphQLMediaObjectTypes]: string[] } =
+    {
+      Episode: await getValidPropertiesForObject("Episode"),
+      Season: await getValidPropertiesForObject("Season"),
+      Brand: await getValidPropertiesForObject("Brand"),
+      Movie: await getValidPropertiesForObject("Movie"),
+      Asset: await getValidPropertiesForObject("Asset"),
+    };
+
+  const languageCodes: { [key: string]: string } = {};
+  languagesTable.filter(({ fields }) => has(fields, "code") && toString(fields.code)).forEach(({ fields, id }) => {
+    languageCodes[id] = fields.code as string;
+  });
+
+  const translationOperations = translationsTable.reduce((previousOperations, { fields, id }) => {
+    if (
+      !fields.object ||
+      !isArray(fields.object) ||
+      !isArray(fields.languages) ||
+      isEmpty(fields.languages)
+    ) {
+      return previousOperations;
+    }
+
+    const [objectAirtableId] = fields.object as string[];
+    const originalObject = originalObjects.find(
+      ({ external_id }) => external_id === objectAirtableId
+    );
+
+    // if the original object doesn't exist
+    if (!originalObject) {
+      return previousOperations;
+    }
+
+    const { objectType, argName, updateFunc } = gqlObjectMeta(
+      // eslint-disable-next-line no-underscore-dangle
+      originalObject.__typename as GraphQLMediaObjectTypes,
+    );
+
+    const validFields = getValidFields(
+      fields,
+      validObjectProperties[objectType]
+    );
+
+    const languages = fields.languages as string[];
+    const objectsTranslations = languages.reduce((previousTranslations, languageAirtableId) => {
+      const language = languageCodes[languageAirtableId];
+      const updatedTranslations = {
+        ...previousTranslations,
+        [`translation_${language.replace("-", "_")}_${id}`]: {
+          __aliasFor: updateFunc,
+          __args: {
+            uid: originalObject.uid,
+            language,
+            [argName]: validFields,
+          },
+          __typename: true,
+          uid: true,
+          external_id: true,
+          title: true,
+          slug: true,
+        },
+      }
+
+      return updatedTranslations;
+    }, {} as { [key: string]: object })
+
+    const updatedOperations: { [key: string]: object } = {
+      ...previousOperations,
+      ...objectsTranslations,
+    };
+
+    return updatedOperations;
+  }, {} as { [key: string]: object });
+
+  const arr = await mutateMultipleObjects<GraphQLBaseObject>(
+    "createMediaObjectTranslations",
+    translationOperations
+  );
+
+  return arr;
 };

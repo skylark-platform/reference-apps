@@ -141,10 +141,10 @@ export const createGraphQLOperation = (
 
 export const getGraphQLObjectAvailability = (
   availabilityMetadata: GraphQLMetadata["availability"],
-  availabilityField?: string[]
+  availabilityField?: string[],
 ): { link: string[] } => {
   const { all, default: defaultAvailability } = availabilityMetadata;
-  if (!availabilityField) {
+  if (!availabilityField || availabilityField.length === 0) {
     return { link: defaultAvailability ? [defaultAvailability.uid] : [] };
   }
 

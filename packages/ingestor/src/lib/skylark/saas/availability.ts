@@ -185,7 +185,6 @@ export const createOrUpdateScheduleDimensionValues = async (
       { type: "affiliates", data: airtable.affiliates },
       { type: "customer-types", data: airtable.customerTypes },
       { type: "device-types", data: airtable.deviceTypes },
-      { type: "languages", data: airtable.languages },
       { type: "locales", data: airtable.locales },
       { type: "operating-systems", data: airtable.operatingSystems },
       { type: "regions", data: airtable.regions },
@@ -199,7 +198,6 @@ export const createOrUpdateScheduleDimensionValues = async (
     affiliates,
     customerTypes,
     deviceTypes,
-    languages,
     locales,
     operatingSystems,
     regions,
@@ -213,7 +211,6 @@ export const createOrUpdateScheduleDimensionValues = async (
     affiliates,
     customerTypes,
     deviceTypes,
-    languages,
     locales,
     operatingSystems,
     regions,
@@ -240,6 +237,17 @@ export const createOrUpdateAvailability = async (
       // Currently only support creating availability, not updating
       const objectExists = false;
 
+      const availabilityInput: {
+        title: string;
+        slug: string;
+        start?: string;
+        end?: string;
+        dimensions?: { dimension_slug: DimensionTypes; value_slugs: string[] }[];
+      } = {
+        title: fields.title,
+        slug: fields.slug,
+      };
+
       const availabilityDimensions: {
         dimension_slug: DimensionTypes;
         value_slugs: string[];
@@ -258,10 +266,6 @@ export const createOrUpdateAvailability = async (
         {
           dimension_slug: "device-types",
           value_slugs: getValueSlugs(dimensions.deviceTypes, fields.devices),
-        },
-        {
-          dimension_slug: "languages",
-          value_slugs: getValueSlugs(dimensions.languages, fields.languages),
         },
         {
           dimension_slug: "locales",
@@ -287,17 +291,11 @@ export const createOrUpdateAvailability = async (
         },
       ];
 
-      const availabilityInput: {
-        title: string;
-        slug: string;
-        start?: string;
-        end?: string;
-        dimensions: { dimension_slug: DimensionTypes; value_slugs: string[] }[];
-      } = {
-        title: fields.title,
-        slug: fields.slug,
-        dimensions: availabilityDimensions,
-      };
+      // Filter out any dimensions that are empty, only add the dimensions property to the input if at least one dimension is given
+      const filteredDimensions = availabilityDimensions.filter(({ value_slugs }) => value_slugs.length > 0);
+      if(filteredDimensions.length > 0) {
+        availabilityInput.dimensions = filteredDimensions;
+      }
 
       // Only include start / end field when it exists in Airtable, Skylark errors otherwise
       if (fields.starts) {

@@ -54,7 +54,7 @@ _These objects can be created or modified via the Ingestor_
 - Credits (using People and Roles)
 - Genres
 - Themes
-- Availibility (Licenses and Editorial Schedules)
+- Availability (Licenses and Editorial Schedules)
 - Ratings
 - Images
 - Dimensions
