@@ -239,11 +239,13 @@ export const parseAirtableImagesAndUploadToSkylark = <T extends ApiBaseObject>(
         type,
         image: [image],
         schedules,
+        availability,
       } = airtableImage.fields as {
         title: string;
         type: string[];
         image: Attachment[];
         schedules: string[];
+        availability: string[];
       };
 
       if (!type || type.length === 0) {
@@ -257,7 +259,7 @@ export const parseAirtableImagesAndUploadToSkylark = <T extends ApiBaseObject>(
       }
 
       const scheduleUrls = getScheduleUrlsFromMetadata(
-        schedules,
+        availability || schedules,
         metadata.schedules
       );
 
