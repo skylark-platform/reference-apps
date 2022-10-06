@@ -16,6 +16,7 @@ jobs:
     outputs:
       git-branch: ${{ steps.branch-and-ref.outputs.branch }}
       git-ref: ${{ steps.branch-and-ref.outputs.ref }}
+      saas-account-id: ${{ steps.saas-account-id.outputs.account-id }}
     steps:
       - uses: actions/checkout@v3
       - name: Comment building status on PR
@@ -47,6 +48,12 @@ jobs:
 
           echo "::set-output name=ref::$GitRef"
           echo "::set-output name=branch::$GitBranch"
+      - name: Create SaaS Ingestor Account ID
+        id: saas-account-id
+        env:
+          BRANCH: ${{ steps.branch-and-ref.outputs.branch }}
+        run: |
+          echo "::set-output name=account-id::$BRANCH-$GITHUB_SHA"
 
   deploy:
     name: Deploy
@@ -79,7 +86,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_SKYLARK_DEV }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_SKYLARK_DEV }}
           saas-api-token: ${{ secrets.SHOWCASE_SAAS_API_KEY }}
-          saas-account-id: ${{ needs.prepare.outputs.git-branch }}
+          saas-account-id: ${{ needs.prepare.outputs.saas-account-id }}
       - id: urls
         run: echo "::set-output name=${{ matrix.app }}-url::${{ steps.cdk.outputs.url }}"
         shell: bash
@@ -111,7 +118,7 @@ jobs:
           create-additional-objects: "true"
           saas-ingest: ${{ matrix.version == 'SaaS' && 'true' || 'false' }}
           saas-api-token: ${{ secrets.SHOWCASE_SAAS_API_KEY }}
-          saas-account-id: ${{ needs.prepare.outputs.git-branch }}
+          saas-account-id: ${{ needs.prepare.outputs.saas-account-id }}
 
   signal:
     name: Signal
