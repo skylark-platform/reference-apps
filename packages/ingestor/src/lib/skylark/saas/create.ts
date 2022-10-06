@@ -28,7 +28,7 @@ export const mutateMultipleObjects = async <T>(
   mutations: { [key: string]: object }
 ): Promise<T[]> => {
   // Smaller requests are better as each is handled by a single lambda
-  const chunks = chunk(Object.keys(mutations), 10);
+  const chunks = chunk(Object.keys(mutations), 6);
 
   const chunkedData = await Promise.all(
     chunks.map(async (keys, i): Promise<T[]> => {
