@@ -14,9 +14,22 @@ const createGraphQLQuery = (nextToken?: string) => {
           ignore_availability: true,
           uid: "3d3d45f6-dc54-4cc7-be47-940efaa81dc1",
         },
-
         uid: true,
         title: true,
+        title_short: true,
+        title_medium: true,
+        title_long: true,
+        synopsis_short: true,
+        synopsis_medium: true,
+        synopsis_long: true,
+        release_date: true,
+        images: {
+          objects: {
+            title: true,
+            type: true,
+            url: true,
+          },
+        },
         content: {
           __args: {
             next_token: nextToken || "",
@@ -71,6 +84,7 @@ export const useCollection = (disable = false) => {
 
   // TODO missing collection data
   return {
+    collection: data,
     items,
     isLoading: isLoading && !data,
     isError: error,

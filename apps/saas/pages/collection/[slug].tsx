@@ -3,14 +3,9 @@ import type { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
 import {
-  BrandPageParsedEpisode,
   MoviesPageParsedMovie,
   CollectionPage,
 } from "@skylark-reference-apps/react";
-import {
-  getTitleByOrder,
-  getSynopsisByOrder,
-} from "@skylark-reference-apps/lib";
 
 import { useCollection } from "../../hooks/useCollection";
 import {
@@ -23,6 +18,7 @@ import { MediaObjectFetcher } from "../../components/mediaObjectFetcher";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 import {
   getGraphQLImageSrc,
+  getSynopsisByOrderForGraphQLObject,
   getTitleByOrderForGraphQLObject,
 } from "../../lib/utils";
 
@@ -47,27 +43,21 @@ const CurationMetadataFetcher: React.FC<{
   </MediaObjectFetcher>
 );
 
-/*
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const seo = await getSeoDataForSet(
-    "collection",
-    context.query.slug as string,
-    context.locale || ""
-  );
+  const seo = await getSeoDataForObject("Movie", context.query.slug as string);
   return {
     props: {
       seo,
     },
   };
 };
-*/
 
 const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
 
-  const { items: collection, isError } = useCollection();
+  const { collection, items, isError } = useCollection();
 
-  if (isError) {
+  if (isError && !collection) {
     return (
       <div className="flex h-screen flex-col items-center justify-center text-white">
         <p>{`Error fetching brand: ${(query?.slug as string) || ""}`}</p>
@@ -76,28 +66,27 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     );
   }
 
-  console.log("collection", collection);
-  /*
-  const title = getTitleByOrder({
-    short: collection?.title_short || "",
-    medium: collection?.title_medium || "",
-    long: collection?.title_long || "",
-  });
+  console.log("collection", items);
 
-  const synopsis = getSynopsisByOrder({
-    short: collection?.synopsis_short || "",
-    medium: collection?.synopsis_medium || "",
-    long: collection?.synopsis_long || "",
-  });
-*/
+  const title = collection
+    ? getTitleByOrderForGraphQLObject(collection[0])
+    : "";
+  const synopsis = collection
+    ? getSynopsisByOrderForGraphQLObject(collection[0])
+    : "";
   return (
     <>
+      <NextSeo
+        description={seo.synopsis}
+        openGraph={{ images: seo.images }}
+        title={title || seo.title}
+      />
       {collection && (
         <CollectionPage
           CollectionItemDataFetcher={CurationMetadataFetcher}
-          bgImage={""}
+          bgImage={getGraphQLImageSrc(collection[0]?.images, "Main")}
           content={
-            collection?.map((item) => ({
+            items?.map((item) => ({
               self: "",
               slug: "",
               uid: item?.uid || "",
@@ -105,9 +94,9 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           }
           loading={!collection}
           rating={""}
-          // releaseDate={"collection?.releaseDate"}
-          synopsis={"getSynopsisByOrder(collection?.synopsis)"}
-          title={"title"}
+          releaseDate={""} // collection[0]?.releaseDate}
+          synopsis={synopsis}
+          title={title ?? ""}
         />
       )}
     </>
