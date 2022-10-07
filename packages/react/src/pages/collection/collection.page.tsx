@@ -28,13 +28,19 @@ interface Props {
   content: {
     slug: string;
     self: string;
+    uid: string;
   }[];
   rating: string;
-  CollectionItemDataFetcher: React.FC<{
-    slug: string;
-    self: string;
-    children(data: CollectionPageParsedContentItem): React.ReactNode;
-  }>;
+  CollectionItemDataFetcher:
+    | React.FC<{
+        slug: string;
+        self: string;
+        children(data: CollectionPageParsedContentItem): React.ReactNode;
+      }>
+    | React.FC<{
+        uid: string;
+        children(data: CollectionPageParsedContentItem): React.ReactNode;
+      }>;
 }
 
 export const CollectionPage: React.FC<Props> = ({
@@ -64,11 +70,12 @@ export const CollectionPage: React.FC<Props> = ({
           />
         </Hero>
         <div className="grid w-full grid-cols-2 gap-x-4 gap-y-6 px-gutter sm:px-sm-gutter md:grid-cols-3 lg:grid-cols-4 lg:px-lg-gutter xl:px-xl-gutter 2xl:grid-cols-6">
-          {content.map(({ self, slug }) => (
+          {content.map(({ self, slug, uid }) => (
             <CollectionItemDataFetcher
               key={`collection-content-item-${slug}`}
               self={self}
               slug={slug}
+              uid={uid}
             >
               {(item: CollectionPageParsedContentItem) => (
                 <StandardThumbnail
