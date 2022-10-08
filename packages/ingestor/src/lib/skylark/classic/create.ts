@@ -236,13 +236,13 @@ export const parseAirtableImagesAndUploadToSkylark = <T extends ApiBaseObject>(
       }
       const {
         title,
-        type,
+        "type-reference": type,
         image: [image],
         schedules,
         availability,
       } = airtableImage.fields as {
         title: string;
-        type: string[];
+        "type-reference": string[];
         image: Attachment[];
         schedules: string[];
         availability: string[];

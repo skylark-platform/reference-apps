@@ -5,7 +5,7 @@ import {
 import { Attachment, Collaborator } from "airtable";
 import { EnumType } from "json-to-graphql-query";
 import { has, isArray } from "lodash";
-import { GraphQLBaseObject, GraphQLMetadata } from "../../interfaces";
+import { GraphQLBaseObject, GraphQLIntrospectionProperties, GraphQLMetadata } from "../../interfaces";
 import { ApiObjectType } from "../../types";
 
 export const getExtId = (externalId: string) =>
@@ -95,18 +95,18 @@ export const getValidFields = (
       | ReadonlyArray<string>
       | ReadonlyArray<Attachment>;
   },
-  validProperties: string[]
+  validProperties: GraphQLIntrospectionProperties[]
 ): { [key: string]: string | number | boolean | EnumType } => {
-  const validObjectFields = validProperties.filter((property) =>
+  const validObjectFields = validProperties.filter(({ property }) =>
     has(fields, property)
   );
-  const validFields = validObjectFields.reduce((obj, property) => {
+  const validFields = validObjectFields.reduce((obj, { property, kind }) => {
     const val = isArray(fields[property])
       ? (fields[property] as string[])[0]
       : fields[property];
     return {
       ...obj,
-      [property]: val as string | number | boolean | EnumType,
+      [property]: kind === "ENUM" ? new EnumType(val as string) : val as string | number | boolean | EnumType,
     };
   }, {} as { [key: string]: string | number | boolean | EnumType });
 

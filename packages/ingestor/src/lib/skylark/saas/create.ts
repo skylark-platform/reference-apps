@@ -7,7 +7,7 @@ import { FieldSet, Records } from "airtable";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import { chunk, flatten, has, isArray, isEmpty, isString, toString, values } from "lodash";
 
-import { GraphQLBaseObject, GraphQLMetadata } from "../../interfaces";
+import { GraphQLBaseObject, GraphQLIntrospectionProperties, GraphQLMetadata } from "../../interfaces";
 import {
   ApiObjectType,
   RelationshipsLink,
@@ -28,7 +28,7 @@ export const mutateMultipleObjects = async <T>(
   mutations: { [key: string]: object }
 ): Promise<T[]> => {
   // Smaller requests are better as each is handled by a single lambda
-  const chunks = chunk(Object.keys(mutations), 6);
+  const chunks = chunk(Object.keys(mutations), 10);
 
   const chunkedData = await Promise.all(
     chunks.map(async (keys, i): Promise<T[]> => {
@@ -195,7 +195,7 @@ export const createOrUpdateGraphQLCredits = async (
   return data;
 };
 
-const getMediaObjectRelationships = (
+export const getMediaObjectRelationships = (
   fields: FieldSet,
   metadata: GraphQLMetadata
 ) => {
@@ -233,7 +233,7 @@ export const createGraphQLMediaObjects = async (
   airtableRecords: Records<FieldSet>,
   metadata: GraphQLMetadata
 ) => {
-  const validObjectProperties: { [key in GraphQLMediaObjectTypes]: string[] } =
+  const validObjectProperties: { [key in GraphQLMediaObjectTypes]: GraphQLIntrospectionProperties[] } =
     {
       Episode: await getValidPropertiesForObject("Episode"),
       Season: await getValidPropertiesForObject("Season"),
@@ -376,7 +376,7 @@ export const createTranslationsForGraphQLObjects = async (
   translationsTable: Records<FieldSet>,
   languagesTable: Records<FieldSet>,
 ) => {
-  const validObjectProperties: { [key in GraphQLMediaObjectTypes]: string[] } =
+  const validObjectProperties: { [key in GraphQLMediaObjectTypes]: GraphQLIntrospectionProperties[] } =
     {
       Episode: await getValidPropertiesForObject("Episode"),
       Season: await getValidPropertiesForObject("Season"),

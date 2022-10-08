@@ -1,10 +1,12 @@
-import { jsonToGraphQLQuery } from "json-to-graphql-query";
+import { EnumType, jsonToGraphQLQuery } from "json-to-graphql-query";
 import { graphQLClient } from "@skylark-reference-apps/lib";
-
-import { SetConfig, GraphQLBaseObject } from "../../interfaces";
-import { ApiObjectType, SetRelationshipsLink } from "../../types";
+import { FieldSet, Records } from "airtable";
+import { has, toString } from "lodash";
+import { SetConfig, GraphQLBaseObject, GraphQLMetadata } from "../../interfaces";
+import { ApiObjectType, RelationshipsLink, SetRelationshipsLink } from "../../types";
 import { getValidPropertiesForObject, getExistingObjects } from "./get";
-import { gqlObjectMeta, getValidFields } from "./utils";
+import { gqlObjectMeta, getValidFields, getGraphQLObjectAvailability } from "./utils";
+import { getMediaObjectRelationships } from "./create";
 
 interface SetItem {
   uid: string;
@@ -14,19 +16,17 @@ interface SetItem {
 
 export const createOrUpdateGraphQLSet = async (
   set: SetConfig,
-  mediaObjects: GraphQLBaseObject[]
-): Promise<GraphQLBaseObject> => {
+  mediaObjects: GraphQLBaseObject[],
+  metadata: GraphQLMetadata,
+  languagesTable: Records<FieldSet>,
+  airtableSetsMetadata: { id: string; fields: FieldSet }[]
+): Promise<GraphQLBaseObject | undefined> => {
+  const languageCodes: { [key: string]: string } = {};
+  languagesTable.filter(({ fields: languageFields }) => has(languageFields, "code") && toString(languageFields.code)).forEach(({ fields: languageFields, id }) => {
+    languageCodes[id] = languageFields.code as string;
+  });
+
   const validProperties = await getValidPropertiesForObject("Set");
-  const validFields = getValidFields(
-    {
-      title: set.title,
-      slug: set.slug,
-      // TODO Switch type to EnumType when its fixed
-      // type: new EnumType(set.graphQlSetType),
-      type: set.graphQlSetType,
-    },
-    validProperties
-  );
 
   const setExists =
     (await getExistingObjects("Set", [set.externalId])).length > 0;
@@ -36,7 +36,7 @@ export const createOrUpdateGraphQLSet = async (
     return {} as GraphQLBaseObject;
   }
 
-  const method = setExists ? `updateSet` : `createSet`;
+  const operationName = setExists ? `updateSet` : `createSet`;
 
   const setItems = set.contents.map((content, index): SetItem => {
     const { slug } = content as { slug: string };
@@ -67,39 +67,91 @@ export const createOrUpdateGraphQLSet = async (
     content[objectType].link.push({ position, uid });
   }
 
-  const operationName = "createSet";
+  const airtableMetadataTranslations = airtableSetsMetadata?.filter(({ fields }) => fields.slug === set.slug);
 
-  const mutation = {
-    mutation: {
-      [operationName]: {
-        __aliasFor: method,
-        __args: setExists
-          ? {
-              external_id: set.externalId,
-              set: {
-                content,
-                ...validFields,
-              },
-            }
-          : {
-              set: {
-                external_id: set.externalId,
-                content,
-                ...validFields,
-              },
+  if (airtableMetadataTranslations && airtableMetadataTranslations.length > 0) {
+    const sets = [];
+
+    // Creating sets with the same data_source_id in parallel does not work as we need to create the set first before adding additional translations
+    // due to this, we create sets in a synchronous order
+    for (let i = 0; i < airtableMetadataTranslations.length; i+=1) {
+      const metadataTranslation = airtableMetadataTranslations[i];
+      const { fields: { availability: availabilityField, ...fields } } = metadataTranslation;
+
+      const availability = getGraphQLObjectAvailability(
+        metadata.availability,
+        availabilityField as string[]
+      );
+
+      const relationships: RelationshipsLink = getMediaObjectRelationships(
+        fields,
+        metadata
+      );
+
+
+      const validFields = getValidFields(
+        {
+          ...fields,
+          title: set.title,
+          slug: set.slug,
+          type: set.graphQlSetType,
+        },
+        validProperties
+      );
+
+      // Always updateSet to add more langauges
+      const method = i === 0 ? operationName : "updateSet";
+      const language = languageCodes[fields.language as string];
+
+      const args: { external_id?: string, language: string, set: { [key: string]: string | object | number | EnumType | boolean } } = method === "updateSet"
+        ? {
+            external_id: set.externalId,
+            language,
+            set: {
+              ...validFields,
             },
-        uid: true,
-        external_id: true,
-        slug: true,
-      },
-    },
-  };
+          }
+        : {
+            language,
+            set: {
+              external_id: set.externalId,
+              ...validFields,
+            },
+          };
 
-  const graphQLMutation = jsonToGraphQLQuery(mutation);
+      // Only add relationships to first operation
+      if(i === 0) {
+        args.set.content = content;
+        args.set.availability = availability;
+        args.set.relationships = relationships;
+      }
 
-  const data = await graphQLClient.request<{
-    createSet: GraphQLBaseObject;
-  }>(graphQLMutation);
+      const mutationKey = `${method}_${language.replace("-", "_")}_${set.externalId}`;
 
-  return data[operationName];
+      const mutation = {
+        mutation: {
+          [mutationKey]: {
+            __aliasFor: method,
+            __args: args,
+            uid: true,
+            external_id: true,
+            slug: true,
+          },
+        },
+      };
+
+      const graphQLMutation = jsonToGraphQLQuery(mutation);
+
+      // eslint-disable-next-line no-await-in-loop
+      const data = await graphQLClient.request<{
+        [key: string]: GraphQLBaseObject;
+      }>(graphQLMutation);
+
+      sets.push(data[mutationKey])
+    }
+
+    return sets[0];
+  }
+
+  // return data[operationName];
 };

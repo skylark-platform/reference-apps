@@ -29,17 +29,34 @@ export interface GraphQLMetadata {
   };
 }
 
+export type GraphQLIntrospectionKind = "SCALAR" | "ENUM" | "INPUT_OBJECT" | "NON_NULL";
+
 export interface GraphQLIntrospection {
-  __type: {
+  IntrospectionOnType: {
     name: string;
     fields: {
       name: string;
       type: {
         name: string;
-        kind: string;
+        kind: GraphQLIntrospectionKind;
       };
     }[];
   };
+  IntrospectionOnInputType: {
+    name: string;
+    inputFields: {
+      name: string;
+      type: {
+        name: string;
+        kind: GraphQLIntrospectionKind;
+      };
+    }[];
+  } | null;
+}
+
+export interface GraphQLIntrospectionProperties {
+  property: string
+  kind: GraphQLIntrospectionKind;
 }
 
 export interface GraphQLDimension {

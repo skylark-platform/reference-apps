@@ -7,6 +7,7 @@ import {
   GraphQLBaseObject,
   GraphQLDimension,
   GraphQLMetadata,
+  GraphQLIntrospectionProperties
 } from "../../interfaces";
 import { mutateMultipleObjects } from "./create";
 import { getValidPropertiesForObject } from "./get";
@@ -119,7 +120,7 @@ export const createDimensions = async () => {
 
 const createOrUpdateDimensionValues = async (
   type: DimensionTypes,
-  validProperties: string[],
+  validProperties: GraphQLIntrospectionProperties[],
   airtableRecords: Record<FieldSet>[],
   dimensions: GraphQLDimension[]
 ) => {

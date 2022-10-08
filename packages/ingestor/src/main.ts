@@ -372,8 +372,8 @@ const main = async () => {
         const set = await createOrUpdateGraphQLSet(setConfig, [
           ...mediaObjects,
           ...createdSets,
-        ]);
-        createdSets.push(set);
+        ], metadata, airtable.dimensions.languages, airtable.setsMetadata);
+        if (set) createdSets.push(set);
       }
 
       // eslint-disable-next-line no-console
