@@ -35,7 +35,7 @@ describe("saas/create.ts", () => {
 
     beforeEach(() => {
       const mockedGraphQLResponse = {
-        __type: {
+        IntrospectionOnType: {
           fields: [
             {
               name: "title",
@@ -83,7 +83,7 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateBrands { createBrandbrand_1: createBrand (brand: {title: "Brand 1", external_id: "brand_1"}) { uid slug external_id } }'
+        'mutation createOrUpdateBrands { createBrandbrand_1: createBrand (brand: {title: "Brand 1", availability: {link: []}, external_id: "brand_1"}) { uid slug external_id } }'
       );
     });
 
@@ -97,13 +97,13 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateBrands { updateBrandbrand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1"}) { uid slug external_id } }'
+        'mutation createOrUpdateBrands { updateBrandbrand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: []}}) { uid slug external_id } }'
       );
     });
 
-    it("makes two requests when more than 20 records are sent", async () => {
+    it("makes two requests when more than 10 records are sent", async () => {
       const manyRecords: Partial<Record<FieldSet>>[] = Array.from(
-        { length: 30 },
+        { length: 20 },
         (_, index) => ({
           id: `brand_${index + 1}`,
           fields: {
@@ -145,6 +145,9 @@ describe("saas/create.ts", () => {
     ];
 
     const metadata: Partial<GraphQLMetadata> = {
+      availability: {
+        all: [],
+      },
       roles: [
         {
           uid: "role_1",
@@ -163,7 +166,7 @@ describe("saas/create.ts", () => {
 
     beforeEach(() => {
       const mockedGraphQLResponse = {
-        __type: {
+        IntrospectionOnType: {
           fields: [
             {
               name: "title",
@@ -205,7 +208,7 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateCredits { createCreditcredit_1: createCredit (credit: {title: "Credit 1", relationships: {people: {link: "person_1"}, roles: {link: "role_1"}}, external_id: "credit_1"}) { uid slug external_id } }'
+        'mutation createOrUpdateCredits { createCreditcredit_1: createCredit (credit: {title: "Credit 1", availability: {link: []}, relationships: {people: {link: "person_1"}, roles: {link: "role_1"}}, external_id: "credit_1"}) { uid slug external_id } }'
       );
     });
 
@@ -216,16 +219,12 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateCredits { updateCreditcredit_1: updateCredit (external_id: "credit_1", credit: {title: "Credit 1", relationships: {people: {link: "person_1"}, roles: {link: "role_1"}}}) { uid slug external_id } }'
+        'mutation createOrUpdateCredits { updateCreditcredit_1: updateCredit (external_id: "credit_1", credit: {title: "Credit 1", availability: {link: []}, relationships: {people: {link: "person_1"}, roles: {link: "role_1"}}}) { uid slug external_id } }'
       );
     });
   });
 
-  // describe("createGraphQLMediaObjects", () => {
-
-  // })
-
-  describe("createOrUpdateAirtableObjectsInSkylarkWithParentsInSameTable", () => {
+  describe("createGraphQLMediaObjects", () => {
     const table = { name: "episodes" } as Table<FieldSet>;
     const airtableEpisodeRecords: Partial<Record<FieldSet>>[] = [
       {
@@ -322,7 +321,7 @@ describe("saas/create.ts", () => {
     it("does nothing when no airtable records are given", async () => {
       // Arrange.
       const mockedGraphQLResponse = {
-        __type: {
+        IntrospectionOnType: {
           fields: [
             {
               name: "title",
@@ -346,7 +345,7 @@ describe("saas/create.ts", () => {
     it("calls Skylark 11 times when all records don't have parents", async () => {
       // Arrange.
       const mockedIntrospectionResponse = {
-        __type: {
+        IntrospectionOnType: {
           fields: [
             {
               name: "title",
@@ -414,7 +413,7 @@ describe("saas/create.ts", () => {
       ];
 
       const mockedIntrospectionResponse = {
-        __type: {
+        IntrospectionOnType: {
           fields: [
             {
               name: "title",
@@ -478,7 +477,7 @@ describe("saas/create.ts", () => {
       ];
 
       const mockedIntrospectionResponse = {
-        __type: {
+        IntrospectionOnType: {
           fields: [
             {
               name: "title",

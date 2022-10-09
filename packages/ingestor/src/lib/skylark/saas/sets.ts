@@ -31,7 +31,7 @@ export const createOrUpdateGraphQLSet = async (
   mediaObjects: GraphQLBaseObject[],
   metadata: GraphQLMetadata,
   languagesTable: Records<FieldSet>,
-  airtableSetsMetadata: { id: string; fields: FieldSet }[]
+  airtableSetsMetadata: Records<FieldSet>
 ): Promise<GraphQLBaseObject | undefined> => {
   const languageCodes: { [key: string]: string } = {};
   languagesTable
@@ -180,5 +180,6 @@ export const createOrUpdateGraphQLSet = async (
     return sets[0];
   }
 
+  return undefined;
   // return data[operationName];
 };
