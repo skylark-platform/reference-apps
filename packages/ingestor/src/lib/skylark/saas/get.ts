@@ -2,7 +2,11 @@ import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import { has, isNull } from "lodash";
 import { graphQLClient, GraphQLObjectTypes } from "@skylark-reference-apps/lib";
 
-import { GraphQLBaseObject, GraphQLIntrospection, GraphQLIntrospectionProperties } from "../../interfaces";
+import {
+  GraphQLBaseObject,
+  GraphQLIntrospection,
+  GraphQLIntrospectionProperties,
+} from "../../interfaces";
 
 export const getValidPropertiesForObject = async (
   objectType: GraphQLObjectTypes
@@ -10,7 +14,7 @@ export const getValidPropertiesForObject = async (
   const query = {
     query: {
       IntrospectionOnType: {
-        __aliasFor: '__type',
+        __aliasFor: "__type",
         __args: {
           name: objectType,
         },
@@ -24,7 +28,7 @@ export const getValidPropertiesForObject = async (
         },
       },
       IntrospectionOnInputType: {
-        __aliasFor: '__type',
+        __aliasFor: "__type",
         __args: {
           name: `${objectType}Input`,
         },
@@ -46,12 +50,19 @@ export const getValidPropertiesForObject = async (
     graphQLGetQuery
   );
 
-  const supportedKinds =["SCALAR", "ENUM", "NON_NULL"];
+  const supportedKinds = ["SCALAR", "ENUM", "NON_NULL"];
   const supportedObjects = ["availability"];
 
-  const fields = data.IntrospectionOnInputType?.inputFields || data.IntrospectionOnType.fields;
-  const filteredFields = fields.filter(({ name: property, type: { kind } }) => supportedKinds.includes(kind) || supportedObjects.includes(property))
-  const types: GraphQLIntrospectionProperties[] = filteredFields.map(({ name, type: { kind }}) => ( { property: name, kind }));
+  const fields =
+    data.IntrospectionOnInputType?.inputFields ||
+    data.IntrospectionOnType.fields;
+  const filteredFields = fields.filter(
+    ({ name: property, type: { kind } }) =>
+      supportedKinds.includes(kind) || supportedObjects.includes(property)
+  );
+  const types: GraphQLIntrospectionProperties[] = filteredFields.map(
+    ({ name, type: { kind } }) => ({ property: name, kind })
+  );
 
   return types;
 };

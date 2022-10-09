@@ -29,7 +29,11 @@ export interface GraphQLMetadata {
   };
 }
 
-export type GraphQLIntrospectionKind = "SCALAR" | "ENUM" | "INPUT_OBJECT" | "NON_NULL";
+export type GraphQLIntrospectionKind =
+  | "SCALAR"
+  | "ENUM"
+  | "INPUT_OBJECT"
+  | "NON_NULL";
 
 export interface GraphQLIntrospection {
   IntrospectionOnType: {
@@ -55,7 +59,7 @@ export interface GraphQLIntrospection {
 }
 
 export interface GraphQLIntrospectionProperties {
-  property: string
+  property: string;
   kind: GraphQLIntrospectionKind;
 }
 

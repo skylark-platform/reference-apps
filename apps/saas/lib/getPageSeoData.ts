@@ -6,7 +6,7 @@ import {
 } from "@skylark-reference-apps/lib";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import { Entertainment } from "../types/gql";
-import { addDimensionsToGraphQLMutation } from "./utils";
+import { createGraphQLQueryDimensions } from "./utils";
 
 interface SeoObjectImage {
   url: string;
@@ -34,12 +34,12 @@ export const getSeoDataForObject = async (
       [method]: {
         __args: {
           [lookupField]: lookupValue,
-          ...addDimensionsToGraphQLMutation({
+          ...createGraphQLQueryDimensions({
             language,
             // TODO can we work out these before the client loads the page?
             customerType: "premium",
             deviceType: "pc",
-          })
+          }),
         },
         uid: true,
         title: true,
@@ -90,9 +90,11 @@ export const getSeoDataForObject = async (
       synopsis,
       images,
     };
-  } catch(err) {
-    const error = err as { response?: { errors?: { errorType: string, message: string }[] } }
-    if(error && error?.response?.errors?.[0].errorType === "NotFound") {
+  } catch (err) {
+    const error = err as {
+      response?: { errors?: { errorType: string; message: string }[] };
+    };
+    if (error && error?.response?.errors?.[0].errorType === "NotFound") {
       return {
         title: "Not found",
         synopsis: error.response.errors?.[0].message,

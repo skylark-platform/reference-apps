@@ -272,10 +272,15 @@ const main = async () => {
       dimensions
     );
 
-    const defaultAvailabilityAirtable = airtable.availability.find(({ fields }) => has(fields, "default") && fields.default && has(fields, "slug"));
+    const defaultAvailabilityAirtable = airtable.availability.find(
+      ({ fields }) =>
+        has(fields, "default") && fields.default && has(fields, "slug")
+    );
     // Attempt to use the schedule marked as default in Airtable, if not use the always-license one
-    const defaultSchedule = availability.find(
-      ({ slug }) => defaultAvailabilityAirtable ? slug === defaultAvailabilityAirtable.fields.slug : slug === "always-license"
+    const defaultSchedule = availability.find(({ slug }) =>
+      defaultAvailabilityAirtable
+        ? slug === defaultAvailabilityAirtable.fields.slug
+        : slug === "always-license"
     );
 
     // eslint-disable-next-line no-console
@@ -290,7 +295,7 @@ const main = async () => {
     const metadataAvailability: GraphQLMetadata["availability"] = {
       all: availability,
       default: UNLICENSED_BY_DEFAULT ? undefined : defaultSchedule,
-    }
+    };
 
     const metadata: GraphQLMetadata = {
       dimensions,
@@ -308,37 +313,37 @@ const main = async () => {
     metadata.images = await createOrUpdateGraphQlObjectsUsingIntrospection(
       "Image",
       airtable.images,
-      metadataAvailability,
+      metadataAvailability
     );
     metadata.themes = await createOrUpdateGraphQlObjectsUsingIntrospection(
       "Theme",
       airtable.themes,
-      metadataAvailability,
+      metadataAvailability
     );
     metadata.genres = await createOrUpdateGraphQlObjectsUsingIntrospection(
       "Genre",
       airtable.genres,
-      metadataAvailability,
+      metadataAvailability
     );
     metadata.ratings = await createOrUpdateGraphQlObjectsUsingIntrospection(
       "Rating",
       airtable.ratings,
-      metadataAvailability,
+      metadataAvailability
     );
     metadata.tags = await createOrUpdateGraphQlObjectsUsingIntrospection(
       "Tag",
       airtable.tags,
-      metadataAvailability,
+      metadataAvailability
     );
     metadata.people = await createOrUpdateGraphQlObjectsUsingIntrospection(
       "Person",
       airtable.people,
-      metadataAvailability,
+      metadataAvailability
     );
     metadata.roles = await createOrUpdateGraphQlObjectsUsingIntrospection(
       "Role",
       airtable.roles,
-      metadataAvailability,
+      metadataAvailability
     );
     metadata.credits = await createOrUpdateGraphQLCredits(
       airtable.credits,
@@ -355,7 +360,11 @@ const main = async () => {
       metadata
     );
 
-    await createTranslationsForGraphQLObjects(mediaObjects, airtable.translations.mediaObjects, airtable.dimensions.languages);
+    await createTranslationsForGraphQLObjects(
+      mediaObjects,
+      airtable.translations.mediaObjects,
+      airtable.dimensions.languages
+    );
 
     // eslint-disable-next-line no-console
     console.log("Media objects created");
@@ -369,10 +378,13 @@ const main = async () => {
       ) {
         const setConfig = orderedSetsToCreateWithoutDynamicObject[i];
         // eslint-disable-next-line no-await-in-loop
-        const set = await createOrUpdateGraphQLSet(setConfig, [
-          ...mediaObjects,
-          ...createdSets,
-        ], metadata, airtable.dimensions.languages, airtable.setsMetadata);
+        const set = await createOrUpdateGraphQLSet(
+          setConfig,
+          [...mediaObjects, ...createdSets],
+          metadata,
+          airtable.dimensions.languages,
+          airtable.setsMetadata
+        );
         if (set) createdSets.push(set);
       }
 

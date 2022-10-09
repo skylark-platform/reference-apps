@@ -7,7 +7,7 @@ import {
 } from "@skylark-reference-apps/lib";
 import { useDimensions } from "@skylark-reference-apps/react";
 import { Brand, Episode, Movie, Season } from "../types/gql";
-import { addDimensionsToGraphQLMutation } from "../lib/utils";
+import { createGraphQLQueryDimensions } from "../lib/utils";
 
 type ObjectType<T> = T extends "Episode"
   ? Episode
@@ -22,7 +22,7 @@ type ObjectType<T> = T extends "Episode"
 const createGraphQLQuery = (
   type: GraphQLMediaObjectTypes,
   lookupValue: string,
-  dimensions: Dimensions,
+  dimensions: Dimensions
 ) => {
   // Helper to use the external_id when an airtable record ID is given
   const lookupField = lookupValue.startsWith("rec") ? "external_id" : "uid";
@@ -143,7 +143,7 @@ const createGraphQLQuery = (
       [method]: {
         __args: {
           [lookupField]: lookupValue,
-          ...addDimensionsToGraphQLMutation(dimensions),
+          ...createGraphQLQueryDimensions(dimensions),
         },
         ...fieldsToFetch,
       },
@@ -155,11 +155,11 @@ const createGraphQLQuery = (
   return { query, method };
 };
 
-const fetcher = <T extends GraphQLMediaObjectTypes>([type, lookupValue, dimensions]: [
-  type: T,
-  lookupValue: string,
-  dimensions: Dimensions,
-]) => {
+const fetcher = <T extends GraphQLMediaObjectTypes>([
+  type,
+  lookupValue,
+  dimensions,
+]: [type: T, lookupValue: string, dimensions: Dimensions]) => {
   const { query, method } = createGraphQLQuery(type, lookupValue, dimensions);
   return graphQLClient
     .request<{ [key: string]: ObjectType<T> }>(query)

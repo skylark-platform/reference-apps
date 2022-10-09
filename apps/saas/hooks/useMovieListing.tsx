@@ -3,7 +3,7 @@ import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import { Dimensions, graphQLClient } from "@skylark-reference-apps/lib";
 import { useDimensions } from "@skylark-reference-apps/react";
 import { Movie, MovieListing } from "../types/gql";
-import { addDimensionsToGraphQLMutation } from "../lib/utils";
+import { createGraphQLQueryDimensions } from "../lib/utils";
 
 const createGraphQLQuery = (dimensions: Dimensions, nextToken?: string) => {
   const method = `listMovie`;
@@ -14,7 +14,7 @@ const createGraphQLQuery = (dimensions: Dimensions, nextToken?: string) => {
       [method]: {
         __args: {
           next_token: nextToken || "",
-          ...addDimensionsToGraphQLMutation(dimensions),
+          ...createGraphQLQueryDimensions(dimensions),
         },
         next_token: true,
         objects: {
@@ -40,7 +40,11 @@ const movieListingFetcher = ([, dimensions, nextToken]: [
     .then(({ [method]: data }): MovieListing => data);
 };
 
-const getKey = (pageIndex: number, previousPageData: MovieListing | null, dimensions: Dimensions) => {
+const getKey = (
+  pageIndex: number,
+  previousPageData: MovieListing | null,
+  dimensions: Dimensions
+) => {
   if (previousPageData && !previousPageData.next_token) return null;
 
   if (pageIndex === 0) return ["MovieListing", dimensions, ""];

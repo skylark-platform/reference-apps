@@ -22,7 +22,6 @@ describe("saas/create.ts", () => {
   });
 
   describe("createOrUpdateGraphQlObjectsUsingIntrospection", () => {
-
     // TODO add test for the default license being added
 
     const records: Partial<Record<FieldSet>>[] = [

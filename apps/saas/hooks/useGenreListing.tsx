@@ -3,7 +3,7 @@ import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import { Dimensions, graphQLClient } from "@skylark-reference-apps/lib";
 import { useDimensions } from "@skylark-reference-apps/react";
 import { Genre, GenreListing } from "../types/gql";
-import { addDimensionsToGraphQLMutation } from "../lib/utils";
+import { createGraphQLQueryDimensions } from "../lib/utils";
 
 const createGraphQLQuery = (dimensions: Dimensions, nextToken?: string) => {
   const method = `listGenre`;
@@ -14,7 +14,7 @@ const createGraphQLQuery = (dimensions: Dimensions, nextToken?: string) => {
       [method]: {
         __args: {
           next_token: nextToken || "",
-          ...addDimensionsToGraphQLMutation(dimensions),
+          ...createGraphQLQueryDimensions(dimensions),
         },
         next_token: true,
         objects: {
@@ -30,7 +30,11 @@ const createGraphQLQuery = (dimensions: Dimensions, nextToken?: string) => {
   return { query, method };
 };
 
-const fetcher = ([, dimensions, nextToken]: [name: string, dimensions: Dimensions, nextToken?: string]) => {
+const fetcher = ([, dimensions, nextToken]: [
+  name: string,
+  dimensions: Dimensions,
+  nextToken?: string
+]) => {
   const { query, method } = createGraphQLQuery(dimensions, nextToken);
   return graphQLClient
     .request<{ [key: string]: GenreListing }>(query)
@@ -40,7 +44,7 @@ const fetcher = ([, dimensions, nextToken]: [name: string, dimensions: Dimension
 const getKey = (
   pageIndex: number,
   previousPageData: GenreListing | undefined,
-  dimensions: Dimensions,
+  dimensions: Dimensions
 ) => {
   if (previousPageData && !previousPageData.next_token) return null;
 
@@ -53,7 +57,8 @@ export const useGenreListing = () => {
   const { dimensions } = useDimensions();
 
   const { data, error, isLoading } = useSWRInfinite<GenreListing, Error>(
-    (pageIndex: number, previousPageData: GenreListing | undefined) => getKey(pageIndex, previousPageData, dimensions),
+    (pageIndex: number, previousPageData: GenreListing | undefined) =>
+      getKey(pageIndex, previousPageData, dimensions),
     fetcher,
     {
       initialSize: 3,

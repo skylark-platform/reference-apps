@@ -5,9 +5,6 @@ import { Episode } from "../../types/gql";
 jest.spyOn(graphQLClient, "request");
 
 describe("getPageSeoData.ts", () => {
-
-  // TODO add test for throwing NotFound and generic errors
-
   let graphQlRequest: jest.Mock;
 
   beforeEach(() => {
@@ -43,6 +40,34 @@ describe("getPageSeoData.ts", () => {
           url: "https://skylark.com/image.jpg",
         },
       ],
+    });
+  });
+
+  it("returns NotFound when Skylark returns a NotFound error", async () => {
+    graphQlRequest.mockRejectedValueOnce({
+      response: {
+        errors: [{ errorType: "NotFound", message: "Not found message" }],
+      },
+    });
+
+    const seo = await getSeoDataForObject("Episode", "uid", "");
+
+    expect(seo).toEqual({
+      title: "Not found",
+      synopsis: "Not found message",
+      images: [],
+    });
+  });
+
+  it("returns empty data when an unexpected error occurs", async () => {
+    graphQlRequest.mockRejectedValueOnce("Unexpected");
+
+    const seo = await getSeoDataForObject("Episode", "uid", "");
+
+    expect(seo).toEqual({
+      title: "",
+      synopsis: "",
+      images: [],
     });
   });
 });

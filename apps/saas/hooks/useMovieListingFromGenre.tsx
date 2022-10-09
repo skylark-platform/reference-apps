@@ -3,9 +3,13 @@ import useSWRInfinite from "swr/infinite";
 import { Dimensions, graphQLClient } from "@skylark-reference-apps/lib";
 import { useDimensions } from "@skylark-reference-apps/react";
 import { Genre, MovieListing, Movie } from "../types/gql";
-import { addDimensionsToGraphQLMutation } from "../lib/utils";
+import { createGraphQLQueryDimensions } from "../lib/utils";
 
-const createGraphQLQuery = (genreUid: string, dimensions: Dimensions, nextToken?: string) => {
+const createGraphQLQuery = (
+  genreUid: string,
+  dimensions: Dimensions,
+  nextToken?: string
+) => {
   const method = `getGenre`;
 
   const queryAsJson = {
@@ -14,7 +18,7 @@ const createGraphQLQuery = (genreUid: string, dimensions: Dimensions, nextToken?
       [method]: {
         __args: {
           uid: genreUid,
-          ...addDimensionsToGraphQLMutation(dimensions),
+          ...createGraphQLQueryDimensions(dimensions),
         },
         movies: {
           __args: {
@@ -65,7 +69,9 @@ export const useMovieListingFromGenre = (genreUid?: string) => {
 
   const { data, error, isLoading } = useSWRInfinite<MovieListing, Error>(
     (pageIndex, previousPageData: MovieListing) =>
-      genreUid ? getKey(pageIndex, previousPageData, genreUid, dimensions) : null,
+      genreUid
+        ? getKey(pageIndex, previousPageData, genreUid, dimensions)
+        : null,
     movieListingFromGenreFetcher,
     {
       initialSize: 10,

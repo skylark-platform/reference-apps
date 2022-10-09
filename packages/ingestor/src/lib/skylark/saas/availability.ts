@@ -7,7 +7,7 @@ import {
   GraphQLBaseObject,
   GraphQLDimension,
   GraphQLMetadata,
-  GraphQLIntrospectionProperties
+  GraphQLIntrospectionProperties,
 } from "../../interfaces";
 import { mutateMultipleObjects } from "./create";
 import { getValidPropertiesForObject } from "./get";
@@ -243,7 +243,10 @@ export const createOrUpdateAvailability = async (
         slug: string;
         start?: string;
         end?: string;
-        dimensions?: { dimension_slug: DimensionTypes; value_slugs: string[] }[];
+        dimensions?: {
+          dimension_slug: DimensionTypes;
+          value_slugs: string[];
+        }[];
       } = {
         title: fields.title,
         slug: fields.slug,
@@ -293,8 +296,10 @@ export const createOrUpdateAvailability = async (
       ];
 
       // Filter out any dimensions that are empty, only add the dimensions property to the input if at least one dimension is given
-      const filteredDimensions = availabilityDimensions.filter(({ value_slugs }) => value_slugs.length > 0);
-      if(filteredDimensions.length > 0) {
+      const filteredDimensions = availabilityDimensions.filter(
+        ({ value_slugs }) => value_slugs.length > 0
+      );
+      if (filteredDimensions.length > 0) {
         availabilityInput.dimensions = filteredDimensions;
       }
 

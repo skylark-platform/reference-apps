@@ -5,7 +5,11 @@ import {
 import { Attachment, Collaborator } from "airtable";
 import { EnumType } from "json-to-graphql-query";
 import { has, isArray } from "lodash";
-import { GraphQLBaseObject, GraphQLIntrospectionProperties, GraphQLMetadata } from "../../interfaces";
+import {
+  GraphQLBaseObject,
+  GraphQLIntrospectionProperties,
+  GraphQLMetadata,
+} from "../../interfaces";
 import { ApiObjectType } from "../../types";
 
 export const getExtId = (externalId: string) =>
@@ -106,7 +110,10 @@ export const getValidFields = (
       : fields[property];
     return {
       ...obj,
-      [property]: kind === "ENUM" ? new EnumType(val as string) : val as string | number | boolean | EnumType,
+      [property]:
+        kind === "ENUM"
+          ? new EnumType(val as string)
+          : (val as string | number | boolean | EnumType),
     };
   }, {} as { [key: string]: string | number | boolean | EnumType });
 
@@ -141,7 +148,7 @@ export const createGraphQLOperation = (
 
 export const getGraphQLObjectAvailability = (
   availabilityMetadata: GraphQLMetadata["availability"],
-  availabilityField?: string[],
+  availabilityField?: string[]
 ): { link: string[] } => {
   const { all, default: defaultAvailability } = availabilityMetadata;
   if (!availabilityField || availabilityField.length === 0) {

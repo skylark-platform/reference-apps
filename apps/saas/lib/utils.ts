@@ -118,8 +118,8 @@ export const getSynopsisByOrderForGraphQLObject = (
   );
 };
 
-export const addDimensionsToGraphQLMutation = (activeDimensions: Dimensions) => {
-  const dimensions: { dimension: DimensionTypes, value: string }[] = [
+export const createGraphQLQueryDimensions = (activeDimensions: Dimensions) => {
+  const dimensions: { dimension: DimensionTypes; value: string }[] = [
     { dimension: "device-types", value: activeDimensions.deviceType },
     { dimension: "customer-types", value: activeDimensions.customerType },
   ];
@@ -127,5 +127,5 @@ export const addDimensionsToGraphQLMutation = (activeDimensions: Dimensions) => 
   return {
     language: activeDimensions.language,
     dimensions,
-  }
-}
+  };
+};

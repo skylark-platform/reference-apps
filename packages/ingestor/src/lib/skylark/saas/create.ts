@@ -5,9 +5,22 @@ import {
 } from "@skylark-reference-apps/lib";
 import { FieldSet, Records } from "airtable";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
-import { chunk, flatten, has, isArray, isEmpty, isString, toString, values } from "lodash";
+import {
+  chunk,
+  flatten,
+  has,
+  isArray,
+  isEmpty,
+  isString,
+  toString,
+  values,
+} from "lodash";
 
-import { GraphQLBaseObject, GraphQLIntrospectionProperties, GraphQLMetadata } from "../../interfaces";
+import {
+  GraphQLBaseObject,
+  GraphQLIntrospectionProperties,
+  GraphQLMetadata,
+} from "../../interfaces";
 import {
   ApiObjectType,
   RelationshipsLink,
@@ -66,7 +79,7 @@ export const mutateMultipleObjects = async <T>(
 export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
   objectType: GraphQLObjectTypes,
   airtableRecords: Records<FieldSet>,
-  metadataAvailability: GraphQLMetadata["availability"],
+  metadataAvailability: GraphQLMetadata["availability"]
 ): Promise<GraphQLBaseObject[]> => {
   if (airtableRecords.length === 0) {
     return [];
@@ -86,12 +99,12 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
 
       const availability = getGraphQLObjectAvailability(
         metadataAvailability,
-        fields.availability as string[],
+        fields.availability as string[]
       );
 
       const args = {
         [objectType.toLowerCase()]: objectExists
-          ? { ...validFields, availability, }
+          ? { ...validFields, availability }
           : { ...validFields, availability, external_id: id },
       };
 
@@ -151,7 +164,7 @@ export const createOrUpdateGraphQLCredits = async (
 
       const availability = getGraphQLObjectAvailability(
         metadata.availability,
-        fields.availability as string[],
+        fields.availability as string[]
       );
 
       const creditExists = existingObjects.includes(id);
@@ -233,14 +246,15 @@ export const createGraphQLMediaObjects = async (
   airtableRecords: Records<FieldSet>,
   metadata: GraphQLMetadata
 ) => {
-  const validObjectProperties: { [key in GraphQLMediaObjectTypes]: GraphQLIntrospectionProperties[] } =
-    {
-      Episode: await getValidPropertiesForObject("Episode"),
-      Season: await getValidPropertiesForObject("Season"),
-      Brand: await getValidPropertiesForObject("Brand"),
-      Movie: await getValidPropertiesForObject("Movie"),
-      Asset: await getValidPropertiesForObject("Asset"),
-    };
+  const validObjectProperties: {
+    [key in GraphQLMediaObjectTypes]: GraphQLIntrospectionProperties[];
+  } = {
+    Episode: await getValidPropertiesForObject("Episode"),
+    Season: await getValidPropertiesForObject("Season"),
+    Brand: await getValidPropertiesForObject("Brand"),
+    Movie: await getValidPropertiesForObject("Movie"),
+    Asset: await getValidPropertiesForObject("Asset"),
+  };
 
   const externalIds = airtableRecords.map(({ id }) => id);
   const existingObjects = flatten(
@@ -374,82 +388,91 @@ export const createGraphQLMediaObjects = async (
 export const createTranslationsForGraphQLObjects = async (
   originalObjects: GraphQLBaseObject[],
   translationsTable: Records<FieldSet>,
-  languagesTable: Records<FieldSet>,
+  languagesTable: Records<FieldSet>
 ) => {
-  const validObjectProperties: { [key in GraphQLMediaObjectTypes]: GraphQLIntrospectionProperties[] } =
-    {
-      Episode: await getValidPropertiesForObject("Episode"),
-      Season: await getValidPropertiesForObject("Season"),
-      Brand: await getValidPropertiesForObject("Brand"),
-      Movie: await getValidPropertiesForObject("Movie"),
-      Asset: await getValidPropertiesForObject("Asset"),
-    };
+  const validObjectProperties: {
+    [key in GraphQLMediaObjectTypes]: GraphQLIntrospectionProperties[];
+  } = {
+    Episode: await getValidPropertiesForObject("Episode"),
+    Season: await getValidPropertiesForObject("Season"),
+    Brand: await getValidPropertiesForObject("Brand"),
+    Movie: await getValidPropertiesForObject("Movie"),
+    Asset: await getValidPropertiesForObject("Asset"),
+  };
 
   const languageCodes: { [key: string]: string } = {};
-  languagesTable.filter(({ fields }) => has(fields, "code") && toString(fields.code)).forEach(({ fields, id }) => {
-    languageCodes[id] = fields.code as string;
-  });
+  languagesTable
+    .filter(({ fields }) => has(fields, "code") && toString(fields.code))
+    .forEach(({ fields, id }) => {
+      languageCodes[id] = fields.code as string;
+    });
 
-  const translationOperations = translationsTable.reduce((previousOperations, { fields, id }) => {
-    if (
-      !fields.object ||
-      !isArray(fields.object) ||
-      !isArray(fields.languages) ||
-      isEmpty(fields.languages)
-    ) {
-      return previousOperations;
-    }
-
-    const [objectAirtableId] = fields.object as string[];
-    const originalObject = originalObjects.find(
-      ({ external_id }) => external_id === objectAirtableId
-    );
-
-    // if the original object doesn't exist
-    if (!originalObject) {
-      return previousOperations;
-    }
-
-    const { objectType, argName, updateFunc } = gqlObjectMeta(
-      // eslint-disable-next-line no-underscore-dangle
-      originalObject.__typename as GraphQLMediaObjectTypes,
-    );
-
-    const validFields = getValidFields(
-      fields,
-      validObjectProperties[objectType]
-    );
-
-    const languages = fields.languages as string[];
-    const objectsTranslations = languages.reduce((previousTranslations, languageAirtableId) => {
-      const language = languageCodes[languageAirtableId];
-      const updatedTranslations = {
-        ...previousTranslations,
-        [`translation_${language.replace("-", "_")}_${id}`]: {
-          __aliasFor: updateFunc,
-          __args: {
-            uid: originalObject.uid,
-            language,
-            [argName]: validFields,
-          },
-          __typename: true,
-          uid: true,
-          external_id: true,
-          title: true,
-          slug: true,
-        },
+  const translationOperations = translationsTable.reduce(
+    (previousOperations, { fields, id }) => {
+      if (
+        !fields.object ||
+        !isArray(fields.object) ||
+        !isArray(fields.languages) ||
+        isEmpty(fields.languages)
+      ) {
+        return previousOperations;
       }
 
-      return updatedTranslations;
-    }, {} as { [key: string]: object })
+      const [objectAirtableId] = fields.object as string[];
+      const originalObject = originalObjects.find(
+        ({ external_id }) => external_id === objectAirtableId
+      );
 
-    const updatedOperations: { [key: string]: object } = {
-      ...previousOperations,
-      ...objectsTranslations,
-    };
+      // if the original object doesn't exist
+      if (!originalObject) {
+        return previousOperations;
+      }
 
-    return updatedOperations;
-  }, {} as { [key: string]: object });
+      const { objectType, argName, updateFunc } = gqlObjectMeta(
+        // eslint-disable-next-line no-underscore-dangle
+        originalObject.__typename as GraphQLMediaObjectTypes
+      );
+
+      const validFields = getValidFields(
+        fields,
+        validObjectProperties[objectType]
+      );
+
+      const languages = fields.languages as string[];
+      const objectsTranslations = languages.reduce(
+        (previousTranslations, languageAirtableId) => {
+          const language = languageCodes[languageAirtableId];
+          const updatedTranslations = {
+            ...previousTranslations,
+            [`translation_${language.replace("-", "_")}_${id}`]: {
+              __aliasFor: updateFunc,
+              __args: {
+                uid: originalObject.uid,
+                language,
+                [argName]: validFields,
+              },
+              __typename: true,
+              uid: true,
+              external_id: true,
+              title: true,
+              slug: true,
+            },
+          };
+
+          return updatedTranslations;
+        },
+        {} as { [key: string]: object }
+      );
+
+      const updatedOperations: { [key: string]: object } = {
+        ...previousOperations,
+        ...objectsTranslations,
+      };
+
+      return updatedOperations;
+    },
+    {} as { [key: string]: object }
+  );
 
   const arr = await mutateMultipleObjects<GraphQLBaseObject>(
     "createMediaObjectTranslations",
