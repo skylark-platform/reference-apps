@@ -50,21 +50,34 @@ describe("saas/sets.ts", () => {
     }
   );
 
-  const metadata: Partial<GraphQLMetadata> = {};
+  const metadata: Partial<GraphQLMetadata> = {
+    availability: {
+      all: [],
+      default: {
+        uid: "availability-1",
+        external_id: "availability-1",
+        slug: "availability-1",
+      },
+    },
+  };
 
   const languagesTable: Partial<Record<FieldSet>>[] = [
     {
       id: "language-1",
       fields: {
-        title: "English (United Kingdom)",
-        slug: "eng-uk",
         code: "en-GB",
+      },
+    },
+    {
+      id: "language-2",
+      fields: {
+        code: "pt-PT",
       },
     },
   ];
 
   // eslint-disable-next-line jest/no-disabled-tests
-  describe.skip("createOrUpdateGraphQLSet", () => {
+  describe("createOrUpdateGraphQLSet", () => {
     beforeEach(() => {
       const mockedIntrospectionResponse = {
         IntrospectionOnType: {
@@ -76,37 +89,17 @@ describe("saas/sets.ts", () => {
                 kind: "SCALAR",
               },
             },
+            {
+              name: "title_short",
+              type: {
+                name: "String",
+                kind: "SCALAR",
+              },
+            },
           ],
         },
       };
       graphQlRequest.mockResolvedValueOnce(mockedIntrospectionResponse);
-    });
-
-    it("makes a request to create a set containing various media objects", async () => {
-      const mockedGetResponse = {
-        response: {
-          data: {
-            home_page_slider: null,
-          },
-        },
-      };
-      graphQlRequest.mockRejectedValueOnce(mockedGetResponse);
-
-      const mockedCreateResponse = {
-        createSet: {},
-      };
-      graphQlRequest.mockResolvedValueOnce(mockedCreateResponse);
-
-      await createOrUpdateGraphQLSet(
-        setConfig,
-        mediaObjects,
-        metadata as GraphQLMetadata,
-        languagesTable as Records<FieldSet>,
-        [] as Records<FieldSet>
-      );
-      expect(graphQlRequest).toBeCalledWith(
-        'mutation { createSet: createSet (set: {external_id: "home_page_slider", content: {Episode: {link: [{position: 5, uid: "episodes-Game of Thrones S01E01"}]}, Season: {link: [{position: 6, uid: "seasons-Game of Thrones S01"}]}, Brand: {link: [{position: 1, uid: "brands-game-of-thrones"}]}, Movie: {link: [{position: 2, uid: "movies-deadpool-2"}, {position: 3, uid: "movies-sing-2"}, {position: 4, uid: "movies-us"}]}, Set: {link: []}}, title: "Home page hero"}) { uid external_id slug } }'
-      );
     });
 
     it("returns an empty object when attempting the set exists as update is not implemented", async () => {
@@ -118,6 +111,101 @@ describe("saas/sets.ts", () => {
         [] as Records<FieldSet>
       );
       expect(got).toEqual({});
+    });
+
+    describe("without translations", () => {
+      it("makes a request to create a set containing various media objects", async () => {
+        const mockedGetResponse = {
+          response: {
+            data: {
+              home_page_slider: null,
+            },
+          },
+        };
+        graphQlRequest.mockRejectedValueOnce(mockedGetResponse);
+
+        const mockedCreateResponse = {
+          createSet: {},
+        };
+        graphQlRequest.mockResolvedValueOnce(mockedCreateResponse);
+
+        await createOrUpdateGraphQLSet(
+          setConfig,
+          mediaObjects,
+          metadata as GraphQLMetadata,
+          languagesTable as Records<FieldSet>,
+          [] as Records<FieldSet>
+        );
+        expect(graphQlRequest).toBeCalledWith(
+          'mutation { createSet_home_page_slider: createSet (set: {title: "Home page hero", external_id: "home_page_slider", content: {Episode: {link: [{position: 5, uid: "episodes-Game of Thrones S01E01"}]}, Season: {link: [{position: 6, uid: "seasons-Game of Thrones S01"}]}, Brand: {link: [{position: 1, uid: "brands-game-of-thrones"}]}, Movie: {link: [{position: 2, uid: "movies-deadpool-2"}, {position: 3, uid: "movies-sing-2"}, {position: 4, uid: "movies-us"}]}, Set: {link: []}}, availability: {link: ["availability-1"]}}) { uid external_id slug } }'
+        );
+      });
+    });
+
+    describe("with translations", () => {
+      const mockedGetResponse = {
+        response: {
+          data: {
+            home_page_slider: null,
+          },
+        },
+      };
+      const mockedCreateResponse = {
+        createSet: {},
+      };
+
+      const translationsTable: Partial<Record<FieldSet>>[] = [
+        {
+          fields: {
+            slug: setConfig.slug,
+            language: ["language-1"],
+            title_short: "English Title",
+          },
+        },
+        {
+          fields: {
+            slug: setConfig.slug,
+            language: ["language-2"],
+            title_short: "Portuguese Title",
+          },
+        },
+      ];
+
+      it("makes a create and update request to create two language versions of a set", async () => {
+        graphQlRequest.mockRejectedValueOnce(mockedGetResponse);
+        graphQlRequest.mockResolvedValue(mockedCreateResponse);
+
+        await createOrUpdateGraphQLSet(
+          setConfig,
+          mediaObjects,
+          metadata as GraphQLMetadata,
+          languagesTable as Records<FieldSet>,
+          translationsTable as Records<FieldSet>
+        );
+        expect(graphQlRequest).toBeCalledTimes(4);
+        expect(graphQlRequest).toHaveBeenNthCalledWith(
+          3,
+          'mutation { createSet_en_GB_home_page_slider: createSet (language: "en-GB", set: {external_id: "home_page_slider", title: "Home page hero", title_short: "English Title", content: {Episode: {link: [{position: 5, uid: "episodes-Game of Thrones S01E01"}]}, Season: {link: [{position: 6, uid: "seasons-Game of Thrones S01"}]}, Brand: {link: [{position: 1, uid: "brands-game-of-thrones"}]}, Movie: {link: [{position: 2, uid: "movies-deadpool-2"}, {position: 3, uid: "movies-sing-2"}, {position: 4, uid: "movies-us"}]}, Set: {link: []}}, availability: {link: ["availability-1"]}, relationships: {}}) { uid external_id slug } }'
+        );
+      });
+
+      it("the second language creation is an update and doesn't contain relationships or content", async () => {
+        graphQlRequest.mockRejectedValueOnce(mockedGetResponse);
+        graphQlRequest.mockResolvedValue(mockedCreateResponse);
+
+        await createOrUpdateGraphQLSet(
+          setConfig,
+          mediaObjects,
+          metadata as GraphQLMetadata,
+          languagesTable as Records<FieldSet>,
+          translationsTable as Records<FieldSet>
+        );
+        expect(graphQlRequest).toBeCalledTimes(4);
+        expect(graphQlRequest).toHaveBeenNthCalledWith(
+          4,
+          'mutation { updateSet_pt_PT_home_page_slider: updateSet (external_id: "home_page_slider", language: "pt-PT", set: {title: "Home page hero", title_short: "Portuguese Title"}) { uid external_id slug } }'
+        );
+      });
     });
   });
 });

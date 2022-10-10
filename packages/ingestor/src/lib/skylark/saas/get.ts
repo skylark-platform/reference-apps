@@ -71,20 +71,32 @@ export const getExistingObjects = async (
   objectType: GraphQLObjectTypes,
   externalIds: string[]
 ): Promise<string[]> => {
-  const getOperations = externalIds.reduce((previousOperations, externalId) => {
-    const operation = {
-      ...previousOperations,
-      [externalId]: {
-        __aliasFor: `get${objectType}`,
-        __args: {
-          ignore_availability: true,
-          external_id: externalId,
-        },
-        uid: true,
-        external_id: true,
-      },
+  const getOperations = externalIds.reduce((previousQueries, externalId) => {
+    const args: { [key: string]: string | boolean } = {
+      external_id: externalId,
     };
-    return operation;
+
+    // Dimensions don't have availability
+    if (
+      !objectType.startsWith("Dimension") &&
+      !objectType.startsWith("Availability")
+    ) {
+      args.ignore_availability = true;
+    }
+
+    const operation = {
+      __aliasFor: `get${objectType}`,
+      __args: args,
+      uid: true,
+      external_id: true,
+    };
+
+    const queries = {
+      ...previousQueries,
+      [externalId]: operation,
+    };
+
+    return queries;
   }, {} as { [key: string]: object });
 
   const query = {

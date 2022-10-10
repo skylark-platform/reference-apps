@@ -59,7 +59,7 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         2,
-        'query getBrands { brand_1: getBrand (ignore_availability: true, external_id: "brand_1") { uid external_id } }'
+        'query getBrands { brand_1: getBrand (external_id: "brand_1", ignore_availability: true) { uid external_id } }'
       );
     });
 
@@ -206,7 +206,7 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         2,
-        'query getCredits { credit_1: getCredit (ignore_availability: true, external_id: "credit_1") { uid external_id } }'
+        'query getCredits { credit_1: getCredit (external_id: "credit_1", ignore_availability: true) { uid external_id } }'
       );
     });
 

@@ -10,7 +10,7 @@ import {
   GraphQLIntrospectionProperties,
 } from "../../interfaces";
 import { mutateMultipleObjects } from "./create";
-import { getValidPropertiesForObject } from "./get";
+import { getExistingObjects, getValidPropertiesForObject } from "./get";
 import { createGraphQLOperation, getValidFields } from "./utils";
 
 const dimensionsConfig: { slug: DimensionTypes; title: string }[] = [
@@ -101,7 +101,7 @@ export const createDimensions = async () => {
         description: true,
       };
 
-      const updatedOperations = {
+      const updatedOperations: { [key: string]: object } = {
         ...previousOperations,
         [`createDimension${title.replace(/\s/g, "")}`]: operation,
       };
@@ -134,21 +134,23 @@ const createOrUpdateDimensionValues = async (
 
   const operations = airtableRecords.reduce(
     (previousOperations, { fields, id }) => {
-      const validFields = getValidFields(
-        { ...fields, external_id: id },
-        validProperties
-      );
+      const validFields = getValidFields(fields, validProperties);
 
       const objectExists = existingObjectSlugs.includes(fields.slug as string);
 
       const dimensionValue = {
-        dimension_value: {
-          ...validFields,
-        },
+        dimension_value: objectExists
+          ? validFields
+          : {
+              ...validFields,
+              external_id: id,
+            },
       };
 
       const args = objectExists
-        ? dimensionValue
+        ? {
+            ...dimensionValue,
+          }
         : {
             dimension_id: type,
             ...dimensionValue,
@@ -158,10 +160,10 @@ const createOrUpdateDimensionValues = async (
         "DimensionValue",
         objectExists,
         args,
-        { dimension_id: type, value_id: validFields.slug as string }
+        { dimension_id: type, value_external_id: id }
       );
 
-      const updatedOperations = {
+      const updatedOperations: { [key: string]: object } = {
         ...previousOperations,
         [`${method}${id}`]: operation,
       };
@@ -231,12 +233,14 @@ export const createOrUpdateAvailability = async (
   schedules: Record<FieldSet>[],
   dimensions: GraphQLMetadata["dimensions"]
 ) => {
+  const externalIds = schedules.map(({ id }) => id);
+  const existingObjects = await getExistingObjects("Availability", externalIds);
+
   const operations = schedules.reduce(
     (previousOperations, { id, ...record }) => {
       const fields = record.fields as AvailabilityTableFields;
 
-      // Currently only support creating availability, not updating
-      const objectExists = false;
+      const objectExists = existingObjects.includes(id);
 
       const availabilityInput: {
         title: string;

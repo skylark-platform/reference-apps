@@ -196,6 +196,8 @@ export const createOrUpdateGraphQLSet = async (
   languagesTable: Records<FieldSet>,
   airtableSetsMetadata: Records<FieldSet>
 ): Promise<GraphQLBaseObject | undefined> => {
+  const validProperties = await getValidPropertiesForObject("Set");
+
   const setExists =
     (await getExistingObjects("Set", [set.externalId])).length > 0;
   if (setExists) {
@@ -206,7 +208,6 @@ export const createOrUpdateGraphQLSet = async (
 
   const operationName = setExists ? `updateSet` : `createSet`;
 
-  const validProperties = await getValidPropertiesForObject("Set");
   const languageCodes = getLanguageCodesFromAirtable(languagesTable);
 
   const content = createSetContent(set.contents, mediaObjects);
@@ -268,6 +269,7 @@ export const createOrUpdateGraphQLSet = async (
     setExists
   );
   const mutationKey = `${operationName}_${set.externalId}`;
+
   const data = await createOrUpdateSet(operationName, args, mutationKey);
 
   return data[mutationKey];
