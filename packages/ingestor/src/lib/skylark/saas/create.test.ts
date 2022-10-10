@@ -1,11 +1,12 @@
 import { FieldSet, Records, Record, Table } from "airtable";
 import { graphQLClient } from "@skylark-reference-apps/lib";
 
-import { GraphQLMetadata } from "../../interfaces";
+import { GraphQLBaseObject, GraphQLMetadata } from "../../interfaces";
 import {
   createGraphQLMediaObjects,
   createOrUpdateGraphQLCredits,
   createOrUpdateGraphQlObjectsUsingIntrospection,
+  createTranslationsForGraphQLObjects,
 } from "./create";
 
 jest.mock("@skylark-reference-apps/lib");
@@ -544,5 +545,152 @@ describe("saas/create.ts", () => {
     });
   });
 
-  describe.skip("createTranslationsForGraphQLObjects", () => {});
+  describe("createTranslationsForGraphQLObjects", () => {
+    const mockedIntrospectionResponse = {
+      IntrospectionOnType: {
+        fields: [
+          {
+            name: "title",
+            type: {
+              name: "String",
+              kind: "SCALAR",
+            },
+          },
+        ],
+      },
+    };
+
+    const originalObjects: GraphQLBaseObject[] = [
+      {
+        uid: "episode-1-uid",
+        external_id: "recepisode1",
+        slug: "episode-1",
+        __typename: "Episode",
+      },
+      {
+        uid: "brand-1-uid",
+        external_id: "recbrand1",
+        slug: "brand-1",
+        __typename: "Brand",
+      },
+    ];
+
+    const languageTable: Partial<Record<FieldSet>>[] = [
+      { id: "reclang1", fields: { code: "es-ES" } },
+      { id: "reclang2", fields: { code: "pt-PT" } },
+    ];
+
+    it("creates the language version for a given object", async () => {
+      graphQlRequest.mockResolvedValue(mockedIntrospectionResponse);
+      const translationsTable: Partial<Record<FieldSet>>[] = [
+        {
+          id: "translation-1",
+          fields: {
+            object: ["recepisode1"],
+            languages: ["reclang1"],
+            title: "Title in spanish",
+          },
+        },
+      ];
+
+      await createTranslationsForGraphQLObjects(
+        originalObjects,
+        translationsTable as Records<FieldSet>,
+        languageTable as Records<FieldSet>
+      );
+
+      expect(graphQlRequest).toHaveBeenNthCalledWith(
+        6,
+        'mutation createMediaObjectTranslations { translation_es_ES_translation-1: updateEpisode (uid: "episode-1-uid", language: "es-ES", episode: {title: "Title in spanish"}) { __typename uid external_id title slug } }'
+      );
+    });
+
+    it("creates multiple language versions when multiple langauges are given in Airtable", async () => {
+      const translationsTable: Partial<Record<FieldSet>>[] = [
+        {
+          id: "translation-1",
+          fields: {
+            object: ["recepisode1"],
+            languages: ["reclang1", "reclang2"],
+            title: "Title in spanishy portuguese",
+          },
+        },
+      ];
+      graphQlRequest.mockResolvedValue(mockedIntrospectionResponse);
+
+      await createTranslationsForGraphQLObjects(
+        originalObjects,
+        translationsTable as Records<FieldSet>,
+        languageTable as Records<FieldSet>
+      );
+
+      expect(graphQlRequest).toHaveBeenNthCalledWith(
+        6,
+        'mutation createMediaObjectTranslations { translation_es_ES_translation-1: updateEpisode (uid: "episode-1-uid", language: "es-ES", episode: {title: "Title in spanishy portuguese"}) { __typename uid external_id title slug } translation_pt_PT_translation-1: updateEpisode (uid: "episode-1-uid", language: "pt-PT", episode: {title: "Title in spanishy portuguese"}) { __typename uid external_id title slug } }'
+      );
+    });
+
+    it("makes multiple mutations when multiple translations are given", async () => {
+      graphQlRequest.mockResolvedValue(mockedIntrospectionResponse);
+      const translationsTable: Partial<Record<FieldSet>>[] = [
+        {
+          id: "translation-1",
+          fields: {
+            object: ["recepisode1"],
+            languages: ["reclang1"],
+            title: "Title in spanish",
+          },
+        },
+        {
+          id: "translation-2",
+          fields: {
+            object: ["recepisode1"],
+            languages: ["reclang2"],
+            title: "Title in portuguese",
+          },
+        },
+        {
+          id: "translation-3",
+          fields: {
+            object: ["recbrand1"],
+            languages: ["reclang2"],
+            title: "Brand title in portuguese",
+          },
+        },
+      ];
+
+      await createTranslationsForGraphQLObjects(
+        originalObjects,
+        translationsTable as Records<FieldSet>,
+        languageTable as Records<FieldSet>
+      );
+
+      expect(graphQlRequest).toHaveBeenNthCalledWith(
+        6,
+        'mutation createMediaObjectTranslations { translation_es_ES_translation-1: updateEpisode (uid: "episode-1-uid", language: "es-ES", episode: {title: "Title in spanish"}) { __typename uid external_id title slug } translation_pt_PT_translation-2: updateEpisode (uid: "episode-1-uid", language: "pt-PT", episode: {title: "Title in portuguese"}) { __typename uid external_id title slug } translation_pt_PT_translation-3: updateBrand (uid: "brand-1-uid", language: "pt-PT", brand: {title: "Brand title in portuguese"}) { __typename uid external_id title slug } }'
+      );
+    });
+
+    it("does nothing when the mediaObject doesn't exist", async () => {
+      const translationsTable: Partial<Record<FieldSet>>[] = [
+        {
+          id: "translation-1",
+          fields: {
+            object: ["recepisode1"],
+            languages: ["reclang1", "reclang2"],
+            title: "Title in spanishy portuguese",
+          },
+        },
+      ];
+      graphQlRequest.mockResolvedValue(mockedIntrospectionResponse);
+
+      await createTranslationsForGraphQLObjects(
+        [],
+        translationsTable as Records<FieldSet>,
+        languageTable as Records<FieldSet>
+      );
+
+      expect(graphQlRequest).toBeCalledTimes(5);
+    });
+  });
 });
