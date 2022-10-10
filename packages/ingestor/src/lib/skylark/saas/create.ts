@@ -12,7 +12,6 @@ import {
   isArray,
   isEmpty,
   isString,
-  toString,
   values,
 } from "lodash";
 
@@ -34,6 +33,7 @@ import {
   getValidFields,
   createGraphQLOperation,
   getGraphQLObjectAvailability,
+  getLanguageCodesFromAirtable,
 } from "./utils";
 
 export const mutateMultipleObjects = async <T>(
@@ -400,12 +400,7 @@ export const createTranslationsForGraphQLObjects = async (
     Asset: await getValidPropertiesForObject("Asset"),
   };
 
-  const languageCodes: { [key: string]: string } = {};
-  languagesTable
-    .filter(({ fields }) => has(fields, "code") && toString(fields.code))
-    .forEach(({ fields, id }) => {
-      languageCodes[id] = fields.code as string;
-    });
+  const languageCodes = getLanguageCodesFromAirtable(languagesTable);
 
   const translationOperations = translationsTable.reduce(
     (previousOperations, { fields, id }) => {

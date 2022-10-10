@@ -2,9 +2,9 @@ import {
   GraphQLMediaObjectTypes,
   GraphQLObjectTypes,
 } from "@skylark-reference-apps/lib";
-import { Attachment, Collaborator } from "airtable";
+import { Attachment, Collaborator, FieldSet, Records } from "airtable";
 import { EnumType } from "json-to-graphql-query";
-import { has, isArray } from "lodash";
+import { has, isArray, isString } from "lodash";
 import {
   GraphQLBaseObject,
   GraphQLIntrospectionProperties,
@@ -157,4 +157,17 @@ export const getGraphQLObjectAvailability = (
 
   const uids = getUidsFromField(availabilityField, all);
   return { link: uids || [] };
+};
+
+export const getLanguageCodesFromAirtable = (
+  languagesTable: Records<FieldSet>
+) => {
+  const languageCodes: { [key: string]: string } = {};
+  languagesTable
+    .filter(({ fields }) => has(fields, "code") && isString(fields.code))
+    .forEach(({ fields, id }) => {
+      languageCodes[id] = fields.code as string;
+    });
+
+  return languageCodes;
 };

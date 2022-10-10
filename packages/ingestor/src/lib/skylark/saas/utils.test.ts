@@ -1,4 +1,5 @@
 import { GraphQLMediaObjectTypes } from "@skylark-reference-apps/lib";
+import { FieldSet, Record } from "airtable";
 import { EnumType } from "json-to-graphql-query";
 import {
   GraphQLBaseObject,
@@ -12,6 +13,7 @@ import {
   gqlObjectMeta,
   createGraphQLOperation,
   getGraphQLObjectAvailability,
+  getLanguageCodesFromAirtable,
 } from "./utils";
 
 describe("saas/utils.ts", () => {
@@ -202,6 +204,51 @@ describe("saas/utils.ts", () => {
 
       expect(got).toEqual({
         link: [availability.all[0].uid, availability.all[2].uid],
+      });
+    });
+  });
+
+  describe("getLanguageCodesFromAirtable", () => {
+    it("returns the expected languages", () => {
+      const records: Partial<Record<FieldSet>>[] = [
+        { id: "1", fields: { code: "en-GB" } },
+        { id: "2", fields: { code: "pt-PT" } },
+        { id: "3", fields: { code: "es-ES" } },
+      ];
+
+      const got = getLanguageCodesFromAirtable(records as Record<FieldSet>[]);
+
+      expect(got).toEqual({
+        1: "en-GB",
+        2: "pt-PT",
+        3: "es-ES",
+      });
+    });
+
+    it("returns an empty object when no languages have codes", () => {
+      const records: Partial<Record<FieldSet>>[] = [
+        { id: "1" },
+        { id: "2" },
+        { id: "3" },
+        { id: "4" },
+      ];
+
+      const got = getLanguageCodesFromAirtable(records as Record<FieldSet>[]);
+
+      expect(got).toEqual({});
+    });
+
+    it("filters out any codes that are not strings", () => {
+      const records: Partial<Record<FieldSet>>[] = [
+        { id: "1", fields: { code: "en-GB" } },
+        { id: "2", fields: { code: ["pt-PT"] } },
+        { id: "3", fields: { code: 12 } },
+      ];
+
+      const got = getLanguageCodesFromAirtable(records as Record<FieldSet>[]);
+
+      expect(got).toEqual({
+        1: "en-GB",
       });
     });
   });
