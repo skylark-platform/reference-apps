@@ -154,7 +154,6 @@ const createSetArgsWithTranslations = (
         },
       };
 
-  // Only add relationships to first operation
   if (addRelationships) {
     args.set.content = content;
     args.set.availability = availability;

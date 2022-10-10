@@ -22,8 +22,6 @@ describe("saas/create.ts", () => {
   });
 
   describe("createOrUpdateGraphQlObjectsUsingIntrospection", () => {
-    // TODO add test for the default license being added
-
     const records: Partial<Record<FieldSet>>[] = [
       {
         id: "brand_1",
@@ -128,6 +126,25 @@ describe("saas/create.ts", () => {
       expect(graphQlRequest).toHaveBeenNthCalledWith(
         4,
         expect.stringContaining("mutation createOrUpdateBrands_chunk_2")
+      );
+    });
+
+    it("adds the default availability to the request", async () => {
+      await createOrUpdateGraphQlObjectsUsingIntrospection(
+        "Brand",
+        records as Records<FieldSet>,
+        {
+          all: [],
+          default: {
+            uid: "default-uid-1",
+            external_id: "default-external-id-1",
+            slug: "default-slug-1",
+          },
+        }
+      );
+      expect(graphQLClient.request).toHaveBeenNthCalledWith(
+        3,
+        'mutation createOrUpdateBrands { updateBrandbrand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: ["default-uid-1"]}}) { uid slug external_id } }'
       );
     });
   });
@@ -526,4 +543,6 @@ describe("saas/create.ts", () => {
       );
     });
   });
+
+  describe.skip("createTranslationsForGraphQLObjects", () => {});
 });

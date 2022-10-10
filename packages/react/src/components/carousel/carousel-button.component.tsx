@@ -33,7 +33,7 @@ export const CarouselButton: React.FC<CarouselButtonProps> = ({
       type="button"
       onClick={onClick}
     >
-      <motion.svg className="w-8" viewBox="0 0 100 100">
+      <motion.svg className="w-8" viewBox="0 0 100 100 chromatic-ignore">
         <motion.circle
           animate={active ? { scale: 1 } : { scale: 0.45 }}
           className="fill-gray-900/60 stroke-gray-500 stroke-[6]"
