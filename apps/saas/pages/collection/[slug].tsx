@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
-import type { GetServerSideProps, NextPage } from "next";
+import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import { NextSeo } from "next-seo";
+
 import {
   MoviesPageParsedMovie,
   CollectionPage,
@@ -9,18 +9,12 @@ import {
 import { GraphQLMediaObjectTypes } from "@skylark-reference-apps/lib";
 
 import { useCollection } from "../../hooks/useCollection";
-import {
-  Brand,
-  CurationMetadata,
-  Entertainment,
-  ImageType,
-  Episode,
-  Movie,
-  Season,
-} from "../../types/gql";
+import { Brand, Set, ImageType, Episode, Movie, Season } from "../../types/gql";
 import { MediaObjectFetcher } from "../../components/mediaObjectFetcher";
-import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
+import { SeoObjectData } from "../../lib/getPageSeoData";
 import {
+  convertGraphQLSetType,
+  convertTypenameToEntertainmentType,
   getFirstRatingValue,
   getGraphQLImageSrc,
   getSynopsisByOrderForGraphQLObject,
@@ -33,13 +27,17 @@ const CurationMetadataFetcher: React.FC<{
   type: GraphQLMediaObjectTypes;
 }> = ({ uid, children, type }) => (
   <MediaObjectFetcher type={type} uid={uid}>
-    {(item: CurationMetadata & Entertainment) => (
+    {(item: Episode | Movie | Brand | Season | Set) => (
       <>
         {children({
           title: getTitleByOrderForGraphQLObject(item, ["short", "medium"]),
           image: getGraphQLImageSrc(item?.images, ImageType.Thumbnail),
           uid: item.uid,
-          href: `/movie/${item.uid}`,
+          href: `/${
+            item.__typename === "Set"
+              ? convertGraphQLSetType(item?.type || "")
+              : convertTypenameToEntertainmentType(item.__typename)
+          }/${item.uid}`,
           releaseDate: item.release_date || "",
           duration: "1hr 38m",
         })}
@@ -48,20 +46,7 @@ const CurationMetadataFetcher: React.FC<{
   </MediaObjectFetcher>
 );
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const seo = await getSeoDataForObject(
-    "Set",
-    context.query.slug as string,
-    context.locale || ""
-  );
-  return {
-    props: {
-      seo,
-    },
-  };
-};
-
-const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
+const Collection: NextPage<{ seo: SeoObjectData }> = () => {
   const { query } = useRouter();
 
   const { collection, isError } = useCollection(query?.slug as string);
@@ -82,11 +67,6 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
 
   return (
     <>
-      <NextSeo
-        description={seo.synopsis}
-        openGraph={{ images: seo.images }}
-        title={title || seo.title}
-      />
       {collection && (
         <CollectionPage
           CollectionItemDataFetcher={CurationMetadataFetcher}
