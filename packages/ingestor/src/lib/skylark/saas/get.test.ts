@@ -16,9 +16,9 @@ describe("saas/get.ts", () => {
   });
 
   describe("getValidPropertiesForObject", () => {
-    it("makes a request with the expected query", async () => {
+    it("makes two requests, one to get the Object's fields and one to get it's input fields", async () => {
       const mockedGraphQLResponse = {
-        __type: {
+        IntrospectionOnType: {
           fields: [],
         },
       };
@@ -27,13 +27,13 @@ describe("saas/get.ts", () => {
       await getValidPropertiesForObject("Brand");
 
       expect(graphQlRequest).toBeCalledWith(
-        'query Introspection { __type (name: "Brand") { name fields { name type { name kind } } } }'
+        'query { IntrospectionOnType: __type (name: "Brand") { name fields { name type { name kind } } } IntrospectionOnInputType: __type (name: "BrandInput") { name inputFields { name type { name kind } } } }'
       );
     });
 
     it("returns the expected fields (they are strings)", async () => {
       const mockedGraphQLResponse = {
-        __type: {
+        IntrospectionOnType: {
           fields: [
             {
               name: "title",
@@ -56,12 +56,70 @@ describe("saas/get.ts", () => {
 
       const validProperties = await getValidPropertiesForObject("Brand");
 
-      expect(validProperties).toEqual(["title", "required-title"]);
+      expect(validProperties).toEqual([
+        { property: "title", kind: "SCALAR" },
+        { property: "required-title", kind: "SCALAR" },
+      ]);
+    });
+
+    it("returns the expected fields (they are enums)", async () => {
+      const mockedGraphQLResponse = {
+        IntrospectionOnType: {
+          fields: [
+            {
+              name: "type",
+              type: {
+                name: "String",
+                kind: "ENUM",
+              },
+            },
+          ],
+        },
+      };
+      graphQlRequest.mockResolvedValueOnce(mockedGraphQLResponse);
+
+      const validProperties = await getValidPropertiesForObject("Brand");
+
+      expect(validProperties).toEqual([{ property: "type", kind: "ENUM" }]);
+    });
+
+    it("uses the IntrospectionOnInputType response when it populated (InputTypes are more accurate)", async () => {
+      const mockedGraphQLResponse = {
+        IntrospectionOnType: {
+          fields: [
+            {
+              name: "non-enum-type-used-for-read",
+              type: {
+                name: "String",
+                kind: "SCALAR",
+              },
+            },
+          ],
+        },
+        IntrospectionOnInputType: {
+          inputFields: [
+            {
+              name: "enum-type-used-for-input-only",
+              type: {
+                name: "String",
+                kind: "ENUM",
+              },
+            },
+          ],
+        },
+      };
+      graphQlRequest.mockResolvedValueOnce(mockedGraphQLResponse);
+
+      const validProperties = await getValidPropertiesForObject("Brand");
+
+      expect(validProperties).toEqual([
+        { property: "enum-type-used-for-input-only", kind: "ENUM" },
+      ]);
     });
 
     it("does not return any fields with kind OBJECT", async () => {
       const mockedGraphQLResponse = {
-        __type: {
+        IntrospectionOnType: {
           fields: [
             {
               name: "theme",
@@ -86,7 +144,7 @@ describe("saas/get.ts", () => {
       await getExistingObjects("Brand", ["brand-1"]);
 
       expect(graphQlRequest).toBeCalledWith(
-        'query getBrands { brand-1: getBrand (ignore_availability: true, external_id: "brand-1") { uid external_id } }'
+        'query getBrands { brand-1: getBrand (external_id: "brand-1", ignore_availability: true) { uid external_id } }'
       );
     });
 

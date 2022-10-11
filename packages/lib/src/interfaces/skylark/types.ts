@@ -49,6 +49,7 @@ export type GraphQLObjectTypes =
   | "Tag"
   | "Credit"
   | "Set"
+  | "Dimension"
   | "DimensionValue"
   | "Availability"
   | "Image";

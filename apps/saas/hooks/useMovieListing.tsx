@@ -1,9 +1,11 @@
 import useSWRInfinite from "swr/infinite";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
-import { graphQLClient } from "@skylark-reference-apps/lib";
+import { Dimensions, graphQLClient } from "@skylark-reference-apps/lib";
+import { useDimensions } from "@skylark-reference-apps/react";
 import { Movie, MovieListing } from "../types/gql";
+import { createGraphQLQueryDimensions } from "../lib/utils";
 
-const createGraphQLQuery = (nextToken?: string) => {
+const createGraphQLQuery = (dimensions: Dimensions, nextToken?: string) => {
   const method = `listMovie`;
 
   const queryAsJson = {
@@ -11,8 +13,8 @@ const createGraphQLQuery = (nextToken?: string) => {
       __name: method,
       [method]: {
         __args: {
-          ignore_availability: true,
           next_token: nextToken || "",
+          ...createGraphQLQueryDimensions(dimensions),
         },
         next_token: true,
         objects: {
@@ -27,28 +29,35 @@ const createGraphQLQuery = (nextToken?: string) => {
   return { query, method };
 };
 
-const movieListingFetcher = ([, nextToken]: [
+const movieListingFetcher = ([, dimensions, nextToken]: [
   name: string,
+  dimensions: Dimensions,
   nextToken?: string
 ]) => {
-  const { query, method } = createGraphQLQuery(nextToken);
+  const { query, method } = createGraphQLQuery(dimensions, nextToken);
   return graphQLClient
     .request<{ [key: string]: MovieListing }>(query)
     .then(({ [method]: data }): MovieListing => data);
 };
 
-const getKey = (pageIndex: number, previousPageData: MovieListing | null) => {
+const getKey = (
+  pageIndex: number,
+  previousPageData: MovieListing | null,
+  dimensions: Dimensions
+) => {
   if (previousPageData && !previousPageData.next_token) return null;
 
-  if (pageIndex === 0) return ["MovieListing", ""];
+  if (pageIndex === 0) return ["MovieListing", dimensions, ""];
 
-  return ["MovieListing", previousPageData?.next_token];
+  return ["MovieListing", dimensions, previousPageData?.next_token];
 };
 
 export const useMovieListing = (disable = false) => {
+  const { dimensions } = useDimensions();
+
   const { data, error, isLoading } = useSWRInfinite<MovieListing, Error>(
     (pageIndex, previousPageData: MovieListing) =>
-      disable ? null : getKey(pageIndex, previousPageData),
+      disable ? null : getKey(pageIndex, previousPageData, dimensions),
     movieListingFetcher,
     {
       initialSize: 10,

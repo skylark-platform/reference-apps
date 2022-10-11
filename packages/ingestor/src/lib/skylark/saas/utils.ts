@@ -2,10 +2,14 @@ import {
   GraphQLMediaObjectTypes,
   GraphQLObjectTypes,
 } from "@skylark-reference-apps/lib";
-import { Attachment, Collaborator } from "airtable";
+import { Attachment, Collaborator, FieldSet, Records } from "airtable";
 import { EnumType } from "json-to-graphql-query";
-import { has, isArray } from "lodash";
-import { GraphQLBaseObject, GraphQLMetadata } from "../../interfaces";
+import { has, isArray, isString } from "lodash";
+import {
+  GraphQLBaseObject,
+  GraphQLIntrospectionProperties,
+  GraphQLMetadata,
+} from "../../interfaces";
 import { ApiObjectType } from "../../types";
 
 export const getExtId = (externalId: string) =>
@@ -95,18 +99,21 @@ export const getValidFields = (
       | ReadonlyArray<string>
       | ReadonlyArray<Attachment>;
   },
-  validProperties: string[]
+  validProperties: GraphQLIntrospectionProperties[]
 ): { [key: string]: string | number | boolean | EnumType } => {
-  const validObjectFields = validProperties.filter((property) =>
+  const validObjectFields = validProperties.filter(({ property }) =>
     has(fields, property)
   );
-  const validFields = validObjectFields.reduce((obj, property) => {
+  const validFields = validObjectFields.reduce((obj, { property, kind }) => {
     const val = isArray(fields[property])
       ? (fields[property] as string[])[0]
       : fields[property];
     return {
       ...obj,
-      [property]: val as string | number | boolean | EnumType,
+      [property]:
+        kind === "ENUM"
+          ? new EnumType(val as string)
+          : (val as string | number | boolean | EnumType),
     };
   }, {} as { [key: string]: string | number | boolean | EnumType });
 
@@ -144,10 +151,23 @@ export const getGraphQLObjectAvailability = (
   availabilityField?: string[]
 ): { link: string[] } => {
   const { all, default: defaultAvailability } = availabilityMetadata;
-  if (!availabilityField) {
+  if (!availabilityField || availabilityField.length === 0) {
     return { link: defaultAvailability ? [defaultAvailability.uid] : [] };
   }
 
   const uids = getUidsFromField(availabilityField, all);
   return { link: uids || [] };
+};
+
+export const getLanguageCodesFromAirtable = (
+  languagesTable: Records<FieldSet>
+) => {
+  const languageCodes: { [key: string]: string } = {};
+  languagesTable
+    .filter(({ fields }) => has(fields, "code") && isString(fields.code))
+    .forEach(({ fields, id }) => {
+      languageCodes[id] = fields.code as string;
+    });
+
+  return languageCodes;
 };

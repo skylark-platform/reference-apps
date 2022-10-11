@@ -1,5 +1,7 @@
 import {
   CreditTypes,
+  Dimensions,
+  DimensionTypes,
   getSynopsisByOrder,
   getTitleByOrder,
   ImageTypes,
@@ -114,4 +116,16 @@ export const getSynopsisByOrderForGraphQLObject = (
     },
     priority
   );
+};
+
+export const createGraphQLQueryDimensions = (activeDimensions: Dimensions) => {
+  const dimensions: { dimension: DimensionTypes; value: string }[] = [
+    { dimension: "device-types", value: activeDimensions.deviceType },
+    { dimension: "customer-types", value: activeDimensions.customerType },
+  ];
+
+  return {
+    language: activeDimensions.language,
+    dimensions,
+  };
 };

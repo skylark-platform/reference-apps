@@ -1,3 +1,4 @@
+import { Dimensions } from "@skylark-reference-apps/lib";
 import * as utils from "../../lib/utils";
 import { Credit, ImageListing } from "../../types/gql";
 
@@ -141,6 +142,26 @@ describe("utils.ts", () => {
         ["long", "medium", "short"]
       );
       expect(got).toEqual("Medium synopsis");
+    });
+  });
+
+  describe("createGraphQLQueryDimensions", () => {
+    it("translates the active dimensions into the expected GraphQL format", () => {
+      const dimensions: Dimensions = {
+        language: "en-GB",
+        deviceType: "smartphone",
+        customerType: "premium",
+      };
+
+      const got = utils.createGraphQLQueryDimensions(dimensions);
+
+      expect(got).toEqual({
+        dimensions: [
+          { dimension: "device-types", value: "smartphone" },
+          { dimension: "customer-types", value: "premium" },
+        ],
+        language: dimensions.language,
+      });
     });
   });
 });

@@ -1,11 +1,12 @@
 import { FieldSet, Records, Record, Table } from "airtable";
 import { graphQLClient } from "@skylark-reference-apps/lib";
 
-import { GraphQLMetadata } from "../../interfaces";
+import { GraphQLBaseObject, GraphQLMetadata } from "../../interfaces";
 import {
   createGraphQLMediaObjects,
   createOrUpdateGraphQLCredits,
   createOrUpdateGraphQlObjectsUsingIntrospection,
+  createTranslationsForGraphQLObjects,
 } from "./create";
 
 jest.mock("@skylark-reference-apps/lib");
@@ -33,7 +34,7 @@ describe("saas/create.ts", () => {
 
     beforeEach(() => {
       const mockedGraphQLResponse = {
-        __type: {
+        IntrospectionOnType: {
           fields: [
             {
               name: "title",
@@ -51,11 +52,14 @@ describe("saas/create.ts", () => {
     it("makes a request to check whether the brand exists", async () => {
       await createOrUpdateGraphQlObjectsUsingIntrospection(
         "Brand",
-        records as Records<FieldSet>
+        records as Records<FieldSet>,
+        {
+          all: [],
+        }
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         2,
-        'query getBrands { brand_1: getBrand (ignore_availability: true, external_id: "brand_1") { uid external_id } }'
+        'query getBrands { brand_1: getBrand (external_id: "brand_1", ignore_availability: true) { uid external_id } }'
       );
     });
 
@@ -71,28 +75,34 @@ describe("saas/create.ts", () => {
 
       await createOrUpdateGraphQlObjectsUsingIntrospection(
         "Brand",
-        records as Records<FieldSet>
+        records as Records<FieldSet>,
+        {
+          all: [],
+        }
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateBrands { createBrandbrand_1: createBrand (brand: {title: "Brand 1", external_id: "brand_1"}) { uid slug external_id } }'
+        'mutation createOrUpdateBrands { createBrandbrand_1: createBrand (brand: {title: "Brand 1", availability: {link: []}, external_id: "brand_1"}) { uid slug external_id } }'
       );
     });
 
     it("makes a request to update the brand when it exists", async () => {
       await createOrUpdateGraphQlObjectsUsingIntrospection(
         "Brand",
-        records as Records<FieldSet>
+        records as Records<FieldSet>,
+        {
+          all: [],
+        }
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateBrands { updateBrandbrand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1"}) { uid slug external_id } }'
+        'mutation createOrUpdateBrands { updateBrandbrand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: []}}) { uid slug external_id } }'
       );
     });
 
-    it("makes two requests when more than 20 records are sent", async () => {
+    it("makes two requests when more than 10 records are sent", async () => {
       const manyRecords: Partial<Record<FieldSet>>[] = Array.from(
-        { length: 30 },
+        { length: 20 },
         (_, index) => ({
           id: `brand_${index + 1}`,
           fields: {
@@ -104,7 +114,10 @@ describe("saas/create.ts", () => {
 
       await createOrUpdateGraphQlObjectsUsingIntrospection(
         "Brand",
-        manyRecords as Records<FieldSet>
+        manyRecords as Records<FieldSet>,
+        {
+          all: [],
+        }
       );
       expect(graphQlRequest).toHaveBeenCalledTimes(4);
       expect(graphQlRequest).toHaveBeenNthCalledWith(
@@ -114,6 +127,25 @@ describe("saas/create.ts", () => {
       expect(graphQlRequest).toHaveBeenNthCalledWith(
         4,
         expect.stringContaining("mutation createOrUpdateBrands_chunk_2")
+      );
+    });
+
+    it("adds the default availability to the request", async () => {
+      await createOrUpdateGraphQlObjectsUsingIntrospection(
+        "Brand",
+        records as Records<FieldSet>,
+        {
+          all: [],
+          default: {
+            uid: "default-uid-1",
+            external_id: "default-external-id-1",
+            slug: "default-slug-1",
+          },
+        }
+      );
+      expect(graphQLClient.request).toHaveBeenNthCalledWith(
+        3,
+        'mutation createOrUpdateBrands { updateBrandbrand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: ["default-uid-1"]}}) { uid slug external_id } }'
       );
     });
   });
@@ -131,6 +163,9 @@ describe("saas/create.ts", () => {
     ];
 
     const metadata: Partial<GraphQLMetadata> = {
+      availability: {
+        all: [],
+      },
       roles: [
         {
           uid: "role_1",
@@ -149,7 +184,7 @@ describe("saas/create.ts", () => {
 
     beforeEach(() => {
       const mockedGraphQLResponse = {
-        __type: {
+        IntrospectionOnType: {
           fields: [
             {
               name: "title",
@@ -171,7 +206,7 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         2,
-        'query getCredits { credit_1: getCredit (ignore_availability: true, external_id: "credit_1") { uid external_id } }'
+        'query getCredits { credit_1: getCredit (external_id: "credit_1", ignore_availability: true) { uid external_id } }'
       );
     });
 
@@ -191,7 +226,7 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateCredits { createCreditcredit_1: createCredit (credit: {title: "Credit 1", relationships: {people: {link: "person_1"}, roles: {link: "role_1"}}, external_id: "credit_1"}) { uid slug external_id } }'
+        'mutation createOrUpdateCredits { createCreditcredit_1: createCredit (credit: {title: "Credit 1", availability: {link: []}, relationships: {people: {link: "person_1"}, roles: {link: "role_1"}}, external_id: "credit_1"}) { uid slug external_id } }'
       );
     });
 
@@ -202,16 +237,12 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateCredits { updateCreditcredit_1: updateCredit (external_id: "credit_1", credit: {title: "Credit 1", relationships: {people: {link: "person_1"}, roles: {link: "role_1"}}}) { uid slug external_id } }'
+        'mutation createOrUpdateCredits { updateCreditcredit_1: updateCredit (external_id: "credit_1", credit: {title: "Credit 1", availability: {link: []}, relationships: {people: {link: "person_1"}, roles: {link: "role_1"}}}) { uid slug external_id } }'
       );
     });
   });
 
-  // describe("createGraphQLMediaObjects", () => {
-
-  // })
-
-  describe("createOrUpdateAirtableObjectsInSkylarkWithParentsInSameTable", () => {
+  describe("createGraphQLMediaObjects", () => {
     const table = { name: "episodes" } as Table<FieldSet>;
     const airtableEpisodeRecords: Partial<Record<FieldSet>>[] = [
       {
@@ -297,7 +328,6 @@ describe("saas/create.ts", () => {
       dimensions: {
         affiliates: [],
         customerTypes: [],
-        languages: [],
         deviceTypes: [],
         locales: [],
         operatingSystems: [],
@@ -309,7 +339,7 @@ describe("saas/create.ts", () => {
     it("does nothing when no airtable records are given", async () => {
       // Arrange.
       const mockedGraphQLResponse = {
-        __type: {
+        IntrospectionOnType: {
           fields: [
             {
               name: "title",
@@ -333,7 +363,7 @@ describe("saas/create.ts", () => {
     it("calls Skylark 11 times when all records don't have parents", async () => {
       // Arrange.
       const mockedIntrospectionResponse = {
-        __type: {
+        IntrospectionOnType: {
           fields: [
             {
               name: "title",
@@ -401,7 +431,7 @@ describe("saas/create.ts", () => {
       ];
 
       const mockedIntrospectionResponse = {
-        __type: {
+        IntrospectionOnType: {
           fields: [
             {
               name: "title",
@@ -465,7 +495,7 @@ describe("saas/create.ts", () => {
       ];
 
       const mockedIntrospectionResponse = {
-        __type: {
+        IntrospectionOnType: {
           fields: [
             {
               name: "title",
@@ -512,6 +542,155 @@ describe("saas/create.ts", () => {
         12,
         'mutation createMediaObjects { updateBrand_airtable-episode-3: updateBrand (external_id: "airtable-episode-3", brand: {title: "episode 3", relationships: {brands: {link: undefined}}, availability: {link: []}}) { __typename uid external_id title slug } }'
       );
+    });
+  });
+
+  describe("createTranslationsForGraphQLObjects", () => {
+    const mockedIntrospectionResponse = {
+      IntrospectionOnType: {
+        fields: [
+          {
+            name: "title",
+            type: {
+              name: "String",
+              kind: "SCALAR",
+            },
+          },
+        ],
+      },
+    };
+
+    const originalObjects: GraphQLBaseObject[] = [
+      {
+        uid: "episode-1-uid",
+        external_id: "recepisode1",
+        slug: "episode-1",
+        __typename: "Episode",
+      },
+      {
+        uid: "brand-1-uid",
+        external_id: "recbrand1",
+        slug: "brand-1",
+        __typename: "Brand",
+      },
+    ];
+
+    const languageTable: Partial<Record<FieldSet>>[] = [
+      { id: "reclang1", fields: { code: "es-ES" } },
+      { id: "reclang2", fields: { code: "pt-PT" } },
+    ];
+
+    it("creates the language version for a given object", async () => {
+      graphQlRequest.mockResolvedValue(mockedIntrospectionResponse);
+      const translationsTable: Partial<Record<FieldSet>>[] = [
+        {
+          id: "translation-1",
+          fields: {
+            object: ["recepisode1"],
+            languages: ["reclang1"],
+            title: "Title in spanish",
+          },
+        },
+      ];
+
+      await createTranslationsForGraphQLObjects(
+        originalObjects,
+        translationsTable as Records<FieldSet>,
+        languageTable as Records<FieldSet>
+      );
+
+      expect(graphQlRequest).toHaveBeenNthCalledWith(
+        6,
+        'mutation createMediaObjectTranslations { translation_es_ES_translation-1: updateEpisode (uid: "episode-1-uid", language: "es-ES", episode: {title: "Title in spanish"}) { __typename uid external_id title slug } }'
+      );
+    });
+
+    it("creates multiple language versions when multiple langauges are given in Airtable", async () => {
+      const translationsTable: Partial<Record<FieldSet>>[] = [
+        {
+          id: "translation-1",
+          fields: {
+            object: ["recepisode1"],
+            languages: ["reclang1", "reclang2"],
+            title: "Title in spanishy portuguese",
+          },
+        },
+      ];
+      graphQlRequest.mockResolvedValue(mockedIntrospectionResponse);
+
+      await createTranslationsForGraphQLObjects(
+        originalObjects,
+        translationsTable as Records<FieldSet>,
+        languageTable as Records<FieldSet>
+      );
+
+      expect(graphQlRequest).toHaveBeenNthCalledWith(
+        6,
+        'mutation createMediaObjectTranslations { translation_es_ES_translation-1: updateEpisode (uid: "episode-1-uid", language: "es-ES", episode: {title: "Title in spanishy portuguese"}) { __typename uid external_id title slug } translation_pt_PT_translation-1: updateEpisode (uid: "episode-1-uid", language: "pt-PT", episode: {title: "Title in spanishy portuguese"}) { __typename uid external_id title slug } }'
+      );
+    });
+
+    it("makes multiple mutations when multiple translations are given", async () => {
+      graphQlRequest.mockResolvedValue(mockedIntrospectionResponse);
+      const translationsTable: Partial<Record<FieldSet>>[] = [
+        {
+          id: "translation-1",
+          fields: {
+            object: ["recepisode1"],
+            languages: ["reclang1"],
+            title: "Title in spanish",
+          },
+        },
+        {
+          id: "translation-2",
+          fields: {
+            object: ["recepisode1"],
+            languages: ["reclang2"],
+            title: "Title in portuguese",
+          },
+        },
+        {
+          id: "translation-3",
+          fields: {
+            object: ["recbrand1"],
+            languages: ["reclang2"],
+            title: "Brand title in portuguese",
+          },
+        },
+      ];
+
+      await createTranslationsForGraphQLObjects(
+        originalObjects,
+        translationsTable as Records<FieldSet>,
+        languageTable as Records<FieldSet>
+      );
+
+      expect(graphQlRequest).toHaveBeenNthCalledWith(
+        6,
+        'mutation createMediaObjectTranslations { translation_es_ES_translation-1: updateEpisode (uid: "episode-1-uid", language: "es-ES", episode: {title: "Title in spanish"}) { __typename uid external_id title slug } translation_pt_PT_translation-2: updateEpisode (uid: "episode-1-uid", language: "pt-PT", episode: {title: "Title in portuguese"}) { __typename uid external_id title slug } translation_pt_PT_translation-3: updateBrand (uid: "brand-1-uid", language: "pt-PT", brand: {title: "Brand title in portuguese"}) { __typename uid external_id title slug } }'
+      );
+    });
+
+    it("does nothing when the mediaObject doesn't exist", async () => {
+      const translationsTable: Partial<Record<FieldSet>>[] = [
+        {
+          id: "translation-1",
+          fields: {
+            object: ["recepisode1"],
+            languages: ["reclang1", "reclang2"],
+            title: "Title in spanishy portuguese",
+          },
+        },
+      ];
+      graphQlRequest.mockResolvedValue(mockedIntrospectionResponse);
+
+      await createTranslationsForGraphQLObjects(
+        [],
+        translationsTable as Records<FieldSet>,
+        languageTable as Records<FieldSet>
+      );
+
+      expect(graphQlRequest).toBeCalledTimes(5);
     });
   });
 });

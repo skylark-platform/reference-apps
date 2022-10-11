@@ -7,9 +7,10 @@ import {
   GraphQLBaseObject,
   GraphQLDimension,
   GraphQLMetadata,
+  GraphQLIntrospectionProperties,
 } from "../../interfaces";
 import { mutateMultipleObjects } from "./create";
-import { getValidPropertiesForObject } from "./get";
+import { getExistingObjects, getValidPropertiesForObject } from "./get";
 import { createGraphQLOperation, getValidFields } from "./utils";
 
 const dimensionsConfig: { slug: DimensionTypes; title: string }[] = [
@@ -100,7 +101,7 @@ export const createDimensions = async () => {
         description: true,
       };
 
-      const updatedOperations = {
+      const updatedOperations: { [key: string]: object } = {
         ...previousOperations,
         [`createDimension${title.replace(/\s/g, "")}`]: operation,
       };
@@ -119,7 +120,7 @@ export const createDimensions = async () => {
 
 const createOrUpdateDimensionValues = async (
   type: DimensionTypes,
-  validProperties: string[],
+  validProperties: GraphQLIntrospectionProperties[],
   airtableRecords: Record<FieldSet>[],
   dimensions: GraphQLDimension[]
 ) => {
@@ -133,21 +134,23 @@ const createOrUpdateDimensionValues = async (
 
   const operations = airtableRecords.reduce(
     (previousOperations, { fields, id }) => {
-      const validFields = getValidFields(
-        { ...fields, external_id: id },
-        validProperties
-      );
+      const validFields = getValidFields(fields, validProperties);
 
       const objectExists = existingObjectSlugs.includes(fields.slug as string);
 
       const dimensionValue = {
-        dimension_value: {
-          ...validFields,
-        },
+        dimension_value: objectExists
+          ? validFields
+          : {
+              ...validFields,
+              external_id: id,
+            },
       };
 
       const args = objectExists
-        ? dimensionValue
+        ? {
+            ...dimensionValue,
+          }
         : {
             dimension_id: type,
             ...dimensionValue,
@@ -157,10 +160,10 @@ const createOrUpdateDimensionValues = async (
         "DimensionValue",
         objectExists,
         args,
-        { dimension_id: type, value_id: validFields.slug as string }
+        { dimension_id: type, value_external_id: id }
       );
 
-      const updatedOperations = {
+      const updatedOperations: { [key: string]: object } = {
         ...previousOperations,
         [`${method}${id}`]: operation,
       };
@@ -185,7 +188,6 @@ export const createOrUpdateScheduleDimensionValues = async (
       { type: "affiliates", data: airtable.affiliates },
       { type: "customer-types", data: airtable.customerTypes },
       { type: "device-types", data: airtable.deviceTypes },
-      { type: "languages", data: airtable.languages },
       { type: "locales", data: airtable.locales },
       { type: "operating-systems", data: airtable.operatingSystems },
       { type: "regions", data: airtable.regions },
@@ -199,7 +201,6 @@ export const createOrUpdateScheduleDimensionValues = async (
     affiliates,
     customerTypes,
     deviceTypes,
-    languages,
     locales,
     operatingSystems,
     regions,
@@ -213,7 +214,6 @@ export const createOrUpdateScheduleDimensionValues = async (
     affiliates,
     customerTypes,
     deviceTypes,
-    languages,
     locales,
     operatingSystems,
     regions,
@@ -233,12 +233,34 @@ export const createOrUpdateAvailability = async (
   schedules: Record<FieldSet>[],
   dimensions: GraphQLMetadata["dimensions"]
 ) => {
+  const externalIds = schedules.map(({ id }) => id);
+  const existingObjects = await getExistingObjects("Availability", externalIds);
+
+  if (existingObjects.length > 0) {
+    throw new Error(
+      "Updating Availability is currently broken\nWorkaround: use a new account-id\n  1. Pagination is broken (SL-2259)\n  2. Updates timeout as all objects have to be updated with the new schedule (SL-2260)"
+    );
+  }
+
   const operations = schedules.reduce(
     (previousOperations, { id, ...record }) => {
       const fields = record.fields as AvailabilityTableFields;
 
-      // Currently only support creating availability, not updating
-      const objectExists = false;
+      const objectExists = existingObjects.includes(id);
+
+      const availabilityInput: {
+        title: string;
+        slug: string;
+        start?: string;
+        end?: string;
+        dimensions?: {
+          dimension_slug: DimensionTypes;
+          value_slugs: string[];
+        }[];
+      } = {
+        title: fields.title,
+        slug: fields.slug,
+      };
 
       const availabilityDimensions: {
         dimension_slug: DimensionTypes;
@@ -258,10 +280,6 @@ export const createOrUpdateAvailability = async (
         {
           dimension_slug: "device-types",
           value_slugs: getValueSlugs(dimensions.deviceTypes, fields.devices),
-        },
-        {
-          dimension_slug: "languages",
-          value_slugs: getValueSlugs(dimensions.languages, fields.languages),
         },
         {
           dimension_slug: "locales",
@@ -287,17 +305,13 @@ export const createOrUpdateAvailability = async (
         },
       ];
 
-      const availabilityInput: {
-        title: string;
-        slug: string;
-        start?: string;
-        end?: string;
-        dimensions: { dimension_slug: DimensionTypes; value_slugs: string[] }[];
-      } = {
-        title: fields.title,
-        slug: fields.slug,
-        dimensions: availabilityDimensions,
-      };
+      // Filter out any dimensions that are empty, only add the dimensions property to the input if at least one dimension is given
+      const filteredDimensions = availabilityDimensions.filter(
+        ({ value_slugs }) => value_slugs.length > 0
+      );
+      if (filteredDimensions.length > 0) {
+        availabilityInput.dimensions = filteredDimensions;
+      }
 
       // Only include start / end field when it exists in Airtable, Skylark errors otherwise
       if (fields.starts) {
