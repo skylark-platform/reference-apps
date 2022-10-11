@@ -236,6 +236,12 @@ export const createOrUpdateAvailability = async (
   const externalIds = schedules.map(({ id }) => id);
   const existingObjects = await getExistingObjects("Availability", externalIds);
 
+  if (existingObjects.length > 0) {
+    throw new Error(
+      "Updating Availability is currently broken\nWorkaround: use a new account-id\n  1. Pagination is broken (SL-2259)\n  2. Updates timeout as all objects have to be updated with the new schedule (SL-2260)"
+    );
+  }
+
   const operations = schedules.reduce(
     (previousOperations, { id, ...record }) => {
       const fields = record.fields as AvailabilityTableFields;
