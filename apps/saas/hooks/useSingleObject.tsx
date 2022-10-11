@@ -1,12 +1,12 @@
 import useSWR from "swr";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import {
-  GraphQLMediaObjectTypes,
   graphQLClient,
   Dimensions,
+  GraphQLObjectTypes,
 } from "@skylark-reference-apps/lib";
 import { useDimensions } from "@skylark-reference-apps/react";
-import { Brand, Episode, Movie, Season } from "../types/gql";
+import { Brand, Episode, Movie, Season, Set } from "../types/gql";
 import { createGraphQLQueryDimensions } from "../lib/utils";
 
 type ObjectType<T> = T extends "Episode"
@@ -17,10 +17,12 @@ type ObjectType<T> = T extends "Episode"
   ? Brand
   : T extends "Season"
   ? Season
+  : T extends "Set"
+  ? Set
   : never;
 
 const createGraphQLQuery = (
-  type: GraphQLMediaObjectTypes,
+  type: GraphQLObjectTypes,
   lookupValue: string,
   dimensions: Dimensions
 ) => {
@@ -135,6 +137,10 @@ const createGraphQLQuery = (
     };
   }
 
+  if (type === "Set") {
+    fieldsToFetch.type = true;
+  }
+
   const method = `get${type}`;
 
   const queryAsJson = {
@@ -155,7 +161,7 @@ const createGraphQLQuery = (
   return { query, method };
 };
 
-const fetcher = <T extends GraphQLMediaObjectTypes>([
+const fetcher = <T extends GraphQLObjectTypes>([
   type,
   lookupValue,
   dimensions,
@@ -166,7 +172,7 @@ const fetcher = <T extends GraphQLMediaObjectTypes>([
     .then(({ [method]: data }): ObjectType<T> => data);
 };
 
-export const useSingleObject = <T extends GraphQLMediaObjectTypes>(
+export const useSingleObject = <T extends GraphQLObjectTypes>(
   type: T,
   lookupValue: string
 ) => {
@@ -180,6 +186,9 @@ export const useSingleObject = <T extends GraphQLMediaObjectTypes>(
   return {
     data,
     isLoading: !error && !data,
+    isNotFound: error?.message
+      ? error.message.toLowerCase().includes("not found")
+      : false,
     isError: error,
   };
 };

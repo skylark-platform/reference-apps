@@ -7,15 +7,27 @@ import { createGraphQLQueryDimensions } from "../lib/utils";
 
 const createGraphQLQuery = (lookupValue: string, dimensions: Dimensions) => {
   // Helper to use the external_id when an airtable record ID is given
-  const lookupField = lookupValue.startsWith("ingestor_set")
-    ? "external_id"
-    : "uid";
+  const lookupField = lookupValue.startsWith("rec") ? "external_id" : "uid";
 
   const fieldsToFetch: { [key: string]: boolean | object } = {
     __typename: true,
     uid: true,
     title: true,
     slug: true,
+    title_short: true,
+    title_medium: true,
+    title_long: true,
+    synopsis_short: true,
+    synopsis_medium: true,
+    synopsis_long: true,
+    release_date: true,
+    images: {
+      objects: {
+        title: true,
+        type: true,
+        url: true,
+      },
+    },
     content: {
       count: true,
       objects: {
@@ -24,36 +36,28 @@ const createGraphQLQuery = (lookupValue: string, dimensions: Dimensions) => {
           slug: true,
           __on: [
             {
-              __typeName: "Season",
+              __typeName: "Brand",
               uid: true,
               title_short: true,
               title_medium: true,
-              episodes: {
-                __args: {
-                  limit: 30,
-                },
+              images: {
                 objects: {
-                  uid: true,
-                  episode_number: true,
                   title: true,
+                  type: true,
+                  url: true,
                 },
               },
             },
             {
-              __typeName: "Set",
+              __typeName: "Movie",
               uid: true,
-              type: true,
               title_short: true,
               title_medium: true,
-              content: {
-                __args: {
-                  limit: 30,
-                },
+              images: {
                 objects: {
-                  object: {
-                    __typename: true,
-                    uid: true,
-                  },
+                  title: true,
+                  type: true,
+                  url: true,
                 },
               },
             },
@@ -63,7 +67,7 @@ const createGraphQLQuery = (lookupValue: string, dimensions: Dimensions) => {
     },
   };
 
-  const method = `getSet`;
+  const method = "getSet";
 
   const queryAsJson = {
     query: {
@@ -90,22 +94,20 @@ const fetcher = ([lookupValue, dimensions]: [
   const { query, method } = createGraphQLQuery(lookupValue, dimensions);
   return graphQLClient
     .request<{ [key: string]: Set }>(query)
-    .then(({ [method]: data }): Set => data);
+    .then(({ [method]: data }) => data);
 };
 
-export const useHomepageSet = () => {
+export const useSlider = (lookupValue: string) => {
   const { dimensions } = useDimensions();
 
-  const homepageExternalId = "ingestor_set_media_reference_homepage";
-
-  const { data, error, isLoading } = useSWR<Set, Error>(
-    [homepageExternalId, dimensions],
+  const { data, error } = useSWR<Set, Error>(
+    [lookupValue, dimensions],
     fetcher
   );
 
   return {
-    data,
-    isLoading: isLoading || (!error && !data),
+    slider: data,
+    isLoading: !error && !data,
     isError: error,
   };
 };

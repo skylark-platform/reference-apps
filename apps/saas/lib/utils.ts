@@ -2,17 +2,21 @@ import {
   CreditTypes,
   Dimensions,
   DimensionTypes,
+  EntertainmentType,
   getSynopsisByOrder,
   getTitleByOrder,
-  ImageTypes,
+  GraphQLMediaObjectTypes,
+  SetTypes,
   SynopsisTypes,
   TitleTypes,
 } from "@skylark-reference-apps/lib";
 import {
   Credit,
   Entertainment,
+  Episode,
   GenreListing,
   ImageListing,
+  ImageType,
   Maybe,
   RatingListing,
   ThemeListing,
@@ -65,7 +69,7 @@ export const getFirstRatingValue = (
 
 export const getGraphQLImageSrc = (
   images: Maybe<ImageListing> | undefined,
-  type: ImageTypes
+  type: ImageType
 ): string => {
   if (!images || !images.objects || images.objects.length === 0) {
     return "";
@@ -129,3 +133,34 @@ export const createGraphQLQueryDimensions = (activeDimensions: Dimensions) => {
     dimensions,
   };
 };
+
+export const convertTypenameToEntertainmentType = (
+  typename: GraphQLMediaObjectTypes | undefined
+): EntertainmentType => {
+  switch (typename) {
+    case "Episode":
+      return "episode";
+    case "Movie":
+      return "movie";
+    case "Season":
+      return "season";
+    default:
+      return "brand";
+  }
+};
+
+export const convertGraphQLSetType = (setType?: string): SetTypes => {
+  switch (setType) {
+    case "COLLECTION":
+      return "collection";
+    case "SLIDER":
+      return "slider";
+    case "RAIL":
+      return "rail";
+    default:
+      return "homepage";
+  }
+};
+
+export const sortEpisodesByNumber = (a: Maybe<Episode>, b: Maybe<Episode>) =>
+  (a?.episode_number || 0) > (b?.episode_number || 0) ? 1 : -1;

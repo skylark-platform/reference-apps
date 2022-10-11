@@ -13,6 +13,7 @@ import {
   getSynopsisByOrderForGraphQLObject,
   getTitleByOrderForGraphQLObject,
 } from "../../lib/utils";
+import { ImageType } from "../../types/gql";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject(
@@ -30,10 +31,19 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
-  const { data: movie, isError } = useSingleObject(
-    "Movie",
-    query?.slug as string
-  );
+  const {
+    data: movie,
+    isError,
+    isNotFound,
+  } = useSingleObject("Movie", query?.slug as string);
+
+  if (isNotFound) {
+    return (
+      <div className="flex h-screen flex-col items-center justify-center text-white">
+        <p>{`Movie not found`}</p>
+      </div>
+    );
+  }
 
   if (isError) {
     return (
@@ -81,7 +91,7 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         loading={!movie}
         player={{
           assetId: "1",
-          poster: getGraphQLImageSrc(movie?.images, "Poster"),
+          poster: getGraphQLImageSrc(movie?.images, ImageType.Poster),
           src: "/mux-video-intro.mp4",
           duration: 58, // TODO read this from asset
         }}

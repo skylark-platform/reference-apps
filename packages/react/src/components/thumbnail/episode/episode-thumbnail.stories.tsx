@@ -26,3 +26,14 @@ Default.args = {
   duration: "55m",
   releaseDate: "22 Jan 2022",
 };
+
+export const WithoutNumber = Template.bind({});
+WithoutNumber.args = {
+  href: "/",
+  title: "Episode Title",
+  backgroundImage: "/episodes/GOT%20-%20S1%20-%201.png",
+  description:
+    "Series Premiere. Lord Ned Stark is troubled by disturbing reports from a Night's Watch deserter.",
+  duration: "55m",
+  releaseDate: "22 Jan 2022",
+};
