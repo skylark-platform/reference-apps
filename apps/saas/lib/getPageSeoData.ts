@@ -61,8 +61,7 @@ export const getSeoDataForObject = async (
     },
   };
 
-  try {
-    const query = jsonToGraphQLQuery(queryAsJson);
+  const query = jsonToGraphQLQuery(queryAsJson);
 
   try {
     const { [method]: data } = await graphQLClient.request<{

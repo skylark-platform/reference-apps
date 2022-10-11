@@ -1,9 +1,12 @@
 import useSWR from "swr";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
-import { graphQLClient } from "@skylark-reference-apps/lib";
-import { Set } from "../types/gql";
+import { graphQLClient, Dimensions } from "@skylark-reference-apps/lib";
+import { useDimensions } from "@skylark-reference-apps/react";
 
-const createGraphQLQuery = (lookupValue: string) => {
+import { Set } from "../types/gql";
+import { createGraphQLQueryDimensions } from "../lib/utils";
+
+const createGraphQLQuery = (lookupValue: string, dimensions: Dimensions) => {
   const method = `getSet`;
 
   // Helper to use the external_id when an airtable record ID is given
@@ -18,6 +21,7 @@ const createGraphQLQuery = (lookupValue: string) => {
         __args: {
           ignore_availability: true,
           [lookupField]: lookupValue,
+          ...createGraphQLQueryDimensions(dimensions),
         },
         uid: true,
         title: true,
@@ -62,16 +66,21 @@ const createGraphQLQuery = (lookupValue: string) => {
   return { query, method };
 };
 
-const getSetFetcher = ([lookupValue]: [lookupValue: string]) => {
-  const { query, method } = createGraphQLQuery(lookupValue);
+const getSetFetcher = ([lookupValue, dimensions]: [
+  lookupValue: string,
+  dimensions: Dimensions
+]) => {
+  const { query, method } = createGraphQLQuery(lookupValue, dimensions);
   return graphQLClient
     .request<{ [key: string]: Set }>(query)
     .then(({ [method]: data }): Set => data);
 };
 
 export const useCollection = (lookupValue: string) => {
+  const { dimensions } = useDimensions();
+
   const { data, error, isLoading } = useSWR<Set, Error>(
-    [lookupValue],
+    [lookupValue, dimensions],
     getSetFetcher
   );
 

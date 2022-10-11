@@ -48,7 +48,11 @@ const CurationMetadataFetcher: React.FC<{
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const seo = await getSeoDataForObject("Movie", context.query.slug as string);
+  const seo = await getSeoDataForObject(
+    "Set",
+    context.query.slug as string,
+    context.locale || ""
+  );
   return {
     props: {
       seo,
