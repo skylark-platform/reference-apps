@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
-
+import { NextSeo } from "next-seo";
 import {
   MoviesPageParsedMovie,
   CollectionPage,
@@ -11,7 +11,7 @@ import { GraphQLMediaObjectTypes } from "@skylark-reference-apps/lib";
 import { useCollection } from "../../hooks/useCollection";
 import { Brand, Set, ImageType, Episode, Movie, Season } from "../../types/gql";
 import { MediaObjectFetcher } from "../../components/mediaObjectFetcher";
-import { SeoObjectData } from "../../lib/getPageSeoData";
+import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 import {
   convertGraphQLSetType,
   convertTypenameToEntertainmentType,
@@ -46,7 +46,20 @@ const CurationMetadataFetcher: React.FC<{
   </MediaObjectFetcher>
 );
 
-const Collection: NextPage<{ seo: SeoObjectData }> = () => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const seo = await getSeoDataForObject(
+    "Set",
+    context.query.slug as string,
+    context.locale || ""
+  );
+  return {
+    props: {
+      seo,
+    },
+  };
+};
+
+const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
 
   const { collection, isError } = useCollection(query?.slug as string);
@@ -67,6 +80,11 @@ const Collection: NextPage<{ seo: SeoObjectData }> = () => {
 
   return (
     <>
+      <NextSeo
+        description={seo.synopsis}
+        openGraph={{ images: seo.images }}
+        title={title || seo.title}
+      />
       {collection && (
         <CollectionPage
           CollectionItemDataFetcher={CurationMetadataFetcher}
