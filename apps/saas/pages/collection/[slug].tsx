@@ -13,6 +13,7 @@ import {
   Brand,
   CurationMetadata,
   Entertainment,
+  ImageType,
   Episode,
   Movie,
   Season,
@@ -36,7 +37,7 @@ const CurationMetadataFetcher: React.FC<{
       <>
         {children({
           title: getTitleByOrderForGraphQLObject(item, ["short", "medium"]),
-          image: getGraphQLImageSrc(item?.images, "Thumbnail"),
+          image: getGraphQLImageSrc(item?.images, ImageType.Thumbnail),
           uid: item.uid,
           href: `/movie/${item.uid}`,
           releaseDate: item.release_date || "",
@@ -89,7 +90,7 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
       {collection && (
         <CollectionPage
           CollectionItemDataFetcher={CurationMetadataFetcher}
-          bgImage={getGraphQLImageSrc(collection?.images, "Main")}
+          bgImage={getGraphQLImageSrc(collection?.images, ImageType.Main)}
           content={
             collection?.content?.objects?.map((item) => ({
               self: "",
