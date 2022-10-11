@@ -59,7 +59,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 };
 
 const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
-  const { homepage } = useHomepageSet();
+  const { homepage, isLoading } = useHomepageSet();
 
   const homepageItems =
     homepage?.isExpanded &&
@@ -109,6 +109,7 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         RailItemDataFetcher={RailItemDataFetcher}
         SliderDataFetcher={SliderDataFetcher}
         items={parsedItems}
+        loading={isLoading}
       />
     </>
   );

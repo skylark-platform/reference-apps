@@ -11,6 +11,7 @@ import {
   EntertainmentType,
   Dimensions,
 } from "@skylark-reference-apps/lib";
+import { useDimensions } from "@skylark-reference-apps/react";
 
 const fieldsToExpand = {};
 
@@ -46,9 +47,11 @@ export const moviesSetFetcher = ([endpoint, genreUid, dimensions]: [
 };
 
 export const useAllMovies = (type: EntertainmentType, genreUid?: string) => {
+  const { dimensions } = useDimensions();
+
   const endpoint = convertObjectTypeToSkylarkEndpoint(type);
   const { data, error } = useSWR<AllEntertainment[], Error>(
-    [endpoint, genreUid],
+    [endpoint, genreUid || "", dimensions],
     moviesSetFetcher
   );
 

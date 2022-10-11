@@ -17,7 +17,8 @@ import {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject(
     "Episode",
-    context.query.slug as string
+    context.query.slug as string,
+    context.locale || ""
   );
 
   return {

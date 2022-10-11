@@ -10,12 +10,6 @@ const config: CodegenConfig = {
       },
     },
   },
-  documents: [
-    "components/**/*.tsx",
-    "pages/**/*.tsx",
-    "hooks/**/*.tsx",
-    "!/gql/**/*",
-  ],
   generates: {
     "./types/gql.ts": {
       plugins: [

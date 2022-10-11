@@ -27,7 +27,7 @@ export interface Airtables {
   ratings: Record<FieldSet>[];
   tags: Record<FieldSet>[];
   images: Record<FieldSet>[];
-  availibility: Record<FieldSet>[];
+  availability: Record<FieldSet>[];
   setsMetadata: Record<FieldSet>[];
   assetTypes: Record<FieldSet>[];
   imageTypes: Record<FieldSet>[];

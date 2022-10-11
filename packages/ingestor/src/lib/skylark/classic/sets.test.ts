@@ -85,7 +85,7 @@ describe("skylark.sets", () => {
       fields: {
         title: imageAttachment.filename,
         image: [imageAttachment],
-        type: [imageTypes[0].airtableId],
+        "type-reference": [imageTypes[0].airtableId],
         schedule_urls: [],
       },
     };
@@ -95,7 +95,7 @@ describe("skylark.sets", () => {
       fields: {
         title: imageAttachment.filename,
         image: [imageAttachment],
-        type: ["invalid"],
+        "type-reference": ["invalid"],
         schedule_urls: [],
       },
     };

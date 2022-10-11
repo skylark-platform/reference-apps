@@ -2,16 +2,10 @@ import type { NextPage } from "next";
 import { useHomepageSet } from "../hooks/useHomepageSet";
 
 const Home: NextPage = () => {
-  const data = useHomepageSet();
-  const homepageItems = data.homepage?.content?.objects;
+  const { data } = useHomepageSet();
+  console.log("Homepage", data);
 
-  return (
-    <div>
-      {homepageItems?.map((item) => (
-        <div key={`${item.slug}`}>{item?.slug}</div>
-      ))}
-    </div>
-  );
+  return <div>{`Content count: ${data?.content?.count || ""}`}</div>;
 };
 
 export default Home;

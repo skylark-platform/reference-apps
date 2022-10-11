@@ -17,6 +17,7 @@ import {
 import axios from "axios";
 import { Attachment } from "airtable";
 import { mkdir, writeFile } from "fs/promises";
+import { has } from "lodash";
 import {
   createOrUpdateDynamicObject,
   createOrUpdateSetAndContents,
@@ -53,6 +54,7 @@ import {
   createGraphQLMediaObjects,
   createOrUpdateGraphQLCredits,
   createOrUpdateGraphQlObjectsUsingIntrospection,
+  createTranslationsForGraphQLObjects,
 } from "./lib/skylark/saas/create";
 import { createOrUpdateGraphQLSet } from "./lib/skylark/saas/sets";
 import {
@@ -68,7 +70,7 @@ const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
     createOrUpdateScheduleDimensions(airtable.dimensions),
   ]);
   const createdSchedules = await createOrUpdateSchedules(
-    airtable.availibility,
+    airtable.availability,
     dimensions
   );
   // eslint-disable-next-line no-console
@@ -266,29 +268,38 @@ const main = async () => {
     );
 
     const availability = await createOrUpdateAvailability(
-      airtable.availibility,
+      airtable.availability,
       dimensions
     );
-    const alwaysSchedule = availability.find(
-      ({ slug }) => slug === "always-license"
+
+    const defaultAvailabilityAirtable = airtable.availability.find(
+      ({ fields }) =>
+        has(fields, "default") && fields.default && has(fields, "slug")
+    );
+    // Attempt to use the schedule marked as default in Airtable, if not use the always-license one
+    const defaultSchedule = availability.find(({ slug }) =>
+      defaultAvailabilityAirtable
+        ? slug === defaultAvailabilityAirtable.fields.slug
+        : slug === "always-license"
     );
 
     // eslint-disable-next-line no-console
     console.log(
       `Default license: ${
-        UNLICENSED_BY_DEFAULT || !alwaysSchedule
+        UNLICENSED_BY_DEFAULT || !defaultSchedule
           ? "undefined"
-          : `${alwaysSchedule.slug} (${alwaysSchedule.external_id})`
+          : `${defaultSchedule.slug} (${defaultSchedule.external_id})`
       }`
     );
 
+    const metadataAvailability: GraphQLMetadata["availability"] = {
+      all: availability,
+      default: UNLICENSED_BY_DEFAULT ? undefined : defaultSchedule,
+    };
+
     const metadata: GraphQLMetadata = {
       dimensions,
-      availability: {
-        all: availability,
-        always: alwaysSchedule,
-        default: UNLICENSED_BY_DEFAULT ? undefined : alwaysSchedule,
-      },
+      availability: metadataAvailability,
       people: [],
       roles: [],
       genres: [],
@@ -301,31 +312,38 @@ const main = async () => {
 
     metadata.images = await createOrUpdateGraphQlObjectsUsingIntrospection(
       "Image",
-      airtable.images
+      airtable.images,
+      metadataAvailability
     );
     metadata.themes = await createOrUpdateGraphQlObjectsUsingIntrospection(
       "Theme",
-      airtable.themes
+      airtable.themes,
+      metadataAvailability
     );
     metadata.genres = await createOrUpdateGraphQlObjectsUsingIntrospection(
       "Genre",
-      airtable.genres
+      airtable.genres,
+      metadataAvailability
     );
     metadata.ratings = await createOrUpdateGraphQlObjectsUsingIntrospection(
       "Rating",
-      airtable.ratings
+      airtable.ratings,
+      metadataAvailability
     );
     metadata.tags = await createOrUpdateGraphQlObjectsUsingIntrospection(
       "Tag",
-      airtable.tags
+      airtable.tags,
+      metadataAvailability
     );
     metadata.people = await createOrUpdateGraphQlObjectsUsingIntrospection(
       "Person",
-      airtable.people
+      airtable.people,
+      metadataAvailability
     );
     metadata.roles = await createOrUpdateGraphQlObjectsUsingIntrospection(
       "Role",
-      airtable.roles
+      airtable.roles,
+      metadataAvailability
     );
     metadata.credits = await createOrUpdateGraphQLCredits(
       airtable.credits,
@@ -342,6 +360,12 @@ const main = async () => {
       metadata
     );
 
+    await createTranslationsForGraphQLObjects(
+      mediaObjects,
+      airtable.translations.mediaObjects,
+      airtable.dimensions.languages
+    );
+
     // eslint-disable-next-line no-console
     console.log("Media objects created");
 
@@ -354,11 +378,14 @@ const main = async () => {
       ) {
         const setConfig = orderedSetsToCreateWithoutDynamicObject[i];
         // eslint-disable-next-line no-await-in-loop
-        const set = await createOrUpdateGraphQLSet(setConfig, [
-          ...mediaObjects,
-          ...createdSets,
-        ]);
-        createdSets.push(set);
+        const set = await createOrUpdateGraphQLSet(
+          setConfig,
+          [...mediaObjects, ...createdSets],
+          metadata,
+          airtable.dimensions.languages,
+          airtable.setsMetadata
+        );
+        if (set) createdSets.push(set);
       }
 
       // eslint-disable-next-line no-console

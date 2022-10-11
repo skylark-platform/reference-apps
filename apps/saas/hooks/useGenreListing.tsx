@@ -1,9 +1,11 @@
 import useSWRInfinite from "swr/infinite";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
-import { graphQLClient } from "@skylark-reference-apps/lib";
+import { Dimensions, graphQLClient } from "@skylark-reference-apps/lib";
+import { useDimensions } from "@skylark-reference-apps/react";
 import { Genre, GenreListing } from "../types/gql";
+import { createGraphQLQueryDimensions } from "../lib/utils";
 
-const createGraphQLQuery = (nextToken?: string) => {
+const createGraphQLQuery = (dimensions: Dimensions, nextToken?: string) => {
   const method = `listGenre`;
 
   const queryAsJson = {
@@ -11,8 +13,8 @@ const createGraphQLQuery = (nextToken?: string) => {
       __name: method,
       [method]: {
         __args: {
-          ignore_availability: true,
           next_token: nextToken || "",
+          ...createGraphQLQueryDimensions(dimensions),
         },
         next_token: true,
         objects: {
@@ -28,8 +30,12 @@ const createGraphQLQuery = (nextToken?: string) => {
   return { query, method };
 };
 
-const fetcher = ([, nextToken]: [name: string, nextToken?: string]) => {
-  const { query, method } = createGraphQLQuery(nextToken);
+const fetcher = ([, dimensions, nextToken]: [
+  name: string,
+  dimensions: Dimensions,
+  nextToken?: string
+]) => {
+  const { query, method } = createGraphQLQuery(dimensions, nextToken);
   return graphQLClient
     .request<{ [key: string]: GenreListing }>(query)
     .then(({ [method]: data }): GenreListing => data);
@@ -37,18 +43,22 @@ const fetcher = ([, nextToken]: [name: string, nextToken?: string]) => {
 
 const getKey = (
   pageIndex: number,
-  previousPageData: GenreListing | undefined
+  previousPageData: GenreListing | undefined,
+  dimensions: Dimensions
 ) => {
   if (previousPageData && !previousPageData.next_token) return null;
 
-  if (pageIndex === 0) return ["GenreListing", ""];
+  if (pageIndex === 0) return ["GenreListing", dimensions, ""];
 
-  return ["GenreListing", previousPageData?.next_token];
+  return ["GenreListing", dimensions, previousPageData?.next_token];
 };
 
 export const useGenreListing = () => {
+  const { dimensions } = useDimensions();
+
   const { data, error, isLoading } = useSWRInfinite<GenreListing, Error>(
-    getKey,
+    (pageIndex: number, previousPageData: GenreListing | undefined) =>
+      getKey(pageIndex, previousPageData, dimensions),
     fetcher,
     {
       initialSize: 3,

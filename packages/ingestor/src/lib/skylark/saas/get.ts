@@ -2,20 +2,38 @@ import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import { has, isNull } from "lodash";
 import { graphQLClient, GraphQLObjectTypes } from "@skylark-reference-apps/lib";
 
-import { GraphQLBaseObject, GraphQLIntrospection } from "../../interfaces";
+import {
+  GraphQLBaseObject,
+  GraphQLIntrospection,
+  GraphQLIntrospectionProperties,
+} from "../../interfaces";
 
 export const getValidPropertiesForObject = async (
   objectType: GraphQLObjectTypes
-) => {
+): Promise<GraphQLIntrospectionProperties[]> => {
   const query = {
     query: {
-      __name: "Introspection",
-      __type: {
+      IntrospectionOnType: {
+        __aliasFor: "__type",
         __args: {
           name: objectType,
         },
         name: true,
         fields: {
+          name: true,
+          type: {
+            name: true,
+            kind: true,
+          },
+        },
+      },
+      IntrospectionOnInputType: {
+        __aliasFor: "__type",
+        __args: {
+          name: `${objectType}Input`,
+        },
+        name: true,
+        inputFields: {
           name: true,
           type: {
             name: true,
@@ -32,17 +50,19 @@ export const getValidPropertiesForObject = async (
     graphQLGetQuery
   );
 
+  const supportedKinds = ["SCALAR", "ENUM", "NON_NULL"];
   const supportedObjects = ["availability"];
 
-  // eslint-disable-next-line no-underscore-dangle
-  const types = data.__type.fields
-    .filter(
-      ({ name: fieldName, type: { name, kind } }) =>
-        supportedObjects.includes(fieldName) ||
-        kind !== "OBJECT" ||
-        (name && name.startsWith("String"))
-    )
-    .map(({ name }) => name);
+  const fields =
+    data.IntrospectionOnInputType?.inputFields ||
+    data.IntrospectionOnType.fields;
+  const filteredFields = fields.filter(
+    ({ name: property, type: { kind } }) =>
+      supportedKinds.includes(kind) || supportedObjects.includes(property)
+  );
+  const types: GraphQLIntrospectionProperties[] = filteredFields.map(
+    ({ name, type: { kind } }) => ({ property: name, kind })
+  );
 
   return types;
 };
@@ -51,20 +71,32 @@ export const getExistingObjects = async (
   objectType: GraphQLObjectTypes,
   externalIds: string[]
 ): Promise<string[]> => {
-  const getOperations = externalIds.reduce((previousOperations, externalId) => {
-    const operation = {
-      ...previousOperations,
-      [externalId]: {
-        __aliasFor: `get${objectType}`,
-        __args: {
-          ignore_availability: true,
-          external_id: externalId,
-        },
-        uid: true,
-        external_id: true,
-      },
+  const getOperations = externalIds.reduce((previousQueries, externalId) => {
+    const args: { [key: string]: string | boolean } = {
+      external_id: externalId,
     };
-    return operation;
+
+    // Dimensions don't have availability
+    if (
+      !objectType.startsWith("Dimension") &&
+      !objectType.startsWith("Availability")
+    ) {
+      args.ignore_availability = true;
+    }
+
+    const operation = {
+      __aliasFor: `get${objectType}`,
+      __args: args,
+      uid: true,
+      external_id: true,
+    };
+
+    const queries = {
+      ...previousQueries,
+      [externalId]: operation,
+    };
+
+    return queries;
   }, {} as { [key: string]: object });
 
   const query = {

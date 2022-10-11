@@ -6,6 +6,7 @@ import {
 } from "@skylark-reference-apps/lib";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import { Entertainment } from "../types/gql";
+import { createGraphQLQueryDimensions } from "./utils";
 
 interface SeoObjectImage {
   url: string;
@@ -19,7 +20,8 @@ export interface SeoObjectData {
 
 export const getSeoDataForObject = async (
   type: GraphQLObjectTypes,
-  lookupValue: string
+  lookupValue: string,
+  language: string
 ): Promise<SeoObjectData> => {
   // Helper to use the external_id when an airtable record ID is given
   const lookupField = lookupValue.startsWith("rec") ? "external_id" : "uid";
@@ -32,7 +34,12 @@ export const getSeoDataForObject = async (
       [method]: {
         __args: {
           [lookupField]: lookupValue,
-          ignore_availability: true,
+          ...createGraphQLQueryDimensions({
+            language,
+            // TODO can we work out these before the client loads the page?
+            customerType: "premium",
+            deviceType: "pc",
+          }),
         },
         uid: true,
         title: true,
@@ -57,6 +64,7 @@ export const getSeoDataForObject = async (
   try {
     const query = jsonToGraphQLQuery(queryAsJson);
 
+  try {
     const { [method]: data } = await graphQLClient.request<{
       [key: string]: Entertainment;
     }>(query);

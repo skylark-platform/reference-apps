@@ -63,7 +63,7 @@ describe("useMovieListingFromGenre", () => {
     await waitForNextUpdate();
 
     expect(graphQlRequest).toBeCalledWith(
-      'query getGenre { getGenre (uid: "genreuid", ignore_availability: true) { movies (next_token: "") { next_token objects { uid } } } }'
+      'query getGenre { getGenre (uid: "genreuid", language: "en-gb", dimensions: [{dimension: "device-types", value: ""}, {dimension: "customer-types", value: "standard"}]) { movies (next_token: "") { next_token objects { uid } } } }'
     );
   });
 
@@ -88,7 +88,7 @@ describe("useMovieListingFromGenre", () => {
 
     expect(graphQlRequest).toBeCalledTimes(2);
     expect(graphQlRequest).toBeCalledWith(
-      'query getGenre { getGenre (uid: "genreuid", ignore_availability: true) { movies (next_token: "token") { next_token objects { uid } } } }'
+      'query getGenre { getGenre (uid: "genreuid", language: "en-gb", dimensions: [{dimension: "device-types", value: ""}, {dimension: "customer-types", value: "standard"}]) { movies (next_token: "token") { next_token objects { uid } } } }'
     );
   });
 
