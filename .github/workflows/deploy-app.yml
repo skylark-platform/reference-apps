@@ -53,7 +53,7 @@ jobs:
         env:
           BRANCH: ${{ steps.branch-and-ref.outputs.branch }}
         run: |
-          echo "::set-output name=account-id::$BRANCH-$GITHUB_SHA-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          echo "::set-output name=account-id::environment$GITHUB_RUN_ID$GITHUB_RUN_ATTEMPT"
 
   deploy:
     name: Deploy
