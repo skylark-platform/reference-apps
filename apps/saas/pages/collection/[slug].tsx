@@ -6,28 +6,32 @@ import {
   MoviesPageParsedMovie,
   CollectionPage,
 } from "@skylark-reference-apps/react";
+import { GraphQLMediaObjectTypes } from "@skylark-reference-apps/lib";
 
 import { useCollection } from "../../hooks/useCollection";
 import {
-  Episode,
-  Season,
+  Brand,
   CurationMetadata,
   Entertainment,
+  Episode,
+  Movie,
+  Season,
 } from "../../types/gql";
 import { MediaObjectFetcher } from "../../components/mediaObjectFetcher";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 import {
+  getFirstRatingValue,
   getGraphQLImageSrc,
   getSynopsisByOrderForGraphQLObject,
   getTitleByOrderForGraphQLObject,
 } from "../../lib/utils";
 
-// TODO, same as movies ?
 const CurationMetadataFetcher: React.FC<{
   uid: string;
   children(data: MoviesPageParsedMovie): ReactNode;
-}> = ({ uid, children }) => (
-  <MediaObjectFetcher type="Movie" uid={uid}>
+  type: GraphQLMediaObjectTypes;
+}> = ({ uid, children, type }) => (
+  <MediaObjectFetcher type={type} uid={uid}>
     {(item: CurationMetadata & Entertainment) => (
       <>
         {children({
@@ -35,7 +39,7 @@ const CurationMetadataFetcher: React.FC<{
           image: getGraphQLImageSrc(item?.images, "Thumbnail"),
           uid: item.uid,
           href: `/movie/${item.uid}`,
-          releaseDate: "",
+          releaseDate: item.release_date || "",
           duration: "1hr 38m",
         })}
       </>
@@ -55,25 +59,22 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
 
-  const { collection, items, isError } = useCollection();
+  const { collection, isError } = useCollection(query?.slug as string);
 
   if (isError && !collection) {
     return (
       <div className="flex h-screen flex-col items-center justify-center text-white">
-        <p>{`Error fetching brand: ${(query?.slug as string) || ""}`}</p>
+        <p>{`Error fetching collection: ${(query?.slug as string) || ""}`}</p>
         <p>{isError?.message}</p>
       </div>
     );
   }
 
-  console.log("collection", items);
-
-  const title = collection
-    ? getTitleByOrderForGraphQLObject(collection[0])
-    : "";
+  const title = collection ? getTitleByOrderForGraphQLObject(collection) : "";
   const synopsis = collection
-    ? getSynopsisByOrderForGraphQLObject(collection[0])
+    ? getSynopsisByOrderForGraphQLObject(collection)
     : "";
+
   return (
     <>
       <NextSeo
@@ -84,17 +85,20 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
       {collection && (
         <CollectionPage
           CollectionItemDataFetcher={CurationMetadataFetcher}
-          bgImage={getGraphQLImageSrc(collection[0]?.images, "Main")}
+          bgImage={getGraphQLImageSrc(collection?.images, "Main")}
           content={
-            items?.map((item) => ({
+            collection?.content?.objects?.map((item) => ({
               self: "",
               slug: "",
-              uid: item?.uid || "",
+              uid: item?.object?.uid || "",
+              // eslint-disable-next-line no-underscore-dangle
+              type: (item?.object as Episode | Movie | Brand | Season)
+                .__typename,
             })) || []
           }
           loading={!collection}
-          rating={""}
-          releaseDate={""} // collection[0]?.releaseDate}
+          rating={getFirstRatingValue(collection?.ratings)}
+          releaseDate={collection?.release_date || ""}
           synopsis={synopsis}
           title={title ?? ""}
         />

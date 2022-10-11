@@ -13,36 +13,6 @@ const queryGQL = gql`
     ) {
       uid
       external_id
-      slug
-      title
-      content {
-        objects {
-          slug
-          ... on Set {
-            content {
-              objects {
-                slug
-                ... on Movie {
-                  title
-                  slug
-                }
-                ... on Brand {
-                  title
-                  slug
-                }
-              }
-            }
-          }
-          ... on Movie {
-            title
-            slug
-          }
-          ... on Season {
-            title
-            slug
-          }
-        }
-      }
     }
   }
 `;

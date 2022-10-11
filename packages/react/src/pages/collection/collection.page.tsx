@@ -1,5 +1,9 @@
 import React from "react";
-import { formatReleaseDate, formatYear } from "@skylark-reference-apps/lib";
+import {
+  formatReleaseDate,
+  formatYear,
+  GraphQLMediaObjectTypes,
+} from "@skylark-reference-apps/lib";
 import useTranslation from "next-translate/useTranslation";
 import {
   SkeletonPage,
@@ -29,6 +33,7 @@ interface Props {
     slug: string;
     self: string;
     uid: string;
+    type?: GraphQLMediaObjectTypes;
   }[];
   rating: string;
   CollectionItemDataFetcher:
@@ -39,6 +44,7 @@ interface Props {
       }>
     | React.FC<{
         uid: string;
+        type: GraphQLMediaObjectTypes;
         children(data: CollectionPageParsedContentItem): React.ReactNode;
       }>;
 }
@@ -70,11 +76,12 @@ export const CollectionPage: React.FC<Props> = ({
           />
         </Hero>
         <div className="grid w-full grid-cols-2 gap-x-4 gap-y-6 px-gutter sm:px-sm-gutter md:grid-cols-3 lg:grid-cols-4 lg:px-lg-gutter xl:px-xl-gutter 2xl:grid-cols-6">
-          {content.map(({ self, slug, uid }) => (
+          {content.map(({ self, slug, uid, type }) => (
             <CollectionItemDataFetcher
-              key={`collection-content-item-${slug}`}
+              key={`collection-content-item-${slug || uid}`}
               self={self}
               slug={slug}
+              type={type || "Movie"}
               uid={uid}
             >
               {(item: CollectionPageParsedContentItem) => (

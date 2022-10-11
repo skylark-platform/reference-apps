@@ -1,10 +1,15 @@
-import useSWRInfinite from "swr/infinite";
+import useSWR from "swr";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import { graphQLClient } from "@skylark-reference-apps/lib";
-import { CurationMetadata, Set } from "../types/gql";
+import { Set } from "../types/gql";
 
-const createGraphQLQuery = (nextToken?: string) => {
+const createGraphQLQuery = (lookupValue: string) => {
   const method = `getSet`;
+
+  // Helper to use the external_id when an airtable record ID is given
+  const lookupField = lookupValue.startsWith("ingestor_set")
+    ? "external_id"
+    : "uid";
 
   const queryAsJson = {
     query: {
@@ -12,7 +17,7 @@ const createGraphQLQuery = (nextToken?: string) => {
       [method]: {
         __args: {
           ignore_availability: true,
-          uid: "3d3d45f6-dc54-4cc7-be47-940efaa81dc1",
+          [lookupField]: lookupValue,
         },
         uid: true,
         title: true,
@@ -23,6 +28,11 @@ const createGraphQLQuery = (nextToken?: string) => {
         synopsis_medium: true,
         synopsis_long: true,
         release_date: true,
+        ratings: {
+          objects: {
+            value: true,
+          },
+        },
         images: {
           objects: {
             title: true,
@@ -32,12 +42,15 @@ const createGraphQLQuery = (nextToken?: string) => {
         },
         content: {
           __args: {
-            next_token: nextToken || "",
+            limit: 50,
           },
           next_token: true,
           objects: {
-            uid: true,
-            slug: true,
+            object: {
+              uid: true,
+              slug: true,
+              __typename: true,
+            },
           },
         },
       },
@@ -49,43 +62,21 @@ const createGraphQLQuery = (nextToken?: string) => {
   return { query, method };
 };
 
-const getSetFetcher = ([, nextToken]: [name: string, nextToken?: string]) => {
-  const { query, method } = createGraphQLQuery(nextToken);
+const getSetFetcher = ([lookupValue]: [lookupValue: string]) => {
+  const { query, method } = createGraphQLQuery(lookupValue);
   return graphQLClient
     .request<{ [key: string]: Set }>(query)
     .then(({ [method]: data }): Set => data);
 };
 
-const getKey = (pageIndex: number, previousPageData: Set | null) => {
-  if (previousPageData && !previousPageData?.content?.next_token) return null;
-
-  if (pageIndex === 0) return ["Set", ""];
-
-  return ["Set", previousPageData?.content?.next_token];
-};
-
-export const useCollection = (disable = false) => {
-  const { data, error, isLoading } = useSWRInfinite<Set, Error>(
-    (pageIndex, previousPageData: Set) =>
-      disable ? null : getKey(pageIndex, previousPageData),
-    getSetFetcher,
-    {
-      initialSize: 10,
-    }
+export const useCollection = (lookupValue: string) => {
+  const { data, error, isLoading } = useSWR<Set, Error>(
+    [lookupValue],
+    getSetFetcher
   );
 
-  const items: CurationMetadata[] | undefined =
-    data &&
-    (data
-      .flatMap((collectionSet) => collectionSet?.content?.objects)
-      .filter((movie) => !!movie) as CurationMetadata[]);
-
-  console.log("data retrieved", items);
-
-  // TODO missing collection data
   return {
     collection: data,
-    items,
     isLoading: isLoading && !data,
     isError: error,
   };

@@ -54,32 +54,51 @@ export const getSeoDataForObject = async (
     },
   };
 
-  const query = jsonToGraphQLQuery(queryAsJson);
+  try {
+    const query = jsonToGraphQLQuery(queryAsJson);
 
-  const { [method]: data } = await graphQLClient.request<{
-    [key: string]: Entertainment;
-  }>(query);
+    const { [method]: data } = await graphQLClient.request<{
+      [key: string]: Entertainment;
+    }>(query);
 
-  const title = getTitleByOrder({
-    short: data?.title_short || "",
-    medium: data?.title_medium || "",
-    long: data?.title_long || "",
-  });
+    const title = getTitleByOrder({
+      short: data?.title_short || "",
+      medium: data?.title_medium || "",
+      long: data?.title_long || "",
+    });
 
-  const synopsis = getSynopsisByOrder({
-    short: data?.synopsis_short || "",
-    medium: data?.synopsis_medium || "",
-    long: data?.synopsis_long || "",
-  });
+    const synopsis = getSynopsisByOrder({
+      short: data?.synopsis_short || "",
+      medium: data?.synopsis_medium || "",
+      long: data?.synopsis_long || "",
+    });
 
-  const images =
-    data.images?.objects?.map(
-      (image): SeoObjectImage => ({ url: image?.url || "" })
-    ) || [];
+    const images =
+      data.images?.objects?.map(
+        (image): SeoObjectImage => ({ url: image?.url || "" })
+      ) || [];
 
-  return {
-    title,
-    synopsis,
-    images,
-  };
+    return {
+      title,
+      synopsis,
+      images,
+    };
+  } catch (err) {
+    const error = err as {
+      response?: { errors?: { errorType: string; message: string }[] };
+    };
+    if (error && error?.response?.errors?.[0].errorType === "NotFound") {
+      return {
+        title: "Not found",
+        synopsis: error.response.errors?.[0].message,
+        images: [],
+      };
+    }
+
+    return {
+      title: "",
+      synopsis: "",
+      images: [],
+    };
+  }
 };
