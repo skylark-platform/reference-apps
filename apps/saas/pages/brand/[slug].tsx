@@ -74,7 +74,6 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const title = getTitleByOrderForGraphQLObject(brand);
   const synopsis = getSynopsisByOrderForGraphQLObject(brand);
 
-  // eslint-disable-next-line no-underscore-dangle
   const seasons = brand?.seasons?.objects?.sort((s1, s2) =>
     (s1?.season_number || 0) > (s2?.season_number || 0) ? 1 : -1
   ) as Season[];

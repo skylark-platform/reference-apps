@@ -2,6 +2,7 @@ import type { GetStaticProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 import {
   HomePage,
+  HomepageItem,
   HomePageParsedRailItem,
 } from "@skylark-reference-apps/react";
 import {
@@ -38,10 +39,10 @@ const RailItemDataFetcher: React.FC<{
             "Thumbnail",
             isPortrait ? "350x350" : "384x216"
           ),
-          slug: item.slug,
           uid: item.uid,
           href: item.type && item.slug ? `/${item.type}/${item.slug}` : "",
-          number: (item.type === "episode" && (item as Episode).number) || 0,
+          number:
+            (item.type === "episode" && (item as Episode).number) || undefined,
         })}
       </>
     )}
@@ -73,7 +74,7 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         )
       : [];
 
-  const parsedItems = homepageItems.map((item) => {
+  const parsedItems: HomepageItem[] = homepageItems.map((item) => {
     let content: AllEntertainment[] = [];
     if (item.items?.isExpanded) {
       if (
@@ -98,6 +99,8 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
       content: content.map((contentItem) => ({
         self: contentItem.self,
         slug: contentItem.slug,
+        uid: "",
+        type: "",
       })),
     };
   });
