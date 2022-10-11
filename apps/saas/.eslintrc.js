@@ -16,6 +16,7 @@ module.exports = {
       extends: ["plugin:@next/next/recommended"],
       rules: {
         "react/react-in-jsx-scope": "off",
+        "no-underscore-dangle": "off",
       },
     },
   ],

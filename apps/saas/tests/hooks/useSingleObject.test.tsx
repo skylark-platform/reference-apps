@@ -163,7 +163,8 @@ describe("useSingleObject", () => {
   });
 
   it("returns an error when the GraphQL request errors", async () => {
-    graphQlRequest.mockRejectedValueOnce("graphql error");
+    const err = new Error("graphql error");
+    graphQlRequest.mockRejectedValueOnce(err);
 
     const { result, waitForNextUpdate } = renderHook(() =>
       useSingleObject("Episode", "123")
@@ -171,6 +172,20 @@ describe("useSingleObject", () => {
 
     await waitForNextUpdate();
 
-    expect(result.current.isError).toBe("graphql error");
+    expect(result.current.isError).toBe(err);
+  });
+
+  it("sets isNotFound to true when the error contains not found", async () => {
+    const err = new Error("error not found");
+    graphQlRequest.mockRejectedValueOnce(err);
+
+    const { result, waitForNextUpdate } = renderHook(() =>
+      useSingleObject("Episode", "123")
+    );
+
+    await waitForNextUpdate();
+
+    expect(result.current.isNotFound).toBe(true);
+    expect(result.current.isError).toBe(err);
   });
 });

@@ -40,7 +40,7 @@ describe("useHomepageSet", () => {
     await waitForNextUpdate();
 
     expect(graphQlRequest).toBeCalledWith(
-      'query getSet { getSet (external_id: "ingestor_set_media_reference_homepage", language: "en-gb", dimensions: [{dimension: "device-types", value: ""}, {dimension: "customer-types", value: "standard"}]) { __typename uid title slug title_short title_medium title_long synopsis_short synopsis_medium synopsis_long release_date images { objects { title type url } } content { count objects { object { __typename slug ... on Season { uid episodes { objects { uid episode_number } } } ... on Set { uid type content (limit: 20) { objects { object { uid } } } } } } } } }'
+      'query getSet { getSet (external_id: "ingestor_set_media_reference_homepage", language: "en-gb", dimensions: [{dimension: "device-types", value: ""}, {dimension: "customer-types", value: "standard"}]) { __typename uid title slug content { count objects { object { __typename slug ... on Season { uid title_short title_medium episodes (limit: 30) { objects { uid episode_number title } } } ... on Set { uid type title_short title_medium content (limit: 30) { objects { object { __typename uid } } } } } } } } }'
     );
   });
 
