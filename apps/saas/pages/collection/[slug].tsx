@@ -21,7 +21,7 @@ import {
   getTitleByOrderForGraphQLObject,
 } from "../../lib/utils";
 
-const CurationMetadataFetcher: React.FC<{
+const CollectionItemDataFetcher: React.FC<{
   uid: string;
   children(data: MoviesPageParsedMovie): ReactNode;
   type: GraphQLMediaObjectTypes;
@@ -87,7 +87,7 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
       />
       {collection && (
         <CollectionPage
-          CollectionItemDataFetcher={CurationMetadataFetcher}
+          CollectionItemDataFetcher={CollectionItemDataFetcher}
           bgImage={getGraphQLImageSrc(collection?.images, ImageType.Main)}
           content={
             collection?.content?.objects?.map((item) => ({
@@ -95,8 +95,8 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
               slug: "",
               uid: item?.object?.uid || "",
               type:
-                // eslint-disable-next-line no-underscore-dangle
-                (item?.object as Episode | Movie | Brand | Season).__typename,
+                (item?.object as Episode | Movie | Brand | Season).__typename ||
+                "",
             })) || []
           }
           loading={!collection}

@@ -89,6 +89,7 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           self: contentItem.self,
           slug: contentItem.slug,
           uid: "",
+          type: "",
         }))}
         loading={!collection}
         rating={
