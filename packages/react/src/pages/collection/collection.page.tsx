@@ -33,7 +33,7 @@ interface Props {
     slug: string;
     self: string;
     uid: string;
-    type?: GraphQLMediaObjectTypes;
+    type?: GraphQLMediaObjectTypes | "";
   }[];
   rating: string;
   CollectionItemDataFetcher:

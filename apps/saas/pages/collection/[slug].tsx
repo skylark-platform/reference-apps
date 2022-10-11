@@ -91,9 +91,9 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
               self: "",
               slug: "",
               uid: item?.object?.uid || "",
-              // eslint-disable-next-line no-underscore-dangle
-              type: (item?.object as Episode | Movie | Brand | Season)
-                .__typename,
+              type:
+                // eslint-disable-next-line no-underscore-dangle
+                (item?.object as Episode | Movie | Brand | Season).__typename,
             })) || []
           }
           loading={!collection}
