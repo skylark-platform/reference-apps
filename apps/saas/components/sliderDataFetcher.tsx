@@ -7,7 +7,14 @@ import {
   getGraphQLImageSrc,
   getTitleByOrderForGraphQLObject,
 } from "../lib/utils";
-import { Brand, Episode, Movie, Season, SetContent } from "../types/gql";
+import {
+  Brand,
+  Episode,
+  ImageType,
+  Movie,
+  Season,
+  SetContent,
+} from "../types/gql";
 
 export const SliderDataFetcher: FC<{
   children(data: CarouselItem[]): ReactNode;
@@ -40,7 +47,7 @@ export const SliderDataFetcher: FC<{
                 href: `/${convertTypenameToEntertainmentType(
                   object.__typename
                 )}/${object.uid}`,
-                image: getGraphQLImageSrc(object.images, "Main"),
+                image: getGraphQLImageSrc(object.images, ImageType.Main),
                 type: convertTypenameToEntertainmentType(object.__typename),
                 releaseDate: object.release_date || "",
               }))

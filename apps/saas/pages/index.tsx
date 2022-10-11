@@ -23,7 +23,15 @@ import {
   getTitleByOrderForGraphQLObject,
   sortEpisodesByNumber,
 } from "../lib/utils";
-import { Brand, Episode, Movie, Season, SetContent, Set } from "../types/gql";
+import {
+  Brand,
+  Episode,
+  Movie,
+  Season,
+  SetContent,
+  Set,
+  ImageType,
+} from "../types/gql";
 
 const RailItemDataFetcher: React.FC<{
   uid: string;
@@ -36,6 +44,7 @@ const RailItemDataFetcher: React.FC<{
       <MediaObjectFetcher type={type} uid={uid}>
         {(object) => (
           <>
+            {console.log(object)}
             {children({
               title: getTitleByOrderForGraphQLObject(object, [
                 "short",
@@ -46,7 +55,7 @@ const RailItemDataFetcher: React.FC<{
                 "medium",
                 "long",
               ]),
-              image: getGraphQLImageSrc(object?.images, "Thumbnail"),
+              image: getGraphQLImageSrc(object?.images, ImageType.Thumbnail),
               uid: object.uid,
               href: `/${
                 object.__typename === "Set"
@@ -115,7 +124,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { data, isLoading, isError } = useHomepageSet();
 
-  if (isError || !data?.content?.objects) {
+  if (!isLoading && (isError || !data?.content?.objects)) {
     return (
       <div className="flex h-screen flex-col items-center justify-center text-white">
         <p>{`Error fetching homepage`}</p>
@@ -125,9 +134,11 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     );
   }
 
-  const content = (data?.content?.objects as SetContent[])?.map(
-    ({ object }) => object as Episode | Movie | Brand | Season | Set
-  );
+  const content = data?.content?.objects
+    ? (data.content.objects as SetContent[])?.map(
+        ({ object }) => object as Episode | Movie | Brand | Season | Set
+      )
+    : [];
 
   return (
     <>

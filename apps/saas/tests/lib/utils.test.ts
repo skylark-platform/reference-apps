@@ -1,6 +1,12 @@
 import { Dimensions } from "@skylark-reference-apps/lib";
 import * as utils from "../../lib/utils";
-import { Credit, ImageListing } from "../../types/gql";
+import {
+  Credit,
+  Episode,
+  ImageListing,
+  ImageType,
+  Maybe,
+} from "../../types/gql";
 
 const credits: Credit[] = [
   {
@@ -33,8 +39,8 @@ const credits: Credit[] = [
 
 const images: ImageListing = {
   objects: [
-    { uid: "image-1", url: "poster.jpg", type: "Poster" },
-    { uid: "image-1", url: "thumbnail.jpg", type: "Thumbnail" },
+    { uid: "image-1", url: "poster.jpg", type: "POSTER" },
+    { uid: "image-1", url: "thumbnail.jpg", type: "THUMBNAIL" },
   ],
 };
 
@@ -102,17 +108,20 @@ describe("utils.ts", () => {
 
   describe("getGraphQLImageSrc", () => {
     it("returns an empty string when no images are given", () => {
-      const got = utils.getGraphQLImageSrc({ objects: [] }, "Thumbnail");
+      const got = utils.getGraphQLImageSrc(
+        { objects: [] },
+        ImageType.Thumbnail
+      );
       expect(got).toEqual("");
     });
 
     it("returns the image url for the Thumbnail", () => {
-      const got = utils.getGraphQLImageSrc(images, "Thumbnail");
+      const got = utils.getGraphQLImageSrc(images, ImageType.Thumbnail);
       expect(got).toEqual("thumbnail.jpg");
     });
 
     it("returns the first image when none are found for the given type", () => {
-      const got = utils.getGraphQLImageSrc(images, "Main");
+      const got = utils.getGraphQLImageSrc(images, ImageType.Main);
       expect(got).toEqual("poster.jpg");
     });
   });
@@ -162,6 +171,56 @@ describe("utils.ts", () => {
         ],
         language: dimensions.language,
       });
+    });
+  });
+
+  describe("convertTypenameToEntertainmentType", () => {
+    it("converts a given typename to the expected type", () => {
+      const got = utils.convertTypenameToEntertainmentType("Episode");
+      expect(got).toEqual("episode");
+    });
+  });
+
+  describe("convertGraphQLSetType", () => {
+    it("converts a collection set type", () => {
+      const got = utils.convertGraphQLSetType("COLLECTION");
+      expect(got).toEqual("collection");
+    });
+
+    it("converts a rail set type", () => {
+      const got = utils.convertGraphQLSetType("RAIL");
+      expect(got).toEqual("rail");
+    });
+
+    it("converts a slider set type", () => {
+      const got = utils.convertGraphQLSetType("SLIDER");
+      expect(got).toEqual("slider");
+    });
+
+    it("defaults to a set type of homepage", () => {
+      const got = utils.convertGraphQLSetType("PAGE");
+      expect(got).toEqual("homepage");
+    });
+  });
+
+  describe("sortEpisodesByNumber", () => {
+    const arr: Maybe<Episode>[] = [
+      { uid: "10", episode_number: 10 },
+      { uid: "1", episode_number: 1 },
+      { uid: "5", episode_number: 5 },
+      { uid: "4", episode_number: 4 },
+      { uid: "55", episode_number: 5 },
+    ];
+
+    it("sorts the objects by the number property", () => {
+      const got = arr.sort(utils.sortEpisodesByNumber);
+      expect(got).toEqual([
+        { uid: "1", episode_number: 1 },
+        { uid: "4", episode_number: 4 },
+        { uid: "55", episode_number: 5 },
+        { uid: "5", episode_number: 5 },
+        { uid: "10", episode_number: 10 },
+      ]);
     });
   });
 });

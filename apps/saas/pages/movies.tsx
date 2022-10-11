@@ -9,7 +9,7 @@ import useTranslation from "next-translate/useTranslation";
 import { sortArrayIntoAlphabeticalOrder } from "@skylark-reference-apps/lib";
 import { useMovieListing } from "../hooks/useMovieListing";
 import { MediaObjectFetcher } from "../components/mediaObjectFetcher";
-import { Genre, Movie } from "../types/gql";
+import { Genre, ImageType, Movie } from "../types/gql";
 import { useGenreListing } from "../hooks/useGenreListing";
 import { useMovieListingFromGenre } from "../hooks/useMovieListingFromGenre";
 import {
@@ -26,7 +26,7 @@ const MovieDataFetcher: React.FC<{
       <>
         {children({
           title: getTitleByOrderForGraphQLObject(movie, ["short", "medium"]),
-          image: getGraphQLImageSrc(movie?.images, "Thumbnail"),
+          image: getGraphQLImageSrc(movie?.images, ImageType.Thumbnail),
           uid: movie.uid,
           href: `/movie/${movie.uid}`,
           releaseDate: movie.release_date || "",

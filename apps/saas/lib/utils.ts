@@ -6,7 +6,6 @@ import {
   getSynopsisByOrder,
   getTitleByOrder,
   GraphQLMediaObjectTypes,
-  ImageTypes,
   SetTypes,
   SynopsisTypes,
   TitleTypes,
@@ -17,6 +16,7 @@ import {
   Episode,
   GenreListing,
   ImageListing,
+  ImageType,
   Maybe,
   RatingListing,
   ThemeListing,
@@ -69,7 +69,7 @@ export const getFirstRatingValue = (
 
 export const getGraphQLImageSrc = (
   images: Maybe<ImageListing> | undefined,
-  type: ImageTypes
+  type: ImageType
 ): string => {
   if (!images || !images.objects || images.objects.length === 0) {
     return "";
@@ -135,7 +135,7 @@ export const createGraphQLQueryDimensions = (activeDimensions: Dimensions) => {
 };
 
 export const convertTypenameToEntertainmentType = (
-  typename: GraphQLMediaObjectTypes | "Set" | undefined
+  typename: GraphQLMediaObjectTypes | undefined
 ): EntertainmentType => {
   switch (typename) {
     case "Episode":

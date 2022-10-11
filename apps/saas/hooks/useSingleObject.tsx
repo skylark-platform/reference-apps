@@ -186,6 +186,9 @@ export const useSingleObject = <T extends GraphQLObjectTypes>(
   return {
     data,
     isLoading: !error && !data,
+    isNotFound: error?.message
+      ? error.message.toLowerCase().includes("not found")
+      : false,
     isError: error,
   };
 };

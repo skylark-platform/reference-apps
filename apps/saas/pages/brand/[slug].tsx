@@ -7,7 +7,7 @@ import {
   TVShowBrandPage,
 } from "@skylark-reference-apps/react";
 import { useSingleObject } from "../../hooks/useSingleObject";
-import { Episode, Season } from "../../types/gql";
+import { Episode, ImageType, Season } from "../../types/gql";
 import { MediaObjectFetcher } from "../../components/mediaObjectFetcher";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 import {
@@ -30,7 +30,7 @@ const EpisodeDataFetcher: React.FC<{
             "short",
             "long",
           ]),
-          image: getGraphQLImageSrc(episode?.images, "Thumbnail"),
+          image: getGraphQLImageSrc(episode?.images, ImageType.Thumbnail),
           number: episode?.episode_number as number,
           uid: episode.uid,
           href: `/episode/${episode.uid}`,
@@ -57,10 +57,19 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
 
-  const { data: brand, isError } = useSingleObject(
-    "Brand",
-    query?.slug as string
-  );
+  const {
+    data: brand,
+    isError,
+    isNotFound,
+  } = useSingleObject("Brand", query?.slug as string);
+
+  if (isNotFound) {
+    return (
+      <div className="flex h-screen flex-col items-center justify-center text-white">
+        <p>{`Brand not found`}</p>
+      </div>
+    );
+  }
 
   if (isError) {
     return (
@@ -103,7 +112,7 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
       />
       <TVShowBrandPage
         EpisodeDataFetcher={EpisodeDataFetcher}
-        bgImage={getGraphQLImageSrc(brand?.images, "Main")}
+        bgImage={getGraphQLImageSrc(brand?.images, ImageType.Main)}
         loading={!brand}
         rating={brand?.ratings?.objects?.[0]?.value}
         seasons={formattedSeasonsWithEpisodes || []}
