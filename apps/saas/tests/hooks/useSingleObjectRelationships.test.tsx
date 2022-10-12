@@ -5,7 +5,7 @@ import {
 import { renderHook, act } from "@testing-library/react-hooks";
 import { useSWRConfig } from "swr";
 
-import { useSingleObject } from "../../hooks/useSingleObject";
+import { useSingleObjectRelationships } from "../../hooks/useSingleObjectRelationships";
 
 jest.spyOn(graphQLClient, "request");
 
@@ -36,15 +36,13 @@ describe("useSingleObject", () => {
       graphQlRequest.mockResolvedValueOnce({ [method]: {} });
 
       const { waitForNextUpdate } = renderHook(() =>
-        useSingleObject(type as GraphQLMediaObjectTypes, "uid")
+        useSingleObjectRelationships(type as GraphQLMediaObjectTypes, "uid")
       );
 
       await waitForNextUpdate();
 
       expect(graphQlRequest).toBeCalledWith(
-        expect.stringContaining(`query ${method} { ${method} (uid: "uid"`),
-        {},
-        {}
+        expect.stringContaining(`query ${method} { ${method} (uid: "uid"`)
       );
     });
 
@@ -53,35 +51,13 @@ describe("useSingleObject", () => {
       graphQlRequest.mockResolvedValueOnce({ [method]: {} });
 
       const { waitForNextUpdate } = renderHook(() =>
-        useSingleObject(type as GraphQLMediaObjectTypes, "uid")
+        useSingleObjectRelationships(type as GraphQLMediaObjectTypes, "uid")
       );
 
       await waitForNextUpdate();
 
-      expect(graphQlRequest).toHaveBeenNthCalledWith(
-        1,
-        expect.stringContaining(
-          "{ __typename uid title slug title_short title_medium title_long synopsis_short synopsis_medium synopsis_long release_date"
-        ),
-        {},
-        {}
-      );
-    });
-
-    it(`makes a second request to fetch relationships when the type is ${type}`, async () => {
-      const method = `get${type}`;
-      graphQlRequest.mockResolvedValueOnce({ [method]: {} });
-
-      const { waitForNextUpdate } = renderHook(() =>
-        useSingleObject(type as GraphQLMediaObjectTypes, "uid")
-      );
-
-      await waitForNextUpdate();
-
-      expect(graphQlRequest).toHaveBeenCalledTimes(2);
-      expect(graphQlRequest).toHaveBeenNthCalledWith(
-        2,
-        expect.stringContaining("images { objects { title type url }")
+      expect(graphQlRequest).toBeCalledWith(
+        expect.stringContaining("{ images { objects { title type url } }")
       );
     });
   });
@@ -90,7 +66,7 @@ describe("useSingleObject", () => {
     graphQlRequest.mockResolvedValueOnce({ getEpisode: {} });
 
     const { waitForNextUpdate } = renderHook(() =>
-      useSingleObject("Episode", "reclskjdf")
+      useSingleObjectRelationships("Episode", "reclskjdf")
     );
 
     await waitForNextUpdate();
@@ -98,9 +74,7 @@ describe("useSingleObject", () => {
     expect(graphQlRequest).toBeCalledWith(
       expect.stringContaining(
         `query getEpisode { getEpisode (external_id: "reclskjdf"`
-      ),
-      {},
-      {}
+      )
     );
   });
 
@@ -108,7 +82,7 @@ describe("useSingleObject", () => {
     graphQlRequest.mockResolvedValueOnce({ getEpisode: {} });
 
     const { waitForNextUpdate } = renderHook(() =>
-      useSingleObject("Episode", "uid")
+      useSingleObjectRelationships("Episode", "uid")
     );
 
     await waitForNextUpdate();
@@ -116,36 +90,21 @@ describe("useSingleObject", () => {
     expect(graphQlRequest).toBeCalledWith(
       expect.stringContaining(
         "credits { objects { character people { objects { name } } roles { objects { title } } } }"
-      ),
-      {},
-      {}
+      )
     );
     expect(graphQlRequest).toBeCalledWith(
-      expect.stringContaining("themes { objects { name } }"),
-      {},
-      {}
+      expect.stringContaining("themes { objects { name } }")
     );
     expect(graphQlRequest).toBeCalledWith(
-      expect.stringContaining("genres { objects { name } }"),
-      {},
-      {}
+      expect.stringContaining("genres { objects { name } }")
     );
     expect(graphQlRequest).toBeCalledWith(
-      expect.stringContaining("ratings { objects { value } }"),
-      {},
-      {}
-    );
-    expect(graphQlRequest).toBeCalledWith(
-      expect.stringContaining("episode_number"),
-      {},
-      {}
+      expect.stringContaining("ratings { objects { value } }")
     );
     expect(graphQlRequest).toBeCalledWith(
       expect.stringContaining(
         "seasons { objects { season_number brands { objects { title_short title_medium title_long } } } }"
-      ),
-      {},
-      {}
+      )
     );
   });
 
@@ -153,7 +112,7 @@ describe("useSingleObject", () => {
     graphQlRequest.mockResolvedValueOnce({ getMovie: {} });
 
     const { waitForNextUpdate } = renderHook(() =>
-      useSingleObject("Movie", "uid")
+      useSingleObjectRelationships("Movie", "uid")
     );
 
     await waitForNextUpdate();
@@ -161,31 +120,21 @@ describe("useSingleObject", () => {
     expect(graphQlRequest).toBeCalledWith(
       expect.stringContaining(
         "credits { objects { character people { objects { name } } roles { objects { title } } } }"
-      ),
-      {},
-      {}
+      )
     );
     expect(graphQlRequest).toBeCalledWith(
-      expect.stringContaining("themes { objects { name } }"),
-      {},
-      {}
+      expect.stringContaining("themes { objects { name } }")
     );
     expect(graphQlRequest).toBeCalledWith(
-      expect.stringContaining("genres { objects { name } }"),
-      {},
-      {}
+      expect.stringContaining("genres { objects { name } }")
     );
     expect(graphQlRequest).toBeCalledWith(
-      expect.stringContaining("ratings { objects { value } }"),
-      {},
-      {}
+      expect.stringContaining("ratings { objects { value } }")
     );
     expect(graphQlRequest).toBeCalledWith(
       expect.stringContaining(
         "brands { objects { title_short title_medium title_long } }"
-      ),
-      {},
-      {}
+      )
     );
   });
 
@@ -193,22 +142,18 @@ describe("useSingleObject", () => {
     graphQlRequest.mockResolvedValueOnce({ getBrand: {} });
 
     const { waitForNextUpdate } = renderHook(() =>
-      useSingleObject("Brand", "uid")
+      useSingleObjectRelationships("Brand", "uid")
     );
 
     await waitForNextUpdate();
 
     expect(graphQlRequest).toBeCalledWith(
-      expect.stringContaining("tags { objects { name } }"),
-      {},
-      {}
+      expect.stringContaining("tags { objects { name } }")
     );
     expect(graphQlRequest).toBeCalledWith(
       expect.stringContaining(
         "seasons { objects { title_short title_medium title_long season_number number_of_episodes episodes { objects { uid episode_number } } } }"
-      ),
-      {},
-      {}
+      )
     );
   });
 
@@ -217,25 +162,11 @@ describe("useSingleObject", () => {
     graphQlRequest.mockRejectedValueOnce(err);
 
     const { result, waitForNextUpdate } = renderHook(() =>
-      useSingleObject("Episode", "123")
+      useSingleObjectRelationships("Episode", "123")
     );
 
     await waitForNextUpdate();
 
-    expect(result.current.isError).toBe(err);
-  });
-
-  it("sets isNotFound to true when the error contains not found", async () => {
-    const err = new Error("error not found");
-    graphQlRequest.mockRejectedValueOnce(err);
-
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useSingleObject("Episode", "123")
-    );
-
-    await waitForNextUpdate();
-
-    expect(result.current.isNotFound).toBe(true);
     expect(result.current.isError).toBe(err);
   });
 });

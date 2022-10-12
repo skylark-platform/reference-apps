@@ -86,6 +86,7 @@ export const useSingleObject = <T extends GraphQLObjectTypes>(
     fetcher
   );
 
+  // Fetch simple metadata and relationships in separate requests to speed up time to interactive
   const { data: relationships, isError: relationshipsError } =
     useSingleObjectRelationships<T>(type, lookupValue);
 
