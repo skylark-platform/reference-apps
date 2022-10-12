@@ -1,3 +1,10 @@
+/**
+ * In Skylark, the more levels of relationships you request, the longer the query will take.
+ * This hook is used in "useSingleObject" to fetch any relationships to an object while
+ * "useSingleObject" is focussed on getting only simple metadata, with no relationships.
+ * The reason for this is to make the first request as fast as possible, and updating
+ * the object with relationships after.
+ */
 import useSWR from "swr";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import {
@@ -6,20 +13,8 @@ import {
   GraphQLObjectTypes,
 } from "@skylark-reference-apps/lib";
 import { useDimensions } from "@skylark-reference-apps/react";
-import { Brand, Episode, Movie, Season, Set } from "../types/gql";
 import { createGraphQLQueryDimensions } from "../lib/utils";
-
-type ObjectType<T> = T extends "Episode"
-  ? Episode
-  : T extends "Movie"
-  ? Movie
-  : T extends "Brand"
-  ? Brand
-  : T extends "Season"
-  ? Season
-  : T extends "Set"
-  ? Set
-  : never;
+import { SingleObjectType } from "../interfaces";
 
 const createGraphQLQuery = (
   type: GraphQLObjectTypes,
@@ -29,7 +24,15 @@ const createGraphQLQuery = (
   // Helper to use the external_id when an airtable record ID is given
   const lookupField = lookupValue.startsWith("rec") ? "external_id" : "uid";
 
-  const fieldsToFetch: { [key: string]: boolean | object } = {};
+  const fieldsToFetch: { [key: string]: boolean | object } = {
+    images: {
+      objects: {
+        title: true,
+        type: true,
+        url: true,
+      },
+    },
+  };
 
   if (["Episode", "Movie"].includes(type)) {
     fieldsToFetch.credits = {
@@ -145,8 +148,8 @@ const fetcher = <T extends GraphQLObjectTypes>([
 ]: [key: string, type: T, lookupValue: string, dimensions: Dimensions]) => {
   const { query, method } = createGraphQLQuery(type, lookupValue, dimensions);
   return graphQLClient
-    .request<{ [key: string]: ObjectType<T> }>(query)
-    .then(({ [method]: data }): ObjectType<T> => data);
+    .request<{ [key: string]: SingleObjectType<T> }>(query)
+    .then(({ [method]: data }): SingleObjectType<T> => data);
 };
 
 export const useSingleObjectRelationships = <T extends GraphQLObjectTypes>(
@@ -155,7 +158,7 @@ export const useSingleObjectRelationships = <T extends GraphQLObjectTypes>(
 ) => {
   const { dimensions } = useDimensions();
 
-  const { data, error } = useSWR<ObjectType<T>, Error>(
+  const { data, error } = useSWR<SingleObjectType<T>, Error>(
     [`${type}Relationships`, type, lookupValue, dimensions],
     fetcher
   );
