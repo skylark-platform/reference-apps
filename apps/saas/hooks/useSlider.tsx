@@ -9,6 +9,20 @@ const createGraphQLQuery = (lookupValue: string, dimensions: Dimensions) => {
   // Helper to use the external_id when an airtable record ID is given
   const lookupField = lookupValue.startsWith("rec") ? "external_id" : "uid";
 
+  const commonObjectFields = {
+    uid: true,
+    title_short: true,
+    title_medium: true,
+    release_date: true,
+    images: {
+      objects: {
+        title: true,
+        type: true,
+        url: true,
+      },
+    },
+  };
+
   const fieldsToFetch: { [key: string]: boolean | object } = {
     __typename: true,
     uid: true,
@@ -37,29 +51,11 @@ const createGraphQLQuery = (lookupValue: string, dimensions: Dimensions) => {
           __on: [
             {
               __typeName: "Brand",
-              uid: true,
-              title_short: true,
-              title_medium: true,
-              images: {
-                objects: {
-                  title: true,
-                  type: true,
-                  url: true,
-                },
-              },
+              ...commonObjectFields,
             },
             {
               __typeName: "Movie",
-              uid: true,
-              title_short: true,
-              title_medium: true,
-              images: {
-                objects: {
-                  title: true,
-                  type: true,
-                  url: true,
-                },
-              },
+              ...commonObjectFields,
             },
           ],
         },
