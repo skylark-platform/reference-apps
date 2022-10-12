@@ -22,3 +22,9 @@ export const WithShow = Template.bind({});
 WithShow.args = {
   show: true,
 };
+
+export const WithTimeTravel = Template.bind({});
+WithTimeTravel.args = {
+  show: true,
+  timeTravelEnabled: true,
+};

@@ -42,7 +42,9 @@ describe("useMovieListing", () => {
     await waitForNextUpdate();
 
     expect(graphQlRequest).toBeCalledWith(
-      'query listMovie { listMovie (next_token: "", language: "en-gb", dimensions: [{dimension: "device-types", value: ""}, {dimension: "customer-types", value: "standard"}]) { next_token objects { uid } } }'
+      'query listMovie { listMovie (next_token: "", language: "en-gb", dimensions: [{dimension: "device-types", value: ""}, {dimension: "customer-types", value: "standard"}]) { next_token objects { uid } } }',
+      {},
+      {}
     );
   });
 
@@ -62,7 +64,9 @@ describe("useMovieListing", () => {
 
     expect(graphQlRequest).toBeCalledTimes(2);
     expect(graphQlRequest).toBeCalledWith(
-      'query listMovie { listMovie (next_token: "token", language: "en-gb", dimensions: [{dimension: "device-types", value: ""}, {dimension: "customer-types", value: "standard"}]) { next_token objects { uid } } }'
+      'query listMovie { listMovie (next_token: "token", language: "en-gb", dimensions: [{dimension: "device-types", value: ""}, {dimension: "customer-types", value: "standard"}]) { next_token objects { uid } } }',
+      {},
+      {}
     );
   });
 

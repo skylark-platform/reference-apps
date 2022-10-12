@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import dayjs from "dayjs";
 import { DimensionContent } from "./dimension-content";
 import { DimensionToggle } from "./dimension-toggle";
 import { DimensionRadioButton } from "./dimension-radio-button";
@@ -9,6 +10,7 @@ import { useDimensions } from "../../contexts";
 interface DimensionSettingsProps {
   show?: boolean;
   skylarkApiUrl?: string;
+  timeTravelEnabled: boolean;
 }
 
 const variants = {
@@ -18,11 +20,21 @@ const variants = {
 
 export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
   show: propShow = false,
+  timeTravelEnabled,
   skylarkApiUrl,
 }) => {
   const [show, setShow] = useState(propShow);
-  const { dimensions, setLanguage, setCustomerType, setDeviceType } =
-    useDimensions();
+  const {
+    dimensions,
+    setLanguage,
+    setCustomerType,
+    setDeviceType,
+    setTimeTravel,
+  } = useDimensions();
+
+  const nextWeek = dayjs().add(7, "days");
+  const nextWeekReadable = nextWeek.format("DD MMMM, h:mm A");
+  const nextWeekIso = nextWeek.toISOString();
 
   return (
     <>
@@ -108,6 +120,22 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                     onChange={(value: string) => setDeviceType(value)}
                   />
                 </DimensionContent>
+                {timeTravelEnabled && (
+                  <DimensionContent label="Time Travel">
+                    <DimensionRadioButton
+                      initial={dimensions.timeTravel}
+                      options={[
+                        { text: "Now", value: "" },
+                        {
+                          text: `Forward 7 days (${nextWeekReadable})`,
+                          value: nextWeekIso,
+                          activeOverride: dimensions.timeTravel !== "",
+                        },
+                      ]}
+                      onChange={(value: string) => setTimeTravel(value)}
+                    />
+                  </DimensionContent>
+                )}
               </div>
             </div>
           </motion.div>

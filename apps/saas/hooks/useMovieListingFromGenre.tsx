@@ -1,6 +1,9 @@
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import useSWRInfinite from "swr/infinite";
-import { Dimensions, graphQLClient } from "@skylark-reference-apps/lib";
+import {
+  Dimensions,
+  skylarkRequestWithDimensions,
+} from "@skylark-reference-apps/lib";
 import { useDimensions } from "@skylark-reference-apps/react";
 import { Genre, MovieListing, Movie } from "../types/gql";
 import { createGraphQLQueryDimensions } from "../lib/utils";
@@ -50,8 +53,10 @@ const movieListingFromGenreFetcher = ([, genreUid, dimensions, nextToken]: [
   nextToken?: string
 ]) => {
   const { query, method } = createGraphQLQuery(genreUid, dimensions, nextToken);
-  return graphQLClient
-    .request<{ [key: string]: Genre }>(query)
+  return skylarkRequestWithDimensions<{ [key: string]: Genre }>(
+    query,
+    dimensions
+  )
     .then(({ [method]: data }): Genre => data)
     .then((genre) => genre.movies as MovieListing);
 };

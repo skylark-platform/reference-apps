@@ -1,6 +1,9 @@
 import useSWR from "swr";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
-import { graphQLClient, Dimensions } from "@skylark-reference-apps/lib";
+import {
+  Dimensions,
+  skylarkRequestWithDimensions,
+} from "@skylark-reference-apps/lib";
 import { useDimensions } from "@skylark-reference-apps/react";
 import { Set } from "../types/gql";
 import { createGraphQLQueryDimensions } from "../lib/utils";
@@ -88,9 +91,10 @@ const fetcher = ([lookupValue, dimensions]: [
   dimensions: Dimensions
 ]) => {
   const { query, method } = createGraphQLQuery(lookupValue, dimensions);
-  return graphQLClient
-    .request<{ [key: string]: Set }>(query)
-    .then(({ [method]: data }): Set => data);
+  return skylarkRequestWithDimensions<{ [key: string]: Set }>(
+    query,
+    dimensions
+  ).then(({ [method]: data }): Set => data);
 };
 
 export const useHomepageSet = () => {

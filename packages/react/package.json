@@ -29,6 +29,7 @@
   "dependencies": {
     "@mux-elements/mux-video-react": "^0.4.6",
     "@skylark-reference-apps/lib": "*",
+    "dayjs": "^1.11.3",
     "framer-motion": "^6.3.0",
     "next": "12.1.6",
     "next-translate": "^1.5.0",

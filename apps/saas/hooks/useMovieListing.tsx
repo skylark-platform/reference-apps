@@ -1,6 +1,9 @@
 import useSWRInfinite from "swr/infinite";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
-import { Dimensions, graphQLClient } from "@skylark-reference-apps/lib";
+import {
+  Dimensions,
+  skylarkRequestWithDimensions,
+} from "@skylark-reference-apps/lib";
 import { useDimensions } from "@skylark-reference-apps/react";
 import { Movie, MovieListing } from "../types/gql";
 import { createGraphQLQueryDimensions } from "../lib/utils";
@@ -35,9 +38,10 @@ const movieListingFetcher = ([, dimensions, nextToken]: [
   nextToken?: string
 ]) => {
   const { query, method } = createGraphQLQuery(dimensions, nextToken);
-  return graphQLClient
-    .request<{ [key: string]: MovieListing }>(query)
-    .then(({ [method]: data }): MovieListing => data);
+  return skylarkRequestWithDimensions<{ [key: string]: MovieListing }>(
+    query,
+    dimensions
+  ).then(({ [method]: data }): MovieListing => data);
 };
 
 const getKey = (

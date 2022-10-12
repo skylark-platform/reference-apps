@@ -3,6 +3,7 @@ import React, { useState } from "react";
 interface Option {
   text: string;
   value: string;
+  activeOverride?: boolean;
 }
 
 interface RadioButtonProps {
@@ -30,7 +31,7 @@ export const DimensionRadioButton: React.FC<RadioButtonProps> = ({
       {options.map((option) => (
         <div className="m-1 flex flex-row items-center" key={option.value}>
           <input
-            checked={option.value === active?.value}
+            checked={option.activeOverride || option.value === active?.value}
             className="peer form-radio border-none bg-gray-200 p-3 ring-offset-0 checked:bg-skylark-blue focus:shadow-none focus:outline-none focus:ring-0 md:p-4"
             id={`dimension-radio-${option.value}`}
             type="radio"
