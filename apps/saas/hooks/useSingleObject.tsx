@@ -8,6 +8,7 @@ import {
 import { useDimensions } from "@skylark-reference-apps/react";
 import { Brand, Episode, Movie, Season, Set } from "../types/gql";
 import { createGraphQLQueryDimensions } from "../lib/utils";
+import { useSingleObjectRelationships } from "./useSingleObjectRelationships";
 
 type ObjectType<T> = T extends "Episode"
   ? Episode
@@ -50,91 +51,8 @@ const createGraphQLQuery = (
     },
   };
 
-  if (["Episode", "Movie"].includes(type)) {
-    fieldsToFetch.credits = {
-      objects: {
-        character: true,
-        people: {
-          objects: {
-            name: true,
-          },
-        },
-        roles: {
-          objects: {
-            title: true,
-          },
-        },
-      },
-    };
-    fieldsToFetch.themes = {
-      objects: {
-        name: true,
-      },
-    };
-    fieldsToFetch.genres = {
-      objects: {
-        name: true,
-      },
-    };
-    fieldsToFetch.ratings = {
-      objects: {
-        value: true,
-      },
-    };
-  }
-
   if (type === "Episode") {
     fieldsToFetch.episode_number = true;
-    fieldsToFetch.seasons = {
-      objects: {
-        season_number: true,
-        brands: {
-          objects: {
-            title_short: true,
-            title_medium: true,
-            title_long: true,
-          },
-        },
-      },
-    };
-  }
-
-  if (type === "Movie") {
-    fieldsToFetch.brands = {
-      objects: {
-        title_short: true,
-        title_medium: true,
-        title_long: true,
-      },
-    };
-  }
-
-  if (type === "Brand") {
-    fieldsToFetch.tags = {
-      objects: {
-        name: true,
-      },
-    };
-    fieldsToFetch.ratings = {
-      objects: {
-        value: true,
-      },
-    };
-    fieldsToFetch.seasons = {
-      objects: {
-        title_short: true,
-        title_medium: true,
-        title_long: true,
-        season_number: true,
-        number_of_episodes: true,
-        episodes: {
-          objects: {
-            uid: true,
-            episode_number: true,
-          },
-        },
-      },
-    };
   }
 
   if (type === "Set") {
@@ -179,17 +97,25 @@ export const useSingleObject = <T extends GraphQLObjectTypes>(
 ) => {
   const { dimensions } = useDimensions();
 
-  const { data, error } = useSWR<ObjectType<T>, Error>(
+  const { data: basicMetadata, error } = useSWR<ObjectType<T>, Error>(
     [type, lookupValue, dimensions],
     fetcher
   );
 
+  const { data: relationships, isError: relationshipsError } =
+    useSingleObjectRelationships<T>(type, lookupValue);
+
+  const data = {
+    ...basicMetadata,
+    ...relationships,
+  } as ObjectType<T>;
+
   return {
     data,
-    isLoading: !error && !data,
+    isLoading: !error && !basicMetadata,
     isNotFound: error?.message
       ? error.message.toLowerCase().includes("not found")
       : false,
-    isError: error,
+    isError: error || relationshipsError,
   };
 };
