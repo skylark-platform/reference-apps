@@ -42,7 +42,7 @@ describe("useGenreListing", () => {
     await waitForNextUpdate();
 
     expect(graphQlRequest).toBeCalledWith(
-      'query listGenre { listGenre (next_token: "", language: "en-gb", dimensions: [{dimension: "device-types", value: ""}, {dimension: "customer-types", value: "standard"}]) { next_token objects { uid name } } }'
+      'query listGenre { listGenre (next_token: "", dimensions: [{dimension: "device-types", value: ""}, {dimension: "customer-types", value: "standard"}]) { next_token objects { uid name } } }'
     );
   });
 
@@ -62,7 +62,7 @@ describe("useGenreListing", () => {
 
     expect(graphQlRequest).toBeCalledTimes(2);
     expect(graphQlRequest).toBeCalledWith(
-      'query listGenre { listGenre (next_token: "token", language: "en-gb", dimensions: [{dimension: "device-types", value: ""}, {dimension: "customer-types", value: "standard"}]) { next_token objects { uid name } } }'
+      'query listGenre { listGenre (next_token: "token", dimensions: [{dimension: "device-types", value: ""}, {dimension: "customer-types", value: "standard"}]) { next_token objects { uid name } } }'
     );
   });
 

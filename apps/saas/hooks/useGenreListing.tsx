@@ -5,8 +5,13 @@ import { useDimensions } from "@skylark-reference-apps/react";
 import { Genre, GenreListing } from "../types/gql";
 import { createGraphQLQueryDimensions } from "../lib/utils";
 
-const createGraphQLQuery = (dimensions: Dimensions, nextToken?: string) => {
+const createGraphQLQuery = (
+  activeDimensions: Dimensions,
+  nextToken?: string
+) => {
   const method = `listGenre`;
+
+  const { dimensions } = createGraphQLQueryDimensions(activeDimensions);
 
   const queryAsJson = {
     query: {
@@ -14,7 +19,8 @@ const createGraphQLQuery = (dimensions: Dimensions, nextToken?: string) => {
       [method]: {
         __args: {
           next_token: nextToken || "",
-          ...createGraphQLQueryDimensions(dimensions),
+          // No Portuguese Genres have been added to the ingestor yet
+          dimensions,
         },
         next_token: true,
         objects: {
