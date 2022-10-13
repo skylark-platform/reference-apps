@@ -5,7 +5,7 @@ import useTranslation from "next-translate/useTranslation";
 import { useDeviceType } from "../../hooks";
 
 interface ReducerAction {
-  type: "language" | "customerType" | "deviceType";
+  type: "language" | "customerType" | "deviceType" | "timeTravel";
   value: string;
 }
 
@@ -14,6 +14,7 @@ export type DimensionsContextType = {
   setLanguage: (language: Dimensions["language"]) => void;
   setCustomerType: (customerType: Dimensions["customerType"]) => void;
   setDeviceType: (deviceType: Dimensions["deviceType"]) => void;
+  setTimeTravel: (timeTravel: Dimensions["timeTravel"]) => void;
 };
 
 const dimensionsReducer = (
@@ -36,6 +37,11 @@ const dimensionsReducer = (
         ...state,
         deviceType: action.value,
       };
+    case "timeTravel":
+      return {
+        ...state,
+        timeTravel: action.value,
+      };
     default:
       throw new Error();
   }
@@ -46,10 +52,12 @@ const DimensionsContext = createContext<DimensionsContextType>({
     language: "en-gb",
     customerType: "standard",
     deviceType: "",
+    timeTravel: "",
   },
   setLanguage: () => {},
   setCustomerType: () => {},
   setDeviceType: () => {},
+  setTimeTravel: () => {},
 });
 
 export const DimensionsContextProvider: React.FC = ({ children }) => {
@@ -60,6 +68,7 @@ export const DimensionsContextProvider: React.FC = ({ children }) => {
     language: lang,
     customerType: "premium",
     deviceType,
+    timeTravel: "",
   });
 
   // Automatically updates device type dimension depending on screen size
@@ -80,6 +89,7 @@ export const DimensionsContextProvider: React.FC = ({ children }) => {
           void setLanguage(value);
         },
         setDeviceType: (value) => dispatch({ type: "deviceType", value }),
+        setTimeTravel: (value) => dispatch({ type: "timeTravel", value }),
       }}
     >
       {children}

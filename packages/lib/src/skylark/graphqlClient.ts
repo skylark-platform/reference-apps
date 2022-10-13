@@ -1,4 +1,5 @@
 import { GraphQLClient } from "graphql-request";
+import { Dimensions } from "../interfaces";
 import {
   SAAS_ACCOUNT_ID,
   SAAS_API_ENDPOINT,
@@ -11,3 +12,16 @@ export const graphQLClient = new GraphQLClient(SAAS_API_ENDPOINT, {
     "x-account-id": SAAS_ACCOUNT_ID,
   },
 });
+
+export const skylarkRequestWithDimensions = <T>(
+  query: string,
+  dimensions: Dimensions
+) => {
+  const headers: { [key: string]: string } = {};
+
+  if (dimensions.timeTravel) {
+    headers["x-time-travel"] = dimensions.timeTravel;
+  }
+
+  return graphQLClient.request<T>(query, {}, headers);
+};

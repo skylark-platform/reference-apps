@@ -16,12 +16,14 @@ interface Props {
   appTitle: string;
   tvShowsHref: string;
   skylarkApiUrl?: string;
+  timeTravelEnabled?: boolean;
 }
 
 export const StreamTVLayout: React.FC<Props> = ({
   appTitle,
   tvShowsHref,
   skylarkApiUrl,
+  timeTravelEnabled,
   children,
 }) => {
   const { asPath } = useRouter();
@@ -72,7 +74,10 @@ export const StreamTVLayout: React.FC<Props> = ({
         <div className="relative z-10 h-full w-full pt-mobile-header md:pt-0">
           {children}
         </div>
-        <DimensionSettings skylarkApiUrl={skylarkApiUrl} />
+        <DimensionSettings
+          skylarkApiUrl={skylarkApiUrl}
+          timeTravelEnabled={!!timeTravelEnabled}
+        />
       </div>
     </DimensionsContextProvider>
   );

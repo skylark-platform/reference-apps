@@ -19,6 +19,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <StreamTVLayout
       appTitle={appTitle}
       skylarkApiUrl={process.env.NEXT_PUBLIC_SAAS_API_ENDPOINT}
+      timeTravelEnabled
       tvShowsHref="/brand/reculg97iNzbkEZCK"
     >
       <DefaultSeo {...createDefaultSeo(appTitle, t("seo.description"))} />

@@ -39,6 +39,7 @@ export const getSeoDataForObject = async (
             // TODO can we work out these before the client loads the page?
             customerType: "premium",
             deviceType: "pc",
+            timeTravel: "",
           }),
         },
         uid: true,

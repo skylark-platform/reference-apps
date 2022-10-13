@@ -56,6 +56,7 @@ const getSeoDataFromSkylark = async (
       language: locale || "",
       customerType: "",
       deviceType: "",
+      timeTravel: "",
     },
   });
 
