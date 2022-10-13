@@ -65,6 +65,9 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const title = getTitleByOrderForGraphQLObject(movie);
   const synopsis = getSynopsisByOrderForGraphQLObject(movie);
 
+  const asset = movie?.assets?.objects?.[0];
+  const playbackUrl = asset?.url || "/mux-video-intro.mp4";
+
   return (
     <>
       <NextSeo
@@ -90,9 +93,9 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         genres={convertObjectToName(movie?.genres)}
         loading={!movie}
         player={{
-          assetId: "1",
+          assetId: asset?.external_id || asset?.uid || "1",
           poster: getGraphQLImageSrc(movie?.images, ImageType.Poster),
-          src: "/mux-video-intro.mp4",
+          src: playbackUrl,
           duration: 58, // TODO read this from asset
         }}
         rating={getFirstRatingValue(movie?.ratings)}
