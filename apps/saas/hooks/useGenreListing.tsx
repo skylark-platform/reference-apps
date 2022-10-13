@@ -1,12 +1,20 @@
 import useSWRInfinite from "swr/infinite";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
-import { Dimensions, graphQLClient } from "@skylark-reference-apps/lib";
+import {
+  Dimensions,
+  skylarkRequestWithDimensions,
+} from "@skylark-reference-apps/lib";
 import { useDimensions } from "@skylark-reference-apps/react";
 import { Genre, GenreListing } from "../types/gql";
 import { createGraphQLQueryDimensions } from "../lib/utils";
 
-const createGraphQLQuery = (dimensions: Dimensions, nextToken?: string) => {
+const createGraphQLQuery = (
+  activeDimensions: Dimensions,
+  nextToken?: string
+) => {
   const method = `listGenre`;
+
+  const { dimensions } = createGraphQLQueryDimensions(activeDimensions);
 
   const queryAsJson = {
     query: {
@@ -14,7 +22,8 @@ const createGraphQLQuery = (dimensions: Dimensions, nextToken?: string) => {
       [method]: {
         __args: {
           next_token: nextToken || "",
-          ...createGraphQLQueryDimensions(dimensions),
+          // No Portuguese Genres have been added to the ingestor yet
+          dimensions,
         },
         next_token: true,
         objects: {
@@ -36,9 +45,10 @@ const fetcher = ([, dimensions, nextToken]: [
   nextToken?: string
 ]) => {
   const { query, method } = createGraphQLQuery(dimensions, nextToken);
-  return graphQLClient
-    .request<{ [key: string]: GenreListing }>(query)
-    .then(({ [method]: data }): GenreListing => data);
+  return skylarkRequestWithDimensions<{ [key: string]: GenreListing }>(
+    query,
+    dimensions
+  ).then(({ [method]: data }): GenreListing => data);
 };
 
 const getKey = (

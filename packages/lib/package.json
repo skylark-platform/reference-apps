@@ -18,7 +18,8 @@
     "eslint": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "^27.3.1",
-    "jest-junit": "^13.0.0"
+    "jest-junit": "^13.0.0",
+    "regenerator-runtime": "^0.13.9"
   },
   "dependencies": {
     "@aws-amplify/auth": "^4.6.1",

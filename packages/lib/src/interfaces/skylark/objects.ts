@@ -150,4 +150,5 @@ export interface Dimensions {
   language: string;
   customerType: string;
   deviceType: string;
+  timeTravel: string;
 }

@@ -160,6 +160,7 @@ describe("utils.ts", () => {
         language: "en-GB",
         deviceType: "smartphone",
         customerType: "premium",
+        timeTravel: "",
       };
 
       const got = utils.createGraphQLQueryDimensions(dimensions);

@@ -42,7 +42,9 @@ describe("useSingleObject", () => {
       await waitForNextUpdate();
 
       expect(graphQlRequest).toBeCalledWith(
-        expect.stringContaining(`query ${method} { ${method} (uid: "uid"`)
+        expect.stringContaining(`query ${method} { ${method} (uid: "uid"`),
+        {},
+        {}
       );
     });
 
@@ -59,7 +61,9 @@ describe("useSingleObject", () => {
       expect(graphQlRequest).toBeCalledWith(
         expect.stringContaining(
           "{ __typename uid title slug title_short title_medium title_long synopsis_short synopsis_medium synopsis_long release_date images { objects { title type url } }"
-        )
+        ),
+        {},
+        {}
       );
     });
   });
@@ -76,7 +80,9 @@ describe("useSingleObject", () => {
     expect(graphQlRequest).toBeCalledWith(
       expect.stringContaining(
         `query getEpisode { getEpisode (external_id: "reclskjdf"`
-      )
+      ),
+      {},
+      {}
     );
   });
 
@@ -92,24 +98,36 @@ describe("useSingleObject", () => {
     expect(graphQlRequest).toBeCalledWith(
       expect.stringContaining(
         "credits { objects { character people { objects { name } } roles { objects { title } } } }"
-      )
+      ),
+      {},
+      {}
     );
     expect(graphQlRequest).toBeCalledWith(
-      expect.stringContaining("themes { objects { name } }")
+      expect.stringContaining("themes { objects { name } }"),
+      {},
+      {}
     );
     expect(graphQlRequest).toBeCalledWith(
-      expect.stringContaining("genres { objects { name } }")
+      expect.stringContaining("genres { objects { name } }"),
+      {},
+      {}
     );
     expect(graphQlRequest).toBeCalledWith(
-      expect.stringContaining("ratings { objects { value } }")
+      expect.stringContaining("ratings { objects { value } }"),
+      {},
+      {}
     );
     expect(graphQlRequest).toBeCalledWith(
-      expect.stringContaining("episode_number")
+      expect.stringContaining("episode_number"),
+      {},
+      {}
     );
     expect(graphQlRequest).toBeCalledWith(
       expect.stringContaining(
         "seasons { objects { season_number brands { objects { title_short title_medium title_long } } } }"
-      )
+      ),
+      {},
+      {}
     );
   });
 
@@ -125,21 +143,31 @@ describe("useSingleObject", () => {
     expect(graphQlRequest).toBeCalledWith(
       expect.stringContaining(
         "credits { objects { character people { objects { name } } roles { objects { title } } } }"
-      )
+      ),
+      {},
+      {}
     );
     expect(graphQlRequest).toBeCalledWith(
-      expect.stringContaining("themes { objects { name } }")
+      expect.stringContaining("themes { objects { name } }"),
+      {},
+      {}
     );
     expect(graphQlRequest).toBeCalledWith(
-      expect.stringContaining("genres { objects { name } }")
+      expect.stringContaining("genres { objects { name } }"),
+      {},
+      {}
     );
     expect(graphQlRequest).toBeCalledWith(
-      expect.stringContaining("ratings { objects { value } }")
+      expect.stringContaining("ratings { objects { value } }"),
+      {},
+      {}
     );
     expect(graphQlRequest).toBeCalledWith(
       expect.stringContaining(
         "brands { objects { title_short title_medium title_long } }"
-      )
+      ),
+      {},
+      {}
     );
   });
 
@@ -153,12 +181,16 @@ describe("useSingleObject", () => {
     await waitForNextUpdate();
 
     expect(graphQlRequest).toBeCalledWith(
-      expect.stringContaining("tags { objects { name } }")
+      expect.stringContaining("tags { objects { name } }"),
+      {},
+      {}
     );
     expect(graphQlRequest).toBeCalledWith(
       expect.stringContaining(
         "seasons { objects { title_short title_medium title_long season_number number_of_episodes episodes { objects { uid episode_number } } } }"
-      )
+      ),
+      {},
+      {}
     );
   });
 

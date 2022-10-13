@@ -1,8 +1,8 @@
 import useSWR from "swr";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import {
-  graphQLClient,
   Dimensions,
+  skylarkRequestWithDimensions,
   GraphQLObjectTypes,
 } from "@skylark-reference-apps/lib";
 import { useDimensions } from "@skylark-reference-apps/react";
@@ -167,9 +167,10 @@ const fetcher = <T extends GraphQLObjectTypes>([
   dimensions,
 ]: [type: T, lookupValue: string, dimensions: Dimensions]) => {
   const { query, method } = createGraphQLQuery(type, lookupValue, dimensions);
-  return graphQLClient
-    .request<{ [key: string]: ObjectType<T> }>(query)
-    .then(({ [method]: data }): ObjectType<T> => data);
+  return skylarkRequestWithDimensions<{ [key: string]: ObjectType<T> }>(
+    query,
+    dimensions
+  ).then(({ [method]: data }): ObjectType<T> => data);
 };
 
 export const useSingleObject = <T extends GraphQLObjectTypes>(

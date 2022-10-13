@@ -1,6 +1,9 @@
 import useSWR from "swr";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
-import { graphQLClient, Dimensions } from "@skylark-reference-apps/lib";
+import {
+  Dimensions,
+  skylarkRequestWithDimensions,
+} from "@skylark-reference-apps/lib";
 import { useDimensions } from "@skylark-reference-apps/react";
 import { Set } from "../types/gql";
 import { createGraphQLQueryDimensions } from "../lib/utils";
@@ -8,6 +11,20 @@ import { createGraphQLQueryDimensions } from "../lib/utils";
 const createGraphQLQuery = (lookupValue: string, dimensions: Dimensions) => {
   // Helper to use the external_id when an airtable record ID is given
   const lookupField = lookupValue.startsWith("rec") ? "external_id" : "uid";
+
+  const commonObjectFields = {
+    uid: true,
+    title_short: true,
+    title_medium: true,
+    release_date: true,
+    images: {
+      objects: {
+        title: true,
+        type: true,
+        url: true,
+      },
+    },
+  };
 
   const fieldsToFetch: { [key: string]: boolean | object } = {
     __typename: true,
@@ -37,29 +54,11 @@ const createGraphQLQuery = (lookupValue: string, dimensions: Dimensions) => {
           __on: [
             {
               __typeName: "Brand",
-              uid: true,
-              title_short: true,
-              title_medium: true,
-              images: {
-                objects: {
-                  title: true,
-                  type: true,
-                  url: true,
-                },
-              },
+              ...commonObjectFields,
             },
             {
               __typeName: "Movie",
-              uid: true,
-              title_short: true,
-              title_medium: true,
-              images: {
-                objects: {
-                  title: true,
-                  type: true,
-                  url: true,
-                },
-              },
+              ...commonObjectFields,
             },
           ],
         },
@@ -92,9 +91,10 @@ const fetcher = ([lookupValue, dimensions]: [
   dimensions: Dimensions
 ]) => {
   const { query, method } = createGraphQLQuery(lookupValue, dimensions);
-  return graphQLClient
-    .request<{ [key: string]: Set }>(query)
-    .then(({ [method]: data }) => data);
+  return skylarkRequestWithDimensions<{ [key: string]: Set }>(
+    query,
+    dimensions
+  ).then(({ [method]: data }) => data);
 };
 
 export const useSlider = (lookupValue: string) => {
