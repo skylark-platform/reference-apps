@@ -50,6 +50,7 @@ export class SkylarkReferenceAppStack extends cdk.Stack {
       // Not recommended for production deployments
       nextImageCachePolicy: CachePolicy.CACHING_DISABLED as CachePolicy,
       nextLambdaCachePolicy: CachePolicy.CACHING_DISABLED as CachePolicy,
+      withLogging: true,
     });
     // https://github.com/serverless-nextjs/serverless-next.js/issues/2432
     const defaultLambda = nextJsApp.defaultNextLambda.node
