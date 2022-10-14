@@ -28,7 +28,7 @@ const main = async () => {
     args: ["build"],
     cwd: appPath,
     env: {
-      NEXT_PUBLIC_APP_URL: `https://${PRIMARY_DOMAIN}`,
+      NEXT_PUBLIC_APP_DOMAIN: PRIMARY_DOMAIN,
     },
   });
 
