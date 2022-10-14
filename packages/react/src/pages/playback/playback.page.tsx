@@ -34,12 +34,15 @@ interface Props {
     title: string;
   };
   season?: {
+    title?: string;
     number?: string | number;
   };
   credits: {
     actors: string[];
     directors: string[];
     writers: string[];
+    presenters?: string[];
+    engineers?: string[];
   };
 }
 
@@ -74,12 +77,12 @@ export const PlaybackPage: NextPage<Props> = ({
           <div className="h-full w-full pb-4 md:w-7/12">
             <InformationPanel
               availableUntil={12}
+              brand={brand}
               description={synopsis}
               duration={player.duration}
               genres={genres}
-              parentTitle={brand?.title}
               rating={rating}
-              seasonNumber={season?.number}
+              season={season}
               themes={themes}
               title={number ? `${number}. ${title}` : title}
             />
@@ -105,6 +108,16 @@ export const PlaybackPage: NextPage<Props> = ({
                   icon: <MdMode />,
                   header: t("skylark.role.writers"),
                   body: credits.writers,
+                },
+                {
+                  icon: <MdMode />,
+                  header: t("skylark.role.presenters"),
+                  body: credits.presenters || [],
+                },
+                {
+                  icon: <MdMode />,
+                  header: t("skylark.role.engineers"),
+                  body: credits.engineers || [],
                 },
                 {
                   icon: <MdCalendarToday />,

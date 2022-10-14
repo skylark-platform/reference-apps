@@ -26,20 +26,26 @@ export const Player: React.FC<PlayerProps> = ({
   return (
     <div className="w-screen sm:w-11/12 md:w-3/4 lg:w-2/3 xl:w-1/2">
       <div className="aspect-h-9 aspect-w-16 shadow shadow-black md:shadow-xl">
-        <MuxVideo
-          className="h-full w-full bg-black object-cover object-center"
-          controls
-          data-testid="player"
-          metadata={{
-            video_id: videoId,
-            video_title: videoTitle,
-          }}
-          poster={poster}
-          ref={undefined}
-          // Convert relative URL into absolute
-          src={absoluteSrc}
-          streamType={"on-demand"}
-        />
+        {/* For Google Drive videos, use iframe embed because they don't work with MuxPlayer */}
+        {src.startsWith("https://drive.google.com/file") &&
+        src.endsWith("/preview") ? (
+          <iframe src={src} />
+        ) : (
+          <MuxVideo
+            className="h-full w-full bg-black object-cover object-center"
+            controls
+            data-testid="player"
+            metadata={{
+              video_id: videoId,
+              video_title: videoTitle,
+            }}
+            poster={poster}
+            ref={undefined}
+            // Convert relative URL into absolute
+            src={absoluteSrc}
+            streamType={"on-demand"}
+          />
+        )}
       </div>
     </div>
   );

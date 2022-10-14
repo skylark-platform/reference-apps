@@ -31,7 +31,9 @@
     "role": {
       "key-cast": "Key Cast",
       "directors": "Directors",
-      "writers": "Writers"
+      "writers": "Writers",
+      "presenters": "Presenters",
+      "engineers": "Engineers"
     }
   },
   "sign-in": "Sign in",

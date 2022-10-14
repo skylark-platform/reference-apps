@@ -83,6 +83,12 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           directors: formatGraphQLCredits(
             getGraphQLCreditsByType(episode?.credits?.objects, "Director")
           ),
+          presenters: formatGraphQLCredits(
+            getGraphQLCreditsByType(episode?.credits?.objects, "Presenter")
+          ),
+          engineers: formatGraphQLCredits(
+            getGraphQLCreditsByType(episode?.credits?.objects, "Engineer")
+          ),
         }}
         genres={convertObjectToName(episode.genres)}
         number={episode?.episode_number || ""}
@@ -95,6 +101,9 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         rating={getFirstRatingValue(episode.ratings)}
         releaseDate={episode.release_date || ""}
         season={{
+          title: getTitleByOrderForGraphQLObject(
+            episode?.seasons?.objects?.[0]
+          ),
           number: episode?.seasons?.objects?.[0]?.season_number as number,
         }}
         synopsis={synopsis}

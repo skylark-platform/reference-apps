@@ -89,6 +89,7 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
 
   const formattedSeasonsWithEpisodes = seasons?.map((season) => ({
     number: season?.season_number || 0,
+    title: getTitleByOrderForGraphQLObject(season),
     episodes:
       season?.episodes?.objects
         ?.sort((ep1, ep2) =>

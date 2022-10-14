@@ -31,7 +31,9 @@
     "role": {
       "key-cast": "Elenco",
       "directors": "Diretores",
-      "writers": "Escritores"
+      "writers": "Escritores",
+      "presenters": "Presenters",
+      "engineers": "Apresentadores"
     }
   },
   "sign-in": "Entrar",
