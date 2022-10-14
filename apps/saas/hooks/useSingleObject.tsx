@@ -81,6 +81,13 @@ const createGraphQLQuery = (
         value: true,
       },
     };
+    fieldsToFetch.assets = {
+      objects: {
+        uid: true,
+        external_id: true,
+        url: true,
+      },
+    };
   }
 
   if (type === "Episode") {
