@@ -7,6 +7,9 @@ import {
   MdMovie,
   MdMode,
   MdCalendarToday,
+  MdPhotoCameraFront,
+  MdSettings,
+  MdTag,
 } from "react-icons/md";
 import {
   InformationPanel,
@@ -21,6 +24,7 @@ interface Props {
   synopsis: string;
   genres: string[];
   themes: string[];
+  tags: string[];
   rating?: string;
   player: {
     assetId: string;
@@ -52,6 +56,7 @@ export const PlaybackPage: NextPage<Props> = ({
   synopsis,
   genres,
   themes,
+  tags,
   rating,
   player,
   number,
@@ -110,12 +115,12 @@ export const PlaybackPage: NextPage<Props> = ({
                   body: credits.writers,
                 },
                 {
-                  icon: <MdMode />,
+                  icon: <MdPhotoCameraFront />,
                   header: t("skylark.role.presenters"),
                   body: credits.presenters || [],
                 },
                 {
-                  icon: <MdMode />,
+                  icon: <MdSettings />,
                   header: t("skylark.role.engineers"),
                   body: credits.engineers || [],
                 },
@@ -123,6 +128,11 @@ export const PlaybackPage: NextPage<Props> = ({
                   icon: <MdCalendarToday />,
                   header: t("released"),
                   body: formatReleaseDate(releaseDate, lang),
+                },
+                {
+                  icon: <MdTag />,
+                  header: t("tags"),
+                  body: tags,
                 },
               ].filter(({ body }) => body.length > 0)}
             />

@@ -46,5 +46,6 @@
   "available-for": "Available for {{days}} days",
   "show-more": "Show more",
   "show-less": "Show less",
-  "released": "Released"
+  "released": "Released",
+  "tags": "Tags"
 }

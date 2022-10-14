@@ -81,6 +81,11 @@ const createGraphQLQuery = (
         value: true,
       },
     };
+    fieldsToFetch.tags = {
+      objects: {
+        name: true,
+      },
+    };
     fieldsToFetch.assets = {
       objects: {
         uid: true,

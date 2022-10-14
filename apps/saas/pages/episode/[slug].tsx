@@ -107,6 +107,7 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           number: episode?.seasons?.objects?.[0]?.season_number as number,
         }}
         synopsis={synopsis}
+        tags={convertObjectToName(episode.tags)}
         themes={convertObjectToName(episode.themes)}
         title={title}
       />

@@ -99,7 +99,11 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           uid: episode?.uid || "",
           slug: "",
           self: "",
-          title: getTitleByOrderForGraphQLObject(episode),
+          title: getTitleByOrderForGraphQLObject(episode, [
+            "short",
+            "medium",
+            "long",
+          ]),
           number: episode?.episode_number as number,
         })) || [],
   }));

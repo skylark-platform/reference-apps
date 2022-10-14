@@ -45,6 +45,7 @@ Episode.args = {
     "Nacho runs for his life. Saul and Kim hatch a plan to mess with Howard. Mike questions his allegiances.",
   themes: ["Good vs evil", "Perseverance"],
   title: "Wine and Roses",
+  tags: ["New release", "Most watched this week"],
 };
 
 export const Movie = Template.bind({});
