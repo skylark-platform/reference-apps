@@ -73,6 +73,7 @@ Movie.args = {
   releaseDate: "2016-2-10",
   synopsis:
     "A wisecracking mercenary gets experimented on and becomes immortal but ugly, and sets out to track down the man who ruined his looks.",
+  tags: ["New release", "Most watched this week"],
   themes: ["Love", "Perseverance", "Good vs evil", "Sacrifice"],
   title: "Deadpool 2",
 };
