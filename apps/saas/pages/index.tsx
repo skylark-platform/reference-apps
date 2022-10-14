@@ -44,7 +44,6 @@ const RailItemDataFetcher: React.FC<{
       <MediaObjectFetcher type={type} uid={uid}>
         {(object) => (
           <>
-            {console.log(object)}
             {children({
               title: getTitleByOrderForGraphQLObject(object, [
                 "short",
