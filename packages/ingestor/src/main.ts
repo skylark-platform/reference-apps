@@ -354,9 +354,7 @@ const main = async () => {
     console.log("Metadata objects created");
 
     const mediaObjects = await createGraphQLMediaObjects(
-      airtable.mediaObjects.filter(
-        ({ fields }) => fields.skylark_object_type !== "assets"
-      ),
+      airtable.mediaObjects,
       metadata
     );
 
