@@ -113,6 +113,11 @@ describe("useSingleObject", () => {
       {}
     );
     expect(graphQlRequest).toBeCalledWith(
+      expect.stringContaining("tags { objects { name } }"),
+      {},
+      {}
+    );
+    expect(graphQlRequest).toBeCalledWith(
       expect.stringContaining("ratings { objects { value } }"),
       {},
       {}
@@ -154,6 +159,11 @@ describe("useSingleObject", () => {
     );
     expect(graphQlRequest).toBeCalledWith(
       expect.stringContaining("genres { objects { name } }"),
+      {},
+      {}
+    );
+    expect(graphQlRequest).toBeCalledWith(
+      expect.stringContaining("tags { objects { name } }"),
       {},
       {}
     );
