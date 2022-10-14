@@ -24,4 +24,4 @@ const moduleExports = {
   },
 };
 
-module.exports = withPlausibleProxy(nextTranslate(withTM(moduleExports)));
+module.exports = nextTranslate(withTM(withPlausibleProxy(moduleExports)));
