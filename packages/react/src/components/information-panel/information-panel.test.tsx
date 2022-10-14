@@ -7,12 +7,14 @@ describe("InformationPanel component", () => {
     render(
       <InformationPanel
         availableUntil={12}
+        brand={{ title: "Game of Thrones" }}
         description="Series Premiere. Lord Stark is troubled by disturbing reports from a Night's Watch deserter."
         duration={57}
         genres={["Drama", "Mythical", "Based on a book"]}
-        parentTitle={"Game of Thrones"}
         rating="18+"
-        seasonNumber={1}
+        season={{
+          number: 1,
+        }}
         themes={["Action", "Adventure"]}
         title="1. Winter is Coming"
       />

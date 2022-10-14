@@ -101,6 +101,7 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         rating={getFirstRatingValue(movie?.ratings)}
         releaseDate={movie?.release_date || ""}
         synopsis={synopsis}
+        tags={convertObjectToName(movie?.tags)}
         themes={convertObjectToName(movie?.themes)}
         title={title}
       />

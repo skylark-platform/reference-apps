@@ -111,6 +111,7 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         }
         releaseDate={movie?.releaseDate}
         synopsis={synopsis}
+        tags={[]}
         themes={themes}
         title={titleLongToShort}
       />

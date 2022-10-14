@@ -45,6 +45,7 @@ Episode.args = {
     "Nacho runs for his life. Saul and Kim hatch a plan to mess with Howard. Mike questions his allegiances.",
   themes: ["Good vs evil", "Perseverance"],
   title: "Wine and Roses",
+  tags: ["New release", "Most watched this week"],
 };
 
 export const Movie = Template.bind({});
@@ -72,6 +73,7 @@ Movie.args = {
   releaseDate: "2016-2-10",
   synopsis:
     "A wisecracking mercenary gets experimented on and becomes immortal but ugly, and sets out to track down the man who ruined his looks.",
+  tags: ["New release", "Most watched this week"],
   themes: ["Love", "Perseverance", "Good vs evil", "Sacrifice"],
   title: "Deadpool 2",
 };

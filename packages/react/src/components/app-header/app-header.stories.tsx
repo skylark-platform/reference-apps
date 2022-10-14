@@ -1,7 +1,6 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { MdStream, MdAccountCircle } from "react-icons/md";
-import Link from "next/link";
 import { AppHeader } from "./app-header.component";
 import { Button } from "../button";
 
@@ -28,9 +27,7 @@ Default.args = {
       <div className="flex items-center justify-center text-3xl text-gray-100">
         <MdStream className="h-9 w-9 md:ml-8 md:h-10 md:w-10 lg:ml-16 lg:h-12 lg:w-12 xl:ml-20" />
         <h2 className="ml-1 text-base md:ml-2 md:text-xl lg:text-2xl">
-          <Link href="/">
-            <a>{`StreamTV`}</a>
-          </Link>
+          <a>{`StreamTV`}</a>
         </h2>
         <span className="absolute right-2 md:hidden">
           <Button

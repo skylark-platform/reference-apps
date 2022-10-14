@@ -4,9 +4,14 @@ import { MdOutlineWatchLater } from "react-icons/md";
 import { List } from "../list";
 
 interface InformationPanelProps {
-  parentTitle?: string;
+  brand?: {
+    title: string;
+  };
+  season?: {
+    title?: string;
+    number?: string | number;
+  };
   title: string;
-  seasonNumber?: string | number;
   duration: number;
   rating?: string;
   availableUntil: number;
@@ -16,7 +21,8 @@ interface InformationPanelProps {
 }
 
 export const InformationPanel: React.FC<InformationPanelProps> = ({
-  parentTitle,
+  brand,
+  season,
   title,
   duration,
   rating,
@@ -24,7 +30,6 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
   description,
   genres,
   themes,
-  seasonNumber,
 }) => {
   const [isExpanded, setExpand] = useState(false);
   const [isTrunicated, setTrunicated] = useState(false);
@@ -38,14 +43,16 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
     <div className="h-full w-full bg-gray-900">
       <div className="p-2 text-white">
         <div className="left flex w-full flex-col gap-3">
-          {parentTitle && (
+          {brand && (
             <div className="hidden md:flex">
               <List
                 contents={
                   [
-                    parentTitle,
-                    seasonNumber
-                      ? `${t("skylark.object.season")} ${seasonNumber}`
+                    brand.title,
+                    season
+                      ? season.title ||
+                        (season.number &&
+                          `${t("skylark.object.season")} ${season.number}`)
                       : "",
                   ] || []
                 }

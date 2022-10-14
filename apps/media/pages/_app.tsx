@@ -8,6 +8,7 @@ import type { AppProps } from "next/app";
 import { DefaultSeo } from "next-seo";
 import { StreamTVLayout } from "@skylark-reference-apps/react";
 import useTranslation from "next-translate/useTranslation";
+import PlausibleProvider from "next-plausible";
 import createDefaultSeo from "../next-seo.config";
 
 const appTitle = "StreamTV";
@@ -16,14 +17,16 @@ function MyApp({ Component, pageProps }: AppProps) {
   const { t } = useTranslation("common");
 
   return (
-    <StreamTVLayout
-      appTitle={appTitle}
-      skylarkApiUrl={process.env.NEXT_PUBLIC_SKYLARK_API_URL}
-      tvShowsHref="/brand/game-of-thrones"
-    >
-      <DefaultSeo {...createDefaultSeo(appTitle, t("seo.description"))} />
-      <Component {...pageProps} />
-    </StreamTVLayout>
+    <PlausibleProvider domain={process.env.NEXT_PUBLIC_APP_DOMAIN as string}>
+      <StreamTVLayout
+        appTitle={appTitle}
+        skylarkApiUrl={process.env.NEXT_PUBLIC_SKYLARK_API_URL}
+        tvShowsHref="/brand/game-of-thrones"
+      >
+        <DefaultSeo {...createDefaultSeo(appTitle, t("seo.description"))} />
+        <Component {...pageProps} />
+      </StreamTVLayout>
+    </PlausibleProvider>
   );
 }
 

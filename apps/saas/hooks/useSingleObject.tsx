@@ -81,6 +81,11 @@ const createGraphQLQuery = (
         value: true,
       },
     };
+    fieldsToFetch.tags = {
+      objects: {
+        name: true,
+      },
+    };
     fieldsToFetch.assets = {
       objects: {
         uid: true,
@@ -95,6 +100,9 @@ const createGraphQLQuery = (
     fieldsToFetch.seasons = {
       objects: {
         season_number: true,
+        title_short: true,
+        title_medium: true,
+        title_long: true,
         brands: {
           objects: {
             title_short: true,

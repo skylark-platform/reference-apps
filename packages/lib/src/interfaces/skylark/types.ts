@@ -14,7 +14,12 @@ export type ObjectTypes = EntertainmentType | SetTypes | null;
 
 export type ImageTypes = "Thumbnail" | "Main" | "Poster";
 
-export type CreditTypes = "Actor" | "Director" | "Writer";
+export type CreditTypes =
+  | "Actor"
+  | "Director"
+  | "Writer"
+  | "Engineer"
+  | "Presenter";
 
 export type DeviceTypes = "smartphone" | "pc";
 
