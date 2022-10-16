@@ -19,6 +19,7 @@ import {
   ImageType,
   Maybe,
   RatingListing,
+  TagListing,
   ThemeListing,
 } from "../types/gql";
 
@@ -48,7 +49,11 @@ export const formatGraphQLCredits = (credits: Credit[]) => {
 };
 
 export const convertObjectToName = (
-  listing: Maybe<ThemeListing> | Maybe<GenreListing> | undefined
+  listing:
+    | Maybe<ThemeListing>
+    | Maybe<GenreListing>
+    | Maybe<TagListing>
+    | undefined
 ): string[] => {
   if (!listing || !listing.objects || listing.objects.length === 0) {
     return [];

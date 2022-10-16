@@ -16,10 +16,10 @@ When running multiple apps, it is efficient to set all variables at once. The ex
 # - StreamTV
 # - Content ingestor
 NEXT_PUBLIC_SKYLARK_API_URL=
-# Deployed URL for your app, used for OpenGraph (SEO) headers
+# Deployed domain for your app, used for OpenGraph (SEO) headers
 # Used in
 # - StreamTV
-NEXT_PUBLIC_APP_URL=
+NEXT_PUBLIC_APP_DOMAIN=
 # Configuration for AWS Cognito
 # These should be provided by your customer success representative
 # Used in
@@ -60,7 +60,7 @@ If you prefer to only include the environment variables that allow full function
 
 ```bash
 NEXT_PUBLIC_SKYLARK_API_URL=
-NEXT_PUBLIC_APP_URL=
+NEXT_PUBLIC_APP_DOMAIN=
 COGNITO_AWS_REGION=
 COGNITO_CLIENT_ID=
 COGNITO_USER_POOL_ID=
@@ -76,7 +76,7 @@ NEXT_PUBLIC_SKYLARK_API_URL=
 
 But note:
 
-1. The site name in the SEO headers will be blank because `NEXT_PUBLIC_APP_URL` isn't provided
+1. The site name in the SEO headers will be blank because `NEXT_PUBLIC_APP_DOMAIN` isn't provided
 2. Asset playback from Skylark will not work as the `COGNITO_` variables are required for that
 
 ### packages/infra (AWS deployment)

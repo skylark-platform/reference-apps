@@ -31,7 +31,9 @@
     "role": {
       "key-cast": "Key Cast",
       "directors": "Directors",
-      "writers": "Writers"
+      "writers": "Writers",
+      "presenters": "Presenters",
+      "engineers": "Engineers"
     }
   },
   "sign-in": "Sign in",
@@ -44,5 +46,6 @@
   "available-for": "Available for {{days}} days",
   "show-more": "Show more",
   "show-less": "Show less",
-  "released": "Released"
+  "released": "Released",
+  "tags": "Tags"
 }

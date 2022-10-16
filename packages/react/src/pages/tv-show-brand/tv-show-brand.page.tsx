@@ -29,6 +29,7 @@ interface Props {
   tags: string[];
   seasons: {
     number?: number;
+    title?: string;
     episodes: {
       uid: string;
       self: string;
@@ -103,7 +104,10 @@ export const TVShowBrandPage: React.FC<Props> = ({
           <div className="my-6 w-full" key={season.number}>
             <Rail
               displayCount
-              header={`${t("skylark.object.season")} ${season.number || "-"}`}
+              header={
+                season.title ||
+                `${t("skylark.object.season")} ${season.number || "-"}`
+              }
             >
               {season.episodes?.sort(sortObjectByNumberProperty).map((ep) => (
                 <EpisodeDataFetcher

@@ -89,6 +89,7 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
 
   const formattedSeasonsWithEpisodes = seasons?.map((season) => ({
     number: season?.season_number || 0,
+    title: getTitleByOrderForGraphQLObject(season),
     episodes:
       season?.episodes?.objects
         ?.sort((ep1, ep2) =>
@@ -98,7 +99,11 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           uid: episode?.uid || "",
           slug: "",
           self: "",
-          title: getTitleByOrderForGraphQLObject(episode),
+          title: getTitleByOrderForGraphQLObject(episode, [
+            "short",
+            "medium",
+            "long",
+          ]),
           number: episode?.episode_number as number,
         })) || [],
   }));

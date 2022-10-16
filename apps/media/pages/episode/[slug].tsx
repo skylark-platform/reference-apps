@@ -117,6 +117,7 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
             : undefined,
         }}
         synopsis={synopsis}
+        tags={[]}
         themes={themes}
         title={titleLongToShort}
       />

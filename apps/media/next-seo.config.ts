@@ -1,6 +1,8 @@
 import { DefaultSeoProps } from "next-seo";
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL || "";
+const appUrl = process.env.NEXT_PUBLIC_APP_DOMAIN
+  ? `https://${process.env.NEXT_PUBLIC_APP_DOMAIN}`
+  : "";
 
 const createDefaultSeo = (
   appTitle: string,
