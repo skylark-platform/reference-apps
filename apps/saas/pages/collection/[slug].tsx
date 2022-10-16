@@ -17,7 +17,6 @@ import {
   convertTypenameToEntertainmentType,
   getFirstRatingValue,
   getGraphQLImageSrc,
-  getSynopsisByOrderForGraphQLObject,
   getTitleByOrderForGraphQLObject,
 } from "../../lib/utils";
 
@@ -74,9 +73,6 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   }
 
   const title = collection ? getTitleByOrderForGraphQLObject(collection) : "";
-  const synopsis = collection
-    ? getSynopsisByOrderForGraphQLObject(collection)
-    : "";
 
   return (
     <>
@@ -102,7 +98,7 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           loading={!collection}
           rating={getFirstRatingValue(collection?.ratings)}
           releaseDate={collection?.release_date || ""}
-          synopsis={synopsis}
+          synopsis={""}
           title={title ?? ""}
         />
       )}
