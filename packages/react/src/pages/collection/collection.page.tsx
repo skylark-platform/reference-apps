@@ -1,16 +1,10 @@
 import React from "react";
 import {
   formatReleaseDate,
-  formatYear,
   GraphQLMediaObjectTypes,
 } from "@skylark-reference-apps/lib";
 import useTranslation from "next-translate/useTranslation";
-import {
-  SkeletonPage,
-  Hero,
-  Header,
-  StandardThumbnail,
-} from "../../components";
+import { SkeletonPage, Hero, Header } from "../../components";
 
 export interface CollectionPageParsedContentItem {
   slug: string;
@@ -57,7 +51,6 @@ export const CollectionPage: React.FC<Props> = ({
   releaseDate,
   content,
   rating,
-  CollectionItemDataFetcher,
 }) => {
   const { lang } = useTranslation("common");
 
@@ -75,30 +68,6 @@ export const CollectionPage: React.FC<Props> = ({
             typeOfItems="movie"
           />
         </Hero>
-        <div className="grid w-full grid-cols-2 gap-x-4 gap-y-6 px-gutter sm:px-sm-gutter md:grid-cols-3 lg:grid-cols-4 lg:px-lg-gutter xl:px-xl-gutter 2xl:grid-cols-6">
-          {content.map(({ self, slug, uid, type }) => (
-            <CollectionItemDataFetcher
-              key={`collection-content-item-${slug || uid}`}
-              self={self}
-              slug={slug}
-              type={type || "Movie"}
-              uid={uid}
-            >
-              {(item: CollectionPageParsedContentItem) => (
-                <StandardThumbnail
-                  backgroundImage={item.image}
-                  contentLocation="below"
-                  description={item.synopsis}
-                  duration={item.duration}
-                  href={item.href}
-                  key={item.uid}
-                  releaseDate={formatYear(item.releaseDate)}
-                  title={item.title}
-                />
-              )}
-            </CollectionItemDataFetcher>
-          ))}
-        </div>
       </SkeletonPage>
     </div>
   );
