@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  formatReleaseDate,
-  GraphQLMediaObjectTypes,
-} from "@skylark-reference-apps/lib";
-import useTranslation from "next-translate/useTranslation";
-import { SkeletonPage, Hero, Header } from "../../components";
+import { GraphQLMediaObjectTypes } from "@skylark-reference-apps/lib";
 
 export interface CollectionPageParsedContentItem {
   slug: string;
@@ -43,32 +38,6 @@ interface Props {
       }>;
 }
 
-export const CollectionPage: React.FC<Props> = ({
-  loading,
-  bgImage,
-  title,
-  synopsis,
-  releaseDate,
-  content,
-  rating,
-}) => {
-  const { lang } = useTranslation("common");
-
-  return (
-    <div className="mb-20 mt-48 flex min-h-screen w-full flex-col items-center bg-gray-900 font-body">
-      <SkeletonPage show={!!loading}>
-        <div className="-mt-48"></div>
-        <Hero bgImage={bgImage}>
-          <Header
-            description={synopsis}
-            numberOfItems={content.length || 0}
-            rating={rating}
-            releaseDate={formatReleaseDate(releaseDate, lang)}
-            title={title}
-            typeOfItems="movie"
-          />
-        </Hero>
-      </SkeletonPage>
-    </div>
-  );
-};
+export const CollectionPage: React.FC<Props> = () => (
+  <div className="mb-20 mt-48 flex min-h-screen w-full flex-col items-center bg-gray-900 font-body"></div>
+);
