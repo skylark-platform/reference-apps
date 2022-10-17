@@ -15,9 +15,7 @@ import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 import {
   convertGraphQLSetType,
   convertTypenameToEntertainmentType,
-  getFirstRatingValue,
   getGraphQLImageSrc,
-  getSynopsisByOrderForGraphQLObject,
   getTitleByOrderForGraphQLObject,
 } from "../../lib/utils";
 
@@ -76,9 +74,6 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   }
 
   const title = collection ? getTitleByOrderForGraphQLObject(collection) : "";
-  const synopsis = collection
-    ? getSynopsisByOrderForGraphQLObject(collection)
-    : "";
 
   return (
     <>
@@ -87,16 +82,15 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         openGraph={{ images: seo.images }}
         title={title || seo.title}
       />
-
       <CollectionPage
         CollectionItemDataFetcher={CollectionItemDataFetcher}
         bgImage={""}
         content={[]}
         loading={isLoading}
-        rating={getFirstRatingValue(collection?.ratings)}
-        releaseDate={collection?.release_date || ""}
-        synopsis={synopsis}
-        title={title ?? ""}
+        rating={""}
+        releaseDate={""}
+        synopsis={""}
+        title={""}
       />
     </>
   );
