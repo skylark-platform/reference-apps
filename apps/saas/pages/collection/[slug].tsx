@@ -49,9 +49,9 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           CollectionItemDataFetcher={""}
           bgImage={""}
           content={[]}
-          loading={!collection}
+          loading={false}
           rating={""}
-          releaseDate={collection?.release_date || ""}
+          releaseDate={""}
           synopsis={""}
           title={title ?? ""}
         />

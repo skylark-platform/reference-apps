@@ -1,5 +1,4 @@
 import React from "react";
-import { GraphQLMediaObjectTypes } from "@skylark-reference-apps/lib";
 
 export interface CollectionPageParsedContentItem {
   slug: string;
@@ -22,7 +21,7 @@ interface Props {
     slug: string;
     self: string;
     uid: string;
-    type: GraphQLMediaObjectTypes | "";
+    type: string;
   }[];
   rating: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
