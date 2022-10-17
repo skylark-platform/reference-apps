@@ -1,7 +1,6 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import { CollectionPage } from "@skylark-reference-apps/react";
 
 import { useCollection } from "../../hooks/useCollection";
 
@@ -44,18 +43,7 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         openGraph={{ images: seo.images }}
         title={title || seo.title}
       />
-      {collection && (
-        <CollectionPage
-          bgImage={""}
-          collectionItemDataFetcher={""}
-          content={[]}
-          loading={false}
-          rating={""}
-          releaseDate={""}
-          synopsis={""}
-          title={title ?? ""}
-        />
-      )}
+      <div>{JSON.stringify(collection)}</div>
     </>
   );
 };
