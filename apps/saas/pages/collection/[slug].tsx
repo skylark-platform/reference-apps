@@ -16,7 +16,6 @@ import {
   convertGraphQLSetType,
   convertTypenameToEntertainmentType,
   getGraphQLImageSrc,
-  getSynopsisByOrderForGraphQLObject,
   getTitleByOrderForGraphQLObject,
 } from "../../lib/utils";
 
@@ -73,9 +72,6 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   }
 
   const title = collection ? getTitleByOrderForGraphQLObject(collection) : "";
-  const synopsis = collection
-    ? getSynopsisByOrderForGraphQLObject(collection)
-    : "";
 
   return (
     <>
@@ -86,13 +82,13 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
       />
       <CollectionPage
         CollectionItemDataFetcher={CollectionItemDataFetcher}
-        bgImage={getGraphQLImageSrc(collection?.images, ImageType.Main)}
+        bgImage={""}
         content={[]}
         loading={false}
         rating={""}
         releaseDate={""}
-        synopsis={synopsis}
-        title={title ?? ""}
+        synopsis={""}
+        title={""}
       />
     </>
   );
