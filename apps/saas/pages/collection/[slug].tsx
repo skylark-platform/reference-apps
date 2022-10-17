@@ -15,9 +15,7 @@ import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 import {
   convertGraphQLSetType,
   convertTypenameToEntertainmentType,
-  getFirstRatingValue,
   getGraphQLImageSrc,
-  getSynopsisByOrderForGraphQLObject,
   getTitleByOrderForGraphQLObject,
 } from "../../lib/utils";
 
@@ -62,7 +60,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
 
-  const { collection, isError } = useCollection(query?.slug as string);
+  const { collection, isLoading, isError } = useCollection(
+    query?.slug as string
+  );
 
   if (isError && !collection) {
     return (
@@ -74,9 +74,6 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   }
 
   const title = collection ? getTitleByOrderForGraphQLObject(collection) : "";
-  const synopsis = collection
-    ? getSynopsisByOrderForGraphQLObject(collection)
-    : "";
 
   return (
     <>
@@ -85,24 +82,16 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         openGraph={{ images: seo.images }}
         title={title || seo.title}
       />
+
       <CollectionPage
         CollectionItemDataFetcher={CollectionItemDataFetcher}
-        bgImage={getGraphQLImageSrc(collection?.images, ImageType.Main)}
-        content={
-          collection?.content?.objects?.map((item) => ({
-            self: "",
-            slug: "",
-            uid: item?.object?.uid || "",
-            type:
-              (item?.object as Episode | Movie | Brand | Season).__typename ||
-              "",
-          })) || []
-        }
-        loading={!collection}
-        rating={getFirstRatingValue(collection?.ratings)}
-        releaseDate={collection?.release_date || ""}
-        synopsis={synopsis}
-        title={title ?? ""}
+        bgImage={""}
+        content={[]}
+        loading={isLoading}
+        rating={""}
+        releaseDate={""}
+        synopsis={""}
+        title={""}
       />
     </>
   );
