@@ -15,7 +15,6 @@ import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 import {
   convertGraphQLSetType,
   convertTypenameToEntertainmentType,
-  getFirstRatingValue,
   getGraphQLImageSrc,
   getTitleByOrderForGraphQLObject,
 } from "../../lib/utils";
@@ -84,7 +83,7 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
       {collection && (
         <CollectionPage
           CollectionItemDataFetcher={CollectionItemDataFetcher}
-          bgImage={getGraphQLImageSrc(collection?.images, ImageType.Main)}
+          bgImage={""}
           content={
             collection?.content?.objects?.map((item) => ({
               self: "",
@@ -96,7 +95,7 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
             })) || []
           }
           loading={!collection}
-          rating={getFirstRatingValue(collection?.ratings)}
+          rating={""}
           releaseDate={collection?.release_date || ""}
           synopsis={""}
           title={title ?? ""}

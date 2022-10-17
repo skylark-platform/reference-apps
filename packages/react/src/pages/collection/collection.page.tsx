@@ -25,17 +25,8 @@ interface Props {
     type: GraphQLMediaObjectTypes | "";
   }[];
   rating: string;
-  CollectionItemDataFetcher:
-    | React.FC<{
-        slug: string;
-        self: string;
-        children(data: CollectionPageParsedContentItem): React.ReactNode;
-      }>
-    | React.FC<{
-        uid: string;
-        type: GraphQLMediaObjectTypes;
-        children(data: CollectionPageParsedContentItem): React.ReactNode;
-      }>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  CollectionItemDataFetcher: any;
 }
 
 export const CollectionPage: React.FC<Props> = () => (
