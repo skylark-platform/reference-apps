@@ -46,8 +46,8 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
       />
       {collection && (
         <CollectionPage
-          CollectionItemDataFetcher={""}
           bgImage={""}
+          collectionItemDataFetcher={""}
           content={[]}
           loading={false}
           rating={""}

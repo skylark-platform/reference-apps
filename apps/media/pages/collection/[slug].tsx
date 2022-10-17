@@ -83,8 +83,8 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         title={title || seo.title}
       />
       <CollectionPage
-        CollectionItemDataFetcher={CollectionItemDataFetcher}
         bgImage={getImageSrcAndSizeByWindow(collection?.images, "Main")}
+        collectionItemDataFetcher={CollectionItemDataFetcher}
         content={content.map((contentItem) => ({
           self: contentItem.self,
           slug: contentItem.slug,

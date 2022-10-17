@@ -25,7 +25,7 @@ interface Props {
   }[];
   rating: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  CollectionItemDataFetcher: any;
+  collectionItemDataFetcher: any;
 }
 
 export const CollectionPage: React.FC<Props> = () => (
