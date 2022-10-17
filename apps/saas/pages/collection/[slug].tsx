@@ -83,7 +83,16 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
       <CollectionPage
         CollectionItemDataFetcher={CollectionItemDataFetcher}
         bgImage={""}
-        content={[]}
+        content={
+          collection?.content?.objects?.map((item) => ({
+            self: "",
+            slug: "",
+            uid: item?.object?.uid || "",
+            type:
+              (item?.object as Episode | Movie | Brand | Season).__typename ||
+              "",
+          })) || []
+        }
         loading={false}
         rating={""}
         releaseDate={""}
