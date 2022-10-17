@@ -85,18 +85,16 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         openGraph={{ images: seo.images }}
         title={title || seo.title}
       />
-      {collection && (
-        <CollectionPage
-          CollectionItemDataFetcher={CollectionItemDataFetcher}
-          bgImage={getGraphQLImageSrc(collection?.images, ImageType.Main)}
-          content={[]}
-          loading={!collection}
-          rating={getFirstRatingValue(collection?.ratings)}
-          releaseDate={collection?.release_date || ""}
-          synopsis={synopsis}
-          title={title ?? ""}
-        />
-      )}
+      <CollectionPage
+        CollectionItemDataFetcher={CollectionItemDataFetcher}
+        bgImage={getGraphQLImageSrc(collection?.images, ImageType.Main)}
+        content={[]}
+        loading={!collection}
+        rating={getFirstRatingValue(collection?.ratings)}
+        releaseDate={collection?.release_date || ""}
+        synopsis={synopsis}
+        title={title ?? ""}
+      />
     </>
   );
 };
