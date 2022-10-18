@@ -79,7 +79,9 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const synopsis = collection
     ? getSynopsisByOrderForGraphQLObject(collection)
     : "";
+  // eslint-disable-next-line no-console
   console.log("title", title);
+  // eslint-disable-next-line no-console
   console.log("synopsis", synopsis);
 
   return (
