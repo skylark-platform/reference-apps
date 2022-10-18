@@ -15,6 +15,7 @@ import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 import {
   convertGraphQLSetType,
   convertTypenameToEntertainmentType,
+  getFirstRatingValue,
   getGraphQLImageSrc,
   getTitleByOrderForGraphQLObject,
 } from "../../lib/utils";
@@ -96,10 +97,10 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           })) || []
         }
         loading={isLoading}
-        rating={""}
+        rating={getFirstRatingValue(collection?.ratings)}
         releaseDate={""}
         synopsis={""}
-        title={title ?? ""}
+        title={""}
       />
     </>
   );
