@@ -75,12 +75,11 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     );
   }
 
-  const title = collection ? getTitleByOrderForGraphQLObject(collection) : "";
-  const synopsis = collection
-    ? getSynopsisByOrderForGraphQLObject(collection)
-    : "";
+  const title = getTitleByOrderForGraphQLObject(collection);
+  const synopsis = getSynopsisByOrderForGraphQLObject(collection);
+
   // eslint-disable-next-line no-console
-  console.log("title", title);
+  console.log("title", title, title.toString());
   // eslint-disable-next-line no-console
   console.log("synopsis", synopsis);
 
@@ -108,7 +107,7 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         rating={getFirstRatingValue(collection?.ratings)}
         releaseDate={collection?.release_date || ""}
         synopsis={""}
-        title={title ?? ""}
+        title={title.toString() ?? ""}
       />
     </>
   );
