@@ -78,11 +78,6 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const title = getTitleByOrderForGraphQLObject(collection);
   const synopsis = getSynopsisByOrderForGraphQLObject(collection);
 
-  // eslint-disable-next-line no-console
-  console.log("title", title, title.toString());
-  // eslint-disable-next-line no-console
-  console.log("synopsis", synopsis);
-
   return (
     <>
       <NextSeo
@@ -106,8 +101,8 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         loading={isLoading}
         rating={getFirstRatingValue(collection?.ratings)}
         releaseDate={collection?.release_date || ""}
-        synopsis={""}
-        title={title.toString() ?? ""}
+        synopsis={synopsis || ""}
+        title={title || ""}
       />
     </>
   );
