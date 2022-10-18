@@ -99,7 +99,7 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         rating={""}
         releaseDate={""}
         synopsis={""}
-        title={""}
+        title={title ?? ""}
       />
     </>
   );
