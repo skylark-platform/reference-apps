@@ -16,7 +16,6 @@ import {
   convertGraphQLSetType,
   convertTypenameToEntertainmentType,
   getGraphQLImageSrc,
-  getSynopsisByOrderForGraphQLObject,
   getTitleByOrderForGraphQLObject,
 } from "../../lib/utils";
 
@@ -61,7 +60,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
 
-  const { collection, isError } = useCollection(query?.slug as string);
+  const { collection, isLoading, isError } = useCollection(
+    query?.slug as string
+  );
 
   if (isError && !collection) {
     return (
@@ -73,9 +74,6 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   }
 
   const title = collection ? getTitleByOrderForGraphQLObject(collection) : "";
-  const synopsis = collection
-    ? getSynopsisByOrderForGraphQLObject(collection)
-    : "";
 
   return (
     <>
@@ -86,7 +84,7 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
       />
       <CollectionPage
         CollectionItemDataFetcher={CollectionItemDataFetcher}
-        bgImage={""}
+        bgImage={getGraphQLImageSrc(collection?.images, ImageType.Main)}
         content={
           collection?.content?.objects?.map((item) => ({
             self: "",
@@ -97,11 +95,11 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
               "",
           })) || []
         }
-        loading={false}
+        loading={isLoading}
         rating={""}
         releaseDate={""}
-        synopsis={synopsis}
-        title={title ?? ""}
+        synopsis={""}
+        title={""}
       />
     </>
   );
