@@ -85,7 +85,12 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
       <CollectionPage
         CollectionItemDataFetcher={CollectionItemDataFetcher}
         bgImage={getImageSrcAndSizeByWindow(collection?.images, "Main")}
-        content={content}
+        content={content.map((contentItem) => ({
+          self: contentItem.self,
+          slug: contentItem.slug,
+          uid: "",
+          type: "",
+        }))}
         loading={!collection}
         rating={
           collection?.ratings?.isExpanded
