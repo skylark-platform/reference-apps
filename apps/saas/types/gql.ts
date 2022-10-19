@@ -74,7 +74,7 @@ export type AssetInput = {
   relationships?: InputMaybe<AssetRelationships>;
   slug?: InputMaybe<Scalars["String"]>;
   title?: InputMaybe<Scalars["String"]>;
-  type?: InputMaybe<Scalars["String"]>;
+  type?: InputMaybe<AssetType>;
   url?: InputMaybe<Scalars["String"]>;
 };
 
@@ -95,6 +95,11 @@ export type AssetRelationships = {
   images?: InputMaybe<ImageRelationshipInput>;
   parental_guidance?: InputMaybe<ParentalGuidanceRelationshipInput>;
 };
+
+export enum AssetType {
+  Main = "MAIN",
+  Trailer = "TRAILER",
+}
 
 export type AssignAvailabilityInput = {
   create?: InputMaybe<Array<InputMaybe<AvailabilityInput>>>;
