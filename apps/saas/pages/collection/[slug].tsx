@@ -101,8 +101,8 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         loading={isLoading}
         rating={getFirstRatingValue(collection?.ratings)}
         releaseDate={collection?.release_date || ""}
-        synopsis={synopsis || ""}
-        title={title || ""}
+        synopsis={synopsis}
+        title={title}
       />
     </>
   );
