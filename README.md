@@ -1,4 +1,9 @@
+![image](https://user-images.githubusercontent.com/17385115/196493113-4205645c-9e08-4492-888f-630dd4591723.png)
+
 # StreamTV OTT Reference App
+
+[![Deploy App](https://github.com/skylark-platform/reference-apps/actions/workflows/deploy-app.yml/badge.svg)](https://github.com/skylark-platform/reference-apps/actions/workflows/deploy-app.yml)
+[![Pull Request Checks](https://github.com/skylark-platform/reference-apps/actions/workflows/pr-checks.yml/badge.svg)](https://github.com/skylark-platform/reference-apps/actions/workflows/pr-checks.yml)
 
 Home to StreamTV, a web app designed to demonstrate the features of [Skylark][skylark], a headless CMS designed to enable customers to build and scale world-class streaming products.
 
@@ -9,6 +14,7 @@ We use Lerna and Yarn Workspaces to re-use local packages in multiple projects.
 ### Apps (`app/`)
 
 - Media (StreamTV) - [Demo application for Skylark V8.x.x][v8-app] (up between 6am and 12am GMT)
+- SaaS (StreamTV (SaaS)) - Demo application for SaaS Skylark (up between 6am and 12am GMT)
 - Storybook - [React component library][storybook]
 
 #### Running
