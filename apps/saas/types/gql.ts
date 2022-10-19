@@ -26,11 +26,19 @@ export type Asset = Metadata & {
   __typename?: "Asset";
   _meta?: Maybe<_AssetMeta>;
   availability?: Maybe<AvailabilityListing>;
+  brands?: Maybe<BrandListing>;
+  credits?: Maybe<CreditListing>;
+  episodes?: Maybe<EpisodeListing>;
   external_id?: Maybe<Scalars["String"]>;
+  genres?: Maybe<GenreListing>;
   images?: Maybe<ImageListing>;
+  movies?: Maybe<MovieListing>;
   parental_guidance?: Maybe<ParentalGuidanceListing>;
-  parents?: Maybe<EntertainmentListing>;
+  ratings?: Maybe<RatingListing>;
+  seasons?: Maybe<SeasonListing>;
   slug?: Maybe<Scalars["String"]>;
+  tags?: Maybe<TagListing>;
+  themes?: Maybe<ThemeListing>;
   title?: Maybe<Scalars["String"]>;
   type: Scalars["String"];
   uid: Scalars["String"];
@@ -48,7 +56,37 @@ export type AssetAvailabilityArgs = {
   next_token?: InputMaybe<Scalars["String"]>;
 };
 
+export type AssetBrandsArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type AssetCreditsArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type AssetEpisodesArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type AssetGenresArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
 export type AssetImagesArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type AssetMoviesArgs = {
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
   next_token?: InputMaybe<Scalars["String"]>;
@@ -60,7 +98,25 @@ export type AssetParental_GuidanceArgs = {
   next_token?: InputMaybe<Scalars["String"]>;
 };
 
-export type AssetParentsArgs = {
+export type AssetRatingsArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type AssetSeasonsArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type AssetTagsArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type AssetThemesArgs = {
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
   next_token?: InputMaybe<Scalars["String"]>;
@@ -74,7 +130,7 @@ export type AssetInput = {
   relationships?: InputMaybe<AssetRelationships>;
   slug?: InputMaybe<Scalars["String"]>;
   title?: InputMaybe<Scalars["String"]>;
-  type?: InputMaybe<Scalars["String"]>;
+  type?: InputMaybe<AssetType>;
   url?: InputMaybe<Scalars["String"]>;
 };
 
@@ -92,9 +148,23 @@ export type AssetRelationshipInput = {
 };
 
 export type AssetRelationships = {
+  brands?: InputMaybe<BrandRelationshipInput>;
+  credits?: InputMaybe<CreditRelationshipInput>;
+  episodes?: InputMaybe<EpisodeRelationshipInput>;
+  genres?: InputMaybe<GenreRelationshipInput>;
   images?: InputMaybe<ImageRelationshipInput>;
+  movies?: InputMaybe<MovieRelationshipInput>;
   parental_guidance?: InputMaybe<ParentalGuidanceRelationshipInput>;
+  ratings?: InputMaybe<RatingRelationshipInput>;
+  seasons?: InputMaybe<SeasonRelationshipInput>;
+  tags?: InputMaybe<TagRelationshipInput>;
+  themes?: InputMaybe<ThemeRelationshipInput>;
 };
+
+export enum AssetType {
+  Main = "MAIN",
+  Trailer = "TRAILER",
+}
 
 export type AssignAvailabilityInput = {
   create?: InputMaybe<Array<InputMaybe<AvailabilityInput>>>;
@@ -2489,11 +2559,11 @@ export type UserDimension = {
 
 export type _AssetGlobal = _Global & {
   __typename?: "_AssetGlobal";
-  asset_url?: Maybe<Scalars["String"]>;
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_AssetGlobal>>>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
+  url?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["Int"]>;
 };
 
