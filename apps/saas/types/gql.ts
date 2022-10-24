@@ -1347,14 +1347,14 @@ export type MutationUpdateCreditArgs = {
 };
 
 export type MutationUpdateDimensionArgs = {
-  dimension: DimensionInput;
+  dimension: UpdateDimensionInput;
   dimension_id?: InputMaybe<Scalars["String"]>;
   external_id?: InputMaybe<Scalars["String"]>;
 };
 
 export type MutationUpdateDimensionValueArgs = {
   dimension_id?: InputMaybe<Scalars["String"]>;
-  dimension_value: DimensionInput;
+  dimension_value: UpdateDimensionInput;
   external_id?: InputMaybe<Scalars["String"]>;
   value_external_id?: InputMaybe<Scalars["String"]>;
   value_id?: InputMaybe<Scalars["String"]>;
@@ -2550,6 +2550,12 @@ export type ThemeSetInput = {
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
   unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+};
+
+export type UpdateDimensionInput = {
+  description?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]>;
+  title?: InputMaybe<Scalars["String"]>;
 };
 
 export type UserDimension = {

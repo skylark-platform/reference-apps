@@ -138,6 +138,11 @@ const createOrUpdateDimensionValues = async (
 
       const objectExists = existingObjectSlugs.includes(fields.slug as string);
 
+      if (objectExists) {
+        // When updating dimensions, changing the slug isn't supported
+        delete validFields.slug;
+      }
+
       const dimensionValue = {
         dimension_value: objectExists
           ? validFields
