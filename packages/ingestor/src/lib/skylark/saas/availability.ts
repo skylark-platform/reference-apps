@@ -244,12 +244,14 @@ export const createOrUpdateAvailability = async (
   if (existingObjects.length > 0) {
     // eslint-disable-next-line no-console
     console.warn(
-      "Updating Availability is currently broken\n  1. Pagination is broken (SL-2259)\n  2. Updates timeout as all objects have to be updated with the new schedule (SL-2260)\nWill create any new availabilities, but won't update existing ones."
+      "Updating Availability is currently broken\n  1. Updates timeout as all objects have to be updated with the new schedule (SL-2260)\nWill create any new availabilities, but won't update existing ones."
     );
   }
 
-  const schedulesToCreate = schedules.filter(({ id }) => !existingObjects.includes(id));
-  if(schedulesToCreate.length === 0) {
+  const schedulesToCreate = schedules.filter(
+    ({ id }) => !existingObjects.includes(id)
+  );
+  if (schedulesToCreate.length === 0) {
     return;
   }
 

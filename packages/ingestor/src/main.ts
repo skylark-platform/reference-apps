@@ -267,10 +267,7 @@ const main = async () => {
       airtable.dimensions
     );
 
-    await createOrUpdateAvailability(
-      airtable.availability,
-      dimensions
-    );
+    await createOrUpdateAvailability(airtable.availability, dimensions);
 
     const defaultSchedule = airtable.availability.find(
       ({ fields }) =>

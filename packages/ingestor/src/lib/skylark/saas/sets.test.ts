@@ -53,11 +53,7 @@ describe("saas/sets.ts", () => {
   const metadata: Partial<GraphQLMetadata> = {
     availability: {
       all: [],
-      default: {
-        uid: "availability-1",
-        external_id: "availability-1",
-        slug: "availability-1",
-      },
+      default: "availability-1",
     },
   };
 
