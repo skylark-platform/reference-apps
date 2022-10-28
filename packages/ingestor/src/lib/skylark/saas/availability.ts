@@ -242,12 +242,20 @@ export const createOrUpdateAvailability = async (
   const existingObjects = await getExistingObjects("Availability", externalIds);
 
   if (existingObjects.length > 0) {
-    throw new Error(
-      "Updating Availability is currently broken\nWorkaround: use a new account-id\n  1. Pagination is broken (SL-2259)\n  2. Updates timeout as all objects have to be updated with the new schedule (SL-2260)"
+    // eslint-disable-next-line no-console
+    console.warn(
+      "Updating Availability is currently broken\n  1. Updates timeout as all objects have to be updated with the new schedule (SL-2260)\nWill create any new availabilities, but won't update existing ones."
     );
   }
 
-  const operations = schedules.reduce(
+  const schedulesToCreate = schedules.filter(
+    ({ id }) => !existingObjects.includes(id)
+  );
+  if (schedulesToCreate.length === 0) {
+    return;
+  }
+
+  const operations = schedulesToCreate.reduce(
     (previousOperations, { id, ...record }) => {
       const fields = record.fields as AvailabilityTableFields;
 
@@ -351,10 +359,8 @@ export const createOrUpdateAvailability = async (
     {} as { [key: string]: object }
   );
 
-  const arr = await mutateMultipleObjects<GraphQLBaseObject>(
+  await mutateMultipleObjects<GraphQLBaseObject>(
     "createOrUpdateAvailability",
     operations
   );
-
-  return arr;
 };

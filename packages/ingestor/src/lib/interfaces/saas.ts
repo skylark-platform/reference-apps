@@ -15,8 +15,8 @@ export interface GraphQLMetadata {
   tags: GraphQLBaseObject[];
   credits: GraphQLBaseObject[];
   availability: {
-    default?: GraphQLBaseObject;
-    all: GraphQLBaseObject[];
+    default?: string;
+    all: string[];
   };
   dimensions: {
     affiliates: GraphQLBaseObject[];

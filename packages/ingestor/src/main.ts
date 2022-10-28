@@ -267,20 +267,11 @@ const main = async () => {
       airtable.dimensions
     );
 
-    const availability = await createOrUpdateAvailability(
-      airtable.availability,
-      dimensions
-    );
+    await createOrUpdateAvailability(airtable.availability, dimensions);
 
-    const defaultAvailabilityAirtable = airtable.availability.find(
+    const defaultSchedule = airtable.availability.find(
       ({ fields }) =>
         has(fields, "default") && fields.default && has(fields, "slug")
-    );
-    // Attempt to use the schedule marked as default in Airtable, if not use the always-license one
-    const defaultSchedule = availability.find(({ slug }) =>
-      defaultAvailabilityAirtable
-        ? slug === defaultAvailabilityAirtable.fields.slug
-        : slug === "always-license"
     );
 
     // eslint-disable-next-line no-console
@@ -288,13 +279,14 @@ const main = async () => {
       `Default license: ${
         UNLICENSED_BY_DEFAULT || !defaultSchedule
           ? "undefined"
-          : `${defaultSchedule.slug} (${defaultSchedule.external_id})`
+          : `${defaultSchedule.fields.slug as string} (${defaultSchedule.id})`
       }`
     );
 
     const metadataAvailability: GraphQLMetadata["availability"] = {
-      all: availability,
-      default: UNLICENSED_BY_DEFAULT ? undefined : defaultSchedule,
+      // We use the Airtable IDs (external_id within Skylark) for Availability
+      all: airtable.availability.map(({ id }) => id),
+      default: UNLICENSED_BY_DEFAULT ? undefined : defaultSchedule?.id,
     };
 
     const metadata: GraphQLMetadata = {

@@ -165,23 +165,11 @@ describe("saas/utils.ts", () => {
   describe("getGraphQLObjectAvailability", () => {
     const availability: GraphQLMetadata["availability"] = {
       all: [
-        {
-          uid: "availability-1-uid",
-          external_id: "availability-1-ext-id",
-          slug: "availability-1-slug",
-        },
-        {
-          uid: "availability-2-uid",
-          external_id: "availability-2-ext-id",
-          slug: "availability-2-slug",
-        },
-        {
-          uid: "availability-3-uid",
-          external_id: "availability-3-ext-id",
-          slug: "availability-3-slug",
-        },
+        "availability-1-ext-id",
+        "availability-2-ext-id",
+        "availability-3-ext-id",
       ],
-      default: { uid: "default-uid", external_id: "default", slug: "default" },
+      default: "default-ext-id",
     };
 
     it("returns an empty link array when availabilityField is empty and no default is given", () => {
@@ -193,17 +181,17 @@ describe("saas/utils.ts", () => {
     it("returns the default when no availabilityField is empty and a default is given", () => {
       const got = getGraphQLObjectAvailability(availability);
 
-      expect(got).toEqual({ link: ["default-uid"] });
+      expect(got).toEqual({ link: ["default-ext-id"] });
     });
 
     it("returns the availabilities in availabilityFields", () => {
       const got = getGraphQLObjectAvailability(availability, [
-        availability.all[0].external_id,
-        availability.all[2].external_id,
+        availability.all[0],
+        availability.all[2],
       ]);
 
       expect(got).toEqual({
-        link: [availability.all[0].uid, availability.all[2].uid],
+        link: [availability.all[0], availability.all[2]],
       });
     });
   });

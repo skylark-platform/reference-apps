@@ -136,16 +136,12 @@ describe("saas/create.ts", () => {
         records as Records<FieldSet>,
         {
           all: [],
-          default: {
-            uid: "default-uid-1",
-            external_id: "default-external-id-1",
-            slug: "default-slug-1",
-          },
+          default: "default-external-id-1",
         }
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateBrands { updateBrandbrand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: ["default-uid-1"]}}) { uid slug external_id } }'
+        'mutation createOrUpdateBrands { updateBrandbrand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: ["default-external-id-1"]}}) { uid slug external_id } }'
       );
     });
   });

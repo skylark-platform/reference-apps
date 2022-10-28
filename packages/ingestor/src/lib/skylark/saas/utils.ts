@@ -150,13 +150,12 @@ export const getGraphQLObjectAvailability = (
   availabilityMetadata: GraphQLMetadata["availability"],
   availabilityField?: string[]
 ): { link: string[] } => {
-  const { all, default: defaultAvailability } = availabilityMetadata;
+  const { default: defaultAvailability } = availabilityMetadata;
   if (!availabilityField || availabilityField.length === 0) {
-    return { link: defaultAvailability ? [defaultAvailability.uid] : [] };
+    return { link: defaultAvailability ? [defaultAvailability] : [] };
   }
 
-  const uids = getUidsFromField(availabilityField, all);
-  return { link: uids || [] };
+  return { link: availabilityField || [] };
 };
 
 export const getLanguageCodesFromAirtable = (
