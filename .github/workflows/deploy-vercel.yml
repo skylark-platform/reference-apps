@@ -63,28 +63,40 @@ jobs:
         - name: V8
           dir: media
           vercel-project-secret-name: VERCEL_PROJECT_ID_MEDIA
-    env:
-      VERCEL_PROJECT_ID: ${{ secrets[matrix.apps.vercel-project-secret-name] }}
-      NEXT_PUBLIC_SAAS_ACCOUNT_ID: ${{ needs.prepare.outputs.git-branch }}
+    # env:
+      # VERCEL_PROJECT_ID: ${{ secrets[matrix.apps.vercel-project-secret-name] }}
+      # NEXT_PUBLIC_SAAS_ACCOUNT_ID: ${{ needs.prepare.outputs.git-branch }}
     steps:
       - uses: actions/checkout@v3
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
-      - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=${{ env.VERCEL_ENVIRONMENT }} --token=${{ secrets.VERCEL_TOKEN }}
-      - name: Development Build
-        if: github.ref != 'refs/heads/main'
-        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
-      - name: Production build
-        if: github.ref == 'refs/heads/main'
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-      - name: Deploy to Vercel
-        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} > deployment-url.txt
-      - name: Output Deployment URL
-        run: |
-          URL=$(cat deployment-url.txt)
-          echo "${{ matrix.apps.dir }}-url=$URL" >> $GITHUB_OUTPUT
-          echo "::notice::${{ matrix.apps.name }} URL: $URL"
+      - uses: ./.github/actions/vercel-deploy
+        id: vercel-deploy
+        with:
+          vercel-org-id: ${{ env.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets[matrix.apps.vercel-project-secret-name] }}
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-environment: ${{ env.VERCEL_ENVIRONMENT }}
+          saas-account-id: ${{ needs.prepare.outputs.git-branch }}
+      - run: |
+          echo "::notice::${{ matrix.apps.name }} URL: ${{ steps.vercel-deploy.outputs.url }}"
+
+
+      # - name: Install Vercel CLI
+      #   run: npm install --global vercel@latest
+      # - name: Pull Vercel Environment Information
+      #   run: vercel pull --yes --environment=${{ env.VERCEL_ENVIRONMENT }} --token=${{ secrets.VERCEL_TOKEN }}
+      # - name: Development Build
+      #   if: github.ref != 'refs/heads/main'
+      #   run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+      # - name: Production build
+      #   if: github.ref == 'refs/heads/main'
+      #   run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+      # - name: Deploy to Vercel
+      #   run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} > deployment-url.txt
+      # - name: Output Deployment URL
+      #   run: |
+      #     URL=$(cat deployment-url.txt)
+      #     echo "${{ matrix.apps.dir }}-url=$URL" >> $GITHUB_OUTPUT
+      #     echo "::notice::${{ matrix.apps.name }} URL: $URL"
 
   ingestor:
     name: Content Ingestor (${{ matrix.apps.name }})
@@ -126,6 +138,7 @@ jobs:
           saas-api-token: ${{ steps.dotenv.outputs.next_public_saas_api_key }}
           # Use git-branch as account-id so it matches Vercel
           saas-account-id: ${{ needs.prepare.outputs.git-branch }}
+
   signal:
     name: Signal
     runs-on: ubuntu-latest
