@@ -12,7 +12,8 @@
     "tsc": "tsc",
     "codegen": "DOTENV_CONFIG_PATH=.env.local graphql-codegen -r dotenv/config --config codegen.ts",
     "prebuild": "yarn codegen",
-    "predev": "yarn codegen"
+    "predev": "yarn codegen",
+    "ingest": "cd ../../packages/ingestor && yarn ingest:saas:with-sets"
   },
   "dependencies": {
     "@fontsource/inter": "^4.5.1",

@@ -9,7 +9,8 @@
     "export": "next export",
     "lint": "eslint .",
     "test": "jest --config=jest.config.js",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "ingest": "cd ../../packages/ingestor && yarn ingest:with-sets"
   },
   "dependencies": {
     "@aws-amplify/auth": "^4.6.1",

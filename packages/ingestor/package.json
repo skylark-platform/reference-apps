@@ -31,6 +31,8 @@
     "tsc": "tsc",
     "ingest": "ts-node src/main.ts",
     "ingest:with-sets": "cross-env CREATE_SETS=true yarn ingest",
+    "ingest:saas": "cross-env INGEST_TO_SAAS_SKYLARK=true yarn ingest",
+    "ingest:saas:with-sets": "cross-env INGEST_TO_SAAS_SKYLARK=true CREATE_SETS=true yarn ingest",
     "test": "jest --config=jest.config.js",
     "lint": "eslint -c .eslintrc.js ."
   }
