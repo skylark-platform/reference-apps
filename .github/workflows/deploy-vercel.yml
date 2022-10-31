@@ -74,6 +74,7 @@ jobs:
           vercel-environment: ${{ env.VERCEL_ENVIRONMENT }}
           saas-account-id: ${{ needs.prepare.outputs.git-branch }}
       - run: |
+          echo "${{ matrix.apps.dir }}-url=${{ steps.vercel-deploy.outputs.url }}" >> $GITHUB_OUTPUT
           echo "::notice::URL: ${{ steps.vercel-deploy.outputs.url }}"
 
   ingestor:
