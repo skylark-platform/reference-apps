@@ -8,6 +8,7 @@ on:
   push:
 concurrency:
   group: deploy-vercel-${{ github.ref }}
+  cancel-in-progress: true
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'preview' }}
@@ -45,10 +46,6 @@ jobs:
     name: Deploy (${{ matrix.apps.name }})
     runs-on: ubuntu-latest
     needs: prepare
-    defaults:
-      run:
-        shell: bash
-        working-directory: apps/${{ matrix.apps.dir }}
     strategy:
       fail-fast: false
       matrix:
