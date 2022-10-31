@@ -42,16 +42,22 @@ jobs:
           echo "::set-output name=branch::$GitBranch"
 
   deploy:
-    name: Deploy (${ matrix.apps.name })
+    name: Deploy (${{ matrix.apps.name }})
     runs-on: ubuntu-latest
     needs: prepare
+    defaults:
+      run:
+        shell: bash
+        working-directory: apps/${{ matrix.apps.dir }}
     strategy:
       fail-fast: false
       matrix:
         apps:
         - name: SaaS
+          dir: saas
           vercel-project-secret-name: VERCEL_PROJECT_ID_SAAS
         - name: V8
+          dir: media
           vercel-project-secret-name: VERCEL_PROJECT_ID_MEDIA
     env:
       VERCEL_PROJECT_ID: ${{ secrets[matrix.apps.vercel-project-secret-name] }}
@@ -71,16 +77,25 @@ jobs:
       - name: Deploy to Vercel
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
 
-  ingestor-saas:
-    name: Content Ingestor (SaaS)
+  ingestor:
+    name: Content Ingestor (${{ matrix.apps.name }})
     runs-on: ubuntu-latest
     needs: prepare
+    strategy:
+      fail-fast: false
+      matrix:
+        apps:
+        - name: SaaS
+          vercel-project-secret-name: VERCEL_PROJECT_ID_SAAS
+        - name: V8
+          vercel-project-secret-name: VERCEL_PROJECT_ID_MEDIA
     env:
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_SAAS }}
+      VERCEL_PROJECT_ID: ${{ secrets[matrix.apps.vercel-project-secret-name] }}
     steps:
       - uses: actions/checkout@v3
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
+      # We're using the environment variables stored on Vercel. So we fetch and then use dotenv to output them into the runner
       - name: Pull Vercel Environment Information
         run: vercel env pull --yes --environment=${{ env.VERCEL_ENVIRONMENT }} --token=${{ secrets.VERCEL_TOKEN }}
       - id: dotenv
@@ -89,8 +104,15 @@ jobs:
         with:
           airtable-api-key: ${{ steps.dotenv.outputs.airtable_api_key }}
           airtable-base-id: ${{ steps.dotenv.outputs.airtable_base_id }}
-          skylark-api-url: ${{ steps.dotenv.outputs.next_public_saas_api_endpoint }}
+          skylark-api-url: ${{ matrix.apps.name == 'SaaS' && steps.dotenv.outputs.next_public_saas_api_endpoint || steps.dotenv.outputs.next_public_skylark_api_url }}
+          cognito-aws-region: ${{ steps.dotenv.outputs.cognito_aws_region }}
+          cognito-client-id: ${{ steps.dotenv.outputs.cognito_client_id }}
+          cognito-user-pool-id: ${{ steps.dotenv.outputs.cognito_user_pool_id }}
+          cognito-identity-pool-id: ${{ steps.dotenv.outputs.cognito_identity_pool_id }}
+          amplify-storage-bucket: ${{ steps.dotenv.outputs.amplify_storage_bucket }}
+          cognito-email: ${{ steps.dotenv.outputs.cognito_email }}
+          cognito-password: ${{ steps.dotenv.outputs.cognito_password }}
           create-additional-objects: "true"
-          saas-ingest: "true"
+          saas-ingest: ${{ matrix.apps.name == 'SaaS' && 'true' || 'false' }}
           saas-api-token: ${{ steps.dotenv.outputs.next_public_saas_api_key }}
           saas-account-id: ${{ needs.prepare.outputs.git-branch }}
