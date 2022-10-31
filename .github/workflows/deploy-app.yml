@@ -1,9 +1,11 @@
 name: AWS Deployment
 on:
-  push:
-    branches:
-      - main
-  pull_request:
+# Disabled - using Vercel for development
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+  workflow_dispatch:
 concurrency:
   group: deploy-aws-${{ github.ref }}
 env:

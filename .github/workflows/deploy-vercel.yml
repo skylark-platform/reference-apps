@@ -1,17 +1,17 @@
 name: Vercel Deployment
-# on:
-#   push:
-#     branches:
-#       - main
-#   pull_request:
 on:
   push:
+    branches:
+      - main
+  pull_request:
 concurrency:
   group: deploy-vercel-${{ github.ref }}
   cancel-in-progress: true
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'preview' }}
+  pr-comment-id: reference-apps-deployment
+  pr-comment-title: "Reference Apps Deployment"
 jobs:
   prepare:
     name: Prepare
@@ -20,6 +20,13 @@ jobs:
       git-branch: ${{ steps.get-branch.outputs.branch }}
     steps:
       - uses: actions/checkout@v3
+      - name: Comment building status on PR
+        uses: ostmodern/comment-url-on-pr@v1
+        with:
+          title: ${{ env.pr-comment-title }}
+          comment_id: ${{ env.pr-comment-id }}
+          status: building
+          github_token: ${{ github.token }}
       - name: Get branch
         id: get-branch
         run: |
@@ -39,8 +46,8 @@ jobs:
 
           echo "Git Ref: $GitRef"
           echo "Git Branch Name: $GitBranch"
-
-          echo "::set-output name=branch::$GitBranch"
+          echo "branch=$GitBranch" >> $GITHUB_OUTPUT
+          echo "::notice::SaaS Account ID: $GitBranch"
 
   deploy:
     name: Deploy (${{ matrix.apps.name }})
@@ -75,9 +82,9 @@ jobs:
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} > deployment-url.txt
       - name: Output Deployment URL
         run: |
-          cat deployment-url.txt
-          echo "---"
-          tail -n 1 deployment-url.txt
+          URL=$(cat deployment-url.txt)
+          echo "${{ matrix.apps.dir }}-url=$URL" >> $GITHUB_OUTPUT
+          echo "::notice::${{ matrix.apps.name }} URL: $URL"
 
   ingestor:
     name: Content Ingestor (${{ matrix.apps.name }})
@@ -117,4 +124,48 @@ jobs:
           create-additional-objects: "true"
           saas-ingest: ${{ matrix.apps.name == 'SaaS' && 'true' || 'false' }}
           saas-api-token: ${{ steps.dotenv.outputs.next_public_saas_api_key }}
+          # Use git-branch as account-id so it matches Vercel
           saas-account-id: ${{ needs.prepare.outputs.git-branch }}
+  signal:
+    name: Signal
+    runs-on: ubuntu-latest
+    needs: [deploy, ingestor]
+    if: always()
+    steps:
+      - uses: actions/github-script@v6
+        id: additional-urls
+        with:
+          result-encoding: string
+          script: |
+            const json = JSON.stringify([
+              { label: "Media", value: "${{ needs.deploy.outputs.media-url }}" },
+              { label: "SaaS", value: "${{ needs.deploy.outputs.saas-url }}" },
+            ]);
+            return json;
+      - uses: technote-space/workflow-conclusion-action@v2
+      - name: Comment status on PR
+        uses: ostmodern/comment-url-on-pr@v1
+        with:
+          title: ${{ env.pr-comment-title }}
+          comment_id: ${{ env.pr-comment-id }}
+          status: ${{ env.WORKFLOW_CONCLUSION }}
+          github_token: ${{ github.token }}
+          additional_urls: ${{ steps.additional-urls.outputs.result }}
+
+  lighthouse-check:
+    name: Lighthouse
+    runs-on: ubuntu-latest
+    needs: [deploy, ingestor]
+    steps:
+      - uses: actions/checkout@master
+      - name: Lighthouse
+        uses: foo-software/lighthouse-check-action@master
+        with:
+          device: "desktop"
+          urls: ${{ needs.deploy.outputs.media-url }},${{ needs.deploy.outputs.media-url }}/movies,${{ needs.deploy.outputs.saas-url }},${{ needs.deploy.outputs.saas-url }}/movies
+          gitHubAccessToken: ${{ github.token }}
+          slackWebhookUrl: ${{ secrets.SLACK_ALERTS_FE_TESTING }}
+          gitAuthor: ${{ github.actor }}
+          gitBranch: ${{ github.repositoryUrl }}
+          sha: ${{ github.sha }}
+          prCommentEnabled: true
