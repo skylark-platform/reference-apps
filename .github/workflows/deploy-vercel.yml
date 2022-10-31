@@ -63,11 +63,6 @@ jobs:
     env:
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_SAAS }}
       VERCEL_ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'preview' }}
-    strategy:
-      fail-fast: false
-      matrix:
-        version:
-          - "SaaS"
     steps:
       - uses: actions/checkout@v3
       - name: Install Vercel CLI
@@ -75,7 +70,7 @@ jobs:
       - name: Pull Vercel Environment Information
         run: vercel env pull --yes --environment=${{ env.VERCEL_ENVIRONMENT }} --token=${{ secrets.VERCEL_TOKEN }}
       - id: dotenv
-        uses: ./.github/actions/dotenv-action
+        uses: falti/dotenv-action@v1.0.1
       - uses: ./.github/actions/run-ingestor
         with:
           airtable-api-key: ${{ steps.dotenv.outputs.airtable_api_key }}
