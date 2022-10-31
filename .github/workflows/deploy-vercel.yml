@@ -60,12 +60,12 @@ jobs:
       fail-fast: false
       matrix:
         apps:
-        - name: SaaS
-          dir: saas
-          vercel-project-secret-name: VERCEL_PROJECT_ID_SAAS
-        - name: V8
-          dir: media
-          vercel-project-secret-name: VERCEL_PROJECT_ID_MEDIA
+          - name: SaaS
+            dir: saas
+            vercel-project-secret-name: VERCEL_PROJECT_ID_SAAS
+          - name: V8
+            dir: media
+            vercel-project-secret-name: VERCEL_PROJECT_ID_MEDIA
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/vercel-deploy
@@ -89,10 +89,10 @@ jobs:
       fail-fast: false
       matrix:
         apps:
-        - name: SaaS
-          vercel-project-secret-name: VERCEL_PROJECT_ID_SAAS
-        - name: V8
-          vercel-project-secret-name: VERCEL_PROJECT_ID_MEDIA
+          - name: SaaS
+            vercel-project-secret-name: VERCEL_PROJECT_ID_SAAS
+          - name: V8
+            vercel-project-secret-name: VERCEL_PROJECT_ID_MEDIA
     env:
       VERCEL_PROJECT_ID: ${{ secrets[matrix.apps.vercel-project-secret-name] }}
     steps:
