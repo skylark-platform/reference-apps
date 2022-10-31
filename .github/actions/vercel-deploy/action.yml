@@ -1,0 +1,55 @@
+name: Vercel Deploy
+description: Deploys a reference app to Vercel
+inputs:
+  vercel-org-id:
+    description: Vercel Organisation ID
+    required: true
+  vercel-project-id:
+    description: Vercel Project ID
+    required: true
+  vercel-token:
+    description: Vercel Access Token
+    required: true
+  vercel-environment:
+    description: Vercel environment (production / preview)
+    required: false
+    default: "preview"
+  saas-account-id:
+    description: The Account ID for the SaaS deployment
+    required: false
+outputs:
+  url:
+    description: The deployed app URL
+    value: ${{ steps.deployment-url.outputs.url }}
+runs:
+  using: composite
+  steps:
+    - run: |
+        echo "VERCEL_ORG_ID=${{ inputs.vercel-org-id }}" >> $GITHUB_ENV
+        echo "VERCEL_PROJECT_ID=${{ inputs.vercel-project-id }}" >> $GITHUB_ENV
+        echo "VERCEL_ENVIRONMENT=${{ inputs.production == 'true' && 'production' || 'preview' }}" >> $GITHUB_ENV
+        echo "NEXT_PUBLIC_SAAS_ACCOUNT_ID=${{ inputs.saas-account-id }}" >> $GITHUB_ENV
+      shell: bash
+    - name: Install Vercel CLI
+      shell: bash
+      run: npm install --global vercel@latest
+    - name: Pull Vercel Environment Information
+      shell: bash
+      run: vercel pull --yes --environment=${{ env.VERCEL_ENVIRONMENT }} --token=${{ inputs.vercel-token }}
+    - name: Development Build
+      shell: bash
+      if: inputs.production != 'true'
+      run: vercel build --token=${{ inputs.vercel-token }}
+    - name: Production build
+      shell: bash
+      if: inputs.production == 'true'
+      run: vercel build --prod --token=${{ inputs.vercel-token }}
+    - name: Deploy to Vercel
+      shell: bash
+      run: vercel deploy --prebuilt --token=${{ inputs.vercel-token }} > deployment-url.txt
+    - name: Output Deployment URL
+      id: deployment-url
+      shell: bash
+      run: |
+        URL=$(cat deployment-url.txt)
+        echo "url=$URL" >> $GITHUB_OUTPUT

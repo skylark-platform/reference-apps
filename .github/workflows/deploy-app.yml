@@ -1,11 +1,13 @@
-name: Deploy App
+name: AWS Deployment
 on:
-  push:
-    branches:
-      - main
-  pull_request:
+  # Disabled - using Vercel for development
+  #   push:
+  #     branches:
+  #       - main
+  #   pull_request:
+  workflow_dispatch:
 concurrency:
-  group: deploy-app-${{ github.ref }}
+  group: deploy-aws-${{ github.ref }}
 env:
   pr-comment-id: reference-apps-deployment
   pr-comment-title: "Reference Apps Deployment"
