@@ -53,6 +53,9 @@ jobs:
     name: Deploy (${{ matrix.apps.name }})
     runs-on: ubuntu-latest
     needs: prepare
+    outputs:
+      media-url: ${{ steps.urls.outputs.media-url }}
+      saas-url: ${{ steps.urls.outputs.saas-url }}
     strategy:
       fail-fast: false
       matrix:
@@ -73,7 +76,8 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-environment: ${{ env.VERCEL_ENVIRONMENT }}
           saas-account-id: ${{ needs.prepare.outputs.git-branch }}
-      - run: |
+      - id: urls
+        run: |
           echo "${{ matrix.apps.dir }}-url=${{ steps.vercel-deploy.outputs.url }}" >> $GITHUB_OUTPUT
           echo "::notice::URL: ${{ steps.vercel-deploy.outputs.url }}"
 
