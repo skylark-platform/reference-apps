@@ -10,7 +10,9 @@
     "lint": "eslint .",
     "test": "jest --config=jest.config.js",
     "tsc": "tsc",
-    "ingest": "cd ../../packages/ingestor && yarn ingest:with-sets"
+    "ingest": "cd ../../packages/ingestor && yarn ingest:with-sets",
+    "vercel:link": "vercel link -p reference-apps-media --scope skylark-platform --yes",
+    "vercel:env": "vercel env pull .env.local --yes"
   },
   "dependencies": {
     "@aws-amplify/auth": "^4.6.1",

@@ -36,6 +36,9 @@ runs:
     - name: Pull Vercel Environment Information
       shell: bash
       run: vercel pull --yes --environment=${{ inputs.vercel-environment }} --token=${{ inputs.vercel-token }}
+    - name: Pull Vercel Environment Variables to .env file
+      shell: bash
+      run: vercel env pull --yes --environment=${{ inputs.vercel-environment }} --token=${{ inputs.vercel-token }} .env.local
     - name: Development Build
       shell: bash
       if: inputs.production != 'true'

@@ -21,7 +21,9 @@
     "prepare": "husky install",
     "storybook": "lerna run --stream storybook",
     "dev": "lerna run --parallel dev",
-    "ingest": "lerna run --stream ingest"
+    "ingest": "lerna run --stream ingest",
+    "vercel:link": "lerna run --parallel vercel:link",
+    "vercel:env": "lerna run --parallel vercel:env"
   },
   "devDependencies": {
     "@lerna/exec": "^4.0.0",

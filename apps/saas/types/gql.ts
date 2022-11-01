@@ -828,6 +828,7 @@ export type ImageInput = {
   data_source_id?: InputMaybe<Scalars["String"]>;
   description?: InputMaybe<Scalars["String"]>;
   external_id?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   title?: InputMaybe<Scalars["String"]>;
   type?: InputMaybe<ImageType>;
   url?: InputMaybe<Scalars["String"]>;
@@ -2970,6 +2971,7 @@ export type _RatingLanguage = _Language & {
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
   slug?: Maybe<Scalars["String"]>;
+  title?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["Int"]>;
 };
 
