@@ -9,7 +9,6 @@ concurrency:
   cancel-in-progress: true
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'preview' }}
   pr-comment-id: reference-apps-deployment
   pr-comment-title: "Reference Apps Deployment"
 jobs:
@@ -53,6 +52,8 @@ jobs:
     name: Deploy (${{ matrix.apps.name }})
     runs-on: ubuntu-latest
     needs: prepare
+    env:
+      VERCEL_ENVIRONMENT: ${{ needs.prepare.outputs.git-branch == 'main' && 'production' || 'preview' }}
     outputs:
       media-url: ${{ steps.urls.outputs.media-url }}
       saas-url: ${{ steps.urls.outputs.saas-url }}
@@ -85,6 +86,8 @@ jobs:
     name: Content Ingestor (${{ matrix.apps.name }})
     runs-on: ubuntu-latest
     needs: prepare
+    env:
+      VERCEL_ENVIRONMENT: ${{ needs.prepare.outputs.git-branch == 'main' && 'production' || 'preview' }}
     strategy:
       fail-fast: false
       matrix:
