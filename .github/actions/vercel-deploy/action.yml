@@ -14,6 +14,9 @@ inputs:
     description: Vercel environment (production / preview)
     required: false
     default: "preview"
+  dir:
+    description: App directory
+    required: true
   saas-account-id:
     description: The Account ID for the SaaS deployment
     required: false
@@ -38,6 +41,7 @@ runs:
       run: vercel pull --yes --environment=${{ inputs.vercel-environment }} --token=${{ inputs.vercel-token }}
     - name: Pull Vercel Environment Variables to .env file
       shell: bash
+      working-directory: ${{ inputs.dir }}
       run: vercel env pull --yes --environment=${{ inputs.vercel-environment }} --token=${{ inputs.vercel-token }} .env.local
     - name: Development Build
       shell: bash

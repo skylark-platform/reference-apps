@@ -75,6 +75,7 @@ jobs:
           vercel-project-id: ${{ secrets[matrix.apps.vercel-project-secret-name] }}
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-environment: ${{ needs.prepare.outputs.vercel-environment }}
+          dir: apps/${{ matrix.apps.dir }}
           saas-account-id: ${{ needs.prepare.outputs.git-branch }}
       - id: urls
         run: |
