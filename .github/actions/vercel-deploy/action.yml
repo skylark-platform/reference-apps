@@ -58,7 +58,7 @@ runs:
     - name: Deploy to Vercel (Production)
       shell: bash
       if: inputs.vercel-environment == 'production'
-      run: vercel deploy --prebuilt --token=${{ inputs.vercel-token }} > deployment-url.txt
+      run: vercel deploy --prebuilt --prod --token=${{ inputs.vercel-token }} > deployment-url.txt
     - name: Output Deployment URL
       id: deployment-url
       shell: bash
