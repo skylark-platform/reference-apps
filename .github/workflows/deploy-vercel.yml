@@ -88,6 +88,7 @@ jobs:
     needs: prepare
     env:
       VERCEL_ENVIRONMENT: ${{ needs.prepare.outputs.git-branch == 'main' && 'production' || 'preview' }}
+      VERCEL_PROJECT_ID: ${{ secrets[matrix.apps.vercel-project-secret-name] }}
     strategy:
       fail-fast: false
       matrix:
@@ -96,8 +97,6 @@ jobs:
             vercel-project-secret-name: VERCEL_PROJECT_ID_SAAS
           - name: V8
             vercel-project-secret-name: VERCEL_PROJECT_ID_MEDIA
-    env:
-      VERCEL_PROJECT_ID: ${{ secrets[matrix.apps.vercel-project-secret-name] }}
     steps:
       - uses: actions/checkout@v3
       - name: Install Vercel CLI
