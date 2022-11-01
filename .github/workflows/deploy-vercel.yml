@@ -4,6 +4,8 @@ on:
     branches:
       - main
   pull_request:
+  schedule:
+    - cron: "0 8 * * 1-5"
 concurrency:
   group: deploy-vercel-${{ github.ref }}
   cancel-in-progress: true
