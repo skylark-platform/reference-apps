@@ -20,6 +20,7 @@ jobs:
     outputs:
       git-branch: ${{ steps.get-branch.outputs.branch }}
       vercel-environment: ${{ steps.get-branch.outputs.branch == 'main' && 'production' || 'preview' }}
+      saas-account-id: ${{ steps.create-account-id.outputs.saas-account-id  }}
     steps:
       - uses: actions/checkout@v3
       - name: Comment building status on PR
@@ -49,7 +50,14 @@ jobs:
           echo "Git Ref: $GitRef"
           echo "Git Branch Name: $GitBranch"
           echo "branch=$GitBranch" >> $GITHUB_OUTPUT
-          echo "::notice::SaaS Account ID: $GitBranch"
+      - name: SaaS Account ID
+        id: create-account-id
+        env:
+          # Use git-branch as account-id so it matches Vercel
+          ACCOUNT_ID: ${{ steps.get-branch.outputs.branch == 'main' && 'showcase' || steps.get-branch.outputs.branch }}
+        run: |
+          echo "saas-account-id=$ACCOUNT_ID" >> $GITHUB_OUTPUT
+          echo "::notice::SaaS Account ID: $ACCOUNT_ID"
 
   deploy:
     name: Deploy (${{ matrix.apps.name }})
@@ -78,7 +86,7 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-environment: ${{ needs.prepare.outputs.vercel-environment }}
           dir: apps/${{ matrix.apps.dir }}
-          saas-account-id: ${{ needs.prepare.outputs.git-branch }}
+          saas-account-id: ${{ needs.prepare.outputs.saas-account-id }}
       - id: urls
         run: |
           echo "${{ matrix.apps.dir }}-url=${{ steps.vercel-deploy.outputs.url }}" >> $GITHUB_OUTPUT
@@ -122,8 +130,7 @@ jobs:
           create-additional-objects: "true"
           saas-ingest: ${{ matrix.apps.name == 'SaaS' && 'true' || 'false' }}
           saas-api-token: ${{ steps.dotenv.outputs.next_public_saas_api_key }}
-          # Use git-branch as account-id so it matches Vercel
-          saas-account-id: ${{ needs.prepare.outputs.git-branch }}
+          saas-account-id: ${{ needs.prepare.outputs.saas-account-id }}
 
   signal:
     name: Signal
