@@ -68,7 +68,4 @@ export interface GraphQLDimension {
   title: string;
   slug: string;
   description?: string;
-  _meta: {
-    values: GraphQLBaseObject[];
-  };
 }

@@ -48,17 +48,61 @@ const dimensionsConfig: { slug: DimensionTypes; title: string }[] = [
   },
 ];
 
-const getExistingDimensions = async () => {
+const getExistingDimensions = async (
+  nextToken?: string
+): Promise<GraphQLDimension[]> => {
   const query = {
     query: {
       __name: "listDimensions",
       listDimensions: {
-        uid: true,
-        title: true,
-        slug: true,
-        description: true,
-        _meta: {
-          values: {
+        __args: {
+          limit: 50,
+          next_token: nextToken || "",
+        },
+        objects: {
+          uid: true,
+          title: true,
+          slug: true,
+          description: true,
+        },
+        count: true,
+        next_token: true,
+      },
+    },
+  };
+
+  const graphQLQuery = jsonToGraphQLQuery(query, { pretty: true });
+
+  const data = await graphQLClient.request<{
+    listDimensions: { objects: GraphQLDimension[]; next_token: string };
+  }>(graphQLQuery);
+
+  if (data.listDimensions.next_token) {
+    const some = await getExistingDimensions(data.listDimensions.next_token);
+    return [...data.listDimensions.objects, ...some];
+  }
+
+  return data.listDimensions.objects;
+};
+
+const getExistingDimensionValues = async (
+  slug: string,
+  nextToken?: string
+): Promise<GraphQLBaseObject[]> => {
+  const query = {
+    query: {
+      __name: "getDimensionValues",
+      getDimension: {
+        __args: {
+          dimension_id: slug, // or uid, slug OR we can use external ID
+        },
+        values: {
+          __args: {
+            next_token: nextToken || "",
+          },
+          count: true,
+          next_token: true,
+          objects: {
             uid: true,
             title: true,
             slug: true,
@@ -71,47 +115,59 @@ const getExistingDimensions = async () => {
   const graphQLQuery = jsonToGraphQLQuery(query, { pretty: true });
 
   const data = await graphQLClient.request<{
-    listDimensions: GraphQLDimension[];
+    getDimension: {
+      values: { next_token: string; objects: GraphQLBaseObject[] };
+    };
   }>(graphQLQuery);
 
-  return data.listDimensions;
+  const { objects } = data.getDimension.values;
+
+  if (data.getDimension.values.next_token) {
+    const some = await getExistingDimensionValues(
+      slug,
+      data.getDimension.values.next_token
+    );
+    return [...objects, ...some];
+  }
+
+  return objects;
 };
 
 export const createDimensions = async () => {
   const existingTypes: GraphQLDimension[] = await getExistingDimensions();
+
   const existingSlugs = existingTypes.map(({ slug }) => slug);
 
-  const dimensionsToCreate = dimensionsConfig.filter(
-    ({ slug }) => !existingSlugs.includes(slug)
-  );
-
-  const operations = dimensionsToCreate.reduce(
+  const operations = dimensionsConfig.reduce(
     (previousOperations, { slug, title }) => {
-      const operation = {
-        __aliasFor: "createDimension",
-        __args: {
-          dimension: {
-            slug,
+      const objectExists = existingSlugs.includes(slug);
+
+      const dimension = objectExists
+        ? { title }
+        : {
             title,
-          },
-        },
-        uid: true,
-        title: true,
-        slug: true,
-        description: true,
-      };
+            slug,
+          };
+
+      const { operation, method } = createGraphQLOperation(
+        "Dimension",
+        objectExists,
+        { dimension },
+        { dimension_id: slug }
+      );
 
       const updatedOperations: { [key: string]: object } = {
         ...previousOperations,
-        [`createDimension${title.replace(/\s/g, "")}`]: operation,
+        [`${method}${title.replace(/\s/g, "")}`]: operation,
       };
+
       return updatedOperations;
     },
     {} as { [key: string]: object }
   );
 
   const arr = await mutateMultipleObjects<GraphQLDimension>(
-    "createDimensions",
+    "createOrUpdateDimensions",
     operations
   );
 
@@ -129,8 +185,10 @@ const createOrUpdateDimensionValues = async (
     throw new Error(`Dimension: ${type} does not exist in Skylark`);
   }
 
-  // eslint-disable-next-line no-underscore-dangle
-  const existingObjectSlugs = dimension._meta.values.map(({ slug }) => slug);
+  const existingDimensionValues = await getExistingDimensionValues(
+    dimension.slug
+  );
+  const existingObjectSlugs = existingDimensionValues.map(({ slug }) => slug);
 
   const operations = airtableRecords.reduce(
     (previousOperations, { fields, id }) => {
@@ -241,13 +299,6 @@ export const createOrUpdateAvailability = async (
   const externalIds = schedules.map(({ id }) => id);
   const existingObjects = await getExistingObjects("Availability", externalIds);
 
-  if (existingObjects.length > 0) {
-    // eslint-disable-next-line no-console
-    console.warn(
-      "Updating Availability is currently broken\n  1. Updates timeout as all objects have to be updated with the new schedule (SL-2260)\nWill create any new availabilities, but won't update existing ones."
-    );
-  }
-
   const schedulesToCreate = schedules.filter(
     ({ id }) => !existingObjects.includes(id)
   );
@@ -267,9 +318,11 @@ export const createOrUpdateAvailability = async (
         start?: string;
         end?: string;
         dimensions?: {
-          dimension_slug: DimensionTypes;
-          value_slugs: string[];
-        }[];
+          link: {
+            dimension_slug: DimensionTypes;
+            value_slugs: string[];
+          }[];
+        };
       } = {
         title: fields.title,
         slug: fields.slug,
@@ -323,7 +376,9 @@ export const createOrUpdateAvailability = async (
         ({ value_slugs }) => value_slugs.length > 0
       );
       if (filteredDimensions.length > 0) {
-        availabilityInput.dimensions = filteredDimensions;
+        availabilityInput.dimensions = {
+          link: filteredDimensions,
+        };
       }
 
       // Only include start / end field when it exists in Airtable, Skylark errors otherwise

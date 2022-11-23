@@ -279,7 +279,7 @@ const main = async () => {
       `Default license: ${
         UNLICENSED_BY_DEFAULT || !defaultSchedule
           ? "undefined"
-          : `${defaultSchedule.fields.slug as string} (${defaultSchedule.id})`
+          : `${defaultSchedule?.fields.slug as string} (${defaultSchedule.id})`
       }`
     );
 
