@@ -20,6 +20,7 @@ import {
   getLanguageCodesFromAirtable,
 } from "./utils";
 import { getMediaObjectRelationships } from "./create";
+import { logUpdatingSetsNotImplemented } from "../classic/logging";
 
 interface SetItem {
   uid: string;
@@ -201,8 +202,7 @@ export const createOrUpdateGraphQLSet = async (
   const setExists =
     (await getExistingObjects("Set", [set.externalId])).length > 0;
   if (setExists) {
-    // eslint-disable-next-line no-console
-    console.warn("Updating sets is not implemented");
+    logUpdatingSetsNotImplemented();
     return {} as GraphQLBaseObject;
   }
 

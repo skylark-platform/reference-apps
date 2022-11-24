@@ -12,3 +12,5 @@ export const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY as string;
 export const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID as string;
 export const UNLICENSED_BY_DEFAULT =
   (process.env.DEFAULT_UNLICENSED as string) === "true";
+export const CREATE_ONLY = process.env.CREATE_ONLY === "true";
+export const CHECK_MISSING = (process.env.CHECK_MISSING as string) === "true";

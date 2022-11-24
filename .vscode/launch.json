@@ -14,7 +14,8 @@
       "type": "node",
       "env": {
         "CREATE_SETS": "true",
-        "INGEST_TO_SAAS_SKYLARK": "false"
+        "INGEST_TO_SAAS_SKYLARK": "false",
+        "CREATE_ONLY": "true"
       }
     },
     {

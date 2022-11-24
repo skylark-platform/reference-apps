@@ -4,6 +4,8 @@ import { authenticatedSkylarkRequest } from "./api";
 import { convertAirtableFieldsToSkylarkObject } from "./create";
 import { ApiAirtableFields, Metadata } from "../../interfaces";
 import { ApiContentObjectType } from "../../types";
+import { CHECK_MISSING, CREATE_ONLY } from "../../constants";
+import { logFoundAndMissingObjects } from "./logging";
 
 /**
  * getContentTypes - retrieves all content types of the given type from Skylark
@@ -32,35 +34,77 @@ export const createOrUpdateContentTypes = async <T extends ApiBaseObject>(
   type: ApiContentObjectType,
   records: Record<FieldSet>[],
   metadata: Metadata
-) => {
+): Promise<(T & ApiAirtableFields)[]> => {
+  if (records.length === 0) {
+    return [];
+  }
+
   const existingTypes = await getContentTypes<T>(type);
+  const existingSlugs = existingTypes?.map(({ slug }) => slug);
+
+  const existingObjectsWithAirtableId = existingTypes
+    ? existingTypes.map((object) => {
+        const matchingRecord = records.find(
+          ({ fields: { slug } }) => slug === object.slug
+        );
+        const airtableId = matchingRecord ? matchingRecord.id : "";
+        return {
+          ...object,
+          airtableId,
+        };
+      })
+    : [];
+
+  logFoundAndMissingObjects(type, records.length, existingTypes?.length || 0);
+
+  if (CHECK_MISSING) {
+    const allRecordsExist = records.every(({ fields: { slug } }) =>
+      existingSlugs?.includes((slug as string) || "")
+    );
+    if (!allRecordsExist || !existingTypes) {
+      process.exit(1);
+    }
+    return existingObjectsWithAirtableId;
+  }
+
+  const recordsToCreateUpdate = CREATE_ONLY
+    ? records.filter(
+        ({ fields: { slug } }) => !existingSlugs?.includes(slug as string)
+      )
+    : records;
+
   const contentTypes = await Promise.all(
-    records.map(async (record): Promise<T & ApiAirtableFields> => {
-      const existingContentObject = existingTypes?.find(
-        (existingType) => existingType.slug === record.fields.slug
-      );
+    recordsToCreateUpdate.map(
+      async (record): Promise<T & ApiAirtableFields> => {
+        const existingContentObject = existingTypes?.find(
+          (existingType) => existingType.slug === record.fields.slug
+        );
 
-      const contentTypeObject = convertAirtableFieldsToSkylarkObject(
-        record.id,
-        record.fields,
-        metadata
-      );
+        const contentTypeObject = convertAirtableFieldsToSkylarkObject(
+          record.id,
+          record.fields,
+          metadata
+        );
 
-      const url = existingContentObject
-        ? `/api/${type}/${existingContentObject.uid}`
-        : `/api/${type}/`;
-      const { data: contentType } = await authenticatedSkylarkRequest<T>(url, {
-        method: existingContentObject ? "PUT" : "POST",
-        data: {
-          ...existingContentObject,
-          ...contentTypeObject,
-          uid: existingContentObject?.uid || "",
-          self: existingContentObject?.self || "",
-        },
-      });
+        const url = existingContentObject
+          ? `/api/${type}/${existingContentObject.uid}`
+          : `/api/${type}/`;
+        const { data: contentType } = await authenticatedSkylarkRequest<T>(
+          url,
+          {
+            method: existingContentObject ? "PUT" : "POST",
+            data: {
+              ...existingContentObject,
+              ...contentTypeObject,
+              uid: existingContentObject?.uid || "",
+              self: existingContentObject?.self || "",
+            },
+          }
+        );
 
-      return { ...contentType, airtableId: record.id };
-    })
+        return { ...contentType, airtableId: record.id };
+      }
+    )
   );
-  return contentTypes as (T & ApiAirtableFields)[];
+  return [...existingObjectsWithAirtableId, ...contentTypes];
 };

@@ -46,6 +46,10 @@ export const getAlwaysSchedule = async (): Promise<ApiSchedule> => {
  * @returns all dimensions from a given table
  */
 const createOrUpdateDimensions = async (table: Record<FieldSet>[]) => {
+  if (table.length === 0) {
+    return [];
+  }
+
   const objectData = table.map(({ fields, id }) => ({
     uid: "",
     self: "",

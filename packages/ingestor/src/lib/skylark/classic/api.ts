@@ -1,7 +1,9 @@
 import { ApiBatchResponse, SKYLARK_API } from "@skylark-reference-apps/lib";
-import axios, { AxiosRequestConfig, AxiosRequestHeaders } from "axios";
+import axios, { AxiosRequestConfig, AxiosRequestHeaders, Method } from "axios";
 import { chunk } from "lodash";
 import { getToken } from "../../amplify";
+import { CHECK_MISSING } from "../../constants";
+import { APIBatchRequestData } from "../../interfaces";
 
 /**
  * authenticatedSkylarkRequest - makes a request to Skylark using the Bearer token from Amplify
@@ -11,8 +13,18 @@ import { getToken } from "../../amplify";
  */
 export const authenticatedSkylarkRequest = async <T>(
   path: string,
-  config?: AxiosRequestConfig
+  config?: AxiosRequestConfig & { method: Method }
 ) => {
+  const isBatchRequest =
+    path.startsWith("/api/batch") && config?.method === "POST";
+  if (CHECK_MISSING && config?.method !== "GET" && !isBatchRequest) {
+    throw new Error(
+      `Non GET method used in CHECK_MISSING mode - URL: ${path}, METHOD: ${
+        config?.method || "undefined"
+      }`
+    );
+  }
+
   const token = await getToken();
   const url = new URL(path, SKYLARK_API).toString();
 
@@ -53,11 +65,20 @@ const checkBatchRequestWasSuccessful = (
  * @returns
  */
 export const batchSkylarkRequest = async <T>(
-  data: object[],
+  data: APIBatchRequestData,
   config?: {
     ignore404s?: boolean;
   }
 ): Promise<{ batchRequestId: string; data: T; code: number }[]> => {
+  if (CHECK_MISSING) {
+    const allGetMethods = data.every(({ method }) => method === "GET");
+    if (!allGetMethods) {
+      throw new Error(
+        `Non GET method used in CHECK_MISSING mode (within batch request)`
+      );
+    }
+  }
+
   const chunks = chunk(data, 20);
 
   // Use a for loop here to limit the number of requests made at once

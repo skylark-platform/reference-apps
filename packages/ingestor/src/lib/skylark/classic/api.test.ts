@@ -49,7 +49,10 @@ describe("skylark.api", () => {
         title: "title",
         slug: "slug",
       };
-      await authenticatedSkylarkRequest("/api/episodes", { data });
+      await authenticatedSkylarkRequest("/api/episodes", {
+        method: "PUT",
+        data,
+      });
 
       expect(axiosRequest).toBeCalledWith({
         headers: {
@@ -57,6 +60,7 @@ describe("skylark.api", () => {
           "Cache-Control": "no-cache",
         },
         url: "https://skylarkplatform.io/api/episodes",
+        method: "PUT",
         data,
       });
     });
@@ -76,7 +80,9 @@ describe("skylark.api", () => {
       axiosRequest.mockImplementation(() => ({ data }));
 
       // Act.
-      await batchSkylarkRequest([{ data: "data" }]);
+      await batchSkylarkRequest([
+        { id: "batch-1", url: "/api/episode", method: "PUT", data: "data" },
+      ]);
 
       // Assert.
       expect(axiosRequest).toBeCalledWith({
@@ -86,7 +92,9 @@ describe("skylark.api", () => {
         },
         url: "https://skylarkplatform.io/api/batch/",
         method: "POST",
-        data: [{ data: "data" }],
+        data: [
+          { id: "batch-1", url: "/api/episode", method: "PUT", data: "data" },
+        ],
       });
     });
 
@@ -103,7 +111,11 @@ describe("skylark.api", () => {
       axiosRequest.mockImplementation(() => ({ data }));
 
       // Act.
-      await expect(batchSkylarkRequest([{ data: "data" }])).rejects.toThrow(
+      await expect(
+        batchSkylarkRequest([
+          { id: "batch-1", url: "/api/episode", method: "PUT", data: "data" },
+        ])
+      ).rejects.toThrow(
         `Batch request "request-id" failed with 500. Response body: {}`
       );
     });
