@@ -14,6 +14,10 @@ jest.mock("@aws-amplify/auth");
 jest.mock("@skylark-reference-apps/lib", () => ({
   SKYLARK_API: "https://skylarkplatform.io",
 }));
+jest.mock("./logging", () => ({
+  logFoundAndMissingObjects: jest.fn(),
+  logFoundObject: jest.fn(),
+}));
 
 const dimensions = [
   "affiliates",

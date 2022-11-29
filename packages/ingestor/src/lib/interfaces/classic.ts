@@ -12,6 +12,7 @@ import {
   ApiThemeGenre,
 } from "@skylark-reference-apps/lib";
 import { Record, FieldSet } from "airtable";
+import { Method } from "axios";
 
 export interface ApiEntertainmentObjectWithAirtableId
   extends ApiEntertainmentObject {
@@ -54,3 +55,10 @@ export interface Metadata {
     viewingContext: (ApiDimension & ApiAirtableFields)[];
   };
 }
+
+export type APIBatchRequestData = {
+  id: string;
+  method: Method;
+  url: string;
+  data?: string;
+}[];

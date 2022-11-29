@@ -14,7 +14,8 @@ import { authenticatedSkylarkRequest } from "./api";
  */
 export const getResources = async <T>(resource: string): Promise<T[]> => {
   const res = await authenticatedSkylarkRequest<{ objects?: T[] }>(
-    `/api/${resource}/`
+    `/api/${resource}/`,
+    { method: "GET" }
   );
   return res.data?.objects || [];
 };

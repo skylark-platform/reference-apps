@@ -49,7 +49,11 @@ import {
   signInToCognito,
   uploadToWorkflowServiceWatchBucket,
 } from "./lib/amplify";
-import { UNLICENSED_BY_DEFAULT } from "./lib/constants";
+import {
+  CHECK_MISSING,
+  CREATE_ONLY,
+  UNLICENSED_BY_DEFAULT,
+} from "./lib/constants";
 import {
   createGraphQLMediaObjects,
   createOrUpdateGraphQLCredits,
@@ -403,6 +407,12 @@ const main = async () => {
   } else {
     // eslint-disable-next-line no-console
     console.log(`Starting ingest to V8 Skylark: ${SKYLARK_API}`);
+    // eslint-disable-next-line no-console
+    if (CHECK_MISSING)
+      console.log("CHECK_MISSING mode ENABLED (will not create or update)");
+    // eslint-disable-next-line no-console
+    if (CREATE_ONLY)
+      console.log("CREATE_ONLY mode ENABLED (will not create or update)");
 
     configureAmplify();
 

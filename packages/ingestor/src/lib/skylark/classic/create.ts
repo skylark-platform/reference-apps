@@ -7,8 +7,11 @@ import {
   ApiPerson,
 } from "@skylark-reference-apps/lib";
 import { Attachment, FieldSet, Records, Record } from "airtable";
-import { compact, flatten, has, isArray, isEmpty, isString } from "lodash";
+import { Method } from "axios";
+import { flatten, has, isArray, isEmpty, isString, uniqBy } from "lodash";
+import { CHECK_MISSING, CREATE_ONLY } from "../../constants";
 import {
+  APIBatchRequestData,
   ApiEntertainmentObjectWithAirtableId,
   DynamicObjectConfig,
   Metadata,
@@ -16,6 +19,12 @@ import {
 import { ApiSkylarkObjectWithAllPotentialFields } from "../../types";
 import { authenticatedSkylarkRequest, batchSkylarkRequest } from "./api";
 import { getResourceByDataSourceId, getResourceByProperty } from "./get";
+import {
+  logFoundObject,
+  logFoundAndMissingObjects,
+  logMissingObject,
+  logMediaObjectsUploaded,
+} from "./logging";
 import {
   getScheduleUrlsFromMetadata,
   removeUndefinedPropertiesFromObject,
@@ -42,10 +51,25 @@ export const createOrUpdateObject = async <T extends ApiBaseObject>(
       ? await getResourceByDataSourceId<T>(type, lookup.value)
       : await getResourceByProperty<T>(type, lookup.property, lookup.value);
 
+  if (existingObject) logFoundObject(type, lookup.value, lookup.property);
+
+  if (CHECK_MISSING) {
+    if (!existingObject) {
+      logMissingObject(type, lookup.value, lookup.property);
+      // Exit when missing as we cannot continue
+      process.exit(1);
+    }
+    return existingObject;
+  }
+
+  if (CREATE_ONLY && existingObject) {
+    return existingObject;
+  }
+
   // Patch method is safer when updating objects, but the /api/images endpoint doesn't implement it
   const updateMethod = type === "images" ? "PUT" : "PATCH";
 
-  let method = existingObject ? updateMethod : "POST";
+  let method: Method = existingObject ? updateMethod : "POST";
   let url = `/api/${type}/${existingObject?.uid || ""}`;
 
   if (lookup.property === "data_source_id") {
@@ -76,16 +100,17 @@ export const bulkCreateOrUpdateObjectsWithLookup = async <
   objects: ApiSkylarkObjectWithAllPotentialFields[],
   objectTypes: { [id: string]: string },
   lookupMethod: "slug" | "title"
-) => {
+): Promise<T[]> => {
   const getBatchRequestData = objects.map((object) => {
     const type = objectTypes[object.data_source_id];
 
     const lookupValue = object[lookupMethod] as string;
     const url = `/api/${type}/?${lookupMethod}=${lookupValue}`;
 
+    const method: Method = "GET";
     return {
       id: object.data_source_id,
-      method: "GET",
+      method,
       url,
     };
   });
@@ -94,42 +119,78 @@ export const bulkCreateOrUpdateObjectsWithLookup = async <
     { ignore404s: true }
   );
 
-  const createOrUpdateBatchRequestData = objects.map(({ ...object }) => {
-    const matchingBatchResponse = getBatchResponseData.find(
-      ({ batchRequestId }) => batchRequestId === object.data_source_id
-    );
+  const foundObjects = getBatchResponseData
+    .map(({ data }) => data?.objects?.[0])
+    .filter((object) => object) as T[];
+  const foundObjectDataSourceIds = foundObjects.map(
+    ({ data_source_id }) => data_source_id
+  );
+  const objectsThatAlreadyExist = objects.filter(({ data_source_id }) =>
+    foundObjectDataSourceIds.includes(data_source_id)
+  );
+  logFoundAndMissingObjects(
+    objectTypes,
+    objects.length,
+    objectsThatAlreadyExist.length
+  );
 
-    const existingObject = matchingBatchResponse?.data.objects?.[0];
-    const type = objectTypes[object.data_source_id];
-    const url = existingObject ? existingObject.self : `/api/${type}/`;
-    const method = existingObject ? "PATCH" : "POST";
-    return {
-      id: object.data_source_id,
-      method,
-      url,
-      data: JSON.stringify({
-        ...existingObject,
-        ...object,
-        uid: existingObject?.uid || "",
-        self: existingObject?.self || "",
-      }),
-    };
-  });
+  if (CHECK_MISSING) {
+    if (objectsThatAlreadyExist < objects) {
+      process.exit(1);
+    }
+    return foundObjects;
+  }
+
+  // In CREATE_ONLY mode, filter out objects that already exist
+  const objectsToCreateUpdate = CREATE_ONLY
+    ? objects.filter(
+        ({ data_source_id }) =>
+          !foundObjectDataSourceIds.includes(data_source_id)
+      )
+    : objects;
+
+  const createOrUpdateBatchRequestData = objectsToCreateUpdate.map(
+    ({ ...object }) => {
+      const matchingBatchResponse = getBatchResponseData.find(
+        ({ batchRequestId }) => batchRequestId === object.data_source_id
+      );
+
+      const existingObject = matchingBatchResponse?.data.objects?.[0];
+      const type = objectTypes[object.data_source_id];
+      const url = existingObject ? existingObject.self : `/api/${type}/`;
+      const method: Method = existingObject ? "PATCH" : "POST";
+      return {
+        id: object.data_source_id,
+        method,
+        url,
+        data: JSON.stringify({
+          ...existingObject,
+          ...object,
+          uid: existingObject?.uid || "",
+          self: existingObject?.self || "",
+        }),
+      };
+    }
+  );
   const createOrUpdateBatchResponseData = await batchSkylarkRequest<T>(
     createOrUpdateBatchRequestData
   );
 
-  return createOrUpdateBatchResponseData.map(({ data, batchRequestId }) => {
-    if (!data.data_source_id) {
-      // Add data_source_id when one isn't returned (bugfix for roles)
-      return {
-        ...data,
-        data_source_id: batchRequestId,
-      };
-    }
+  const createUpdatedObjects = createOrUpdateBatchResponseData.map(
+    ({ data, batchRequestId }) => {
+      if (!data.data_source_id) {
+        // Add data_source_id when one isn't returned (bugfix for roles)
+        return {
+          ...data,
+          data_source_id: batchRequestId,
+        };
+      }
 
-    return data;
-  });
+      return data;
+    }
+  );
+
+  return uniqBy([...foundObjects, ...createUpdatedObjects], "uid");
 };
 
 /**
@@ -143,15 +204,16 @@ export const bulkCreateOrUpdateObjectsUsingDataSourceId = async <
 >(
   objects: ApiSkylarkObjectWithAllPotentialFields[],
   objectTypes: { [id: string]: string }
-) => {
+): Promise<T[]> => {
   const getBatchRequestData = objects.map((object) => {
     const type = objectTypes[object.data_source_id];
 
     const url = `/api/${type}/versions/data-source/${object.data_source_id}/`;
 
+    const method: Method = "GET";
     return {
       id: object.data_source_id,
-      method: "GET",
+      method,
       url,
     };
   });
@@ -161,33 +223,71 @@ export const bulkCreateOrUpdateObjectsUsingDataSourceId = async <
     { ignore404s: true }
   );
 
-  const createOrUpdateBatchRequestData = objects.map(({ ...object }) => {
-    const matchingBatchResponse = getBatchResponseData.find(
-      ({ batchRequestId }) => batchRequestId === object.data_source_id
-    );
+  const foundObjects = getBatchResponseData
+    .map(({ data }) => data)
+    .filter((object) => object);
+  const foundObjectDataSourceIds = foundObjects.map(
+    ({ data_source_id }) => data_source_id
+  );
+  const objectsThatAlreadyExist = objects.filter(({ data_source_id }) =>
+    foundObjectDataSourceIds.includes(data_source_id)
+  );
+  logFoundAndMissingObjects(
+    objectTypes,
+    objects.length,
+    objectsThatAlreadyExist.length
+  );
 
-    const existingObject =
-      matchingBatchResponse?.code !== 404 ? matchingBatchResponse?.data : null;
-    const type = objectTypes[object.data_source_id];
-    const url = `/api/${type}/versions/data-source/${object.data_source_id}/`;
-    const method = "PUT";
-    return {
-      id: `${method}-${url}`,
-      method,
-      url,
-      data: JSON.stringify({
-        ...existingObject,
-        ...object,
-        uid: existingObject?.uid || "",
-        self: existingObject?.self || "",
-      }),
-    };
-  });
+  if (CHECK_MISSING) {
+    if (objectsThatAlreadyExist < objects) {
+      process.exit(1);
+    }
+    return foundObjects;
+  }
+
+  // In CREATE_ONLY mode, filter out objects that already exist
+  const objectsToCreateUpdate = CREATE_ONLY
+    ? objects.filter(
+        ({ data_source_id }) =>
+          !foundObjectDataSourceIds.includes(data_source_id)
+      )
+    : objects;
+
+  const createOrUpdateBatchRequestData = objectsToCreateUpdate.map(
+    ({ ...object }) => {
+      const matchingBatchResponse = getBatchResponseData.find(
+        ({ batchRequestId }) => batchRequestId === object.data_source_id
+      );
+
+      const existingObject =
+        matchingBatchResponse?.code !== 404
+          ? matchingBatchResponse?.data
+          : null;
+      const type = objectTypes[object.data_source_id];
+      const url = `/api/${type}/versions/data-source/${object.data_source_id}/`;
+      const method: Method = "PUT";
+      return {
+        id: `${method}-${url}`,
+        method,
+        url,
+        data: JSON.stringify({
+          ...existingObject,
+          ...object,
+          uid: existingObject?.uid || "",
+          self: existingObject?.self || "",
+        }),
+      };
+    }
+  );
   const createOrUpdateBatchResponseData = await batchSkylarkRequest<T>(
     createOrUpdateBatchRequestData
   );
 
-  return createOrUpdateBatchResponseData.map(({ data }) => data);
+  const createUpdatedObjects = createOrUpdateBatchResponseData.map(
+    ({ data }) => data
+  );
+
+  return uniqBy([...foundObjects, ...createUpdatedObjects], "uid");
 };
 
 /**
@@ -404,11 +504,10 @@ export const convertAirtableFieldsToSkylarkObject = (
     data_source_id: airtableId,
   };
 
-  // Credits cannot be updated when using data source URLs. See SL-2204
-  // const credits = getCreditsFromField(fields.credits as string[], metadata);
-  // if (credits) {
-  //   object.credits = credits;
-  // }
+  const credits = getCreditsFromField(fields.credits as string[], metadata);
+  if (credits) {
+    object.credits = credits;
+  }
 
   const genreUrls = getUrlsFromField(
     fields.genres as string[],
@@ -473,41 +572,6 @@ export const convertAirtableFieldsToSkylarkObject = (
 };
 
 /**
- * updateCredits - updates Credits using an object's self property
- * Workaround for SL-2204 using the normal object endpoints
- */
-export const updateCredits = async <T extends ApiBaseObject>(
-  objects: T[],
-  records: Records<FieldSet>,
-  metadata: Metadata
-) => {
-  const updateCreditsBatchRequestData = objects.map((object) => {
-    const record = records.find(
-      ({ id }) => id === object.data_source_id
-    ) as Record<FieldSet>;
-    if (!record) {
-      return null;
-    }
-
-    const url = object.self;
-    const method = "PATCH"; // PATCH to not update other fields
-    const credits =
-      getCreditsFromField(record.fields.credits as string[], metadata) || [];
-
-    return {
-      id: `CREDITS-${object.uid}`,
-      method,
-      url,
-      data: JSON.stringify({
-        credits: credits || [],
-      }),
-    };
-  });
-
-  await batchSkylarkRequest<T>(compact(updateCreditsBatchRequestData));
-};
-
-/**
  * createOrUpdateAirtableObjectsInSkylark - creates or updates objects in Skylark using Records from Airtable
  * @param airtableRecords - Airtable records from a table of the given type
  * @param metadata
@@ -536,22 +600,15 @@ export const createOrUpdateAirtableObjectsInSkylark = async <
     objectTypes[id] = (fields.skylark_object_type as string) || _table.name;
   });
 
+  if (airtableRecords.length === 0) {
+    return [];
+  }
+
   const createOrUpdateBatchResponseData =
     await bulkCreateOrUpdateObjectsUsingDataSourceId<T>(
       objectData,
       objectTypes
     );
-
-  const hasCredits = createOrUpdateBatchResponseData.some((object) =>
-    has(object, "credits")
-  );
-  if (hasCredits) {
-    await updateCredits<T>(
-      createOrUpdateBatchResponseData,
-      airtableRecords,
-      metadata
-    );
-  }
 
   const parseObjectsAndCreateImages = await Promise.all(
     createOrUpdateBatchResponseData.map(
@@ -559,13 +616,14 @@ export const createOrUpdateAirtableObjectsInSkylark = async <
         const airtableFields = airtableRecords.find(
           ({ id }) => id === data.data_source_id
         );
-        const imageUrls = airtableFields?.fields?.images
-          ? await parseAirtableImagesAndUploadToSkylark<T>(
-              airtableFields.fields.images as string[],
-              data,
-              metadata
-            )
-          : [];
+        const imageUrls =
+          !CHECK_MISSING && airtableFields?.fields?.images
+            ? await parseAirtableImagesAndUploadToSkylark<T>(
+                airtableFields.fields.images as string[],
+                data,
+                metadata
+              )
+            : [];
 
         return {
           ...data,
@@ -631,9 +689,9 @@ export const createOrUpdateAirtableObjectsInSkylarkWithParentsInSameTable =
         );
 
       createdMediaObjects.push(...objs);
-      // eslint-disable-next-line no-console
-      console.log(
-        `Media objects uploaded: ${createdMediaObjects.length}/${airtableRecords.length}`
+      logMediaObjectsUploaded(
+        createdMediaObjects.length,
+        airtableRecords.length
       );
     }
 
@@ -699,8 +757,9 @@ export const createTranslationsForObjects = async (
       });
 
     const languages = fields.languages as string[];
+    const method: Method = "PATCH";
     return languages.map((languageAirtableId) => ({
-      method: "PATCH",
+      method,
       url: object.self,
       headers: {
         "Accept-Language": languageCodes[languageAirtableId],
@@ -734,6 +793,10 @@ export const connectExternallyCreatedAssetToMediaObject = async (
   createdMediaObjects: ApiEntertainmentObjectWithAirtableId[],
   metadata: Metadata
 ) => {
+  if (CHECK_MISSING) {
+    return [];
+  }
+
   const recordsWithExternalAsset = records.filter(
     ({ fields }) =>
       has(fields, "external_asset_data_source_id") &&
@@ -745,9 +808,10 @@ export const connectExternallyCreatedAssetToMediaObject = async (
       fields.external_asset_data_source_id as string
     }/`;
 
+    const method: Method = "GET";
     return {
       id: `GET-${fields.external_asset_data_source_id as string}`,
-      method: "GET",
+      method,
       url,
     };
   });
@@ -774,7 +838,7 @@ export const connectExternallyCreatedAssetToMediaObject = async (
       );
 
       if (!assetParent || asset?.parent_url === assetParent.self) {
-        return {};
+        return null;
       }
 
       const data: Partial<ApiEntertainmentObjectWithAirtableId> = {
@@ -793,7 +857,7 @@ export const connectExternallyCreatedAssetToMediaObject = async (
 
       // Filter out any objects which already have the correct parent_url
     })
-    .filter((request) => !isEmpty(request));
+    .filter((request) => request) as APIBatchRequestData;
 
   const batchResponseData =
     await batchSkylarkRequest<ApiEntertainmentObjectWithAirtableId>(

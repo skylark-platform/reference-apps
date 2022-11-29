@@ -9,6 +9,9 @@ import { ApiObjectType } from "../../types";
 import { createOrUpdateGraphQLSet } from "./sets";
 
 jest.mock("@skylark-reference-apps/lib");
+jest.mock("../classic/logging", () => ({
+  logUpdatingSetsNotImplemented: jest.fn(),
+}));
 
 describe("saas/sets.ts", () => {
   let graphQlRequest: jest.Mock;
