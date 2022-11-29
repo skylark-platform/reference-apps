@@ -42,6 +42,12 @@ export const createOrUpdateContentTypes = async <T extends ApiBaseObject>(
   const existingTypes = await getContentTypes<T>(type);
   const existingSlugs = existingTypes?.map(({ slug }) => slug);
 
+  // Array of types that match data we want to import (rather than just all types in Skylark)
+  const recordSlugs = records.map(({ fields }) => fields.slug);
+  const existingImportedTypes = existingTypes
+    ? existingTypes.filter(({ slug }) => recordSlugs.includes(slug))
+    : [];
+
   const existingObjectsWithAirtableId = existingTypes
     ? existingTypes.map((object) => {
         const matchingRecord = records.find(
@@ -55,15 +61,9 @@ export const createOrUpdateContentTypes = async <T extends ApiBaseObject>(
       })
     : [];
 
-  logFoundAndMissingObjects(type, records.length, existingTypes?.length || 0);
+  logFoundAndMissingObjects(type, records.length, existingImportedTypes.length);
 
   if (CHECK_MISSING) {
-    const allRecordsExist = records.every(({ fields: { slug } }) =>
-      existingSlugs?.includes((slug as string) || "")
-    );
-    if (!allRecordsExist || !existingTypes) {
-      process.exit(1);
-    }
     return existingObjectsWithAirtableId;
   }
 

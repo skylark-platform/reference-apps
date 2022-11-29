@@ -1,6 +1,5 @@
 import Auth from "@aws-amplify/auth";
 import {
-  ApiBaseObject,
   ApiBatchResponse,
   ApiCreditUnexpanded,
   ApiImage,
@@ -22,7 +21,6 @@ import {
   createOrUpdateObject,
   parseAirtableImagesAndUploadToSkylark,
   createTranslationsForObjects,
-  updateCredits,
   connectExternallyCreatedAssetToMediaObject,
 } from "./create";
 
@@ -564,9 +562,7 @@ describe("skylark.create", () => {
       expect(skylarkObject).toEqual(expected);
     });
 
-    // Unskip when SL-2204 is fixed
-    // eslint-disable-next-line jest/no-disabled-tests
-    it.skip("adds credits using the credits, people and roles tables", () => {
+    it("adds credits using the credits, people and roles tables", () => {
       const metadataWithCredits: Metadata = {
         ...metadata,
         people: [
@@ -779,142 +775,6 @@ describe("skylark.create", () => {
       );
 
       expect(skylarkObject.category_url).toEqual(expected);
-    });
-  });
-
-  describe("updateCredits", () => {
-    const objects = [
-      {
-        uid: "episode-1",
-        data_source_id: "airtable-episode-1",
-        self: "/api/episodes/episode-1",
-      },
-    ] as ApiBaseObject[];
-
-    it("sets the credits to [] when none exist in Airtable", async () => {
-      // Arrange
-      const record: Partial<Record<FieldSet>> = {
-        id: "airtable-episode-1",
-        _table: { name: "episodes" } as Table<FieldSet>,
-        fields: { uid: "episode-1", title_short: "short title" },
-      };
-      const data: ApiBatchResponse[] = [
-        {
-          code: 200,
-          id: record.id as string,
-          header: {},
-          // url: `/api/episodes/${record.fields?.uid as string}`,
-          body: "{}",
-        },
-      ];
-
-      axiosRequest.mockImplementation(() => ({ data }));
-
-      // Act
-      await updateCredits(objects, [record] as Record<FieldSet>[], metadata);
-
-      // Assert
-      expect(axiosRequest).toBeCalledWith(
-        expect.objectContaining({
-          method: "POST",
-          url: "https://skylarkplatform.io/api/batch/",
-          data: [
-            {
-              id: "CREDITS-episode-1",
-              method: "PATCH",
-              url: "/api/episodes/episode-1",
-              data: JSON.stringify({
-                credits: [],
-              }),
-            },
-          ],
-        })
-      );
-    });
-
-    it("adds credits when they exist in Airtable", async () => {
-      // Arrange
-      const metadataWithCredits: Metadata = {
-        ...metadata,
-        people: [
-          {
-            airtableId: "airtable-person-1",
-            name: "person-1",
-            uid: "people_1",
-            slug: "person-1",
-            self: "/api/people/people_1",
-          },
-        ],
-        roles: [
-          {
-            airtableId: "airtable-role-1",
-            title: "role-1",
-            uid: "role_1",
-            self: "/api/roles/role_1",
-          } as unknown as ApiRole & ApiAirtableFields,
-        ],
-        airtableCredits: [
-          {
-            id: "airtable-credit-1",
-            fields: {
-              person: ["airtable-person-1"],
-              role: ["airtable-role-1"],
-              character: "character",
-            } as object,
-          } as Record<FieldSet>,
-        ],
-      };
-      const record: Partial<Record<FieldSet>> = {
-        id: "airtable-episode-1",
-        _table: { name: "episodes" } as Table<FieldSet>,
-        fields: {
-          uid: "episode-1",
-          title_short: "short title",
-          credits: ["airtable-credit-1"],
-        },
-      };
-      const data: ApiBatchResponse[] = [
-        {
-          code: 200,
-          id: record.id as string,
-          header: {},
-          // url: `/api/episodes/${record.fields?.uid as string}`,
-          body: "{}",
-        },
-      ];
-
-      axiosRequest.mockImplementation(() => ({ data }));
-
-      // Act
-      await updateCredits(
-        objects,
-        [record] as Record<FieldSet>[],
-        metadataWithCredits
-      );
-
-      // Assert
-      expect(axiosRequest).toBeCalledWith(
-        expect.objectContaining({
-          method: "POST",
-          url: "https://skylarkplatform.io/api/batch/",
-          data: [
-            {
-              id: "CREDITS-episode-1",
-              method: "PATCH",
-              url: "/api/episodes/episode-1",
-              data: JSON.stringify({
-                credits: [
-                  {
-                    people_url: metadataWithCredits.people[0].self,
-                    role_url: metadataWithCredits.roles[0].self,
-                    character: "character",
-                  },
-                ],
-              }),
-            },
-          ],
-        })
-      );
     });
   });
 
@@ -1308,9 +1168,9 @@ describe("skylark.create", () => {
       );
 
       // Assert.
-      expect(axiosRequest).toHaveBeenCalledTimes(5);
+      expect(axiosRequest).toHaveBeenCalledTimes(4);
       expect(axiosRequest).toHaveBeenNthCalledWith(
-        5,
+        4,
         expect.objectContaining({
           method: "POST",
           url: "https://skylarkplatform.io/api/batch/",
@@ -1393,7 +1253,7 @@ describe("skylark.create", () => {
       );
 
       // Assert.
-      expect(axiosRequest).toHaveBeenCalledTimes(3);
+      expect(axiosRequest).toHaveBeenCalledTimes(2);
     });
   });
 

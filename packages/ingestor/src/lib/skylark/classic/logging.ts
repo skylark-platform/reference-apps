@@ -10,7 +10,7 @@ export const logFoundAndMissingObjects = (
     : [...new Set(Object.values(objectTypes))].join(", ");
   // eslint-disable-next-line no-console
   console.log(
-    `[${uniqueTypes}] Found ${totalExistingObjects}, ${
+    `[${uniqueTypes}] Found ${totalExistingObjects}, expected ${totalObjects}, ${
       totalObjects - totalExistingObjects
     } missing`
   );

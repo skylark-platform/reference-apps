@@ -8,15 +8,7 @@ import {
 } from "@skylark-reference-apps/lib";
 import { Attachment, FieldSet, Records, Record } from "airtable";
 import { Method } from "axios";
-import {
-  compact,
-  flatten,
-  has,
-  isArray,
-  isEmpty,
-  isString,
-  uniqBy,
-} from "lodash";
+import { flatten, has, isArray, isEmpty, isString, uniqBy } from "lodash";
 import { CHECK_MISSING, CREATE_ONLY } from "../../constants";
 import {
   APIBatchRequestData,
@@ -64,6 +56,7 @@ export const createOrUpdateObject = async <T extends ApiBaseObject>(
   if (CHECK_MISSING) {
     if (!existingObject) {
       logMissingObject(type, lookup.value, lookup.property);
+      // Exit when missing as we cannot continue
       process.exit(1);
     }
     return existingObject;
@@ -132,14 +125,17 @@ export const bulkCreateOrUpdateObjectsWithLookup = async <
   const foundObjectDataSourceIds = foundObjects.map(
     ({ data_source_id }) => data_source_id
   );
-  logFoundAndMissingObjects(objectTypes, objects.length, foundObjects.length);
+  const objectsThatAlreadyExist = objects.filter(({ data_source_id }) =>
+    foundObjectDataSourceIds.includes(data_source_id)
+  );
+  logFoundAndMissingObjects(
+    objectTypes,
+    objects.length,
+    objectsThatAlreadyExist.length
+  );
 
   if (CHECK_MISSING) {
-    const allObjectsExist = objects.every(({ data_source_id }) =>
-      foundObjectDataSourceIds.includes(data_source_id)
-    );
-
-    if (!allObjectsExist) {
+    if (objectsThatAlreadyExist < objects) {
       process.exit(1);
     }
     return foundObjects;
@@ -233,14 +229,17 @@ export const bulkCreateOrUpdateObjectsUsingDataSourceId = async <
   const foundObjectDataSourceIds = foundObjects.map(
     ({ data_source_id }) => data_source_id
   );
-  logFoundAndMissingObjects(objectTypes, objects.length, foundObjects.length);
+  const objectsThatAlreadyExist = objects.filter(({ data_source_id }) =>
+    foundObjectDataSourceIds.includes(data_source_id)
+  );
+  logFoundAndMissingObjects(
+    objectTypes,
+    objects.length,
+    objectsThatAlreadyExist.length
+  );
 
   if (CHECK_MISSING) {
-    const allObjectsExist = objects.every(({ data_source_id }) =>
-      foundObjectDataSourceIds.includes(data_source_id)
-    );
-
-    if (!allObjectsExist) {
+    if (objectsThatAlreadyExist < objects) {
       process.exit(1);
     }
     return foundObjects;
@@ -505,11 +504,10 @@ export const convertAirtableFieldsToSkylarkObject = (
     data_source_id: airtableId,
   };
 
-  // Credits cannot be updated when using data source URLs. See SL-2204
-  // const credits = getCreditsFromField(fields.credits as string[], metadata);
-  // if (credits) {
-  //   object.credits = credits;
-  // }
+  const credits = getCreditsFromField(fields.credits as string[], metadata);
+  if (credits) {
+    object.credits = credits;
+  }
 
   const genreUrls = getUrlsFromField(
     fields.genres as string[],
@@ -574,41 +572,6 @@ export const convertAirtableFieldsToSkylarkObject = (
 };
 
 /**
- * updateCredits - updates Credits using an object's self property
- * Workaround for SL-2204 using the normal object endpoints
- */
-export const updateCredits = async <T extends ApiBaseObject>(
-  objects: T[],
-  records: Records<FieldSet>,
-  metadata: Metadata
-) => {
-  const updateCreditsBatchRequestData = objects.map((object) => {
-    const record = records.find(
-      ({ id }) => id === object.data_source_id
-    ) as Record<FieldSet>;
-    if (!record) {
-      return null;
-    }
-
-    const url = object.self;
-    const method: Method = "PATCH"; // PATCH to not update other fields
-    const credits =
-      getCreditsFromField(record.fields.credits as string[], metadata) || [];
-
-    return {
-      id: `CREDITS-${object.uid}`,
-      method,
-      url,
-      data: JSON.stringify({
-        credits: credits || [],
-      }),
-    };
-  });
-
-  await batchSkylarkRequest<T>(compact(updateCreditsBatchRequestData));
-};
-
-/**
  * createOrUpdateAirtableObjectsInSkylark - creates or updates objects in Skylark using Records from Airtable
  * @param airtableRecords - Airtable records from a table of the given type
  * @param metadata
@@ -647,20 +610,6 @@ export const createOrUpdateAirtableObjectsInSkylark = async <
       objectTypes
     );
 
-  const hasCredits = createOrUpdateBatchResponseData.some((object) =>
-    has(object, "credits")
-  );
-
-  // When CHECK_MISSING or CREATE_ONLY mode is enabled, don't update credits or images
-
-  if (hasCredits && !CHECK_MISSING && !CREATE_ONLY) {
-    await updateCredits<T>(
-      createOrUpdateBatchResponseData,
-      airtableRecords,
-      metadata
-    );
-  }
-
   const parseObjectsAndCreateImages = await Promise.all(
     createOrUpdateBatchResponseData.map(
       async (data): Promise<T & { airtableId: string }> => {
@@ -668,7 +617,7 @@ export const createOrUpdateAirtableObjectsInSkylark = async <
           ({ id }) => id === data.data_source_id
         );
         const imageUrls =
-          !CHECK_MISSING && !CREATE_ONLY && airtableFields?.fields?.images
+          !CHECK_MISSING && airtableFields?.fields?.images
             ? await parseAirtableImagesAndUploadToSkylark<T>(
                 airtableFields.fields.images as string[],
                 data,
