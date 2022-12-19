@@ -72,7 +72,7 @@ const tarantinoMoviesCollection: SetConfig = {
   contents: [{ type: "dynamic-object", name: quentinTarantinoMovies.name }],
 };
 
-// SaaS Skylark does not support dynamic objects yet
+// Skylark X does not support dynamic objects yet
 const tarantinoMoviesCollectionWithoutDynamicObject: SetConfig = {
   ...tarantinoMoviesCollection,
   contents: [

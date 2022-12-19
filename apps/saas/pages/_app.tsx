@@ -11,7 +11,7 @@ import useTranslation from "next-translate/useTranslation";
 import PlausibleProvider from "next-plausible";
 import createDefaultSeo from "../next-seo.config";
 
-const appTitle = "StreamTV (SaaS)";
+const appTitle = "StreamTV (SLX)";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { t } = useTranslation("common");

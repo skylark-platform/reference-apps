@@ -18,7 +18,7 @@ inputs:
     description: App directory
     required: true
   saas-account-id:
-    description: The Account ID for the SaaS deployment
+    description: The Account ID for the SLX deployment
     required: false
 outputs:
   url:

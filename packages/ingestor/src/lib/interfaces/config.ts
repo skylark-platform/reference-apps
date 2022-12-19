@@ -2,8 +2,8 @@ import { ApiEntertainmentObject, SetTypes } from "@skylark-reference-apps/lib";
 import { ApiObjectType } from "../types";
 
 export interface SetConfig extends Partial<ApiEntertainmentObject> {
-  dataSourceId: string; // V8
-  externalId: string; // SaaS (GraphQL)
+  dataSourceId: string; // SL8
+  externalId: string; // SLX (GraphQL)
   title: string;
   slug: string;
   set_type_slug: SetTypes;

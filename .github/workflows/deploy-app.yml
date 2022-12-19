@@ -50,13 +50,13 @@ jobs:
 
           echo "::set-output name=ref::$GitRef"
           echo "::set-output name=branch::$GitBranch"
-      - name: Create SaaS Ingestor Account ID
+      - name: Create SLX Ingestor Account ID
         id: saas-account-id
         env:
           BRANCH: ${{ steps.branch-and-ref.outputs.branch }}
         run: |
           ACCOUNT_ID="environment${GITHUB_RUN_ID}${GITHUB_RUN_ATTEMPT}"
-          echo "::notice::SaaS Account ID: $ACCOUNT_ID"
+          echo "::notice::SLX Account ID: $ACCOUNT_ID"
           echo "::set-output name=account-id::$ACCOUNT_ID"
 
   deploy:

@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug ingestor - Classic",
+      "name": "Debug ingestor - SL8",
       "request": "launch",
       "cwd": "${workspaceFolder}/packages/ingestor",
       "runtimeArgs": ["ingest"],
@@ -18,7 +18,7 @@
       }
     },
     {
-      "name": "Debug ingestor - Classic (CREATE_ONLY)",
+      "name": "Debug ingestor - SL8 (CREATE_ONLY)",
       "request": "launch",
       "cwd": "${workspaceFolder}/packages/ingestor",
       "runtimeArgs": ["ingest"],
@@ -33,7 +33,7 @@
       }
     },
     {
-      "name": "Debug ingestor - SaaS",
+      "name": "Debug ingestor - SLX",
       "request": "launch",
       "cwd": "${workspaceFolder}/packages/ingestor",
       "runtimeArgs": ["ingest"],
