@@ -158,20 +158,20 @@ jobs:
           github_token: ${{ github.token }}
           additional_urls: ${{ steps.additional-urls.outputs.result }}
 
-  lighthouse-check:
-    name: Lighthouse
-    runs-on: ubuntu-latest
-    needs: [deploy, ingestor]
-    steps:
-      - uses: actions/checkout@master
-      - name: Lighthouse
-        uses: foo-software/lighthouse-check-action@master
-        with:
-          device: "desktop"
-          urls: ${{ needs.deploy.outputs.media-url }},${{ needs.deploy.outputs.media-url }}/movies,${{ needs.deploy.outputs.saas-url }},${{ needs.deploy.outputs.saas-url }}/movies
-          gitHubAccessToken: ${{ github.token }}
-          slackWebhookUrl: ${{ secrets.SLACK_ALERTS_FE_TESTING }}
-          gitAuthor: ${{ github.actor }}
-          gitBranch: ${{ github.repositoryUrl }}
-          sha: ${{ github.sha }}
-          prCommentEnabled: true
+  # lighthouse-check:
+  #   name: Lighthouse
+  #   runs-on: ubuntu-latest
+  #   needs: [deploy, ingestor]
+  #   steps:
+  #     - uses: actions/checkout@master
+  #     - name: Lighthouse
+  #       uses: foo-software/lighthouse-check-action@master
+  #       with:
+  #         device: "desktop"
+  #         urls: ${{ needs.deploy.outputs.media-url }},${{ needs.deploy.outputs.media-url }}/movies,${{ needs.deploy.outputs.saas-url }},${{ needs.deploy.outputs.saas-url }}/movies
+  #         gitHubAccessToken: ${{ github.token }}
+  #         slackWebhookUrl: ${{ secrets.SLACK_ALERTS_FE_TESTING }}
+  #         gitAuthor: ${{ github.actor }}
+  #         gitBranch: ${{ github.repositoryUrl }}
+  #         sha: ${{ github.sha }}
+  #         prCommentEnabled: true

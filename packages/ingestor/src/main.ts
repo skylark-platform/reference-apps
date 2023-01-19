@@ -261,9 +261,7 @@ const main = async () => {
   // eslint-disable-next-line no-constant-condition
   if (process.env.INGEST_TO_SAAS_SKYLARK === "true") {
     // eslint-disable-next-line no-console
-    console.log(
-      `Starting ingest to SaaS Skylark: ${SAAS_API_ENDPOINT} (account: ${SAAS_ACCOUNT_ID})`
-    );
+    console.log(`Starting ingest to SaaS Skylark: ${SAAS_API_ENDPOINT}`);
 
     await createDimensions();
 
