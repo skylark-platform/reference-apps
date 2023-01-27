@@ -66,6 +66,7 @@ import {
   createOrUpdateAvailability,
   createOrUpdateScheduleDimensionValues,
 } from "./lib/skylark/saas/availability";
+import { updateObjectConfigurations } from "./lib/skylark/saas/objectConfiguration";
 
 const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
   const [alwaysSchedule, setTypes, dimensions] = await Promise.all([
@@ -262,6 +263,10 @@ const main = async () => {
   if (process.env.INGEST_TO_SAAS_SKYLARK === "true") {
     // eslint-disable-next-line no-console
     console.log(`Starting ingest to SaaS Skylark: ${SAAS_API_ENDPOINT}`);
+
+    await updateObjectConfigurations();
+    // eslint-disable-next-line no-console
+    console.log("Object configuration updated");
 
     await createDimensions();
 
