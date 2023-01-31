@@ -41,9 +41,10 @@ inputs:
   saas-api-token:
     description: Access token to use in API Requests, SLX only
     required: false
-  saas-account-id:
-    description: The Skylark account to use, SLX only
+  content-type:
+    description: The content type to ingest (CONTENT_TYPE) (all, streamtv or slxdemos)
     required: false
+    default: "all"
 runs:
   using: composite
   steps:
@@ -73,7 +74,7 @@ runs:
         INGEST_TO_SAAS_SKYLARK: ${{ inputs.saas-ingest }}
         SAAS_API_ENDPOINT: ${{ inputs.skylark-api-url }}
         SAAS_API_KEY: ${{ inputs.saas-api-token }}
-        SAAS_ACCOUNT_ID: ${{ inputs.saas-account-id }}
+        CONTENT_TYPE: ${{ inputs.content-type }}
       with:
         timeout_minutes: 20
         retry_wait_seconds: 10

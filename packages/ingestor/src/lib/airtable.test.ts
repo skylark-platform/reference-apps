@@ -59,7 +59,7 @@ describe("airtable", () => {
         Object.keys(tables).length - 1 + Object.keys(tables.dimensions).length;
 
       // Act.
-      await getAllTables();
+      await getAllTables("all");
 
       // Assert.
       expect(mockedGet).toBeCalledWith(
@@ -109,7 +109,7 @@ describe("airtable", () => {
         Object.keys(tables).length - 1 + Object.keys(tables.dimensions).length;
 
       // Act.
-      await getAllTables();
+      await getAllTables("all");
 
       // Assert.
       expect(mockedGet).toBeCalledWith(
@@ -133,7 +133,7 @@ describe("airtable", () => {
       mockedGet.mockResolvedValue({ data: { records } });
 
       // Act.
-      const data = await getAllTables();
+      const data = await getAllTables("all");
 
       // Assert.
       expect(data.mediaObjects).toEqual(records);
@@ -155,7 +155,7 @@ describe("airtable", () => {
       mockedGet.mockResolvedValue({ data: { records } });
 
       // Act.
-      const data = await getAllTables();
+      const data = await getAllTables("all");
 
       // Assert.
       expect(data.mediaObjects).toEqual([
@@ -177,7 +177,7 @@ describe("airtable", () => {
       mockedGet.mockRejectedValue(err);
 
       // Act.
-      await getAllTables();
+      await getAllTables("all");
 
       // Assert.
       // eslint-disable-next-line no-console
@@ -199,7 +199,7 @@ describe("airtable", () => {
       mockedGet.mockRejectedValue(err);
 
       // Act.
-      await expect(getAllTables()).rejects.toEqual(err);
+      await expect(getAllTables("all")).rejects.toEqual(err);
     });
   });
 });

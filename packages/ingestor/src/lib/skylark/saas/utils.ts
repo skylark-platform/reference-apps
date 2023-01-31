@@ -2,7 +2,7 @@ import {
   GraphQLMediaObjectTypes,
   GraphQLObjectTypes,
 } from "@skylark-reference-apps/lib";
-import { Attachment, Collaborator, FieldSet, Records } from "airtable";
+import { Attachment, Collaborator, FieldSet, Record, Records } from "airtable";
 import { EnumType } from "json-to-graphql-query";
 import { has, isArray, isString } from "lodash";
 import {
@@ -169,4 +169,37 @@ export const getLanguageCodesFromAirtable = (
     });
 
   return languageCodes;
+};
+
+// Utility filter to remove either SLXDemo content OR StreamTV content depending on what Airtable data we want in the environment
+export const filterSLXDemos = (
+  table: string,
+  record: Record<FieldSet>,
+  removeSLXDemoContent: boolean
+) => {
+  const tablesToFilter: string[] = [
+    "Media Content",
+    "Media Content - Translations",
+    "roles",
+    "people",
+    "credits",
+    "images",
+    "sets-metadata",
+  ];
+  const SLX_PREFIX = "SLX";
+
+  const { title, slx_demo_only: slxDemoOnly } = record.fields;
+
+  if (!tablesToFilter.includes(table)) {
+    return true;
+  }
+
+  const isSLXDemoContent =
+    (title && isString(title) && title.startsWith(SLX_PREFIX)) || slxDemoOnly;
+  if (removeSLXDemoContent) {
+    // If we want to remove the SLX Demo Content, rather than remove anything but it
+    return !isSLXDemoContent;
+  }
+
+  return isSLXDemoContent;
 };

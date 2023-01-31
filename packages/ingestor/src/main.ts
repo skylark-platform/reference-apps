@@ -257,9 +257,14 @@ const main = async () => {
     }`
   );
 
-  const airtable = await getAllTables();
+  // We keep StreamTV and SLX Demo data in the same Airtable, sometimes we don't want to add one type of content to an environment
+  const contentTypeToIngest =
+    (process.env.CONTENT_TYPE as "all" | "streamtv" | "slxdemos" | undefined) ||
+    "all";
+  // eslint-disable-next-line no-console
+  console.log("Content type:", contentTypeToIngest);
+  const airtable = await getAllTables(contentTypeToIngest);
 
-  // eslint-disable-next-line no-constant-condition
   if (process.env.INGEST_TO_SAAS_SKYLARK === "true") {
     // eslint-disable-next-line no-console
     console.log(`Starting ingest to SaaS Skylark: ${SAAS_API_ENDPOINT}`);
@@ -410,11 +415,11 @@ const main = async () => {
   } else {
     // eslint-disable-next-line no-console
     console.log(`Starting ingest to V8 Skylark: ${SKYLARK_API}`);
-    // eslint-disable-next-line no-console
     if (CHECK_MISSING)
+      // eslint-disable-next-line no-console
       console.log("CHECK_MISSING mode ENABLED (will not create or update)");
-    // eslint-disable-next-line no-console
     if (CREATE_ONLY)
+      // eslint-disable-next-line no-console
       console.log("CREATE_ONLY mode ENABLED (will not create or update)");
 
     configureAmplify();

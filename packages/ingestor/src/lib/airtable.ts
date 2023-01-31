@@ -2,6 +2,7 @@ import { Record, FieldSet } from "airtable";
 import axios from "axios";
 import { Airtables } from "./interfaces";
 import { AIRTABLE_API_KEY, AIRTABLE_BASE_ID } from "./constants";
+import { filterSLXDemos } from "./skylark/saas/utils";
 
 /**
  * getTable - fetches a table from Airtable and filters empty rows
@@ -64,7 +65,9 @@ const getTable = async (
  * Fetches and returns the tables from Airtable
  * @returns Object containing Airtable tables
  */
-export const getAllTables = async (): Promise<Airtables> => {
+export const getAllTables = async (
+  contentType: "all" | "streamtv" | "slxdemos"
+): Promise<Airtables> => {
   const dimensionTables = [
     "affiliates",
     "customer-types",
@@ -119,7 +122,19 @@ export const getAllTables = async (): Promise<Airtables> => {
     assetTypes,
     imageTypes,
     tagTypes,
-  ] = await Promise.all(tables.map((table) => getTable(table)));
+  ] = await Promise.all(
+    tables.map(async (table) => {
+      const data = await getTable(table);
+
+      if (contentType === "all") {
+        return data;
+      }
+
+      return data.filter((record) =>
+        filterSLXDemos(table, record, contentType === "streamtv")
+      );
+    })
+  );
 
   return {
     dimensions: {
