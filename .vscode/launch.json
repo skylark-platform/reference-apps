@@ -68,6 +68,7 @@
       "skipFiles": ["<node_internals>/**"],
       "type": "node",
       "env": {
+        "CREATE_SETS": "true",
         "INGEST_TO_SAAS_SKYLARK": "true",
         "CONTENT_TYPE": "slxdemos"
       }

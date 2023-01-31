@@ -56,7 +56,26 @@ AIRTABLE_BASE_ID=
 
 If you prefer to only include the environment variables that allow full functionality of your app, the guides below will help you understand which are required.
 
-### apps/media (StreamTV)
+### apps/saas (SLX StreamTV)
+
+```bash
+NEXT_PUBLIC_SAAS_API_ENDPOINT=
+NEXT_PUBLIC_SAAS_API_KEY=
+AIRTABLE_API_KEY=
+AIRTABLE_BASE_ID=
+# Title is optional, defaults to `StreamTV`
+NEXT_PUBLIC_APP_TITLE=
+```
+
+If you're just testing StreamTV out then you can probably get away with just:
+
+```bash
+NEXT_PUBLIC_SAAS_API_ENDPOINT=
+NEXT_PUBLIC_SAAS_API_KEY=
+NEXT_PUBLIC_APP_TITLE=
+```
+
+### apps/media (SL8 StreamTV)
 
 ```bash
 NEXT_PUBLIC_SKYLARK_API_URL=

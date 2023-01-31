@@ -67,6 +67,7 @@ import {
   createOrUpdateScheduleDimensionValues,
 } from "./lib/skylark/saas/availability";
 import { updateObjectConfigurations } from "./lib/skylark/saas/objectConfiguration";
+import { slxDemoSetsToCreate } from "./additional-objects/slxDemosSets";
 
 const createMetadata = async (airtable: Airtables): Promise<Metadata> => {
   const [alwaysSchedule, setTypes, dimensions] = await Promise.all([
@@ -373,12 +374,14 @@ const main = async () => {
 
     const createdSets: GraphQLBaseObject[] = [];
     if (shouldCreateAdditionalObjects) {
-      for (
-        let i = 0;
-        i < orderedSetsToCreateWithoutDynamicObject.length;
-        i += 1
-      ) {
-        const setConfig = orderedSetsToCreateWithoutDynamicObject[i];
+      // SLX Demos have a special sets file
+      const setsToCreate =
+        contentTypeToIngest === "slxdemos"
+          ? slxDemoSetsToCreate
+          : orderedSetsToCreateWithoutDynamicObject;
+
+      for (let i = 0; i < setsToCreate.length; i += 1) {
+        const setConfig = setsToCreate[i];
         // eslint-disable-next-line no-await-in-loop
         const set = await createOrUpdateGraphQLSet(
           setConfig,

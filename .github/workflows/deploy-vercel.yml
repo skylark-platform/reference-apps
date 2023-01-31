@@ -104,8 +104,8 @@ jobs:
         apps:
           - name: SaaS
             vercel-project-secret-name: VERCEL_PROJECT_ID_SAAS
-          - name: V8
-            vercel-project-secret-name: VERCEL_PROJECT_ID_MEDIA
+          # - name: V8
+          #   vercel-project-secret-name: VERCEL_PROJECT_ID_MEDIA
     steps:
       - uses: actions/checkout@v3
       - name: Install Vercel CLI

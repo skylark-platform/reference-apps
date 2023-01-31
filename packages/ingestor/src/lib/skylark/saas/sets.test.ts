@@ -101,17 +101,6 @@ describe("saas/sets.ts", () => {
       graphQlRequest.mockResolvedValueOnce(mockedIntrospectionResponse);
     });
 
-    it("returns an empty object when attempting the set exists as update is not implemented", async () => {
-      const got = await createOrUpdateGraphQLSet(
-        setConfig,
-        mediaObjects,
-        metadata as GraphQLMetadata,
-        languagesTable as Records<FieldSet>,
-        [] as Records<FieldSet>
-      );
-      expect(got).toEqual({});
-    });
-
     describe("without translations", () => {
       it("makes a request to create a set containing various media objects", async () => {
         const mockedGetResponse = {

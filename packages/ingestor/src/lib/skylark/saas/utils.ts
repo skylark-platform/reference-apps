@@ -182,7 +182,6 @@ export const filterSLXDemos = (
     "Media Content - Translations",
     "roles",
     "people",
-    "credits",
     "images",
     "sets-metadata",
   ];
