@@ -26,6 +26,15 @@ yarn dev
 yarn build && yarn start
 ```
 
+### Password protected deployment
+
+Optionally, you can enable simple password protected deployments by setting the following environment variables:
+
+```
+NEXT_PUBLIC_PASSWORD_PROTECT=true
+SITE_PASSWORD=yoursitepassword
+```
+
 ## Deployment
 
 As this is a Next.js app, we recommend that you deploy through [Vercel][vercel] to ensure full feature compatibility, but you can use any provider that supports Next.js.
