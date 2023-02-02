@@ -9,9 +9,12 @@ import { DefaultSeo } from "next-seo";
 import { StreamTVLayout } from "@skylark-reference-apps/react";
 import useTranslation from "next-translate/useTranslation";
 import PlausibleProvider from "next-plausible";
+import { withPasswordProtect } from "next-password-protect";
 import createDefaultSeo from "../next-seo.config";
 
-const appTitle = process.env.NEXT_PUBLIC_APP_TITLE || "StreamTV (SLX)";
+const appTitle = process.env.NEXT_PUBLIC_APP_TITLE || "StreamTV";
+const tvShowsHref =
+  process.env.NEXT_PUBLIC_TV_SHOWS_HREF || "/brand/reculg97iNzbkEZCK";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { t } = useTranslation("common");
@@ -22,7 +25,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         appTitle={appTitle}
         skylarkApiUrl={process.env.NEXT_PUBLIC_SAAS_API_ENDPOINT}
         timeTravelEnabled
-        tvShowsHref="/brand/reculg97iNzbkEZCK"
+        tvShowsHref={tvShowsHref}
       >
         <DefaultSeo {...createDefaultSeo(appTitle, t("seo.description"))} />
         <Component {...pageProps} />
@@ -31,4 +34,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
-export default MyApp;
+export default process.env.NEXT_PUBLIC_PASSWORD_PROTECT
+  ? withPasswordProtect(MyApp)
+  : MyApp;
