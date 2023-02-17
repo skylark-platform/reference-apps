@@ -33,5 +33,5 @@ jobs:
           skylark-api-url: ${{ github.event.inputs.skylark_url }}
           create-additional-objects: "true"
           saas-ingest: "true"
-          saas-api-token: $SKYLARK_API_KEY
+          saas-api-token: ${{ env.SKYLARK_API_KEY }}
           content-type: "streamtv"
