@@ -2,17 +2,17 @@ name: Add StreamTV Content to a Skylark Account
 on:
   workflow_dispatch:
     inputs:
-      skylark-url:
+      skylark_url:
         type: string
         default: https://api.saas-sl-develop-10.skylark-dev.skylarkplatform.io/graphql
         required: true
         description: Your Skylark's GraphQL URL. Default to sl-develop-10's URL.
-      skylark-api-key:
+      skylark_api_key:
         type: string
         required: true
         description: Your Skylark API Key.
 concurrency:
-  group: ingest-streamtv-content-${{ github.event.inputs.skylark-url }}
+  group: ingest-streamtv-content-${{ github.event.inputs.skylark_url }}
   cancel-in-progress: true
 jobs:
   ingestor:
@@ -23,14 +23,15 @@ jobs:
       - name: Mask API key input
         id: add_mask
         run: |
-          API_KEY=$(echo $GITHUB_EVENT_PATH | jq -r .inputs.skylark-api-key)
+          echo $GITHUB_EVENT_PATH
+          API_KEY=$(cat $GITHUB_EVENT_PATH | jq -r '.inputs.skylark_api_key' )
           echo ::add-mask::$API_KEY
           echo SKYLARK_API_KEY="$API_KEY" >> $GITHUB_ENV
       - uses: ./.github/actions/run-ingestor
         with:
           airtable-api-key: ${{ secrets.AIRTABLE_API_KEY }}
           airtable-base-id: ${{ secrets.AIRTABLE_BASE_ID }}
-          skylark-api-url: ${{ github.event.inputs.skylark-url }}
+          skylark-api-url: ${{ github.event.inputs.skylark_url }}
           create-additional-objects: "true"
           saas-ingest: "true"
           saas-api-token: $SKYLARK_API_KEY
