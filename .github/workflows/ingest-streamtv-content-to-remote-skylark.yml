@@ -23,7 +23,7 @@ jobs:
       - name: Mask API key input
         id: add_mask
         run: |
-          API_KEY=$(jq -r '.inputs.skylark-api-key' $GITHUB_EVENT_PATH)
+          API_KEY=$(echo $GITHUB_EVENT_PATH | jq -r .inputs.skylark-api-key)
           echo ::add-mask::$API_KEY
           echo SKYLARK_API_KEY="$API_KEY" >> $GITHUB_ENV
       - uses: ./.github/actions/run-ingestor
