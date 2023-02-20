@@ -29,7 +29,7 @@ const MovieDataFetcher: React.FC<{
           image: getGraphQLImageSrc(movie?.images, ImageType.Thumbnail),
           uid: movie.uid,
           href: `/movie/${movie.uid}`,
-          releaseDate: movie.release_date || "",
+          releaseDate: (movie.release_date as string | undefined) || "",
           duration: "1hr 38m",
         })}
       </>

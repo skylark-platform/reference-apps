@@ -1,5 +1,6 @@
 import { Dimensions } from "@skylark-reference-apps/lib";
 import * as utils from "../../lib/utils";
+import { Entertainment } from "../../types";
 import {
   Credit,
   Episode,
@@ -133,7 +134,7 @@ describe("utils.ts", () => {
           title_short: "Short title",
           title_medium: "Medium title",
           title_long: "",
-        },
+        } as Entertainment,
         ["long", "medium", "short"]
       );
       expect(got).toEqual("Medium title");
@@ -147,7 +148,7 @@ describe("utils.ts", () => {
           synopsis_short: "Short synopsis",
           synopsis_medium: "Medium synopsis",
           synopsis_long: "",
-        },
+        } as Entertainment,
         ["long", "medium", "short"]
       );
       expect(got).toEqual("Medium synopsis");

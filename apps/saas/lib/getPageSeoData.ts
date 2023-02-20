@@ -5,7 +5,7 @@ import {
   GraphQLObjectTypes,
 } from "@skylark-reference-apps/lib";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
-import { Entertainment } from "../types/gql";
+import { Entertainment } from "../types";
 import { createGraphQLQueryDimensions } from "./utils";
 
 interface SeoObjectImage {

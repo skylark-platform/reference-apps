@@ -119,7 +119,7 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         EpisodeDataFetcher={EpisodeDataFetcher}
         bgImage={getGraphQLImageSrc(brand?.images, ImageType.Main)}
         loading={!brand}
-        rating={brand?.ratings?.objects?.[0]?.value}
+        rating={brand?.ratings?.objects?.[0]?.value as string | undefined}
         seasons={formattedSeasonsWithEpisodes || []}
         synopsis={synopsis}
         tags={brand?.tags?.objects?.map((tag) => tag?.name || "") || []}

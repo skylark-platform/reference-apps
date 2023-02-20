@@ -99,7 +99,7 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           duration: 58, // TODO read this from asset
         }}
         rating={getFirstRatingValue(episode.ratings)}
-        releaseDate={episode.release_date || ""}
+        releaseDate={(episode.release_date as string | undefined) || ""}
         season={{
           title: getTitleByOrderForGraphQLObject(
             episode?.seasons?.objects?.[0]

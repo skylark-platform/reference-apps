@@ -49,7 +49,7 @@ export const SliderDataFetcher: FC<{
                 )}/${object.uid}`,
                 image: getGraphQLImageSrc(object.images, ImageType.Main),
                 type: convertTypenameToEntertainmentType(object.__typename),
-                releaseDate: object.release_date || "",
+                releaseDate: (object.release_date as string | undefined) || "",
               }))
             )}
         </>

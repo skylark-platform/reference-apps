@@ -21,7 +21,7 @@ import {
   RatingListing,
   TagListing,
   ThemeListing,
-} from "../types/gql";
+} from "../types";
 
 export const getGraphQLCreditsByType = (
   credits: Maybe<Maybe<Credit>[]> | null | undefined,

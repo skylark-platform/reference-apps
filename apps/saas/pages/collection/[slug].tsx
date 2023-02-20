@@ -38,7 +38,7 @@ const CollectionItemDataFetcher: React.FC<{
               ? convertGraphQLSetType(item?.type || "")
               : convertTypenameToEntertainmentType(item.__typename)
           }/${item.uid}`,
-          releaseDate: item.release_date || "",
+          releaseDate: item.release_date as string | undefined,
           duration: "1hr 38m",
         })}
       </>
