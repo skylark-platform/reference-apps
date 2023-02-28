@@ -1,6 +1,7 @@
 import { graphQLClient } from "@skylark-reference-apps/lib";
 import { EnumType, jsonToGraphQLQuery } from "json-to-graphql-query";
 import { chunk } from "lodash";
+import { CREATE_OBJECT_CHUNK_SIZE } from "../../constants";
 
 const OBJECT_CONFIG: Record<string, { colour: string; primaryField: string }> =
   {
@@ -40,7 +41,7 @@ const OBJECT_CONFIG: Record<string, { colour: string; primaryField: string }> =
   };
 
 const createMutation = (): string[] => {
-  const chunks = chunk(Object.keys(OBJECT_CONFIG), 2);
+  const chunks = chunk(Object.keys(OBJECT_CONFIG), CREATE_OBJECT_CHUNK_SIZE);
 
   const mutations = chunks.map((objectConfigurations) => {
     const mutation = objectConfigurations.reduce((prev, objectType) => {
