@@ -100,7 +100,7 @@ describe("saas/create.ts", () => {
       );
     });
 
-    it("makes two requests when more than 10 records are sent", async () => {
+    it("makes four requests when more than 10 records are sent", async () => {
       const manyRecords: Partial<Record<FieldSet>>[] = Array.from(
         { length: 20 },
         (_, index) => ({
@@ -119,7 +119,7 @@ describe("saas/create.ts", () => {
           all: [],
         }
       );
-      expect(graphQlRequest).toHaveBeenCalledTimes(4);
+      expect(graphQlRequest).toHaveBeenCalledTimes(6);
       expect(graphQlRequest).toHaveBeenNthCalledWith(
         3,
         expect.stringContaining("mutation createOrUpdateBrands_chunk_1")
