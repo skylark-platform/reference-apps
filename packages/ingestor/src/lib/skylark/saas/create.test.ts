@@ -121,9 +121,10 @@ describe("saas/create.ts", () => {
         }
       );
       // 2 requests are always made regardless of requests, then its 20 records divided by chunkSize
-      expect(graphQlRequest).toHaveBeenCalledTimes(
-        manyRecords.length / CREATE_OBJECT_CHUNK_SIZE + 2
+      const numOfRequestChunks = Math.round(
+        manyRecords.length / CREATE_OBJECT_CHUNK_SIZE
       );
+      expect(graphQlRequest).toHaveBeenCalledTimes(numOfRequestChunks + 2);
       expect(graphQlRequest).toHaveBeenNthCalledWith(
         3,
         expect.stringContaining("mutation createOrUpdateBrands_chunk_1")
@@ -135,9 +136,7 @@ describe("saas/create.ts", () => {
       expect(graphQlRequest).toHaveBeenNthCalledWith(
         graphQlRequest.mock.calls.length,
         expect.stringContaining(
-          `mutation createOrUpdateBrands_chunk_${
-            manyRecords.length / CREATE_OBJECT_CHUNK_SIZE
-          }`
+          `mutation createOrUpdateBrands_chunk_${numOfRequestChunks}`
         )
       );
     });
@@ -675,15 +674,7 @@ describe("saas/create.ts", () => {
 
       expect(graphQlRequest).toHaveBeenNthCalledWith(
         6,
-        expect.stringContaining(
-          "mutation createMediaObjectTranslations_chunk_1"
-        )
-      );
-      expect(graphQlRequest).toHaveBeenNthCalledWith(
-        7,
-        expect.stringContaining(
-          "mutation createMediaObjectTranslations_chunk_2"
-        )
+        'mutation createMediaObjectTranslations { translation_es_ES_translation-1: updateEpisode (uid: "episode-1-uid", language: "es-ES", episode: {title: "Title in spanish"}) { __typename uid external_id title slug } translation_pt_PT_translation-2: updateEpisode (uid: "episode-1-uid", language: "pt-PT", episode: {title: "Title in portuguese"}) { __typename uid external_id title slug } translation_pt_PT_translation-3: updateBrand (uid: "brand-1-uid", language: "pt-PT", brand: {title: "Brand title in portuguese"}) { __typename uid external_id title slug } }'
       );
     });
 
