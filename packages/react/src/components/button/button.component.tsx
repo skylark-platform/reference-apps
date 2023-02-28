@@ -40,10 +40,10 @@ export const Button: React.FC<ButtonProps> = ({
   ${variant === "primary" ? primaryStyles : ""}
   ${variant === "secondary" ? secondaryStyles : ""}
   ${variant === "tertiary" ? tertiaryStyles : ""}
-  ${variant === "outline" ? outlineStyles : ""}
+  ${variant === "outline" ? outlineStyles : "text-white disabled:text-gray-300"}
 flex justify-center items-center h-full
 hover:bg-button-hover disabled:bg-button-disabled transition-colors
-text-white disabled:text-gray-300 font-body rounded-sm cursor-pointer
+font-body rounded-sm cursor-pointer
 `;
 
   if (text) {
