@@ -1136,6 +1136,7 @@ export type ImageRelationshipInput = {
 };
 
 export type ImageRelationships = {
+  assets?: InputMaybe<AssetRelationshipInput>;
   brands?: InputMaybe<BrandRelationshipInput>;
   episodes?: InputMaybe<EpisodeRelationshipInput>;
   genres?: InputMaybe<GenreRelationshipInput>;
@@ -1143,6 +1144,7 @@ export type ImageRelationships = {
   people?: InputMaybe<PersonRelationshipInput>;
   ratings?: InputMaybe<RatingRelationshipInput>;
   seasons?: InputMaybe<SeasonRelationshipInput>;
+  sets?: InputMaybe<SetRelationshipInput>;
   themes?: InputMaybe<ThemeRelationshipInput>;
 };
 

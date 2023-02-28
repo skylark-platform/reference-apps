@@ -75,7 +75,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                 </div>
               </div>
               <p className="pt-2 text-sm">
-                {"Skylark API: "}
+                {"Skylark: "}
                 {skylarkApiUrl ? (
                   <a
                     className="text-skylark-blue"

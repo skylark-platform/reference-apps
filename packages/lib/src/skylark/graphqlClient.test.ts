@@ -5,7 +5,6 @@ import { Dimensions } from "../interfaces";
 import { graphQLClient, skylarkRequestWithDimensions } from "./graphqlClient";
 
 jest.mock("./skylark.constants", () => ({
-  SAAS_ACCOUNT_ID: "account-id",
   SAAS_API_ENDPOINT: "https://endpoint/graphql",
   SAAS_API_KEY: "api-key",
 }));

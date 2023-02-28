@@ -1,7 +1,7 @@
-import { GraphQLClient } from "graphql-request";
+import { GraphQLClient, request } from "graphql-request";
 import { Dimensions } from "../interfaces";
 import {
-  SAAS_ACCOUNT_ID,
+  LOCAL_STORAGE,
   SAAS_API_ENDPOINT,
   SAAS_API_KEY,
 } from "./skylark.constants";
@@ -9,9 +9,20 @@ import {
 export const graphQLClient = new GraphQLClient(SAAS_API_ENDPOINT, {
   headers: {
     "x-api-key": SAAS_API_KEY,
-    "x-account-id": SAAS_ACCOUNT_ID,
   },
 });
+
+export const skylarkRequest = <T>(
+  uri: string,
+  apiKey: string,
+  query: string,
+  variables?: object,
+  headers?: object
+) =>
+  request<T>(uri, query, variables, {
+    ...headers,
+    "x-api-key": apiKey,
+  });
 
 export const skylarkRequestWithDimensions = <T>(
   query: string,
@@ -21,6 +32,13 @@ export const skylarkRequestWithDimensions = <T>(
 
   if (dimensions.timeTravel) {
     headers["x-time-travel"] = dimensions.timeTravel;
+  }
+
+  // Allow users to give their own Skylark to connect to
+  const localStorageUri = localStorage.getItem(LOCAL_STORAGE.uri);
+  const localStorageApiKey = localStorage.getItem(LOCAL_STORAGE.apikey);
+  if (localStorageUri && localStorageApiKey) {
+    return skylarkRequest<T>(localStorageUri, localStorageApiKey, query);
   }
 
   return graphQLClient.request<T>(query, {}, headers);

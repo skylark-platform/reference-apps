@@ -10,6 +10,8 @@ import { StreamTVLayout } from "@skylark-reference-apps/react";
 import useTranslation from "next-translate/useTranslation";
 import PlausibleProvider from "next-plausible";
 import { withPasswordProtect } from "next-password-protect";
+import { LOCAL_STORAGE } from "@skylark-reference-apps/lib";
+import { useEffect, useState } from "react";
 import createDefaultSeo from "../next-seo.config";
 
 const appTitle = process.env.NEXT_PUBLIC_APP_TITLE || "StreamTV";
@@ -18,12 +20,30 @@ const tvShowsHref =
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { t } = useTranslation("common");
+  const [skylarkApiUrl, setSkylarkApiUrl] = useState(
+    process.env.NEXT_PUBLIC_SAAS_API_ENDPOINT
+  );
+
+  useEffect(() => {
+    const update = () => {
+      const url =
+        localStorage.getItem(LOCAL_STORAGE.apikey) &&
+        localStorage.getItem(LOCAL_STORAGE.uri);
+      setSkylarkApiUrl(url || process.env.NEXT_PUBLIC_SAAS_API_ENDPOINT);
+    };
+    update();
+
+    window.addEventListener("storage", update);
+    return () => {
+      window.removeEventListener("storage", update);
+    };
+  }, []);
 
   return (
     <PlausibleProvider domain={process.env.NEXT_PUBLIC_APP_DOMAIN as string}>
       <StreamTVLayout
         appTitle={appTitle}
-        skylarkApiUrl={process.env.NEXT_PUBLIC_SAAS_API_ENDPOINT}
+        skylarkApiUrl={skylarkApiUrl}
         timeTravelEnabled
         tvShowsHref={tvShowsHref}
       >

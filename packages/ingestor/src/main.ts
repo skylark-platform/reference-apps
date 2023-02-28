@@ -11,7 +11,6 @@ import {
   ApiTagCategory,
   ApiThemeGenre,
   SKYLARK_API,
-  SAAS_ACCOUNT_ID,
   SAAS_API_ENDPOINT,
 } from "@skylark-reference-apps/lib";
 import axios from "axios";
@@ -402,7 +401,6 @@ const main = async () => {
       environment_meta: {
         date_stamp: dateStamp,
         endpoint: SAAS_API_ENDPOINT,
-        account: SAAS_ACCOUNT_ID,
       },
       airtable_data: airtable,
       metadata,
