@@ -78,6 +78,6 @@ runs:
       with:
         timeout_minutes: 20
         retry_wait_seconds: 10
-        max_attempts: 3
+        max_attempts: 10
         retry_on: error
         command: cd ./packages/ingestor && yarn ingest

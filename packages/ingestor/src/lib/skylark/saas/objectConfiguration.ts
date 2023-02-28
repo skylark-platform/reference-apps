@@ -1,5 +1,6 @@
 import { graphQLClient } from "@skylark-reference-apps/lib";
 import { EnumType, jsonToGraphQLQuery } from "json-to-graphql-query";
+import { chunk } from "lodash";
 
 const OBJECT_CONFIG: Record<string, { colour: string; primaryField: string }> =
   {
@@ -38,35 +39,41 @@ const OBJECT_CONFIG: Record<string, { colour: string; primaryField: string }> =
     Set: { colour: "000000", primaryField: "title" },
   };
 
-const createMutation = (): string => {
-  const objectConfigurations = Object.keys(OBJECT_CONFIG);
+const createMutation = (): string[] => {
+  const chunks = chunk(Object.keys(OBJECT_CONFIG), 2);
 
-  const mutation = objectConfigurations.reduce((prev, objectType) => {
-    const updatedOperations = {
-      ...prev,
-      [objectType]: {
-        __aliasFor: "setObjectConfiguration",
-        __args: {
-          object: new EnumType(objectType),
-          object_config: {
-            colour: `#${OBJECT_CONFIG[objectType].colour.toLowerCase()}`,
-            primary_field: OBJECT_CONFIG[objectType].primaryField,
+  const mutations = chunks.map((objectConfigurations) => {
+    const mutation = objectConfigurations.reduce((prev, objectType) => {
+      const updatedOperations = {
+        ...prev,
+        [objectType]: {
+          __aliasFor: "setObjectConfiguration",
+          __args: {
+            object: new EnumType(objectType),
+            object_config: {
+              colour: `#${OBJECT_CONFIG[objectType].colour.toLowerCase()}`,
+              primary_field: OBJECT_CONFIG[objectType].primaryField,
+            },
           },
+          colour: true,
+          primary_field: true,
         },
-        colour: true,
-        primary_field: true,
-      },
-    };
-    return updatedOperations;
-  }, {} as { [key: string]: object });
+      };
+      return updatedOperations;
+    }, {} as { [key: string]: object });
 
-  const parsedMutation = jsonToGraphQLQuery({ mutation });
+    const parsedMutation = jsonToGraphQLQuery({ mutation });
 
-  return parsedMutation;
+    return parsedMutation;
+  });
+
+  return mutations;
 };
 
 export const updateObjectConfigurations = async () => {
-  const mutation = createMutation();
+  const mutations = createMutation();
 
-  await graphQLClient.request(mutation);
+  await Promise.all(
+    mutations.map((mutation) => graphQLClient.request(mutation))
+  );
 };
