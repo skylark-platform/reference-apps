@@ -82,27 +82,21 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                   </a>
                 </div>
               </div>
-              <div className="flex items-center justify-center">
-                <p className="ml-4 flex-grow text-sm">
-                  {"Skylark: "}
-                  {skylarkApiUrl ? (
-                    <a
-                      className="text-skylark-blue"
-                      href={skylarkApiUrl}
-                      rel="noreferrer"
-                      target="_blank"
-                    >
-                      {skylarkApiUrl}
-                    </a>
-                  ) : (
-                    "not connected"
-                  )}
+              <div className="flex items-center justify-start">
+                <p className="text-sm font-medium">
+                  {skylarkApiUrl
+                    ? `Connected: ${
+                        skylarkApiUrl.includes("skylarkplatform.io")
+                          ? skylarkApiUrl.split(".")[1]
+                          : skylarkApiUrl
+                      }.`
+                    : "Not connected."}
                 </p>
                 <button
-                  className="rounded-full bg-skylark-blue px-4 py-3 text-sm font-medium text-white hover:bg-blue-600"
+                  className="ml-1.5 rounded-full text-sm font-medium text-skylark-blue  hover:text-blue-600"
                   onClick={() => setModalOpen(true)}
                 >
-                  {"Connect Skylark Account"}
+                  {"Change"}
                 </button>
               </div>
               <div className="grid grid-cols-1 gap-8 pt-7 md:grid-cols-2 md:pt-10 lg:grid-cols-4">

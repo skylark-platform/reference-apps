@@ -8,11 +8,11 @@ import { quentinTarantinoMovies } from "./dynamicObjects";
 const createDataSourceId = (id: string) => `ingestor-set-${id}`;
 
 // Data source but for V10 - GraphQL doesn't like "-"
-const createExternalId = (id: string) => `ingestor_set_${id}`;
+const createStreamTVExternalId = (id: string) => `streamtv_${id}`;
 
 const newTVReleases: SetConfig = {
   dataSourceId: createDataSourceId("new-tv-releases"),
-  externalId: createExternalId("new_tv_releases"),
+  externalId: createStreamTVExternalId("new_tv_releases"),
   title: "New TV Releases",
   slug: "new-tv-releases",
   set_type_slug: "rail",
@@ -26,7 +26,7 @@ const newTVReleases: SetConfig = {
 
 const spotlightMovies: SetConfig = {
   dataSourceId: createDataSourceId("spotlight-movies"),
-  externalId: createExternalId("spotlight_movies"),
+  externalId: createStreamTVExternalId("spotlight_movies"),
   title: "Spotlight movies",
   slug: "spotlight-movies",
   set_type_slug: "rail",
@@ -49,7 +49,7 @@ const spotlightMovies: SetConfig = {
 
 const homePageSlider: SetConfig = {
   dataSourceId: createDataSourceId("home-page-slider"),
-  externalId: createExternalId("home_page_slider"),
+  externalId: createStreamTVExternalId("home_page_slider"),
   title: "Home page hero",
   slug: "media-reference-home-page-hero",
   set_type_slug: "slider",
@@ -64,7 +64,7 @@ const homePageSlider: SetConfig = {
 
 const tarantinoMoviesCollection: SetConfig = {
   dataSourceId: createDataSourceId("tarantino-movies"),
-  externalId: createExternalId("tarantino_movies"),
+  externalId: createStreamTVExternalId("tarantino_movies"),
   title: "Tarantino Movies Collection",
   slug: "tarantino-movies-collection",
   set_type_slug: "collection",
@@ -95,7 +95,7 @@ const tarantinoMoviesCollectionWithoutDynamicObject: SetConfig = {
 
 const discoverCollection: SetConfig = {
   dataSourceId: createDataSourceId("discover-collection"),
-  externalId: createExternalId("discover_collection"),
+  externalId: createStreamTVExternalId("discover_collection"),
   title: "Discover Collection",
   slug: "discover-collection",
   set_type_slug: "collection",
@@ -111,7 +111,7 @@ const discoverCollection: SetConfig = {
 
 const mediaReferenceHomepage: SetConfig = {
   dataSourceId: createDataSourceId("media-reference-homepage"),
-  externalId: createExternalId("media_reference_homepage"),
+  externalId: createStreamTVExternalId("homepage"),
   title: "Homepage",
   slug: "media-reference-homepage",
   set_type_slug: "homepage",

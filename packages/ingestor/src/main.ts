@@ -267,7 +267,7 @@ const main = async () => {
 
   if (process.env.INGEST_TO_SAAS_SKYLARK === "true") {
     // eslint-disable-next-line no-console
-    console.log(`Starting ingest to SaaS Skylark: ${SAAS_API_ENDPOINT}`);
+    console.log(`Starting ingest to Skylark X: ${SAAS_API_ENDPOINT}`);
 
     await updateObjectConfigurations();
     // eslint-disable-next-line no-console

@@ -1,5 +1,21 @@
-import { ImageUrls } from "@skylark-reference-apps/lib";
-import { getImageSrcAndSizeByWindow } from "./utils";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import "regenerator-runtime/runtime";
+import {
+  Dimensions,
+  graphQLClient,
+  ImageUrls,
+} from "@skylark-reference-apps/lib";
+import {
+  getImageSrcAndSizeByWindow,
+  skylarkRequestWithDimensions,
+} from "./utils";
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+jest.mock("@skylark-reference-apps/lib", () => ({
+  ...jest.requireActual("@skylark-reference-apps/lib"),
+  SAAS_API_ENDPOINT: "https://endpoint/graphql",
+  SAAS_API_KEY: "api-key",
+}));
 
 describe("utils", () => {
   describe("getImageSrcAndSizeByWindow", () => {
@@ -48,6 +64,48 @@ describe("utils", () => {
       window.dispatchEvent(new Event("resize"));
       const src = getImageSrcAndSizeByWindow(imageUrls, "Main");
       expect(src).toEqual("https://skylark.com/images/2-200x200.jpg");
+    });
+  });
+
+  describe("skylarkRequestWithDimensions", () => {
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
+
+    it("makes a request without additional headers when time travel is empty", async () => {
+      jest.spyOn(graphQLClient, "request");
+      (graphQLClient.request as jest.Mock).mockImplementation(() => {});
+
+      const dimensions: Dimensions = {
+        timeTravel: "",
+        deviceType: "",
+        customerType: "",
+        language: "",
+      };
+
+      await skylarkRequestWithDimensions("query", dimensions);
+
+      expect(graphQLClient.request).toBeCalledWith("query", {}, {});
+    });
+
+    it("makes a request and adds the time travel header when its populated", async () => {
+      jest.spyOn(graphQLClient, "request");
+      (graphQLClient.request as jest.Mock).mockImplementation(() => {});
+
+      const dimensions: Dimensions = {
+        timeTravel: "next week",
+        deviceType: "",
+        customerType: "",
+        language: "",
+      };
+
+      await skylarkRequestWithDimensions("query", dimensions);
+
+      expect(graphQLClient.request).toBeCalledWith(
+        "query",
+        {},
+        { "x-time-travel": "next week" }
+      );
     });
   });
 });

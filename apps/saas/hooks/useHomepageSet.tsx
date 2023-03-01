@@ -1,18 +1,20 @@
 import useSWR from "swr";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
+import { Dimensions } from "@skylark-reference-apps/lib";
 import {
-  Dimensions,
+  useDimensions,
   skylarkRequestWithDimensions,
-} from "@skylark-reference-apps/lib";
-import { useDimensions } from "@skylark-reference-apps/react";
+} from "@skylark-reference-apps/react";
 import { Set } from "../types/gql";
 import { createGraphQLQueryDimensions } from "../lib/utils";
 
 const createGraphQLQuery = (lookupValue: string, dimensions: Dimensions) => {
   // Helper to use the external_id when an airtable record ID is given
-  const lookupField = lookupValue.startsWith("ingestor_set")
-    ? "external_id"
-    : "uid";
+  const lookupField =
+    lookupValue.startsWith("ingestor_set") ||
+    lookupValue.startsWith("streamtv_")
+      ? "external_id"
+      : "uid";
 
   const fieldsToFetch: { [key: string]: boolean | object } = {
     __typename: true,

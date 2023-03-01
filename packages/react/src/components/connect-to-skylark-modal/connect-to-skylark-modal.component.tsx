@@ -112,33 +112,33 @@ export const ConnectToSkylarkModal = ({
                     as="h3"
                     className="text-xl font-medium leading-6 text-gray-900"
                   >
-                    {"Connect to Skylark"}
+                    {"Connect to your Skylark account"}
                   </Dialog.Title>
                   <div className="mt-2">
-                    <p className="text-sm text-gray-600">
+                    {/* <p className="text-sm text-gray-600">
                       {
                         "StreamTV can now connect to your Skylark Beta Account. Enter your API URL and API Key using the form below and the content will be loaded from your Account."
                       }
-                    </p>
-                    <p className="mt-1 text-sm text-gray-600">
+                    </p> */}
+                    {/* <p className="mt-1 text-sm text-gray-600">
                       {
                         'To power the homepage, you must create a Set object with the external_id "streamtv-homepage". Alternatively, our customer success team can preload the StreamTV data into your acccount.'
                       }
-                    </p>
+                    </p> */}
 
-                    <p className="mt-3 text-sm font-medium text-gray-900">
+                    {/* <p className="mt-3 text-sm font-medium text-gray-900">
                       {"Want to join our Beta?"}
                     </p>
                     <p className="mt-1 text-sm text-gray-600">
                       {
                         "Complete the registration form and a member of our team will contact you to set up your account."
                       }
-                    </p>
+                    </p> */}
                     <a
                       className="mt-1 text-sm font-medium text-skylark-blue hover:text-blue-700"
                       href={process.env.NEXT_PUBLIC_REGISTER_BUTTON_HREF}
                     >
-                      {"Register for the Skylark Beta"}
+                      {"Don't have an account?"}
                     </a>
 
                     <div className="my-4 grid w-full grid-cols-5 gap-4">

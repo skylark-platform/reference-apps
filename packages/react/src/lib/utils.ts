@@ -1,7 +1,11 @@
 import {
+  Dimensions,
   getImageSrc,
+  graphQLClient,
   ImageTypes,
   ImageUrls,
+  LOCAL_STORAGE,
+  skylarkRequest,
   UnexpandedObjects,
 } from "@skylark-reference-apps/lib";
 
@@ -23,4 +27,27 @@ export const getImageSrcAndSizeByWindow = (
       : `${window.innerWidth}x${window.innerWidth}`);
 
   return getImageSrc(images, type, imageSize || "");
+};
+
+// Make request to Skylark using values from LocalStorage if found
+export const skylarkRequestWithDimensions = <T>(
+  query: string,
+  dimensions: Dimensions
+) => {
+  const headers: { [key: string]: string } = {};
+
+  if (dimensions.timeTravel) {
+    headers["x-time-travel"] = dimensions.timeTravel;
+  }
+
+  if (typeof window !== "undefined") {
+    // Allow users to give their own Skylark to connect to
+    const localStorageUri = localStorage.getItem(LOCAL_STORAGE.uri);
+    const localStorageApiKey = localStorage.getItem(LOCAL_STORAGE.apikey);
+    if (localStorageUri && localStorageApiKey) {
+      return skylarkRequest<T>(localStorageUri, localStorageApiKey, query);
+    }
+  }
+
+  return graphQLClient.request<T>(query, {}, headers);
 };

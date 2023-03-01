@@ -109,7 +109,7 @@ const getContentForSetItem = (
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const seo = await getSeoDataForObject(
     "Set",
-    "ingestor_set_media_reference_homepage",
+    "streamtv_homepage",
     locale || ""
   );
   return {
