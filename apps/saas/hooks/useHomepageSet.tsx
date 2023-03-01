@@ -113,5 +113,6 @@ export const useHomepageSet = () => {
     data,
     isLoading: isLoading || (!error && !data),
     isError: error,
+    isNotFound: error?.message?.startsWith("Unable to find"),
   };
 };

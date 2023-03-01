@@ -121,14 +121,29 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 };
 
 const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
-  const { data, isLoading, isError } = useHomepageSet();
+  const { data, isLoading, isError, isNotFound } = useHomepageSet();
 
   if (!isLoading && (isError || !data?.content?.objects)) {
     return (
       <div className="flex h-screen flex-col items-center justify-center text-white">
-        <p>{`Error fetching homepage`}</p>
-        {isError && <p>{isError.message}</p>}
-        {!data?.content?.objects && <p>{`No items in the homepage set`}</p>}
+        {isNotFound ? (
+          <>
+            <p className="mb-4 text-lg font-medium">
+              {"StreamTV homepage Set not found"}
+            </p>
+            <p className="max-w-md text-center text-sm">
+              {
+                'To power the homepage, you must create a Set object with the external_id "streamtv_homepage". Alternatively, our customer success team can preload the StreamTV data into your acccount.'
+              }
+            </p>
+          </>
+        ) : (
+          <>
+            <p className="mb-4 text-lg font-medium">{`Error fetching homepage`}</p>
+            {isError && <p>{isError.message}</p>}
+            {!data?.content?.objects && <p>{`No items in the homepage set`}</p>}
+          </>
+        )}
       </div>
     );
   }
