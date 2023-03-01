@@ -71,6 +71,7 @@ font-body rounded-sm cursor-pointer
     return (
       <Link href={href}>
         <a className={className} target={externalHref ? "_blank" : undefined}>
+          {icon && <span className={iconClassName}>{icon}</span>}
           {text && <span>{text}</span>}
         </a>
       </Link>

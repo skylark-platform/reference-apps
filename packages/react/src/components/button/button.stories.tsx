@@ -67,6 +67,17 @@ Tertiary.args = {
   variant: "tertiary",
 };
 
+export const Outline = Template.bind({});
+Outline.args = {
+  text: "Button name",
+  icon: undefined,
+  size: "lg",
+  iconPlacement: "left",
+  disabled: false,
+  onClick,
+  variant: "outline",
+};
+
 export const WithIcon = Template.bind({});
 WithIcon.args = {
   text: "Button name",
