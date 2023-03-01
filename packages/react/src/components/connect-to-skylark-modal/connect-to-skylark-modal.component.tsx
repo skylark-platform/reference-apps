@@ -115,25 +115,36 @@ export const ConnectToSkylarkModal = ({
                     {"Connect to Skylark"}
                   </Dialog.Title>
                   <div className="mt-2">
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-600">
                       {
                         "StreamTV can now connect to your Skylark Beta Account. Enter your API URL and API Key using the form below and the content will be loaded from your Account."
                       }
                     </p>
-
-                    <p className="mt-3 text-sm font-medium text-gray-800">
-                      {"Want to join our Beta?"}
-                    </p>
-                    <p className="mt-1 text-sm text-gray-500">
+                    <p className="mt-1 text-sm text-gray-600">
                       {
-                        "Use the Register button to have a member of our team contact you and get your started with Skylark."
+                        'To power the homepage, you must create a Set object with the external_id "streamtv-homepage". Alternatively, our customer success team can preload the StreamTV data into your acccount.'
                       }
                     </p>
+
+                    <p className="mt-3 text-sm font-medium text-gray-900">
+                      {"Want to join our Beta?"}
+                    </p>
+                    <p className="mt-1 text-sm text-gray-600">
+                      {
+                        "Complete the registration form and a member of our team will contact you to set up your account."
+                      }
+                    </p>
+                    <a
+                      className="mt-1 text-sm font-medium text-skylark-blue hover:text-blue-700"
+                      href={process.env.NEXT_PUBLIC_REGISTER_BUTTON_HREF}
+                    >
+                      {"Register for the Skylark Beta"}
+                    </a>
 
                     <div className="my-4 grid w-full grid-cols-5 gap-4">
                       <div className="col-span-5 sm:col-span-4">
                         <label
-                          className="block text-sm font-medium text-gray-700"
+                          className="block text-sm font-medium text-gray-900"
                           htmlFor="skylark-url"
                         >
                           {"GraphQL URL"}
@@ -149,7 +160,7 @@ export const ConnectToSkylarkModal = ({
                       </div>
                       <div className="col-span-5 sm:col-span-4">
                         <label
-                          className="block text-sm font-medium text-gray-700"
+                          className="block text-sm font-medium text-gray-900"
                           htmlFor="skylark-apikey"
                         >
                           {"API Key"}

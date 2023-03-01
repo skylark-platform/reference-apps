@@ -70,17 +70,8 @@ export const StreamTVLayout: React.FC<Props> = ({
             </span>
           </div>
           <div className="hidden gap-1 md:flex">
-            <Button
-              icon={<MdAccountCircle size={25} />}
-              text={t("sign-in")}
-              onClick={() => setModalOpen(true)}
-            />
-            <Button
-              externalHref
-              href={process.env.NEXT_PUBLIC_REGISTER_BUTTON_HREF}
-              text={t("register")}
-              variant="tertiary"
-            />
+            <Button icon={<MdAccountCircle size={25} />} text={t("sign-in")} />
+            <Button externalHref text={t("register")} variant="tertiary" />
           </div>
         </AppHeader>
         <div className="relative z-10 h-full w-full pt-mobile-header md:pt-0">
