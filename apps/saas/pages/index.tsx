@@ -11,6 +11,7 @@ import {
 import type { GetStaticProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 import { ReactNode } from "react";
+import { DisplayError } from "../components/displayError";
 import { MediaObjectFetcher } from "../components/mediaObjectFetcher";
 import { SliderDataFetcher } from "../components/sliderDataFetcher";
 import { useHomepageSet } from "../hooks/useHomepageSet";
@@ -121,30 +122,14 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 };
 
 const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
-  const { data, isLoading, isError, isNotFound } = useHomepageSet();
+  const { data, isLoading, isError } = useHomepageSet();
 
-  if (!isLoading && (isError || !data?.content?.objects)) {
+  if (!isLoading && isError) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center text-white">
-        {isNotFound ? (
-          <>
-            <p className="mb-4 text-lg font-medium">
-              {"StreamTV homepage Set not found"}
-            </p>
-            <p className="max-w-md text-center text-sm">
-              {
-                'To power the homepage, you must create a Set object with the external_id "streamtv_homepage". Alternatively, our customer success team can preload the StreamTV data into your acccount.'
-              }
-            </p>
-          </>
-        ) : (
-          <>
-            <p className="mb-4 text-lg font-medium">{`Error fetching homepage`}</p>
-            {isError && <p>{isError.message}</p>}
-            {!data?.content?.objects && <p>{`No items in the homepage set`}</p>}
-          </>
-        )}
-      </div>
+      <DisplayError
+        error={isError}
+        notFoundMessage='To power the homepage, you must create a Set object with the external_id "streamtv_homepage". Alternatively, our customer success team can preload the StreamTV data into your acccount.'
+      />
     );
   }
 
