@@ -15,6 +15,7 @@ import {
   getSynopsisByOrderForGraphQLObject,
   getTitleByOrderForGraphQLObject,
 } from "../../lib/utils";
+import { DisplayError } from "../../components/displayError";
 
 const EpisodeDataFetcher: React.FC<{
   uid: string;
@@ -60,23 +61,15 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const {
     data: brand,
     isError,
-    isNotFound,
+    isLoading,
   } = useSingleObject("Brand", query?.slug as string);
 
-  if (isNotFound) {
+  if (!isLoading && isError) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center text-white">
-        <p>{`Brand not found`}</p>
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="flex h-screen flex-col items-center justify-center text-white">
-        <p>{`Error fetching brand: ${(query?.slug as string) || ""}`}</p>
-        <p>{isError?.message}</p>
-      </div>
+      <DisplayError
+        error={isError}
+        notFoundMessage={`Brand "${query?.slug as string}" not found.`}
+      />
     );
   }
 

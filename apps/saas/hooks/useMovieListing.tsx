@@ -7,6 +7,7 @@ import {
 } from "@skylark-reference-apps/react";
 import { Movie, MovieListing } from "../types/gql";
 import { createGraphQLQueryDimensions } from "../lib/utils";
+import { GQLError } from "../types";
 
 const createGraphQLQuery = (dimensions: Dimensions, nextToken?: string) => {
   const method = `listMovie`;
@@ -59,7 +60,7 @@ const getKey = (
 export const useMovieListing = (disable = false) => {
   const { dimensions } = useDimensions();
 
-  const { data, error, isLoading } = useSWRInfinite<MovieListing, Error>(
+  const { data, error, isLoading } = useSWRInfinite<MovieListing, GQLError>(
     (pageIndex, previousPageData: MovieListing) =>
       disable ? null : getKey(pageIndex, previousPageData, dimensions),
     movieListingFetcher,

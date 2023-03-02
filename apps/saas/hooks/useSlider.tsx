@@ -7,6 +7,7 @@ import {
 } from "@skylark-reference-apps/react";
 import { Set } from "../types/gql";
 import { createGraphQLQueryDimensions } from "../lib/utils";
+import { GQLError } from "../types";
 
 const createGraphQLQuery = (lookupValue: string, dimensions: Dimensions) => {
   // Helper to use the external_id when an airtable record ID is given
@@ -100,7 +101,7 @@ const fetcher = ([lookupValue, dimensions]: [
 export const useSlider = (lookupValue: string) => {
   const { dimensions } = useDimensions();
 
-  const { data, error } = useSWR<Set, Error>(
+  const { data, error } = useSWR<Set, GQLError>(
     [lookupValue, dimensions],
     fetcher
   );

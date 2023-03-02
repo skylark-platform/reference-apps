@@ -7,6 +7,7 @@ import {
 } from "@skylark-reference-apps/react";
 import { Genre, GenreListing } from "../types/gql";
 import { createGraphQLQueryDimensions } from "../lib/utils";
+import { GQLError } from "../types";
 
 const createGraphQLQuery = (
   activeDimensions: Dimensions,
@@ -66,7 +67,7 @@ const getKey = (
 export const useGenreListing = () => {
   const { dimensions } = useDimensions();
 
-  const { data, error, isLoading } = useSWRInfinite<GenreListing, Error>(
+  const { data, error, isLoading } = useSWRInfinite<GenreListing, GQLError>(
     (pageIndex: number, previousPageData: GenreListing | undefined) =>
       getKey(pageIndex, previousPageData, dimensions),
     fetcher,

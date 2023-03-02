@@ -14,6 +14,7 @@ import {
   getTitleByOrderForGraphQLObject,
 } from "../../lib/utils";
 import { ImageType } from "../../types/gql";
+import { DisplayError } from "../../components/displayError";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject(
@@ -34,23 +35,15 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const {
     data: movie,
     isError,
-    isNotFound,
+    isLoading,
   } = useSingleObject("Movie", query?.slug as string);
 
-  if (isNotFound) {
+  if (!isLoading && isError) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center text-white">
-        <p>{`Movie not found`}</p>
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="flex h-screen flex-col items-center justify-center text-white">
-        <p>{`Error fetching movie: ${(query?.slug as string) || ""}`}</p>
-        <p>{isError.message}</p>
-      </div>
+      <DisplayError
+        error={isError}
+        notFoundMessage={`Movie "${query?.slug as string}" not found.`}
+      />
     );
   }
 

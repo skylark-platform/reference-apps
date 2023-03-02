@@ -20,6 +20,7 @@ import {
   getSynopsisByOrderForGraphQLObject,
   getTitleByOrderForGraphQLObject,
 } from "../../lib/utils";
+import { DisplayError } from "../../components/displayError";
 
 const CollectionItemDataFetcher: React.FC<{
   uid: string;
@@ -66,12 +67,12 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     query?.slug as string
   );
 
-  if (isError && !collection) {
+  if (!isLoading && isError) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center text-white">
-        <p>{`Error fetching collection: ${(query?.slug as string) || ""}`}</p>
-        <p>{isError?.message}</p>
-      </div>
+      <DisplayError
+        error={isError}
+        notFoundMessage={`Collection "${query?.slug as string}" not found.`}
+      />
     );
   }
 

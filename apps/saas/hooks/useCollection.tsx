@@ -8,6 +8,7 @@ import {
 
 import { Set } from "../types/gql";
 import { createGraphQLQueryDimensions } from "../lib/utils";
+import { GQLError } from "../types";
 
 const createGraphQLQuery = (lookupValue: string, dimensions: Dimensions) => {
   const method = `getSet`;
@@ -85,7 +86,7 @@ const getSetFetcher = ([lookupValue, dimensions]: [
 export const useCollection = (lookupValue: string) => {
   const { dimensions } = useDimensions();
 
-  const { data, error, isLoading } = useSWR<Set, Error>(
+  const { data, error, isLoading } = useSWR<Set, GQLError>(
     [lookupValue, dimensions],
     getSetFetcher
   );

@@ -14,6 +14,7 @@ import {
   getTitleByOrderForGraphQLObject,
 } from "../../lib/utils";
 import { ImageType } from "../../types/gql";
+import { DisplayError } from "../../components/displayError";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject(
@@ -34,23 +35,15 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const {
     data: episode,
     isError,
-    isNotFound,
+    isLoading,
   } = useSingleObject("Episode", query?.slug as string);
 
-  if (isNotFound) {
+  if (!isLoading && isError) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center text-white">
-        <p>{`Episode not found`}</p>
-      </div>
-    );
-  }
-
-  if (isError || !episode) {
-    return (
-      <div className="flex h-screen flex-col items-center justify-center text-white">
-        <p>{`Error fetching episode: ${(query?.slug as string) || ""}`}</p>
-        <p>{isError?.message}</p>
-      </div>
+      <DisplayError
+        error={isError}
+        notFoundMessage={`Episode "${query?.slug as string}" not found.`}
+      />
     );
   }
 
@@ -90,7 +83,7 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
             getGraphQLCreditsByType(episode?.credits?.objects, "Engineer")
           ),
         }}
-        genres={convertObjectToName(episode.genres)}
+        genres={convertObjectToName(episode?.genres)}
         number={episode?.episode_number || ""}
         player={{
           assetId: asset?.external_id || asset?.uid || "1",
@@ -98,8 +91,8 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           src: playbackUrl,
           duration: 58, // TODO read this from asset
         }}
-        rating={getFirstRatingValue(episode.ratings)}
-        releaseDate={(episode.release_date as string | undefined) || ""}
+        rating={getFirstRatingValue(episode?.ratings)}
+        releaseDate={(episode?.release_date as string | undefined) || ""}
         season={{
           title: getTitleByOrderForGraphQLObject(
             episode?.seasons?.objects?.[0]
@@ -107,8 +100,8 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           number: episode?.seasons?.objects?.[0]?.season_number as number,
         }}
         synopsis={synopsis}
-        tags={convertObjectToName(episode.tags)}
-        themes={convertObjectToName(episode.themes)}
+        tags={convertObjectToName(episode?.tags)}
+        themes={convertObjectToName(episode?.themes)}
         title={title}
       />
     </>
