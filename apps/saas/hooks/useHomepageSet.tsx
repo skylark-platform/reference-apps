@@ -103,7 +103,7 @@ const fetcher = ([lookupValue, dimensions]: [
 export const useHomepageSet = () => {
   const { dimensions } = useDimensions();
 
-  const homepageExternalId = "ingestor_set_media_reference_homepage";
+  const homepageExternalId = "streamtv_homepage";
 
   const { data, error, isLoading } = useSWR<Set, GQLError>(
     [homepageExternalId, dimensions],

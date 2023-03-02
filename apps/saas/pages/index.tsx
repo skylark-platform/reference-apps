@@ -128,7 +128,7 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     return (
       <DisplayError
         error={isError}
-        notFoundMessage='To power the homepage, you must create a Set object with the external_id "streamtv_homepage". Alternatively, our customer success team can preload the StreamTV data into your acccount.'
+        notFoundMessage='To power the homepage, you must create a Set object with the external_id "streamtv_homepage" with valid Availability. Currently, this page will only show Sets and Seasons. Alternatively, our customer success team can preload the StreamTV data into your acccount.'
       />
     );
   }
