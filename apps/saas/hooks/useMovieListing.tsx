@@ -1,12 +1,13 @@
 import useSWRInfinite from "swr/infinite";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
+import { Dimensions } from "@skylark-reference-apps/lib";
 import {
-  Dimensions,
+  useDimensions,
   skylarkRequestWithDimensions,
-} from "@skylark-reference-apps/lib";
-import { useDimensions } from "@skylark-reference-apps/react";
+} from "@skylark-reference-apps/react";
 import { Movie, MovieListing } from "../types/gql";
 import { createGraphQLQueryDimensions } from "../lib/utils";
+import { GQLError } from "../types";
 
 const createGraphQLQuery = (dimensions: Dimensions, nextToken?: string) => {
   const method = `listMovie`;
@@ -59,7 +60,7 @@ const getKey = (
 export const useMovieListing = (disable = false) => {
   const { dimensions } = useDimensions();
 
-  const { data, error, isLoading } = useSWRInfinite<MovieListing, Error>(
+  const { data, error, isLoading } = useSWRInfinite<MovieListing, GQLError>(
     (pageIndex, previousPageData: MovieListing) =>
       disable ? null : getKey(pageIndex, previousPageData, dimensions),
     movieListingFetcher,

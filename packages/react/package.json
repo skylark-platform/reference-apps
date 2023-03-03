@@ -27,6 +27,7 @@
     "jest-junit": "^13.0.0"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.12",
     "@mux-elements/mux-video-react": "^0.4.6",
     "@skylark-reference-apps/lib": "*",
     "dayjs": "^1.11.3",

@@ -7,11 +7,11 @@ import { SetConfig } from "../lib/interfaces";
 const createDataSourceId = (id: string) => `ingestor-set-${id}`;
 
 // Data source but for V10 - GraphQL doesn't like "-"
-const createExternalId = (id: string) => `ingestor_set_${id}`;
+const createStreamTVExternalId = (id: string) => `streamtv_${id}`;
 
 const homePageSlider: SetConfig = {
   dataSourceId: createDataSourceId("home-page-slider"),
-  externalId: createExternalId("home_page_slider"),
+  externalId: createStreamTVExternalId("home_page_slider"),
   title: "Home page hero",
   slug: "home-page-hero",
   set_type_slug: "slider",
@@ -24,7 +24,7 @@ const homePageSlider: SetConfig = {
 
 const mediaReferenceHomepage: SetConfig = {
   dataSourceId: createDataSourceId("media-reference-homepage"),
-  externalId: createExternalId("media_reference_homepage"),
+  externalId: createStreamTVExternalId("homepage"),
   title: "Homepage",
   slug: "media-reference-homepage",
   set_type_slug: "homepage",

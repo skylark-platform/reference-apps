@@ -21,3 +21,4 @@ export * from "./information-panel";
 export * from "./list";
 export * from "./hero";
 export * from "./skeleton";
+export * from "./connect-to-skylark-modal";

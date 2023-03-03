@@ -39,7 +39,27 @@ describe("useCollection", () => {
     expect(graphQlRequest).toBeCalledWith(
       expect.stringContaining(
         `query getSet { getSet (ignore_availability: true, external_id: "ingestor_set_lskjdf"`
-      )
+      ),
+      {},
+      {}
+    );
+  });
+
+  it("uses the external_id field to lookup the Set when the uid starts with streamtv_ (Airtable record ID)", async () => {
+    graphQlRequest.mockResolvedValueOnce({ getSet: {} });
+
+    const { waitForNextUpdate } = renderHook(() =>
+      useCollection("streamtv_lskjdf")
+    );
+
+    await waitForNextUpdate();
+
+    expect(graphQlRequest).toBeCalledWith(
+      expect.stringContaining(
+        `query getSet { getSet (ignore_availability: true, external_id: "streamtv_lskjdf"`
+      ),
+      {},
+      {}
     );
   });
 });

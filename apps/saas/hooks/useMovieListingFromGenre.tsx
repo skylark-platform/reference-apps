@@ -1,12 +1,13 @@
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import useSWRInfinite from "swr/infinite";
+import { Dimensions } from "@skylark-reference-apps/lib";
 import {
-  Dimensions,
+  useDimensions,
   skylarkRequestWithDimensions,
-} from "@skylark-reference-apps/lib";
-import { useDimensions } from "@skylark-reference-apps/react";
+} from "@skylark-reference-apps/react";
 import { Genre, MovieListing, Movie } from "../types/gql";
 import { createGraphQLQueryDimensions } from "../lib/utils";
+import { GQLError } from "../types";
 
 const createGraphQLQuery = (
   genreUid: string,
@@ -77,7 +78,7 @@ const getKey = (
 export const useMovieListingFromGenre = (genreUid?: string) => {
   const { dimensions } = useDimensions();
 
-  const { data, error, isLoading } = useSWRInfinite<MovieListing, Error>(
+  const { data, error, isLoading } = useSWRInfinite<MovieListing, GQLError>(
     (pageIndex, previousPageData: MovieListing) =>
       genreUid
         ? getKey(pageIndex, previousPageData, genreUid, dimensions)

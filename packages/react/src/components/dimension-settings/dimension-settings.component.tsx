@@ -6,6 +6,7 @@ import { DimensionToggle } from "./dimension-toggle";
 import { DimensionRadioButton } from "./dimension-radio-button";
 import { SkylarkBranding } from "../skylark-branding";
 import { useDimensions } from "../../contexts";
+import { ConnectToSkylarkModal } from "../connect-to-skylark-modal";
 
 interface DimensionSettingsProps {
   show?: boolean;
@@ -36,6 +37,8 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
   const nextWeekReadable = nextWeek.format("DD MMMM, h:mm A");
   const nextWeekIso = nextWeek.toISOString();
 
+  const [modalOpen, setModalOpen] = useState(false);
+
   return (
     <>
       <div
@@ -60,36 +63,43 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
               <DimensionToggle variant="close" onClick={() => setShow(false)} />
             </div>
             <div className="relative h-full overflow-y-auto py-4 px-sm-gutter md:py-12 md:px-md-gutter  lg:px-lg-gutter xl:px-xl-gutter">
-              <div className="flex items-center justify-between">
+              <div className="mb-4 flex items-center justify-between">
                 <SkylarkBranding className="w-12 md:w-48" />
                 <div className="ml-2 flex flex-col items-start justify-end text-sm md:flex-row md:items-center">
                   <p className="text-gray-400">{`Demo v1.0 -`}</p>
                   <a
                     className="text-skylark-blue md:pl-1"
-                    href="mailto:hello@skylarkplatform.com?subject=Enquiry from StreamTV"
+                    href={
+                      process.env.NEXT_PUBLIC_REGISTER_BUTTON_HREF ||
+                      "mailto:hello@skylarkplatform.com?subject=Enquiry from StreamTV"
+                    }
                     rel="noreferrer"
                     target="_blank"
                   >
-                    {`hello@skylarkplatform.com`}
+                    {process.env.NEXT_PUBLIC_REGISTER_BUTTON_HREF
+                      ? "Join the Skylark Beta"
+                      : "hello@skylarkplatform.com"}
                   </a>
                 </div>
               </div>
-              <p className="pt-2 text-sm">
-                {"Skylark API: "}
-                {skylarkApiUrl ? (
-                  <a
-                    className="text-skylark-blue"
-                    href={skylarkApiUrl}
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    {skylarkApiUrl}
-                  </a>
-                ) : (
-                  "not connected"
-                )}
-              </p>
-              <div className="grid grid-cols-1 gap-8 pt-7 md:grid-cols-2 md:pt-14 lg:grid-cols-4">
+              <div className="flex items-center justify-start">
+                <p className="text-sm font-medium">
+                  {skylarkApiUrl
+                    ? `Connected: ${
+                        skylarkApiUrl.includes("skylarkplatform.io")
+                          ? skylarkApiUrl.split(".")[1]
+                          : skylarkApiUrl
+                      }.`
+                    : "Not connected."}
+                </p>
+                <button
+                  className="ml-1.5 rounded-full text-sm font-medium text-skylark-blue  hover:text-blue-600"
+                  onClick={() => setModalOpen(true)}
+                >
+                  {"Change"}
+                </button>
+              </div>
+              <div className="grid grid-cols-1 gap-8 pt-7 md:grid-cols-2 md:pt-10 lg:grid-cols-4">
                 <DimensionContent label="Language">
                   <DimensionRadioButton
                     initial={dimensions.language}
@@ -140,6 +150,10 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
             </div>
           </motion.div>
         )}
+        <ConnectToSkylarkModal
+          closeModal={() => setModalOpen(false)}
+          isOpen={modalOpen}
+        />
       </AnimatePresence>
     </>
   );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { MdStream, MdAccountCircle } from "react-icons/md";
 import { useRouter } from "next/router";
@@ -9,6 +9,7 @@ import {
   AppHeader,
   Button,
   DimensionSettings,
+  ConnectToSkylarkModal,
 } from "../components";
 import { DimensionsContextProvider } from "../contexts";
 
@@ -34,6 +35,8 @@ export const StreamTVLayout: React.FC<Props> = ({
     { text: t("movies"), href: "/movies" },
     { text: t("tv-shows"), href: tvShowsHref },
   ];
+
+  const [modalOpen, setModalOpen] = useState(false);
 
   return (
     <DimensionsContextProvider>
@@ -68,7 +71,7 @@ export const StreamTVLayout: React.FC<Props> = ({
           </div>
           <div className="hidden gap-1 md:flex">
             <Button icon={<MdAccountCircle size={25} />} text={t("sign-in")} />
-            <Button text={t("register")} variant="tertiary" />
+            <Button externalHref text={t("register")} variant="tertiary" />
           </div>
         </AppHeader>
         <div className="relative z-10 h-full w-full pt-mobile-header md:pt-0">
@@ -79,6 +82,10 @@ export const StreamTVLayout: React.FC<Props> = ({
           timeTravelEnabled={!!timeTravelEnabled}
         />
       </div>
+      <ConnectToSkylarkModal
+        closeModal={() => setModalOpen(false)}
+        isOpen={modalOpen}
+      />
     </DimensionsContextProvider>
   );
 };

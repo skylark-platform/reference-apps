@@ -63,12 +63,18 @@ export const mutateMultipleObjects = async <T>(
 
       const graphQLMutation = jsonToGraphQLQuery(mutation);
 
-      const data = await graphQLClient.request<{
-        [key: string]: T;
-      }>(graphQLMutation);
+      try {
+        const data = await graphQLClient.request<{
+          [key: string]: T;
+        }>(graphQLMutation);
 
-      const arr = values(data);
-      return arr;
+        const arr = values(data);
+        return arr;
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error("Failing request: ", graphQLMutation);
+        throw err;
+      }
     })
   );
 

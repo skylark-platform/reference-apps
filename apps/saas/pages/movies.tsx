@@ -16,6 +16,7 @@ import {
   getGraphQLImageSrc,
   getTitleByOrderForGraphQLObject,
 } from "../lib/utils";
+import { DisplayError } from "../components/displayError";
 
 const MovieDataFetcher: React.FC<{
   uid: string;
@@ -50,12 +51,15 @@ const Movies: NextPage = () => {
 
   const { t } = useTranslation("common");
 
-  if (isMovieError) {
+  if (!isLoading && isMovieError) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center text-white">
-        <p>{`Error fetching movies`}</p>
-        <p>{isMovieError.message}</p>
-      </div>
+      <DisplayError error={isMovieError} notFoundMessage="No Movies found." />
+    );
+  }
+
+  if (!isLoading && isGenreError) {
+    return (
+      <DisplayError error={isGenreError} notFoundMessage="No Genres found." />
     );
   }
 
@@ -81,11 +85,6 @@ const Movies: NextPage = () => {
           )
         }
       />
-      {isGenreError && (
-        <div className="flex flex-col items-center justify-center text-white">
-          <p>{`Error fetching genres: ${isGenreError.message || ""}`}</p>
-        </div>
-      )}
     </>
   );
 };

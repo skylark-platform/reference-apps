@@ -1,13 +1,13 @@
 import useSWR from "swr";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
+import { Dimensions, GraphQLObjectTypes } from "@skylark-reference-apps/lib";
 import {
-  Dimensions,
+  useDimensions,
   skylarkRequestWithDimensions,
-  GraphQLObjectTypes,
-} from "@skylark-reference-apps/lib";
-import { useDimensions } from "@skylark-reference-apps/react";
+} from "@skylark-reference-apps/react";
 import { Brand, Episode, Movie, Season, Set } from "../types/gql";
 import { createGraphQLQueryDimensions } from "../lib/utils";
+import { GQLError } from "../types";
 
 type ObjectType<T> = T extends "Episode"
   ? Episode
@@ -194,7 +194,7 @@ export const useSingleObject = <T extends GraphQLObjectTypes>(
 ) => {
   const { dimensions } = useDimensions();
 
-  const { data, error } = useSWR<ObjectType<T>, Error>(
+  const { data, error } = useSWR<ObjectType<T>, GQLError>(
     [type, lookupValue, dimensions],
     fetcher
   );
@@ -202,9 +202,6 @@ export const useSingleObject = <T extends GraphQLObjectTypes>(
   return {
     data,
     isLoading: !error && !data,
-    isNotFound: error?.message
-      ? error.message.toLowerCase().includes("not found")
-      : false,
     isError: error,
   };
 };

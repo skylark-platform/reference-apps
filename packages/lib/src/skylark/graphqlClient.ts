@@ -1,27 +1,20 @@
-import { GraphQLClient } from "graphql-request";
-import { Dimensions } from "../interfaces";
-import {
-  SAAS_ACCOUNT_ID,
-  SAAS_API_ENDPOINT,
-  SAAS_API_KEY,
-} from "./skylark.constants";
+import { GraphQLClient, request } from "graphql-request";
+import { SAAS_API_ENDPOINT, SAAS_API_KEY } from "./skylark.constants";
 
 export const graphQLClient = new GraphQLClient(SAAS_API_ENDPOINT, {
   headers: {
     "x-api-key": SAAS_API_KEY,
-    "x-account-id": SAAS_ACCOUNT_ID,
   },
 });
 
-export const skylarkRequestWithDimensions = <T>(
+export const skylarkRequest = <T>(
+  uri: string,
+  apiKey: string,
   query: string,
-  dimensions: Dimensions
-) => {
-  const headers: { [key: string]: string } = {};
-
-  if (dimensions.timeTravel) {
-    headers["x-time-travel"] = dimensions.timeTravel;
-  }
-
-  return graphQLClient.request<T>(query, {}, headers);
-};
+  variables?: object,
+  headers?: object
+) =>
+  request<T>(uri, query, variables, {
+    ...headers,
+    "x-api-key": apiKey,
+  });

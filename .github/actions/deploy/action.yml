@@ -38,10 +38,10 @@ inputs:
     description: AWS secret access key
     required: true
   saas-api-token:
-    description: The API key to use to authenticate with SaaS Skylark
+    description: The API key to use to authenticate with SLX Skylark
     required: false
   saas-account-id:
-    description: The account ID used when communicating with SaaS Skylark
+    description: The account ID used when communicating with SLX Skylark
     required: false
 outputs:
   stack-name:

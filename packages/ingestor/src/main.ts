@@ -11,7 +11,6 @@ import {
   ApiTagCategory,
   ApiThemeGenre,
   SKYLARK_API,
-  SAAS_ACCOUNT_ID,
   SAAS_API_ENDPOINT,
 } from "@skylark-reference-apps/lib";
 import axios from "axios";
@@ -268,7 +267,7 @@ const main = async () => {
 
   if (process.env.INGEST_TO_SAAS_SKYLARK === "true") {
     // eslint-disable-next-line no-console
-    console.log(`Starting ingest to SaaS Skylark: ${SAAS_API_ENDPOINT}`);
+    console.log(`Starting ingest to Skylark X: ${SAAS_API_ENDPOINT}`);
 
     await updateObjectConfigurations();
     // eslint-disable-next-line no-console
@@ -402,7 +401,6 @@ const main = async () => {
       environment_meta: {
         date_stamp: dateStamp,
         endpoint: SAAS_API_ENDPOINT,
-        account: SAAS_ACCOUNT_ID,
       },
       airtable_data: airtable,
       metadata,
