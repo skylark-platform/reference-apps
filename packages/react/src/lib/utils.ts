@@ -45,7 +45,12 @@ export const skylarkRequestWithDimensions = <T>(
     const localStorageUri = localStorage.getItem(LOCAL_STORAGE.uri);
     const localStorageApiKey = localStorage.getItem(LOCAL_STORAGE.apikey);
     if (localStorageUri && localStorageApiKey) {
-      return skylarkRequest<T>(localStorageUri, localStorageApiKey, query);
+      return skylarkRequest<T>(
+        localStorageUri,
+        localStorageApiKey,
+        query,
+        headers
+      );
     }
   }
 
