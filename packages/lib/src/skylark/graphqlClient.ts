@@ -11,8 +11,8 @@ export const skylarkRequest = <T>(
   uri: string,
   apiKey: string,
   query: string,
-  variables?: object,
-  headers?: object
+  variables: object,
+  headers: object
 ) =>
   request<T>(uri, query, variables, {
     ...headers,

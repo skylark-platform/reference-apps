@@ -55,7 +55,9 @@ export const ConnectToSkylarkModal = ({
       skylarkRequest(
         debouncedSkylarkUrl,
         debouncedSkylarkApiKey,
-        introspectionQuery
+        introspectionQuery,
+        {},
+        {}
       )
         .then(() => {
           setCredentialsState("valid");

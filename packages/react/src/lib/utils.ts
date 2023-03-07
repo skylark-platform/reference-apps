@@ -49,6 +49,7 @@ export const skylarkRequestWithDimensions = <T>(
         localStorageUri,
         localStorageApiKey,
         query,
+        {},
         headers
       );
     }
