@@ -13,6 +13,7 @@ describe("graphQLClient", () => {
     const client = new GraphQLClient("https://endpoint/graphql", {
       headers: {
         "x-api-key": "api-key",
+        Authorization: "api-key",
       },
     });
     expect(graphQLClient).toEqual(client);

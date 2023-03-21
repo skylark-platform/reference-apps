@@ -7,6 +7,7 @@ const config: CodegenConfig = {
     [SAAS_API_ENDPOINT]: {
       headers: {
         "x-api-key": SAAS_API_KEY,
+        Authorization: SAAS_API_KEY,
       },
     },
   },
