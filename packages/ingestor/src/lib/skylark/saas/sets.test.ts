@@ -113,7 +113,7 @@ describe("saas/sets.ts", () => {
         graphQlRequest.mockRejectedValueOnce(mockedGetResponse);
 
         const mockedCreateResponse = {
-          createSet: {},
+          createSkylarkSet: {},
         };
         graphQlRequest.mockResolvedValueOnce(mockedCreateResponse);
 
@@ -125,7 +125,7 @@ describe("saas/sets.ts", () => {
           [] as Records<FieldSet>
         );
         expect(graphQlRequest).toBeCalledWith(
-          'mutation { createSet_home_page_slider: createSet (set: {title: "Home page hero", external_id: "home_page_slider", content: {Episode: {link: [{position: 5, uid: "episodes-Game of Thrones S01E01"}]}, Season: {link: [{position: 6, uid: "seasons-Game of Thrones S01"}]}, Brand: {link: [{position: 1, uid: "brands-game-of-thrones"}]}, Movie: {link: [{position: 2, uid: "movies-deadpool-2"}, {position: 3, uid: "movies-sing-2"}, {position: 4, uid: "movies-us"}]}, Set: {link: []}}, availability: {link: ["availability-1"]}}) { uid external_id slug } }'
+          'mutation { createSkylarkSet_home_page_slider: createSkylarkSet (skylark_set: {title: "Home page hero", external_id: "home_page_slider", content: {Episode: {link: [{position: 5, uid: "episodes-Game of Thrones S01E01"}]}, Season: {link: [{position: 6, uid: "seasons-Game of Thrones S01"}]}, Brand: {link: [{position: 1, uid: "brands-game-of-thrones"}]}, Movie: {link: [{position: 2, uid: "movies-deadpool-2"}, {position: 3, uid: "movies-sing-2"}, {position: 4, uid: "movies-us"}]}, SkylarkSet: {link: []}}, availability: {link: ["availability-1"]}}) { uid external_id slug } }'
         );
       });
     });
@@ -139,7 +139,7 @@ describe("saas/sets.ts", () => {
         },
       };
       const mockedCreateResponse = {
-        createSet: {},
+        createSkylarkSet: {},
       };
 
       const translationsTable: Partial<Record<FieldSet>>[] = [
@@ -173,7 +173,7 @@ describe("saas/sets.ts", () => {
         expect(graphQlRequest).toBeCalledTimes(4);
         expect(graphQlRequest).toHaveBeenNthCalledWith(
           3,
-          'mutation { createSet_en_GB_home_page_slider: createSet (language: "en-GB", set: {external_id: "home_page_slider", title: "Home page hero", title_short: "English Title", content: {Episode: {link: [{position: 5, uid: "episodes-Game of Thrones S01E01"}]}, Season: {link: [{position: 6, uid: "seasons-Game of Thrones S01"}]}, Brand: {link: [{position: 1, uid: "brands-game-of-thrones"}]}, Movie: {link: [{position: 2, uid: "movies-deadpool-2"}, {position: 3, uid: "movies-sing-2"}, {position: 4, uid: "movies-us"}]}, Set: {link: []}}, availability: {link: ["availability-1"]}, relationships: {}}) { uid external_id slug } }'
+          'mutation { createSkylarkSet_en_GB_home_page_slider: createSkylarkSet (language: "en-GB", skylark_set: {external_id: "home_page_slider", title: "Home page hero", title_short: "English Title", content: {Episode: {link: [{position: 5, uid: "episodes-Game of Thrones S01E01"}]}, Season: {link: [{position: 6, uid: "seasons-Game of Thrones S01"}]}, Brand: {link: [{position: 1, uid: "brands-game-of-thrones"}]}, Movie: {link: [{position: 2, uid: "movies-deadpool-2"}, {position: 3, uid: "movies-sing-2"}, {position: 4, uid: "movies-us"}]}, SkylarkSet: {link: []}}, availability: {link: ["availability-1"]}, relationships: {}}) { uid external_id slug } }'
         );
       });
 
@@ -191,7 +191,7 @@ describe("saas/sets.ts", () => {
         expect(graphQlRequest).toBeCalledTimes(4);
         expect(graphQlRequest).toHaveBeenNthCalledWith(
           4,
-          'mutation { updateSet_pt_PT_home_page_slider: updateSet (external_id: "home_page_slider", language: "pt-PT", set: {title: "Home page hero", title_short: "Portuguese Title"}) { uid external_id slug } }'
+          'mutation { updateSkylarkSet_pt_PT_home_page_slider: updateSkylarkSet (external_id: "home_page_slider", language: "pt-PT", skylark_set: {title: "Home page hero", title_short: "Portuguese Title"}) { uid external_id slug } }'
         );
       });
     });

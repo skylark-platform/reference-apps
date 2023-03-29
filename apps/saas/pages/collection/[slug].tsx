@@ -9,7 +9,14 @@ import {
 import { GraphQLMediaObjectTypes } from "@skylark-reference-apps/lib";
 
 import { useCollection } from "../../hooks/useCollection";
-import { Brand, Set, ImageType, Episode, Movie, Season } from "../../types/gql";
+import {
+  Brand,
+  ImageType,
+  Episode,
+  Movie,
+  Season,
+  SkylarkSet,
+} from "../../types/gql";
 import { MediaObjectFetcher } from "../../components/mediaObjectFetcher";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 import {
@@ -28,14 +35,14 @@ const CollectionItemDataFetcher: React.FC<{
   type: GraphQLMediaObjectTypes;
 }> = ({ uid, children, type }) => (
   <MediaObjectFetcher type={type} uid={uid}>
-    {(item: Episode | Movie | Brand | Season | Set) => (
+    {(item: Episode | Movie | Brand | Season | SkylarkSet) => (
       <>
         {children({
           title: getTitleByOrderForGraphQLObject(item, ["short", "medium"]),
           image: getGraphQLImageSrc(item?.images, ImageType.Thumbnail),
           uid: item.uid,
           href: `/${
-            item.__typename === "Set"
+            item.__typename === "SkylarkSet"
               ? convertGraphQLSetType(item?.type || "")
               : convertTypenameToEntertainmentType(item.__typename)
           }/${item.uid}`,
@@ -49,7 +56,7 @@ const CollectionItemDataFetcher: React.FC<{
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject(
-    "Set",
+    "SkylarkSet",
     context.query.slug as string,
     context.locale || ""
   );

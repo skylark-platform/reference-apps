@@ -315,7 +315,7 @@ const main = async () => {
     };
 
     metadata.images = await createOrUpdateGraphQlObjectsUsingIntrospection(
-      "Image",
+      "SkylarkImage",
       airtable.images,
       metadataAvailability
     );
@@ -335,7 +335,7 @@ const main = async () => {
       metadataAvailability
     );
     metadata.tags = await createOrUpdateGraphQlObjectsUsingIntrospection(
-      "Tag",
+      "SkylarkTag",
       airtable.tags,
       metadataAvailability
     );

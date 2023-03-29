@@ -67,7 +67,7 @@ const createGraphQLQuery = (lookupValue: string, dimensions: Dimensions) => {
     },
   };
 
-  const method = "getSet";
+  const method = "getSkylarkSet";
 
   const queryAsJson = {
     query: {

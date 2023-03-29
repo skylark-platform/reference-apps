@@ -15,11 +15,11 @@ import {
   Entertainment,
   Episode,
   GenreListing,
-  ImageListing,
+  SkylarkImageListing,
   ImageType,
   Maybe,
   RatingListing,
-  TagListing,
+  SkylarkTagListing,
   ThemeListing,
 } from "../types";
 
@@ -52,7 +52,7 @@ export const convertObjectToName = (
   listing:
     | Maybe<ThemeListing>
     | Maybe<GenreListing>
-    | Maybe<TagListing>
+    | Maybe<SkylarkTagListing>
     | undefined
 ): string[] => {
   if (!listing || !listing.objects || listing.objects.length === 0) {
@@ -73,7 +73,7 @@ export const getFirstRatingValue = (
 };
 
 export const getGraphQLImageSrc = (
-  images: Maybe<ImageListing> | undefined,
+  images: Maybe<SkylarkImageListing> | undefined,
   type: ImageType
 ): string => {
   if (!images || !images.objects || images.objects.length === 0) {

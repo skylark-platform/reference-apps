@@ -109,8 +109,13 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
         fields.availability as string[]
       );
 
+      const argName = objectType
+        .match(/[A-Z][a-z]+/g)
+        ?.join("_")
+        .toLowerCase() as string;
+
       const args = {
-        [objectType.toLowerCase()]: objectExists
+        [argName]: objectExists
           ? { ...validFields, availability }
           : { ...validFields, availability, external_id: id },
       };
@@ -260,14 +265,15 @@ export const createGraphQLMediaObjects = async (
     Season: await getValidPropertiesForObject("Season"),
     Brand: await getValidPropertiesForObject("Brand"),
     Movie: await getValidPropertiesForObject("Movie"),
-    Asset: await getValidPropertiesForObject("Asset"),
+    SkylarkAsset: await getValidPropertiesForObject("SkylarkAsset"),
   };
 
   const externalIds = airtableRecords.map(({ id }) => id);
   const existingObjects = flatten(
     await Promise.all(
-      ["Brand", "Season", "Episode", "Movie", "Asset"].map((objectType) =>
-        getExistingObjects(objectType as GraphQLMediaObjectTypes, externalIds)
+      ["Brand", "Season", "Episode", "Movie", "SkylarkAsset"].map(
+        (objectType) =>
+          getExistingObjects(objectType as GraphQLMediaObjectTypes, externalIds)
       )
     )
   );
@@ -404,7 +410,7 @@ export const createTranslationsForGraphQLObjects = async (
     Season: await getValidPropertiesForObject("Season"),
     Brand: await getValidPropertiesForObject("Brand"),
     Movie: await getValidPropertiesForObject("Movie"),
-    Asset: await getValidPropertiesForObject("Asset"),
+    SkylarkAsset: await getValidPropertiesForObject("SkylarkAsset"),
   };
 
   const languageCodes = getLanguageCodesFromAirtable(languagesTable);

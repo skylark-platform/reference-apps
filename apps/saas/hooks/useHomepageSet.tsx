@@ -46,7 +46,7 @@ const createGraphQLQuery = (lookupValue: string, dimensions: Dimensions) => {
               },
             },
             {
-              __typeName: "Set",
+              __typeName: "SkylarkSet",
               uid: true,
               type: true,
               title_short: true,
@@ -69,7 +69,7 @@ const createGraphQLQuery = (lookupValue: string, dimensions: Dimensions) => {
     },
   };
 
-  const method = `getSet`;
+  const method = `getSkylarkSet`;
 
   const queryAsJson = {
     query: {

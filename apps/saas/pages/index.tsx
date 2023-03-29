@@ -30,8 +30,8 @@ import {
   Movie,
   Season,
   SetContent,
-  Set,
   ImageType,
+  SkylarkSet,
 } from "../types/gql";
 
 const RailItemDataFetcher: React.FC<{
@@ -58,7 +58,7 @@ const RailItemDataFetcher: React.FC<{
               image: getGraphQLImageSrc(object?.images, ImageType.Thumbnail),
               uid: object.uid,
               href: `/${
-                object.__typename === "Set"
+                object.__typename === "SkylarkSet"
                   ? convertGraphQLSetType(object?.type || "")
                   : convertTypenameToEntertainmentType(object.__typename)
               }/${object.uid}`,
@@ -74,7 +74,7 @@ const RailItemDataFetcher: React.FC<{
 );
 
 const getContentForSetItem = (
-  item: Set | Episode | Movie | Brand | Season
+  item: SkylarkSet | Episode | Movie | Brand | Season
 ): HomepageItem["content"] => {
   let content:
     | { uid: string; slug: string; self: ""; type: GraphQLMediaObjectTypes }[]
@@ -91,7 +91,7 @@ const getContentForSetItem = (
           type: "Episode",
         }));
       break;
-    case "Set":
+    case "SkylarkSet":
       content = (item?.content?.objects as SetContent[])?.map(({ object }) => ({
         uid: object?.uid || "",
         slug: object?.slug || "",
@@ -109,7 +109,7 @@ const getContentForSetItem = (
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const seo = await getSeoDataForObject(
-    "Set",
+    "SkylarkSet",
     "streamtv_homepage",
     locale || ""
   );
@@ -135,7 +135,7 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
 
   const content = data?.content?.objects
     ? (data.content.objects as SetContent[])?.map(
-        ({ object }) => object as Episode | Movie | Brand | Season | Set
+        ({ object }) => object as Episode | Movie | Brand | Season | SkylarkSet
       )
     : [];
 
@@ -148,7 +148,7 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         items={content.map((item) => ({
           uid: item.uid,
           type: (
-            (item as Set).type || item.__typename
+            (item as SkylarkSet).type || item.__typename
           )?.toLowerCase() as ObjectTypes,
           self: "",
           title:

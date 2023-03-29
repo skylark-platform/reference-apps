@@ -35,7 +35,7 @@ export const gqlObjectMeta = (
   createFunc: string;
   updateFunc: string;
   objectType: GraphQLMediaObjectTypes;
-  argName: "brand" | "season" | "episode" | "movie" | "asset";
+  argName: "brand" | "season" | "episode" | "movie" | "skylark_asset";
   relName: "brands" | "seasons" | "episodes" | "movies" | "assets";
 } => {
   switch (type) {
@@ -67,12 +67,12 @@ export const gqlObjectMeta = (
         relName: "movies",
       };
     case "assets":
-    case "Asset":
+    case "SkylarkAsset":
       return {
-        createFunc: "createAsset",
-        updateFunc: "updateAsset",
-        objectType: "Asset",
-        argName: "asset",
+        createFunc: "createSkylarkAsset",
+        updateFunc: "updateSkylarkAsset",
+        objectType: "SkylarkAsset",
+        argName: "skylark_asset",
         relName: "assets",
       };
     default:

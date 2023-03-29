@@ -1,10 +1,10 @@
-import { Brand, Episode, Movie, Season, Set } from "./gql";
+import { Brand, Episode, Movie, Season, SkylarkSet } from "./gql";
 
-export type Entertainment = Episode | Movie | Brand | Season | Set;
+export type Entertainment = Episode | Movie | Brand | Season | SkylarkSet;
 
 export type GQLError = {
   response: {
-    errors: { errorType: string; message: string }[];
-    status: number;
+    errors?: { errorType: string; message: string }[];
+    status?: number;
   };
 };
