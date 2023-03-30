@@ -6,12 +6,12 @@ import {
   skylarkRequestWithDimensions,
 } from "@skylark-reference-apps/react";
 
-import { Set } from "../types/gql";
+import { SkylarkSet } from "../types/gql";
 import { createGraphQLQueryDimensions } from "../lib/utils";
 import { GQLError } from "../types";
 
 const createGraphQLQuery = (lookupValue: string, dimensions: Dimensions) => {
-  const method = `getSet`;
+  const method = `getSkylarkSet`;
 
   // Helper to use the external_id when an airtable record ID is given
   const lookupField =
@@ -77,16 +77,16 @@ const getSetFetcher = ([lookupValue, dimensions]: [
   dimensions: Dimensions
 ]) => {
   const { query, method } = createGraphQLQuery(lookupValue, dimensions);
-  return skylarkRequestWithDimensions<{ [key: string]: Set }>(
+  return skylarkRequestWithDimensions<{ [key: string]: SkylarkSet }>(
     query,
     dimensions
-  ).then(({ [method]: data }): Set => data);
+  ).then(({ [method]: data }): SkylarkSet => data);
 };
 
 export const useCollection = (lookupValue: string) => {
   const { dimensions } = useDimensions();
 
-  const { data, error, isLoading } = useSWR<Set, GQLError>(
+  const { data, error, isLoading } = useSWR<SkylarkSet, GQLError>(
     [lookupValue, dimensions],
     getSetFetcher
   );

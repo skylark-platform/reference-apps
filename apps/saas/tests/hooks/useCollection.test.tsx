@@ -28,7 +28,7 @@ describe("useCollection", () => {
   });
 
   it("uses the external_id field to lookup the Set when the uid starts with ingestor_set (Airtable record ID)", async () => {
-    graphQlRequest.mockResolvedValueOnce({ getSet: {} });
+    graphQlRequest.mockResolvedValueOnce({ getSkylarkSet: {} });
 
     const { waitForNextUpdate } = renderHook(() =>
       useCollection("ingestor_set_lskjdf")
@@ -38,7 +38,7 @@ describe("useCollection", () => {
 
     expect(graphQlRequest).toBeCalledWith(
       expect.stringContaining(
-        `query getSet { getSet (ignore_availability: true, external_id: "ingestor_set_lskjdf"`
+        `query getSkylarkSet { getSkylarkSet (ignore_availability: true, external_id: "ingestor_set_lskjdf"`
       ),
       {},
       {}
@@ -46,7 +46,7 @@ describe("useCollection", () => {
   });
 
   it("uses the external_id field to lookup the Set when the uid starts with streamtv_ (Airtable record ID)", async () => {
-    graphQlRequest.mockResolvedValueOnce({ getSet: {} });
+    graphQlRequest.mockResolvedValueOnce({ getSkylarkSet: {} });
 
     const { waitForNextUpdate } = renderHook(() =>
       useCollection("streamtv_lskjdf")
@@ -56,7 +56,7 @@ describe("useCollection", () => {
 
     expect(graphQlRequest).toBeCalledWith(
       expect.stringContaining(
-        `query getSet { getSet (ignore_availability: true, external_id: "streamtv_lskjdf"`
+        `query getSkylarkSet { getSkylarkSet (ignore_availability: true, external_id: "streamtv_lskjdf"`
       ),
       {},
       {}

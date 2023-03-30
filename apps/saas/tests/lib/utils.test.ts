@@ -4,7 +4,7 @@ import { Entertainment } from "../../types";
 import {
   Credit,
   Episode,
-  ImageListing,
+  SkylarkImageListing,
   ImageType,
   Maybe,
 } from "../../types/gql";
@@ -38,7 +38,7 @@ const credits: Credit[] = [
   },
 ];
 
-const images: ImageListing = {
+const images: SkylarkImageListing = {
   objects: [
     { uid: "image-1", url: "poster.jpg", type: "POSTER" },
     { uid: "image-1", url: "thumbnail.jpg", type: "THUMBNAIL" },

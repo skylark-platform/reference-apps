@@ -12,8 +12,8 @@ export type RelationshipsLink = { [key: string]: { link: string | string[] } };
 
 export type SetRelationshipsLink = Omit<
   Record<
-    GraphQLMediaObjectTypes | "Set",
+    GraphQLMediaObjectTypes | "SkylarkSet",
     { link: { position: number; uid: string }[] }
   >,
-  "Asset"
+  "SkylarkAsset"
 >;

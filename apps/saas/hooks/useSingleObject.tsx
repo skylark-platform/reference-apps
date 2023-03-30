@@ -5,7 +5,7 @@ import {
   useDimensions,
   skylarkRequestWithDimensions,
 } from "@skylark-reference-apps/react";
-import { Brand, Episode, Movie, Season, Set } from "../types/gql";
+import { Brand, Episode, Movie, Season, SkylarkSet } from "../types/gql";
 import { createGraphQLQueryDimensions } from "../lib/utils";
 import { GQLError } from "../types";
 
@@ -17,8 +17,8 @@ type ObjectType<T> = T extends "Episode"
   ? Brand
   : T extends "Season"
   ? Season
-  : T extends "Set"
-  ? Set
+  : T extends "SkylarkSet"
+  ? SkylarkSet
   : never;
 
 const createGraphQLQuery = (
@@ -152,7 +152,7 @@ const createGraphQLQuery = (
     };
   }
 
-  if (type === "Set") {
+  if (type === "SkylarkSet") {
     fieldsToFetch.type = true;
   }
 

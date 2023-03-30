@@ -14,7 +14,7 @@
       "episode": "Episode",
       "season": "Season",
       "brand": "Brand",
-      "asset": "Asset",
+      "asset": "SkylarkAsset",
       "count": {
         "season": {
           "0": "0 Seasons",

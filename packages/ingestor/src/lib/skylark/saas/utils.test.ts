@@ -49,19 +49,26 @@ describe("saas/utils.ts", () => {
       "Season",
       "Episode",
       "Movie",
-      "Asset",
+      "SkylarkAsset",
     ];
 
     // eslint-disable-next-line no-restricted-syntax
     for (const type of mediaObjectTypes) {
-      const apiObjectType = `${type.toLowerCase()}s` as ApiObjectType;
+      const apiObjectType = `${type
+        .replace("Skylark", "")
+        .toLowerCase()}s` as ApiObjectType;
+
+      const argName = type
+        .match(/[A-Z][a-z]+/g)
+        ?.join("_")
+        .toLowerCase() as string;
 
       const want = {
         createFunc: `create${type}`,
         updateFunc: `update${type}`,
         objectType: type,
-        argName: `${type.toLowerCase()}`,
-        relName: `${type.toLowerCase()}s`,
+        argName,
+        relName: apiObjectType,
       };
 
       it(`returns the metadata for ${type} (MediaObjectType)`, () => {

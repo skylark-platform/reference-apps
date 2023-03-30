@@ -42,7 +42,7 @@ export type GraphQLMediaObjectTypes =
   | "Season"
   | "Episode"
   | "Movie"
-  | "Asset";
+  | "SkylarkAsset";
 
 export type GraphQLObjectTypes =
   | GraphQLMediaObjectTypes
@@ -51,10 +51,10 @@ export type GraphQLObjectTypes =
   | "Rating"
   | "Person"
   | "Role"
-  | "Tag"
+  | "SkylarkTag"
   | "Credit"
-  | "Set"
+  | "SkylarkSet"
   | "Dimension"
   | "DimensionValue"
   | "Availability"
-  | "Image";
+  | "SkylarkImage";

@@ -3,10 +3,10 @@ import { useInView } from "react-intersection-observer";
 import { Skeleton } from "@skylark-reference-apps/react";
 import { GraphQLObjectTypes } from "@skylark-reference-apps/lib";
 import { useSingleObject } from "../hooks/useSingleObject";
-import { Brand, Episode, Movie, Season, Set } from "../types/gql";
+import { Brand, Episode, Movie, Season, SkylarkSet } from "../types/gql";
 
 const Data: FC<{
-  children(data: Episode | Movie | Season | Brand | Set): ReactNode;
+  children(data: Episode | Movie | Season | Brand | SkylarkSet): ReactNode;
   type: GraphQLObjectTypes;
   uid: string;
   isPortrait: boolean;
@@ -21,7 +21,7 @@ const Data: FC<{
 };
 
 export const MediaObjectFetcher: FC<{
-  children(data: Episode | Movie | Season | Brand | Set): ReactNode;
+  children(data: Episode | Movie | Season | Brand | SkylarkSet): ReactNode;
   uid: string;
   type: GraphQLObjectTypes;
   isPortrait?: boolean;

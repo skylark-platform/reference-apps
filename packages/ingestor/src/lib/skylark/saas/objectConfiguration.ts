@@ -29,15 +29,15 @@ const OBJECT_CONFIG: Record<string, { colour: string; primaryField: string }> =
       colour: "009688",
       primaryField: "title",
     },
-    Tag: { colour: "4CAF50", primaryField: "name" },
+    SkylarkTag: { colour: "4CAF50", primaryField: "name" },
     Genre: { colour: "8BC34A", primaryField: "name" },
     Theme: { colour: "CDDC39", primaryField: "name" },
     Role: { colour: "FFC107", primaryField: "title" },
     Person: { colour: "FF9800", primaryField: "name" },
     Credit: { colour: "FF5722", primaryField: "slug" },
-    Asset: { colour: "9E9E9E", primaryField: "title" },
-    Image: { colour: "607D8B", primaryField: "title" },
-    Set: { colour: "000000", primaryField: "title" },
+    SkylarkAsset: { colour: "9E9E9E", primaryField: "title" },
+    SkylarkImage: { colour: "607D8B", primaryField: "title" },
+    SkylarkSet: { colour: "000000", primaryField: "title" },
   };
 
 const createMutation = (): string[] => {

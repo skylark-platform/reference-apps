@@ -46,15 +46,15 @@ const createSetContent = (
     Season: { link: [] },
     Brand: { link: [] },
     Movie: { link: [] },
-    Set: { link: [] },
+    SkylarkSet: { link: [] },
   };
 
   for (let i = 0; i < setItems.length; i += 1) {
     const { apiType, position, uid } = setItems[i];
 
     const objectType =
-      apiType === "set" ? "Set" : gqlObjectMeta(apiType).objectType;
-    if (objectType === "Asset") {
+      apiType === "set" ? "SkylarkSet" : gqlObjectMeta(apiType).objectType;
+    if (objectType === "SkylarkAsset") {
       break;
     }
     content[objectType].link.push({ position, uid });
@@ -84,14 +84,14 @@ const createBasicSetArgs = (
   const args = update
     ? {
         external_id: set.externalId,
-        set: {
+        skylark_set: {
           ...validFields,
           content,
           availability,
         },
       }
     : {
-        set: {
+        skylark_set: {
           ...validFields,
           external_id: set.externalId,
           content,
@@ -137,27 +137,29 @@ const createSetArgsWithTranslations = (
   const args: {
     external_id?: string;
     language: string;
-    set: { [key: string]: string | object | number | EnumType | boolean };
+    skylark_set: {
+      [key: string]: string | object | number | EnumType | boolean;
+    };
   } = update
     ? {
         external_id: set.externalId,
         language,
-        set: {
+        skylark_set: {
           ...validFields,
         },
       }
     : {
         language,
-        set: {
+        skylark_set: {
           external_id: set.externalId,
           ...validFields,
         },
       };
 
   if (addRelationships) {
-    args.set.content = content;
-    args.set.availability = availability;
-    args.set.relationships = relationships;
+    args.skylark_set.content = content;
+    args.skylark_set.availability = availability;
+    args.skylark_set.relationships = relationships;
   }
 
   return args;
@@ -196,12 +198,12 @@ export const createOrUpdateGraphQLSet = async (
   languagesTable: Records<FieldSet>,
   airtableSetsMetadata: Records<FieldSet>
 ): Promise<GraphQLBaseObject | undefined> => {
-  const validProperties = await getValidPropertiesForObject("Set");
+  const validProperties = await getValidPropertiesForObject("SkylarkSet");
 
   const setExists =
-    (await getExistingObjects("Set", [set.externalId])).length > 0;
+    (await getExistingObjects("SkylarkSet", [set.externalId])).length > 0;
 
-  const operationName = setExists ? `updateSet` : `createSet`;
+  const operationName = setExists ? `updateSkylarkSet` : `createSkylarkSet`;
 
   const languageCodes = getLanguageCodesFromAirtable(languagesTable);
 
@@ -240,8 +242,8 @@ export const createOrUpdateGraphQLSet = async (
         firstRequest
       );
 
-      // Always updateSet after firstRequest to add more langauges
-      const method = firstRequest ? operationName : "updateSet";
+      // Always updateSkylarkSet after firstRequest to add more langauges
+      const method = firstRequest ? operationName : "updateSkylarkSet";
 
       const mutationKey = `${method}_${language.replace("-", "_")}_${
         set.externalId

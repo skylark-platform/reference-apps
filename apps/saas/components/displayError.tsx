@@ -6,9 +6,9 @@ interface DisplayErrorProps {
 }
 
 export const DisplayError = ({ error, notFoundMessage }: DisplayErrorProps) => {
-  const isNotFound = error.response.errors?.[0].errorType === "NotFound";
+  const isNotFound = error.response?.errors?.[0].errorType === "NotFound";
   const isNotAuthorized =
-    error.response.errors?.[0].errorType === "UnauthorizedException";
+    error.response?.errors?.[0].errorType === "UnauthorizedException";
 
   let header = "Error occured fetching page";
   let message: string | GQLError["response"] = error.response;
