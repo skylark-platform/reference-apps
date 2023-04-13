@@ -3,7 +3,6 @@
  * (Usually you'd create these through the CMS)
  */
 import { SetConfig } from "../lib/interfaces";
-import { quentinTarantinoMovies } from "./dynamicObjects";
 
 const createDataSourceId = (id: string) => `ingestor-set-${id}`;
 
@@ -62,6 +61,7 @@ const homePageSlider: SetConfig = {
   ],
 };
 
+// Skylark X does not support dynamic objects yet
 const tarantinoMoviesCollection: SetConfig = {
   dataSourceId: createDataSourceId("tarantino-movies"),
   externalId: createStreamTVExternalId("tarantino_movies"),
@@ -69,12 +69,6 @@ const tarantinoMoviesCollection: SetConfig = {
   slug: "tarantino-movies-collection",
   set_type_slug: "collection",
   graphQlSetType: "COLLECTION",
-  contents: [{ type: "dynamic-object", name: quentinTarantinoMovies.name }],
-};
-
-// Skylark X does not support dynamic objects yet
-const tarantinoMoviesCollectionWithoutDynamicObject: SetConfig = {
-  ...tarantinoMoviesCollection,
   contents: [
     { type: "movies", slug: "once-upon-a-time-in-hollywood" },
     { type: "movies", slug: "the-hateful-eight" },
@@ -93,6 +87,21 @@ const tarantinoMoviesCollectionWithoutDynamicObject: SetConfig = {
   ],
 };
 
+const wesAndersonMoviesCollection: SetConfig = {
+  dataSourceId: createDataSourceId("wes-anderson-movies"),
+  externalId: createStreamTVExternalId("wes_anderson_movies"),
+  title: "Wes Anderson Movies Collection",
+  slug: "wes-anderson-movies-collection",
+  set_type_slug: "collection",
+  graphQlSetType: "COLLECTION",
+  contents: [
+    { type: "movies", slug: "the-grand-budapest-hotel" },
+    { type: "movies", slug: "the-french-dispatch" },
+    { type: "movies", slug: "moonrise-kingdom" },
+    { type: "movies", slug: "fantastic-mr-fox" },
+  ],
+};
+
 const discoverCollection: SetConfig = {
   dataSourceId: createDataSourceId("discover-collection"),
   externalId: createStreamTVExternalId("discover_collection"),
@@ -105,6 +114,11 @@ const discoverCollection: SetConfig = {
       type: "set",
       set_type: "collection",
       slug: tarantinoMoviesCollection.slug,
+    },
+    {
+      type: "set",
+      set_type: "collection",
+      slug: wesAndersonMoviesCollection.slug,
     },
   ],
 };
@@ -131,18 +145,8 @@ export const orderedSetsToCreate = [
   spotlightMovies,
   homePageSlider,
   tarantinoMoviesCollection,
-  // discoverCollection needs the tarantinoMoviesCollection
-  discoverCollection,
-  // Order matters, homepage is last as it includes the rail and slider
-  mediaReferenceHomepage,
-];
-
-export const orderedSetsToCreateWithoutDynamicObject = [
-  newTVReleases,
-  spotlightMovies,
-  homePageSlider,
-  tarantinoMoviesCollectionWithoutDynamicObject,
-  // discoverCollection needs the tarantinoMoviesCollection
+  wesAndersonMoviesCollection,
+  // discoverCollection needs the tarantinoMoviesCollection and wesAndersonMoviesCollection
   discoverCollection,
   // Order matters, homepage is last as it includes the rail and slider
   mediaReferenceHomepage,

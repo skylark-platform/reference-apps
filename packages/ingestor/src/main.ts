@@ -6,7 +6,7 @@ import { mkdir, writeFile } from "fs/promises";
 import { has } from "lodash";
 import { getAllTables } from "./lib/airtable";
 import { GraphQLBaseObject, GraphQLMetadata } from "./lib/interfaces";
-import { orderedSetsToCreateWithoutDynamicObject } from "./additional-objects/sets";
+import { orderedSetsToCreate } from "./additional-objects/sets";
 import { UNLICENSED_BY_DEFAULT } from "./lib/constants";
 import {
   createGraphQLMediaObjects,
@@ -154,7 +154,7 @@ const main = async () => {
     const setsToCreate =
       contentTypeToIngest === "slxdemos"
         ? slxDemoSetsToCreate
-        : orderedSetsToCreateWithoutDynamicObject;
+        : orderedSetsToCreate;
 
     for (let i = 0; i < setsToCreate.length; i += 1) {
       const setConfig = setsToCreate[i];
