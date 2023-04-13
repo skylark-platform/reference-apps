@@ -1,3 +1,0 @@
-- url: http://localhost:3000?carousel_item=0
-  name: Home page
-  waitForTimeout: 10000

@@ -1,6 +1,9 @@
 import { Auth } from "@aws-amplify/auth";
 import { getToken, signInToCognito } from "./amplify";
 
+// TODO remove if can: https://github.com/cloudflare/miniflare/issues/271
+jest.mock('uuid', () => 'eb7b7961-395d-4b4c-afc6-9ebcadaf0150');
+
 jest.mock("./constants", () => ({
   COGNITO_EMAIL: "email",
   COGNITO_PASSWORD: "password",

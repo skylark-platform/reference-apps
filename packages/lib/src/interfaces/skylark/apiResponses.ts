@@ -73,13 +73,10 @@ export type ApiTags = { tag_url: string }[] | ApiTag[];
 export interface ApiEntertainmentObject extends ApiBaseObject {
   title: string;
   title_short?: string;
-  title_medium?: string;
-  title_long?: string;
   theme_urls?: ApiThemesAndGenres;
   genre_urls?: ApiThemesAndGenres;
+  synopsis?: string;
   synopsis_short?: string;
-  synopsis_medium?: string;
-  synopsis_long?: string;
   image_urls?: ApiImage[] | string[];
   credits?: ApiCredit[] | ApiCreditUnexpanded[];
   rating_urls?: ApiRatings;

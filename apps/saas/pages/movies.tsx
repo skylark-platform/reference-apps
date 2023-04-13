@@ -26,7 +26,7 @@ const MovieDataFetcher: React.FC<{
     {(movie: Movie) => (
       <>
         {children({
-          title: getTitleByOrderForGraphQLObject(movie, ["short", "medium"]),
+          title: getTitleByOrderForGraphQLObject(movie, ["title_short", "title"]),
           image: getGraphQLImageSrc(movie?.images, ImageType.Thumbnail),
           uid: movie.uid,
           href: `/movie/${movie.uid}`,

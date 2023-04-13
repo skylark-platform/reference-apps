@@ -23,9 +23,9 @@ export type CreditTypes =
 
 export type DeviceTypes = "smartphone" | "pc";
 
-export type TitleTypes = "short" | "medium" | "long";
+export type TitleTypes = "title" | "title_short";
 
-export type SynopsisTypes = TitleTypes;
+export type SynopsisTypes = "synopsis" | "synopsis_short";
 
 export type DimensionTypes =
   | "affiliates"

@@ -32,11 +32,8 @@ const createGraphQLQuery = (lookupValue: string, dimensions: Dimensions) => {
         uid: true,
         title: true,
         title_short: true,
-        title_medium: true,
-        title_long: true,
+        synopsis: true,
         synopsis_short: true,
-        synopsis_medium: true,
-        synopsis_long: true,
         release_date: true,
         ratings: {
           objects: {
