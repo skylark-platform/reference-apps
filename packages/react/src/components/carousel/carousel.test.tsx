@@ -6,7 +6,9 @@ import { heros } from "./carousel.fixtures";
 
 describe("Carousel component", () => {
   beforeEach(() => {
-    jest.useFakeTimers();
+    jest.useFakeTimers({
+      legacyFakeTimers: true,
+    });
   });
 
   afterEach(() => {

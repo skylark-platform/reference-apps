@@ -86,7 +86,8 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                 <p className="text-sm font-medium">
                   {skylarkApiUrl
                     ? `Connected: ${
-                        (skylarkApiUrl.includes("skylarkplatform.io") || skylarkApiUrl.includes("skylarkplatform.com"))
+                        skylarkApiUrl.includes("skylarkplatform.io") ||
+                        skylarkApiUrl.includes("skylarkplatform.com")
                           ? skylarkApiUrl.split(".")[1]
                           : skylarkApiUrl
                       }.`

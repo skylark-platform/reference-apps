@@ -25,10 +25,13 @@ const EpisodeDataFetcher: React.FC<{
     {(episode: Episode) => (
       <>
         {children({
-          title: getTitleByOrderForGraphQLObject(episode, ["title_short", "title"]),
+          title: getTitleByOrderForGraphQLObject(episode, [
+            "title_short",
+            "title",
+          ]),
           synopsis: getSynopsisByOrderForGraphQLObject(episode, [
             "synopsis_short",
-            "synopsis"
+            "synopsis",
           ]),
           image: getGraphQLImageSrc(episode?.images, ImageType.Thumbnail),
           number: episode?.episode_number as number,
@@ -93,7 +96,7 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           self: "",
           title: getTitleByOrderForGraphQLObject(episode, [
             "title_short",
-            "title"
+            "title",
           ]),
           number: episode?.episode_number as number,
         })) || [],

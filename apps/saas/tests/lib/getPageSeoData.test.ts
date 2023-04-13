@@ -33,8 +33,8 @@ describe("getPageSeoData.ts", () => {
     const seo = await getSeoDataForObject("Episode", "uid", "");
 
     expect(seo).toEqual({
-      title: "medium title",
-      synopsis: "medium synopsis",
+      title: "title",
+      synopsis: "short synopsis",
       images: [
         {
           url: "https://skylark.com/image.jpg",

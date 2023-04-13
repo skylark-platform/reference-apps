@@ -1,22 +1,13 @@
 // Import dotenv must be first
 import "./env";
-import {
-  SAAS_API_ENDPOINT,
-} from "@skylark-reference-apps/lib";
+import { SAAS_API_ENDPOINT } from "@skylark-reference-apps/lib";
 import axios from "axios";
 import { mkdir, writeFile } from "fs/promises";
 import { has } from "lodash";
 import { getAllTables } from "./lib/airtable";
-import {
-  GraphQLBaseObject,
-  GraphQLMetadata,
-} from "./lib/interfaces";
-import {
-  orderedSetsToCreateWithoutDynamicObject,
-} from "./additional-objects/sets";
-import {
-  UNLICENSED_BY_DEFAULT,
-} from "./lib/constants";
+import { GraphQLBaseObject, GraphQLMetadata } from "./lib/interfaces";
+import { orderedSetsToCreateWithoutDynamicObject } from "./additional-objects/sets";
+import { UNLICENSED_BY_DEFAULT } from "./lib/constants";
 import {
   createGraphQLMediaObjects,
   createOrUpdateGraphQLCredits,
@@ -52,153 +43,153 @@ const main = async () => {
   console.log("Content type:", contentTypeToIngest);
   const airtable = await getAllTables(contentTypeToIngest);
 
-    // eslint-disable-next-line no-console
-    console.log(`Starting ingest to Skylark X: ${SAAS_API_ENDPOINT}`);
+  // eslint-disable-next-line no-console
+  console.log(`Starting ingest to Skylark X: ${SAAS_API_ENDPOINT}`);
 
-    await updateObjectConfigurations();
-    // eslint-disable-next-line no-console
-    console.log("Object configuration updated");
+  await updateObjectConfigurations();
+  // eslint-disable-next-line no-console
+  console.log("Object configuration updated");
 
-    await createDimensions();
+  await createDimensions();
 
-    const dimensions = await createOrUpdateScheduleDimensionValues(
-      airtable.dimensions
-    );
+  const dimensions = await createOrUpdateScheduleDimensionValues(
+    airtable.dimensions
+  );
 
-    await createOrUpdateAvailability(airtable.availability, dimensions);
+  await createOrUpdateAvailability(airtable.availability, dimensions);
 
-    const defaultSchedule = airtable.availability.find(
-      ({ fields }) =>
-        has(fields, "default") && fields.default && has(fields, "slug")
-    );
+  const defaultSchedule = airtable.availability.find(
+    ({ fields }) =>
+      has(fields, "default") && fields.default && has(fields, "slug")
+  );
 
-    // eslint-disable-next-line no-console
-    console.log(
-      `Default license: ${
-        UNLICENSED_BY_DEFAULT || !defaultSchedule
-          ? "undefined"
-          : `${defaultSchedule?.fields.slug as string} (${defaultSchedule.id})`
-      }`
-    );
+  // eslint-disable-next-line no-console
+  console.log(
+    `Default license: ${
+      UNLICENSED_BY_DEFAULT || !defaultSchedule
+        ? "undefined"
+        : `${defaultSchedule?.fields.slug as string} (${defaultSchedule.id})`
+    }`
+  );
 
-    const metadataAvailability: GraphQLMetadata["availability"] = {
-      // We use the Airtable IDs (external_id within Skylark) for Availability
-      all: airtable.availability.map(({ id }) => id),
-      default: UNLICENSED_BY_DEFAULT ? undefined : defaultSchedule?.id,
-    };
+  const metadataAvailability: GraphQLMetadata["availability"] = {
+    // We use the Airtable IDs (external_id within Skylark) for Availability
+    all: airtable.availability.map(({ id }) => id),
+    default: UNLICENSED_BY_DEFAULT ? undefined : defaultSchedule?.id,
+  };
 
-    const metadata: GraphQLMetadata = {
-      dimensions,
-      availability: metadataAvailability,
-      people: [],
-      roles: [],
-      genres: [],
-      themes: [],
-      ratings: [],
-      tags: [],
-      credits: [],
-      images: [],
-    };
+  const metadata: GraphQLMetadata = {
+    dimensions,
+    availability: metadataAvailability,
+    people: [],
+    roles: [],
+    genres: [],
+    themes: [],
+    ratings: [],
+    tags: [],
+    credits: [],
+    images: [],
+  };
 
-    metadata.images = await createOrUpdateGraphQlObjectsUsingIntrospection(
-      "SkylarkImage",
-      airtable.images,
-      metadataAvailability
-    );
-    metadata.themes = await createOrUpdateGraphQlObjectsUsingIntrospection(
-      "Theme",
-      airtable.themes,
-      metadataAvailability
-    );
-    metadata.genres = await createOrUpdateGraphQlObjectsUsingIntrospection(
-      "Genre",
-      airtable.genres,
-      metadataAvailability
-    );
-    metadata.ratings = await createOrUpdateGraphQlObjectsUsingIntrospection(
-      "Rating",
-      airtable.ratings,
-      metadataAvailability
-    );
-    metadata.tags = await createOrUpdateGraphQlObjectsUsingIntrospection(
-      "SkylarkTag",
-      airtable.tags,
-      metadataAvailability
-    );
-    metadata.people = await createOrUpdateGraphQlObjectsUsingIntrospection(
-      "Person",
-      airtable.people,
-      metadataAvailability
-    );
-    metadata.roles = await createOrUpdateGraphQlObjectsUsingIntrospection(
-      "Role",
-      airtable.roles,
-      metadataAvailability
-    );
-    metadata.credits = await createOrUpdateGraphQLCredits(
-      airtable.credits,
-      metadata
-    );
+  metadata.images = await createOrUpdateGraphQlObjectsUsingIntrospection(
+    "SkylarkImage",
+    airtable.images,
+    metadataAvailability
+  );
+  metadata.themes = await createOrUpdateGraphQlObjectsUsingIntrospection(
+    "Theme",
+    airtable.themes,
+    metadataAvailability
+  );
+  metadata.genres = await createOrUpdateGraphQlObjectsUsingIntrospection(
+    "Genre",
+    airtable.genres,
+    metadataAvailability
+  );
+  metadata.ratings = await createOrUpdateGraphQlObjectsUsingIntrospection(
+    "Rating",
+    airtable.ratings,
+    metadataAvailability
+  );
+  metadata.tags = await createOrUpdateGraphQlObjectsUsingIntrospection(
+    "SkylarkTag",
+    airtable.tags,
+    metadataAvailability
+  );
+  metadata.people = await createOrUpdateGraphQlObjectsUsingIntrospection(
+    "Person",
+    airtable.people,
+    metadataAvailability
+  );
+  metadata.roles = await createOrUpdateGraphQlObjectsUsingIntrospection(
+    "Role",
+    airtable.roles,
+    metadataAvailability
+  );
+  metadata.credits = await createOrUpdateGraphQLCredits(
+    airtable.credits,
+    metadata
+  );
 
-    // eslint-disable-next-line no-console
-    console.log("Metadata objects created");
+  // eslint-disable-next-line no-console
+  console.log("Metadata objects created");
 
-    const mediaObjects = await createGraphQLMediaObjects(
-      airtable.mediaObjects,
-      metadata
-    );
+  const mediaObjects = await createGraphQLMediaObjects(
+    airtable.mediaObjects,
+    metadata
+  );
 
-    await createTranslationsForGraphQLObjects(
-      mediaObjects,
-      airtable.translations.mediaObjects,
-      airtable.dimensions.languages
-    );
+  await createTranslationsForGraphQLObjects(
+    mediaObjects,
+    airtable.translations.mediaObjects,
+    airtable.dimensions.languages
+  );
 
-    // eslint-disable-next-line no-console
-    console.log("Media objects created");
+  // eslint-disable-next-line no-console
+  console.log("Media objects created");
 
-    const createdSets: GraphQLBaseObject[] = [];
-    if (shouldCreateAdditionalObjects) {
-      // SLX Demos have a special sets file
-      const setsToCreate =
-        contentTypeToIngest === "slxdemos"
-          ? slxDemoSetsToCreate
-          : orderedSetsToCreateWithoutDynamicObject;
+  const createdSets: GraphQLBaseObject[] = [];
+  if (shouldCreateAdditionalObjects) {
+    // SLX Demos have a special sets file
+    const setsToCreate =
+      contentTypeToIngest === "slxdemos"
+        ? slxDemoSetsToCreate
+        : orderedSetsToCreateWithoutDynamicObject;
 
-      for (let i = 0; i < setsToCreate.length; i += 1) {
-        const setConfig = setsToCreate[i];
-        // eslint-disable-next-line no-await-in-loop
-        const set = await createOrUpdateGraphQLSet(
-          setConfig,
-          [...mediaObjects, ...createdSets],
-          metadata,
-          airtable.dimensions.languages,
-          airtable.setsMetadata
-        );
-        if (set) createdSets.push(set);
-      }
-
-      // eslint-disable-next-line no-console
-      console.log("Additional objects created");
+    for (let i = 0; i < setsToCreate.length; i += 1) {
+      const setConfig = setsToCreate[i];
+      // eslint-disable-next-line no-await-in-loop
+      const set = await createOrUpdateGraphQLSet(
+        setConfig,
+        [...mediaObjects, ...createdSets],
+        metadata,
+        airtable.dimensions.languages,
+        airtable.setsMetadata
+      );
+      if (set) createdSets.push(set);
     }
 
-    const dateStamp = new Date().toISOString();
-    const output = {
-      environment_meta: {
-        date_stamp: dateStamp,
-        endpoint: SAAS_API_ENDPOINT,
-      },
-      airtable_data: airtable,
-      metadata,
-      media_objects: mediaObjects,
-      sets: createdSets,
-    };
+    // eslint-disable-next-line no-console
+    console.log("Additional objects created");
+  }
 
-    await mkdir("./outputs", { recursive: true });
-    await writeFile(
-      `./outputs/${dateStamp}.json`,
-      JSON.stringify(output, null, 4)
-    );
+  const dateStamp = new Date().toISOString();
+  const output = {
+    environment_meta: {
+      date_stamp: dateStamp,
+      endpoint: SAAS_API_ENDPOINT,
+    },
+    airtable_data: airtable,
+    metadata,
+    media_objects: mediaObjects,
+    sets: createdSets,
+  };
+
+  await mkdir("./outputs", { recursive: true });
+  await writeFile(
+    `./outputs/${dateStamp}.json`,
+    JSON.stringify(output, null, 4)
+  );
 
   // eslint-disable-next-line no-console
   console.timeEnd("Completed in:");
