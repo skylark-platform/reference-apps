@@ -30,6 +30,7 @@
   },
   "scripts": {
     "tsc": "tsc",
+    "ingest": "ts-node src/main.ts",
     "ingest:saas": "cross-env yarn ingest",
     "ingest:saas:with-sets": "cross-env CREATE_SETS=true yarn ingest",
     "test": "jest --config=jest.config.js",
