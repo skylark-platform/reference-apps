@@ -75,29 +75,6 @@ NEXT_PUBLIC_SAAS_API_KEY=
 NEXT_PUBLIC_APP_TITLE=
 ```
 
-### apps/media (SL8 StreamTV)
-
-```bash
-NEXT_PUBLIC_SKYLARK_API_URL=
-NEXT_PUBLIC_APP_DOMAIN=
-COGNITO_AWS_REGION=
-COGNITO_CLIENT_ID=
-COGNITO_USER_POOL_ID=
-COGNITO_EMAIL=
-COGNITO_PASSWORD=
-```
-
-If you're just testing StreamTV out then you can probably get away with just:
-
-```bash
-NEXT_PUBLIC_SKYLARK_API_URL=
-```
-
-But note:
-
-1. The site name in the SEO headers will be blank because `NEXT_PUBLIC_APP_DOMAIN` isn't provided
-2. Asset playback from Skylark will not work as the `COGNITO_` variables are required for that
-
 ### packages/infra (AWS deployment)
 
 ```bash
