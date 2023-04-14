@@ -90,7 +90,6 @@ export interface SkylarkObject {
   type: ObjectTypes;
   isExpanded: true;
   uid: string;
-  objectTitle: string;
   slug: string;
   title: {
     [key in TitleTypes]: string;

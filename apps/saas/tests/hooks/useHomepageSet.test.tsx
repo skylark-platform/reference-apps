@@ -18,7 +18,9 @@ describe("useHomepageSet", () => {
       result.current.cache.clear();
     });
 
-    jest.useFakeTimers();
+    jest.useFakeTimers({
+      legacyFakeTimers: true,
+    });
     act(() => {
       jest.runAllTimers();
     });
@@ -40,7 +42,7 @@ describe("useHomepageSet", () => {
     await waitForNextUpdate();
 
     expect(graphQlRequest).toBeCalledWith(
-      'query getSkylarkSet { getSkylarkSet (external_id: "streamtv_homepage", language: "en-gb", dimensions: [{dimension: "device-types", value: ""}, {dimension: "customer-types", value: "standard"}]) { __typename uid title slug content { count objects { object { __typename slug ... on Season { uid title_short title_medium episodes (limit: 30) { objects { uid episode_number title } } } ... on SkylarkSet { uid type title_short title_medium content (limit: 30) { objects { object { __typename uid } } } } } } } } }',
+      'query getSkylarkSet { getSkylarkSet (external_id: "streamtv_homepage", language: "en-gb", dimensions: [{dimension: "device-types", value: ""}, {dimension: "customer-types", value: "standard"}]) { __typename uid title slug content { count objects { object { __typename slug ... on Season { uid title title_short episodes (limit: 30) { objects { uid episode_number title } } } ... on SkylarkSet { uid type title title_short content (limit: 30) { objects { object { __typename uid } } } } } } } } }',
       {},
       {}
     );

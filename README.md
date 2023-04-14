@@ -13,13 +13,12 @@ We use Lerna and Yarn Workspaces to re-use local packages in multiple projects.
 
 ### Apps (`app/`)
 
-- Media (StreamTV) - [Demo application for Skylark V8.x.x][v8-app] (up between 6am and 12am GMT)
 - SaaS (StreamTV (SLX)) - Demo application for Skylark X (up between 6am and 12am GMT)
 - Storybook - [React component library][storybook]
 
 #### Running
 
-Create a `.env.local` in the `apps/media` directory containing the corresponding environment variables found in the [Environment Variables document][environment-variables].
+Create a `.env.local` in the `apps/saas` directory containing the corresponding environment variables found in the [Environment Variables document][environment-variables].
 
 Then run:
 
@@ -45,4 +44,3 @@ From the root directory run `yarn test`
 [skylark]: https://www.skylarkplatform.com/
 [environment-variables]: ./docs/environment-variables.md
 [storybook]: https://main--63219df2e93c0d4a4ed861cf.chromatic.com/
-[v8-app]: https://media.apps.showcase.skylarkplatform.io/

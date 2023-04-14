@@ -19,9 +19,9 @@ describe("getPageSeoData.ts", () => {
     const episode: Episode = {
       uid: "uid",
       title_short: "short title",
-      title_medium: "medium title",
+      title: "title",
       synopsis_short: "short synopsis",
-      synopsis_medium: "medium synopsis",
+      synopsis: "synopsis",
       images: {
         objects: [{ uid: "image-1", url: "https://skylark.com/image.jpg" }],
       },
@@ -33,8 +33,8 @@ describe("getPageSeoData.ts", () => {
     const seo = await getSeoDataForObject("Episode", "uid", "");
 
     expect(seo).toEqual({
-      title: "medium title",
-      synopsis: "medium synopsis",
+      title: "title",
+      synopsis: "short synopsis",
       images: [
         {
           url: "https://skylark.com/image.jpg",

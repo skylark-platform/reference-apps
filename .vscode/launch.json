@@ -5,34 +5,6 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug ingestor - SL8",
-      "request": "launch",
-      "cwd": "${workspaceFolder}/packages/ingestor",
-      "runtimeArgs": ["ingest"],
-      "runtimeExecutable": "yarn",
-      "skipFiles": ["<node_internals>/**"],
-      "type": "node",
-      "env": {
-        "CREATE_SETS": "true",
-        "INGEST_TO_SAAS_SKYLARK": "false"
-      }
-    },
-    {
-      "name": "Debug ingestor - SL8 (CREATE_ONLY)",
-      "request": "launch",
-      "cwd": "${workspaceFolder}/packages/ingestor",
-      "runtimeArgs": ["ingest"],
-      "runtimeExecutable": "yarn",
-      "skipFiles": ["<node_internals>/**"],
-      "type": "node",
-      "env": {
-        "CREATE_SETS": "false",
-        "INGEST_TO_SAAS_SKYLARK": "false",
-        "CREATE_ONLY": "true",
-        "CHECK_MISSING": "false"
-      }
-    },
-    {
       "name": "Debug ingestor - SLX (All content)",
       "request": "launch",
       "cwd": "${workspaceFolder}/packages/ingestor",
@@ -41,8 +13,7 @@
       "skipFiles": ["<node_internals>/**"],
       "type": "node",
       "env": {
-        "CREATE_SETS": "true",
-        "INGEST_TO_SAAS_SKYLARK": "true"
+        "CREATE_SETS": "true"
       }
     },
     {
@@ -55,7 +26,6 @@
       "type": "node",
       "env": {
         "CREATE_SETS": "true",
-        "INGEST_TO_SAAS_SKYLARK": "true",
         "CONTENT_TYPE": "streamtv"
       }
     },
@@ -69,7 +39,6 @@
       "type": "node",
       "env": {
         "CREATE_SETS": "true",
-        "INGEST_TO_SAAS_SKYLARK": "true",
         "CONTENT_TYPE": "slxdemos"
       }
     }

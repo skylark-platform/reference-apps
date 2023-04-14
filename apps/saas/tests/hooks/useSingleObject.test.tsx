@@ -20,7 +20,9 @@ describe("useSingleObject", () => {
       result.current.cache.clear();
     });
 
-    jest.useFakeTimers();
+    jest.useFakeTimers({
+      legacyFakeTimers: true,
+    });
     act(() => {
       jest.runAllTimers();
     });
@@ -60,7 +62,7 @@ describe("useSingleObject", () => {
 
       expect(graphQlRequest).toBeCalledWith(
         expect.stringContaining(
-          "{ __typename uid title slug title_short title_medium title_long synopsis_short synopsis_medium synopsis_long release_date images { objects { title type url } }"
+          "{ __typename uid title slug title_short synopsis synopsis_short release_date images { objects { title type url } }"
         ),
         {},
         {}
@@ -129,7 +131,7 @@ describe("useSingleObject", () => {
     );
     expect(graphQlRequest).toBeCalledWith(
       expect.stringContaining(
-        "seasons { objects { season_number title_short title_medium title_long brands { objects { title_short title_medium title_long } } } }"
+        "seasons { objects { season_number title title_short brands { objects { title title_short } } } }"
       ),
       {},
       {}
@@ -173,9 +175,7 @@ describe("useSingleObject", () => {
       {}
     );
     expect(graphQlRequest).toBeCalledWith(
-      expect.stringContaining(
-        "brands { objects { title_short title_medium title_long } }"
-      ),
+      expect.stringContaining("brands { objects { title title_short } }"),
       {},
       {}
     );
@@ -197,7 +197,7 @@ describe("useSingleObject", () => {
     );
     expect(graphQlRequest).toBeCalledWith(
       expect.stringContaining(
-        "seasons { objects { title_short title_medium title_long season_number number_of_episodes episodes { objects { uid episode_number } } } }"
+        "seasons { objects { title title_short season_number number_of_episodes episodes { objects { uid episode_number } } } }"
       ),
       {},
       {}

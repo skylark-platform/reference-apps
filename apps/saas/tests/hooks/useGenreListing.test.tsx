@@ -18,7 +18,9 @@ describe("useGenreListing", () => {
       result.current.cache.clear();
     });
 
-    jest.useFakeTimers();
+    jest.useFakeTimers({
+      legacyFakeTimers: true,
+    });
     act(() => {
       jest.runAllTimers();
     });

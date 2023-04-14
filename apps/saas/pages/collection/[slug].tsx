@@ -38,7 +38,10 @@ const CollectionItemDataFetcher: React.FC<{
     {(item: Episode | Movie | Brand | Season | SkylarkSet) => (
       <>
         {children({
-          title: getTitleByOrderForGraphQLObject(item, ["short", "medium"]),
+          title: getTitleByOrderForGraphQLObject(item, [
+            "title_short",
+            "title",
+          ]),
           image: getGraphQLImageSrc(item?.images, ImageType.Thumbnail),
           uid: item.uid,
           href: `/${

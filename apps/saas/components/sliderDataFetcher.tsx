@@ -41,8 +41,8 @@ export const SliderDataFetcher: FC<{
               setContent.map((object) => ({
                 uid: object.uid,
                 title: getTitleByOrderForGraphQLObject(object, [
-                  "medium",
-                  "short",
+                  "title",
+                  "title_short",
                 ]),
                 href: `/${convertTypenameToEntertainmentType(
                   object.__typename

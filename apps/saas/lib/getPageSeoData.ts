@@ -46,11 +46,8 @@ export const getSeoDataForObject = async (
         title: true,
         slug: true,
         title_short: true,
-        title_medium: true,
-        title_long: true,
+        synopsis: true,
         synopsis_short: true,
-        synopsis_medium: true,
-        synopsis_long: true,
         images: {
           objects: {
             title: true,
@@ -70,15 +67,13 @@ export const getSeoDataForObject = async (
     }>(query);
 
     const title = getTitleByOrder({
-      short: data?.title_short || "",
-      medium: data?.title_medium || "",
-      long: data?.title_long || "",
+      title: data?.title || "",
+      title_short: data?.title_short || "",
     });
 
     const synopsis = getSynopsisByOrder({
-      short: data?.synopsis_short || "",
-      medium: data?.synopsis_medium || "",
-      long: data?.synopsis_long || "",
+      synopsis: data?.synopsis_short || "",
+      synopsis_short: data?.synopsis_short || "",
     });
 
     const images =

@@ -102,9 +102,8 @@ export const getTitleByOrderForGraphQLObject = (
   }
   return getTitleByOrder(
     {
-      short: obj?.title_short || "",
-      medium: obj?.title_medium || "",
-      long: obj?.title_long || "",
+      title: obj?.title || "",
+      title_short: obj?.title_short || "",
     },
     priority
   );
@@ -119,9 +118,8 @@ export const getSynopsisByOrderForGraphQLObject = (
   }
   return getSynopsisByOrder(
     {
-      short: obj?.synopsis_short || "",
-      medium: obj?.synopsis_medium || "",
-      long: obj?.synopsis_long || "",
+      synopsis: obj?.synopsis || "",
+      synopsis_short: obj?.synopsis_short || "",
     },
     priority
   );

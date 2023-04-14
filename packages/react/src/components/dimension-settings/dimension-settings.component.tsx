@@ -77,7 +77,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                     target="_blank"
                   >
                     {process.env.NEXT_PUBLIC_REGISTER_BUTTON_HREF
-                      ? "Join the Skylark Beta"
+                      ? "Learn more"
                       : "hello@skylarkplatform.com"}
                   </a>
                 </div>
@@ -86,7 +86,8 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                 <p className="text-sm font-medium">
                   {skylarkApiUrl
                     ? `Connected: ${
-                        skylarkApiUrl.includes("skylarkplatform.io")
+                        skylarkApiUrl.includes("skylarkplatform.io") ||
+                        skylarkApiUrl.includes("skylarkplatform.com")
                           ? skylarkApiUrl.split(".")[1]
                           : skylarkApiUrl
                       }.`

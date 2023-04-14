@@ -6,10 +6,11 @@
   "license": "MIT",
   "devDependencies": {
     "@tsconfig/node16": "^1.0.3",
-    "@types/jest": "^26.0.10",
+    "@types/jest": "^29.5.0",
     "@types/node": "^17.0.43",
     "cross-env": "^7.0.3",
-    "jest": "^26.4.2",
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0",
     "ts-node": "^10.8.1",
     "typescript": "^4.7.3"
   },
@@ -29,10 +30,8 @@
   },
   "scripts": {
     "tsc": "tsc",
-    "ingest": "ts-node src/main.ts",
-    "ingest:with-sets": "cross-env CREATE_SETS=true yarn ingest",
-    "ingest:saas": "cross-env INGEST_TO_SAAS_SKYLARK=true yarn ingest",
-    "ingest:saas:with-sets": "cross-env INGEST_TO_SAAS_SKYLARK=true CREATE_SETS=true yarn ingest",
+    "ingest:saas": "cross-env yarn ingest",
+    "ingest:saas:with-sets": "cross-env CREATE_SETS=true yarn ingest",
     "test": "jest --config=jest.config.js",
     "lint": "eslint -c .eslintrc.js ."
   }

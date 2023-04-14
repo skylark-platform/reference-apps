@@ -32,8 +32,8 @@ const createGraphQLQuery = (lookupValue: string, dimensions: Dimensions) => {
             {
               __typeName: "Season",
               uid: true,
+              title: true,
               title_short: true,
-              title_medium: true,
               episodes: {
                 __args: {
                   limit: 30,
@@ -49,8 +49,8 @@ const createGraphQLQuery = (lookupValue: string, dimensions: Dimensions) => {
               __typeName: "SkylarkSet",
               uid: true,
               type: true,
+              title: true,
               title_short: true,
-              title_medium: true,
               content: {
                 __args: {
                   limit: 30,

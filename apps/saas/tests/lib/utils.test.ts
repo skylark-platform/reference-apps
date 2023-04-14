@@ -131,13 +131,12 @@ describe("utils.ts", () => {
     it("returns the expected title", () => {
       const got = utils.getTitleByOrderForGraphQLObject(
         {
+          title: "title",
           title_short: "Short title",
-          title_medium: "Medium title",
-          title_long: "",
         } as Entertainment,
-        ["long", "medium", "short"]
+        ["title", "title_short"]
       );
-      expect(got).toEqual("Medium title");
+      expect(got).toEqual("title");
     });
   });
 
@@ -145,13 +144,12 @@ describe("utils.ts", () => {
     it("returns the expected synopsis", () => {
       const got = utils.getSynopsisByOrderForGraphQLObject(
         {
+          synopsis: "synopsis",
           synopsis_short: "Short synopsis",
-          synopsis_medium: "Medium synopsis",
-          synopsis_long: "",
         } as Entertainment,
-        ["long", "medium", "short"]
+        ["synopsis", "synopsis_short"]
       );
-      expect(got).toEqual("Medium synopsis");
+      expect(got).toEqual("synopsis");
     });
   });
 

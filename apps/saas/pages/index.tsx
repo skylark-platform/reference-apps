@@ -47,13 +47,12 @@ const RailItemDataFetcher: React.FC<{
           <>
             {children({
               title: getTitleByOrderForGraphQLObject(object, [
-                "short",
-                "medium",
+                "title_short",
+                "title",
               ]),
               synopsis: getSynopsisByOrderForGraphQLObject(object, [
-                "short",
-                "medium",
-                "long",
+                "synopsis_short",
+                "synopsis",
               ]),
               image: getGraphQLImageSrc(object?.images, ImageType.Thumbnail),
               uid: object.uid,
@@ -152,7 +151,7 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           )?.toLowerCase() as ObjectTypes,
           self: "",
           title:
-            getTitleByOrderForGraphQLObject(item, ["short", "medium"]) ||
+            getTitleByOrderForGraphQLObject(item, ["title", "title_short"]) ||
             item.title ||
             "",
           content: getContentForSetItem(item),

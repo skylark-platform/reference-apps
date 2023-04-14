@@ -15,8 +15,8 @@ const createGraphQLQuery = (lookupValue: string, dimensions: Dimensions) => {
 
   const commonObjectFields = {
     uid: true,
+    title: true,
     title_short: true,
-    title_medium: true,
     release_date: true,
     images: {
       objects: {
@@ -33,11 +33,8 @@ const createGraphQLQuery = (lookupValue: string, dimensions: Dimensions) => {
     title: true,
     slug: true,
     title_short: true,
-    title_medium: true,
-    title_long: true,
+    synopsis: true,
     synopsis_short: true,
-    synopsis_medium: true,
-    synopsis_long: true,
     release_date: true,
     images: {
       objects: {
