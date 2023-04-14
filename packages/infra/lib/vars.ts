@@ -4,7 +4,7 @@ const baseDomain = process.env.BASE_DOMAIN_NAME;
 const strFromArr = (arr: any[], separator: string) =>
   arr.filter((item) => !!item).join(separator);
 
-export const APP = process.env.APP || "media";
+export const APP = process.env.APP || "saas";
 export const GIT_BRANCH =
   gitBranch && gitBranch.toLowerCase().replace(/[^A-Za-z0-9]/g, "-");
 

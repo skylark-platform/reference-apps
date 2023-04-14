@@ -28,7 +28,7 @@ yarn
 3. Export required environment variables
 
 ```bash
-export APP=media
+export APP=saas
 export BASE_DOMAIN_NAME=
 export NEXT_PUBLIC_SKYLARK_API_URL=
 export COGNITO_EMAIL=
