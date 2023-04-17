@@ -35,15 +35,6 @@ COGNITO_USER_POOL_ID=
 # - Loading content into Skylark via the Ingestor
 COGNITO_EMAIL=
 COGNITO_PASSWORD=
-# Name of the app to deploy
-# Used in
-# - AWS CDK deployment (packages/infra) - defaults to media (StreamTV)
-APP=media
-# Base domain of your Skylark deployment
-# The URL to your Skylark instance with the protocol (https) removed
-# Used in
-# - AWS CDK deployment (packages/infra) - defaults to media (StreamTV)
-BASE_DOMAIN_NAME=
 # Airtable base ID and access token
 # You get these from Airtable directly
 # Used in
@@ -73,21 +64,6 @@ If you're just testing StreamTV out then you can probably get away with just:
 NEXT_PUBLIC_SAAS_API_ENDPOINT=
 NEXT_PUBLIC_SAAS_API_KEY=
 NEXT_PUBLIC_APP_TITLE=
-```
-
-### packages/infra (AWS deployment)
-
-```bash
-APP=media
-BASE_DOMAIN_NAME=
-NEXT_PUBLIC_SKYLARK_API_URL=
-# COGNITO_ used for Asset playback as in apps/media
-COGNITO_AWS_REGION=
-COGNITO_CLIENT_ID=
-COGNITO_USER_POOL_ID=
-COGNITO_EMAIL=
-COGNITO_PASSWORD=
-
 ```
 
 ### packages/ingestor (Content ingestor)
