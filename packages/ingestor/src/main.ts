@@ -48,8 +48,8 @@ const main = async () => {
   console.log(`Starting ingest to Skylark X: ${SAAS_API_ENDPOINT}`);
 
   const { version } = await updateSkylarkSchema();
-    // eslint-disable-next-line no-console
-    console.log("Schema updated to version:", version);
+  // eslint-disable-next-line no-console
+  console.log("Schema updated to version:", version);
 
   await updateObjectConfigurations();
   // eslint-disable-next-line no-console

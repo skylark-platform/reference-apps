@@ -32,16 +32,17 @@ export const GET_MOVIE_THUMBNAIL = gql`
   }
 `;
 
-
 export const GET_MOVIE = gql`
   query GET_MOVIE(
-    $uid: String!
+    $uid: String
+    $externalId: String
     $language: String!
     $deviceType: String!
     $customerType: String!
   ) {
     getObject: getMovie(
       uid: $uid
+      external_id: $externalId
       language: $language
       dimensions: [
         { dimension: "device-types", value: $deviceType }

@@ -1,14 +1,11 @@
-
-
-import {
-  SkeletonPage,
-} from "@skylark-reference-apps/react";
+import { SkeletonPage } from "@skylark-reference-apps/react";
 import type { GetStaticProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 import { Carousel } from "../components/carousel";
 import { DisplayError } from "../components/displayError";
 import { SeasonRail, SetRail } from "../components/rails";
-import { useHomepageSet } from "../hooks/useHomepageSet";
+import { GET_HOME_PAGE_SET } from "../graphql/queries";
+import { useObject } from "../hooks/useObject";
 import { getSeoDataForObject, SeoObjectData } from "../lib/getPageSeoData";
 import {
   Brand,
@@ -35,7 +32,10 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 };
 
 const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
-  const { data, isLoading, isError } = useHomepageSet();
+  const { data, isLoading, isError } = useObject<SkylarkSet>(
+    GET_HOME_PAGE_SET,
+    "streamtv_homepage"
+  );
 
   if (!isLoading && isError) {
     return (
@@ -53,42 +53,39 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     : [];
 
   return (
-      <div className="mb-20 mt-48 flex min-h-screen flex-col items-center bg-gray-900 font-body">
+    <div className="mb-20 mt-48 flex min-h-screen flex-col items-center bg-gray-900 font-body">
       <NextSeo openGraph={{ images: seo.images }} />
       <SkeletonPage show={!!isLoading}>
         <div className="w-full">
-        {content.map((item, index) => {
-          // Only the Set Types, Sliders or Rails will show on the Home Page - as well as Seasons
-          if (item.__typename === "SkylarkSet") {
+          {content.map((item, index) => {
+            // Only the Set Types, Sliders or Rails will show on the Home Page - as well as Seasons
+            if (item.__typename === "SkylarkSet") {
+              if (item.type === SetType.Slider) {
+                return (
+                  // If the carousel is the first item, add negative margin to make it appear through the navigation
+                  <div
+                    className={`h-[90vh] w-full md:h-[95vh] ${
+                      index === 0 ? "-mt-48" : ""
+                    }`}
+                  >
+                    <Carousel key={item.uid} uid={item.uid} />
+                  </div>
+                );
+              }
 
-            if(item.type === SetType.Slider) {
-              return (
-                // If the carousel is the first item, add negative margin to make it appear through the navigation
-                <div
-                className={`h-[90vh] w-full md:h-[95vh] ${
-                  index === 0 ? "-mt-48" : ""
-                }`}
-              >
-                <Carousel key={item.uid} uid={item.uid} />
-                </div>
-              );
+              if (item.type?.startsWith("RAIL")) {
+                return <SetRail className="my-6" set={item} />;
+              }
             }
 
-            if(item.type?.startsWith("RAIL")) {
-              return <SetRail className="my-6" set={item} />
+            if (item.__typename === "Season") {
+              return <SeasonRail className="my-6" season={item} />;
             }
-          }
-
-          if(item.__typename === "Season") {
-            return (
-              <SeasonRail className="my-6" season={item} />
-            )
-          }
-          return <></>
-      })}
-      </div>
-    </SkeletonPage>
-  </div>
+            return <></>;
+          })}
+        </div>
+      </SkeletonPage>
+    </div>
   );
 };
 

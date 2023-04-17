@@ -1,6 +1,10 @@
 import { graphQLClient } from "@skylark-reference-apps/lib";
 import { gql } from "graphql-request";
-import { EnumType, jsonToGraphQLQuery, VariableType } from "json-to-graphql-query";
+import {
+  EnumType,
+  jsonToGraphQLQuery,
+  VariableType,
+} from "json-to-graphql-query";
 import { ENUMS } from "../../constants";
 import { pause } from "./utils";
 
@@ -12,31 +16,36 @@ const GET_ACCOUNT_STATUS = gql`
       update_started_at
     }
   }
-`
+`;
 
 const ACTIVATE_CONFIGURATION_VERSION = gql`
-mutation ACTIVATE_CONFIGURATION_VERSION($version: Int!) {
-  activateConfigurationVersion(version: $version) {
-    messages
-    version
+  mutation ACTIVATE_CONFIGURATION_VERSION($version: Int!) {
+    activateConfigurationVersion(version: $version) {
+      messages
+      version
+    }
   }
-}`
+`;
 
-const getActivationStatus = async() => {
+const getActivationStatus = async () => {
   const res = await graphQLClient.request<{
-    getActivationStatus: { active_version: number, update_in_progress: boolean, update_started_at: string };
+    getActivationStatus: {
+      active_version: number;
+      update_in_progress: boolean;
+      update_started_at: string;
+    };
   }>(GET_ACCOUNT_STATUS);
 
   return res.getActivationStatus;
-}
+};
 
-const activateConfigurationVersion = async(version: number) => {
+const activateConfigurationVersion = async (version: number) => {
   const res = await graphQLClient.request<{
-    activateConfigurationVersion: { version: number, messages: string };
+    activateConfigurationVersion: { version: number; messages: string };
   }>(ACTIVATE_CONFIGURATION_VERSION, { version });
 
   return res.activateConfigurationVersion;
-}
+};
 
 const updateSetTypes = async (version?: number) => {
   const mutation = {
@@ -63,12 +72,12 @@ const updateSetTypes = async (version?: number) => {
   const graphQLQuery = jsonToGraphQLQuery(mutation);
 
   const { editEnumConfiguration } = await graphQLClient.request<{
-    editEnumConfiguration: { version: number, messages: string };
-  }>(graphQLQuery , { version })
+    editEnumConfiguration: { version: number; messages: string };
+  }>(graphQLQuery, { version });
 
   return {
     version: editEnumConfiguration.version,
-  }
+  };
 };
 
 export const updateSkylarkSchema = async () => {
@@ -87,5 +96,5 @@ export const updateSkylarkSchema = async () => {
     await pause(5000);
   }
 
-  return { version: activeVersion};
-}
+  return { version: activeVersion };
+};

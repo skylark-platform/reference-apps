@@ -42,9 +42,7 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     data: brand,
     isError,
     isLoading,
-  } = useObject<Brand>(GET_BRAND, query?.slug as string, {
-    useExternalId: (query?.slug as string).startsWith("rec"),
-  });
+  } = useObject<Brand>(GET_BRAND, query?.slug as string);
 
   const { t } = useTranslation("common");
 
@@ -66,7 +64,8 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     ) as Season[]) || [];
 
   const firstEpisodeOfFirstSeason =
-    seasons.length > 0 && seasons?.[0].episodes?.objects?.sort(sortEpisodesByNumber)?.[0];
+    seasons.length > 0 &&
+    seasons?.[0].episodes?.objects?.sort(sortEpisodesByNumber)?.[0];
 
   return (
     <div className="mb-20 mt-48 flex min-h-screen w-full flex-col items-center bg-gray-900 font-body">
@@ -114,14 +113,14 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         </div>
 
         {seasons.map((season) => (
-            <SeasonRail
-              className="my-6"
-              header={`${t("skylark.object.season")} ${
-                season.season_number || "-"
-              }`}
-              key={season.uid}
-              season={season}
-            />
+          <SeasonRail
+            className="my-6"
+            header={`${t("skylark.object.season")} ${
+              season.season_number || "-"
+            }`}
+            key={season.uid}
+            season={season}
+          />
         ))}
       </SkeletonPage>
     </div>

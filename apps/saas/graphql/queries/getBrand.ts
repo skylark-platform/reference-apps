@@ -1,7 +1,7 @@
 import { gql } from "graphql-request";
 
 export const GET_BRAND_THUMBNAIL = gql`
-  query GET_BRAND_THUMBNAIL (
+  query GET_BRAND_THUMBNAIL(
     $uid: String!
     $language: String!
     $deviceType: String!
@@ -30,7 +30,6 @@ export const GET_BRAND_THUMBNAIL = gql`
     }
   }
 `;
-
 
 export const GET_BRAND = gql`
   query GET_BRAND(

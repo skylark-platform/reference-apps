@@ -7,9 +7,15 @@ import {
 import { Metadata } from "../types/gql";
 import { GQLError } from "../types";
 
-interface UseObjectOpts { disabled?: boolean, useExternalId?: boolean }
+interface UseObjectOpts {
+  disabled?: boolean;
+  useExternalId?: boolean;
+}
 
-const shouldUseExternalId = (lookupValue: string) => lookupValue.startsWith("rec") || lookupValue.startsWith("ingestor_set") || lookupValue.startsWith("streamtv_")
+const shouldUseExternalId = (lookupValue: string) =>
+  lookupValue.startsWith("rec") ||
+  lookupValue.startsWith("ingestor_set") ||
+  lookupValue.startsWith("streamtv_");
 
 const fetcher = <T extends Metadata>([query, uid, dimensions, opts]: [
   query: string,
@@ -24,13 +30,22 @@ const fetcher = <T extends Metadata>([query, uid, dimensions, opts]: [
     deviceType: dimensions.deviceType,
   }).then(({ getObject: data }): T => data);
 
-export const useObject = <T extends Metadata>(query: string, uid: string, opts: UseObjectOpts) => {
+export const useObject = <T extends Metadata>(
+  query: string,
+  uid: string,
+  opts?: UseObjectOpts
+) => {
   const { dimensions } = useDimensions();
 
-  const useExternalId = hasProperty(opts, "useExternalId") ? opts.useExternalId : shouldUseExternalId(uid);
+  const useExternalId =
+    opts && hasProperty(opts, "useExternalId")
+      ? opts.useExternalId
+      : shouldUseExternalId(uid);
 
   const { data, error, isLoading } = useSWR<T, GQLError>(
-    opts.disabled ? null : [query, uid, dimensions, { ...opts, useExternalId }],
+    opts?.disabled
+      ? null
+      : [query, uid, dimensions, { ...opts, useExternalId }],
     fetcher
   );
 

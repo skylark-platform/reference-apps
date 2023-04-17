@@ -64,7 +64,9 @@ export const Thumbnail = ({ uid, objectType, variant }: ThumbnailProps) => {
 
   const query = getThumbnailQuery(objectType);
 
-  const { data, isLoading } = useObject<Entertainment>(query, uid, !inView);
+  const { data, isLoading } = useObject<Entertainment>(query, uid, {
+    disabled: !inView,
+  });
 
   const parsedType =
     data?.__typename === "SkylarkSet"

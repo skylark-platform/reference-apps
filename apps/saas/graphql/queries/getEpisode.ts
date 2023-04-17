@@ -35,13 +35,15 @@ export const GET_EPISODE_THUMBNAIL = gql`
 
 export const GET_EPISODE = gql`
   query GET_EPISODE(
-    $uid: String!
+    $uid: String
+    $externalId: String
     $language: String!
     $deviceType: String!
     $customerType: String!
   ) {
     getObject: getEpisode(
       uid: $uid
+      external_id: $externalId
       language: $language
       dimensions: [
         { dimension: "device-types", value: $deviceType }

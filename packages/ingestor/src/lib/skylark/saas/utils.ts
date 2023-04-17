@@ -12,9 +12,10 @@ import {
 } from "../../interfaces";
 import { ApiObjectType } from "../../types";
 
-export const pause = (ms: number) => new Promise(resolve => {
-  setTimeout(resolve, ms)
-})
+export const pause = (ms: number) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 
 export const getExtId = (externalId: string) =>
   externalId.substring(externalId.indexOf("#") + 1);

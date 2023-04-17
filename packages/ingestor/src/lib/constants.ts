@@ -17,5 +17,14 @@ export const CHECK_MISSING = (process.env.CHECK_MISSING as string) === "true";
 export const CREATE_OBJECT_CHUNK_SIZE = 3;
 
 export const ENUMS = {
-  SET_TYPES: ["PAGE", "COLLECTION", "SLIDER", "RAIL", "RAIL_WITH_DESCRIPTION", "RAIL_PORTRAIT", "RAIL_INSET", "RAIL_MOVIE"] as const
-}
+  SET_TYPES: [
+    "PAGE",
+    "COLLECTION",
+    "SLIDER",
+    "RAIL",
+    "RAIL_WITH_DESCRIPTION",
+    "RAIL_PORTRAIT",
+    "RAIL_INSET",
+    "RAIL_MOVIE",
+  ] as const,
+};

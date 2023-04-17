@@ -1,61 +1,28 @@
-import { ReactNode } from "react";
 import type { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import {
-  MoviesPageParsedMovie,
-  CollectionPage,
-} from "@skylark-reference-apps/react";
-import { GraphQLMediaObjectTypes } from "@skylark-reference-apps/lib";
+import { Header, Hero, SkeletonPage } from "@skylark-reference-apps/react";
+import { formatReleaseDate } from "@skylark-reference-apps/lib";
 
-import { useCollection } from "../../hooks/useCollection";
+import useTranslation from "next-translate/useTranslation";
 import {
-  Brand,
   ImageType,
-  Episode,
-  Movie,
-  Season,
   SkylarkSet,
+  SetContent,
+  ObjectTypes,
 } from "../../types/gql";
-import { MediaObjectFetcher } from "../../components/mediaObjectFetcher";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 import {
-  convertGraphQLSetType,
-  convertTypenameToEntertainmentType,
   getFirstRatingValue,
   getGraphQLImageSrc,
   getSynopsisByOrderForGraphQLObject,
   getTitleByOrderForGraphQLObject,
 } from "../../lib/utils";
 import { DisplayError } from "../../components/displayError";
-
-const CollectionItemDataFetcher: React.FC<{
-  uid: string;
-  children(data: MoviesPageParsedMovie): ReactNode;
-  type: GraphQLMediaObjectTypes;
-}> = ({ uid, children, type }) => (
-  <MediaObjectFetcher type={type} uid={uid}>
-    {(item: Episode | Movie | Brand | Season | SkylarkSet) => (
-      <>
-        {children({
-          title: getTitleByOrderForGraphQLObject(item, [
-            "title_short",
-            "title",
-          ]),
-          image: getGraphQLImageSrc(item?.images, ImageType.Thumbnail),
-          uid: item.uid,
-          href: `/${
-            item.__typename === "SkylarkSet"
-              ? convertGraphQLSetType(item?.type || "")
-              : convertTypenameToEntertainmentType(item.__typename)
-          }/${item.uid}`,
-          releaseDate: item.release_date as string | undefined,
-          duration: "1hr 38m",
-        })}
-      </>
-    )}
-  </MediaObjectFetcher>
-);
+import { Entertainment } from "../../types";
+import { Thumbnail } from "../../components/thumbnail";
+import { useObject } from "../../hooks/useObject";
+import { GET_COLLECTION_SET } from "../../graphql/queries";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject(
@@ -72,10 +39,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
+  const { lang } = useTranslation("common");
 
-  const { collection, isLoading, isError } = useCollection(
-    query?.slug as string
-  );
+  const {
+    data: collection,
+    isError,
+    isLoading,
+  } = useObject<SkylarkSet>(GET_COLLECTION_SET, query?.slug as string);
 
   if (!isLoading && isError) {
     return (
@@ -90,32 +60,43 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const synopsis = getSynopsisByOrderForGraphQLObject(collection);
 
   return (
-    <>
+    <div className="mb-20 mt-48 flex min-h-screen w-full flex-col items-center bg-gray-900 font-body">
       <NextSeo
         description={seo.synopsis}
         openGraph={{ images: seo.images }}
         title={title || seo.title}
       />
-      <CollectionPage
-        CollectionItemDataFetcher={CollectionItemDataFetcher}
-        bgImage={getGraphQLImageSrc(collection?.images, ImageType.Main)}
-        content={
-          collection?.content?.objects?.map((item) => ({
-            self: "",
-            slug: "",
-            uid: item?.object?.uid || "",
-            type:
-              (item?.object as Episode | Movie | Brand | Season).__typename ||
-              "",
-          })) || []
-        }
-        loading={isLoading}
-        rating={getFirstRatingValue(collection?.ratings)}
-        releaseDate={collection?.release_date || ""}
-        synopsis={synopsis}
-        title={title}
-      />
-    </>
+      <SkeletonPage show={isLoading}>
+        <div className="-mt-48"></div>
+        <Hero bgImage={getGraphQLImageSrc(collection?.images, ImageType.Main)}>
+          <Header
+            description={synopsis}
+            numberOfItems={collection?.content?.objects?.length || 0}
+            rating={getFirstRatingValue(collection?.ratings)}
+            releaseDate={
+              collection?.release_date
+                ? formatReleaseDate(collection?.release_date, lang)
+                : undefined
+            }
+            title={title}
+            typeOfItems="movie"
+          />
+        </Hero>
+        <div className="grid w-full grid-cols-2 gap-x-4 gap-y-6 px-gutter sm:px-sm-gutter md:grid-cols-3 lg:grid-cols-4 lg:px-lg-gutter xl:px-xl-gutter 2xl:grid-cols-6">
+          {(collection?.content?.objects as SetContent[])?.map((content) => {
+            const object = content.object as Entertainment;
+            return (
+              <Thumbnail
+                key={object.uid}
+                objectType={object.__typename as ObjectTypes}
+                uid={object.uid}
+                variant="landscape-description"
+              />
+            );
+          })}
+        </div>
+      </SkeletonPage>
+    </div>
   );
 };
 

@@ -22,7 +22,6 @@ describe("saas/sets.ts", () => {
   });
 
   const setConfig: SetConfig = {
-    dataSourceId: "home-page-slider",
     externalId: "home_page_slider",
     title: "Home page hero",
     slug: "media-reference-home-page-hero",

@@ -1,4 +1,3 @@
-import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import useSWRInfinite from "swr/infinite";
 import { Dimensions } from "@skylark-reference-apps/lib";
 import {
@@ -6,61 +5,27 @@ import {
   skylarkRequestWithDimensions,
 } from "@skylark-reference-apps/react";
 import { Genre, MovieListing, Movie } from "../types/gql";
-import { createGraphQLQueryDimensions } from "../lib/utils";
 import { GQLError } from "../types";
+import { LIST_MOVIES_BY_GENRE } from "../graphql/queries";
 
-const createGraphQLQuery = (
-  genreUid: string,
-  activeDimensions: Dimensions,
-  nextToken?: string
-) => {
-  const method = `getGenre`;
-
-  const { dimensions, language } =
-    createGraphQLQueryDimensions(activeDimensions);
-
-  const queryAsJson = {
-    query: {
-      __name: method,
-      [method]: {
-        __args: {
-          uid: genreUid,
-          // No Portuguese Genres have been added to the ingestor yet, so only set language on the movies relationship
-          dimensions,
-        },
-        movies: {
-          __args: {
-            next_token: nextToken || "",
-            language,
-          },
-          next_token: true,
-          objects: {
-            uid: true,
-          },
-        },
-      },
-    },
-  };
-
-  const query = jsonToGraphQLQuery(queryAsJson);
-
-  return { query, method };
-};
-
-const movieListingFromGenreFetcher = ([, genreUid, dimensions, nextToken]: [
-  key: string,
+const movieListingFromGenreFetcher = ([uid, dimensions, nextToken]: [
   genreUid: string,
   dimensions: Dimensions,
   nextToken?: string
-]) => {
-  const { query, method } = createGraphQLQuery(genreUid, dimensions, nextToken);
-  return skylarkRequestWithDimensions<{ [key: string]: Genre }>(
-    query,
-    dimensions
+]) =>
+  skylarkRequestWithDimensions<{ getObject: Genre }>(
+    LIST_MOVIES_BY_GENRE,
+    dimensions,
+    {
+      uid,
+      language: dimensions.language,
+      customerType: dimensions.customerType,
+      deviceType: dimensions.deviceType,
+      nextToken,
+    }
   )
-    .then(({ [method]: data }): Genre => data)
+    .then(({ getObject: data }): Genre => data)
     .then((genre) => genre.movies as MovieListing);
-};
 
 const getKey = (
   pageIndex: number,
@@ -70,12 +35,12 @@ const getKey = (
 ) => {
   if (previousPageData && !previousPageData.next_token) return null;
 
-  if (pageIndex === 0) return ["MovieListing", genreUid, dimensions, ""];
+  if (pageIndex === 0) return [genreUid, dimensions, ""];
 
-  return ["MovieListing", genreUid, dimensions, previousPageData?.next_token];
+  return [genreUid, dimensions, previousPageData?.next_token];
 };
 
-export const useMovieListingFromGenre = (genreUid?: string) => {
+export const useMovieListingFromGenre = (genreUid: string | null) => {
   const { dimensions } = useDimensions();
 
   const { data, error, isLoading } = useSWRInfinite<MovieListing, GQLError>(

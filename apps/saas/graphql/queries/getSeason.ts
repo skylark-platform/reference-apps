@@ -1,14 +1,16 @@
 import { gql } from "graphql-request";
 
 export const GET_SEASON_THUMBNAIL = gql`
-  query GET_SEASON_THUMBNAIL (
-    $uid: String!
+  query GET_SEASON_THUMBNAIL(
+    $uid: String
+    $externalId: String
     $language: String!
     $deviceType: String!
     $customerType: String!
   ) {
     getObject: getSeason(
-      external_id: $uid
+      uid: $uid
+      external_id: $externalId
       language: $language
       dimensions: [
         { dimension: "device-types", value: $deviceType }
