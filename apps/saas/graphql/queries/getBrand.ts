@@ -34,13 +34,15 @@ export const GET_BRAND_THUMBNAIL = gql`
 
 export const GET_BRAND = gql`
   query GET_BRAND(
-    $uid: String!
+    $uid: String
+    $externalId: String
     $language: String!
     $deviceType: String!
     $customerType: String!
   ) {
     getObject: getBrand(
-      external_id: $uid
+      uid: $uid
+      external_id: $externalId
       language: $language
       dimensions: [
         { dimension: "device-types", value: $deviceType }

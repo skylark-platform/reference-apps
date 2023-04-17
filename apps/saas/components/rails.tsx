@@ -1,11 +1,31 @@
 import { hasProperty } from "@skylark-reference-apps/lib";
 import { Rail } from "@skylark-reference-apps/react";
 import { sortEpisodesByNumber } from "../lib/utils";
-import { ObjectTypes, Season, SetContent, SkylarkSet } from "../types";
+import { ObjectTypes, Season, SetContent, SetType, SkylarkSet } from "../types";
 import { Thumbnail, ThumbnailVariant } from "./thumbnail";
 
-export const SeasonRail = ({ season }: { season: Season }) => (
-  <Rail displayCount header={season.title || season.title_short || undefined}>
+const getThumbnailVariantFromSetType = (setType: SkylarkSet["type"]): ThumbnailVariant => {
+  if(setType === SetType.RailInset) {
+    return "landscape-inside"
+  }
+
+  if(setType === SetType.RailWithDescription) {
+    return "landscape-description"
+  }
+
+  if(setType === SetType.RailMovie) {
+    return "landscape-movie"
+  }
+
+  if(setType === SetType.RailPortrait) {
+    return "portrait"
+  }
+
+  return "landscape"
+}
+
+export const SeasonRail = ({ season, header, className }: { season: Season, header?: string, className?: string }) => (
+  <Rail className={className} displayCount header={header || season.title || season.title_short || undefined}>
     {season.episodes?.objects?.sort(sortEpisodesByNumber).map((object) =>
       object ? (
         <Thumbnail
@@ -22,8 +42,10 @@ export const SeasonRail = ({ season }: { season: Season }) => (
 );
 
 
-export const SetRail = ({ set, variant }: { set: SkylarkSet, variant: ThumbnailVariant }) => (
-  <Rail displayCount header={set.title || set.title_short || undefined}>
+export const SetRail = ({ set, className }: { set: SkylarkSet, className?: string }) => {
+  const variant: ThumbnailVariant = getThumbnailVariantFromSetType(set.type);
+
+  return <Rail className={className} displayCount header={set.title || set.title_short || undefined}>
     {(set.content?.objects as SetContent[])?.map(({object}) =>
       // Without __typename, the Thumbnail will not know what query to use
       object && hasProperty(object, "__typename") ? (
@@ -38,4 +60,4 @@ export const SetRail = ({ set, variant }: { set: SkylarkSet, variant: ThumbnailV
       )
     )}
   </Rail>
-)
+}

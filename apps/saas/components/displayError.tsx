@@ -29,7 +29,7 @@ export const DisplayError = ({ error, notFoundMessage }: DisplayErrorProps) => {
   return (
     <div className="flex h-screen flex-col items-center justify-center text-white">
       <p className="mb-4 text-lg font-medium">{header}</p>
-      <p className="max-w-md text-center text-sm">{message}</p>
+      <p className="max-w-md text-center text-sm">{message.toString()}</p>
     </div>
   );
 };

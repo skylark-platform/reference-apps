@@ -32,7 +32,6 @@ yarn dev
 
 ### Packages (`packages/`)
 
-- `@skylark-reference-apps/infra` - AWS CDK used to deploy the Next.js apps to an AWS account that contains a running Skylark to connect to
 - `@skylark-reference-apps/ingestor` - A content ingestor that helps you load large amounts of content into Skylark
 - `@skylark-reference-apps/lib` - Helper functions to communicate with the Skylark API, Cognito etc
 - `@skylark-reference-apps/react` - React components - [Storybook][storybook]

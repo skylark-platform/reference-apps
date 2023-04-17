@@ -4,13 +4,9 @@
  */
 import { SetConfig } from "../lib/interfaces";
 
-const createDataSourceId = (id: string) => `ingestor-set-${id}`;
-
-// Data source but for V10 - GraphQL doesn't like "-"
 const createStreamTVExternalId = (id: string) => `streamtv_${id}`;
 
 const newTVReleases: SetConfig = {
-  dataSourceId: createDataSourceId("new-tv-releases"),
   externalId: createStreamTVExternalId("new_tv_releases"),
   title: "New TV Releases",
   slug: "new-tv-releases",
@@ -24,12 +20,11 @@ const newTVReleases: SetConfig = {
 };
 
 const spotlightMovies: SetConfig = {
-  dataSourceId: createDataSourceId("spotlight-movies"),
   externalId: createStreamTVExternalId("spotlight_movies"),
   title: "Spotlight movies",
   slug: "spotlight-movies",
   set_type_slug: "rail",
-  graphQlSetType: "RAIL",
+  graphQlSetType: "RAIL_MOVIE",
   contents: [
     { type: "movies", slug: "the-hustle" },
     { type: "movies", slug: "the-kid-who-would-be-king" },
@@ -47,7 +42,6 @@ const spotlightMovies: SetConfig = {
 };
 
 const homePageSlider: SetConfig = {
-  dataSourceId: createDataSourceId("home-page-slider"),
   externalId: createStreamTVExternalId("home_page_slider"),
   title: "Home page hero",
   slug: "media-reference-home-page-hero",
@@ -63,7 +57,6 @@ const homePageSlider: SetConfig = {
 
 // Skylark X does not support dynamic objects yet
 const tarantinoMoviesCollection: SetConfig = {
-  dataSourceId: createDataSourceId("tarantino-movies"),
   externalId: createStreamTVExternalId("tarantino_movies"),
   title: "Tarantino Movies Collection",
   slug: "tarantino-movies-collection",
@@ -88,7 +81,6 @@ const tarantinoMoviesCollection: SetConfig = {
 };
 
 const wesAndersonMoviesCollection: SetConfig = {
-  dataSourceId: createDataSourceId("wes-anderson-movies"),
   externalId: createStreamTVExternalId("wes_anderson_movies"),
   title: "Wes Anderson Movies Collection",
   slug: "wes-anderson-movies-collection",
@@ -102,13 +94,12 @@ const wesAndersonMoviesCollection: SetConfig = {
   ],
 };
 
-const discoverCollection: SetConfig = {
-  dataSourceId: createDataSourceId("discover-collection"),
+const discoverCollectionRail: SetConfig = {
   externalId: createStreamTVExternalId("discover_collection"),
   title: "Discover Collection",
   slug: "discover-collection",
   set_type_slug: "collection",
-  graphQlSetType: "COLLECTION",
+  graphQlSetType: "RAIL_PORTRAIT",
   contents: [
     {
       type: "set",
@@ -124,7 +115,6 @@ const discoverCollection: SetConfig = {
 };
 
 const mediaReferenceHomepage: SetConfig = {
-  dataSourceId: createDataSourceId("media-reference-homepage"),
   externalId: createStreamTVExternalId("homepage"),
   title: "Homepage",
   slug: "media-reference-homepage",
@@ -136,7 +126,7 @@ const mediaReferenceHomepage: SetConfig = {
     { type: "set", set_type: "rail", slug: newTVReleases.slug },
     { type: "seasons", slug: "got-s01" },
     { type: "seasons", slug: "got-s02" },
-    { type: "set", set_type: "collection", slug: discoverCollection.slug },
+    { type: "set", set_type: "rail", slug: discoverCollectionRail.slug },
   ],
 };
 
@@ -147,7 +137,7 @@ export const orderedSetsToCreate = [
   tarantinoMoviesCollection,
   wesAndersonMoviesCollection,
   // discoverCollection needs the tarantinoMoviesCollection and wesAndersonMoviesCollection
-  discoverCollection,
+  discoverCollectionRail,
   // Order matters, homepage is last as it includes the rail and slider
   mediaReferenceHomepage,
 ];

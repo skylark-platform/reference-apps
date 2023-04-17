@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { Dimensions } from "@skylark-reference-apps/lib";
+import { Dimensions, hasProperty } from "@skylark-reference-apps/lib";
 import {
   useDimensions,
   skylarkRequestWithDimensions,
@@ -7,23 +7,30 @@ import {
 import { Metadata } from "../types/gql";
 import { GQLError } from "../types";
 
-const fetcher = <T extends Metadata>([query, uid, dimensions]: [
+interface UseObjectOpts { disabled?: boolean, useExternalId?: boolean }
+
+const shouldUseExternalId = (lookupValue: string) => lookupValue.startsWith("rec") || lookupValue.startsWith("ingestor_set") || lookupValue.startsWith("streamtv_")
+
+const fetcher = <T extends Metadata>([query, uid, dimensions, opts]: [
   query: string,
   uid: string,
-  dimensions: Dimensions
+  dimensions: Dimensions,
+  opts: UseObjectOpts
 ]) =>
   skylarkRequestWithDimensions<{ [key: string]: T }>(query, dimensions, {
-    uid,
+    [opts.useExternalId ? "externalId" : "uid"]: uid,
     language: dimensions.language,
     customerType: dimensions.customerType,
     deviceType: dimensions.deviceType,
   }).then(({ getObject: data }): T => data);
 
-export const useObject = <T extends Metadata>(query: string, uid: string, disabled?: boolean) => {
+export const useObject = <T extends Metadata>(query: string, uid: string, opts: UseObjectOpts) => {
   const { dimensions } = useDimensions();
 
+  const useExternalId = hasProperty(opts, "useExternalId") ? opts.useExternalId : shouldUseExternalId(uid);
+
   const { data, error, isLoading } = useSWR<T, GQLError>(
-    disabled ? null : [query, uid, dimensions],
+    opts.disabled ? null : [query, uid, dimensions, { ...opts, useExternalId }],
     fetcher
   );
 

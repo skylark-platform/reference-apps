@@ -1,13 +1,13 @@
 import { ApiEntertainmentObject, SetTypes } from "@skylark-reference-apps/lib";
+import { ENUMS } from "../constants";
 import { ApiObjectType } from "../types";
 
 export interface SetConfig extends Partial<ApiEntertainmentObject> {
-  dataSourceId: string; // SL8
-  externalId: string; // SLX (GraphQL)
+  externalId: string;
   title: string;
   slug: string;
   set_type_slug: SetTypes;
-  graphQlSetType: "RAIL" | "COLLECTION" | "SLIDER" | "PAGE";
+  graphQlSetType: typeof ENUMS.SET_TYPES[number];
   contents: (
     | {
         type: ApiObjectType;
