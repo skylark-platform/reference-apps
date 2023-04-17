@@ -2,7 +2,6 @@ import type { GetServerSideProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 import { PlaybackPage } from "@skylark-reference-apps/react";
 import { useRouter } from "next/router";
-import { useSingleObject } from "../../hooks/useSingleObject";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 import {
   convertObjectToName,
@@ -13,8 +12,10 @@ import {
   getSynopsisByOrderForGraphQLObject,
   getTitleByOrderForGraphQLObject,
 } from "../../lib/utils";
-import { ImageType } from "../../types/gql";
+import { Episode, ImageType } from "../../types/gql";
 import { DisplayError } from "../../components/displayError";
+import { useObject } from "../../hooks/useObject";
+import { GET_EPISODE } from "../../graphql/queries";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject(
@@ -36,7 +37,7 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     data: episode,
     isError,
     isLoading,
-  } = useSingleObject("Episode", query?.slug as string);
+  } = useObject<Episode>(GET_EPISODE, query?.slug as string);
 
   if (!isLoading && isError) {
     return (
@@ -92,7 +93,6 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           assetId: asset?.external_id || asset?.uid || "1",
           poster: getGraphQLImageSrc(episode?.images, ImageType.Poster),
           src: playbackUrl,
-          duration: 58, // TODO read this from asset
         }}
         rating={getFirstRatingValue(episode?.ratings)}
         releaseDate={(episode?.release_date as string | undefined) || ""}

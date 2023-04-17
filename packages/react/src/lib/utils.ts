@@ -32,7 +32,8 @@ export const getImageSrcAndSizeByWindow = (
 // Make request to Skylark using values from LocalStorage if found
 export const skylarkRequestWithDimensions = <T>(
   query: string,
-  dimensions: Dimensions
+  dimensions: Dimensions,
+  variables?: object
 ) => {
   const headers: { [key: string]: string } = {};
 
@@ -49,11 +50,11 @@ export const skylarkRequestWithDimensions = <T>(
         localStorageUri,
         localStorageApiKey,
         query,
-        {},
+        variables || {},
         headers
       );
     }
   }
 
-  return graphQLClient.request<T>(query, {}, headers);
+  return graphQLClient.request<T>(query, variables || {}, headers);
 };

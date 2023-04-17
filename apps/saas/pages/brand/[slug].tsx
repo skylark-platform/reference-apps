@@ -6,8 +6,7 @@ import {
   BrandPageParsedEpisode,
   TVShowBrandPage,
 } from "@skylark-reference-apps/react";
-import { useSingleObject } from "../../hooks/useSingleObject";
-import { Episode, ImageType, Season } from "../../types/gql";
+import { Brand, Episode, ImageType, Season } from "../../types/gql";
 import { MediaObjectFetcher } from "../../components/mediaObjectFetcher";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 import {
@@ -16,6 +15,8 @@ import {
   getTitleByOrderForGraphQLObject,
 } from "../../lib/utils";
 import { DisplayError } from "../../components/displayError";
+import { useObject } from "../../hooks/useObject";
+import { GET_BRAND } from "../../graphql/queries";
 
 const EpisodeDataFetcher: React.FC<{
   uid: string;
@@ -64,7 +65,7 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     data: brand,
     isError,
     isLoading,
-  } = useSingleObject("Brand", query?.slug as string);
+  } = useObject<Brand>(GET_BRAND, query?.slug as string);
 
   if (!isLoading && isError) {
     return (

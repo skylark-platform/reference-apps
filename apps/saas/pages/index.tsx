@@ -7,13 +7,15 @@ import {
   HomePage,
   HomepageItem,
   HomePageParsedRailItem,
+  SkeletonPage,
 } from "@skylark-reference-apps/react";
 import type { GetStaticProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 import { ReactNode } from "react";
+import { Carousel } from "../components/carousel";
 import { DisplayError } from "../components/displayError";
 import { MediaObjectFetcher } from "../components/mediaObjectFetcher";
-import { SliderDataFetcher } from "../components/sliderDataFetcher";
+import { SeasonRail, SetRail } from "../components/rails";
 import { useHomepageSet } from "../hooks/useHomepageSet";
 import { getSeoDataForObject, SeoObjectData } from "../lib/getPageSeoData";
 import {
@@ -32,6 +34,7 @@ import {
   SetContent,
   ImageType,
   SkylarkSet,
+  SetType,
 } from "../types/gql";
 
 const RailItemDataFetcher: React.FC<{
@@ -138,26 +141,98 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
       )
     : [];
 
+  // return <Carousel uid={content && content.length > 0 && content[0].uid} />
+
   return (
     <>
       <NextSeo openGraph={{ images: seo.images }} />
-      <HomePage
-        RailItemDataFetcher={RailItemDataFetcher}
-        SliderDataFetcher={SliderDataFetcher}
-        items={content.map((item) => ({
-          uid: item.uid,
-          type: (
-            (item as SkylarkSet).type || item.__typename
-          )?.toLowerCase() as ObjectTypes,
-          self: "",
-          title:
-            getTitleByOrderForGraphQLObject(item, ["title", "title_short"]) ||
-            item.title ||
-            "",
-          content: getContentForSetItem(item),
-        }))}
-        loading={isLoading}
-      />
+      <div className="mb-20 mt-48 flex min-h-screen flex-col items-center bg-gray-900 font-body">
+      <SkeletonPage show={!!isLoading}>
+        {content.map((item, index) => {
+          if (item.__typename === "SkylarkSet") {
+            if(item.type === SetType.Slider) {
+              return (
+                // If the carousel is the first item, add negative margin to make it appear through the navigation
+                <div
+                className={`h-[90vh] w-full md:h-[95vh] ${
+                  index === 0 ? "-mt-48" : ""
+                }`}
+              >
+                <Carousel key={item.uid} uid={item.uid} />
+                </div>
+              );
+            }
+
+            if(item.type === SetType.Rail) {
+              return <SetRail set={item} variant="landscape" />
+            }
+          }
+
+          if(item.__typename === "Season") {
+            return (
+              <SeasonRail season={item} />
+            )
+          }
+
+        return (
+          <div className="my-6 w-full" key={item.uid}>
+            {}
+            {/* <Rail displayCount header={item.title}>
+              {item.content.map((contentItem) => (
+                <RailItemDataFetcher
+                  isPortrait={(["collection"] as ObjectTypes[]).includes(
+                    item.type
+                  )}
+                  key={`thumbnail-${contentItem.slug || contentItem.uid}`}
+                  self={contentItem.self}
+                  slug={contentItem.slug}
+                  type={contentItem.type}
+                  uid={contentItem.uid}
+                >
+                  {({ image, href, uid, title, synopsis, number }) => {
+                    switch (item.type) {
+                      case "collection":
+                        return (
+                          <CollectionThumbnail
+                            backgroundImage={image}
+                            contentLocation="below"
+                            href={href}
+                            key={uid}
+                            title={title}
+                          />
+                        );
+                      case "season":
+                        return (
+                          <EpisodeThumbnail
+                            backgroundImage={image}
+                            contentLocation="below"
+                            description={synopsis}
+                            href={href}
+                            key={uid}
+                            number={number}
+                            title={title}
+                          />
+                        );
+                      default:
+                        return (
+                          <MovieThumbnail
+                            backgroundImage={image}
+                            contentLocation="below"
+                            href={href}
+                            key={uid}
+                            title={title}
+                          />
+                        );
+                    }
+                  }}
+                </RailItemDataFetcher>
+              ))}
+            </Rail> */}
+          </div>
+        );
+      })}
+    </SkeletonPage>
+  </div>
     </>
   );
 };

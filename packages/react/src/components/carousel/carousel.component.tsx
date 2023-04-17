@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { wrap } from "popmotion";
 import useTranslation from "next-translate/useTranslation";
-import { EntertainmentType, formatYear } from "@skylark-reference-apps/lib";
+import { EntertainmentType, SetTypes, formatYear } from "@skylark-reference-apps/lib";
 import { MdAdd, MdPlayCircleFilled } from "react-icons/md";
 import { CarouselButton } from "./carousel-button.component";
 import { List } from "../list";
@@ -12,7 +12,7 @@ export interface CarouselItem {
   title: string;
   href: string;
   image: string;
-  type: EntertainmentType;
+  type: EntertainmentType | SetTypes;
   releaseDate: string;
   duration?: string;
 }

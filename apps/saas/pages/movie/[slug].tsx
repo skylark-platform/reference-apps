@@ -2,7 +2,6 @@ import type { GetServerSideProps, NextPage } from "next";
 import { PlaybackPage } from "@skylark-reference-apps/react";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import { useSingleObject } from "../../hooks/useSingleObject";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 import {
   convertObjectToName,
@@ -13,8 +12,10 @@ import {
   getSynopsisByOrderForGraphQLObject,
   getTitleByOrderForGraphQLObject,
 } from "../../lib/utils";
-import { ImageType } from "../../types/gql";
+import { ImageType, Movie } from "../../types/gql";
 import { DisplayError } from "../../components/displayError";
+import { useObject } from "../../hooks/useObject";
+import { GET_MOVIE } from "../../graphql/queries";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject(
@@ -36,7 +37,7 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     data: movie,
     isError,
     isLoading,
-  } = useSingleObject("Movie", query?.slug as string);
+  } = useObject<Movie>(GET_MOVIE, query?.slug as string);
 
   if (!isLoading && isError) {
     return (
@@ -92,7 +93,6 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           assetId: asset?.external_id || asset?.uid || "1",
           poster: getGraphQLImageSrc(movie?.images, ImageType.Poster),
           src: playbackUrl,
-          duration: 58, // TODO read this from asset
         }}
         rating={getFirstRatingValue(movie?.ratings)}
         releaseDate={(movie?.release_date as string | undefined) || ""}

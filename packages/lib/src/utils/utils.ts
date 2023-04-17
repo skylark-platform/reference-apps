@@ -86,3 +86,8 @@ export const sortArrayIntoAlphabeticalOrder = (a: string, b: string) => {
   // eslint-disable-next-line no-nested-ternary
   return aUpper < bUpper ? -1 : aUpper > bUpper ? 1 : 0;
 };
+
+export const hasProperty = <T, K extends PropertyKey>(
+  object: T,
+  property: K,
+): object is T & Record<K, unknown> => Object.prototype.hasOwnProperty.call(object, property);
