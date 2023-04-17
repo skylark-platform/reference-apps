@@ -47,7 +47,7 @@ AIRTABLE_BASE_ID=
 
 If you prefer to only include the environment variables that allow full functionality of your app, the guides below will help you understand which are required.
 
-### apps/saas (SLX StreamTV)
+### apps/streamtv (StreamTV)
 
 ```bash
 NEXT_PUBLIC_SAAS_API_ENDPOINT=

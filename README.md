@@ -18,7 +18,7 @@ We use Lerna and Yarn Workspaces to re-use local packages in multiple projects.
 
 #### Running
 
-Create a `.env.local` in the `apps/saas` directory containing the corresponding environment variables found in the [Environment Variables document][environment-variables].
+Create a `.env.local` in the `apps/streamtv` directory containing the corresponding environment variables found in the [Environment Variables document][environment-variables].
 
 Then run:
 

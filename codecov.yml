@@ -1,7 +1,7 @@
 flags:
   streamTV:
     paths:
-      - apps/saas/
+      - apps/streamtv/
   ingestor:
     paths:
       - packages/ingestor/
