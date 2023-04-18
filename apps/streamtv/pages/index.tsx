@@ -77,7 +77,7 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
 
               if (item.type?.startsWith("RAIL")) {
                 return (
-                  <SetRail className="my-6 w-full" key={item.uid} set={item} />
+                  <SetRail className="my-6" key={item.uid} set={item} />
                 );
               }
             }
@@ -85,7 +85,7 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
             if (item.__typename === "Season") {
               return (
                 <SeasonRail
-                  className="my-6 w-full"
+                  className="my-6"
                   key={item.uid}
                   season={item}
                 />
