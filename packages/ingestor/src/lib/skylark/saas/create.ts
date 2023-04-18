@@ -37,7 +37,7 @@ import {
   getLanguageCodesFromAirtable,
 } from "./utils";
 
-export const mutateMultipleObjects = async <T>(
+export const mutateMultipleObjects = async <T extends { external_id?: string }>(
   name: string,
   mutations: { [key: string]: object }
 ): Promise<T[]> => {
@@ -68,12 +68,17 @@ export const mutateMultipleObjects = async <T>(
           [key: string]: T;
         }>(graphQLMutation);
 
+        if(!data) {
+          return []
+        }
+
         const arr = Object.entries(data).map(([requestId, requestData]) => {
           // There is a bug at the moment where the external_id may not be returned. This attempts to get it out of the requestId
-          const requestDataExternalId = hasProperty(requestData, "external_id") && (requestData.external_id as string);
+          const requestDataExternalId = requestData.external_id || false;
           const airtableRecordPrefix = "rec";
           const recordIdInRequestId = requestId.indexOf(airtableRecordPrefix) > 0;
           const externalIdFromRequestId = recordIdInRequestId && `rec${requestId.substring(requestId.indexOf(airtableRecordPrefix) + 1)}`;
+
           return {...requestData,
           external_id: requestDataExternalId || externalIdFromRequestId || null,
           }
@@ -300,9 +305,10 @@ export const createGraphQLMediaObjects = async (
   const createdMediaObjects: GraphQLBaseObject[] = [];
   while (createdMediaObjects.length < airtableRecords.length) {
     const objectsToCreateUpdate = airtableRecords.filter((record) => {
+
       // Filter out any records that have already been created
       const alreadyCreated = createdMediaObjects.find(
-        (existingObj) => existingObj && hasProperty(existingObj, "external_id") && existingObj.external_id && record.id === getExtId(existingObj.external_id)
+        (existingObj) => record.id === getExtId(existingObj.external_id)
       );
       if (alreadyCreated) {
         return false;
@@ -315,7 +321,7 @@ export const createGraphQLMediaObjects = async (
 
       // If the record has a parent, we need to ensure that its parent object has been created first
       const found = createdMediaObjects.find((existingObj) => {
-        const extId = existingObj && hasProperty(existingObj, "external_id") && existingObj.external_id && getExtId(existingObj.external_id);
+        const extId = getExtId(existingObj.external_id);
         return extId && (record.fields.parent as string[]).includes(extId)
     });
       return found;
