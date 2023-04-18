@@ -19,7 +19,7 @@ const getThumbnailVariantFromSetType = (
     return "landscape-movie";
   }
 
-  if (setType === SetType.RailPortrait) {
+  if (setType === SetType.RailPortrait || setType === SetType.Collection) {
     return "portrait";
   }
 
