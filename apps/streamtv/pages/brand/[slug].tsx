@@ -114,7 +114,7 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
 
         {seasons.map((season) => (
           <SeasonRail
-            className="my-6"
+            className="my-6 w-full"
             header={`${t("skylark.object.season")} ${
               season.season_number || "-"
             }`}
