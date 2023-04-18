@@ -15,3 +15,16 @@ export const UNLICENSED_BY_DEFAULT =
 export const CREATE_ONLY = process.env.CREATE_ONLY === "true";
 export const CHECK_MISSING = (process.env.CHECK_MISSING as string) === "true";
 export const CREATE_OBJECT_CHUNK_SIZE = 3;
+
+export const ENUMS = {
+  SET_TYPES: [
+    "PAGE",
+    "COLLECTION",
+    "SLIDER",
+    "RAIL",
+    "RAIL_WITH_SYNOPSIS",
+    "RAIL_PORTRAIT",
+    "RAIL_INSET",
+    "RAIL_MOVIE",
+  ] as const,
+};

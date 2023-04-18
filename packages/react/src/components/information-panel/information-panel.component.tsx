@@ -12,7 +12,7 @@ interface InformationPanelProps {
     number?: string | number;
   };
   title: string;
-  duration: number;
+  duration?: number;
   rating?: string;
   availableUntil: number;
   description?: string;
@@ -65,13 +65,15 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
           <span className="mt-4 mb-2 hidden w-36 border-b border-gray-800 md:flex" />
           <List
             contents={[
-              <span
-                className="flex items-center"
-                key={`duration-icon-for-${title}`}
-              >
-                <MdOutlineWatchLater className="mt-0 mr-2" size={25} />
-                {`${duration}m`}
-              </span>,
+              duration ? (
+                <span
+                  className="flex items-center"
+                  key={`duration-icon-for-${title}`}
+                >
+                  <MdOutlineWatchLater className="mt-0 mr-2" size={25} />
+                  {`${duration}m`}
+                </span>
+              ) : undefined,
               rating,
               t("available-for", { days: availableUntil }),
             ]}

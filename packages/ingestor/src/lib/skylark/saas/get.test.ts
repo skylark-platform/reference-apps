@@ -141,7 +141,7 @@ describe("saas/get.ts", () => {
 
   describe("getExistingObjects", () => {
     it("makes a request with the expected query", async () => {
-      await getExistingObjects("Brand", ["brand-1"]);
+      await getExistingObjects("Brand", [{ externalId: "brand-1" }]);
 
       expect(graphQlRequest).toBeCalledWith(
         'query getBrands { brand-1: getBrand (external_id: "brand-1", ignore_availability: true) { uid external_id } }'
@@ -150,9 +150,9 @@ describe("saas/get.ts", () => {
 
     it("returns all given uids when the request does not error", async () => {
       const got = await getExistingObjects("Brand", [
-        "brand-1",
-        "brand-2",
-        "brand-3",
+        { externalId: "brand-1" },
+        { externalId: "brand-2" },
+        { externalId: "brand-3" },
       ]);
       expect(got).toEqual(["brand-1", "brand-2", "brand-3"]);
     });
@@ -168,9 +168,9 @@ describe("saas/get.ts", () => {
       graphQlRequest.mockRejectedValueOnce(mockedGraphQLResponse);
 
       const got = await getExistingObjects("Brand", [
-        "brand-1",
-        "brand-2",
-        "brand-3",
+        { externalId: "brand-1" },
+        { externalId: "brand-2" },
+        { externalId: "brand-3" },
       ]);
       expect(got).toEqual(["brand-2", "brand-3"]);
     });
@@ -178,7 +178,11 @@ describe("saas/get.ts", () => {
     it("rejects when an unexpected error occurs", async () => {
       graphQlRequest.mockRejectedValueOnce(new Error("Unexpected error"));
       await expect(
-        getExistingObjects("Brand", ["brand-1", "brand-2", "brand-3"])
+        getExistingObjects("Brand", [
+          { externalId: "brand-1" },
+          { externalId: "brand-2" },
+          { externalId: "brand-3" },
+        ])
       ).rejects.toThrow("Unexpected error");
     });
   });

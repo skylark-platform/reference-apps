@@ -30,7 +30,7 @@ interface Props {
     assetId: string;
     src: string;
     poster: string;
-    duration: number;
+    duration?: number;
   };
   number?: string | number;
   releaseDate?: string;

@@ -1,6 +1,6 @@
 # Environment Variables
 
-Throughout this monorepo, environment variables are used for configuration to enable apps to run. When the same variables are used in multiple apps, we aim to keep the naming consistent so that we can use a single `.env.local` file currently located in the [apps/media][media-app] directory.
+Throughout this monorepo, environment variables are used for configuration to enable apps to run. When the same variables are used in multiple apps, we aim to keep the naming consistent so that we can use a single `.env.local` file currently located in the [apps/streamtv][streamtv-app] directory.
 
 In each app, different combinations of the variables are utilised and so the ones that are required for the app to run as expected differ on a per app basis.
 
@@ -35,15 +35,6 @@ COGNITO_USER_POOL_ID=
 # - Loading content into Skylark via the Ingestor
 COGNITO_EMAIL=
 COGNITO_PASSWORD=
-# Name of the app to deploy
-# Used in
-# - AWS CDK deployment (packages/infra) - defaults to media (StreamTV)
-APP=media
-# Base domain of your Skylark deployment
-# The URL to your Skylark instance with the protocol (https) removed
-# Used in
-# - AWS CDK deployment (packages/infra) - defaults to media (StreamTV)
-BASE_DOMAIN_NAME=
 # Airtable base ID and access token
 # You get these from Airtable directly
 # Used in
@@ -56,7 +47,7 @@ AIRTABLE_BASE_ID=
 
 If you prefer to only include the environment variables that allow full functionality of your app, the guides below will help you understand which are required.
 
-### apps/saas (SLX StreamTV)
+### apps/streamtv (StreamTV)
 
 ```bash
 NEXT_PUBLIC_SAAS_API_ENDPOINT=
@@ -75,21 +66,6 @@ NEXT_PUBLIC_SAAS_API_KEY=
 NEXT_PUBLIC_APP_TITLE=
 ```
 
-### packages/infra (AWS deployment)
-
-```bash
-APP=media
-BASE_DOMAIN_NAME=
-NEXT_PUBLIC_SKYLARK_API_URL=
-# COGNITO_ used for Asset playback as in apps/media
-COGNITO_AWS_REGION=
-COGNITO_CLIENT_ID=
-COGNITO_USER_POOL_ID=
-COGNITO_EMAIL=
-COGNITO_PASSWORD=
-
-```
-
 ### packages/ingestor (Content ingestor)
 
 ```bash
@@ -103,4 +79,4 @@ AIRTABLE_API_KEY=
 AIRTABLE_BASE_ID=
 ```
 
-[media-app]: ../apps/media
+[streamtv-app]: ../apps/streamtv

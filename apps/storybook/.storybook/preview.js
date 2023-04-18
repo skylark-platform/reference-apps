@@ -9,7 +9,7 @@ import "@fontsource/inter/600.css";
 
 import { DimensionsContextProvider } from "@skylark-reference-apps/react";
 import I18nProvider from "next-translate/I18nProvider";
-import common from "@skylark-reference-apps/saas/locales/en-gb/common.json";
+import common from "@skylark-reference-apps/streamtv/locales/en-gb/common.json";
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },

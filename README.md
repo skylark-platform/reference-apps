@@ -13,12 +13,12 @@ We use Lerna and Yarn Workspaces to re-use local packages in multiple projects.
 
 ### Apps (`app/`)
 
-- SaaS (StreamTV (SLX)) - Demo application for Skylark X (up between 6am and 12am GMT)
+- StreamTV - Demo application for Skylark
 - Storybook - [React component library][storybook]
 
 #### Running
 
-Create a `.env.local` in the `apps/saas` directory containing the corresponding environment variables found in the [Environment Variables document][environment-variables].
+Create a `.env.local` in the `apps/streamtv` directory containing the corresponding environment variables found in the [Environment Variables document][environment-variables].
 
 Then run:
 
@@ -32,7 +32,6 @@ yarn dev
 
 ### Packages (`packages/`)
 
-- `@skylark-reference-apps/infra` - AWS CDK used to deploy the Next.js apps to an AWS account that contains a running Skylark to connect to
 - `@skylark-reference-apps/ingestor` - A content ingestor that helps you load large amounts of content into Skylark
 - `@skylark-reference-apps/lib` - Helper functions to communicate with the Skylark API, Cognito etc
 - `@skylark-reference-apps/react` - React components - [Storybook][storybook]

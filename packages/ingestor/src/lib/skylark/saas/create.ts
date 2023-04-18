@@ -2,18 +2,11 @@ import {
   GraphQLMediaObjectTypes,
   GraphQLObjectTypes,
   graphQLClient,
+  hasProperty,
 } from "@skylark-reference-apps/lib";
 import { FieldSet, Records } from "airtable";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
-import {
-  chunk,
-  flatten,
-  has,
-  isArray,
-  isEmpty,
-  isString,
-  values,
-} from "lodash";
+import { chunk, flatten, has, isArray, isEmpty, isString } from "lodash";
 import { CREATE_OBJECT_CHUNK_SIZE } from "../../constants";
 
 import {
@@ -37,7 +30,7 @@ import {
   getLanguageCodesFromAirtable,
 } from "./utils";
 
-export const mutateMultipleObjects = async <T>(
+export const mutateMultipleObjects = async <T extends { external_id?: string }>(
   name: string,
   mutations: { [key: string]: object }
 ): Promise<T[]> => {
@@ -68,7 +61,28 @@ export const mutateMultipleObjects = async <T>(
           [key: string]: T;
         }>(graphQLMutation);
 
-        const arr = values(data);
+        if (!data) {
+          return [];
+        }
+
+        const arr = Object.entries(data).map(([requestId, requestData]) => {
+          // There is a bug at the moment where the external_id may not be returned. This attempts to get it out of the requestId
+          const requestDataExternalId = requestData.external_id || false;
+          const airtableRecordPrefix = "rec";
+          const recordIdInRequestId =
+            requestId.indexOf(airtableRecordPrefix) > 0;
+          const externalIdFromRequestId =
+            recordIdInRequestId &&
+            `rec${requestId.substring(
+              requestId.indexOf(airtableRecordPrefix) + 1
+            )}`;
+
+          return {
+            ...requestData,
+            external_id:
+              requestDataExternalId || externalIdFromRequestId || null,
+          };
+        });
         return arr;
       } catch (err) {
         // eslint-disable-next-line no-console
@@ -94,7 +108,7 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
 
   const validProperties = await getValidPropertiesForObject(objectType);
 
-  const externalIds = airtableRecords.map(({ id }) => id);
+  const externalIds = airtableRecords.map(({ id }) => ({ externalId: id }));
 
   const existingObjects = await getExistingObjects(objectType, externalIds);
 
@@ -152,7 +166,7 @@ export const createOrUpdateGraphQLCredits = async (
 ): Promise<GraphQLBaseObject[]> => {
   const validProperties = await getValidPropertiesForObject("Credit");
 
-  const externalIds = airtableRecords.map(({ id }) => id);
+  const externalIds = airtableRecords.map(({ id }) => ({ externalId: id }));
   const existingObjects = await getExistingObjects("Credit", externalIds);
 
   const operations = airtableRecords.reduce(
@@ -254,9 +268,29 @@ export const getMediaObjectRelationships = (
   return relationships;
 };
 
+// Media table only supports a single language
+const getMediaObjectLanguage = (
+  fields: FieldSet,
+  languagesTable: Records<FieldSet>
+): string | null => {
+  const languageCodes = getLanguageCodesFromAirtable(languagesTable);
+  const languages = hasProperty(fields, "language")
+    ? (fields.language as string[])
+    : null;
+  const language: string | null =
+    languages &&
+    languages.length > 0 &&
+    hasProperty(languageCodes, languages[0])
+      ? languageCodes[languages[0]]
+      : null;
+
+  return language;
+};
+
 export const createGraphQLMediaObjects = async (
   airtableRecords: Records<FieldSet>,
-  metadata: GraphQLMetadata
+  metadata: GraphQLMetadata,
+  languagesTable: Records<FieldSet>
 ) => {
   const validObjectProperties: {
     [key in GraphQLMediaObjectTypes]: GraphQLIntrospectionProperties[];
@@ -268,12 +302,18 @@ export const createGraphQLMediaObjects = async (
     SkylarkAsset: await getValidPropertiesForObject("SkylarkAsset"),
   };
 
-  const externalIds = airtableRecords.map(({ id }) => id);
+  const externalIdsAndLanguage = airtableRecords.map(({ id, fields }) => ({
+    externalId: id,
+    language: getMediaObjectLanguage(fields, languagesTable),
+  }));
   const existingObjects = flatten(
     await Promise.all(
       ["Brand", "Season", "Episode", "Movie", "SkylarkAsset"].map(
         (objectType) =>
-          getExistingObjects(objectType as GraphQLMediaObjectTypes, externalIds)
+          getExistingObjects(
+            objectType as GraphQLMediaObjectTypes,
+            externalIdsAndLanguage
+          )
       )
     )
   );
@@ -283,7 +323,7 @@ export const createGraphQLMediaObjects = async (
     const objectsToCreateUpdate = airtableRecords.filter((record) => {
       // Filter out any records that have already been created
       const alreadyCreated = createdMediaObjects.find(
-        ({ external_id }) => record.id === getExtId(external_id)
+        (existingObj) => record.id === getExtId(existingObj.external_id)
       );
       if (alreadyCreated) {
         return false;
@@ -295,9 +335,10 @@ export const createGraphQLMediaObjects = async (
       }
 
       // If the record has a parent, we need to ensure that its parent object has been created first
-      const found = createdMediaObjects.find(({ external_id }) =>
-        (record.fields.parent as string[]).includes(getExtId(external_id))
-      );
+      const found = createdMediaObjects.find((existingObj) => {
+        const extId = getExtId(existingObj.external_id);
+        return extId && (record.fields.parent as string[]).includes(extId);
+      });
       return found;
     });
 
@@ -354,27 +395,34 @@ export const createGraphQLMediaObjects = async (
           }
         }
 
+        const args = objectExists
+          ? {
+              external_id: id,
+              [argName]: {
+                ...validFields,
+                relationships,
+                availability,
+              },
+            }
+          : {
+              [argName]: {
+                external_id: id,
+                ...validFields,
+                relationships,
+                availability,
+              },
+            };
+
+        const language = getMediaObjectLanguage(fields, languagesTable);
+        if (language) {
+          args.language = language;
+        }
+
         const updatedOperations: { [key: string]: object } = {
           ...previousOperations,
           [`${method}_${id}`]: {
             __aliasFor: method,
-            __args: objectExists
-              ? {
-                  external_id: id,
-                  [argName]: {
-                    ...validFields,
-                    relationships,
-                    availability,
-                  },
-                }
-              : {
-                  [argName]: {
-                    external_id: id,
-                    ...validFields,
-                    relationships,
-                    availability,
-                  },
-                },
+            __args: args,
             __typename: true,
             uid: true,
             external_id: true,

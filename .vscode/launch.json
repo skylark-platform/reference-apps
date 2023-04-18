@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug ingestor - SLX (All content)",
+      "name": "Debug ingestor - (All content)",
       "request": "launch",
       "cwd": "${workspaceFolder}/packages/ingestor",
       "runtimeArgs": ["ingest"],
@@ -17,7 +17,7 @@
       }
     },
     {
-      "name": "Debug ingestor - SLX (StreamTV only)",
+      "name": "Debug ingestor - (StreamTV only)",
       "request": "launch",
       "cwd": "${workspaceFolder}/packages/ingestor",
       "runtimeArgs": ["ingest"],
@@ -30,7 +30,7 @@
       }
     },
     {
-      "name": "Debug ingestor - SLX (SLX Demos only)",
+      "name": "Debug ingestor - (SLX Demos only)",
       "request": "launch",
       "cwd": "${workspaceFolder}/packages/ingestor",
       "runtimeArgs": ["ingest"],

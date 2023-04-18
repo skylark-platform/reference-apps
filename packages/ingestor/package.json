@@ -18,6 +18,7 @@
     "@aws-amplify/auth": "^4.6.1",
     "@aws-amplify/core": "^4.6.1",
     "@aws-sdk/client-s3": "^3.145.0",
+    "@aws-sdk/util-credentials": "^3.56.0",
     "@skylark-reference-apps/lib": "*",
     "@types/lodash": "^4.14.182",
     "airtable": "^0.11.4",

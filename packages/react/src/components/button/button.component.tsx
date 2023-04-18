@@ -43,11 +43,11 @@ export const Button: React.FC<ButtonProps> = ({
   ${variant === "outline" ? outlineStyles : "text-white disabled:text-gray-300"}
 flex justify-center items-center h-full
 hover:bg-button-hover disabled:bg-button-disabled transition-colors
-font-body rounded-sm cursor-pointer
+font-body cursor-pointer
 `;
 
   if (text) {
-    className += ` w-full md:w-fit px-2
+    className += ` rounded-sm w-full md:w-fit px-2
       ${size === "sm" ? smStyles : ""}
       ${size === "lg" ? lgStyles : ""}
       ${size === "xl" ? xlStyles : ""}

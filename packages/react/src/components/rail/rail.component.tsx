@@ -7,6 +7,7 @@ interface RailProps {
   initial?: number;
   header?: string;
   displayCount?: boolean;
+  className?: string;
 }
 
 const directionArrowClassName = `
@@ -35,6 +36,7 @@ export const Rail: React.FC<RailProps> = ({
   children,
   header,
   displayCount,
+  className,
 }) => {
   const numChildren = React.Children.toArray(children).length;
 
@@ -85,7 +87,7 @@ export const Rail: React.FC<RailProps> = ({
   }, []);
 
   return (
-    <div className="w-full">
+    <div className={`w-full ${className || ""}`}>
       {header && (
         <h2 className="ml-sm-gutter text-2xl font-normal text-white md:ml-md-gutter lg:ml-lg-gutter xl:ml-xl-gutter">
           {header}

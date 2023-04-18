@@ -201,7 +201,8 @@ export const createOrUpdateGraphQLSet = async (
   const validProperties = await getValidPropertiesForObject("SkylarkSet");
 
   const setExists =
-    (await getExistingObjects("SkylarkSet", [set.externalId])).length > 0;
+    (await getExistingObjects("SkylarkSet", [{ externalId: set.externalId }]))
+      .length > 0;
 
   const operationName = setExists ? `updateSkylarkSet` : `createSkylarkSet`;
 
