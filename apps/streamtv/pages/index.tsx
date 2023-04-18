@@ -7,7 +7,6 @@ import { DisplayError } from "../components/displayError";
 import { SeasonRail, SetRail } from "../components/rails";
 import { GET_HOME_PAGE_SET } from "../graphql/queries";
 import { useObject } from "../hooks/useObject";
-import { useSearch } from "../hooks/useSearch";
 import { getSeoDataForObject, SeoObjectData } from "../lib/getPageSeoData";
 import {
   Brand,
@@ -34,9 +33,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 };
 
 const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
-  const { data: searchData } = useSearch("obi wan");
-  console.log({ searchData})
-
   const { data, isLoading, isError } = useObject<SkylarkSet>(
     GET_HOME_PAGE_SET,
     "streamtv_homepage"

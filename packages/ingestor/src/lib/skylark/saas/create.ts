@@ -13,7 +13,6 @@ import {
   isArray,
   isEmpty,
   isString,
-  values,
 } from "lodash";
 import { CREATE_OBJECT_CHUNK_SIZE } from "../../constants";
 
@@ -69,7 +68,16 @@ export const mutateMultipleObjects = async <T>(
           [key: string]: T;
         }>(graphQLMutation);
 
-        const arr = values(data);
+        const arr = Object.entries(data).map(([requestId, requestData]) => {
+          // There is a bug at the moment where the external_id may not be returned. This attempts to get it out of the requestId
+          const requestDataExternalId = hasProperty(requestData, "external_id") && (requestData.external_id as string);
+          const airtableRecordPrefix = "rec";
+          const recordIdInRequestId = requestId.indexOf(airtableRecordPrefix) > 0;
+          const externalIdFromRequestId = recordIdInRequestId && `rec${requestId.substring(requestId.indexOf(airtableRecordPrefix) + 1)}`;
+          return {...requestData,
+          external_id: requestDataExternalId || externalIdFromRequestId || null,
+          }
+        });
         return arr;
       } catch (err) {
         // eslint-disable-next-line no-console
