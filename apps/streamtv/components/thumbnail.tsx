@@ -24,7 +24,7 @@ import { Entertainment, ImageType, ObjectTypes } from "../types";
 
 export type ThumbnailVariant =
   | "landscape"
-  | "landscape-description"
+  | "landscape-synopsis"
   | "landscape-movie"
   | "landscape-inside"
   | "portrait";
@@ -80,7 +80,7 @@ export const Thumbnail = ({ uid, objectType, variant }: ThumbnailProps) => {
       )}
       {data && (
         <>
-          {variant === "landscape-description" && (
+          {variant === "landscape-synopsis" && (
             <EpisodeThumbnail
               backgroundImage={getGraphQLImageSrc(
                 data?.images,

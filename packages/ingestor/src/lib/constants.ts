@@ -22,7 +22,7 @@ export const ENUMS = {
     "COLLECTION",
     "SLIDER",
     "RAIL",
-    "RAIL_WITH_DESCRIPTION",
+    "RAIL_WITH_SYNOPSIS",
     "RAIL_PORTRAIT",
     "RAIL_INSET",
     "RAIL_MOVIE",

@@ -3192,7 +3192,7 @@ export enum SetType {
   RailInset = "RAIL_INSET",
   RailMovie = "RAIL_MOVIE",
   RailPortrait = "RAIL_PORTRAIT",
-  RailWithDescription = "RAIL_WITH_DESCRIPTION",
+  RailWithSynopsis = "RAIL_WITH_SYNOPSIS",
   Slider = "SLIDER",
 }
 

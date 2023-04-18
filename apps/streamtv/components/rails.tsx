@@ -11,8 +11,8 @@ const getThumbnailVariantFromSetType = (
     return "landscape-inside";
   }
 
-  if (setType === SetType.RailWithDescription) {
-    return "landscape-description";
+  if (setType === SetType.RailWithSynopsis) {
+    return "landscape-synopsis";
   }
 
   if (setType === SetType.RailMovie) {
@@ -48,7 +48,7 @@ export const SeasonRail = ({
             key={object.uid}
             objectType={ObjectTypes.Episode}
             uid={object.uid}
-            variant="landscape-description"
+            variant="landscape-synopsis"
           />
         ) : (
           <></>

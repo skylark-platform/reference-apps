@@ -90,7 +90,7 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                 key={object.uid}
                 objectType={object.__typename as ObjectTypes}
                 uid={object.uid}
-                variant="landscape-description"
+                variant="landscape-synopsis"
               />
             );
           })}
