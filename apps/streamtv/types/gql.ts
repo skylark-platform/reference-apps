@@ -3189,10 +3189,6 @@ export enum SetType {
   Collection = "COLLECTION",
   Page = "PAGE",
   Rail = "RAIL",
-  RailInset = "RAIL_INSET",
-  RailMovie = "RAIL_MOVIE",
-  RailPortrait = "RAIL_PORTRAIT",
-  RailWithSynopsis = "RAIL_WITH_SYNOPSIS",
   Slider = "SLIDER",
 }
 

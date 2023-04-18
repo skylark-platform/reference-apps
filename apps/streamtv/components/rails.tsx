@@ -1,25 +1,34 @@
 import { hasProperty } from "@skylark-reference-apps/lib";
 import { Rail } from "@skylark-reference-apps/react";
 import { sortEpisodesByNumber } from "../lib/utils";
-import { ObjectTypes, Season, SetContent, SetType, SkylarkSet } from "../types";
+import {
+  ObjectTypes,
+  Season,
+  SetContent,
+  SkylarkSet,
+  StreamTVSupportedSetType,
+} from "../types";
 import { Thumbnail, ThumbnailVariant } from "./thumbnail";
 
 const getThumbnailVariantFromSetType = (
   setType: SkylarkSet["type"]
 ): ThumbnailVariant => {
-  if (setType === SetType.RailInset) {
+  if (setType === StreamTVSupportedSetType.RailInset) {
     return "landscape-inside";
   }
 
-  if (setType === SetType.RailWithSynopsis) {
+  if (setType === StreamTVSupportedSetType.RailWithSynopsis) {
     return "landscape-synopsis";
   }
 
-  if (setType === SetType.RailMovie) {
+  if (setType === StreamTVSupportedSetType.RailMovie) {
     return "landscape-movie";
   }
 
-  if (setType === SetType.RailPortrait || setType === SetType.Collection) {
+  if (
+    setType === StreamTVSupportedSetType.RailPortrait ||
+    setType === StreamTVSupportedSetType.Collection
+  ) {
     return "portrait";
   }
 

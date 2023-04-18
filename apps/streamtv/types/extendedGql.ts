@@ -8,3 +8,16 @@ export type GQLError = {
     status?: number;
   };
 };
+
+export enum StreamTVSupportedSetType {
+  // Built in
+  Collection = "COLLECTION",
+  Page = "PAGE",
+  Rail = "RAIL",
+  Slider = "SLIDER",
+  // Additional, added by ingestor
+  RailInset = "RAIL_INSET",
+  RailMovie = "RAIL_MOVIE",
+  RailPortrait = "RAIL_PORTRAIT",
+  RailWithSynopsis = "RAIL_WITH_SYNOPSIS",
+}

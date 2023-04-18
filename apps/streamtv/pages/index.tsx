@@ -15,8 +15,8 @@ import {
   Season,
   SetContent,
   SkylarkSet,
-  SetType,
-} from "../types/gql";
+  StreamTVSupportedSetType,
+} from "../types";
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const seo = await getSeoDataForObject(
@@ -61,7 +61,7 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           {content.map((item, index) => {
             // Only the Set Types, Sliders or Rails will show on the Home Page - as well as Seasons
             if (item.__typename === "SkylarkSet") {
-              if (item.type === SetType.Slider) {
+              if (item.type === StreamTVSupportedSetType.Slider) {
                 return (
                   // If the carousel is the first item, add negative margin to make it appear through the navigation
                   <div
@@ -75,7 +75,17 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                 );
               }
 
-              if (item.type?.startsWith("RAIL")) {
+              if (
+                item.type &&
+                [
+                  StreamTVSupportedSetType.Rail,
+                  StreamTVSupportedSetType.RailInset,
+                  StreamTVSupportedSetType.RailMovie,
+                  StreamTVSupportedSetType.RailPortrait,
+                  StreamTVSupportedSetType.RailWithSynopsis,
+                  StreamTVSupportedSetType.Collection,
+                ].includes(item.type as StreamTVSupportedSetType)
+              ) {
                 return <SetRail className="my-6" key={item.uid} set={item} />;
               }
             }
