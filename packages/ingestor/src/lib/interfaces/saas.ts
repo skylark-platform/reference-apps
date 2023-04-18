@@ -64,6 +64,7 @@ export interface GraphQLIntrospectionProperties {
 }
 
 export interface GraphQLDimension {
+  external_id?: string;
   uid: string;
   title: string;
   slug: string;

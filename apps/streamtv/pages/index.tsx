@@ -81,7 +81,9 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
             }
 
             if (item.__typename === "Season") {
-              return <SeasonRail className="my-6" key={item.uid} season={item} />;
+              return (
+                <SeasonRail className="my-6" key={item.uid} season={item} />
+              );
             }
             return <Fragment key={item.uid} />;
           })}

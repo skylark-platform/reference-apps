@@ -178,9 +178,11 @@ describe("saas/get.ts", () => {
     it("rejects when an unexpected error occurs", async () => {
       graphQlRequest.mockRejectedValueOnce(new Error("Unexpected error"));
       await expect(
-        getExistingObjects("Brand", [{ externalId: "brand-1" },
-        { externalId: "brand-2" },
-        { externalId: "brand-3" },])
+        getExistingObjects("Brand", [
+          { externalId: "brand-1" },
+          { externalId: "brand-2" },
+          { externalId: "brand-3" },
+        ])
       ).rejects.toThrow("Unexpected error");
     });
   });

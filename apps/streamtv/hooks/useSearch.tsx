@@ -10,24 +10,24 @@ import { SEARCH } from "../graphql/queries";
 
 const fetcher = ([query, dimensions]: [
   query: string,
-  dimensions: Dimensions,
+  dimensions: Dimensions
 ]) =>
-  skylarkRequestWithDimensions<{ search: SearchResultListing }>(SEARCH, dimensions, {
-    query,
-    language: dimensions.language,
-    customerType: dimensions.customerType,
-    deviceType: dimensions.deviceType,
-  }).then(({ search: data }): SearchResultListing => data);
+  skylarkRequestWithDimensions<{ search: SearchResultListing }>(
+    SEARCH,
+    dimensions,
+    {
+      query,
+      language: dimensions.language,
+      customerType: dimensions.customerType,
+      deviceType: dimensions.deviceType,
+    }
+  ).then(({ search: data }): SearchResultListing => data);
 
-export const useSearch = (
-  query: string,
-) => {
+export const useSearch = (query: string) => {
   const { dimensions } = useDimensions();
 
   const { data, error, isLoading } = useSWR<SearchResultListing, GQLError>(
-    query
-      ? [query, dimensions]
-      : null,
+    query ? [query, dimensions] : null,
     fetcher
   );
 

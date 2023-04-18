@@ -408,7 +408,8 @@ describe("saas/create.ts", () => {
       // Act.
       await createGraphQLMediaObjects(
         airtableEpisodeRecords as Record<FieldSet>[],
-        metadata, []
+        metadata,
+        []
       );
 
       // Assert.
@@ -474,7 +475,8 @@ describe("saas/create.ts", () => {
       // Act.
       await createGraphQLMediaObjects(
         airtableRecordWithRelationships as Record<FieldSet>[],
-        metadata, []
+        metadata,
+        []
       );
 
       // Assert.
@@ -540,7 +542,8 @@ describe("saas/create.ts", () => {
       // Act.
       await createGraphQLMediaObjects(
         airtableRecordsWithParentField as Record<FieldSet>[],
-        metadata, []
+        metadata,
+        []
       );
 
       // Assert.
