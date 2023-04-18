@@ -41,5 +41,5 @@ export const Carousel = ({ uid }: CarouselProps) => {
       })
     : [];
 
-  return <ReactCarousel items={items} />;
+  return <ReactCarousel changeInterval={8} items={items} />;
 };
