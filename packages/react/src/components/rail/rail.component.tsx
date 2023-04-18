@@ -87,7 +87,7 @@ export const Rail: React.FC<RailProps> = ({
   }, []);
 
   return (
-    <div className={`w-full ${className  || ""}`}>
+    <div className={`w-full ${className || ""}`}>
       {header && (
         <h2 className="ml-sm-gutter text-2xl font-normal text-white md:ml-md-gutter lg:ml-lg-gutter xl:ml-xl-gutter">
           {header}
