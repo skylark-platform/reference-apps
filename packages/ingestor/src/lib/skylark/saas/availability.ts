@@ -296,7 +296,7 @@ export const createOrUpdateAvailability = async (
   schedules: Record<FieldSet>[],
   dimensions: GraphQLMetadata["dimensions"]
 ) => {
-  const externalIds = schedules.map(({ id }) => id);
+  const externalIds = schedules.map(({ id }) => ({ externalId: id }));
   const existingObjects = await getExistingObjects("Availability", externalIds);
 
   const schedulesToCreate = schedules.filter(

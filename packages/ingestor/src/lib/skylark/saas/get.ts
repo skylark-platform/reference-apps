@@ -69,12 +69,17 @@ export const getValidPropertiesForObject = async (
 
 export const getExistingObjects = async (
   objectType: GraphQLObjectTypes,
-  externalIds: string[]
+  objects: { externalId: string, language?: string | null }[]
 ): Promise<string[]> => {
-  const getOperations = externalIds.reduce((previousQueries, externalId) => {
+  const externalIds = objects.map(({ externalId }) => externalId);
+  const getOperations = objects.reduce((previousQueries, { externalId, language }) => {
     const args: { [key: string]: string | boolean } = {
       external_id: externalId,
     };
+
+    if(language) {
+      args.language = language;
+    }
 
     // Dimensions don't have availability
     if (
@@ -119,11 +124,12 @@ export const getExistingObjects = async (
         response: { data },
       } = err as { response: { data: { [recordId: string]: null | object } } };
 
-      const notFoundObjectExternalIds = externalIds.filter((externalId) =>
+      const notFoundObjects = objects.filter(({externalId}) =>
         Object.keys(data)
           .filter((recordId) => isNull(data[recordId]))
           .includes(externalId)
       );
+      const notFoundObjectExternalIds = notFoundObjects.map(({ externalId }) => externalId)
       const objectsThatExist = externalIds.filter(
         (externalId) => !notFoundObjectExternalIds.includes(externalId)
       );

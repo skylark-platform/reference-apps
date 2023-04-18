@@ -2,6 +2,7 @@ import {
   GraphQLMediaObjectTypes,
   GraphQLObjectTypes,
   graphQLClient,
+  hasProperty,
 } from "@skylark-reference-apps/lib";
 import { FieldSet, Records } from "airtable";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
@@ -94,7 +95,7 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
 
   const validProperties = await getValidPropertiesForObject(objectType);
 
-  const externalIds = airtableRecords.map(({ id }) => id);
+  const externalIds = airtableRecords.map(({ id }) => ({ externalId: id }));
 
   const existingObjects = await getExistingObjects(objectType, externalIds);
 
@@ -152,7 +153,7 @@ export const createOrUpdateGraphQLCredits = async (
 ): Promise<GraphQLBaseObject[]> => {
   const validProperties = await getValidPropertiesForObject("Credit");
 
-  const externalIds = airtableRecords.map(({ id }) => id);
+  const externalIds = airtableRecords.map(({ id }) => ({ externalId: id }));
   const existingObjects = await getExistingObjects("Credit", externalIds);
 
   const operations = airtableRecords.reduce(
@@ -254,6 +255,15 @@ export const getMediaObjectRelationships = (
   return relationships;
 };
 
+// Media table only supports a single language
+const getMediaObjectLanguage = (fields: FieldSet, languagesTable: Records<FieldSet>): string | null => {
+  const languageCodes = getLanguageCodesFromAirtable(languagesTable);
+  const languages = hasProperty(fields, "language") ? fields.language as string[] : null;
+  const language: string | null = languages && languages.length > 0 && hasProperty(languageCodes, languages[0]) ? languageCodes[languages[0]] : null;
+
+  return language;
+}
+
 export const createGraphQLMediaObjects = async (
   airtableRecords: Records<FieldSet>,
   metadata: GraphQLMetadata,
@@ -269,12 +279,12 @@ export const createGraphQLMediaObjects = async (
     SkylarkAsset: await getValidPropertiesForObject("SkylarkAsset"),
   };
 
-  const externalIds = airtableRecords.map(({ id }) => id);
+  const externalIdsAndLanguage = airtableRecords.map(({ id, fields }) => ({ externalId: id, language: getMediaObjectLanguage(fields, languagesTable) }));
   const existingObjects = flatten(
     await Promise.all(
       ["Brand", "Season", "Episode", "Movie", "SkylarkAsset"].map(
         (objectType) =>
-          getExistingObjects(objectType as GraphQLMediaObjectTypes, externalIds)
+          getExistingObjects(objectType as GraphQLMediaObjectTypes, externalIdsAndLanguage)
       )
     )
   );
@@ -284,7 +294,7 @@ export const createGraphQLMediaObjects = async (
     const objectsToCreateUpdate = airtableRecords.filter((record) => {
       // Filter out any records that have already been created
       const alreadyCreated = createdMediaObjects.find(
-        ({ external_id }) => record.id === getExtId(external_id)
+        (existingObj) => existingObj && hasProperty(existingObj, "external_id") && existingObj.external_id && record.id === getExtId(existingObj.external_id)
       );
       if (alreadyCreated) {
         return false;
@@ -296,9 +306,10 @@ export const createGraphQLMediaObjects = async (
       }
 
       // If the record has a parent, we need to ensure that its parent object has been created first
-      const found = createdMediaObjects.find(({ external_id }) =>
-        (record.fields.parent as string[]).includes(getExtId(external_id))
-      );
+      const found = createdMediaObjects.find((existingObj) => {
+        const extId = existingObj && hasProperty(existingObj, "external_id") && existingObj.external_id && getExtId(existingObj.external_id);
+        return extId && (record.fields.parent as string[]).includes(extId)
+    });
       return found;
     });
 
@@ -340,13 +351,6 @@ export const createGraphQLMediaObjects = async (
           fields.availability as string[]
         );
 
-        const languageCodes = getLanguageCodesFromAirtable(languagesTable);
-        const languages = fields.languages as string[];
-  
-        if(fields.languages) {
-          console.log({ languages });
-        }
-
         const parentField = fields.parent as string[];
         if (parentField && parentField.length > 0) {
           const parent = createdMediaObjects.find(
@@ -362,27 +366,34 @@ export const createGraphQLMediaObjects = async (
           }
         }
 
+        const args = objectExists
+        ? {
+            external_id: id,
+            [argName]: {
+              ...validFields,
+              relationships,
+              availability,
+            },
+          }
+        : {
+            [argName]: {
+              external_id: id,
+              ...validFields,
+              relationships,
+              availability,
+            },
+          }
+
+          const language = getMediaObjectLanguage(fields, languagesTable);
+          if(language) {
+            args.language = language;
+          }
+
         const updatedOperations: { [key: string]: object } = {
           ...previousOperations,
           [`${method}_${id}`]: {
             __aliasFor: method,
-            __args: objectExists
-              ? {
-                  external_id: id,
-                  [argName]: {
-                    ...validFields,
-                    relationships,
-                    availability,
-                  },
-                }
-              : {
-                  [argName]: {
-                    external_id: id,
-                    ...validFields,
-                    relationships,
-                    availability,
-                  },
-                },
+            __args: args,
             __typename: true,
             uid: true,
             external_id: true,
