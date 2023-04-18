@@ -1,11 +1,13 @@
 import { SkeletonPage } from "@skylark-reference-apps/react";
 import type { GetStaticProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
+import { Fragment } from "react";
 import { Carousel } from "../components/carousel";
 import { DisplayError } from "../components/displayError";
 import { SeasonRail, SetRail } from "../components/rails";
 import { GET_HOME_PAGE_SET } from "../graphql/queries";
 import { useObject } from "../hooks/useObject";
+import { useSearch } from "../hooks/useSearch";
 import { getSeoDataForObject, SeoObjectData } from "../lib/getPageSeoData";
 import {
   Brand,
@@ -32,6 +34,9 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 };
 
 const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
+  const { data: searchData } = useSearch("obi wan");
+  console.log({ searchData})
+
   const { data, isLoading, isError } = useObject<SkylarkSet>(
     GET_HOME_PAGE_SET,
     "streamtv_homepage"
@@ -67,21 +72,22 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
                     className={`h-[90vh] w-full md:h-[95vh] ${
                       index === 0 ? "-mt-48" : ""
                     }`}
+                    key={item.uid}
                   >
-                    <Carousel key={item.uid} uid={item.uid} />
+                    <Carousel uid={item.uid} />
                   </div>
                 );
               }
 
               if (item.type?.startsWith("RAIL")) {
-                return <SetRail className="my-6" set={item} />;
+                return <SetRail className="my-6" key={item.uid} set={item} />;
               }
             }
 
             if (item.__typename === "Season") {
-              return <SeasonRail className="my-6" season={item} />;
+              return <SeasonRail className="my-6" key={item.uid} season={item} />;
             }
-            return <></>;
+            return <Fragment key={item.uid} />;
           })}
         </div>
       </SkeletonPage>

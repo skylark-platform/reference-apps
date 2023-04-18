@@ -99,37 +99,37 @@ const main = async () => {
   metadata.images = await createOrUpdateGraphQlObjectsUsingIntrospection(
     "SkylarkImage",
     airtable.images,
-    metadataAvailability
+    metadataAvailability,
   );
   metadata.themes = await createOrUpdateGraphQlObjectsUsingIntrospection(
     "Theme",
     airtable.themes,
-    metadataAvailability
+    metadataAvailability,
   );
   metadata.genres = await createOrUpdateGraphQlObjectsUsingIntrospection(
     "Genre",
     airtable.genres,
-    metadataAvailability
+    metadataAvailability,
   );
   metadata.ratings = await createOrUpdateGraphQlObjectsUsingIntrospection(
     "Rating",
     airtable.ratings,
-    metadataAvailability
+    metadataAvailability,
   );
   metadata.tags = await createOrUpdateGraphQlObjectsUsingIntrospection(
     "SkylarkTag",
     airtable.tags,
-    metadataAvailability
+    metadataAvailability,
   );
   metadata.people = await createOrUpdateGraphQlObjectsUsingIntrospection(
     "Person",
     airtable.people,
-    metadataAvailability
+    metadataAvailability,
   );
   metadata.roles = await createOrUpdateGraphQlObjectsUsingIntrospection(
     "Role",
     airtable.roles,
-    metadataAvailability
+    metadataAvailability,
   );
   metadata.credits = await createOrUpdateGraphQLCredits(
     airtable.credits,
@@ -141,7 +141,8 @@ const main = async () => {
 
   const mediaObjects = await createGraphQLMediaObjects(
     airtable.mediaObjects,
-    metadata
+    metadata,
+    airtable.dimensions.languages
   );
 
   await createTranslationsForGraphQLObjects(

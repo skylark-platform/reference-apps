@@ -23,7 +23,7 @@ const fetcher = <T extends Metadata>([query, uid, dimensions, opts]: [
   dimensions: Dimensions,
   opts: UseObjectOpts
 ]) =>
-  skylarkRequestWithDimensions<{ [key: string]: T }>(query, dimensions, {
+  skylarkRequestWithDimensions<{ getObject: T }>(query, dimensions, {
     [opts.useExternalId ? "externalId" : "uid"]: uid,
     language: dimensions.language,
     customerType: dimensions.customerType,

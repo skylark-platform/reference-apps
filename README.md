@@ -13,7 +13,7 @@ We use Lerna and Yarn Workspaces to re-use local packages in multiple projects.
 
 ### Apps (`app/`)
 
-- SaaS (StreamTV (SLX)) - Demo application for Skylark X (up between 6am and 12am GMT)
+- StreamTV - Demo application for Skylark
 - Storybook - [React component library][storybook]
 
 #### Running

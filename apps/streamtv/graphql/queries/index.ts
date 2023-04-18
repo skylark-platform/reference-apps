@@ -4,3 +4,4 @@ export * from "./getMovie";
 export * from "./getSet";
 export * from "./listMovies";
 export * from "./listGenres";
+export * from "./search";

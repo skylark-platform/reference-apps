@@ -4,6 +4,10 @@
 
 A [Skylark X][skylark] reference application built using Next.js and Tailwind CSS.
 
+## Viewing GraphQL Queries
+
+All the GraphQL Queries that StreamTV makes to Skylark can be found in the [graphql/queries][queries-dir] directory.
+
 ## Running
 
 1. Create a `.env.local` and populate it using the instructions in the [Environment Variables document][environment-variables].
@@ -55,3 +59,4 @@ By using it, you will deploy StreamTV into your Vercel account and receive promp
 [vercel]: https://vercel.com/
 [vercel-deploy-button]: https://vercel.com/docs/deploy-button
 [environment-variables]: ../../docs/environment-variables.md
+[queries-dir]: ./graphql/queries/

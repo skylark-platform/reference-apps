@@ -86,7 +86,7 @@ export const mutateMultipleObjects = async <T>(
 export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
   objectType: GraphQLObjectTypes,
   airtableRecords: Records<FieldSet>,
-  metadataAvailability: GraphQLMetadata["availability"]
+  metadataAvailability: GraphQLMetadata["availability"],
 ): Promise<GraphQLBaseObject[]> => {
   if (airtableRecords.length === 0) {
     return [];
@@ -256,7 +256,8 @@ export const getMediaObjectRelationships = (
 
 export const createGraphQLMediaObjects = async (
   airtableRecords: Records<FieldSet>,
-  metadata: GraphQLMetadata
+  metadata: GraphQLMetadata,
+  languagesTable: Records<FieldSet>,
 ) => {
   const validObjectProperties: {
     [key in GraphQLMediaObjectTypes]: GraphQLIntrospectionProperties[];
@@ -338,6 +339,13 @@ export const createGraphQLMediaObjects = async (
           metadata.availability,
           fields.availability as string[]
         );
+
+        const languageCodes = getLanguageCodesFromAirtable(languagesTable);
+        const languages = fields.languages as string[];
+  
+        if(fields.languages) {
+          console.log({ languages });
+        }
 
         const parentField = fields.parent as string[];
         if (parentField && parentField.length > 0) {

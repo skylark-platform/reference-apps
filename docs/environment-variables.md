@@ -1,6 +1,6 @@
 # Environment Variables
 
-Throughout this monorepo, environment variables are used for configuration to enable apps to run. When the same variables are used in multiple apps, we aim to keep the naming consistent so that we can use a single `.env.local` file currently located in the [apps/media][media-app] directory.
+Throughout this monorepo, environment variables are used for configuration to enable apps to run. When the same variables are used in multiple apps, we aim to keep the naming consistent so that we can use a single `.env.local` file currently located in the [apps/streamtv][streamtv-app] directory.
 
 In each app, different combinations of the variables are utilised and so the ones that are required for the app to run as expected differ on a per app basis.
 
@@ -79,4 +79,4 @@ AIRTABLE_API_KEY=
 AIRTABLE_BASE_ID=
 ```
 
-[media-app]: ../apps/media
+[streamtv-app]: ../apps/streamtv
