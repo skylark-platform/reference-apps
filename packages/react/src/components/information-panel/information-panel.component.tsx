@@ -62,7 +62,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
             </div>
           )}
           <h1 className="pt-2 text-2xl md:text-3xl">{title}</h1>
-          <span className="mt-4 mb-2 hidden w-36 border-b border-gray-800 md:flex" />
+          <span className="mb-2 mt-4 hidden w-36 border-b border-gray-800 md:flex" />
           <List
             contents={[
               duration ? (
@@ -70,7 +70,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
                   className="flex items-center"
                   key={`duration-icon-for-${title}`}
                 >
-                  <MdOutlineWatchLater className="mt-0 mr-2" size={25} />
+                  <MdOutlineWatchLater className="mr-2 mt-0" size={25} />
                   {`${duration}m`}
                 </span>
               ) : undefined,

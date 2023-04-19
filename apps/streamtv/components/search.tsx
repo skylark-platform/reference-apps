@@ -84,7 +84,7 @@ const HighlightedSearchResultText = ({
       className={clsx(
         className,
         matchClassName,
-        "[&>span]:text-pink-500 group-hover:[&>span]:text-purple-400 [&>span]:transition-colors"
+        "[&>span]:text-pink-500 [&>span]:transition-colors group-hover:[&>span]:text-purple-400"
       )}
       dangerouslySetInnerHTML={{ __html: cleanHTML }}
     />
@@ -113,7 +113,7 @@ const SearchResultItem = ({
       className="group mb-4  grid grid-cols-[4fr_1fr] items-center gap-4  last:mb-0"
       onClick={onClick}
     >
-      <div className="flex flex-col h-full">
+      <div className="flex h-full flex-col">
         <div className="flex flex-col">
           <HighlightedSearchResultText
             className="text-lg font-medium text-gray-100 transition-colors group-hover:text-purple-400"
@@ -209,7 +209,7 @@ export const Search = () => {
       </div>
       {searchResultsOpen && searchQuery && (
         <div className="right-0 z-100 mt-2 md:absolute">
-          <div className="max-h-[24rem] min-h-[2rem] w-[90vw] overflow-y-auto rounded bg-gray-800 py-8 px-8 md:w-[34rem]">
+          <div className="max-h-[24rem] min-h-[2rem] w-[90vw] overflow-y-auto rounded bg-gray-800 px-8 py-8 md:w-[34rem]">
             {(isLoading || data?.objects?.length === 0) && (
               <p className="text-lg font-medium text-gray-100">
                 {isLoading ? "Loading..." : "Nothing found"}

@@ -93,7 +93,7 @@ export const PlaybackPage: NextPage<Props> = ({
             />
           </div>
           <span className="flex border-gray-800 bg-gray-900 md:mx-3 md:border-r" />
-          <div className="h-full w-full pt-4 pl-1 sm:pl-5 md:w-5/12">
+          <div className="h-full w-full pl-1 pt-4 sm:pl-5 md:w-5/12">
             <div className="flex justify-center">
               <span className="mb-4 w-4/5 border-b border-gray-800 md:hidden" />
             </div>

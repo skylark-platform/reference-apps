@@ -51,7 +51,7 @@ export const Header: React.FC<HeaderProps> = ({
               typeOfItems && numberOfItems ? (
                 <span className="flex items-center" key={"duration-icon"}>
                   <Icon
-                    className="mt-0 mr-2 h-6 w-7"
+                    className="mr-2 mt-0 h-6 w-7"
                     typeOfItems={typeOfItems}
                   />
                   {t(`skylark.object.count.${typeOfItems}`, {

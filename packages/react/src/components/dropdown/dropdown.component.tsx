@@ -66,8 +66,8 @@ export const Dropdown: React.FC<DropdownProps> = ({
                   block
                   w-full
                   bg-white
-                  py-3
                   px-5
+                  py-3
                   text-left
                   text-xs
                   font-semibold

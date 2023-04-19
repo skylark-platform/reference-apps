@@ -60,7 +60,7 @@ const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
         backgroundImage: imageLoaded ? `url('${backgroundImage}')` : "",
       }}
     >
-      <div className="absolute top-0 bottom-0 left-0 right-0">
+      <div className="absolute bottom-0 left-0 right-0 top-0">
         <div
           className={`
               ${contentLocation === "below" ? "justify-end" : "justify-between"}
@@ -101,7 +101,7 @@ export const MediaThumbnail: React.FC<ThumbnailProps> = (props) => {
       <a className="group">
         <BaseThumbnail {...props}>
           {duration && (
-            <div className="absolute top-3 right-3 rounded-xl bg-gray-900 py-0.5 px-2 text-xs font-light md:group-hover:opacity-0">
+            <div className="absolute right-3 top-3 rounded-xl bg-gray-900 px-2 py-0.5 text-xs font-light md:group-hover:opacity-0">
               {duration}
             </div>
           )}

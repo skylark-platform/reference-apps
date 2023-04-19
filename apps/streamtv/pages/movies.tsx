@@ -71,7 +71,7 @@ const Movies: NextPage = () => {
       </div>
       {!isLoading && (!movies || movies.length === 0) && (
         <div className="text-center">
-          <H4 className="mt-2 mb-0.5 text-white">{`No movies found${
+          <H4 className="mb-0.5 mt-2 text-white">{`No movies found${
             activeGenre ? ` for Genre: ${activeGenre.name}` : ""
           }`}</H4>
         </div>
