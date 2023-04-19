@@ -3,9 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { wrap } from "popmotion";
 import useTranslation from "next-translate/useTranslation";
 import {
-  EntertainmentType,
-  SetTypes,
   formatYear,
+  ObjectTypes,
 } from "@skylark-reference-apps/lib";
 import { MdAdd, MdPlayCircleFilled } from "react-icons/md";
 import { CarouselButton } from "./carousel-button.component";
@@ -16,7 +15,7 @@ export interface CarouselItem {
   title: string;
   href: string;
   image: string;
-  type: EntertainmentType | SetTypes;
+  type: ObjectTypes;
   releaseDate: string;
   duration?: string;
 }

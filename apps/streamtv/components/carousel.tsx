@@ -7,7 +7,7 @@ import { GET_SET_FOR_CAROUSEL } from "../graphql/queries";
 import { useObject } from "../hooks/useObject";
 import {
   convertGraphQLSetType,
-  convertTypenameToEntertainmentType,
+  convertTypenameToObjectType,
   getGraphQLImageSrc,
 } from "../lib/utils";
 import { Entertainment, ImageType, SetContent, SkylarkSet } from "../types";
@@ -25,7 +25,7 @@ export const Carousel = ({ uid }: CarouselProps) => {
         const parsedType =
           object.__typename === "SkylarkSet"
             ? convertGraphQLSetType(object?.type || "")
-            : convertTypenameToEntertainmentType(object.__typename);
+            : convertTypenameToObjectType(object.__typename);
 
         return {
           title: object.title_short || object.title || "",

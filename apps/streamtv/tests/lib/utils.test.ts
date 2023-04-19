@@ -174,9 +174,9 @@ describe("utils.ts", () => {
     });
   });
 
-  describe("convertTypenameToEntertainmentType", () => {
+  describe("convertTypenameToObjectType", () => {
     it("converts a given typename to the expected type", () => {
-      const got = utils.convertTypenameToEntertainmentType("Episode");
+      const got = utils.convertTypenameToObjectType("Episode");
       expect(got).toEqual("episode");
     });
   });

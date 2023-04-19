@@ -5,7 +5,8 @@ import {
   EntertainmentType,
   getSynopsisByOrder,
   getTitleByOrder,
-  GraphQLMediaObjectTypes,
+  GraphQLObjectTypes,
+  MetadataType,
   SetTypes,
   SynopsisTypes,
   TitleTypes,
@@ -137,9 +138,9 @@ export const createGraphQLQueryDimensions = (activeDimensions: Dimensions) => {
   };
 };
 
-export const convertTypenameToEntertainmentType = (
-  typename: GraphQLMediaObjectTypes | undefined
-): EntertainmentType => {
+export const convertTypenameToObjectType = (
+  typename: GraphQLObjectTypes | undefined
+): EntertainmentType | MetadataType => {
   switch (typename) {
     case "Episode":
       return "episode";
@@ -147,6 +148,8 @@ export const convertTypenameToEntertainmentType = (
       return "movie";
     case "Season":
       return "season";
+    case "Person":
+      return "person";
     default:
       return "brand";
   }

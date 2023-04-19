@@ -56,7 +56,7 @@ const Home: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   return (
     <div className="mb-20 mt-48 flex min-h-screen flex-col items-center bg-gray-900 font-body">
       <NextSeo openGraph={{ images: seo.images }} />
-      <SkeletonPage show={!!isLoading}>
+      <SkeletonPage show={isLoading && !data}>
         <div className="w-full">
           {content.map((item, index) => {
             // Only the Set Types, Sliders or Rails will show on the Home Page - as well as Seasons

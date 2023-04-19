@@ -6,13 +6,13 @@ import "@fontsource/inter/500.css";
 import "@fontsource/inter/600.css";
 import type { AppProps } from "next/app";
 import { DefaultSeo } from "next-seo";
-import { StreamTVLayout } from "@skylark-reference-apps/react";
 import useTranslation from "next-translate/useTranslation";
 import PlausibleProvider from "next-plausible";
 import { withPasswordProtect } from "next-password-protect";
 import { LOCAL_STORAGE } from "@skylark-reference-apps/lib";
 import { useEffect, useState } from "react";
 import createDefaultSeo from "../next-seo.config";
+import { StreamTVLayout } from "../components/layout";
 
 const appTitle = process.env.NEXT_PUBLIC_APP_TITLE || "StreamTV";
 const tvShowsHref =

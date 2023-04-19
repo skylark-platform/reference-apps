@@ -76,7 +76,7 @@ const Movies: NextPage = () => {
           }`}</H4>
         </div>
       )}
-      <SkeletonPage show={isLoading}>
+      <SkeletonPage show={isLoading && !movies}>
         <div className="grid grid-cols-2 gap-x-4 gap-y-6 px-gutter sm:px-sm-gutter md:grid-cols-3 lg:grid-cols-4 lg:px-lg-gutter xl:px-xl-gutter 2xl:grid-cols-6">
           {movies?.map((movie) => (
             <Thumbnail

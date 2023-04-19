@@ -17,7 +17,7 @@ import { GET_SEASON_THUMBNAIL } from "../graphql/queries/getSeason";
 import { useObject } from "../hooks/useObject";
 import {
   convertGraphQLSetType,
-  convertTypenameToEntertainmentType,
+  convertTypenameToObjectType,
   getGraphQLImageSrc,
 } from "../lib/utils";
 import { Entertainment, ImageType, ObjectTypes } from "../types";
@@ -71,7 +71,7 @@ export const Thumbnail = ({ uid, objectType, variant }: ThumbnailProps) => {
   const parsedType =
     data?.__typename === "SkylarkSet"
       ? convertGraphQLSetType(data?.type || "")
-      : convertTypenameToEntertainmentType(data?.__typename);
+      : convertTypenameToObjectType(data?.__typename);
 
   return (
     <div ref={ref}>
