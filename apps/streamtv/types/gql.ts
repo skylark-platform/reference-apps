@@ -2619,11 +2619,13 @@ export type QueryListThemeArgs = {
 
 export type QuerySearchArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  highlight_results?: InputMaybe<Scalars["Boolean"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
   offset?: InputMaybe<Scalars["Int"]>;
   query: Scalars["String"];
+  search_fields?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
   time_travel?: InputMaybe<Scalars["AWSDateTime"]>;
 };
 

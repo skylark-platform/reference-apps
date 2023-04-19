@@ -167,8 +167,8 @@ export const GET_COLLECTION_SET = gql`
   }
 `;
 
-export const GET_HOME_PAGE_SET = gql`
-  query GET_HOME_PAGE_SET(
+export const GET_PAGE_SET = gql`
+  query GET_PAGE_SET(
     $uid: String
     $externalId: String
     $language: String!
@@ -187,6 +187,7 @@ export const GET_HOME_PAGE_SET = gql`
       __typename
       uid
       title
+      type
       content {
         objects {
           object {

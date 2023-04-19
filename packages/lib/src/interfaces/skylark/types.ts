@@ -10,7 +10,7 @@ export type EntertainmentType =
   | "season"
   | "brand"
   | "asset";
-export type MetadataType = "person"
+export type MetadataType = "person";
 export type ObjectTypes = EntertainmentType | SetTypes | MetadataType | null;
 
 export type ImageTypes = "Thumbnail" | "Main" | "Poster";

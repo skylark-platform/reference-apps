@@ -3,7 +3,15 @@ import Link from "next/link";
 import { MdStream, MdAccountCircle } from "react-icons/md";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
-import { DimensionsContextProvider, TitleScreen, AppBackgroundGradient, AppHeader, Button, DimensionSettings, ConnectToSkylarkModal } from "@skylark-reference-apps/react";
+import {
+  DimensionsContextProvider,
+  TitleScreen,
+  AppBackgroundGradient,
+  AppHeader,
+  Button,
+  DimensionSettings,
+  ConnectToSkylarkModal,
+} from "@skylark-reference-apps/react";
 import { Search } from "./search";
 
 interface Props {

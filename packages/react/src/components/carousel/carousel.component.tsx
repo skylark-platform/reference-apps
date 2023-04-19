@@ -2,10 +2,7 @@ import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { wrap } from "popmotion";
 import useTranslation from "next-translate/useTranslation";
-import {
-  formatYear,
-  ObjectTypes,
-} from "@skylark-reference-apps/lib";
+import { formatYear, ObjectTypes } from "@skylark-reference-apps/lib";
 import { MdAdd, MdPlayCircleFilled } from "react-icons/md";
 import { CarouselButton } from "./carousel-button.component";
 import { List } from "../list";
