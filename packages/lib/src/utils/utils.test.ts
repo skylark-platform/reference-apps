@@ -82,10 +82,15 @@ describe("utils", () => {
   });
 
   describe("formatReleaseDate", () => {
-    const date = "1/1/2000";
+    const date = "2000-01-01";
 
     it("returns date in the default format when a format isn't given", () => {
       const formattedDate = formatReleaseDate(date);
+      expect(formattedDate).toEqual("January 1, 2000");
+    });
+
+    it("returns date in the default format when the date has a timezone and a format isn't given", () => {
+      const formattedDate = formatReleaseDate("2000-01-01+00:50");
       expect(formattedDate).toEqual("January 1, 2000");
     });
 

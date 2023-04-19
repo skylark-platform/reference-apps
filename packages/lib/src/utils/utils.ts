@@ -1,7 +1,10 @@
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { TitleTypes, SynopsisTypes } from "../interfaces";
 
 import "dayjs/locale/pt";
+
+dayjs.extend(customParseFormat);
 
 /**
  * Returns the title from the titles object using a given order of priority
@@ -57,7 +60,12 @@ export const formatReleaseDate = (
   date?: string,
   locale = "en-gb",
   format = "MMMM D, YYYY"
-): string => (date ? dayjs(date).locale(locale).format(format) : "");
+): string =>
+  date
+    ? dayjs(date, ["YYYY-MM-DD", "YYYY-MM-DDZ", "X", "x"])
+        .locale(locale)
+        .format(format)
+    : "";
 
 /**
  * formatYear - takes a date, returns the year
