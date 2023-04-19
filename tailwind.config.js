@@ -2,8 +2,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const plugin = require("tailwindcss/plugin");
 // eslint-disable-next-line import/no-extraneous-dependencies
-const lineClamp = require("@tailwindcss/line-clamp");
-// eslint-disable-next-line import/no-extraneous-dependencies
 const forms = require("@tailwindcss/forms");
 // eslint-disable-next-line import/no-extraneous-dependencies
 const aspectRatio = require("@tailwindcss/aspect-ratio");
@@ -89,7 +87,6 @@ module.exports = {
     aspectRatio: false,
   },
   plugins: [
-    lineClamp,
     forms,
     aspectRatio,
     plugin(({ addUtilities }) => {

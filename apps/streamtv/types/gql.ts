@@ -1093,6 +1093,7 @@ export type Mutation = {
   editFieldConfiguration?: Maybe<ConfigurationResponse>;
   editRelationshipConfiguration?: Maybe<ConfigurationResponse>;
   editSearchableFields?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  sendSearchInsight?: Maybe<Scalars["String"]>;
   setObjectConfiguration?: Maybe<ObjectConfig>;
   updateAvailability?: Maybe<Availability>;
   updateBrand?: Maybe<Brand>;
@@ -1521,6 +1522,11 @@ export type MutationEditRelationshipConfigurationArgs = {
 
 export type MutationEditSearchableFieldsArgs = {
   fields: Array<InputMaybe<Scalars["String"]>>;
+};
+
+export type MutationSendSearchInsightArgs = {
+  uid_clicked?: InputMaybe<Scalars["String"]>;
+  user?: InputMaybe<Scalars["String"]>;
 };
 
 export type MutationSetObjectConfigurationArgs = {
@@ -2627,6 +2633,7 @@ export type QuerySearchArgs = {
   query: Scalars["String"];
   search_fields?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
   time_travel?: InputMaybe<Scalars["AWSDateTime"]>;
+  types?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
 };
 
 export type Rating = Metadata &

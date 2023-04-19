@@ -24,7 +24,7 @@
     "@graphql-typed-document-node/core": "^3.1.1",
     "@skylark-reference-apps/lib": "*",
     "@skylark-reference-apps/react": "*",
-    "@tailwindcss/line-clamp": "^0.4.4",
+    "@tanstack/react-query": "^4.24.10",
     "clsx": "^1.2.1",
     "dompurify": "^3.0.2",
     "graphql": "^16.6.0",
@@ -41,7 +41,6 @@
     "react-icons": "^4.3.1",
     "react-intersection-observer": "^9.4.0",
     "sentence-case": "^3.0.4",
-    "swr": "2.0.0-beta.3",
     "use-debounce": "^7.0.1"
   },
   "devDependencies": {

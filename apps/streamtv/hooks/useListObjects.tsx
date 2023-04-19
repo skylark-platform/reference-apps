@@ -1,4 +1,4 @@
-import useSWRInfinite from "swr/infinite";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { Dimensions } from "@skylark-reference-apps/lib";
 import {
   useDimensions,
@@ -12,24 +12,11 @@ interface ListData<T extends Metadata> {
   next_token?: string | null;
 }
 
-const getKey = <T extends Metadata>(
-  query: string,
-  pageIndex: number,
-  previousPageData: ListData<T> | null,
-  dimensions: Dimensions
-) => {
-  if (previousPageData && !previousPageData.next_token) return null;
-
-  if (pageIndex === 0) return [query, dimensions, ""];
-
-  return [query, dimensions, previousPageData?.next_token];
-};
-
-const fetcher = <T extends Metadata>([query, dimensions, nextToken]: [
+const fetcher = <T extends Metadata>(
   query: string,
   dimensions: Dimensions,
-  nextToken: string | null
-]) =>
+  nextToken?: string | null
+) =>
   skylarkRequestWithDimensions<{ listObjects: ListData<T> }>(
     query,
     dimensions,
@@ -39,7 +26,7 @@ const fetcher = <T extends Metadata>([query, dimensions, nextToken]: [
       deviceType: dimensions.deviceType,
       nextToken,
     }
-  ).then(({ listObjects: data }) => data);
+  );
 
 export const useListObjects = <T extends Metadata>(
   query: string,
@@ -47,22 +34,31 @@ export const useListObjects = <T extends Metadata>(
 ) => {
   const { dimensions } = useDimensions();
 
-  const { data, error, isLoading } = useSWRInfinite<ListData<T>, GQLError>(
-    (pageIndex, previousPageData: ListData<T>) =>
-      disabled ? null : getKey(query, pageIndex, previousPageData, dimensions),
-    fetcher,
-    {
-      initialSize: 10,
-    }
-  );
+  const { data, isLoading, error, fetchNextPage, hasNextPage } =
+    useInfiniteQuery({
+      queryKey: [query, Object.values(dimensions)],
+      queryFn: ({ pageParam: nextToken }: { pageParam?: string }) =>
+        fetcher(query, dimensions, nextToken),
+      getNextPageParam: (lastPage): string | undefined =>
+        lastPage.listObjects?.next_token || undefined,
+      enabled: !disabled,
+    });
+
+  // This if statement ensures that all data is fetched
+  // We could remove it and add a load more button
+  if (hasNextPage) {
+    void fetchNextPage();
+  }
 
   const objects: T[] | undefined =
     data &&
-    (data.flatMap((item) => item.objects).filter((item) => !!item) as T[]);
+    (data.pages
+      .flatMap((item) => item.listObjects.objects)
+      .filter((item) => !!item) as T[]);
 
   return {
     objects,
-    isLoading: !query || isLoading || (!error && !data),
-    isError: error,
+    isLoading,
+    isError: error as GQLError,
   };
 };

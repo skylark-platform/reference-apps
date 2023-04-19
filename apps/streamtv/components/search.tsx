@@ -122,7 +122,7 @@ const SearchResultItem = ({
           />
           {description && (
             <HighlightedSearchResultText
-              className="text-sm text-gray-400 transition-colors line-clamp-3 group-hover:text-purple-400"
+              className="line-clamp-3 text-sm text-gray-400 transition-colors group-hover:text-purple-400"
               matchClassName="[&>span]:font-semibold"
               text={description}
             />

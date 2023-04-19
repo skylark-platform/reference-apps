@@ -123,7 +123,7 @@ export const MediaThumbnail: React.FC<ThumbnailProps> = (props) => {
           </div>
           {contentLocation === "inside" && (
             <div>
-              <h4 className="text-xs font-normal text-white line-clamp-3 sm:text-sm md:mb-0.5 md:text-base">
+              <h4 className="line-clamp-3 text-xs font-normal text-white sm:text-sm md:mb-0.5 md:text-base">
                 {title}
               </h4>
               <div className="hidden sm:block">

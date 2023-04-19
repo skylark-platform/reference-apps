@@ -31,7 +31,7 @@ export const StandardThumbnail: React.FC<StandardThumbnailProps> = (props) => {
     >
       <H4 className="mb-0.5 mt-2 text-white">{title}</H4>
       {description && (
-        <p className="mb-3 mt-0.5 text-xs text-gray-400 line-clamp-4 md:text-sm">
+        <p className="mb-3 mt-0.5 line-clamp-4 text-xs text-gray-400 md:text-sm">
           {description}
         </p>
       )}
