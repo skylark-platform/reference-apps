@@ -14,7 +14,7 @@ export const UNLICENSED_BY_DEFAULT =
   (process.env.DEFAULT_UNLICENSED as string) === "true";
 export const CREATE_ONLY = process.env.CREATE_ONLY === "true";
 export const CHECK_MISSING = (process.env.CHECK_MISSING as string) === "true";
-export const CREATE_OBJECT_CHUNK_SIZE = 3;
+export const CREATE_OBJECT_CHUNK_SIZE = process.env.INGEST_CHUNK_SIZE ? parseInt(process.env.INGEST_CHUNK_SIZE, 10) : 3;
 
 export const ENUMS = {
   SET_TYPES: [
