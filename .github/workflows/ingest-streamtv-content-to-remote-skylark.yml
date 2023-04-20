@@ -14,7 +14,7 @@ on:
       ingest_chunk_size:
         type: string
         required: false
-        description: The number of objects to create/update in a single request.
+        description: Ingest chunk size.
 concurrency:
   group: ingest-streamtv-content-${{ github.event.inputs.skylark_url }}
   cancel-in-progress: true

@@ -7,7 +7,7 @@ import { has } from "lodash";
 import { getAllTables } from "./lib/airtable";
 import { GraphQLBaseObject, GraphQLMetadata } from "./lib/interfaces";
 import { orderedSetsToCreate } from "./additional-objects/sets";
-import { UNLICENSED_BY_DEFAULT } from "./lib/constants";
+import { CREATE_OBJECT_CHUNK_SIZE, UNLICENSED_BY_DEFAULT } from "./lib/constants";
 import {
   createGraphQLMediaObjects,
   createOrUpdateGraphQLCredits,
@@ -46,6 +46,8 @@ const main = async () => {
 
   // eslint-disable-next-line no-console
   console.log(`Starting ingest to Skylark X: ${SAAS_API_ENDPOINT}`);
+  // eslint-disable-next-line no-console
+  console.log(`Chunk size: ${CREATE_OBJECT_CHUNK_SIZE}`);
 
   const { version } = await updateSkylarkSchema();
   // eslint-disable-next-line no-console
