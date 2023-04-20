@@ -2,12 +2,12 @@ import { SkeletonPage } from "@skylark-reference-apps/react";
 import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
 import { Fragment } from "react";
-import { Carousel } from "./carousel";
-import { DisplayError } from "./displayError";
-import { SeasonRail, SetRail } from "./rails";
-import { GET_PAGE_SET } from "../graphql/queries";
-import { useObject } from "../hooks/useObject";
-import { SeoObjectData } from "../lib/getPageSeoData";
+import { Carousel } from "../../carousel";
+import { DisplayError } from "../../displayError";
+import { SeasonRail, SetRail } from "../../rails";
+import { GET_PAGE_SET } from "../../../graphql/queries";
+import { useObject } from "../../../hooks/useObject";
+import { SeoObjectData } from "../../../lib/getPageSeoData";
 import {
   Brand,
   Episode,
@@ -16,7 +16,7 @@ import {
   SetContent,
   SkylarkSet,
   StreamTVSupportedSetType,
-} from "../types";
+} from "../../../types";
 
 const Page: NextPage<{
   slug: string;

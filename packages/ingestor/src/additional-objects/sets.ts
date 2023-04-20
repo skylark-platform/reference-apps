@@ -91,6 +91,7 @@ const wesAndersonMoviesCollection: SetConfig = {
     { type: "movies", slug: "the-french-dispatch" },
     { type: "movies", slug: "moonrise-kingdom" },
     { type: "movies", slug: "fantastic-mr-fox" },
+    { type: "movies", slug: "isle-of-dogs" },
   ],
 };
 

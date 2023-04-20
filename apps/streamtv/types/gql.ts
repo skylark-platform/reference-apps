@@ -69,6 +69,7 @@ export type AvailabilityInput = {
   dimensions?: InputMaybe<AssignDimensionGroupInput>;
   end?: InputMaybe<Scalars["AWSDateTime"]>;
   external_id?: InputMaybe<Scalars["String"]>;
+  relative_end?: InputMaybe<RelativeTimes>;
   slug?: InputMaybe<Scalars["String"]>;
   start?: InputMaybe<Scalars["AWSDateTime"]>;
   title?: InputMaybe<Scalars["String"]>;
@@ -2781,6 +2782,16 @@ export type RatingSetInput = {
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
   unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+};
+
+export type RelativeTimes = {
+  days?: InputMaybe<Scalars["Int"]>;
+  hours?: InputMaybe<Scalars["Int"]>;
+  minutes?: InputMaybe<Scalars["Int"]>;
+  months?: InputMaybe<Scalars["Int"]>;
+  seconds?: InputMaybe<Scalars["Int"]>;
+  weeks?: InputMaybe<Scalars["Int"]>;
+  years?: InputMaybe<Scalars["Int"]>;
 };
 
 export type Role = Metadata &

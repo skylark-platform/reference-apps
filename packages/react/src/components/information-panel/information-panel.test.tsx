@@ -6,7 +6,7 @@ describe("InformationPanel component", () => {
   it("the component renders correctly", () => {
     render(
       <InformationPanel
-        availableUntil={12}
+        availableUntil={{ unit: "day", number: 12 }}
         brand={{ title: "Game of Thrones" }}
         description="Series Premiere. Lord Stark is troubled by disturbing reports from a Night's Watch deserter."
         duration={57}

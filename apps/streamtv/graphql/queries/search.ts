@@ -21,9 +21,8 @@ export const SEARCH = gql`
       dimensions: [
         { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
-      ]
-    ) # types: ["COLLECTION"]
-    # highlight_results: true
+      ] # types: ["COLLECTION"]
+    ) # highlight_results: true
     {
       total_count
       objects {

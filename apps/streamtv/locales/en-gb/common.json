@@ -43,7 +43,13 @@
   "tv-shows": "TV Shows",
   "movies-page-description": "Search 100's of the latest and greatest titles, available to watch on StreamTV",
   "by-skylark": "By Skylark",
-  "available-for": "Available for {{days}} days",
+  "available-for": {
+    "leaving-today": "Leaving Today",
+    "days": "Leaving In {{number}} Days",
+    "months": "Leaving In {{number}} Months",
+    "years": "Leaving In {{number}} Years",
+    "ever": "A StreamTV Staple"
+  },
   "show-more": "Show more",
   "show-less": "Show less",
   "released": "Released",

@@ -11,6 +11,8 @@ import {
   SynopsisTypes,
   TitleTypes,
 } from "@skylark-reference-apps/lib";
+import dayjs, { Dayjs } from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import {
   Credit,
   Entertainment,
@@ -22,7 +24,10 @@ import {
   RatingListing,
   SkylarkTagListing,
   ThemeListing,
+  Availability,
 } from "../types";
+
+dayjs.extend(relativeTime);
 
 export const getGraphQLCreditsByType = (
   credits: Maybe<Maybe<Credit>[]> | null | undefined,
@@ -170,3 +175,55 @@ export const convertGraphQLSetType = (setType?: string): SetTypes => {
 
 export const sortEpisodesByNumber = (a: Maybe<Episode>, b: Maybe<Episode>) =>
   (a?.episode_number || 0) > (b?.episode_number || 0) ? 1 : -1;
+
+export const getFurthestAvailabilityEndDate = (
+  objects?: Availability[] | null
+): Dayjs | null => {
+  if (!objects || objects.length === 0) {
+    return null;
+  }
+
+  const orderedDates = objects
+    ?.filter(({ end }) => !!end)
+    .sort(({ end: endA }, { end: endB }) =>
+      dayjs(endA as string).isBefore(endB as string) ? 1 : -1
+    );
+  return dayjs(orderedDates[0].end as string);
+};
+
+export const is2038Problem = (date: Dayjs) =>
+  date.isSame("2038-01-19T03:14:07.000Z");
+
+export const getTimeFromNow = (
+  d: Dayjs
+): { unit: "day" | "month" | "year" | "never"; number: number } => {
+  if (is2038Problem(d)) {
+    return {
+      unit: "never",
+      number: -1,
+    };
+  }
+
+  const now = dayjs();
+  const yearsFromNow = d.diff(now, "years");
+  if (yearsFromNow > 0) {
+    return {
+      unit: "year",
+      number: yearsFromNow,
+    };
+  }
+
+  const monthsFromNow = d.diff(now, "months");
+  if (monthsFromNow > 0) {
+    return {
+      unit: "month",
+      number: monthsFromNow,
+    };
+  }
+
+  const daysFromNow = d.diff(now, "days");
+  return {
+    unit: "day",
+    number: daysFromNow,
+  };
+};
