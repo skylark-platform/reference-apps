@@ -64,6 +64,13 @@ export const GET_SET_FOR_CAROUSEL = gql`
                   url
                 }
               }
+              call_to_actions(limit: 1) {
+                objects {
+                  type
+                  text
+                  description
+                }
+              }
             }
             ... on Episode {
               title
@@ -74,6 +81,13 @@ export const GET_SET_FOR_CAROUSEL = gql`
               images {
                 objects {
                   url
+                }
+              }
+              call_to_actions(limit: 1) {
+                objects {
+                  type
+                  text
+                  description
                 }
               }
             }
@@ -88,6 +102,13 @@ export const GET_SET_FOR_CAROUSEL = gql`
                   url
                 }
               }
+              call_to_actions(limit: 1) {
+                objects {
+                  type
+                  text
+                  description
+                }
+              }
             }
             ... on Brand {
               title
@@ -100,6 +121,13 @@ export const GET_SET_FOR_CAROUSEL = gql`
                   url
                 }
               }
+              call_to_actions(limit: 1) {
+                objects {
+                  type
+                  text
+                  description
+                }
+              }
             }
             ... on SkylarkSet {
               title
@@ -109,6 +137,13 @@ export const GET_SET_FOR_CAROUSEL = gql`
               images {
                 objects {
                   url
+                }
+              }
+              call_to_actions(limit: 1) {
+                objects {
+                  type
+                  text
+                  description
                 }
               }
             }

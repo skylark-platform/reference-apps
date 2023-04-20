@@ -37,6 +37,11 @@ export const Carousel = ({ uid }: CarouselProps) => {
             "",
           type: parsedType,
           image: getGraphQLImageSrc(object.images, ImageType.Main),
+          callToAction: object?.call_to_actions?.objects?.[0] ? {
+            text: object.call_to_actions.objects[0].text || object.call_to_actions.objects[0].text_short || null,
+            description: object.call_to_actions.objects[0].description || object.call_to_actions.objects[0].description_short || null,
+            type: "LINK_TO_RELATED_OBJECT",
+          } : undefined,
         };
       })
     : [];

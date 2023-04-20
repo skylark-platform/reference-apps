@@ -15,6 +15,11 @@ export interface CarouselItem {
   type: ObjectTypes;
   releaseDate: string;
   duration?: string;
+  callToAction?: {
+    type: "LINK_TO_RELATED_OBJECT", // The only type supported as of now
+    text: string | null
+    description: string | null
+  }
 }
 
 interface CarouselProps {

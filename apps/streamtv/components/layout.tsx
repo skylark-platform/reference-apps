@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import { MdStream, MdAccountCircle } from "react-icons/md";
+import { MdStream, MdSearch, MdClose } from "react-icons/md";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import {
@@ -30,6 +30,7 @@ export const StreamTVLayout: React.FC<Props> = ({
 }) => {
   const { asPath } = useRouter();
   const { t } = useTranslation("common");
+  const [isMobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   const links = [
     { text: t("discover"), href: "/" },
@@ -42,6 +43,9 @@ export const StreamTVLayout: React.FC<Props> = ({
   return (
     <DimensionsContextProvider>
       <div className="relative w-full">
+          {isMobileSearchOpen && <div className="fixed z-20 inset-0 bg-gray-900/30 md:hidden">
+            <Search onSearch={() => setMobileSearchOpen(false)} />
+          </div>}
         <TitleScreen
           exitBackgroundColor="#5B45CE"
           logo={
@@ -64,13 +68,14 @@ export const StreamTVLayout: React.FC<Props> = ({
             </h2>
             <span className="absolute right-2 md:hidden">
               <Button
-                icon={<MdAccountCircle size={20} />}
+                icon={isMobileSearchOpen ? <MdClose size={20} /> : <MdSearch size={20} />}
                 size="sm"
                 variant="tertiary"
+                onClick={() => setMobileSearchOpen(!isMobileSearchOpen)}
               />
             </span>
           </div>
-          <div className="hidden gap-1 md:flex">
+          <div className="hidden md:block">
             <Search />
           </div>
         </AppHeader>
