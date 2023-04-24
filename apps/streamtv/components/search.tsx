@@ -84,7 +84,7 @@ const HighlightedSearchResultText = ({
       className={clsx(
         className,
         matchClassName,
-        "[&>span]:text-pink-500 group-hover:[&>span]:text-purple-400 [&>span]:transition-colors"
+        "[&>span]:text-pink-500 [&>span]:transition-colors group-hover:[&>span]:text-purple-400"
       )}
       dangerouslySetInnerHTML={{ __html: cleanHTML }}
     />
@@ -113,7 +113,7 @@ const SearchResultItem = ({
       className="group mb-4  grid grid-cols-[4fr_1fr] items-center gap-4 last:mb-0"
       onClick={() => onClick()}
     >
-      <div className="flex flex-col h-full">
+      <div className="flex h-full flex-col">
         <div className="flex flex-col">
           <HighlightedSearchResultText
             className="text-lg font-medium text-gray-100 transition-colors group-hover:text-purple-400"
@@ -122,7 +122,7 @@ const SearchResultItem = ({
           />
           {description && (
             <HighlightedSearchResultText
-              className="text-sm text-gray-400 transition-colors line-clamp-3 group-hover:text-purple-400"
+              className="line-clamp-3 text-sm text-gray-400 transition-colors group-hover:text-purple-400"
               matchClassName="[&>span]:font-semibold"
               text={description}
             />
@@ -163,7 +163,7 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
   const onSearchWrapper = () => {
     onSearch?.();
     clearSearchQuery();
-  }
+  };
 
   const ref = useRef<HTMLDivElement | null>(null);
 
@@ -192,7 +192,7 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
     >
       <div
         className={clsx(
-          "flex items-center bg-purple-500/90 justify-center rounded-full border-0 border-gray-300 md:bg-button-tertiary p-3 px-4  transition-colors focus-within:border-white  focus-within:text-white",
+          "flex items-center justify-center rounded-full border-0 border-gray-300 bg-purple-500/90 p-3 px-4 transition-colors  focus-within:border-white focus-within:text-white  md:bg-button-tertiary",
           searchQuery ? "text-white" : "text-gray-300"
         )}
       >
@@ -213,7 +213,7 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
       </div>
       {searchResultsOpen && searchQuery && (
         <div className="right-0 z-100 mt-2 md:absolute">
-          <div className="md:max-h-[24rem] max-h-[70vh] min-h-[2rem] w-[94vw] overflow-y-auto rounded bg-gray-800 px-4 py-6 md:px-8 md:py-8 md:w-[34rem]">
+          <div className="max-h-[70vh] min-h-[2rem] w-[94vw] overflow-y-auto rounded bg-gray-800 px-4 py-6 md:max-h-[24rem] md:w-[34rem] md:px-8 md:py-8">
             {(isLoading || data?.objects?.length === 0) && (
               <p className="text-lg font-medium text-gray-100">
                 {isLoading ? "Loading..." : "Nothing found"}

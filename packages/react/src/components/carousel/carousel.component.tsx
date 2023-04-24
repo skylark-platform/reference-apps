@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { wrap } from "popmotion";
 import useTranslation from "next-translate/useTranslation";
 import { formatYear, ObjectTypes } from "@skylark-reference-apps/lib";
-import { MdAdd, MdPlayCircleFilled } from "react-icons/md";
+import { MdPlayCircleFilled, MdArrowForward } from "react-icons/md";
 import { CarouselButton } from "./carousel-button.component";
 import { List } from "../list";
 import { Button } from "../button";
@@ -16,10 +16,12 @@ export interface CarouselItem {
   releaseDate: string;
   duration?: string;
   callToAction?: {
-    type: "LINK_TO_RELATED_OBJECT", // The only type supported as of now
-    text: string | null
-    description: string | null
-  }
+    type: "SIGN_UP" | "COMING_SOON" | "LINK_TO_RELATED_OBJECT" | "LINK_TO_URL";
+    text: string | null;
+    description: string | null;
+    url?: string;
+    urlPath?: string;
+  };
 }
 
 interface CarouselProps {
@@ -84,9 +86,14 @@ export const Carousel: React.FC<CarouselProps> = ({
     return undefined;
   }, [page, changeInterval, items.length]);
 
-  const { image, title, releaseDate, type, duration, href } = items[
-    itemIndex
-  ] || { image: "", title: "", releaseDate: "", type: "", href: "" };
+  const { image, title, releaseDate, type, duration, href, callToAction } =
+    items[itemIndex] || {
+      image: "",
+      title: "",
+      releaseDate: "",
+      type: "",
+      href: "",
+    };
   const activeImageHasLoaded =
     (image !== "" && areImagesLoaded) || loadedImages.includes(image);
 
@@ -128,26 +135,59 @@ export const Carousel: React.FC<CarouselProps> = ({
           `}
           >
             <div className="flex flex-col">
-              <h2 className="my-3 text-5xl font-medium md:text-6xl">{title}</h2>
-              <List
-                contents={[
-                  duration,
-                  formatYear(releaseDate),
-                  type && t(`skylark.object.${type}`),
-                ]}
-                highlightFirst
-                textSize="sm"
-              />
-              <div className="mb-4 mt-8 flex flex-row items-center gap-x-4">
-                <Button
-                  href={href}
-                  icon={<MdPlayCircleFilled size={25} />}
-                  iconPlacement="right"
-                  text={t("cta.watch-free")}
-                />
-                <Button icon={<MdAdd size={25} />} variant="secondary" />
-              </div>
-              <p className="text-xs text-gray-300">{t("cta.subscribe")}</p>
+              {title && (
+                <>
+                  <h2 className="my-3 text-5xl font-medium md:text-6xl">
+                    {title}
+                  </h2>
+                  <List
+                    contents={[
+                      duration,
+                      formatYear(releaseDate),
+                      type && t(`skylark.object.${type}`),
+                    ]}
+                    highlightFirst
+                    textSize="sm"
+                  />
+                </>
+              )}
+              {callToAction && (
+                <>
+                  {callToAction.type === "LINK_TO_RELATED_OBJECT" && (
+                    <>
+                      <div className="mb-4 mt-8 flex flex-row items-center gap-x-4">
+                        <Button
+                          href={href}
+                          icon={<MdPlayCircleFilled size={25} />}
+                          iconPlacement="right"
+                          text={callToAction.text || undefined}
+                        />
+                      </div>
+                      <p className="text-xs text-gray-300">
+                        {callToAction.description}
+                      </p>
+                    </>
+                  )}
+                  {callToAction.type === "LINK_TO_URL" && (
+                    <>
+                      <div className="mb-4 mt-8 flex flex-row items-center gap-x-4">
+                        <Button
+                          externalHref={
+                            (callToAction.url && !callToAction.urlPath) || false
+                          }
+                          href={callToAction.urlPath || callToAction.url}
+                          icon={<MdArrowForward size={25} />}
+                          iconPlacement="right"
+                          text={callToAction.text || undefined}
+                        />
+                      </div>
+                      <p className="text-xs text-gray-300">
+                        {callToAction.description}
+                      </p>
+                    </>
+                  )}
+                </>
+              )}
             </div>
           </div>
         </motion.div>

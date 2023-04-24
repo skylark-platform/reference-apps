@@ -10,11 +10,36 @@ import {
   convertTypenameToObjectType,
   getGraphQLImageSrc,
 } from "../lib/utils";
-import { Entertainment, ImageType, SetContent, SkylarkSet } from "../types";
+import {
+  Entertainment,
+  ImageType,
+  SetContent,
+  SkylarkSet,
+  StreamTVSupportCallToActionType,
+} from "../types";
 
 interface CarouselProps {
   uid: string;
 }
+
+const getFirstCallToAction = (
+  callToActions: Entertainment["call_to_actions"]
+): CarouselItem["callToAction"] => {
+  if (!callToActions?.objects?.[0]?.type) {
+    return undefined;
+  }
+
+  const callToAction = callToActions.objects[0];
+
+  return {
+    text: callToAction.text || callToAction.text_short || null,
+    description:
+      callToAction.description || callToAction.description_short || null,
+    type: callToAction.type as StreamTVSupportCallToActionType,
+    url: callToAction.url as string | undefined,
+    urlPath: callToAction.url_path as string | undefined,
+  };
+};
 
 export const Carousel = ({ uid }: CarouselProps) => {
   const { data } = useObject<SkylarkSet>(GET_SET_FOR_CAROUSEL, uid);
@@ -37,11 +62,7 @@ export const Carousel = ({ uid }: CarouselProps) => {
             "",
           type: parsedType,
           image: getGraphQLImageSrc(object.images, ImageType.Main),
-          callToAction: object?.call_to_actions?.objects?.[0] ? {
-            text: object.call_to_actions.objects[0].text || object.call_to_actions.objects[0].text_short || null,
-            description: object.call_to_actions.objects[0].description || object.call_to_actions.objects[0].description_short || null,
-            type: "LINK_TO_RELATED_OBJECT",
-          } : undefined,
+          callToAction: getFirstCallToAction(object.call_to_actions),
         };
       })
     : [];

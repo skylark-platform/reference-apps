@@ -43,9 +43,11 @@ export const StreamTVLayout: React.FC<Props> = ({
   return (
     <DimensionsContextProvider>
       <div className="relative w-full">
-          {isMobileSearchOpen && <div className="fixed z-20 inset-0 bg-gray-900/30 md:hidden">
+        {isMobileSearchOpen && (
+          <div className="fixed inset-0 z-20 bg-gray-900/30 md:hidden">
             <Search onSearch={() => setMobileSearchOpen(false)} />
-          </div>}
+          </div>
+        )}
         <TitleScreen
           exitBackgroundColor="#5B45CE"
           logo={
@@ -68,7 +70,13 @@ export const StreamTVLayout: React.FC<Props> = ({
             </h2>
             <span className="absolute right-2 md:hidden">
               <Button
-                icon={isMobileSearchOpen ? <MdClose size={20} /> : <MdSearch size={20} />}
+                icon={
+                  isMobileSearchOpen ? (
+                    <MdClose size={20} />
+                  ) : (
+                    <MdSearch size={20} />
+                  )
+                }
                 size="sm"
                 variant="tertiary"
                 onClick={() => setMobileSearchOpen(!isMobileSearchOpen)}

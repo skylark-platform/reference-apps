@@ -1,13 +1,8 @@
 import { gql } from "graphql-request";
+import { ImageListingFragment } from "./fragments";
 
 export const SEARCH = gql`
-  fragment imageListing on SkylarkImageListing {
-    objects {
-      title
-      type
-      url
-    }
-  }
+  ${ImageListingFragment}
 
   query SEARCH(
     $query: String!
@@ -21,9 +16,8 @@ export const SEARCH = gql`
       dimensions: [
         { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
-      ] # types: ["COLLECTION"]
-    ) # highlight_results: true
-    {
+      ] # types: ["COLLECTION"] # highlight_results: true
+    ) {
       total_count
       objects {
         __typename
@@ -35,7 +29,7 @@ export const SEARCH = gql`
           synopsis_short
           type
           images {
-            ...imageListing
+            ...imageListingFragment
           }
         }
         ... on Brand {
@@ -45,7 +39,7 @@ export const SEARCH = gql`
           synopsis_short
           release_date
           images {
-            ...imageListing
+            ...imageListingFragment
           }
         }
         ... on Episode {
@@ -55,7 +49,7 @@ export const SEARCH = gql`
           synopsis_short
           release_date
           images {
-            ...imageListing
+            ...imageListingFragment
           }
         }
         ... on Movie {
@@ -65,13 +59,13 @@ export const SEARCH = gql`
           synopsis_short
           release_date
           images {
-            ...imageListing
+            ...imageListingFragment
           }
         }
         ... on Person {
           name
           images {
-            ...imageListing
+            ...imageListingFragment
           }
         }
       }
