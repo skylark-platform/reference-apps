@@ -10,7 +10,6 @@ const newTVReleases: SetConfig = {
   externalId: createStreamTVExternalId("new_tv_releases"),
   title: "New TV Releases",
   slug: "new-tv-releases",
-  set_type_slug: "rail",
   graphQlSetType: "RAIL",
   contents: [
     { type: "brands", slug: "house-of-the-dragon" },
@@ -23,7 +22,6 @@ const spotlightMovies: SetConfig = {
   externalId: createStreamTVExternalId("spotlight_movies"),
   title: "Spotlight movies",
   slug: "spotlight-movies",
-  set_type_slug: "rail",
   graphQlSetType: "RAIL_MOVIE",
   contents: [
     { type: "movies", slug: "the-hustle" },
@@ -45,7 +43,6 @@ const homePageSlider: SetConfig = {
   externalId: createStreamTVExternalId("home_page_slider"),
   title: "Home page hero",
   slug: "media-reference-home-page-hero",
-  set_type_slug: "slider",
   graphQlSetType: "SLIDER",
   contents: [
     { type: "brands", slug: "game-of-thrones" },
@@ -60,7 +57,6 @@ const tarantinoMoviesCollection: SetConfig = {
   externalId: createStreamTVExternalId("tarantino_movies"),
   title: "Tarantino Movies Collection",
   slug: "tarantino-movies-collection",
-  set_type_slug: "collection",
   graphQlSetType: "COLLECTION",
   contents: [
     { type: "movies", slug: "once-upon-a-time-in-hollywood" },
@@ -84,7 +80,6 @@ const wesAndersonMoviesCollection: SetConfig = {
   externalId: createStreamTVExternalId("wes_anderson_movies"),
   title: "Wes Anderson Movies Collection",
   slug: "wes-anderson-movies-collection",
-  set_type_slug: "collection",
   graphQlSetType: "COLLECTION",
   contents: [
     { type: "movies", slug: "the-grand-budapest-hotel" },
@@ -95,11 +90,53 @@ const wesAndersonMoviesCollection: SetConfig = {
   ],
 };
 
+const gameOfThronesUniverseSlider: SetConfig = {
+  externalId: createStreamTVExternalId("game_of_thrones_universe"),
+  title: "Game of Thrones Universe Slider",
+  slug: "game-of-thrones-universe-slider",
+  graphQlSetType: "SLIDER",
+  contents: [
+    { type: "brands", slug: "house-of-the-dragon" },
+    { type: "brands", slug: "game-of-thrones" },
+  ],
+};
+
+const gotHighestRatedEpisodesRail: SetConfig = {
+  externalId: createStreamTVExternalId("got_highest_rated_episodes"),
+  title: "GOT Highest Rated Episodes",
+  slug: "got-highest-rated-episodes",
+  graphQlSetType: "RAIL_WITH_SYNOPSIS",
+  contents: [
+    { type: "episodes", slug: "the-rains-of-castamere" },
+    { type: "episodes", slug: "hardhome" },
+    { type: "episodes", slug: "the-mountain-and-the-viper" },
+    { type: "episodes", slug: "the-lion-and-the-rose" },
+    { type: "episodes", slug: "the-laws-of-gods-and-men" },
+    { type: "episodes", slug: "baelor" },
+  ],
+};
+
+const gameOfThronesUniversePage: SetConfig = {
+  externalId: createStreamTVExternalId("game_of_thrones_universe"),
+  title: "Game of Thrones Universe",
+  slug: "game-of-thrones-universe",
+  graphQlSetType: "PAGE",
+  contents: [
+    { type: "set", set_type: "slider", slug: gameOfThronesUniverseSlider.slug },
+    { type: "seasons", slug: "house-of-the-dragon-s01" },
+    { type: "set", set_type: "rail", slug: gotHighestRatedEpisodesRail.slug },
+    { type: "seasons", slug: "got-s05" },
+    { type: "seasons", slug: "got-s04" },
+    { type: "seasons", slug: "got-s03" },
+    { type: "seasons", slug: "got-s02" },
+    { type: "seasons", slug: "got-s01" },
+  ],
+};
+
 const discoverCollectionRail: SetConfig = {
   externalId: createStreamTVExternalId("discover_collection"),
-  title: "Discover Collection",
+  title: "Discover",
   slug: "discover-collection",
-  set_type_slug: "collection",
   graphQlSetType: "RAIL_PORTRAIT",
   contents: [
     {
@@ -112,6 +149,11 @@ const discoverCollectionRail: SetConfig = {
       set_type: "collection",
       slug: wesAndersonMoviesCollection.slug,
     },
+    {
+      type: "set",
+      set_type: "homepage",
+      slug: gameOfThronesUniversePage.slug,
+    },
   ],
 };
 
@@ -119,7 +161,6 @@ const mediaReferenceHomepage: SetConfig = {
   externalId: createStreamTVExternalId("homepage"),
   title: "Homepage",
   slug: "media-reference-homepage",
-  set_type_slug: "homepage",
   graphQlSetType: "PAGE",
   contents: [
     { type: "set", set_type: "slider", slug: homePageSlider.slug },
@@ -137,8 +178,12 @@ export const orderedSetsToCreate = [
   homePageSlider,
   tarantinoMoviesCollection,
   wesAndersonMoviesCollection,
-  // discoverCollection needs the tarantinoMoviesCollection and wesAndersonMoviesCollection
+  // got
+  gameOfThronesUniverseSlider,
+  gotHighestRatedEpisodesRail,
+  gameOfThronesUniversePage,
+  // discoverCollection needs the tarantinoMoviesCollection and wesAndersonMoviesCollection and gameOfThronesUniversePage
   discoverCollectionRail,
-  // Order matters, homepage is last as it includes the rail and slider
+  // Order matters, pages are last as they include the rails and sliders
   mediaReferenceHomepage,
 ];

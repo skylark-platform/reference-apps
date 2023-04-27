@@ -1,4 +1,4 @@
-import { formatReleaseDate } from "@skylark-reference-apps/lib";
+import { formatReleaseDate, hasProperty } from "@skylark-reference-apps/lib";
 import clsx from "clsx";
 import Link from "next/link";
 import React, { Fragment, useEffect, useRef, useState } from "react";
@@ -23,19 +23,6 @@ const findMatchOrReturnFirst = (
     filteredStrings.find((str) => str.includes("skylark-search-highlight")) ||
     filteredStrings?.[0] ||
     ""
-  );
-};
-
-// At the moment, Skylark cannot highlight the Object Type even if it is the search's match
-// We can manually override this behaviour by checking the query
-const highlightTypenameIfInSearchQuery = (
-  query: string,
-  objectType: string
-) => {
-  const regEx = new RegExp(query, "ig");
-  return sentenceCase(objectType).replace(
-    regEx,
-    `<span class="skylark-search-highlight">$&</span>`
   );
 };
 
@@ -222,6 +209,9 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
             {!isLoading &&
               data?.objects?.map((obj) => {
                 const typename = obj.__typename;
+                const highlightedTypename = hasProperty(obj, "_context")
+                  ? (obj._context?.typename_highlight as string)
+                  : typename || "";
                 const parsedType = convertTypenameToObjectType(typename);
                 const href = `/${parsedType}/${obj.uid}`;
 
@@ -238,10 +228,7 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
                       image={getGraphQLImageSrc(obj?.images, ImageType.Main)}
                       key={obj.uid}
                       title={obj.name || ""}
-                      typename={highlightTypenameIfInSearchQuery(
-                        searchQuery,
-                        typename
-                      )}
+                      typename={highlightedTypename}
                       onClick={onSearchWrapper}
                     />
                   );
@@ -296,10 +283,7 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
                         obj.title_short,
                         obj.title,
                       ])}
-                      typename={highlightTypenameIfInSearchQuery(
-                        searchQuery,
-                        typename
-                      )}
+                      typename={highlightedTypename}
                       onClick={onSearchWrapper}
                     />
                   );

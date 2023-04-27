@@ -16,12 +16,17 @@ export const SEARCH = gql`
       dimensions: [
         { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
-      ] # types: ["COLLECTION"] # highlight_results: true
+      ]
+      highlight_results: true
     ) {
       total_count
       objects {
         __typename
         uid
+        external_id
+        _context {
+          typename_highlight
+        }
         ... on SkylarkSet {
           title
           title_short
@@ -62,12 +67,12 @@ export const SEARCH = gql`
             ...imageListingFragment
           }
         }
-        ... on Person {
-          name
-          images {
-            ...imageListingFragment
-          }
-        }
+        #... on Person {
+        #  name
+        #  images {
+        #    ...imageListingFragment
+        #  }
+        #}
       }
     }
   }
