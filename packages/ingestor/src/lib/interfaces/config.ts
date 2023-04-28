@@ -6,7 +6,6 @@ export interface SetConfig extends Partial<ApiEntertainmentObject> {
   externalId: string;
   title: string;
   slug: string;
-  set_type_slug: SetTypes;
   graphQlSetType: typeof ENUMS.SET_TYPES[number];
   contents: (
     | {

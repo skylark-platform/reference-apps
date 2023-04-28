@@ -99,7 +99,8 @@ const main = async () => {
   metadata.images = await createOrUpdateGraphQlObjectsUsingIntrospection(
     "SkylarkImage",
     airtable.images,
-    metadataAvailability
+    metadataAvailability,
+    true
   );
   metadata.themes = await createOrUpdateGraphQlObjectsUsingIntrospection(
     "Theme",
