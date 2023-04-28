@@ -4,7 +4,7 @@ import {
   graphQLClient,
   hasProperty,
 } from "@skylark-reference-apps/lib";
-import { FieldSet, Records } from "airtable";
+import { Attachment, FieldSet, Records } from "airtable";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import { chunk, flatten, has, isArray, isEmpty, isString } from "lodash";
 import { CREATE_OBJECT_CHUNK_SIZE } from "../../constants";
@@ -100,7 +100,8 @@ export const mutateMultipleObjects = async <T extends { external_id?: string }>(
 export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
   objectType: GraphQLObjectTypes,
   airtableRecords: Records<FieldSet>,
-  metadataAvailability: GraphQLMetadata["availability"]
+  metadataAvailability: GraphQLMetadata["availability"],
+  isImage?: boolean
 ): Promise<GraphQLBaseObject[]> => {
   if (airtableRecords.length === 0) {
     return [];
@@ -128,10 +129,25 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
         ?.join("_")
         .toLowerCase() as string;
 
+      const objectFields: Record<string, string | object> = {
+        ...validFields,
+        availability,
+      };
+
+      if (isImage) {
+        const imageAttachments = fields.image as Attachment[];
+        if (imageAttachments.length > 0) {
+          const image = imageAttachments[0];
+          // https://docs.skylarkplatform.com/docs/creating-an-image#upload-an-image-from-an-external-url
+          objectFields.download_from_url = image.url;
+          objectFields.content_type = image.type;
+        }
+      }
+
       const args = {
         [argName]: objectExists
-          ? { ...validFields, availability }
-          : { ...validFields, availability, external_id: id },
+          ? objectFields
+          : { ...objectFields, external_id: id },
       };
 
       const { operation, method } = createGraphQLOperation(
