@@ -6,7 +6,8 @@ export type ValidMediaObjectRelationships =
   | "tags"
   | "credits"
   | "ratings"
-  | "images";
+  | "images"
+  | "call_to_actions";
 
 export type RelationshipsLink = { [key: string]: { link: string | string[] } };
 

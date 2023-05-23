@@ -5,7 +5,6 @@ import {
   GraphQLMetadata,
   SetConfig,
 } from "../../interfaces";
-import { ApiObjectType } from "../../types";
 import { createOrUpdateGraphQLSet } from "./sets";
 
 jest.mock("@skylark-reference-apps/lib");
@@ -25,7 +24,6 @@ describe("saas/sets.ts", () => {
     externalId: "home_page_slider",
     title: "Home page hero",
     slug: "media-reference-home-page-hero",
-    set_type_slug: "slider",
     graphQlSetType: "SLIDER",
     contents: [
       { type: "brands", slug: "game-of-thrones" },
@@ -40,7 +38,7 @@ describe("saas/sets.ts", () => {
 
   const mediaObjects: GraphQLBaseObject[] = setConfig.contents.map(
     (content) => {
-      const { type, slug } = content as { type: ApiObjectType; slug: string };
+      const { type, slug } = content as { type: string; slug: string };
       return {
         external_id: `${type}-${slug}`,
         uid: `${type}-${slug}`,

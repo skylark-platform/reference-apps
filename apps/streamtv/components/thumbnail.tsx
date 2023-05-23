@@ -73,6 +73,10 @@ export const Thumbnail = ({ uid, objectType, variant }: ThumbnailProps) => {
       ? convertGraphQLSetType(data?.type || "")
       : convertTypenameToObjectType(data?.__typename);
 
+  const href = parsedType === "page" ? uid : `/${parsedType}/${uid}`;
+
+  const thumbnailImage = getGraphQLImageSrc(data?.images, ImageType.Thumbnail);
+
   return (
     <div ref={ref}>
       {isLoading && !data && (
@@ -82,13 +86,10 @@ export const Thumbnail = ({ uid, objectType, variant }: ThumbnailProps) => {
         <>
           {variant === "landscape-synopsis" && (
             <EpisodeThumbnail
-              backgroundImage={getGraphQLImageSrc(
-                data?.images,
-                ImageType.Thumbnail
-              )}
+              backgroundImage={thumbnailImage}
               contentLocation="below"
               description={data?.synopsis_short || data?.synopsis || ""}
-              href={`/${parsedType}/${uid}`}
+              href={href}
               key={uid}
               number={
                 data && hasProperty(data, "episode_number")
@@ -101,12 +102,9 @@ export const Thumbnail = ({ uid, objectType, variant }: ThumbnailProps) => {
 
           {variant === "landscape-movie" && (
             <MovieThumbnail
-              backgroundImage={getGraphQLImageSrc(
-                data?.images,
-                ImageType.Thumbnail
-              )}
+              backgroundImage={thumbnailImage}
               contentLocation="below"
-              href={`/${parsedType}/${uid}`}
+              href={href}
               key={uid}
               releaseDate={
                 data && hasProperty(data, "release_date")
@@ -119,12 +117,9 @@ export const Thumbnail = ({ uid, objectType, variant }: ThumbnailProps) => {
 
           {variant === "landscape-inside" && (
             <MovieThumbnail
-              backgroundImage={getGraphQLImageSrc(
-                data?.images,
-                ImageType.Thumbnail
-              )}
+              backgroundImage={thumbnailImage}
               contentLocation="inside"
-              href={`/${parsedType}/${uid}`}
+              href={href}
               key={uid}
               releaseDate={
                 data && hasProperty(data, "release_date")
@@ -137,11 +132,8 @@ export const Thumbnail = ({ uid, objectType, variant }: ThumbnailProps) => {
 
           {variant === "portrait" && (
             <CollectionThumbnail
-              backgroundImage={getGraphQLImageSrc(
-                data?.images,
-                ImageType.Thumbnail
-              )}
-              href={`/${parsedType}/${uid}`}
+              backgroundImage={thumbnailImage}
+              href={href}
               key={uid}
               title={data?.title_short || data?.title || ""}
             />
@@ -149,12 +141,9 @@ export const Thumbnail = ({ uid, objectType, variant }: ThumbnailProps) => {
 
           {variant === "landscape" && (
             <StandardThumbnail
-              backgroundImage={getGraphQLImageSrc(
-                data?.images,
-                ImageType.Thumbnail
-              )}
+              backgroundImage={thumbnailImage}
               contentLocation="below"
-              href={`/${parsedType}/${uid}`}
+              href={href}
               key={uid}
               title={data?.title_short || data?.title || ""}
             />

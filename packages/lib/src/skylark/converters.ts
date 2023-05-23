@@ -1,6 +1,5 @@
 import {
   EntertainmentType,
-  ObjectTypes,
   UnexpandedObject,
   UnexpandedObjects,
   UnexpandedSkylarkObject,
@@ -31,32 +30,6 @@ export const convertObjectToSkylarkApiFields = (
   );
 
   return keys.join(",");
-};
-
-/**
- * Converts an ObjectType to a valid Skylark Endpoint
- * @param type The object type to convert
- * @returns string, the endpoint
- */
-export const convertObjectTypeToSkylarkEndpoint = (
-  type: ObjectTypes
-): string => {
-  switch (type) {
-    case "episode":
-      return "episodes";
-    case "movie":
-      return "movies";
-    case "season":
-      return "seasons";
-    case "brand":
-      return "brands";
-    case "collection":
-      return "collection";
-    case "homepage":
-      return "homepage";
-    default:
-      throw new Error("Unknown type provided");
-  }
 };
 
 /**

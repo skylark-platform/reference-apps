@@ -2,7 +2,6 @@ import {
   GraphQLMediaObjectTypes,
   GraphQLObjectTypes,
   graphQLClient,
-  hasProperty,
 } from "@skylark-reference-apps/lib";
 import { Attachment, FieldSet, Records } from "airtable";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
@@ -14,11 +13,7 @@ import {
   GraphQLIntrospectionProperties,
   GraphQLMetadata,
 } from "../../interfaces";
-import {
-  ApiObjectType,
-  RelationshipsLink,
-  ValidMediaObjectRelationships,
-} from "../../types";
+import { RelationshipsLink, ValidMediaObjectRelationships } from "../../types";
 import { getValidPropertiesForObject, getExistingObjects } from "./get";
 import {
   getExtId,
@@ -28,6 +23,7 @@ import {
   createGraphQLOperation,
   getGraphQLObjectAvailability,
   getLanguageCodesFromAirtable,
+  hasProperty,
 } from "./utils";
 
 export const mutateMultipleObjects = async <T extends { external_id?: string }>(
@@ -261,6 +257,7 @@ export const getMediaObjectRelationships = (
     "tags",
     "credits",
     "images",
+    "call_to_actions",
   ];
 
   const relationships = relationshipNames.reduce(
@@ -375,16 +372,24 @@ export const createGraphQLMediaObjects = async (
         }
 
         const { objectType, argName, createFunc, updateFunc } = gqlObjectMeta(
-          fields.skylark_object_type as ApiObjectType
+          fields.skylark_object_type as string
         );
 
         const objectExists = existingObjects.includes(id);
         const method = objectExists ? updateFunc : createFunc;
 
-        const validFields = getValidFields(
-          fields,
-          validObjectProperties[objectType]
-        );
+        if (!hasProperty(validObjectProperties, objectType)) {
+          throw new Error(
+            `Object Type ${objectType} is not a valid property. Valid ones are ${Object.keys(
+              validObjectProperties
+            ).join(", ")}`
+          );
+        }
+
+        const validProperties = validObjectProperties[
+          objectType
+        ] as GraphQLIntrospectionProperties[];
+        const validFields = getValidFields(fields, validProperties);
 
         const relationships: RelationshipsLink = getMediaObjectRelationships(
           fields,
@@ -442,8 +447,6 @@ export const createGraphQLMediaObjects = async (
             __typename: true,
             uid: true,
             external_id: true,
-            title: true,
-            slug: true,
           },
         };
         return updatedOperations;
@@ -467,14 +470,18 @@ export const createTranslationsForGraphQLObjects = async (
   translationsTable: Records<FieldSet>,
   languagesTable: Records<FieldSet>
 ) => {
-  const validObjectProperties: {
-    [key in GraphQLMediaObjectTypes]: GraphQLIntrospectionProperties[];
-  } = {
+  const validObjectProperties: Record<
+    string,
+    GraphQLIntrospectionProperties[]
+  > = {
     Episode: await getValidPropertiesForObject("Episode"),
     Season: await getValidPropertiesForObject("Season"),
     Brand: await getValidPropertiesForObject("Brand"),
     Movie: await getValidPropertiesForObject("Movie"),
     SkylarkAsset: await getValidPropertiesForObject("SkylarkAsset"),
+    SkylarkCallToAction: await getValidPropertiesForObject(
+      "SkylarkCallToAction"
+    ),
   };
 
   const languageCodes = getLanguageCodesFromAirtable(languagesTable);
@@ -526,8 +533,6 @@ export const createTranslationsForGraphQLObjects = async (
               __typename: true,
               uid: true,
               external_id: true,
-              title: true,
-              slug: true,
             },
           };
 

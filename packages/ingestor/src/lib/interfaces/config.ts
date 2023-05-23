@@ -1,15 +1,14 @@
-import { ApiEntertainmentObject, SetTypes } from "@skylark-reference-apps/lib";
+import { SetTypes } from "@skylark-reference-apps/lib";
 import { ENUMS } from "../constants";
-import { ApiObjectType } from "../types";
 
-export interface SetConfig extends Partial<ApiEntertainmentObject> {
+export interface SetConfig {
   externalId: string;
   title: string;
   slug: string;
   graphQlSetType: typeof ENUMS.SET_TYPES[number];
   contents: (
     | {
-        type: ApiObjectType;
+        type: string;
         slug: string;
       }
     | {
@@ -26,6 +25,6 @@ export interface SetConfig extends Partial<ApiEntertainmentObject> {
 
 export interface DynamicObjectConfig {
   name: string;
-  resource: ApiObjectType;
+  resource: string;
   query: string;
 }

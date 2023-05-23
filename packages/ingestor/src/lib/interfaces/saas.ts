@@ -14,18 +14,14 @@ export interface GraphQLMetadata {
   ratings: GraphQLBaseObject[];
   tags: GraphQLBaseObject[];
   credits: GraphQLBaseObject[];
+  call_to_actions: GraphQLBaseObject[];
   availability: {
     default?: string;
     all: string[];
   };
   dimensions: {
-    affiliates: GraphQLBaseObject[];
     deviceTypes: GraphQLBaseObject[];
     customerTypes: GraphQLBaseObject[];
-    locales: GraphQLBaseObject[];
-    operatingSystems: GraphQLBaseObject[];
-    regions: GraphQLBaseObject[];
-    viewingContext: GraphQLBaseObject[];
   };
 }
 

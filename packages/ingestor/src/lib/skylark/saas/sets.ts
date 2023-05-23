@@ -7,24 +7,21 @@ import {
   GraphQLMetadata,
   GraphQLIntrospectionProperties,
 } from "../../interfaces";
-import {
-  ApiObjectType,
-  RelationshipsLink,
-  SetRelationshipsLink,
-} from "../../types";
+import { RelationshipsLink, SetRelationshipsLink } from "../../types";
 import { getValidPropertiesForObject, getExistingObjects } from "./get";
 import {
   gqlObjectMeta,
   getValidFields,
   getGraphQLObjectAvailability,
   getLanguageCodesFromAirtable,
+  hasProperty,
 } from "./utils";
 import { getMediaObjectRelationships } from "./create";
 
 interface SetItem {
   uid: string;
   position: number;
-  apiType: ApiObjectType | "set";
+  apiType: string | "set";
 }
 
 const createSetContent = (
@@ -37,7 +34,7 @@ const createSetContent = (
     return {
       uid: item?.uid as string,
       position: index + 1,
-      apiType: content.type as ApiObjectType | "set",
+      apiType: content.type,
     };
   });
 
@@ -57,7 +54,18 @@ const createSetContent = (
     if (objectType === "SkylarkAsset") {
       break;
     }
-    content[objectType].link.push({ position, uid });
+
+    if (!hasProperty(content, objectType)) {
+      throw new Error(
+        `Object Type ${objectType} is not a valid property. Valid ones are ${Object.keys(
+          content
+        ).join(", ")}`
+      );
+    }
+
+    (
+      content[objectType] as { link: { position: number; uid: string }[] }
+    ).link.push({ position, uid });
   }
 
   return content;

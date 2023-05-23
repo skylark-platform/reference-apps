@@ -169,7 +169,7 @@ export const convertGraphQLSetType = (setType?: string): SetTypes => {
     case "RAIL":
       return "rail";
     default:
-      return "homepage";
+      return "page";
   }
 };
 

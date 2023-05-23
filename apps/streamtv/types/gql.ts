@@ -3618,6 +3618,7 @@ export type SkylarkCallToAction = VisibleObject & {
   description_short?: Maybe<Scalars["String"]>;
   episodes?: Maybe<EpisodeListing>;
   external_id?: Maybe<Scalars["String"]>;
+  images?: Maybe<SkylarkImageListing>;
   internal_title?: Maybe<Scalars["String"]>;
   movies?: Maybe<MovieListing>;
   seasons?: Maybe<SeasonListing>;
@@ -3649,6 +3650,12 @@ export type SkylarkCallToActionBrandsArgs = {
 };
 
 export type SkylarkCallToActionEpisodesArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type SkylarkCallToActionImagesArgs = {
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
   next_token?: InputMaybe<Scalars["String"]>;
@@ -3718,6 +3725,7 @@ export type SkylarkCallToActionRelationshipInput = {
 export type SkylarkCallToActionRelationships = {
   brands?: InputMaybe<BrandRelationshipInput>;
   episodes?: InputMaybe<EpisodeRelationshipInput>;
+  images?: InputMaybe<SkylarkImageRelationshipInput>;
   movies?: InputMaybe<MovieRelationshipInput>;
   seasons?: InputMaybe<SeasonRelationshipInput>;
   sets?: InputMaybe<SkylarkSetRelationshipInput>;
@@ -4063,6 +4071,7 @@ export type SkylarkImage = MediaFile &
     assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
     brands?: Maybe<BrandListing>;
+    call_to_actions?: Maybe<SkylarkCallToActionListing>;
     channels?: Maybe<SkylarkChannelListing>;
     content_of?: Maybe<SetListing>;
     content_type?: Maybe<Scalars["String"]>;
@@ -4107,6 +4116,12 @@ export type SkylarkImageAvailabilityArgs = {
 };
 
 export type SkylarkImageBrandsArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type SkylarkImageCall_To_ActionsArgs = {
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
   next_token?: InputMaybe<Scalars["String"]>;
@@ -4228,6 +4243,7 @@ export type SkylarkImageRelationshipInput = {
 export type SkylarkImageRelationships = {
   assets?: InputMaybe<SkylarkAssetRelationshipInput>;
   brands?: InputMaybe<BrandRelationshipInput>;
+  call_to_actions?: InputMaybe<SkylarkCallToActionRelationshipInput>;
   channels?: InputMaybe<SkylarkChannelRelationshipInput>;
   epg_programmes?: InputMaybe<SkylarkEpgProgrammeRelationshipInput>;
   episodes?: InputMaybe<EpisodeRelationshipInput>;
@@ -4780,9 +4796,11 @@ export type SkylarkSetCreateInput = {
   relationships?: InputMaybe<SkylarkSetRelationships>;
   release_date?: InputMaybe<Scalars["String"]>;
   slug?: InputMaybe<Scalars["String"]>;
+  synopsis?: InputMaybe<Scalars["String"]>;
   synopsis_short?: InputMaybe<Scalars["String"]>;
   title?: InputMaybe<Scalars["String"]>;
   title_short?: InputMaybe<Scalars["String"]>;
+  title_sort?: InputMaybe<Scalars["String"]>;
   type?: InputMaybe<SetType>;
 };
 
@@ -4794,9 +4812,11 @@ export type SkylarkSetInput = {
   relationships?: InputMaybe<SkylarkSetRelationships>;
   release_date?: InputMaybe<Scalars["String"]>;
   slug?: InputMaybe<Scalars["String"]>;
+  synopsis?: InputMaybe<Scalars["String"]>;
   synopsis_short?: InputMaybe<Scalars["String"]>;
   title?: InputMaybe<Scalars["String"]>;
   title_short?: InputMaybe<Scalars["String"]>;
+  title_sort?: InputMaybe<Scalars["String"]>;
   type?: InputMaybe<SetType>;
 };
 

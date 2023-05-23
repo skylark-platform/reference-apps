@@ -1,8 +1,11 @@
+import { GraphQLObjectTypes } from "@skylark-reference-apps/lib";
 import {
-  GraphQLMediaObjectTypes,
-  GraphQLObjectTypes,
-} from "@skylark-reference-apps/lib";
-import { Attachment, Collaborator, FieldSet, Record, Records } from "airtable";
+  Attachment,
+  Collaborator,
+  FieldSet,
+  Record as AirtableRecord,
+  Records,
+} from "airtable";
 import { EnumType } from "json-to-graphql-query";
 import { has, isArray, isString } from "lodash";
 import {
@@ -10,7 +13,6 @@ import {
   GraphQLIntrospectionProperties,
   GraphQLMetadata,
 } from "../../interfaces";
-import { ApiObjectType } from "../../types";
 
 export const pause = (ms: number) =>
   new Promise((resolve) => {
@@ -35,13 +37,13 @@ export const getUidsFromField = (
 };
 
 export const gqlObjectMeta = (
-  type: ApiObjectType | GraphQLMediaObjectTypes
+  type: GraphQLObjectTypes | string
 ): {
   createFunc: string;
   updateFunc: string;
-  objectType: GraphQLMediaObjectTypes;
-  argName: "brand" | "season" | "episode" | "movie" | "skylark_asset";
-  relName: "brands" | "seasons" | "episodes" | "movies" | "assets";
+  objectType: GraphQLObjectTypes;
+  argName: string;
+  relName: string;
 } => {
   switch (type) {
     case "episodes":
@@ -80,7 +82,8 @@ export const gqlObjectMeta = (
         argName: "skylark_asset",
         relName: "assets",
       };
-    default:
+    case "brands":
+    case "Brand":
       return {
         createFunc: "createBrand",
         updateFunc: "updateBrand",
@@ -88,6 +91,16 @@ export const gqlObjectMeta = (
         argName: "brand",
         relName: "brands",
       };
+    case "SkylarkCallToAction":
+      return {
+        createFunc: "createSkylarkCallToAction",
+        updateFunc: "updateSkylarkCallToAction",
+        objectType: "SkylarkCallToAction",
+        argName: "skylark_call_to_action",
+        relName: "call_to_actions",
+      };
+    default:
+      throw new Error(`Case ${type} does not have values`);
   }
 };
 
@@ -143,6 +156,7 @@ export const createGraphQLOperation = (
       : {
           ...args,
         },
+    __typename: true,
     uid: true,
     slug: true,
     external_id: true,
@@ -179,7 +193,7 @@ export const getLanguageCodesFromAirtable = (
 // Utility filter to remove either SLXDemo content OR StreamTV content depending on what Airtable data we want in the environment
 export const filterSLXDemos = (
   table: string,
-  record: Record<FieldSet>,
+  record: AirtableRecord<FieldSet>,
   removeSLXDemoContent: boolean
 ) => {
   const tablesToFilter: string[] = [
@@ -207,3 +221,9 @@ export const filterSLXDemos = (
 
   return isSLXDemoContent;
 };
+
+export const hasProperty = <T, K extends PropertyKey>(
+  object: T,
+  property: K
+): object is T & Record<K, unknown> =>
+  Object.prototype.hasOwnProperty.call(object, property);

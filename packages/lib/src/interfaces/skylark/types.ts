@@ -1,9 +1,4 @@
-export type SetTypes =
-  | "slider"
-  | "rail"
-  | "collection"
-  | "homepage"
-  | "generic";
+export type SetTypes = "slider" | "rail" | "collection" | "page";
 export type EntertainmentType =
   | "movie"
   | "episode"
@@ -28,15 +23,7 @@ export type TitleTypes = "title" | "title_short";
 
 export type SynopsisTypes = "synopsis" | "synopsis_short";
 
-export type DimensionTypes =
-  | "affiliates"
-  | "customer-types"
-  | "device-types"
-  | "locales"
-  | "languages"
-  | "operating-systems"
-  | "regions"
-  | "viewing-context";
+export type DimensionTypes = "customer-types" | "device-types";
 
 export type GraphQLMediaObjectTypes =
   | "Brand"
@@ -58,4 +45,5 @@ export type GraphQLObjectTypes =
   | "Dimension"
   | "DimensionValue"
   | "Availability"
-  | "SkylarkImage";
+  | "SkylarkImage"
+  | "SkylarkCallToAction";

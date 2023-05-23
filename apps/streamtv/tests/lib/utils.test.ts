@@ -197,9 +197,9 @@ describe("utils.ts", () => {
       expect(got).toEqual("slider");
     });
 
-    it("defaults to a set type of homepage", () => {
+    it("defaults to a set type of page", () => {
       const got = utils.convertGraphQLSetType("PAGE");
-      expect(got).toEqual("homepage");
+      expect(got).toEqual("page");
     });
   });
 
