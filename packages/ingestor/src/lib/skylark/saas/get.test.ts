@@ -144,7 +144,7 @@ describe("saas/get.ts", () => {
       await getExistingObjects("Brand", [{ externalId: "brand-1" }]);
 
       expect(graphQlRequest).toBeCalledWith(
-        'query getBrands { brand-1: getBrand (external_id: "brand-1", ignore_availability: true) { uid external_id } }'
+        'query getBrands { brand-1: getBrand (external_id: "brand-1", ignore_availability: true) { __typename uid slug external_id } }'
       );
     });
 

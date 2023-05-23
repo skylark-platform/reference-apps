@@ -36,6 +36,7 @@ const getExistingDimensions = async (
           next_token: nextToken || "",
         },
         objects: {
+          __typename: true,
           uid: true,
           title: true,
           slug: true,
@@ -79,6 +80,7 @@ const getExistingDimensionValues = async (
           count: true,
           next_token: true,
           objects: {
+            __typename: true,
             uid: true,
             title: true,
             slug: true,

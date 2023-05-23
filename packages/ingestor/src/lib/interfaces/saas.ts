@@ -1,5 +1,5 @@
 export interface GraphQLBaseObject {
-  __typename?: string;
+  __typename: string;
   uid: string;
   external_id: string;
   slug: string;

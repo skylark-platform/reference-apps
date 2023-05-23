@@ -446,6 +446,7 @@ export const createGraphQLMediaObjects = async (
             __args: args,
             __typename: true,
             uid: true,
+            slug: true,
             external_id: true,
           },
         };
@@ -532,6 +533,7 @@ export const createTranslationsForGraphQLObjects = async (
               },
               __typename: true,
               uid: true,
+              slug: true,
               external_id: true,
             },
           };

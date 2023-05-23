@@ -60,7 +60,7 @@ const getThumbnailQuery = (objectType: ObjectTypes) => {
 };
 
 export const Thumbnail = ({ uid, objectType, variant }: ThumbnailProps) => {
-  const { ref, inView } = useInView({ triggerOnce: true });
+  const { ref, inView } = useInView();
 
   const query = getThumbnailQuery(objectType);
 

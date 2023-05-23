@@ -19,16 +19,19 @@ describe("saas/utils.ts", () => {
   describe("getUidsFromField", () => {
     const objects: GraphQLBaseObject[] = [
       {
+        __typename: "Episode",
         uid: "1",
         external_id: "ext_1",
         slug: "",
       },
       {
+        __typename: "Episode",
         uid: "2",
         external_id: "account#ext_2",
         slug: "",
       },
       {
+        __typename: "Episode",
         uid: "3",
         external_id: "ext_3",
         slug: "",

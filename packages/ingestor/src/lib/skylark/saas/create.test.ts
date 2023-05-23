@@ -60,7 +60,7 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         2,
-        'query getBrands { brand_1: getBrand (external_id: "brand_1", ignore_availability: true) { uid external_id } }'
+        'query getBrands { brand_1: getBrand (external_id: "brand_1", ignore_availability: true) { __typename uid slug external_id } }'
       );
     });
 
@@ -175,6 +175,7 @@ describe("saas/create.ts", () => {
       },
       roles: [
         {
+          __typename: "Role",
           uid: "role_1",
           external_id: "ext_role_1",
           slug: "role-1",
@@ -182,6 +183,7 @@ describe("saas/create.ts", () => {
       ],
       people: [
         {
+          __typename: "Person",
           uid: "person_1",
           external_id: "ext_person_1",
           slug: "person-1",
@@ -213,7 +215,7 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         2,
-        'query getCredits { credit_1: getCredit (external_id: "credit_1", ignore_availability: true) { uid external_id } }'
+        'query getCredits { credit_1: getCredit (external_id: "credit_1", ignore_availability: true) { __typename uid slug external_id } }'
       );
     });
 
@@ -277,6 +279,7 @@ describe("saas/create.ts", () => {
     const metadata: GraphQLMetadata = {
       images: [
         {
+          __typename: "Image",
           uid: "image_1",
           external_id: "ext_image_1",
           slug: "image-1",
@@ -284,6 +287,7 @@ describe("saas/create.ts", () => {
       ],
       roles: [
         {
+          __typename: "Role",
           uid: "role_1",
           external_id: "ext_role_1",
           slug: "role-1",
@@ -291,6 +295,7 @@ describe("saas/create.ts", () => {
       ],
       people: [
         {
+          __typename: "Person",
           uid: "person_1",
           external_id: "ext_person_1",
           slug: "person-1",
@@ -298,6 +303,7 @@ describe("saas/create.ts", () => {
       ],
       credits: [
         {
+          __typename: "Credit",
           uid: "credit_1",
           external_id: "ext_credit_1",
           slug: "credit-1",
@@ -305,6 +311,7 @@ describe("saas/create.ts", () => {
       ],
       themes: [
         {
+          __typename: "Theme",
           uid: "theme_1",
           external_id: "ext_theme_1",
           slug: "theme-1",
@@ -312,6 +319,7 @@ describe("saas/create.ts", () => {
       ],
       genres: [
         {
+          __typename: "Genre",
           uid: "genre_1",
           external_id: "ext_genre_1",
           slug: "genre-1",
@@ -319,6 +327,7 @@ describe("saas/create.ts", () => {
       ],
       tags: [
         {
+          __typename: "Tag",
           uid: "tag_1",
           external_id: "ext_tag_1",
           slug: "tag-1",
@@ -326,6 +335,7 @@ describe("saas/create.ts", () => {
       ],
       ratings: [
         {
+          __typename: "Rating",
           uid: "rating_1",
           external_id: "ext_rating_1",
           slug: "rating-1",
@@ -333,6 +343,7 @@ describe("saas/create.ts", () => {
       ],
       call_to_actions: [
         {
+          __typename: "SkylarkCallToAction",
           uid: "call_to_action_1",
           external_id: "ext_cta_1",
           slug: "call-to-action-1",
@@ -420,7 +431,7 @@ describe("saas/create.ts", () => {
       expect(graphQlRequest).toHaveBeenCalledTimes(11);
       expect(graphQlRequest).toHaveBeenNthCalledWith(
         11,
-        'mutation createMediaObjects { updateEpisode_airtable-episode-1: updateEpisode (external_id: "airtable-episode-1", episode: {title: "episode-1", relationships: {}, availability: {link: []}}) { __typename uid external_id } updateEpisode_airtable-episode-2: updateEpisode (external_id: "airtable-episode-2", episode: {title: "episode-2", relationships: {}, availability: {link: []}}) { __typename uid external_id } }'
+        'mutation createMediaObjects { updateEpisode_airtable-episode-1: updateEpisode (external_id: "airtable-episode-1", episode: {title: "episode-1", relationships: {}, availability: {link: []}}) { __typename uid slug external_id } updateEpisode_airtable-episode-2: updateEpisode (external_id: "airtable-episode-2", episode: {title: "episode-2", relationships: {}, availability: {link: []}}) { __typename uid slug external_id } }'
       );
     });
 
@@ -488,7 +499,7 @@ describe("saas/create.ts", () => {
       expect(graphQlRequest).toHaveBeenCalledTimes(11);
       expect(graphQlRequest).toHaveBeenNthCalledWith(
         11,
-        'mutation createMediaObjects { updateEpisode_airtable-episode-1: updateEpisode (external_id: "airtable-episode-1", episode: {title: "episode with relationships", relationships: {themes: {link: ["theme_1"]}, genres: {link: ["genre_1"]}, ratings: {link: ["rating_1"]}, tags: {link: ["tag_1"]}, credits: {link: ["credit_1"]}}, availability: {link: []}}) { __typename uid external_id } }'
+        'mutation createMediaObjects { updateEpisode_airtable-episode-1: updateEpisode (external_id: "airtable-episode-1", episode: {title: "episode with relationships", relationships: {themes: {link: ["theme_1"]}, genres: {link: ["genre_1"]}, ratings: {link: ["rating_1"]}, tags: {link: ["tag_1"]}, credits: {link: ["credit_1"]}}, availability: {link: []}}) { __typename uid slug external_id } }'
       );
     });
 
@@ -562,7 +573,7 @@ describe("saas/create.ts", () => {
       expect(graphQlRequest).toHaveBeenCalledTimes(12);
       expect(graphQlRequest).toHaveBeenNthCalledWith(
         12,
-        'mutation createMediaObjects { updateEpisode_airtable-episode-3: updateEpisode (external_id: "airtable-episode-3", episode: {title: "episode 3", relationships: {episodes: {link: undefined}}, availability: {link: []}}) { __typename uid external_id } }'
+        'mutation createMediaObjects { updateEpisode_airtable-episode-3: updateEpisode (external_id: "airtable-episode-3", episode: {title: "episode 3", relationships: {episodes: {link: undefined}}, availability: {link: []}}) { __typename uid slug external_id } }'
       );
     });
   });
@@ -623,7 +634,7 @@ describe("saas/create.ts", () => {
 
       expect(graphQlRequest).toHaveBeenNthCalledWith(
         7,
-        'mutation createMediaObjectTranslations { translation_es_ES_translation-1: updateEpisode (uid: "episode-1-uid", language: "es-ES", episode: {title: "Title in spanish"}) { __typename uid external_id } }'
+        'mutation createMediaObjectTranslations { translation_es_ES_translation-1: updateEpisode (uid: "episode-1-uid", language: "es-ES", episode: {title: "Title in spanish"}) { __typename uid slug external_id } }'
       );
     });
 
@@ -648,7 +659,7 @@ describe("saas/create.ts", () => {
 
       expect(graphQlRequest).toHaveBeenNthCalledWith(
         7,
-        'mutation createMediaObjectTranslations { translation_es_ES_translation-1: updateEpisode (uid: "episode-1-uid", language: "es-ES", episode: {title: "Title in spanishy portuguese"}) { __typename uid external_id } translation_pt_PT_translation-1: updateEpisode (uid: "episode-1-uid", language: "pt-PT", episode: {title: "Title in spanishy portuguese"}) { __typename uid external_id } }'
+        'mutation createMediaObjectTranslations { translation_es_ES_translation-1: updateEpisode (uid: "episode-1-uid", language: "es-ES", episode: {title: "Title in spanishy portuguese"}) { __typename uid slug external_id } translation_pt_PT_translation-1: updateEpisode (uid: "episode-1-uid", language: "pt-PT", episode: {title: "Title in spanishy portuguese"}) { __typename uid slug external_id } }'
       );
     });
 
@@ -689,7 +700,7 @@ describe("saas/create.ts", () => {
 
       expect(graphQlRequest).toHaveBeenNthCalledWith(
         7,
-        'mutation createMediaObjectTranslations { translation_es_ES_translation-1: updateEpisode (uid: "episode-1-uid", language: "es-ES", episode: {title: "Title in spanish"}) { __typename uid external_id } translation_pt_PT_translation-2: updateEpisode (uid: "episode-1-uid", language: "pt-PT", episode: {title: "Title in portuguese"}) { __typename uid external_id } translation_pt_PT_translation-3: updateBrand (uid: "brand-1-uid", language: "pt-PT", brand: {title: "Brand title in portuguese"}) { __typename uid external_id } }'
+        'mutation createMediaObjectTranslations { translation_es_ES_translation-1: updateEpisode (uid: "episode-1-uid", language: "es-ES", episode: {title: "Title in spanish"}) { __typename uid slug external_id } translation_pt_PT_translation-2: updateEpisode (uid: "episode-1-uid", language: "pt-PT", episode: {title: "Title in portuguese"}) { __typename uid slug external_id } translation_pt_PT_translation-3: updateBrand (uid: "brand-1-uid", language: "pt-PT", brand: {title: "Brand title in portuguese"}) { __typename uid slug external_id } }'
       );
     });
 
