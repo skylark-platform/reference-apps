@@ -8,6 +8,11 @@ export const heros: CarouselItem[] = [
     duration: "1hr 25m",
     releaseDate: "2018",
     type: "movie",
+    callToAction: {
+      text: "Watch for free",
+      description: "30 day free trial available. £12.99/mo after.",
+      type: "LINK_TO_RELATED_OBJECT",
+    },
   },
   {
     title: "Game of Thrones",
@@ -15,6 +20,11 @@ export const heros: CarouselItem[] = [
     image: "/heros/got.png",
     releaseDate: "2011",
     type: "season",
+    callToAction: {
+      text: "Watch for free",
+      description: "30 day free trial available. £12.99/mo after.",
+      type: "LINK_TO_RELATED_OBJECT",
+    },
   },
   {
     title: "Sing 2",
@@ -23,6 +33,11 @@ export const heros: CarouselItem[] = [
     duration: "1hr 25m",
     releaseDate: "2022",
     type: "movie",
+    callToAction: {
+      text: "Watch for free",
+      description: "30 day free trial available. £12.99/mo after.",
+      type: "LINK_TO_RELATED_OBJECT",
+    },
   },
   {
     title: "Us",
@@ -31,5 +46,10 @@ export const heros: CarouselItem[] = [
     duration: "1hr 25m",
     releaseDate: "2019",
     type: "movie",
+    callToAction: {
+      text: "Watch for free",
+      description: "30 day free trial available. £12.99/mo after.",
+      type: "LINK_TO_RELATED_OBJECT",
+    },
   },
 ];

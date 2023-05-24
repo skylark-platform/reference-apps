@@ -46,7 +46,7 @@ export const Navigation: React.FC<NavigationProps> = ({
   const onDesktop = !["", "sm"].includes(twBreakpoint as string);
   return (
     <>
-      <div className="absolute top-0 left-0 z-90 flex md:hidden">
+      <div className="absolute left-0 top-0 z-90 flex md:hidden">
         <NavigationToggle
           variant={openOnMobile ? "close" : "open"}
           onClick={() => setMobileOpen(!openOnMobile)}

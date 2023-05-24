@@ -1,4 +1,4 @@
-import useSWR from "swr";
+import { useQuery } from "@tanstack/react-query";
 import { Dimensions, hasProperty } from "@skylark-reference-apps/lib";
 import {
   useDimensions,
@@ -17,12 +17,12 @@ const shouldUseExternalId = (lookupValue: string) =>
   lookupValue.startsWith("ingestor_set") ||
   lookupValue.startsWith("streamtv_");
 
-const fetcher = <T extends Metadata>([query, uid, dimensions, opts]: [
+const fetcher = <T extends Metadata>(
   query: string,
   uid: string,
   dimensions: Dimensions,
   opts: UseObjectOpts
-]) =>
+) =>
   skylarkRequestWithDimensions<{ getObject: T }>(query, dimensions, {
     [opts.useExternalId ? "externalId" : "uid"]: uid,
     language: dimensions.language,
@@ -42,16 +42,16 @@ export const useObject = <T extends Metadata>(
       ? opts.useExternalId
       : shouldUseExternalId(uid);
 
-  const { data, error, isLoading } = useSWR<T, GQLError>(
-    opts?.disabled
-      ? null
-      : [query, uid, dimensions, { ...opts, useExternalId }],
-    fetcher
-  );
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["Search", query, uid, dimensions],
+    queryFn: () =>
+      fetcher<T>(query, uid, dimensions, { ...opts, useExternalId }),
+    enabled: opts?.disabled,
+  });
 
   return {
     data,
-    isLoading: !uid || !query || isLoading || (!error && !data),
-    isError: error,
+    isLoading: !uid || isLoading,
+    isError: error as GQLError,
   };
 };

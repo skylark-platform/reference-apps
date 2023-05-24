@@ -1,6 +1,9 @@
 import { gql } from "graphql-request";
+import { CallToActionListingFragment, ImageListingFragment } from "./fragments";
 
 export const GET_SET_THUMBNAIL = gql`
+  ${ImageListingFragment}
+
   query GET_SET_THUMBNAIL(
     $uid: String!
     $language: String!
@@ -22,17 +25,16 @@ export const GET_SET_THUMBNAIL = gql`
       synopsis
       synopsis_short
       images {
-        objects {
-          title
-          type
-          url
-        }
+        ...imageListingFragment
       }
     }
   }
 `;
 
 export const GET_SET_FOR_CAROUSEL = gql`
+  ${ImageListingFragment}
+  ${CallToActionListingFragment}
+
   query GET_SET_FOR_CAROUSEL(
     $uid: String!
     $language: String!
@@ -60,9 +62,10 @@ export const GET_SET_FOR_CAROUSEL = gql`
               synopsis_short
               release_date
               images {
-                objects {
-                  url
-                }
+                ...imageListingFragment
+              }
+              call_to_actions(limit: 1) {
+                ...callToActionListingFragment
               }
             }
             ... on Episode {
@@ -72,9 +75,10 @@ export const GET_SET_FOR_CAROUSEL = gql`
               synopsis_short
               release_date
               images {
-                objects {
-                  url
-                }
+                ...imageListingFragment
+              }
+              call_to_actions(limit: 1) {
+                ...callToActionListingFragment
               }
             }
             ... on Season {
@@ -84,9 +88,10 @@ export const GET_SET_FOR_CAROUSEL = gql`
               synopsis_short
               release_date
               images {
-                objects {
-                  url
-                }
+                ...imageListingFragment
+              }
+              call_to_actions(limit: 1) {
+                ...callToActionListingFragment
               }
             }
             ... on Brand {
@@ -96,9 +101,10 @@ export const GET_SET_FOR_CAROUSEL = gql`
               synopsis_short
               release_date
               images {
-                objects {
-                  url
-                }
+                ...imageListingFragment
+              }
+              call_to_actions(limit: 1) {
+                ...callToActionListingFragment
               }
             }
             ... on SkylarkSet {
@@ -107,9 +113,10 @@ export const GET_SET_FOR_CAROUSEL = gql`
               synopsis
               synopsis_short
               images {
-                objects {
-                  url
-                }
+                ...imageListingFragment
+              }
+              call_to_actions(limit: 1) {
+                ...callToActionListingFragment
               }
             }
           }
@@ -120,6 +127,8 @@ export const GET_SET_FOR_CAROUSEL = gql`
 `;
 
 export const GET_COLLECTION_SET = gql`
+  ${ImageListingFragment}
+
   query GET_COLLECTION_SET(
     $uid: String
     $externalId: String
@@ -144,11 +153,7 @@ export const GET_COLLECTION_SET = gql`
       synopsis_short
       release_date
       images {
-        objects {
-          title
-          type
-          url
-        }
+        ...imageListingFragment
       }
       ratings {
         objects {
@@ -167,8 +172,8 @@ export const GET_COLLECTION_SET = gql`
   }
 `;
 
-export const GET_HOME_PAGE_SET = gql`
-  query GET_HOME_PAGE_SET(
+export const GET_PAGE_SET = gql`
+  query GET_PAGE_SET(
     $uid: String
     $externalId: String
     $language: String!
@@ -187,6 +192,7 @@ export const GET_HOME_PAGE_SET = gql`
       __typename
       uid
       title
+      type
       content {
         objects {
           object {

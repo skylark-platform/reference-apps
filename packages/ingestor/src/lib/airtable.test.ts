@@ -39,31 +39,31 @@ describe("airtable", () => {
         assetTypes: [],
         imageTypes: [],
         tagTypes: [],
+        callToActions: [],
+        languages: [],
         translations: {
           mediaObjects: [],
+          callToActions: [],
         },
         dimensions: {
-          affiliates: [],
           customerTypes: [],
           deviceTypes: [],
-          languages: [],
-          locales: [],
-          operatingSystems: [],
-          regions: [],
-          viewingContext: [],
         },
       };
 
-      // -1 as dimensions isn't a table
+      // -2 as dimensions and translations isn't a table
       const numTables =
-        Object.keys(tables).length - 1 + Object.keys(tables.dimensions).length;
+        Object.keys(tables).length -
+        2 +
+        Object.keys(tables.dimensions).length +
+        Object.keys(tables.translations).length;
 
       // Act.
       await getAllTables("all");
 
       // Assert.
       expect(mockedGet).toBeCalledWith(
-        "https://api.airtable.com/v0/base-id/affiliates?offset=",
+        "https://api.airtable.com/v0/base-id/customer-types?offset=",
         { headers: { Authorization: "Bearer api-key" } }
       );
       expect(mockedGet).toBeCalledTimes(numTables);
@@ -89,31 +89,31 @@ describe("airtable", () => {
         assetTypes: [],
         imageTypes: [],
         tagTypes: [],
+        callToActions: [],
+        languages: [],
         translations: {
           mediaObjects: [],
+          callToActions: [],
         },
         dimensions: {
-          affiliates: [],
           customerTypes: [],
           deviceTypes: [],
-          languages: [],
-          locales: [],
-          operatingSystems: [],
-          regions: [],
-          viewingContext: [],
         },
       };
 
-      // -1 as dimensions isn't a table
+      // -2 as dimensions and translations isn't a table
       const numTables =
-        Object.keys(tables).length - 1 + Object.keys(tables.dimensions).length;
+        Object.keys(tables).length -
+        2 +
+        Object.keys(tables.dimensions).length +
+        Object.keys(tables.translations).length;
 
       // Act.
       await getAllTables("all");
 
       // Assert.
       expect(mockedGet).toBeCalledWith(
-        "https://api.airtable.com/v0/base-id/affiliates?offset=returnedoffset",
+        "https://api.airtable.com/v0/base-id/customer-types?offset=returnedoffset",
         { headers: { Authorization: "Bearer api-key" } }
       );
       expect(mockedGet).toBeCalledTimes(numTables + 1); // +1 for offset call
@@ -182,7 +182,7 @@ describe("airtable", () => {
       // Assert.
       // eslint-disable-next-line no-console
       expect(console.warn).toBeCalledWith(
-        `warn: Table "affiliates" does not exist`
+        `warn: Table "customer-types" does not exist`
       );
     });
 

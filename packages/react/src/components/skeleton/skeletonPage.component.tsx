@@ -62,7 +62,7 @@ export const SkeletonPage: React.FC<SkeletonProps> = ({
                 style={{ width: `${100 / numPerRow}%` }}
                 variants={item}
               >
-                <div className="aspect-w-16 aspect-h-9 animate-pulse rounded-sm bg-gray-700"></div>
+                <div className="aspect-h-9 aspect-w-16 animate-pulse rounded-sm bg-gray-700"></div>
               </motion.div>
             ))}
           </motion.div>

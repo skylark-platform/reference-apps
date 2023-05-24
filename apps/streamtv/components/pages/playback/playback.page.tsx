@@ -16,7 +16,9 @@ import {
   MetadataPanel,
   Player,
   SkeletonPage,
-} from "../../components";
+} from "@skylark-reference-apps/react";
+import { Dayjs } from "dayjs";
+import { getTimeFromNow } from "../../../lib/utils";
 
 interface Props {
   loading?: boolean;
@@ -48,6 +50,7 @@ interface Props {
     presenters?: string[];
     engineers?: string[];
   };
+  availabilityEndDate: Dayjs | null;
 }
 
 export const PlaybackPage: NextPage<Props> = ({
@@ -64,6 +67,7 @@ export const PlaybackPage: NextPage<Props> = ({
   brand,
   season,
   credits,
+  availabilityEndDate,
 }) => {
   const { t, lang } = useTranslation("common");
 
@@ -81,7 +85,11 @@ export const PlaybackPage: NextPage<Props> = ({
         <div className="flex w-full flex-col px-gutter sm:px-sm-gutter md:flex-row md:py-2 lg:px-lg-gutter xl:px-xl-gutter">
           <div className="h-full w-full pb-4 md:w-7/12">
             <InformationPanel
-              availableUntil={12}
+              availableUntil={
+                availabilityEndDate
+                  ? getTimeFromNow(availabilityEndDate)
+                  : undefined
+              }
               brand={brand}
               description={synopsis}
               duration={player.duration}
@@ -93,7 +101,7 @@ export const PlaybackPage: NextPage<Props> = ({
             />
           </div>
           <span className="flex border-gray-800 bg-gray-900 md:mx-3 md:border-r" />
-          <div className="h-full w-full pt-4 pl-1 sm:pl-5 md:w-5/12">
+          <div className="h-full w-full pl-1 pt-4 sm:pl-5 md:w-5/12">
             <div className="flex justify-center">
               <span className="mb-4 w-4/5 border-b border-gray-800 md:hidden" />
             </div>

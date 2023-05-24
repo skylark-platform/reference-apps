@@ -1,22 +1,18 @@
 import { FieldSet, Record } from "airtable";
 
 export interface DimensionAirtables {
-  affiliates: Record<FieldSet>[];
   customerTypes: Record<FieldSet>[];
   deviceTypes: Record<FieldSet>[];
-  languages: Record<FieldSet>[];
-  locales: Record<FieldSet>[];
-  operatingSystems: Record<FieldSet>[];
-  regions: Record<FieldSet>[];
-  viewingContext: Record<FieldSet>[];
 }
 
 export interface TranslationAirtables {
   mediaObjects: Record<FieldSet>[];
+  callToActions: Record<FieldSet>[];
 }
 
 export interface Airtables {
   dimensions: DimensionAirtables;
+  languages: Record<FieldSet>[];
   translations: TranslationAirtables;
   mediaObjects: Record<FieldSet>[];
   roles: Record<FieldSet>[];
@@ -32,6 +28,7 @@ export interface Airtables {
   assetTypes: Record<FieldSet>[];
   imageTypes: Record<FieldSet>[];
   tagTypes: Record<FieldSet>[];
+  callToActions: Record<FieldSet>[];
 }
 
 export interface AvailabilityTableFields extends FieldSet {
@@ -40,12 +37,6 @@ export interface AvailabilityTableFields extends FieldSet {
   type: string;
   starts?: string;
   ends?: string;
-  affiliates?: string[];
   devices?: string[];
   customers?: string[];
-  languages?: string[];
-  locales?: string[];
-  "operating-systems"?: string[];
-  regions?: string[];
-  "viewing-context"?: string[];
 }

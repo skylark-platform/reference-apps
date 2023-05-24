@@ -1,5 +1,4 @@
 import type { GetServerSideProps, NextPage } from "next";
-import { PlaybackPage } from "@skylark-reference-apps/react";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
@@ -7,15 +6,17 @@ import {
   convertObjectToName,
   formatGraphQLCredits,
   getFirstRatingValue,
+  getFurthestAvailabilityEndDate,
   getGraphQLCreditsByType,
   getGraphQLImageSrc,
   getSynopsisByOrderForGraphQLObject,
   getTitleByOrderForGraphQLObject,
 } from "../../lib/utils";
-import { ImageType, Movie } from "../../types/gql";
+import { Availability, ImageType, Movie } from "../../types/gql";
 import { DisplayError } from "../../components/displayError";
 import { useObject } from "../../hooks/useObject";
 import { GET_MOVIE } from "../../graphql/queries";
+import { PlaybackPage } from "../../components/pages/playback";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject(
@@ -65,6 +66,10 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const asset = movie?.assets?.objects?.[0];
   const playbackUrl = asset?.url || "/mux-video-intro.mp4";
 
+  const availabilityEndDate = getFurthestAvailabilityEndDate(
+    movie?.availability?.objects as Availability[] | undefined
+  );
+
   return (
     <>
       <NextSeo
@@ -73,6 +78,7 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         title={title || seo.title}
       />
       <PlaybackPage
+        availabilityEndDate={availabilityEndDate}
         brand={{
           title: brandTitle,
         }}

@@ -91,7 +91,7 @@ const wesAndersonMoviesCollection: SetConfig = {
 };
 
 const gameOfThronesUniverseSlider: SetConfig = {
-  externalId: createStreamTVExternalId("game_of_thrones_universe"),
+  externalId: createStreamTVExternalId("game_of_thrones_universe_slider"),
   title: "Game of Thrones Universe Slider",
   slug: "game-of-thrones-universe-slider",
   graphQlSetType: "SLIDER",
@@ -149,11 +149,11 @@ const discoverCollectionRail: SetConfig = {
       set_type: "collection",
       slug: wesAndersonMoviesCollection.slug,
     },
-    // {
-    //   type: "set",
-    //   set_type: "homepage",
-    //   slug: gameOfThronesUniversePage.slug,
-    // },
+    {
+      type: "set",
+      set_type: "page",
+      slug: gameOfThronesUniversePage.slug,
+    },
   ],
 };
 

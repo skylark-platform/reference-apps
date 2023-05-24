@@ -174,9 +174,9 @@ describe("utils.ts", () => {
     });
   });
 
-  describe("convertTypenameToEntertainmentType", () => {
+  describe("convertTypenameToObjectType", () => {
     it("converts a given typename to the expected type", () => {
-      const got = utils.convertTypenameToEntertainmentType("Episode");
+      const got = utils.convertTypenameToObjectType("Episode");
       expect(got).toEqual("episode");
     });
   });
@@ -197,9 +197,9 @@ describe("utils.ts", () => {
       expect(got).toEqual("slider");
     });
 
-    it("defaults to a set type of homepage", () => {
+    it("defaults to a set type of page", () => {
       const got = utils.convertGraphQLSetType("PAGE");
-      expect(got).toEqual("homepage");
+      expect(got).toEqual("page");
     });
   });
 

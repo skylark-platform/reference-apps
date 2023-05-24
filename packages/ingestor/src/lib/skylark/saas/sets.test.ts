@@ -5,8 +5,8 @@ import {
   GraphQLMetadata,
   SetConfig,
 } from "../../interfaces";
-import { ApiObjectType } from "../../types";
 import { createOrUpdateGraphQLSet } from "./sets";
+import { gqlObjectMeta } from "./utils";
 
 jest.mock("@skylark-reference-apps/lib");
 
@@ -25,7 +25,6 @@ describe("saas/sets.ts", () => {
     externalId: "home_page_slider",
     title: "Home page hero",
     slug: "media-reference-home-page-hero",
-    set_type_slug: "slider",
     graphQlSetType: "SLIDER",
     contents: [
       { type: "brands", slug: "game-of-thrones" },
@@ -40,8 +39,9 @@ describe("saas/sets.ts", () => {
 
   const mediaObjects: GraphQLBaseObject[] = setConfig.contents.map(
     (content) => {
-      const { type, slug } = content as { type: ApiObjectType; slug: string };
+      const { type, slug } = content as { type: string; slug: string };
       return {
+        __typename: gqlObjectMeta(type).objectType,
         external_id: `${type}-${slug}`,
         uid: `${type}-${slug}`,
         slug,
@@ -121,7 +121,7 @@ describe("saas/sets.ts", () => {
           [] as Records<FieldSet>
         );
         expect(graphQlRequest).toBeCalledWith(
-          'mutation { createSkylarkSet_home_page_slider: createSkylarkSet (skylark_set: {title: "Home page hero", external_id: "home_page_slider", content: {Episode: {link: [{position: 5, uid: "episodes-Game of Thrones S01E01"}]}, Season: {link: [{position: 6, uid: "seasons-Game of Thrones S01"}]}, Brand: {link: [{position: 1, uid: "brands-game-of-thrones"}]}, Movie: {link: [{position: 2, uid: "movies-deadpool-2"}, {position: 3, uid: "movies-sing-2"}, {position: 4, uid: "movies-us"}]}, SkylarkSet: {link: []}}, availability: {link: ["availability-1"]}}) { uid external_id slug } }'
+          'mutation { createSkylarkSet_home_page_slider: createSkylarkSet (skylark_set: {title: "Home page hero", external_id: "home_page_slider", content: {Episode: {link: [{position: 5, uid: "episodes-Game of Thrones S01E01"}]}, Season: {link: [{position: 6, uid: "seasons-Game of Thrones S01"}]}, Brand: {link: [{position: 1, uid: "brands-game-of-thrones"}]}, Movie: {link: [{position: 2, uid: "movies-deadpool-2"}, {position: 3, uid: "movies-sing-2"}, {position: 4, uid: "movies-us"}]}, SkylarkSet: {link: []}}, availability: {link: ["availability-1"]}}) { __typename uid external_id slug } }'
         );
       });
     });
@@ -169,7 +169,7 @@ describe("saas/sets.ts", () => {
         expect(graphQlRequest).toBeCalledTimes(4);
         expect(graphQlRequest).toHaveBeenNthCalledWith(
           3,
-          'mutation { createSkylarkSet_en_GB_home_page_slider: createSkylarkSet (language: "en-GB", skylark_set: {external_id: "home_page_slider", title: "Home page hero", title_short: "English Title", content: {Episode: {link: [{position: 5, uid: "episodes-Game of Thrones S01E01"}]}, Season: {link: [{position: 6, uid: "seasons-Game of Thrones S01"}]}, Brand: {link: [{position: 1, uid: "brands-game-of-thrones"}]}, Movie: {link: [{position: 2, uid: "movies-deadpool-2"}, {position: 3, uid: "movies-sing-2"}, {position: 4, uid: "movies-us"}]}, SkylarkSet: {link: []}}, availability: {link: ["availability-1"]}, relationships: {}}) { uid external_id slug } }'
+          'mutation { createSkylarkSet_en_GB_home_page_slider: createSkylarkSet (language: "en-GB", skylark_set: {external_id: "home_page_slider", title: "Home page hero", title_short: "English Title", content: {Episode: {link: [{position: 5, uid: "episodes-Game of Thrones S01E01"}]}, Season: {link: [{position: 6, uid: "seasons-Game of Thrones S01"}]}, Brand: {link: [{position: 1, uid: "brands-game-of-thrones"}]}, Movie: {link: [{position: 2, uid: "movies-deadpool-2"}, {position: 3, uid: "movies-sing-2"}, {position: 4, uid: "movies-us"}]}, SkylarkSet: {link: []}}, availability: {link: ["availability-1"]}, relationships: {}}) { __typename uid external_id slug } }'
         );
       });
 
@@ -187,7 +187,7 @@ describe("saas/sets.ts", () => {
         expect(graphQlRequest).toBeCalledTimes(4);
         expect(graphQlRequest).toHaveBeenNthCalledWith(
           4,
-          'mutation { updateSkylarkSet_pt_PT_home_page_slider: updateSkylarkSet (external_id: "home_page_slider", language: "pt-PT", skylark_set: {title: "Home page hero", title_short: "Portuguese Title"}) { uid external_id slug } }'
+          'mutation { updateSkylarkSet_pt_PT_home_page_slider: updateSkylarkSet (external_id: "home_page_slider", language: "pt-PT", skylark_set: {title: "Home page hero", title_short: "Portuguese Title"}) { __typename uid external_id slug } }'
         );
       });
     });

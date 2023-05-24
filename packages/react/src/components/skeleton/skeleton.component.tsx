@@ -13,10 +13,7 @@ const item = {
   show: { opacity: 1, transition: { duration: 1 } },
 };
 
-export const Skeleton: React.FC<SkeletonProps> = ({
-  show = true,
-  isPortrait,
-}) => (
+export const Skeleton: React.FC<SkeletonProps> = ({ show, isPortrait }) => (
   <>
     {show && (
       <motion.div

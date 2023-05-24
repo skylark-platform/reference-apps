@@ -68,26 +68,10 @@ const getTable = async (
 export const getAllTables = async (
   contentType: "all" | "streamtv" | "slxdemos"
 ): Promise<Airtables> => {
-  const dimensionTables = [
-    "affiliates",
-    "customer-types",
-    "device-types",
-    "languages",
-    "locales",
-    "operating-systems",
-    "regions",
-    "viewing-context",
-  ];
-  const [
-    affiliates,
-    customerTypes,
-    deviceTypes,
-    languages,
-    locales,
-    operatingSystems,
-    regions,
-    viewingContext,
-  ] = await Promise.all(dimensionTables.map((table) => getTable(table)));
+  const dimensionTables = ["customer-types", "device-types"];
+  const [customerTypes, deviceTypes] = await Promise.all(
+    dimensionTables.map((table) => getTable(table))
+  );
 
   const tables = [
     "Media Content",
@@ -105,6 +89,9 @@ export const getAllTables = async (
     "asset-types",
     "image-types",
     "tag-categories",
+    "languages",
+    "call-to-actions",
+    "call-to-actions - Translations",
   ];
   const [
     mediaObjects,
@@ -122,6 +109,9 @@ export const getAllTables = async (
     assetTypes,
     imageTypes,
     tagTypes,
+    languages,
+    callToActions,
+    callToActionsTranslations,
   ] = await Promise.all(
     tables.map(async (table) => {
       const data = await getTable(table);
@@ -138,17 +128,12 @@ export const getAllTables = async (
 
   return {
     dimensions: {
-      affiliates,
       customerTypes,
       deviceTypes,
-      languages,
-      locales,
-      operatingSystems,
-      regions,
-      viewingContext,
     },
     translations: {
       mediaObjects: mediaObjectsTranslations,
+      callToActions: callToActionsTranslations,
     },
     mediaObjects,
     roles,
@@ -164,5 +149,7 @@ export const getAllTables = async (
     assetTypes,
     imageTypes,
     tagTypes,
+    callToActions,
+    languages,
   };
 };

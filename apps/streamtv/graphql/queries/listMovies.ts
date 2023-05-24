@@ -14,7 +14,7 @@ export const LIST_MOVIES = gql`
         { dimension: "customer-types", value: $customerType }
       ]
       next_token: $nextToken
-      limit: 10
+      limit: 20
     ) {
       next_token
       objects {

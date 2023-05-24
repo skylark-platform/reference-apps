@@ -7,14 +7,39 @@ import { GET_SET_FOR_CAROUSEL } from "../graphql/queries";
 import { useObject } from "../hooks/useObject";
 import {
   convertGraphQLSetType,
-  convertTypenameToEntertainmentType,
+  convertTypenameToObjectType,
   getGraphQLImageSrc,
 } from "../lib/utils";
-import { Entertainment, ImageType, SetContent, SkylarkSet } from "../types";
+import {
+  Entertainment,
+  ImageType,
+  SetContent,
+  SkylarkSet,
+  StreamTVSupportCallToActionType,
+} from "../types";
 
 interface CarouselProps {
   uid: string;
 }
+
+const getFirstCallToAction = (
+  callToActions: Entertainment["call_to_actions"]
+): CarouselItem["callToAction"] => {
+  if (!callToActions?.objects?.[0]?.type) {
+    return undefined;
+  }
+
+  const callToAction = callToActions.objects[0];
+
+  return {
+    text: callToAction.text || callToAction.text_short || null,
+    description:
+      callToAction.description || callToAction.description_short || null,
+    type: callToAction.type as StreamTVSupportCallToActionType,
+    url: callToAction.url as string | undefined,
+    urlPath: callToAction.url_path as string | undefined,
+  };
+};
 
 export const Carousel = ({ uid }: CarouselProps) => {
   const { data } = useObject<SkylarkSet>(GET_SET_FOR_CAROUSEL, uid);
@@ -25,7 +50,7 @@ export const Carousel = ({ uid }: CarouselProps) => {
         const parsedType =
           object.__typename === "SkylarkSet"
             ? convertGraphQLSetType(object?.type || "")
-            : convertTypenameToEntertainmentType(object.__typename);
+            : convertTypenameToObjectType(object.__typename);
 
         return {
           title: object.title_short || object.title || "",
@@ -37,6 +62,7 @@ export const Carousel = ({ uid }: CarouselProps) => {
             "",
           type: parsedType,
           image: getGraphQLImageSrc(object.images, ImageType.Main),
+          callToAction: getFirstCallToAction(object.call_to_actions),
         };
       })
     : [];

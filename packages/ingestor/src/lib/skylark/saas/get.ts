@@ -93,7 +93,9 @@ export const getExistingObjects = async (
       const operation = {
         __aliasFor: `get${objectType}`,
         __args: args,
+        __typename: true,
         uid: true,
+        slug: true,
         external_id: true,
       };
 

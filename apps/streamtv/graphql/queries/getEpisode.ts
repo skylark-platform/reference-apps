@@ -114,6 +114,11 @@ export const GET_EPISODE = gql`
           value
         }
       }
+      availability(limit: 20) {
+        objects {
+          end
+        }
+      }
     }
   }
 `;

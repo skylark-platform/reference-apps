@@ -10,7 +10,6 @@ const homePageSlider: SetConfig = {
   externalId: createStreamTVExternalId("home_page_slider"),
   title: "Home page hero",
   slug: "home-page-hero",
-  set_type_slug: "slider",
   graphQlSetType: "SLIDER",
   contents: [
     { type: "brands", slug: "slx-deep-dives" },
@@ -22,7 +21,6 @@ const mediaReferenceHomepage: SetConfig = {
   externalId: createStreamTVExternalId("homepage"),
   title: "Homepage",
   slug: "media-reference-homepage",
-  set_type_slug: "homepage",
   graphQlSetType: "PAGE",
   contents: [
     { type: "set", set_type: "slider", slug: homePageSlider.slug },

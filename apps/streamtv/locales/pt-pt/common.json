@@ -43,7 +43,13 @@
   "tv-shows": "Televisão",
   "movies-page-description": "Pesquise 100 dos melhores e mais recentes títulos, disponíveis para assistir em StreamTV",
   "by-skylark": "Por Skylark",
-  "available-for": "Disponível para {{days}} dias",
+  "available-for": {
+    "leaving-today": "Saindo Hoje",
+    "days": "Partindo Em {{number}} Dias",
+    "months": "Partindo Em {{number}} Meses",
+    "years": "Partindo Em {{number}} Anos",
+    "ever": "Um Grampo StreamTV"
+  },
   "show-more": "Mostre mais",
   "show-less": "Mostre menos",
   "released": "Lançado",

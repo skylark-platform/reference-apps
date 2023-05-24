@@ -104,6 +104,11 @@ export const GET_MOVIE = gql`
           value
         }
       }
+      availability(limit: 20) {
+        objects {
+          end
+        }
+      }
     }
   }
 `;

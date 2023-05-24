@@ -29,9 +29,9 @@ export const StandardThumbnail: React.FC<StandardThumbnailProps> = (props) => {
       contentLocation={contentLocation || "inside"}
       duration={undefined}
     >
-      <H4 className="mt-2 mb-0.5 text-white">{title}</H4>
+      <H4 className="mb-0.5 mt-2 text-white">{title}</H4>
       {description && (
-        <p className="mt-0.5 mb-3 text-xs text-gray-400 line-clamp-4 md:text-sm">
+        <p className="mb-3 mt-0.5 line-clamp-4 text-xs text-gray-400 md:text-sm">
           {description}
         </p>
       )}

@@ -15,36 +15,12 @@ import { createGraphQLOperation, getValidFields } from "./utils";
 
 const dimensionsConfig: { slug: DimensionTypes; title: string }[] = [
   {
-    title: "Affiliates",
-    slug: "affiliates",
-  },
-  {
     title: "Customer Type",
     slug: "customer-types",
   },
   {
     title: "Device Type",
     slug: "device-types",
-  },
-  {
-    title: "Locales",
-    slug: "locales",
-  },
-  {
-    title: "Languages",
-    slug: "languages",
-  },
-  {
-    title: "Operating Systems",
-    slug: "operating-systems",
-  },
-  {
-    title: "Regions",
-    slug: "regions",
-  },
-  {
-    title: "Viewing Context",
-    slug: "viewing-context",
   },
 ];
 
@@ -60,6 +36,7 @@ const getExistingDimensions = async (
           next_token: nextToken || "",
         },
         objects: {
+          __typename: true,
           uid: true,
           title: true,
           slug: true,
@@ -103,6 +80,7 @@ const getExistingDimensionValues = async (
           count: true,
           next_token: true,
           objects: {
+            __typename: true,
             uid: true,
             title: true,
             slug: true,
@@ -248,39 +226,21 @@ export const createOrUpdateScheduleDimensionValues = async (
 ): Promise<GraphQLMetadata["dimensions"]> => {
   const dimensionValues: { type: DimensionTypes; data: Record<FieldSet>[] }[] =
     [
-      { type: "affiliates", data: airtable.affiliates },
       { type: "customer-types", data: airtable.customerTypes },
       { type: "device-types", data: airtable.deviceTypes },
-      { type: "locales", data: airtable.locales },
-      { type: "operating-systems", data: airtable.operatingSystems },
-      { type: "regions", data: airtable.regions },
-      { type: "viewing-context", data: airtable.viewingContext },
     ];
 
   const dimensions: GraphQLDimension[] = await getExistingDimensions();
   const validProperties = await getValidPropertiesForObject("DimensionValue");
 
-  const [
-    affiliates,
-    customerTypes,
-    deviceTypes,
-    locales,
-    operatingSystems,
-    regions,
-    viewingContext,
-  ] = await Promise.all(
+  const [customerTypes, deviceTypes] = await Promise.all(
     dimensionValues.map(({ data, type }) =>
       createOrUpdateDimensionValues(type, validProperties, data, dimensions)
     )
   );
   return {
-    affiliates,
     customerTypes,
     deviceTypes,
-    locales,
-    operatingSystems,
-    regions,
-    viewingContext,
   };
 };
 
@@ -333,10 +293,6 @@ export const createOrUpdateAvailability = async (
         value_slugs: string[];
       }[] = [
         {
-          dimension_slug: "affiliates",
-          value_slugs: getValueSlugs(dimensions.affiliates, fields.affiliates),
-        },
-        {
           dimension_slug: "customer-types",
           value_slugs: getValueSlugs(
             dimensions.customerTypes,
@@ -346,28 +302,6 @@ export const createOrUpdateAvailability = async (
         {
           dimension_slug: "device-types",
           value_slugs: getValueSlugs(dimensions.deviceTypes, fields.devices),
-        },
-        {
-          dimension_slug: "locales",
-          value_slugs: getValueSlugs(dimensions.locales, fields.locales),
-        },
-        {
-          dimension_slug: "operating-systems",
-          value_slugs: getValueSlugs(
-            dimensions.operatingSystems,
-            fields["operating-systems"]
-          ),
-        },
-        {
-          dimension_slug: "regions",
-          value_slugs: getValueSlugs(dimensions.regions, fields.regions),
-        },
-        {
-          dimension_slug: "viewing-context",
-          value_slugs: getValueSlugs(
-            dimensions.viewingContext,
-            fields["viewing-context"]
-          ),
         },
       ];
 

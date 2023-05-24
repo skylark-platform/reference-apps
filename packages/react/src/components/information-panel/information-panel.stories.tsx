@@ -18,7 +18,7 @@ Default.args = {
   title: "Winter is Coming",
   duration: 57,
   rating: "18+",
-  availableUntil: 12,
+  availableUntil: { unit: "day", number: 12 },
   description:
     "Series Premiere. Lord Stark is troubled by disturbing reports from a Night's Watch deserter.",
   themes: ["Drama", "Mythical", "Based on a book"],

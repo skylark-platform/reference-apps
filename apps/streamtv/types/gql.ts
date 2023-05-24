@@ -49,6 +49,7 @@ export type AssignDimensionInput = {
 export type Availability = VisibleObject & {
   __typename?: "Availability";
   _config?: Maybe<ObjectConfig>;
+  _context?: Maybe<RequestContext>;
   _meta?: Maybe<_AvailabilityMeta>;
   dimensions?: Maybe<DimensionListing>;
   end?: Maybe<Scalars["AWSDateTime"]>;
@@ -69,6 +70,7 @@ export type AvailabilityInput = {
   dimensions?: InputMaybe<AssignDimensionGroupInput>;
   end?: InputMaybe<Scalars["AWSDateTime"]>;
   external_id?: InputMaybe<Scalars["String"]>;
+  relative_end?: InputMaybe<RelativeTimes>;
   slug?: InputMaybe<Scalars["String"]>;
   start?: InputMaybe<Scalars["AWSDateTime"]>;
   title?: InputMaybe<Scalars["String"]>;
@@ -85,9 +87,11 @@ export type Brand = Metadata &
   VisibleObject & {
     __typename?: "Brand";
     _config?: Maybe<ObjectConfig>;
+    _context?: Maybe<RequestContext>;
     _meta?: Maybe<_BrandMeta>;
     assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
+    call_to_actions?: Maybe<SkylarkCallToActionListing>;
     content_of?: Maybe<SetListing>;
     credits?: Maybe<CreditListing>;
     episodes?: Maybe<EpisodeListing>;
@@ -122,6 +126,12 @@ export type BrandAssetsArgs = {
 };
 
 export type BrandAvailabilityArgs = {
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type BrandCall_To_ActionsArgs = {
+  language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
   next_token?: InputMaybe<Scalars["String"]>;
 };
@@ -227,6 +237,7 @@ export type BrandRelationshipInput = {
 
 export type BrandRelationships = {
   assets?: InputMaybe<SkylarkAssetRelationshipInput>;
+  call_to_actions?: InputMaybe<SkylarkCallToActionRelationshipInput>;
   credits?: InputMaybe<CreditRelationshipInput>;
   episodes?: InputMaybe<EpisodeRelationshipInput>;
   genres?: InputMaybe<GenreRelationshipInput>;
@@ -249,6 +260,13 @@ export type BrandSetInput = {
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
   unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
 };
+
+export enum CallToActionType {
+  ComingSoon = "COMING_SOON",
+  LinkToRelatedObject = "LINK_TO_RELATED_OBJECT",
+  LinkToUrl = "LINK_TO_URL",
+  SignUp = "SIGN_UP",
+}
 
 export enum ConfigurationOperations {
   Create = "CREATE",
@@ -280,6 +298,7 @@ export type Credit = Metadata &
   VisibleObject & {
     __typename?: "Credit";
     _config?: Maybe<ObjectConfig>;
+    _context?: Maybe<RequestContext>;
     _meta?: Maybe<_CreditMeta>;
     availability?: Maybe<AvailabilityListing>;
     brands?: Maybe<BrandListing>;
@@ -505,10 +524,12 @@ export type Episode = Metadata &
   VisibleObject & {
     __typename?: "Episode";
     _config?: Maybe<ObjectConfig>;
+    _context?: Maybe<RequestContext>;
     _meta?: Maybe<_EpisodeMeta>;
     assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
     brands?: Maybe<BrandListing>;
+    call_to_actions?: Maybe<SkylarkCallToActionListing>;
     content_of?: Maybe<SetListing>;
     credits?: Maybe<CreditListing>;
     episode_number?: Maybe<Scalars["Int"]>;
@@ -547,6 +568,12 @@ export type EpisodeAvailabilityArgs = {
 };
 
 export type EpisodeBrandsArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type EpisodeCall_To_ActionsArgs = {
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
   next_token?: InputMaybe<Scalars["String"]>;
@@ -644,6 +671,7 @@ export type EpisodeRelationshipInput = {
 export type EpisodeRelationships = {
   assets?: InputMaybe<SkylarkAssetRelationshipInput>;
   brands?: InputMaybe<BrandRelationshipInput>;
+  call_to_actions?: InputMaybe<SkylarkCallToActionRelationshipInput>;
   credits?: InputMaybe<CreditRelationshipInput>;
   genres?: InputMaybe<GenreRelationshipInput>;
   images?: InputMaybe<SkylarkImageRelationshipInput>;
@@ -686,6 +714,7 @@ export type Genre = Metadata &
   VisibleObject & {
     __typename?: "Genre";
     _config?: Maybe<ObjectConfig>;
+    _context?: Maybe<RequestContext>;
     _meta?: Maybe<_GenreMeta>;
     availability?: Maybe<AvailabilityListing>;
     brands?: Maybe<BrandListing>;
@@ -816,6 +845,7 @@ export type GenreSetInput = {
 };
 
 export type HiddenObject = {
+  _context?: Maybe<RequestContext>;
   external_id?: Maybe<Scalars["String"]>;
   slug?: Maybe<Scalars["String"]>;
   uid: Scalars["String"];
@@ -873,10 +903,12 @@ export type Movie = Metadata &
   VisibleObject & {
     __typename?: "Movie";
     _config?: Maybe<ObjectConfig>;
+    _context?: Maybe<RequestContext>;
     _meta?: Maybe<_MovieMeta>;
     assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
     brands?: Maybe<BrandListing>;
+    call_to_actions?: Maybe<SkylarkCallToActionListing>;
     content_of?: Maybe<SetListing>;
     credits?: Maybe<CreditListing>;
     external_id?: Maybe<Scalars["String"]>;
@@ -914,6 +946,12 @@ export type MovieAvailabilityArgs = {
 };
 
 export type MovieBrandsArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type MovieCall_To_ActionsArgs = {
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
   next_token?: InputMaybe<Scalars["String"]>;
@@ -1005,6 +1043,7 @@ export type MovieRelationshipInput = {
 export type MovieRelationships = {
   assets?: InputMaybe<SkylarkAssetRelationshipInput>;
   brands?: InputMaybe<BrandRelationshipInput>;
+  call_to_actions?: InputMaybe<SkylarkCallToActionRelationshipInput>;
   credits?: InputMaybe<CreditRelationshipInput>;
   genres?: InputMaybe<GenreRelationshipInput>;
   images?: InputMaybe<SkylarkImageRelationshipInput>;
@@ -1044,6 +1083,7 @@ export type Mutation = {
   createSeason?: Maybe<Season>;
   createSkylarkAsset?: Maybe<SkylarkAsset>;
   createSkylarkAudioTrack?: Maybe<SkylarkAudioTrack>;
+  createSkylarkCallToAction?: Maybe<SkylarkCallToAction>;
   createSkylarkChannel?: Maybe<SkylarkChannel>;
   createSkylarkDRMProvider?: Maybe<SkylarkDrmProvider>;
   createSkylarkEPGProgramme?: Maybe<SkylarkEpgProgramme>;
@@ -1073,6 +1113,7 @@ export type Mutation = {
   deleteSeason?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
   deleteSkylarkAsset?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
   deleteSkylarkAudioTrack?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
+  deleteSkylarkCallToAction?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
   deleteSkylarkChannel?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
   deleteSkylarkDRMProvider?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
   deleteSkylarkEPGProgramme?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
@@ -1093,6 +1134,7 @@ export type Mutation = {
   editFieldConfiguration?: Maybe<ConfigurationResponse>;
   editRelationshipConfiguration?: Maybe<ConfigurationResponse>;
   editSearchableFields?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  sendSearchInsight?: Maybe<Scalars["String"]>;
   setObjectConfiguration?: Maybe<ObjectConfig>;
   updateAvailability?: Maybe<Availability>;
   updateBrand?: Maybe<Brand>;
@@ -1109,6 +1151,7 @@ export type Mutation = {
   updateSeason?: Maybe<Season>;
   updateSkylarkAsset?: Maybe<SkylarkAsset>;
   updateSkylarkAudioTrack?: Maybe<SkylarkAudioTrack>;
+  updateSkylarkCallToAction?: Maybe<SkylarkCallToAction>;
   updateSkylarkChannel?: Maybe<SkylarkChannel>;
   updateSkylarkDRMProvider?: Maybe<SkylarkDrmProvider>;
   updateSkylarkEPGProgramme?: Maybe<SkylarkEpgProgramme>;
@@ -1206,6 +1249,11 @@ export type MutationCreateSkylarkAssetArgs = {
 export type MutationCreateSkylarkAudioTrackArgs = {
   language?: InputMaybe<Scalars["String"]>;
   skylark_audio_track?: InputMaybe<SkylarkAudioTrackCreateInput>;
+};
+
+export type MutationCreateSkylarkCallToActionArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  skylark_call_to_action?: InputMaybe<SkylarkCallToActionCreateInput>;
 };
 
 export type MutationCreateSkylarkChannelArgs = {
@@ -1391,6 +1439,14 @@ export type MutationDeleteSkylarkAudioTrackArgs = {
   uid: Scalars["String"];
 };
 
+export type MutationDeleteSkylarkCallToActionArgs = {
+  external_id?: InputMaybe<Scalars["String"]>;
+  global_version?: InputMaybe<Scalars["Int"]>;
+  language?: InputMaybe<Scalars["String"]>;
+  language_version?: InputMaybe<Scalars["Int"]>;
+  uid: Scalars["String"];
+};
+
 export type MutationDeleteSkylarkChannelArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   global_version?: InputMaybe<Scalars["Int"]>;
@@ -1523,6 +1579,11 @@ export type MutationEditSearchableFieldsArgs = {
   fields: Array<InputMaybe<Scalars["String"]>>;
 };
 
+export type MutationSendSearchInsightArgs = {
+  uid_clicked?: InputMaybe<Scalars["String"]>;
+  user?: InputMaybe<Scalars["String"]>;
+};
+
 export type MutationSetObjectConfigurationArgs = {
   object: VisibleObjectTypes;
   object_config?: InputMaybe<ObjectConfigInput>;
@@ -1653,6 +1714,15 @@ export type MutationUpdateSkylarkAudioTrackArgs = {
   language?: InputMaybe<Scalars["String"]>;
   language_version?: InputMaybe<Scalars["Int"]>;
   skylark_audio_track?: InputMaybe<SkylarkAudioTrackInput>;
+  uid?: InputMaybe<Scalars["String"]>;
+};
+
+export type MutationUpdateSkylarkCallToActionArgs = {
+  external_id?: InputMaybe<Scalars["String"]>;
+  global_version?: InputMaybe<Scalars["Int"]>;
+  language?: InputMaybe<Scalars["String"]>;
+  language_version?: InputMaybe<Scalars["Int"]>;
+  skylark_call_to_action?: InputMaybe<SkylarkCallToActionInput>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -1817,6 +1887,7 @@ export enum ObjectTypes {
   Role = "Role",
   Season = "Season",
   SkylarkAsset = "SkylarkAsset",
+  SkylarkCallToAction = "SkylarkCallToAction",
   SkylarkImage = "SkylarkImage",
   SkylarkSet = "SkylarkSet",
   SkylarkTag = "SkylarkTag",
@@ -1832,6 +1903,7 @@ export type ParentalGuidance = Metadata &
   VisibleObject & {
     __typename?: "ParentalGuidance";
     _config?: Maybe<ObjectConfig>;
+    _context?: Maybe<RequestContext>;
     _meta?: Maybe<_ParentalGuidanceMeta>;
     availability?: Maybe<AvailabilityListing>;
     content_of?: Maybe<SetListing>;
@@ -1914,6 +1986,7 @@ export type Person = Metadata &
   VisibleObject & {
     __typename?: "Person";
     _config?: Maybe<ObjectConfig>;
+    _context?: Maybe<RequestContext>;
     _meta?: Maybe<_PersonMeta>;
     abbreviation?: Maybe<Scalars["String"]>;
     alias?: Maybe<Scalars["String"]>;
@@ -2085,6 +2158,7 @@ export type Query = {
   getSeason?: Maybe<Season>;
   getSkylarkAsset?: Maybe<SkylarkAsset>;
   getSkylarkAudioTrack?: Maybe<SkylarkAudioTrack>;
+  getSkylarkCallToAction?: Maybe<SkylarkCallToAction>;
   getSkylarkChannel?: Maybe<SkylarkChannel>;
   getSkylarkDRMProvider?: Maybe<SkylarkDrmProvider>;
   getSkylarkEPGProgramme?: Maybe<SkylarkEpgProgramme>;
@@ -2114,6 +2188,7 @@ export type Query = {
   listSeason?: Maybe<SeasonListing>;
   listSkylarkAsset?: Maybe<SkylarkAssetListing>;
   listSkylarkAudioTrack?: Maybe<SkylarkAudioTrackListing>;
+  listSkylarkCallToAction?: Maybe<SkylarkCallToActionListing>;
   listSkylarkChannel?: Maybe<SkylarkChannelListing>;
   listSkylarkDRMProvider?: Maybe<SkylarkDrmProviderListing>;
   listSkylarkEPGProgramme?: Maybe<SkylarkEpgProgrammeListing>;
@@ -2257,6 +2332,15 @@ export type QueryGetSkylarkAssetArgs = {
 };
 
 export type QueryGetSkylarkAudioTrackArgs = {
+  dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  external_id?: InputMaybe<Scalars["String"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
+  language?: InputMaybe<Scalars["String"]>;
+  time_travel?: InputMaybe<Scalars["AWSDateTime"]>;
+  uid?: InputMaybe<Scalars["String"]>;
+};
+
+export type QueryGetSkylarkCallToActionArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
@@ -2500,6 +2584,15 @@ export type QueryListSkylarkAudioTrackArgs = {
   time_travel?: InputMaybe<Scalars["AWSDateTime"]>;
 };
 
+export type QueryListSkylarkCallToActionArgs = {
+  dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+  time_travel?: InputMaybe<Scalars["AWSDateTime"]>;
+};
+
 export type QueryListSkylarkChannelArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
@@ -2619,18 +2712,23 @@ export type QueryListThemeArgs = {
 
 export type QuerySearchArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  highlight_results?: InputMaybe<Scalars["Boolean"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
+  limit_search_fields?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
   offset?: InputMaybe<Scalars["Int"]>;
   query: Scalars["String"];
   time_travel?: InputMaybe<Scalars["AWSDateTime"]>;
+  types?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  typo_tolerance?: InputMaybe<TypoTolerance>;
 };
 
 export type Rating = Metadata &
   VisibleObject & {
     __typename?: "Rating";
     _config?: Maybe<ObjectConfig>;
+    _context?: Maybe<RequestContext>;
     _meta?: Maybe<_RatingMeta>;
     assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
@@ -2774,10 +2872,26 @@ export type RatingSetInput = {
   unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
 };
 
+export type RelativeTimes = {
+  days?: InputMaybe<Scalars["Int"]>;
+  hours?: InputMaybe<Scalars["Int"]>;
+  minutes?: InputMaybe<Scalars["Int"]>;
+  months?: InputMaybe<Scalars["Int"]>;
+  seconds?: InputMaybe<Scalars["Int"]>;
+  weeks?: InputMaybe<Scalars["Int"]>;
+  years?: InputMaybe<Scalars["Int"]>;
+};
+
+export type RequestContext = {
+  __typename?: "RequestContext";
+  typename_highlight?: Maybe<Scalars["String"]>;
+};
+
 export type Role = Metadata &
   VisibleObject & {
     __typename?: "Role";
     _config?: Maybe<ObjectConfig>;
+    _context?: Maybe<RequestContext>;
     _meta?: Maybe<_RoleMeta>;
     availability?: Maybe<AvailabilityListing>;
     content_of?: Maybe<SetListing>;
@@ -2973,10 +3087,12 @@ export type Season = Metadata &
   VisibleObject & {
     __typename?: "Season";
     _config?: Maybe<ObjectConfig>;
+    _context?: Maybe<RequestContext>;
     _meta?: Maybe<_SeasonMeta>;
     assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
     brands?: Maybe<BrandListing>;
+    call_to_actions?: Maybe<SkylarkCallToActionListing>;
     content_of?: Maybe<SetListing>;
     credits?: Maybe<CreditListing>;
     episodes?: Maybe<EpisodeListing>;
@@ -3016,6 +3132,12 @@ export type SeasonAvailabilityArgs = {
 };
 
 export type SeasonBrandsArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type SeasonCall_To_ActionsArgs = {
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
   next_token?: InputMaybe<Scalars["String"]>;
@@ -3115,6 +3237,7 @@ export type SeasonRelationshipInput = {
 export type SeasonRelationships = {
   assets?: InputMaybe<SkylarkAssetRelationshipInput>;
   brands?: InputMaybe<BrandRelationshipInput>;
+  call_to_actions?: InputMaybe<SkylarkCallToActionRelationshipInput>;
   credits?: InputMaybe<CreditRelationshipInput>;
   episodes?: InputMaybe<EpisodeRelationshipInput>;
   genres?: InputMaybe<GenreRelationshipInput>;
@@ -3200,6 +3323,7 @@ export type SkylarkAsset = Metadata &
   VisibleObject & {
     __typename?: "SkylarkAsset";
     _config?: Maybe<ObjectConfig>;
+    _context?: Maybe<RequestContext>;
     _meta?: Maybe<_SkylarkAssetMeta>;
     audio_tracks?: Maybe<SkylarkAudioTrackListing>;
     availability?: Maybe<AvailabilityListing>;
@@ -3400,6 +3524,7 @@ export type SkylarkAssetSetInput = {
 export type SkylarkAudioTrack = HiddenObject & {
   __typename?: "SkylarkAudioTrack";
   _config?: Maybe<ObjectConfig>;
+  _context?: Maybe<RequestContext>;
   _meta?: Maybe<_SkylarkAudioTrackMeta>;
   assets?: Maybe<SkylarkAssetListing>;
   availability?: Maybe<AvailabilityListing>;
@@ -3482,10 +3607,147 @@ export type SkylarkAudioTrackRelationships = {
   epg_programmes?: InputMaybe<SkylarkEpgProgrammeRelationshipInput>;
 };
 
+export type SkylarkCallToAction = VisibleObject & {
+  __typename?: "SkylarkCallToAction";
+  _config?: Maybe<ObjectConfig>;
+  _context?: Maybe<RequestContext>;
+  _meta?: Maybe<_SkylarkCallToActionMeta>;
+  availability?: Maybe<AvailabilityListing>;
+  brands?: Maybe<BrandListing>;
+  description?: Maybe<Scalars["String"]>;
+  description_short?: Maybe<Scalars["String"]>;
+  episodes?: Maybe<EpisodeListing>;
+  external_id?: Maybe<Scalars["String"]>;
+  images?: Maybe<SkylarkImageListing>;
+  internal_title?: Maybe<Scalars["String"]>;
+  movies?: Maybe<MovieListing>;
+  seasons?: Maybe<SeasonListing>;
+  sets?: Maybe<SkylarkSetListing>;
+  slug?: Maybe<Scalars["String"]>;
+  text?: Maybe<Scalars["String"]>;
+  text_short?: Maybe<Scalars["String"]>;
+  type?: Maybe<Scalars["String"]>;
+  uid: Scalars["String"];
+  url?: Maybe<Scalars["String"]>;
+  url_path?: Maybe<Scalars["String"]>;
+};
+
+export type SkylarkCallToAction_MetaArgs = {
+  global_version?: InputMaybe<Scalars["Int"]>;
+  language?: InputMaybe<Scalars["String"]>;
+  language_version?: InputMaybe<Scalars["Int"]>;
+};
+
+export type SkylarkCallToActionAvailabilityArgs = {
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type SkylarkCallToActionBrandsArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type SkylarkCallToActionEpisodesArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type SkylarkCallToActionImagesArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type SkylarkCallToActionMoviesArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type SkylarkCallToActionSeasonsArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type SkylarkCallToActionSetsArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type SkylarkCallToActionCreateInput = {
+  availability?: InputMaybe<AssignAvailabilityInput>;
+  description?: InputMaybe<Scalars["String"]>;
+  description_short?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]>;
+  internal_title: Scalars["String"];
+  relationships?: InputMaybe<SkylarkCallToActionRelationships>;
+  slug?: InputMaybe<Scalars["String"]>;
+  text?: InputMaybe<Scalars["String"]>;
+  text_short?: InputMaybe<Scalars["String"]>;
+  type: CallToActionType;
+  url?: InputMaybe<Scalars["AWSURL"]>;
+  url_path?: InputMaybe<Scalars["String"]>;
+};
+
+export type SkylarkCallToActionInput = {
+  availability?: InputMaybe<AssignAvailabilityInput>;
+  description?: InputMaybe<Scalars["String"]>;
+  description_short?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]>;
+  internal_title?: InputMaybe<Scalars["String"]>;
+  relationships?: InputMaybe<SkylarkCallToActionRelationships>;
+  slug?: InputMaybe<Scalars["String"]>;
+  text?: InputMaybe<Scalars["String"]>;
+  text_short?: InputMaybe<Scalars["String"]>;
+  type?: InputMaybe<CallToActionType>;
+  url?: InputMaybe<Scalars["AWSURL"]>;
+  url_path?: InputMaybe<Scalars["String"]>;
+};
+
+export type SkylarkCallToActionListing = Listing & {
+  __typename?: "SkylarkCallToActionListing";
+  count?: Maybe<Scalars["Int"]>;
+  next_token?: Maybe<Scalars["String"]>;
+  objects?: Maybe<Array<Maybe<SkylarkCallToAction>>>;
+};
+
+export type SkylarkCallToActionRelationshipInput = {
+  create?: InputMaybe<Array<InputMaybe<SkylarkCallToActionInput>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+};
+
+export type SkylarkCallToActionRelationships = {
+  brands?: InputMaybe<BrandRelationshipInput>;
+  episodes?: InputMaybe<EpisodeRelationshipInput>;
+  images?: InputMaybe<SkylarkImageRelationshipInput>;
+  movies?: InputMaybe<MovieRelationshipInput>;
+  seasons?: InputMaybe<SeasonRelationshipInput>;
+  sets?: InputMaybe<SkylarkSetRelationshipInput>;
+};
+
+export type SkylarkCallToActionSetCreate = {
+  object?: InputMaybe<SkylarkCallToActionInput>;
+  position: Scalars["Int"];
+};
+
+export type SkylarkCallToActionSetInput = {
+  create?: InputMaybe<Array<InputMaybe<SkylarkCallToActionSetCreate>>>;
+  link?: InputMaybe<Array<InputMaybe<SetLink>>>;
+  reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+};
+
 export type SkylarkChannel = Metadata &
   VisibleObject & {
     __typename?: "SkylarkChannel";
     _config?: Maybe<ObjectConfig>;
+    _context?: Maybe<RequestContext>;
     _meta?: Maybe<_SkylarkChannelMeta>;
     availability?: Maybe<AvailabilityListing>;
     content_of?: Maybe<SetListing>;
@@ -3594,6 +3856,7 @@ export type SkylarkChannelSetInput = {
 export type SkylarkDrmProvider = HiddenObject & {
   __typename?: "SkylarkDRMProvider";
   _config?: Maybe<ObjectConfig>;
+  _context?: Maybe<RequestContext>;
   _meta?: Maybe<_SkylarkDrmProviderMeta>;
   assets?: Maybe<SkylarkAssetListing>;
   availability?: Maybe<AvailabilityListing>;
@@ -3676,6 +3939,7 @@ export type SkylarkEpgProgramme = Metadata &
   VisibleObject & {
     __typename?: "SkylarkEPGProgramme";
     _config?: Maybe<ObjectConfig>;
+    _context?: Maybe<RequestContext>;
     _meta?: Maybe<_SkylarkEpgProgrammeMeta>;
     audio_tracks?: Maybe<SkylarkAudioTrackListing>;
     availability?: Maybe<AvailabilityListing>;
@@ -3802,10 +4066,12 @@ export type SkylarkImage = MediaFile &
   VisibleObject & {
     __typename?: "SkylarkImage";
     _config?: Maybe<ObjectConfig>;
+    _context?: Maybe<RequestContext>;
     _meta?: Maybe<_SkylarkImageMeta>;
     assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
     brands?: Maybe<BrandListing>;
+    call_to_actions?: Maybe<SkylarkCallToActionListing>;
     channels?: Maybe<SkylarkChannelListing>;
     content_of?: Maybe<SetListing>;
     content_type?: Maybe<Scalars["String"]>;
@@ -3850,6 +4116,12 @@ export type SkylarkImageAvailabilityArgs = {
 };
 
 export type SkylarkImageBrandsArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type SkylarkImageCall_To_ActionsArgs = {
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
   next_token?: InputMaybe<Scalars["String"]>;
@@ -3971,6 +4243,7 @@ export type SkylarkImageRelationshipInput = {
 export type SkylarkImageRelationships = {
   assets?: InputMaybe<SkylarkAssetRelationshipInput>;
   brands?: InputMaybe<BrandRelationshipInput>;
+  call_to_actions?: InputMaybe<SkylarkCallToActionRelationshipInput>;
   channels?: InputMaybe<SkylarkChannelRelationshipInput>;
   epg_programmes?: InputMaybe<SkylarkEpgProgrammeRelationshipInput>;
   episodes?: InputMaybe<EpisodeRelationshipInput>;
@@ -3999,6 +4272,7 @@ export type SkylarkImageSetInput = {
 export type SkylarkPlaybackDetail = HiddenObject & {
   __typename?: "SkylarkPlaybackDetail";
   _config?: Maybe<ObjectConfig>;
+  _context?: Maybe<RequestContext>;
   _meta?: Maybe<_SkylarkPlaybackDetailMeta>;
   assets?: Maybe<SkylarkAssetListing>;
   availability?: Maybe<AvailabilityListing>;
@@ -4063,6 +4337,7 @@ export type SkylarkPlaybackDetailPlayback_ProvidersArgs = {
 export type SkylarkPlaybackDetailAttribute = HiddenObject & {
   __typename?: "SkylarkPlaybackDetailAttribute";
   _config?: Maybe<ObjectConfig>;
+  _context?: Maybe<RequestContext>;
   _meta?: Maybe<_SkylarkPlaybackDetailAttributeMeta>;
   availability?: Maybe<AvailabilityListing>;
   external_id?: Maybe<Scalars["String"]>;
@@ -4166,6 +4441,7 @@ export type SkylarkPlaybackDetailRelationships = {
 export type SkylarkPlaybackProvider = HiddenObject & {
   __typename?: "SkylarkPlaybackProvider";
   _config?: Maybe<ObjectConfig>;
+  _context?: Maybe<RequestContext>;
   _meta?: Maybe<_SkylarkPlaybackProviderMeta>;
   assets?: Maybe<SkylarkAssetListing>;
   availability?: Maybe<AvailabilityListing>;
@@ -4270,6 +4546,7 @@ export type SkylarkPlaybackProviderRelationships = {
 export type SkylarkPlaybackUrlTemplate = HiddenObject & {
   __typename?: "SkylarkPlaybackURLTemplate";
   _config?: Maybe<ObjectConfig>;
+  _context?: Maybe<RequestContext>;
   _meta?: Maybe<_SkylarkPlaybackUrlTemplateMeta>;
   availability?: Maybe<AvailabilityListing>;
   external_id?: Maybe<Scalars["String"]>;
@@ -4335,6 +4612,7 @@ export type SkylarkPlaybackUrlTemplateRelationships = {
 export type SkylarkProviderCredential = HiddenObject & {
   __typename?: "SkylarkProviderCredential";
   _config?: Maybe<ObjectConfig>;
+  _context?: Maybe<RequestContext>;
   _meta?: Maybe<_SkylarkProviderCredentialMeta>;
   availability?: Maybe<AvailabilityListing>;
   description?: Maybe<Scalars["String"]>;
@@ -4412,9 +4690,11 @@ export type SkylarkSet = Metadata &
   VisibleObject & {
     __typename?: "SkylarkSet";
     _config?: Maybe<ObjectConfig>;
+    _context?: Maybe<RequestContext>;
     _meta?: Maybe<_SkylarkSetMeta>;
     assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
+    call_to_actions?: Maybe<SkylarkCallToActionListing>;
     content?: Maybe<MetadataListing>;
     content_of?: Maybe<SetListing>;
     credits?: Maybe<CreditListing>;
@@ -4449,6 +4729,12 @@ export type SkylarkSetAssetsArgs = {
 };
 
 export type SkylarkSetAvailabilityArgs = {
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type SkylarkSetCall_To_ActionsArgs = {
+  language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
   next_token?: InputMaybe<Scalars["String"]>;
 };
@@ -4510,9 +4796,11 @@ export type SkylarkSetCreateInput = {
   relationships?: InputMaybe<SkylarkSetRelationships>;
   release_date?: InputMaybe<Scalars["String"]>;
   slug?: InputMaybe<Scalars["String"]>;
+  synopsis?: InputMaybe<Scalars["String"]>;
   synopsis_short?: InputMaybe<Scalars["String"]>;
   title?: InputMaybe<Scalars["String"]>;
   title_short?: InputMaybe<Scalars["String"]>;
+  title_sort?: InputMaybe<Scalars["String"]>;
   type?: InputMaybe<SetType>;
 };
 
@@ -4524,9 +4812,11 @@ export type SkylarkSetInput = {
   relationships?: InputMaybe<SkylarkSetRelationships>;
   release_date?: InputMaybe<Scalars["String"]>;
   slug?: InputMaybe<Scalars["String"]>;
+  synopsis?: InputMaybe<Scalars["String"]>;
   synopsis_short?: InputMaybe<Scalars["String"]>;
   title?: InputMaybe<Scalars["String"]>;
   title_short?: InputMaybe<Scalars["String"]>;
+  title_sort?: InputMaybe<Scalars["String"]>;
   type?: InputMaybe<SetType>;
 };
 
@@ -4545,6 +4835,7 @@ export type SkylarkSetRelationshipInput = {
 
 export type SkylarkSetRelationships = {
   assets?: InputMaybe<SkylarkAssetRelationshipInput>;
+  call_to_actions?: InputMaybe<SkylarkCallToActionRelationshipInput>;
   credits?: InputMaybe<CreditRelationshipInput>;
   genres?: InputMaybe<GenreRelationshipInput>;
   images?: InputMaybe<SkylarkImageRelationshipInput>;
@@ -4557,6 +4848,7 @@ export type SkylarkTag = Metadata &
   VisibleObject & {
     __typename?: "SkylarkTag";
     _config?: Maybe<ObjectConfig>;
+    _context?: Maybe<RequestContext>;
     _meta?: Maybe<_SkylarkTagMeta>;
     assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
@@ -4714,6 +5006,7 @@ export type SkylarkTextTrack = HiddenObject &
   MediaFile & {
     __typename?: "SkylarkTextTrack";
     _config?: Maybe<ObjectConfig>;
+    _context?: Maybe<RequestContext>;
     _meta?: Maybe<_SkylarkTextTrackMeta>;
     assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
@@ -4807,6 +5100,7 @@ export type SkylarkTextTrackRelationships = {
 export type SkylarkVideoTrack = HiddenObject & {
   __typename?: "SkylarkVideoTrack";
   _config?: Maybe<ObjectConfig>;
+  _context?: Maybe<RequestContext>;
   _meta?: Maybe<_SkylarkVideoTrackMeta>;
   assets?: Maybe<SkylarkAssetListing>;
   availability?: Maybe<AvailabilityListing>;
@@ -4923,6 +5217,7 @@ export type Theme = Metadata &
   VisibleObject & {
     __typename?: "Theme";
     _config?: Maybe<ObjectConfig>;
+    _context?: Maybe<RequestContext>;
     _meta?: Maybe<_ThemeMeta>;
     availability?: Maybe<AvailabilityListing>;
     brands?: Maybe<BrandListing>;
@@ -5057,6 +5352,13 @@ export enum TokenAlgorithm {
   Rs256 = "RS256",
 }
 
+export enum TypoTolerance {
+  Minimal = "MINIMAL",
+  Off = "OFF",
+  On = "ON",
+  Strict = "STRICT",
+}
+
 export type UpdateDimensionInput = {
   description?: InputMaybe<Scalars["String"]>;
   external_id?: InputMaybe<Scalars["String"]>;
@@ -5102,6 +5404,7 @@ export enum VideoFormat {
 }
 
 export type VisibleObject = {
+  _context?: Maybe<RequestContext>;
   external_id?: Maybe<Scalars["String"]>;
   slug?: Maybe<Scalars["String"]>;
   uid: Scalars["String"];
@@ -5120,6 +5423,7 @@ export enum VisibleObjectTypes {
   Role = "Role",
   Season = "Season",
   SkylarkAsset = "SkylarkAsset",
+  SkylarkCallToAction = "SkylarkCallToAction",
   SkylarkChannel = "SkylarkChannel",
   SkylarkEpgProgramme = "SkylarkEPGProgramme",
   SkylarkImage = "SkylarkImage",
@@ -5604,6 +5908,45 @@ export type _SkylarkAudioTrackMeta = {
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_SkylarkAudioTrackGlobal>;
   language_data?: Maybe<_SkylarkAudioTrackLanguage>;
+  modified?: Maybe<_Audit>;
+  publish_stage?: Maybe<PublishStage>;
+};
+
+export type _SkylarkCallToActionGlobal = _Global & {
+  __typename?: "_SkylarkCallToActionGlobal";
+  created?: Maybe<_Audit>;
+  history?: Maybe<Array<Maybe<_SkylarkCallToActionGlobal>>>;
+  internal_title?: Maybe<Scalars["String"]>;
+  modified?: Maybe<_Audit>;
+  publish_stage?: Maybe<PublishStage>;
+  type?: Maybe<Scalars["String"]>;
+  url?: Maybe<Scalars["String"]>;
+  url_path?: Maybe<Scalars["String"]>;
+  version?: Maybe<Scalars["Int"]>;
+};
+
+export type _SkylarkCallToActionLanguage = _Language & {
+  __typename?: "_SkylarkCallToActionLanguage";
+  created?: Maybe<_Audit>;
+  description?: Maybe<Scalars["String"]>;
+  description_short?: Maybe<Scalars["String"]>;
+  history?: Maybe<Array<Maybe<_SkylarkCallToActionLanguage>>>;
+  language?: Maybe<Scalars["String"]>;
+  modified?: Maybe<_Audit>;
+  publish_stage?: Maybe<PublishStage>;
+  slug?: Maybe<Scalars["String"]>;
+  text?: Maybe<Scalars["String"]>;
+  text_short?: Maybe<Scalars["String"]>;
+  version?: Maybe<Scalars["Int"]>;
+};
+
+export type _SkylarkCallToActionMeta = {
+  __typename?: "_SkylarkCallToActionMeta";
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  created?: Maybe<_Audit>;
+  field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
+  global_data?: Maybe<_SkylarkCallToActionGlobal>;
+  language_data?: Maybe<_SkylarkCallToActionLanguage>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
 };

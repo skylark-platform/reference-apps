@@ -1,8 +1,6 @@
 import { convertToUnexpandedSkylarkObjects } from ".";
-import { EntertainmentType } from "../interfaces";
 import {
   convertObjectToSkylarkApiFields,
-  convertObjectTypeToSkylarkEndpoint,
   convertToUnexpandedObjects,
   convertUrlToObjectType,
 } from "./converters";
@@ -69,34 +67,6 @@ describe("converters", () => {
           "items__content_url__items__content_url__self",
         ].join(",")
       );
-    });
-  });
-
-  describe("convertObjectTypeToSkylarkEndpoint", () => {
-    it("converts episode to episodes", () => {
-      const str = convertObjectTypeToSkylarkEndpoint("episode");
-      expect(str).toEqual("episodes");
-    });
-
-    it("converts movie to movies", () => {
-      const str = convertObjectTypeToSkylarkEndpoint("movie");
-      expect(str).toEqual("movies");
-    });
-
-    it("converts season to seasons", () => {
-      const str = convertObjectTypeToSkylarkEndpoint("season");
-      expect(str).toEqual("seasons");
-    });
-
-    it("converts brand to brands", () => {
-      const str = convertObjectTypeToSkylarkEndpoint("brand");
-      expect(str).toEqual("brands");
-    });
-
-    it("returns an empty string when the type doesn't exist", () => {
-      expect(() =>
-        convertObjectTypeToSkylarkEndpoint("unknown" as EntertainmentType)
-      ).toThrow("Unknown type provided");
     });
   });
 

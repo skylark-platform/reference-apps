@@ -21,3 +21,11 @@ export enum StreamTVSupportedSetType {
   RailPortrait = "RAIL_PORTRAIT",
   RailWithSynopsis = "RAIL_WITH_SYNOPSIS",
 }
+
+export enum StreamTVSupportCallToActionType {
+  // Built in
+  SignUp = "SIGN_UP",
+  ComingSoon = "COMING_SOON",
+  LinkToRelatedObject = "LINK_TO_RELATED_OBJECT",
+  LinkToUrl = "LINK_TO_URL",
+}

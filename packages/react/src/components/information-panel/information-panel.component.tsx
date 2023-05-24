@@ -14,11 +14,30 @@ interface InformationPanelProps {
   title: string;
   duration?: number;
   rating?: string;
-  availableUntil: number;
+  availableUntil?: { unit: "day" | "month" | "year" | "never"; number: number };
   description?: string;
   genres?: string[];
   themes?: string[];
 }
+
+const getTranslationStringForAvailability = (
+  unit: "day" | "month" | "year" | "never",
+  number: number
+) => {
+  switch (unit) {
+    case "day":
+      if (number === 0) {
+        return "available-for.leaving-today";
+      }
+      return "available-for.days";
+    case "month":
+      return "available-for.months";
+    case "year":
+      return "available-for.years";
+    default:
+      return "available-for.ever";
+  }
+};
 
 export const InformationPanel: React.FC<InformationPanelProps> = ({
   brand,
@@ -39,6 +58,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
     const trunc = !!(el && el.clientHeight < el.scrollHeight);
     setTrunicated(trunc);
   };
+
   return (
     <div className="h-full w-full bg-gray-900">
       <div className="p-2 text-white">
@@ -62,7 +82,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
             </div>
           )}
           <h1 className="pt-2 text-2xl md:text-3xl">{title}</h1>
-          <span className="mt-4 mb-2 hidden w-36 border-b border-gray-800 md:flex" />
+          <span className="mb-2 mt-4 hidden w-36 border-b border-gray-800 md:flex" />
           <List
             contents={[
               duration ? (
@@ -70,12 +90,19 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
                   className="flex items-center"
                   key={`duration-icon-for-${title}`}
                 >
-                  <MdOutlineWatchLater className="mt-0 mr-2" size={25} />
+                  <MdOutlineWatchLater className="mr-2 mt-0" size={25} />
                   {`${duration}m`}
                 </span>
               ) : undefined,
               rating,
-              t("available-for", { days: availableUntil }),
+              availableUntil &&
+                t(
+                  getTranslationStringForAvailability(
+                    availableUntil.unit,
+                    availableUntil.number
+                  ),
+                  { number: availableUntil?.number }
+                ),
             ]}
             highlightFirst
             textSize={"sm"}

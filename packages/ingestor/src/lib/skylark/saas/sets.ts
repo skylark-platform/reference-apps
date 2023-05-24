@@ -1,5 +1,5 @@
 import { EnumType, jsonToGraphQLQuery } from "json-to-graphql-query";
-import { graphQLClient } from "@skylark-reference-apps/lib";
+import { graphQLClient, GraphQLObjectTypes } from "@skylark-reference-apps/lib";
 import { FieldSet, Records } from "airtable";
 import {
   SetConfig,
@@ -7,24 +7,20 @@ import {
   GraphQLMetadata,
   GraphQLIntrospectionProperties,
 } from "../../interfaces";
-import {
-  ApiObjectType,
-  RelationshipsLink,
-  SetRelationshipsLink,
-} from "../../types";
+import { RelationshipsLink, SetRelationshipsLink } from "../../types";
 import { getValidPropertiesForObject, getExistingObjects } from "./get";
 import {
-  gqlObjectMeta,
   getValidFields,
   getGraphQLObjectAvailability,
   getLanguageCodesFromAirtable,
+  hasProperty,
 } from "./utils";
 import { getMediaObjectRelationships } from "./create";
 
 interface SetItem {
   uid: string;
   position: number;
-  apiType: ApiObjectType | "set";
+  graphqlObjectType: GraphQLObjectTypes;
 }
 
 const createSetContent = (
@@ -34,10 +30,12 @@ const createSetContent = (
   const setItems = contents.map((content, index): SetItem => {
     const { slug } = content as { slug: string };
     const item = mediaObjects.find((object) => object.slug === slug);
+
     return {
       uid: item?.uid as string,
       position: index + 1,
-      apiType: content.type as ApiObjectType | "set",
+      // eslint-disable-next-line no-underscore-dangle
+      graphqlObjectType: item?.__typename as GraphQLObjectTypes,
     };
   });
 
@@ -50,14 +48,25 @@ const createSetContent = (
   };
 
   for (let i = 0; i < setItems.length; i += 1) {
-    const { apiType, position, uid } = setItems[i];
+    const { graphqlObjectType, position, uid } = setItems[i];
 
-    const objectType =
-      apiType === "set" ? "SkylarkSet" : gqlObjectMeta(apiType).objectType;
-    if (objectType === "SkylarkAsset") {
+    if (graphqlObjectType === "SkylarkAsset") {
       break;
     }
-    content[objectType].link.push({ position, uid });
+
+    if (!hasProperty(content, graphqlObjectType)) {
+      throw new Error(
+        `Object Type ${graphqlObjectType} is not a valid property. Valid ones are ${Object.keys(
+          content
+        ).join(", ")}`
+      );
+    }
+
+    (
+      content[graphqlObjectType] as {
+        link: { position: number; uid: string }[];
+      }
+    ).link.push({ position, uid });
   }
 
   return content;
@@ -175,6 +184,7 @@ const createOrUpdateSet = async (
       [mutationKey]: {
         __aliasFor: method,
         __args: args,
+        __typename: true,
         uid: true,
         external_id: true,
         slug: true,

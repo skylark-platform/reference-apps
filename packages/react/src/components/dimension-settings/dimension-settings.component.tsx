@@ -62,7 +62,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
             <div className="absolute -top-9 right-sm-gutter flex md:right-md-gutter lg:right-lg-gutter xl:right-xl-gutter">
               <DimensionToggle variant="close" onClick={() => setShow(false)} />
             </div>
-            <div className="relative h-full overflow-y-auto py-4 px-sm-gutter md:py-12 md:px-md-gutter  lg:px-lg-gutter xl:px-xl-gutter">
+            <div className="relative h-full overflow-y-auto px-sm-gutter py-4 md:px-md-gutter md:py-12  lg:px-lg-gutter xl:px-xl-gutter">
               <div className="mb-4 flex items-center justify-between">
                 <SkylarkBranding className="w-12 md:w-48" />
                 <div className="ml-2 flex flex-col items-start justify-end text-sm md:flex-row md:items-center">

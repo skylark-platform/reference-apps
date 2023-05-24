@@ -6,7 +6,6 @@ import {
   GraphQLIntrospectionProperties,
   GraphQLMetadata,
 } from "../../interfaces";
-import { ApiObjectType } from "../../types";
 import {
   getUidsFromField,
   getValidFields,
@@ -20,16 +19,19 @@ describe("saas/utils.ts", () => {
   describe("getUidsFromField", () => {
     const objects: GraphQLBaseObject[] = [
       {
+        __typename: "Episode",
         uid: "1",
         external_id: "ext_1",
         slug: "",
       },
       {
+        __typename: "Episode",
         uid: "2",
         external_id: "account#ext_2",
         slug: "",
       },
       {
+        __typename: "Episode",
         uid: "3",
         external_id: "ext_3",
         slug: "",
@@ -54,9 +56,7 @@ describe("saas/utils.ts", () => {
 
     // eslint-disable-next-line no-restricted-syntax
     for (const type of mediaObjectTypes) {
-      const apiObjectType = `${type
-        .replace("Skylark", "")
-        .toLowerCase()}s` as ApiObjectType;
+      const apiObjectType = `${type.replace("Skylark", "").toLowerCase()}s`;
 
       const argName = type
         .match(/[A-Z][a-z]+/g)
@@ -138,6 +138,7 @@ describe("saas/utils.ts", () => {
           __args: {
             title: "title",
           },
+          __typename: true,
           external_id: true,
           slug: true,
           uid: true,
@@ -161,6 +162,7 @@ describe("saas/utils.ts", () => {
             title: "title",
             external_id: "id",
           },
+          __typename: true,
           external_id: true,
           slug: true,
           uid: true,

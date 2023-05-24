@@ -94,8 +94,15 @@ const main = async () => {
     tags: [],
     credits: [],
     images: [],
+    call_to_actions: [],
   };
 
+  metadata.call_to_actions =
+    await createOrUpdateGraphQlObjectsUsingIntrospection(
+      "SkylarkCallToAction",
+      airtable.callToActions,
+      metadataAvailability
+    );
   metadata.images = await createOrUpdateGraphQlObjectsUsingIntrospection(
     "SkylarkImage",
     airtable.images,
@@ -137,19 +144,25 @@ const main = async () => {
     metadata
   );
 
+  await createTranslationsForGraphQLObjects(
+    metadata.call_to_actions,
+    airtable.translations.callToActions,
+    airtable.languages
+  );
+
   // eslint-disable-next-line no-console
   console.log("Metadata objects created");
 
   const mediaObjects = await createGraphQLMediaObjects(
     airtable.mediaObjects,
     metadata,
-    airtable.dimensions.languages
+    airtable.languages
   );
 
   await createTranslationsForGraphQLObjects(
     mediaObjects,
     airtable.translations.mediaObjects,
-    airtable.dimensions.languages
+    airtable.languages
   );
 
   // eslint-disable-next-line no-console
@@ -170,7 +183,7 @@ const main = async () => {
         setConfig,
         [...mediaObjects, ...createdSets],
         metadata,
-        airtable.dimensions.languages,
+        airtable.languages,
         airtable.setsMetadata
       );
       if (set) createdSets.push(set);

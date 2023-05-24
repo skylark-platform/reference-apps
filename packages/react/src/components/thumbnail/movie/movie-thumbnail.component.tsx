@@ -27,7 +27,7 @@ export const MovieThumbnail: React.FC<MovieThumbnailProps> = (props) => {
       contentLocation={contentLocation || "inside"}
       duration={undefined}
     >
-      <p className="mt-2 mb-0.5 text-[16px] font-normal leading-[20px] text-white md:text-[18px] md:leading-[24px]">
+      <p className="mb-0.5 mt-2 text-[16px] font-normal leading-[20px] text-white md:text-[18px] md:leading-[24px]">
         {title}
       </p>
       <List

@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import { MdStream, MdAccountCircle } from "react-icons/md";
+import { MdStream, MdSearch, MdClose } from "react-icons/md";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import {
+  DimensionsContextProvider,
   TitleScreen,
   AppBackgroundGradient,
   AppHeader,
   Button,
   DimensionSettings,
   ConnectToSkylarkModal,
-} from "../components";
-import { DimensionsContextProvider } from "../contexts";
+} from "@skylark-reference-apps/react";
+import { Search } from "./search";
 
 interface Props {
   appTitle: string;
@@ -29,6 +30,7 @@ export const StreamTVLayout: React.FC<Props> = ({
 }) => {
   const { asPath } = useRouter();
   const { t } = useTranslation("common");
+  const [isMobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   const links = [
     { text: t("discover"), href: "/" },
@@ -41,6 +43,11 @@ export const StreamTVLayout: React.FC<Props> = ({
   return (
     <DimensionsContextProvider>
       <div className="relative w-full">
+        {isMobileSearchOpen && (
+          <div className="fixed inset-0 z-20 bg-gray-900/30 md:hidden">
+            <Search onSearch={() => setMobileSearchOpen(false)} />
+          </div>
+        )}
         <TitleScreen
           exitBackgroundColor="#5B45CE"
           logo={
@@ -63,20 +70,21 @@ export const StreamTVLayout: React.FC<Props> = ({
             </h2>
             <span className="absolute right-2 md:hidden">
               <Button
-                icon={<MdAccountCircle size={20} />}
+                icon={
+                  isMobileSearchOpen ? (
+                    <MdClose size={20} />
+                  ) : (
+                    <MdSearch size={20} />
+                  )
+                }
                 size="sm"
                 variant="tertiary"
+                onClick={() => setMobileSearchOpen(!isMobileSearchOpen)}
               />
             </span>
           </div>
-          <div className="hidden gap-1 md:flex">
-            <Button icon={<MdAccountCircle size={25} />} text={t("sign-in")} />
-            <Button externalHref text={t("register")} variant="tertiary" />
-            {/* TODO add search */}
-            {/* <div className="rounded-full flex text-gray-300 focus-within:text-white bg-button-tertiary justify-center items-center p-3 px-4 border-gray-300 focus-within:border-white focus-within:bg-pink-500 border-0 hover:bg-pink-500 transition-colors">
-              <input type="text" placeholder="Search" className="bg-transparent w-36 placeholder:text-gray-300 outline-none px-2 py-0 focus:outline-none focus-visible:outline-none focus:placeholder:text-white focus:border-none border-none shadow-none focus:shadow-none ring-0 focus:ring-0 focus-visible:border-none" />
-              <MdSearch className="text-3xl" />
-            </div> */}
+          <div className="hidden md:block">
+            <Search />
           </div>
         </AppHeader>
         <div className="relative z-10 h-full w-full pt-mobile-header md:pt-0">

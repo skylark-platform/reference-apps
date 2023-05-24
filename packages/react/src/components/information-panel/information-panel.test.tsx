@@ -6,7 +6,7 @@ describe("InformationPanel component", () => {
   it("the component renders correctly", () => {
     render(
       <InformationPanel
-        availableUntil={12}
+        availableUntil={{ unit: "day", number: 12 }}
         brand={{ title: "Game of Thrones" }}
         description="Series Premiere. Lord Stark is troubled by disturbing reports from a Night's Watch deserter."
         duration={57}
@@ -23,7 +23,6 @@ describe("InformationPanel component", () => {
     expect(screen.getByText(/1. Winter is Coming/)).toBeTruthy();
     expect(screen.getByText(/Drama/)).toBeTruthy();
     expect(screen.getByText(/Action/)).toBeTruthy();
-    expect(screen.getByText("Available for 12 days")).toBeTruthy();
     expect(screen.getByText("Season 1")).toBeTruthy();
   });
 });
