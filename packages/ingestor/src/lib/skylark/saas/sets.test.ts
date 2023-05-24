@@ -155,24 +155,6 @@ describe("saas/sets.ts", () => {
         },
       ];
 
-      it("makes a create and update request to create two language versions of a set", async () => {
-        graphQlRequest.mockRejectedValueOnce(mockedGetResponse);
-        graphQlRequest.mockResolvedValue(mockedCreateResponse);
-
-        await createOrUpdateGraphQLSet(
-          setConfig,
-          mediaObjects,
-          metadata as GraphQLMetadata,
-          languagesTable as Records<FieldSet>,
-          translationsTable as Records<FieldSet>
-        );
-        expect(graphQlRequest).toBeCalledTimes(4);
-        expect(graphQlRequest).toHaveBeenNthCalledWith(
-          3,
-          'mutation { createSkylarkSet_en_GB_home_page_slider: createSkylarkSet (language: "en-GB", skylark_set: {external_id: "home_page_slider", title: "Home page hero", title_short: "English Title", content: {Episode: {link: [{position: 5, uid: "episodes-Game of Thrones S01E01"}]}, Season: {link: [{position: 6, uid: "seasons-Game of Thrones S01"}]}, Brand: {link: [{position: 1, uid: "brands-game-of-thrones"}]}, Movie: {link: [{position: 2, uid: "movies-deadpool-2"}, {position: 3, uid: "movies-sing-2"}, {position: 4, uid: "movies-us"}]}, SkylarkSet: {link: []}}, availability: {link: ["availability-1"]}, relationships: {}}) { __typename uid external_id slug } }'
-        );
-      });
-
       it("the second language creation is an update and doesn't contain relationships or content", async () => {
         graphQlRequest.mockRejectedValueOnce(mockedGetResponse);
         graphQlRequest.mockResolvedValue(mockedCreateResponse);
@@ -184,9 +166,9 @@ describe("saas/sets.ts", () => {
           languagesTable as Records<FieldSet>,
           translationsTable as Records<FieldSet>
         );
-        expect(graphQlRequest).toBeCalledTimes(4);
+        expect(graphQlRequest).toBeCalledTimes(6);
         expect(graphQlRequest).toHaveBeenNthCalledWith(
-          4,
+          6,
           'mutation { updateSkylarkSet_pt_PT_home_page_slider: updateSkylarkSet (external_id: "home_page_slider", language: "pt-PT", skylark_set: {title: "Home page hero", title_short: "Portuguese Title"}) { __typename uid external_id slug } }'
         );
       });

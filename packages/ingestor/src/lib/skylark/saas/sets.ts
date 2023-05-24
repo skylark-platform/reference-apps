@@ -210,19 +210,32 @@ export const createOrUpdateGraphQLSet = async (
 ): Promise<GraphQLBaseObject | undefined> => {
   const validProperties = await getValidPropertiesForObject("SkylarkSet");
 
-  const setExists =
-    (await getExistingObjects("SkylarkSet", [{ externalId: set.externalId }]))
-      .length > 0;
-
-  const operationName = setExists ? `updateSkylarkSet` : `createSkylarkSet`;
-
   const languageCodes = getLanguageCodesFromAirtable(languagesTable);
-
-  const content = createSetContent(set.contents, mediaObjects);
 
   const airtableTranslationsForThisSet = airtableSetsMetadata?.filter(
     ({ fields }) => fields.slug === set.slug
   );
+  const airtableTranslationLanguages = airtableTranslationsForThisSet
+    .map(
+      ({ fields }) =>
+        fields.language && languageCodes[fields.language as string]
+    )
+    .filter((lang) => lang) as string[];
+
+  const existingSets = await Promise.all([
+    getExistingObjects("SkylarkSet", [{ externalId: set.externalId }]),
+    ...airtableTranslationLanguages.map((language) =>
+      getExistingObjects("SkylarkSet", [
+        { externalId: set.externalId, language },
+      ])
+    ),
+  ]);
+
+  const setExists = existingSets.findIndex((sets) => sets.length > 0) > -1;
+
+  const operationName = setExists ? `updateSkylarkSet` : `createSkylarkSet`;
+
+  const content = createSetContent(set.contents, mediaObjects);
 
   if (
     airtableTranslationsForThisSet &&
