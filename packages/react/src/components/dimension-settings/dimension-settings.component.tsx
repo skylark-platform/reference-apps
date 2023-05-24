@@ -1,12 +1,27 @@
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import dayjs from "dayjs";
+import { FiExternalLink } from "react-icons/fi";
+import {
+  LOCAL_STORAGE,
+  SAAS_API_ENDPOINT,
+  SAAS_API_KEY,
+} from "@skylark-reference-apps/lib";
 import { DimensionContent } from "./dimension-content";
 import { DimensionToggle } from "./dimension-toggle";
 import { DimensionRadioButton } from "./dimension-radio-button";
 import { SkylarkBranding } from "../skylark-branding";
 import { useDimensions } from "../../contexts";
 import { ConnectToSkylarkModal } from "../connect-to-skylark-modal";
+
+const generateSkylarkAutoconnectUrl = () => {
+  const isBrowser = typeof window === "undefined";
+  const url =
+    (isBrowser && localStorage.getItem(LOCAL_STORAGE.uri)) || SAAS_API_ENDPOINT;
+  const apikey =
+    (isBrowser && localStorage.getItem(LOCAL_STORAGE.apikey)) || SAAS_API_KEY;
+  return `https://app.skylarkplatform.com/beta/connect?uri=${url}&apikey=${apikey}`;
+};
 
 interface DimensionSettingsProps {
   show?: boolean;
@@ -64,7 +79,17 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
             </div>
             <div className="relative h-full overflow-y-auto px-sm-gutter py-4 md:px-md-gutter md:py-12  lg:px-lg-gutter xl:px-xl-gutter">
               <div className="mb-4 flex items-center justify-between">
-                <SkylarkBranding className="w-12 md:w-48" />
+                <div className="group flex items-center">
+                  <SkylarkBranding className="w-12 md:w-48" />
+                  <a
+                    className="invisible ml-2 text-skylark-blue opacity-0 transition-all group-hover:visible group-hover:opacity-100 group-hover:delay-1000"
+                    href={generateSkylarkAutoconnectUrl()}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    <FiExternalLink />
+                  </a>
+                </div>
                 <div className="ml-2 flex flex-col items-start justify-end text-sm md:flex-row md:items-center">
                   <p className="text-gray-400">{`Demo v1.0 -`}</p>
                   <a
