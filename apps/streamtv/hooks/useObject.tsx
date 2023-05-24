@@ -6,16 +6,12 @@ import {
 } from "@skylark-reference-apps/react";
 import { Metadata } from "../types/gql";
 import { GQLError } from "../types";
+import { isSkylarkUid } from "../lib/utils";
 
 interface UseObjectOpts {
   disabled?: boolean;
   useExternalId?: boolean;
 }
-
-const shouldUseExternalId = (lookupValue: string) =>
-  lookupValue.startsWith("rec") ||
-  lookupValue.startsWith("ingestor_set") ||
-  lookupValue.startsWith("streamtv_");
 
 const fetcher = <T extends Metadata>(
   query: string,
@@ -40,7 +36,7 @@ export const useObject = <T extends Metadata>(
   const useExternalId =
     opts && hasProperty(opts, "useExternalId")
       ? opts.useExternalId
-      : shouldUseExternalId(uid);
+      : !isSkylarkUid(uid);
 
   const { data, error, isLoading } = useQuery({
     queryKey: ["Search", query, uid, dimensions],

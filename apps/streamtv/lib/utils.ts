@@ -227,3 +227,10 @@ export const getTimeFromNow = (
     number: daysFromNow,
   };
 };
+
+export const isSkylarkUid = (uid: string) => {
+  // Regex for a ULID
+  // eslint-disable-next-line prefer-regex-literals
+  const regex = new RegExp("[0-7][0-9A-HJKMNP-TV-Z]{25}");
+  return regex.test(uid);
+};
