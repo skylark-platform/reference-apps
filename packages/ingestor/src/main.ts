@@ -99,7 +99,7 @@ const main = async () => {
 
   metadata.call_to_actions =
     await createOrUpdateGraphQlObjectsUsingIntrospection(
-      "SkylarkCallToAction",
+      "CallToAction",
       airtable.callToActions,
       metadataAvailability
     );

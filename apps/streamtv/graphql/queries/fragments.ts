@@ -11,7 +11,7 @@ export const ImageListingFragment = gql`
 `;
 
 export const CallToActionListingFragment = gql`
-  fragment callToActionListingFragment on SkylarkCallToActionListing {
+  fragment callToActionListingFragment on CallToActionListing {
     objects {
       type
       text

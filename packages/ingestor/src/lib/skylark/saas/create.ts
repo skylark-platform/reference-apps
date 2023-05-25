@@ -480,9 +480,7 @@ export const createTranslationsForGraphQLObjects = async (
     Brand: await getValidPropertiesForObject("Brand"),
     Movie: await getValidPropertiesForObject("Movie"),
     SkylarkAsset: await getValidPropertiesForObject("SkylarkAsset"),
-    SkylarkCallToAction: await getValidPropertiesForObject(
-      "SkylarkCallToAction"
-    ),
+    CallToAction: await getValidPropertiesForObject("CallToAction"),
   };
 
   const languageCodes = getLanguageCodesFromAirtable(languagesTable);

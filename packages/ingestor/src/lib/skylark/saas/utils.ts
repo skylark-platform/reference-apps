@@ -91,12 +91,12 @@ export const gqlObjectMeta = (
         argName: "brand",
         relName: "brands",
       };
-    case "SkylarkCallToAction":
+    case "CallToAction":
       return {
-        createFunc: "createSkylarkCallToAction",
-        updateFunc: "updateSkylarkCallToAction",
-        objectType: "SkylarkCallToAction",
-        argName: "skylark_call_to_action",
+        createFunc: "createCallToAction",
+        updateFunc: "updateCallToAction",
+        objectType: "CallToAction",
+        argName: "call_to_action",
         relName: "call_to_actions",
       };
     default:

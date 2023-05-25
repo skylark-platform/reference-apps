@@ -343,7 +343,7 @@ describe("saas/create.ts", () => {
       ],
       call_to_actions: [
         {
-          __typename: "SkylarkCallToAction",
+          __typename: "CallToAction",
           uid: "call_to_action_1",
           external_id: "ext_cta_1",
           slug: "call-to-action-1",
