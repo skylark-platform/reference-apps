@@ -1,5 +1,6 @@
 import React, { Fragment, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
+import { MdCancel, MdDone, MdUnfoldMore } from "react-icons/md";
 
 interface DimensionComboboxOption {
   value: string;
@@ -7,12 +8,14 @@ interface DimensionComboboxOption {
 }
 
 interface DimensionComboboxProps {
+  label: string;
   selectedValue: DimensionComboboxOption["value"];
   options: DimensionComboboxOption[];
-  onChange: (value: DimensionComboboxOption) => void;
+  onChange: (value?: DimensionComboboxOption) => void;
 }
 
 export const DimensionCombobox = ({
+  label,
   selectedValue,
   options,
   onChange,
@@ -31,17 +34,34 @@ export const DimensionCombobox = ({
   const selectedOption = options.find(({ value }) => selectedValue === value);
 
   return (
-    <Combobox value={selectedOption} onChange={onChange}>
+    <Combobox value={selectedOption || ""} onChange={onChange}>
       <div className="relative mt-1">
-        <div className="relative w-full cursor-default overflow-hidden rounded-lg border text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
-          <Combobox.Input
-            className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
-            displayValue={(option: DimensionComboboxOption) => option.label}
-            onChange={(event) => setQuery(event.target.value)}
-          />
-          <Combobox.Button className="absolute inset-y-0 right-0 top-0 flex items-center pr-2">
-            {`U`}
+        <div className="relative w-full cursor-default text-sm py-1.5 rounded-lg border border-gray-200 text-gray-500 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
+          <Combobox.Label className="absolute left-2 top-0 -translate-y-1/2 transform text-xs font-medium uppercase md:left-3 text-manatee-500">
+            <span className="bg-white px-2">{label}</span>
+          </Combobox.Label>
+
+          <Combobox.Button as="div" className="">
+            <Combobox.Input
+              className="w-full border-none py-2 pl-4 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
+              displayValue={(option: DimensionComboboxOption) => option.label}
+              onChange={(event) => setQuery(event.target.value)}
+            />
+            <button className="absolute inset-y-0 right-0 top-0 flex items-center pr-2 text-manatee-500">
+              <MdUnfoldMore className="w-6 h-6" />
+            </button>
           </Combobox.Button>
+          {(query || selectedValue) && (
+            <button
+              className="absolute inset-y-0 right-8 top-0 text-manatee-500 hover:text-brand-primary transition-colors"
+              onClick={() => {
+                onChange();
+                setQuery("");
+              }}
+            >
+              <MdCancel className="w-4 h-4" />
+            </button>
+          )}
         </div>
         <Transition
           afterLeave={() => setQuery("")}
@@ -59,7 +79,7 @@ export const DimensionCombobox = ({
               filteredOptions.map((option) => (
                 <Combobox.Option
                   className={({ active }) =>
-                    `relative cursor-default select-none py-1 pl-4 pr-4 ${
+                    `relative cursor-default select-none py-1 pl-6 pr-4 ${
                       active ? "bg-brand-primary text-white" : "text-gray-900"
                     }`
                   }
@@ -82,7 +102,7 @@ export const DimensionCombobox = ({
                           }`}
                         >
                           {/* <CheckIcon aria-hidden="true" className="h-5 w-5" /> */}
-                          {`T`}
+                          <MdDone aria-hidden="true" className="h-4 w-4" />
                         </span>
                       ) : null}
                     </>

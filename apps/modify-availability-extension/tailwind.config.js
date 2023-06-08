@@ -4,7 +4,7 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 const formPlugin = require("@tailwindcss/forms");
 
 export default {
-  important: "#skylark-availability-modifier-root",
+  // important: "#skylark-availability-extension-app-root",
   // prefix: "tw-",
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
