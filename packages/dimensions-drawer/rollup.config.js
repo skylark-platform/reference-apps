@@ -7,6 +7,9 @@ import postcss from "rollup-plugin-postcss";
 import autoprefixer from "autoprefixer";
 import tailwindcss from "tailwindcss";
 import dts from "rollup-plugin-dts";
+import json from "@rollup/plugin-json";
+import alias from "@rollup/plugin-alias";
+import ignore from "rollup-plugin-ignore";
 
 import packageJson from "./package.json" assert { type: "json" };
 
@@ -31,38 +34,32 @@ export default [
         config: {
           path: "./postcss.config.cjs",
         },
-        // plugins: [
-        //   autoprefixer(),
-        //   tailwindcss({
-        //     config: "./tailwind.config.cjs",
-        //   }),
-        // ],
-        // minimize: true,
-        // modules: true,
-        // use: {
-        //   sass: null,
-        //   stylus: null,
-        //   less: { javascriptEnabled: true },
-        // },
-        // extract: true,
-        // extensions: [".css"],
-        // minimize: true,
         extensions: [".css"],
         minimize: true,
         inject: {
           insertAt: "top",
         },
         extract: false,
-        // inject: true,
-        // plugins: [tailwindcss()],
       }),
-      external(),
+      // ignore(["stream"]),
+      // external(),
 
       resolve(),
       commonjs(),
+      json(),
       typescript({ tsconfig: "./tsconfig.json" }),
       terser(),
     ],
+    onwarn(warning, warn) {
+      if (
+        warning.code === "MODULE_LEVEL_DIRECTIVE" &&
+        warning.message.includes(`use client`)
+      ) {
+        return;
+      }
+      warn(warning);
+    },
+    external: ["react", "react-dom"],
   },
   {
     input: "dist/esm/types/index.d.ts",

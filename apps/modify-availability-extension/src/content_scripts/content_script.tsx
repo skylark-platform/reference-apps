@@ -1,7 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Button from "../components/Button";
-import { DimensionsDrawer } from "@skylark-reference-apps/dimensions-drawer";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { DimensionSettings } from "../components/DimensionsDrawer";
+import "../index.css";
+
+// import { DimensionDrawer } from "@skylark-reference-apps/dimensions-drawer";
 
 // import rules from '../rules';
 
@@ -15,9 +18,11 @@ const updateHeaders = () => {
 
 function ContentScript() {
   console.log("ContentScript loaded");
+  const queryClient = new QueryClient();
+
   updateHeaders();
   return (
-    <div className="App">
+    <div className="App" id="skylark-availability-inspector">
       <header
         className="App-header"
         style={{
@@ -29,16 +34,17 @@ function ContentScript() {
           zIndex: 1000,
         }}
       >
-        <h1>ContentScript</h1>
-        <Button onClick={updateHeaders}>button222</Button>
-        <DimensionsDrawer />
+        <p className="bg-red-500">THIS</p>
+        <QueryClientProvider client={queryClient}>
+          <DimensionSettings />
+        </QueryClientProvider>
       </header>
     </div>
   );
 }
 
 const index = document.createElement("div");
-index.id = "skylark-dimensions-drawer";
+index.id = "content-script";
 document.body.appendChild(index);
 
 ReactDOM.createRoot(index).render(

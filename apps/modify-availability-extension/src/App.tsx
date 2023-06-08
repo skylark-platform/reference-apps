@@ -1,35 +1,28 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import "@fontsource/work-sans/400.css";
+import "@fontsource/work-sans/700.css";
+import "@fontsource/inter";
 
-function App() {
-  const [count, setCount] = useState(0)
+import "./index.css";
+import { AvailabilityModifier } from "./components/availabilityModifier";
+import { Header } from "./components/header";
+import { Footer } from "./components/footer";
+
+export const App = () => {
+  const queryClient = new QueryClient();
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <QueryClientProvider client={queryClient}>
+      <div className="flex h-full flex-grow flex-col items-start justify-start bg-white font-body">
+        <Header />
+        <main className="flex h-full w-full flex-grow px-4">
+          <AvailabilityModifier />
+        </main>
+        <Footer />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    </QueryClientProvider>
+  );
+};
 
-export default App
+export default App;

@@ -1,3 +1,3 @@
 import "../index.css";
 
-export * from "./dimensionsDrawer.component";
+export * from "./container.component";
