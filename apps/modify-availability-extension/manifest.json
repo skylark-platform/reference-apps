@@ -3,13 +3,6 @@
   "name": "Modify Skylark Availability",
   "version": "0.0.1",
   "action": { "default_popup": "index.html" },
-  "content_scripts": [
-    {
-      "matches": ["*://*.skylarkplatform.com/*"],
-
-      "js": ["src/content_scripts/content_script.tsx"]
-    }
-  ],
   "background": {
     "service_worker": "src/background.ts",
     "type": "module"

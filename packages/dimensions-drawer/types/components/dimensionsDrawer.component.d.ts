@@ -1,1 +1,2 @@
-export declare const DimensionsDrawer: () => JSX.Element;
+import React from "react";
+export declare const DimensionsDrawer: () => React.JSX.Element;
