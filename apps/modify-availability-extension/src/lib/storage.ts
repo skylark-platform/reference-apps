@@ -1,5 +1,8 @@
 import { ExtensionStorageKeys } from "../constants";
-import { ExtensionMessageValueHeaders } from "../interfaces";
+import {
+  ExtensionMessageValueHeaders,
+  ParsedSkylarkDimensionsWithValues,
+} from "../interfaces";
 
 export const getCredentialsFromStorage = async () => {
   const uriRes = (await chrome.storage.sync.get(
@@ -38,5 +41,27 @@ export const getExtensionEnabledFromStorage = async (): Promise<boolean> => {
 export const setExtensionEnabledToStorage = async (enabled: boolean) => {
   await chrome.storage.local.set({
     [ExtensionStorageKeys.ExtensionEnabled]: enabled,
+  });
+};
+
+export const getParsedDimensionsFromStorage = async (): Promise<
+  ParsedSkylarkDimensionsWithValues[] | undefined
+> => {
+  const res = (await chrome.storage.local.get(
+    ExtensionStorageKeys.Dimensions
+  )) as {
+    [ExtensionStorageKeys.Dimensions]:
+      | ParsedSkylarkDimensionsWithValues[]
+      | undefined;
+  };
+
+  return res[ExtensionStorageKeys.Dimensions];
+};
+
+export const setParsedDimensionsToStorage = async (
+  dimensions: ParsedSkylarkDimensionsWithValues[]
+) => {
+  await chrome.storage.local.set({
+    [ExtensionStorageKeys.Dimensions]: dimensions,
   });
 };

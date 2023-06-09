@@ -9,6 +9,7 @@ export enum ExtensionStorageKeys {
   SkylarkApiKey = "SkylarkApiKey",
   Modifiers = "Modifiers",
   ExtensionEnabled = "ExtensionEnabled",
+  Dimensions = "Dimensions",
 }
 
 const uri = "https://api.sl-f-sl-02.development.skylarkplatform.com/graphql";

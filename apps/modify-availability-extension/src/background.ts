@@ -5,6 +5,7 @@ import {
   ExtensionMessageValueHeaders,
 } from "./interfaces";
 import {
+  getCredentialsFromStorage,
   getExtensionEnabledFromStorage,
   getModifiersFromStorage,
   setExtensionEnabledToStorage,
@@ -13,9 +14,14 @@ import {
 const convertModifiersToRules = ({
   dimensions,
   timeTravel,
-}: ExtensionMessageValueHeaders):
+  apiKey,
+}: ExtensionMessageValueHeaders & { apiKey: string }):
   | chrome.declarativeNetRequest.Rule[]
   | undefined => {
+  if (!apiKey) {
+    return undefined;
+  }
+
   const allResourceTypes = Object.values(
     chrome.declarativeNetRequest.ResourceType
   );
@@ -33,7 +39,6 @@ const convertModifiersToRules = ({
       header: "x-time-travel",
       value: timeTravel,
     };
-
     requestHeaders.push(timeTravelRule);
   }
 
@@ -41,6 +46,12 @@ const convertModifiersToRules = ({
     operation: chrome.declarativeNetRequest.HeaderOperation.SET,
     header: "x-bypass-cache",
     value: "1",
+  });
+
+  requestHeaders.push({
+    operation: chrome.declarativeNetRequest.HeaderOperation.SET,
+    header: "Authorization",
+    value: apiKey,
   });
 
   console.log({ requestHeaders });
@@ -87,7 +98,9 @@ const getActiveRules = () => chrome.declarativeNetRequest.getDynamicRules();
 const updateRules = async (modifiers: ExtensionMessageValueHeaders) => {
   const activeRules = await getActiveRules();
 
-  const rules = convertModifiersToRules(modifiers);
+  const { apiKey } = await getCredentialsFromStorage();
+
+  const rules = convertModifiersToRules({ ...modifiers, apiKey });
 
   const updateRuleOptions: chrome.declarativeNetRequest.UpdateRuleOptions = {
     removeRuleIds: activeRules.map((rule) => rule.id), // remove existing rules

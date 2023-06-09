@@ -12,6 +12,7 @@ import { AvailabilityModifier } from "./components/availabilityModifier";
 import {
   ExtensionMessageType,
   ExtensionMessageValueHeaders,
+  ParsedSkylarkDimensionsWithValues,
 } from "./interfaces";
 import { sendExtensionMessage } from "./lib/utils";
 import { ExtensionStorageKeys } from "./constants";
@@ -21,6 +22,7 @@ import {
   getCredentialsFromStorage,
   getExtensionEnabledFromStorage,
   getModifiersFromStorage,
+  getParsedDimensionsFromStorage,
 } from "./lib/storage";
 
 export const App = () => {
@@ -34,10 +36,11 @@ export const App = () => {
 
   const [showCredentialsScreen, setShowCredentialsScreen] = useState(false);
 
-  const [creds, setCreds] = useState<{ uri: string; apiKey: string }>({
-    uri: "",
-    apiKey: "",
-  });
+  const [creds, setCreds] =
+    useState<{ uri: string; apiKey: string } | undefined>();
+
+  const [dimensionsFromStorage, setDimensionsFromStorage] =
+    useState<undefined | ParsedSkylarkDimensionsWithValues[]>();
 
   const [activeModifiers, setActiveModifiers] =
     useState<ExtensionMessageValueHeaders>({ timeTravel: "", dimensions: {} });
@@ -60,10 +63,17 @@ export const App = () => {
     setExtensionEnabled(enabled);
   };
 
+  const fetchDimensionsFromStorage = async () => {
+    const initialDimensions = await getParsedDimensionsFromStorage();
+    console.log("initialDimensions", initialDimensions);
+    setDimensionsFromStorage(initialDimensions);
+  };
+
   useEffect(() => {
     void fetchCredentialsFromStorage();
     void fetchModifiersFromStorage();
     void fetchExtensionEnabledFromStorage();
+    void fetchDimensionsFromStorage();
   }, []);
 
   const [isHeadersUpdating, setIsHeadersUpdating] = useState(false);
@@ -87,37 +97,57 @@ export const App = () => {
     }
   }, [debouncedActiveModifiers, extensionEnabled]);
 
+  useEffect(() => {
+    if (
+      creds !== undefined &&
+      (!creds?.uri || !creds?.apiKey) &&
+      !showCredentialsScreen
+    ) {
+      setShowCredentialsScreen(true);
+    }
+  }, [creds, showCredentialsScreen]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <div className="flex h-screen flex-grow flex-col items-start justify-start bg-white font-body">
         <Header
-          credentialsAdded={!!creds.apiKey && !!creds.uri}
+          credentialsAdded={!!creds?.apiKey && !!creds?.uri}
           enabled={extensionEnabled}
           toggleEnabled={() => {
             void toggleEnabled();
           }}
-          onChangeCredentials={() => setShowCredentialsScreen(true)}
+          onChangeCredentials={() =>
+            setShowCredentialsScreen(!showCredentialsScreen)
+          }
         />
         <main className="flex h-full w-full flex-grow relative">
-          {!creds?.apiKey || !creds.uri || showCredentialsScreen ? (
-            <ConnectToSkylark
-              className="px-4"
-              skylarkCreds={creds}
-              onUpdate={() => {
-                setShowCredentialsScreen(false);
-                void fetchCredentialsFromStorage();
-              }}
-            />
+          {!creds ? (
+            <div className="my-8 px-4">{`Loading...`}</div>
           ) : (
             <>
-              <DisabledOverlay show={!extensionEnabled} />
+              {showCredentialsScreen ? (
+                <ConnectToSkylark
+                  className="px-4"
+                  skylarkCreds={creds}
+                  onUpdate={() => {
+                    setShowCredentialsScreen(false);
+                    setExtensionEnabled(true);
+                    void fetchCredentialsFromStorage();
+                  }}
+                />
+              ) : (
+                <>
+                  <DisabledOverlay show={!extensionEnabled} />
 
-              <AvailabilityModifier
-                activeModifiers={activeModifiers}
-                className="mb-10 px-4"
-                setActiveModifiers={setActiveModifiers}
-                skylarkCreds={creds}
-              />
+                  <AvailabilityModifier
+                    activeModifiers={activeModifiers}
+                    className="mb-10 px-4"
+                    dimensionsFromStorage={dimensionsFromStorage}
+                    setActiveModifiers={setActiveModifiers}
+                    skylarkCreds={creds}
+                  />
+                </>
+              )}
             </>
           )}
         </main>
