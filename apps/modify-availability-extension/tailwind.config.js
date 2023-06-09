@@ -17,6 +17,11 @@ export default {
         "nav-bar": "#F0F2F6",
         black: "#0E1825",
         "brand-primary": "#226DFF",
+        success: "#33BD6E",
+        "success-content": "#FFF",
+        warning: "#FBBD23",
+        error: "#F43636",
+        "error-content": "#FFF",
         manatee: {
           50: "#F6F8FB",
           100: "#F1F3F7",

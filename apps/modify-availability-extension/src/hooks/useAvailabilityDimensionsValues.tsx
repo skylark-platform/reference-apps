@@ -1,4 +1,8 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import {
+  QueryFunctionContext,
+  QueryKey,
+  useInfiniteQuery,
+} from "@tanstack/react-query";
 import { DocumentNode } from "graphql";
 import { useMemo } from "react";
 
@@ -36,32 +40,42 @@ const getNextPageParam = (
   return entriesWithNextToken.length > 0 ? nextTokens : undefined;
 };
 
-const uri = "https://api.sl-f-sl-02.development.skylarkplatform.com/graphql";
-const token = "skylark-admin-09MU31uYUeOAbKxebXWfbScWVNx98BBWE8J2Emx77k0";
-
-export const useAvailabilityDimensionsWithValues = () => {
-  const { dimensions: dimensionsWithoutValues } = useAvailabilityDimensions({
+export const useAvailabilityDimensionsWithValues = (
+  uri: string,
+  token: string
+) => {
+  const {
+    dimensions: dimensionsWithoutValues,
+    isLoading: isDimensionsLoading,
+  } = useAvailabilityDimensions({
     uri,
     token,
   });
 
-  const { data, fetchNextPage, hasNextPage, ...rest } =
-    useInfiniteQuery<GQLSkylarkListAvailabilityDimensionValuesResponse>({
-      queryKey: [QueryKeys.AvailabilityDimensions, dimensionsWithoutValues],
-      queryFn: ({ pageParam: nextTokens }) => {
-        const query = createGetAvailabilityDimensionValues(
-          dimensionsWithoutValues,
-          nextTokens
-        );
-        return skylarkRequest({
-          uri,
-          token,
-          query: query as DocumentNode,
-        });
-      },
-      getNextPageParam,
-      enabled: !!dimensionsWithoutValues,
-    });
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isLoading: isDimensionsValuesLoading,
+    ...rest
+  } = useInfiniteQuery<GQLSkylarkListAvailabilityDimensionValuesResponse>({
+    queryKey: [QueryKeys.AvailabilityDimensions, dimensionsWithoutValues],
+    queryFn: ({
+      pageParam: nextTokens,
+    }: QueryFunctionContext<QueryKey, Record<string, string>>) => {
+      const query = createGetAvailabilityDimensionValues(
+        dimensionsWithoutValues,
+        nextTokens
+      );
+      return skylarkRequest({
+        uri,
+        token,
+        query: query as DocumentNode,
+      });
+    },
+    getNextPageParam,
+    enabled: !!dimensionsWithoutValues,
+  });
 
   // This if statement ensures that all data is fetched
   if (hasNextPage) {
@@ -113,6 +127,8 @@ export const useAvailabilityDimensionsWithValues = () => {
 
   return {
     dimensions: dimensionsWithValues,
+    isDimensionsLoading,
+    isDimensionsValuesLoading: isDimensionsValuesLoading || isDimensionsLoading,
     ...rest,
   };
 };

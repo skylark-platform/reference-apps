@@ -4,6 +4,19 @@ import { App } from "./app";
 
 import "./index.css";
 
+chrome.runtime.onMessage.addListener((response, sendResponse) => {
+  console.log("fe message listener response");
+});
+
+const query = { active: true, currentWindow: true };
+
+function callback(tabs) {
+  const currentTab = tabs[0]; // there will be only one in this array
+  console.log({ currentTab }); // also has properties like currentTab.id
+}
+
+chrome.tabs.query(query, callback);
+
 ReactDOM.createRoot(
   document.getElementById(
     "skylark-availability-extension-app-root"

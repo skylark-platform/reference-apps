@@ -1,4 +1,8 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import {
+  QueryFunctionContext,
+  QueryKey,
+  useInfiniteQuery,
+} from "@tanstack/react-query";
 
 import { QueryKeys } from "../constants";
 import { skylarkRequest } from "../lib/requestClient";
@@ -21,7 +25,9 @@ export const useAvailabilityDimensions = ({
         QueryKeys.AvailabilityDimensions,
         LIST_AVAILABILITY_DIMENSIONS,
       ],
-      queryFn: ({ pageParam: nextToken }) =>
+      queryFn: ({
+        pageParam: nextToken,
+      }: QueryFunctionContext<QueryKey, string>) =>
         skylarkRequest({
           uri,
           token,

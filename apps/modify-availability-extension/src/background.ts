@@ -1,26 +1,49 @@
-// chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-//   console.log(`Change URL: ${tab.url}`);
-// });
+import { EXTENSION_RULES_URL_FILTER } from "./constants";
+import {
+  ExtensionMessage,
+  ExtensionMessageType,
+  ExtensionMessageValueHeaders,
+} from "./interfaces";
+import {
+  getExtensionEnabledFromStorage,
+  getModifiersFromStorage,
+  setExtensionEnabledToStorage,
+} from "./lib/storage";
 
-const convertHeadersToRules = (
-  headers: Record<string, string>
-): chrome.declarativeNetRequest.Rule[] | undefined => {
+const convertModifiersToRules = ({
+  dimensions,
+  timeTravel,
+}: ExtensionMessageValueHeaders):
+  | chrome.declarativeNetRequest.Rule[]
+  | undefined => {
   const allResourceTypes = Object.values(
     chrome.declarativeNetRequest.ResourceType
   );
 
-  const headerEntries = Object.entries(headers);
-
-  if (headerEntries.length === 0) {
-    return undefined;
-  }
-
   const requestHeaders: chrome.declarativeNetRequest.ModifyHeaderInfo[] =
-    Object.entries(headers).map(([header, value]) => ({
+    Object.entries(dimensions).map(([dimension, value]) => ({
       operation: chrome.declarativeNetRequest.HeaderOperation.SET,
-      header,
+      header: `x-sl-dimension-${dimension}`,
       value,
     }));
+
+  if (timeTravel) {
+    const timeTravelRule: chrome.declarativeNetRequest.ModifyHeaderInfo = {
+      operation: chrome.declarativeNetRequest.HeaderOperation.SET,
+      header: "x-time-travel",
+      value: timeTravel,
+    };
+
+    requestHeaders.push(timeTravelRule);
+  }
+
+  requestHeaders.push({
+    operation: chrome.declarativeNetRequest.HeaderOperation.SET,
+    header: "x-bypass-cache",
+    value: "1",
+  });
+
+  console.log({ requestHeaders });
 
   const rules: chrome.declarativeNetRequest.Rule[] = [
     {
@@ -31,7 +54,7 @@ const convertHeadersToRules = (
         requestHeaders,
       },
       condition: {
-        urlFilter: "skylarkplatform*/graphql",
+        urlFilter: EXTENSION_RULES_URL_FILTER,
         resourceTypes: allResourceTypes,
       },
     },
@@ -39,11 +62,6 @@ const convertHeadersToRules = (
 
   return rules;
 };
-
-chrome.bookmarks.getRecent(10, (results) => {
-  console.log(`bookmarks:`, results);
-});
-
 console.log(`this is background service worker`);
 
 // chrome.tabs.onCreated.addListener((tab) => {
@@ -64,34 +82,117 @@ console.log(`this is background service worker`);
 //   addRules: rules,
 // });
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log("message received", message);
+const getActiveRules = () => chrome.declarativeNetRequest.getDynamicRules();
 
-  if (message.type === "headers") {
-    const rules = convertHeadersToRules(
-      message.value as Record<string, string>
-    );
+const updateRules = async (modifiers: ExtensionMessageValueHeaders) => {
+  const activeRules = await getActiveRules();
 
-    chrome.declarativeNetRequest
-      .getDynamicRules()
-      .then((oldRules) => {
-        console.log("rules", { rules, oldRules });
+  const rules = convertModifiersToRules(modifiers);
 
-        void chrome.declarativeNetRequest
-          .updateDynamicRules({
-            removeRuleIds: oldRules.map((rule) => rule.id), // remove existing rules
-            addRules: rules,
-          })
-          .then(sendResponse);
-      })
-      .catch((err) => console.log("active rules err", err));
+  const updateRuleOptions: chrome.declarativeNetRequest.UpdateRuleOptions = {
+    removeRuleIds: activeRules.map((rule) => rule.id), // remove existing rules
+    addRules: rules,
+  };
+
+  const updated = await chrome.declarativeNetRequest.updateDynamicRules(
+    updateRuleOptions
+  );
+
+  console.log({ updated });
+
+  return rules;
+};
+
+const reloadCurrentTab = async () => {
+  const [activeTab] = await chrome.tabs.query({
+    active: true,
+    currentWindow: true,
+  });
+  if (activeTab?.id) {
+    await chrome.tabs.reload(activeTab.id);
+  }
+};
+
+const toggleExtensionPaused = async () => {
+  const extensionEnabled = await getExtensionEnabledFromStorage();
+
+  console.log("toggleExtensionPaused", extensionEnabled);
+
+  if (extensionEnabled) {
+    const activeRules = await getActiveRules();
+
+    const updateRuleOptions: chrome.declarativeNetRequest.UpdateRuleOptions = {
+      removeRuleIds: activeRules.map((rule) => rule.id),
+      addRules: [],
+    };
+
+    await chrome.declarativeNetRequest.updateDynamicRules(updateRuleOptions);
+  } else {
+    const modifiers = await getModifiersFromStorage();
+    await updateRules(modifiers);
+  }
+  await setExtensionEnabledToStorage(!extensionEnabled);
+};
+
+const handleMessage = async (
+  message: ExtensionMessage,
+  sendResponse: (message?: chrome.declarativeNetRequest.Rule[]) => void
+) => {
+  switch (message.type) {
+    case ExtensionMessageType.UpdateHeaders:
+      return sendResponse(await updateRules(message.value));
+    case ExtensionMessageType.TogglePaused:
+      await toggleExtensionPaused();
+      return sendResponse();
+    case ExtensionMessageType.ClearHeaders:
+      return sendResponse();
+    case ExtensionMessageType.RefreshTab:
+      void reloadCurrentTab();
+      return sendResponse();
+    case ExtensionMessageType.GetActiveHeaders:
+    default:
+      return sendResponse();
+  }
+};
+
+chrome.runtime.onMessage.addListener(
+  (message: ExtensionMessage, sender, sendResponse) => {
+    console.log("message received", message);
+
+    // if (message.type === "update-headers") {
+    //   const rules = convertHeadersToRules(message.value);
+
+    //   chrome.declarativeNetRequest
+    //     .getDynamicRules()
+    //     .then((oldRules) => {
+    //       console.log("rules", { rules, oldRules });
+
+    //       void chrome.declarativeNetRequest
+    //         .updateDynamicRules({
+    //           removeRuleIds: oldRules.map((rule) => rule.id), // remove existing rules
+    //           addRules: rules,
+    //         })
+    //         .then(sendResponse);
+    //     })
+    //     .catch((err) => console.log("active rules err", err));
+    //   return true;
+    // }
+
+    void handleMessage(message, sendResponse);
+
     return true;
   }
-});
+);
 
-chrome.declarativeNetRequest.onRuleMatchedDebug.addListener((e) => {
-  const msg = `Cookies removed in request to ${e.request.url} on tab ${e.request.tabId}.`;
-  console.log(msg);
+chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  void getActiveRules().then((rules) => {
+    console.log("getActiveRules for Tab", rules, tabs);
+    void chrome.runtime.sendMessage(
+      // tabs[0].id,
+      { action: "open_dialog_box", value: rules },
+      (response) => {}
+    );
+  });
 });
 
 console.log("Service worker started.");
