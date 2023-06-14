@@ -364,11 +364,9 @@ export const createGraphQLMediaObjects = async (
       (previousOperations, { id, fields }) => {
         if (
           !has(fields, "title") ||
-          !has(fields, "slug") ||
-          !isString(fields.title) ||
-          !isString(fields.slug)
+          !isString(fields.title)
         ) {
-          return {};
+          return previousOperations;
         }
 
         const { objectType, argName, createFunc, updateFunc } = gqlObjectMeta(
@@ -454,6 +452,11 @@ export const createGraphQLMediaObjects = async (
       },
       {} as { [key: string]: object }
     );
+
+    // Stops infinite loop when blank rows are included
+    if(Object.keys(operations).length === 0) {
+      break;
+    }
 
     // eslint-disable-next-line no-await-in-loop
     const arr = await mutateMultipleObjects<GraphQLBaseObject>(
