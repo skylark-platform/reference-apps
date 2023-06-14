@@ -20,7 +20,6 @@ import {
   createOrUpdateAvailability,
   createOrUpdateScheduleDimensionValues,
 } from "./lib/skylark/saas/availability";
-import { updateObjectConfigurations } from "./lib/skylark/saas/objectConfiguration";
 import { slxDemoSetsToCreate } from "./additional-objects/slxDemosSets";
 import { updateSkylarkSchema } from "./lib/skylark/saas/schema";
 
@@ -51,9 +50,10 @@ const main = async () => {
   // eslint-disable-next-line no-console
   console.log("Schema updated to version:", version);
 
-  await updateObjectConfigurations();
-  // eslint-disable-next-line no-console
-  console.log("Object configuration updated");
+  // Comment updateObjectConfigurations as we can use the defaults
+  // await updateObjectConfigurations();
+  // // eslint-disable-next-line no-console
+  // console.log("Object configuration updated");
 
   await createDimensions();
 

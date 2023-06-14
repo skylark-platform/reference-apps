@@ -81,7 +81,22 @@ const updateSetTypes = async (version?: number) => {
 };
 
 export const updateSkylarkSchema = async () => {
-  const { active_version: initialVersion } = await getActivationStatus();
+  const {
+    active_version: initialVersion,
+    update_in_progress: initialUpdateInProgress,
+  } = await getActivationStatus();
+
+  if (initialUpdateInProgress) {
+    let initialUpdating = true;
+    while (initialUpdating) {
+      const { update_in_progress: initialUpdateStillRunning } =
+        // eslint-disable-next-line no-await-in-loop
+        await getActivationStatus();
+      initialUpdating = initialUpdateStillRunning;
+      // eslint-disable-next-line no-await-in-loop
+      await pause(2500);
+    }
+  }
 
   const { version: updatedVersion } = await updateSetTypes(initialVersion);
 
