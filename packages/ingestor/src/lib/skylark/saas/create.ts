@@ -362,10 +362,7 @@ export const createGraphQLMediaObjects = async (
 
     const operations = objectsToCreateUpdate.reduce(
       (previousOperations, { id, fields }) => {
-        if (
-          !has(fields, "title") ||
-          !isString(fields.title)
-        ) {
+        if (!has(fields, "title") || !isString(fields.title)) {
           return previousOperations;
         }
 
@@ -454,7 +451,7 @@ export const createGraphQLMediaObjects = async (
     );
 
     // Stops infinite loop when blank rows are included
-    if(Object.keys(operations).length === 0) {
+    if (Object.keys(operations).length === 0) {
       break;
     }
 
