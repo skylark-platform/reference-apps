@@ -39,6 +39,19 @@ const spotlightMovies: SetConfig = {
   ],
 };
 
+const classicKidsShows: SetConfig = {
+  externalId: createStreamTVExternalId("classic_kids_shows"),
+  title: "Classic kids shows",
+  slug: "classic-kids-shows",
+  graphQlSetType: "RAIL",
+  contents: [
+    { type: "brands", slug: "power-rangers" },
+    { type: "brands", slug: "teletubbies" },
+    { type: "brands", slug: "chucklevision" },
+    { type: "brands", slug: "pokemon" },
+  ],
+};
+
 const homePageSlider: SetConfig = {
   externalId: createStreamTVExternalId("home_page_slider"),
   title: "Home page hero",
@@ -49,6 +62,19 @@ const homePageSlider: SetConfig = {
     { type: "movies", slug: "deadpool-2" },
     { type: "movies", slug: "sing-2" },
     { type: "movies", slug: "us" },
+  ],
+};
+
+const kidsHomePageSlider: SetConfig = {
+  externalId: createStreamTVExternalId("home_page_slider_kids"),
+  title: "Kids Home page hero",
+  slug: "media-reference-home-page-hero-kids",
+  graphQlSetType: "SLIDER",
+  contents: [
+    { type: "brands", slug: "miraculous" },
+    { type: "brands", slug: "bluey" },
+    { type: "brands", slug: "pokemon" },
+    { type: "brands", slug: "paw-patrol" },
   ],
 };
 
@@ -87,6 +113,26 @@ const wesAndersonMoviesCollection: SetConfig = {
     { type: "movies", slug: "moonrise-kingdom" },
     { type: "movies", slug: "fantastic-mr-fox" },
     { type: "movies", slug: "isle-of-dogs" },
+  ],
+};
+
+const fastAndFuriousMoviesCollection: SetConfig = {
+  externalId: createStreamTVExternalId("fast_and_furious_movies"),
+  title: "Fast & Furious Movies Collection",
+  slug: "fast-and-furious-movies-collection",
+  graphQlSetType: "COLLECTION",
+  contents: [
+    { type: "movies", slug: "the-fast-and-the-furious" },
+    { type: "movies", slug: "2-fast-2-furious" },
+    { type: "movies", slug: "tokyo-drift" },
+    { type: "movies", slug: "fast-and-furious" },
+    { type: "movies", slug: "fast-five" },
+    { type: "movies", slug: "fast-and-furious-6" },
+    { type: "movies", slug: "furious-7" },
+    { type: "movies", slug: "the-fate-of-the-furious" },
+    { type: "movies", slug: "hobbs-and-shaw" },
+    { type: "movies", slug: "f9" },
+    { type: "movies", slug: "fast-x" },
   ],
 };
 
@@ -154,6 +200,11 @@ const discoverCollectionRail: SetConfig = {
       set_type: "page",
       slug: gameOfThronesUniversePage.slug,
     },
+    {
+      type: "set",
+      set_type: "collection",
+      slug: fastAndFuriousMoviesCollection.slug,
+    },
   ],
 };
 
@@ -164,10 +215,13 @@ const mediaReferenceHomepage: SetConfig = {
   graphQlSetType: "PAGE",
   contents: [
     { type: "set", set_type: "slider", slug: homePageSlider.slug },
+    { type: "set", set_type: "slider", slug: kidsHomePageSlider.slug },
     { type: "set", set_type: "rail", slug: spotlightMovies.slug },
     { type: "set", set_type: "rail", slug: newTVReleases.slug },
+    { type: "set", set_type: "rail", slug: classicKidsShows.slug },
     { type: "seasons", slug: "got-s01" },
     { type: "seasons", slug: "got-s02" },
+    { type: "seasons", slug: "miraculous-s05" },
     { type: "set", set_type: "rail", slug: discoverCollectionRail.slug },
   ],
 };
@@ -176,8 +230,11 @@ export const orderedSetsToCreate = [
   newTVReleases,
   spotlightMovies,
   homePageSlider,
+  kidsHomePageSlider,
+  classicKidsShows,
   tarantinoMoviesCollection,
   wesAndersonMoviesCollection,
+  fastAndFuriousMoviesCollection,
   // got
   gameOfThronesUniverseSlider,
   gotHighestRatedEpisodesRail,

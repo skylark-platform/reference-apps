@@ -6,7 +6,10 @@ import {
 import { Attachment, FieldSet, Records } from "airtable";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import { chunk, flatten, has, isArray, isEmpty, isString } from "lodash";
-import { CREATE_OBJECT_CHUNK_SIZE } from "../../constants";
+import {
+  CREATE_OBJECT_CHUNK_SIZE,
+  CONCURRENT_CREATE_REQUESTS_NUM,
+} from "../../constants";
 
 import {
   GraphQLBaseObject,
@@ -33,62 +36,73 @@ export const mutateMultipleObjects = async <T extends { external_id?: string }>(
   // Smaller requests are better as each is handled by a single lambda
   const chunks = chunk(Object.keys(mutations), CREATE_OBJECT_CHUNK_SIZE);
 
-  const chunkedData = await Promise.all(
-    chunks.map(async (keys, i): Promise<T[]> => {
-      const splitMutations = keys.reduce(
-        (previousObj, key) => ({
-          ...previousObj,
-          [key]: mutations[key],
-        }),
-        {}
-      );
+  // Limit the number of requests to Skylark we make at once
+  const concurrentRequestChunks = chunk(chunks, CONCURRENT_CREATE_REQUESTS_NUM);
 
-      const mutation = {
-        mutation: {
-          __name: chunks.length > 1 ? `${name}_chunk_${i + 1}` : name,
-          ...splitMutations,
-        },
-      };
+  const allData: T[] = [];
 
-      const graphQLMutation = jsonToGraphQLQuery(mutation);
+  // eslint-disable-next-line no-restricted-syntax
+  for (const requestChunksBatch of concurrentRequestChunks) {
+    // eslint-disable-next-line no-await-in-loop
+    const chunkedData = await Promise.all(
+      requestChunksBatch.map(async (keys, i): Promise<T[]> => {
+        const splitMutations = keys.reduce(
+          (previousObj, key) => ({
+            ...previousObj,
+            [key]: mutations[key],
+          }),
+          {}
+        );
 
-      try {
-        const data = await graphQLClient.request<{
-          [key: string]: T;
-        }>(graphQLMutation);
+        const mutation = {
+          mutation: {
+            __name:
+              requestChunksBatch.length > 1 ? `${name}_chunk_${i + 1}` : name,
+            ...splitMutations,
+          },
+        };
 
-        if (!data) {
-          return [];
+        const graphQLMutation = jsonToGraphQLQuery(mutation);
+
+        try {
+          const data = await graphQLClient.request<{
+            [key: string]: T;
+          }>(graphQLMutation);
+
+          if (!data) {
+            return [];
+          }
+
+          const arr = Object.entries(data).map(([requestId, requestData]) => {
+            // There is a bug at the moment where the external_id may not be returned. This attempts to get it out of the requestId
+            const requestDataExternalId = requestData.external_id || false;
+            const airtableRecordPrefix = "rec";
+            const recordIdInRequestId =
+              requestId.indexOf(airtableRecordPrefix) > 0;
+            const externalIdFromRequestId =
+              recordIdInRequestId &&
+              `rec${requestId.substring(
+                requestId.indexOf(airtableRecordPrefix) + 1
+              )}`;
+
+            return {
+              ...requestData,
+              external_id:
+                requestDataExternalId || externalIdFromRequestId || null,
+            };
+          });
+          return arr;
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.error("Failing request: ", graphQLMutation);
+          throw err;
         }
+      })
+    );
 
-        const arr = Object.entries(data).map(([requestId, requestData]) => {
-          // There is a bug at the moment where the external_id may not be returned. This attempts to get it out of the requestId
-          const requestDataExternalId = requestData.external_id || false;
-          const airtableRecordPrefix = "rec";
-          const recordIdInRequestId =
-            requestId.indexOf(airtableRecordPrefix) > 0;
-          const externalIdFromRequestId =
-            recordIdInRequestId &&
-            `rec${requestId.substring(
-              requestId.indexOf(airtableRecordPrefix) + 1
-            )}`;
-
-          return {
-            ...requestData,
-            external_id:
-              requestDataExternalId || externalIdFromRequestId || null,
-          };
-        });
-        return arr;
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error("Failing request: ", graphQLMutation);
-        throw err;
-      }
-    })
-  );
-
-  const allData = flatten(chunkedData);
+    const flattenedBatchData = flatten(chunkedData);
+    allData.push(...flattenedBatchData);
+  }
 
   return allData;
 };

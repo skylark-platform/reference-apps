@@ -142,6 +142,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                     options={[
                       { text: "Premium", value: "premium" },
                       { text: "Standard", value: "standard" },
+                      { text: "Kids", value: "kids" },
                     ]}
                     onChange={(value: string) => setCustomerType(value)}
                   />
