@@ -29,18 +29,11 @@ export const getImageSrcAndSizeByWindow = (
   return getImageSrc(images, type, imageSize || "");
 };
 
-// Make request to Skylark using values from LocalStorage if found
-export const skylarkRequestWithDimensions = <T>(
+export const skylarkRequestWithLocalStorage = <T>(
   query: string,
-  dimensions: Dimensions,
+  headers: Record<string, string>,
   variables?: object
 ) => {
-  const headers: { [key: string]: string } = {};
-
-  if (dimensions.timeTravel) {
-    headers["x-time-travel"] = dimensions.timeTravel;
-  }
-
   if (typeof window !== "undefined") {
     // Allow users to give their own Skylark to connect to
     const localStorageUri = localStorage.getItem(LOCAL_STORAGE.uri);
@@ -57,4 +50,19 @@ export const skylarkRequestWithDimensions = <T>(
   }
 
   return graphQLClient.request<T>(query, variables || {}, headers);
+};
+
+// Make request to Skylark using values from LocalStorage if found
+export const skylarkRequestWithDimensions = <T>(
+  query: string,
+  dimensions: Dimensions,
+  variables?: object
+) => {
+  const headers: Record<string, string> = {};
+
+  if (dimensions.timeTravel) {
+    headers["x-time-travel"] = dimensions.timeTravel;
+  }
+
+  return skylarkRequestWithLocalStorage<T>(query, headers, variables);
 };

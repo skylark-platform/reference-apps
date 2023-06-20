@@ -1078,10 +1078,10 @@ export type HiddenObject = {
 
 export enum ImageType {
   Background = "BACKGROUND",
+  Character = "CHARACTER",
   Feature = "FEATURE",
   Footer = "FOOTER",
   Header = "HEADER",
-  Landscape = "LANDSCAPE",
   Main = "MAIN",
   Poster = "POSTER",
   PostLive = "POST_LIVE",
@@ -3425,6 +3425,7 @@ export type Season = Metadata &
     genres?: Maybe<GenreListing>;
     images?: Maybe<SkylarkImageListing>;
     number_of_episodes?: Maybe<Scalars["Int"]>;
+    preferred_image_type?: Maybe<Scalars["String"]>;
     ratings?: Maybe<RatingListing>;
     release_date?: Maybe<Scalars["AWSDate"]>;
     season_number?: Maybe<Scalars["Int"]>;
@@ -3531,6 +3532,7 @@ export type SeasonCreateInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
   external_id?: InputMaybe<Scalars["String"]>;
   number_of_episodes?: InputMaybe<Scalars["Int"]>;
+  preferred_image_type?: InputMaybe<ImageType>;
   relationships?: InputMaybe<SeasonRelationships>;
   release_date?: InputMaybe<Scalars["AWSDate"]>;
   season_number?: InputMaybe<Scalars["Int"]>;
@@ -3547,6 +3549,7 @@ export type SeasonInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
   external_id?: InputMaybe<Scalars["String"]>;
   number_of_episodes?: InputMaybe<Scalars["Int"]>;
+  preferred_image_type?: InputMaybe<ImageType>;
   relationships?: InputMaybe<SeasonRelationships>;
   release_date?: InputMaybe<Scalars["AWSDate"]>;
   season_number?: InputMaybe<Scalars["Int"]>;
@@ -6178,6 +6181,7 @@ export type _SeasonGlobal = _Global & {
   history?: Maybe<Array<Maybe<_SeasonGlobal>>>;
   modified?: Maybe<_Audit>;
   number_of_episodes?: Maybe<Scalars["Int"]>;
+  preferred_image_type?: Maybe<Scalars["String"]>;
   publish_stage?: Maybe<PublishStage>;
   release_date?: Maybe<Scalars["AWSDate"]>;
   season_number?: Maybe<Scalars["Int"]>;

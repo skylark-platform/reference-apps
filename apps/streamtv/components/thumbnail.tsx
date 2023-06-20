@@ -25,6 +25,7 @@ import {
   ImageType,
   ObjectTypes,
   SkylarkSet,
+  StreamTVSupportedImageType,
   StreamTVSupportedSetType,
 } from "../types";
 
@@ -39,6 +40,7 @@ interface ThumbnailProps {
   uid: string;
   objectType: ObjectTypes;
   variant: ThumbnailVariant;
+  preferredImageType?: StreamTVSupportedImageType;
 }
 
 export const getThumbnailVariantFromSetType = (
@@ -90,7 +92,12 @@ const getThumbnailQuery = (objectType: ObjectTypes) => {
   return "";
 };
 
-export const Thumbnail = ({ uid, objectType, variant }: ThumbnailProps) => {
+export const Thumbnail = ({
+  uid,
+  objectType,
+  variant,
+  preferredImageType,
+}: ThumbnailProps) => {
   const { ref, inView } = useInView();
 
   const query = getThumbnailQuery(objectType);
@@ -106,7 +113,10 @@ export const Thumbnail = ({ uid, objectType, variant }: ThumbnailProps) => {
 
   const href = parsedType === "page" ? uid : `/${parsedType}/${uid}`;
 
-  const thumbnailImage = getGraphQLImageSrc(data?.images, ImageType.Thumbnail);
+  const backgroundImage = getGraphQLImageSrc(
+    data?.images,
+    preferredImageType || ImageType.Thumbnail
+  );
 
   return (
     <div ref={ref}>
@@ -117,7 +127,7 @@ export const Thumbnail = ({ uid, objectType, variant }: ThumbnailProps) => {
         <>
           {variant === "landscape-synopsis" && (
             <EpisodeThumbnail
-              backgroundImage={thumbnailImage}
+              backgroundImage={backgroundImage}
               contentLocation="below"
               description={data?.synopsis_short || data?.synopsis || ""}
               href={href}
@@ -133,7 +143,7 @@ export const Thumbnail = ({ uid, objectType, variant }: ThumbnailProps) => {
 
           {variant === "landscape-movie" && (
             <MovieThumbnail
-              backgroundImage={thumbnailImage}
+              backgroundImage={backgroundImage}
               contentLocation="below"
               href={href}
               key={uid}
@@ -148,7 +158,7 @@ export const Thumbnail = ({ uid, objectType, variant }: ThumbnailProps) => {
 
           {variant === "landscape-inside" && (
             <MovieThumbnail
-              backgroundImage={thumbnailImage}
+              backgroundImage={backgroundImage}
               contentLocation="inside"
               href={href}
               key={uid}
@@ -163,7 +173,7 @@ export const Thumbnail = ({ uid, objectType, variant }: ThumbnailProps) => {
 
           {variant === "portrait" && (
             <CollectionThumbnail
-              backgroundImage={thumbnailImage}
+              backgroundImage={backgroundImage}
               href={href}
               key={uid}
               title={data?.title_short || data?.title || ""}
@@ -172,7 +182,7 @@ export const Thumbnail = ({ uid, objectType, variant }: ThumbnailProps) => {
 
           {variant === "landscape" && (
             <StandardThumbnail
-              backgroundImage={thumbnailImage}
+              backgroundImage={backgroundImage}
               contentLocation="below"
               href={href}
               key={uid}

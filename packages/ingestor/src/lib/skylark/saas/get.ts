@@ -47,7 +47,9 @@ export const getValidPropertiesForObject = async (
   const graphQLGetQuery = jsonToGraphQLQuery(query);
 
   const data = await graphQLClient.request<GraphQLIntrospection>(
-    graphQLGetQuery
+    graphQLGetQuery,
+    {},
+    { "x-bypass-cache": "1" }
   );
 
   const supportedKinds = ["SCALAR", "ENUM", "NON_NULL"];

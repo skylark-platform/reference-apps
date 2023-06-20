@@ -1,7 +1,13 @@
 import { hasProperty } from "@skylark-reference-apps/lib";
 import { Rail } from "@skylark-reference-apps/react";
 import { sortEpisodesByNumber } from "../lib/utils";
-import { ObjectTypes, Season, SetContent, SkylarkSet } from "../types";
+import {
+  ObjectTypes,
+  Season,
+  SetContent,
+  SkylarkSet,
+  StreamTVSupportedImageType,
+} from "../types";
 import {
   Thumbnail,
   ThumbnailVariant,
@@ -12,10 +18,12 @@ export const SeasonRail = ({
   season,
   header,
   className,
+  preferredImageType,
 }: {
   season: Season;
   header?: string;
   className?: string;
+  preferredImageType?: StreamTVSupportedImageType;
 }) => (
   <Rail
     className={className}
@@ -29,6 +37,7 @@ export const SeasonRail = ({
           <Thumbnail
             key={object.uid}
             objectType={ObjectTypes.Episode}
+            preferredImageType={preferredImageType}
             uid={object.uid}
             variant="landscape-synopsis"
           />

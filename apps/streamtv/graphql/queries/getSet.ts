@@ -1,5 +1,6 @@
 import { gql } from "graphql-request";
 import { CallToActionListingFragment, ImageListingFragment } from "./fragments";
+import { StreamTVAdditionalFields } from "../../types";
 
 export const GET_SET_THUMBNAIL = gql`
   ${ImageListingFragment}
@@ -172,7 +173,7 @@ export const GET_COLLECTION_SET = gql`
   }
 `;
 
-export const GET_PAGE_SET = gql`
+export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
   query GET_PAGE_SET(
     $uid: String
     $externalId: String
@@ -201,6 +202,11 @@ export const GET_PAGE_SET = gql`
               uid
               title
               title_short
+              ${
+                streamTVIngestorSchemaLoaded
+                  ? StreamTVAdditionalFields.PreferredImageType
+                  : ""
+              }
               episodes(limit: 50) {
                 objects {
                   uid

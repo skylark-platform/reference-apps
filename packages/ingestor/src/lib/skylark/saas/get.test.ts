@@ -27,7 +27,9 @@ describe("saas/get.ts", () => {
       await getValidPropertiesForObject("Brand");
 
       expect(graphQlRequest).toBeCalledWith(
-        'query { IntrospectionOnType: __type (name: "Brand") { name fields { name type { name kind } } } IntrospectionOnInputType: __type (name: "BrandInput") { name inputFields { name type { name kind } } } }'
+        'query { IntrospectionOnType: __type (name: "Brand") { name fields { name type { name kind } } } IntrospectionOnInputType: __type (name: "BrandInput") { name inputFields { name type { name kind } } } }',
+        {},
+        expect.any(Object)
       );
     });
 
