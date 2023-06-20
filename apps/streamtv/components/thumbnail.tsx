@@ -20,7 +20,13 @@ import {
   convertTypenameToObjectType,
   getGraphQLImageSrc,
 } from "../lib/utils";
-import { Entertainment, ImageType, ObjectTypes } from "../types";
+import {
+  Entertainment,
+  ImageType,
+  ObjectTypes,
+  SkylarkSet,
+  StreamTVSupportedSetType,
+} from "../types";
 
 export type ThumbnailVariant =
   | "landscape"
@@ -34,6 +40,31 @@ interface ThumbnailProps {
   objectType: ObjectTypes;
   variant: ThumbnailVariant;
 }
+
+export const getThumbnailVariantFromSetType = (
+  setType: SkylarkSet["type"]
+): ThumbnailVariant => {
+  if (setType === StreamTVSupportedSetType.RailInset) {
+    return "landscape-inside";
+  }
+
+  if (setType === StreamTVSupportedSetType.RailWithSynopsis) {
+    return "landscape-synopsis";
+  }
+
+  if (setType === StreamTVSupportedSetType.RailMovie) {
+    return "landscape-movie";
+  }
+
+  if (
+    setType === StreamTVSupportedSetType.RailPortrait ||
+    setType === StreamTVSupportedSetType.Collection
+  ) {
+    return "portrait";
+  }
+
+  return "landscape";
+};
 
 const getThumbnailQuery = (objectType: ObjectTypes) => {
   if (objectType === ObjectTypes.Episode) {

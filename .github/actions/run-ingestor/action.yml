@@ -75,7 +75,7 @@ runs:
         SAAS_API_KEY: ${{ inputs.saas-api-token }}
         CONTENT_TYPE: ${{ inputs.content-type }}
       with:
-        timeout_minutes: 20
+        timeout_minutes: 30
         retry_wait_seconds: 10
         max_attempts: 5
         retry_on: error

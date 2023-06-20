@@ -1,4 +1,3 @@
-import { SetTypes } from "@skylark-reference-apps/lib";
 import { ENUMS } from "../constants";
 
 export interface SetConfig {
@@ -13,7 +12,6 @@ export interface SetConfig {
       }
     | {
         type: "set";
-        set_type: SetTypes;
         slug: string;
       }
     | {

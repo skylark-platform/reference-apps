@@ -27,6 +27,7 @@ interface DimensionSettingsProps {
   show?: boolean;
   skylarkApiUrl?: string;
   timeTravelEnabled: boolean;
+  showKidsDimension?: boolean;
 }
 
 const variants = {
@@ -38,6 +39,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
   show: propShow = false,
   timeTravelEnabled,
   skylarkApiUrl,
+  showKidsDimension,
 }) => {
   const [show, setShow] = useState(propShow);
   const {
@@ -53,6 +55,15 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
   const nextWeekIso = nextWeek.toISOString();
 
   const [modalOpen, setModalOpen] = useState(false);
+
+  const customerTypeOptions = [
+    { text: "Premium", value: "premium" },
+    { text: "Standard", value: "standard" },
+  ];
+
+  if (showKidsDimension) {
+    customerTypeOptions.push({ text: "Kids", value: "kids" });
+  }
 
   return (
     <>
@@ -139,10 +150,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                 <DimensionContent label="Customer Type">
                   <DimensionRadioButton
                     initial={dimensions.customerType}
-                    options={[
-                      { text: "Premium", value: "premium" },
-                      { text: "Standard", value: "standard" },
-                    ]}
+                    options={customerTypeOptions}
                     onChange={(value: string) => setCustomerType(value)}
                   />
                 </DimensionContent>
