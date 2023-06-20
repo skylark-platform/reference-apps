@@ -12,6 +12,7 @@ import {
   DimensionSettings,
   ConnectToSkylarkModal,
 } from "@skylark-reference-apps/react";
+import { hasProperty } from "@skylark-reference-apps/lib";
 import { Search } from "./search";
 
 interface Props {
@@ -28,7 +29,7 @@ export const StreamTVLayout: React.FC<Props> = ({
   timeTravelEnabled,
   children,
 }) => {
-  const { asPath } = useRouter();
+  const { asPath, query } = useRouter();
   const { t } = useTranslation("common");
   const [isMobileSearchOpen, setMobileSearchOpen] = useState(false);
 
@@ -40,6 +41,8 @@ export const StreamTVLayout: React.FC<Props> = ({
 
   const [modalOpen, setModalOpen] = useState(false);
 
+  const skipTitleScreen = hasProperty(query, "skipTitleScreen");
+
   return (
     <DimensionsContextProvider>
       <div className="relative w-full">
@@ -48,17 +51,19 @@ export const StreamTVLayout: React.FC<Props> = ({
             <Search onSearch={() => setMobileSearchOpen(false)} />
           </div>
         )}
-        <TitleScreen
-          exitBackgroundColor="#5B45CE"
-          logo={
-            <MdStream className="h-12 w-12 rounded-md bg-purple-500 sm:h-14 sm:w-14 lg:h-16 lg:w-16" />
-          }
-          title={appTitle}
-        >
-          <p className="text-xs text-gray-500 sm:text-sm lg:text-lg">
-            {t("by-skylark")}
-          </p>
-        </TitleScreen>
+        {!skipTitleScreen && (
+          <TitleScreen
+            exitBackgroundColor="#5B45CE"
+            logo={
+              <MdStream className="h-12 w-12 rounded-md bg-purple-500 sm:h-14 sm:w-14 lg:h-16 lg:w-16" />
+            }
+            title={appTitle}
+          >
+            <p className="text-xs text-gray-500 sm:text-sm lg:text-lg">
+              {t("by-skylark")}
+            </p>
+          </TitleScreen>
+        )}
         <AppBackgroundGradient />
         <AppHeader activeHref={asPath} links={links}>
           <div className="flex items-center justify-center text-3xl text-gray-100">
@@ -91,6 +96,7 @@ export const StreamTVLayout: React.FC<Props> = ({
           {children}
         </div>
         <DimensionSettings
+          showKidsDimension={hasProperty(query, "withKidsDimension")}
           skylarkApiUrl={skylarkApiUrl}
           timeTravelEnabled={!!timeTravelEnabled}
         />

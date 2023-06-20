@@ -11,12 +11,15 @@ import { SeoObjectData } from "../../../lib/getPageSeoData";
 import {
   Brand,
   Episode,
+  Metadata,
   Movie,
   Season,
   SetContent,
   SkylarkSet,
   StreamTVSupportedSetType,
 } from "../../../types";
+import { Grid } from "../../grid";
+import { getThumbnailVariantFromSetType } from "../../thumbnail";
 
 const Page: NextPage<{
   slug: string;
@@ -73,6 +76,22 @@ const Page: NextPage<{
                   >
                     <Carousel uid={item.uid} />
                   </div>
+                );
+              }
+
+              if (item.type === StreamTVSupportedSetType.Grid) {
+                const objects = (
+                  item?.content?.objects as SetContent[] | undefined
+                )
+                  ?.map(({ object }) => object)
+                  .filter((object) => !!object) as Metadata[];
+                return (
+                  <Grid
+                    className="my-6"
+                    header={item.title || item.title_short || undefined}
+                    objects={objects}
+                    variant={getThumbnailVariantFromSetType(item.type)}
+                  />
                 );
               }
 

@@ -9,7 +9,7 @@ import { DisplayError } from "../components/displayError";
 import { useListObjects } from "../hooks/useListObjects";
 import { LIST_GENRES, LIST_MOVIES } from "../graphql/queries";
 import { useMovieListingFromGenre } from "../hooks/useMovieListingFromGenre";
-import { Thumbnail } from "../components/thumbnail";
+import { Grid } from "../components/grid";
 
 const Movies: NextPage = () => {
   const [activeGenre, setActiveGenre] = useState<{
@@ -61,7 +61,7 @@ const Movies: NextPage = () => {
           </h1>
           <div className="text-[16px]">{t("movies-page-description")}</div>
         </div>
-        <div className="flex flex-row gap-x-2 pb-8 md:pb-20 xl:pb-24">
+        <div className="flex flex-row gap-x-2 pb-6 md:pb-16 xl:pb-20">
           <Dropdown
             items={genres?.map((genre) => genre.name || "").sort() || []}
             label="Genres"
@@ -77,16 +77,14 @@ const Movies: NextPage = () => {
         </div>
       )}
       <SkeletonPage show={isLoading && !movies}>
-        <div className="grid grid-cols-2 gap-x-4 gap-y-6 px-gutter sm:px-sm-gutter md:grid-cols-3 lg:grid-cols-4 lg:px-lg-gutter xl:px-xl-gutter 2xl:grid-cols-6">
-          {movies?.map((movie) => (
-            <Thumbnail
-              key={movie.uid}
-              objectType={ObjectTypes.Movie}
-              uid={movie.uid}
-              variant="landscape-movie"
-            />
-          ))}
-        </div>
+        {movies && (
+          <Grid
+            objects={movies.map(
+              (movie): Movie => ({ ...movie, __typename: ObjectTypes.Movie })
+            )}
+            variant="landscape-movie"
+          />
+        )}
       </SkeletonPage>
     </div>
   );
