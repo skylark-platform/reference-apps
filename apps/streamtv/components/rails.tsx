@@ -1,6 +1,5 @@
 import { hasProperty } from "@skylark-reference-apps/lib";
 import { Rail } from "@skylark-reference-apps/react";
-import { sortEpisodesByNumber } from "../lib/utils";
 import {
   ObjectTypes,
   Season,
@@ -49,20 +48,18 @@ export const SeasonRail = ({
     displayCount
     header={header || season.title || season.title_short || undefined}
   >
-    {season.episodes?.objects
-      ?.sort(sortEpisodesByNumber)
-      .map((object) =>
-        object ? (
-          <Thumbnail
-            key={object.uid}
-            objectType={ObjectTypes.Episode}
-            uid={object.uid}
-            variant="landscape-synopsis"
-          />
-        ) : (
-          <></>
-        )
-      )}
+    {season.episodes?.objects?.map((object) =>
+      object ? (
+        <Thumbnail
+          key={object.uid}
+          objectType={ObjectTypes.Episode}
+          uid={object.uid}
+          variant="landscape-synopsis"
+        />
+      ) : (
+        <></>
+      )
+    )}
   </Rail>
 );
 

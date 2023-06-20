@@ -3,10 +3,8 @@ import * as utils from "../../lib/utils";
 import { Entertainment } from "../../types";
 import {
   Credit,
-  Episode,
   SkylarkImageListing,
   ImageType,
-  Maybe,
 } from "../../types/gql";
 
 const credits: Credit[] = [
@@ -200,27 +198,6 @@ describe("utils.ts", () => {
     it("defaults to a set type of page", () => {
       const got = utils.convertGraphQLSetType("PAGE");
       expect(got).toEqual("page");
-    });
-  });
-
-  describe("sortEpisodesByNumber", () => {
-    const arr: Maybe<Episode>[] = [
-      { uid: "10", episode_number: 10 },
-      { uid: "1", episode_number: 1 },
-      { uid: "5", episode_number: 5 },
-      { uid: "4", episode_number: 4 },
-      { uid: "55", episode_number: 5 },
-    ];
-
-    it("sorts the objects by the number property", () => {
-      const got = arr.sort(utils.sortEpisodesByNumber);
-      expect(got).toEqual([
-        { uid: "1", episode_number: 1 },
-        { uid: "4", episode_number: 4 },
-        { uid: "55", episode_number: 5 },
-        { uid: "5", episode_number: 5 },
-        { uid: "10", episode_number: 10 },
-      ]);
     });
   });
 });
