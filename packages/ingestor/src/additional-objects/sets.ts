@@ -147,11 +147,11 @@ const gameOfThronesUniverseSlider: SetConfig = {
   ],
 };
 
-const gotHighestRatedEpisodesRail: SetConfig = {
+const gotHighestRatedEpisodes: SetConfig = {
   externalId: createStreamTVExternalId("got_highest_rated_episodes"),
   title: "GOT Highest Rated Episodes",
   slug: "got-highest-rated-episodes",
-  graphQlSetType: "RAIL_WITH_SYNOPSIS",
+  graphQlSetType: "GRID",
   contents: [
     { type: "episodes", slug: "the-rains-of-castamere" },
     { type: "episodes", slug: "hardhome" },
@@ -168,9 +168,9 @@ const gameOfThronesUniversePage: SetConfig = {
   slug: "game-of-thrones-universe",
   graphQlSetType: "PAGE",
   contents: [
-    { type: "set", set_type: "slider", slug: gameOfThronesUniverseSlider.slug },
+    { type: "set", slug: gameOfThronesUniverseSlider.slug },
     { type: "seasons", slug: "house-of-the-dragon-s01" },
-    { type: "set", set_type: "rail", slug: gotHighestRatedEpisodesRail.slug },
+    { type: "set", slug: gotHighestRatedEpisodes.slug },
     { type: "seasons", slug: "got-s05" },
     { type: "seasons", slug: "got-s04" },
     { type: "seasons", slug: "got-s03" },
@@ -187,22 +187,18 @@ const discoverCollectionRail: SetConfig = {
   contents: [
     {
       type: "set",
-      set_type: "collection",
       slug: tarantinoMoviesCollection.slug,
     },
     {
       type: "set",
-      set_type: "collection",
       slug: wesAndersonMoviesCollection.slug,
     },
     {
       type: "set",
-      set_type: "page",
       slug: gameOfThronesUniversePage.slug,
     },
     {
       type: "set",
-      set_type: "collection",
       slug: fastAndFuriousMoviesCollection.slug,
     },
   ],
@@ -214,15 +210,15 @@ const mediaReferenceHomepage: SetConfig = {
   slug: "media-reference-homepage",
   graphQlSetType: "PAGE",
   contents: [
-    { type: "set", set_type: "slider", slug: homePageSlider.slug },
-    { type: "set", set_type: "slider", slug: kidsHomePageSlider.slug },
-    { type: "set", set_type: "rail", slug: spotlightMovies.slug },
-    { type: "set", set_type: "rail", slug: newTVReleases.slug },
-    { type: "set", set_type: "rail", slug: classicKidsShows.slug },
+    { type: "set", slug: homePageSlider.slug },
+    { type: "set", slug: kidsHomePageSlider.slug },
+    { type: "set", slug: spotlightMovies.slug },
+    { type: "set", slug: newTVReleases.slug },
+    { type: "set", slug: classicKidsShows.slug },
     { type: "seasons", slug: "got-s01" },
     { type: "seasons", slug: "got-s02" },
     { type: "seasons", slug: "miraculous-s05" },
-    { type: "set", set_type: "rail", slug: discoverCollectionRail.slug },
+    { type: "set", slug: discoverCollectionRail.slug },
   ],
 };
 
@@ -237,7 +233,7 @@ export const orderedSetsToCreate = [
   fastAndFuriousMoviesCollection,
   // got
   gameOfThronesUniverseSlider,
-  gotHighestRatedEpisodesRail,
+  gotHighestRatedEpisodes,
   gameOfThronesUniversePage,
   // discoverCollection needs the tarantinoMoviesCollection and wesAndersonMoviesCollection and gameOfThronesUniversePage
   discoverCollectionRail,

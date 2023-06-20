@@ -23,7 +23,7 @@ const mediaReferenceHomepage: SetConfig = {
   slug: "media-reference-homepage",
   graphQlSetType: "PAGE",
   contents: [
-    { type: "set", set_type: "slider", slug: homePageSlider.slug },
+    { type: "set", slug: homePageSlider.slug },
     { type: "seasons", slug: "slx-beta-1-demos" },
     { type: "seasons", slug: "slx-alpha-2-demos" },
     { type: "seasons", slug: "slx-alpha-1-demos" },

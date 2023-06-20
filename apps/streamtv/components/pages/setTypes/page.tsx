@@ -89,6 +89,7 @@ const Page: NextPage<{
                   <Grid
                     className="my-6"
                     header={item.title || item.title_short || undefined}
+                    key={item.uid}
                     objects={objects}
                     variant={getThumbnailVariantFromSetType(item.type)}
                   />
