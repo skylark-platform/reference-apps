@@ -39,6 +39,38 @@ const spotlightMovies: SetConfig = {
   ],
 };
 
+const bestPictureMovies2020: SetConfig = {
+  externalId: createStreamTVExternalId("best_picture_nominees_2020"),
+  title: "Best Picture Nominees 2020",
+  slug: "best-picture-nominees-2020",
+  graphQlSetType: "RAIL_WITH_SYNOPSIS",
+  contents: [
+    { type: "movies", slug: "once-upon-a-time-in-hollywood" },
+    { type: "movies", slug: "1917" },
+    { type: "movies", slug: "jojo-rabbit" },
+    { type: "movies", slug: "little-women" },
+    { type: "movies", slug: "the-irishman" },
+    { type: "movies", slug: "parasite" },
+    { type: "movies", slug: "marriage-story" },
+  ],
+};
+
+const bestPictureMovies2021: SetConfig = {
+  externalId: createStreamTVExternalId("best_picture_nominees_2021"),
+  title: "Best Picture Nominees 2021",
+  slug: "best-picture-nominees-2021",
+  graphQlSetType: "RAIL_WITH_SYNOPSIS",
+  contents: [
+    { type: "movies", slug: "sound-of-metal" },
+    { type: "movies", slug: "minari" },
+    { type: "movies", slug: "judas-and-the-black-messiah" },
+    { type: "movies", slug: "promising-young-woman" },
+    { type: "movies", slug: "the-father" },
+    { type: "movies", slug: "mank" },
+    { type: "movies", slug: "nomadland" },
+  ],
+};
+
 const classicKidsShows: SetConfig = {
   externalId: createStreamTVExternalId("classic_kids_shows"),
   title: "Classic kids shows",
@@ -58,8 +90,9 @@ const homePageSlider: SetConfig = {
   slug: "media-reference-home-page-hero",
   graphQlSetType: "SLIDER",
   contents: [
-    { type: "brands", slug: "game-of-thrones" },
+    { type: "brands", slug: "the-last-of-us" },
     { type: "movies", slug: "deadpool-2" },
+    { type: "brands", slug: "yellowjackets" },
     { type: "movies", slug: "sing-2" },
     { type: "movies", slug: "us" },
   ],
@@ -136,6 +169,24 @@ const fastAndFuriousMoviesCollection: SetConfig = {
   ],
 };
 
+const starWarsMoviesCollection: SetConfig = {
+  externalId: createStreamTVExternalId("star_wars_skywalker_saga"),
+  title: "Star Wars: The Skywalker Saga",
+  slug: "star-wars-the-skywalker-saga",
+  graphQlSetType: "COLLECTION",
+  contents: [
+    { type: "movies", slug: "the-phantom-menace" },
+    { type: "movies", slug: "attack-of-the-clones" },
+    { type: "movies", slug: "revenge-of-the-sith" },
+    { type: "movies", slug: "a-new-hope" },
+    { type: "movies", slug: "the-empire-strikes-back" },
+    { type: "movies", slug: "return-of-the-jedi" },
+    { type: "movies", slug: "the-force-awakens" },
+    { type: "movies", slug: "the-last-jedi" },
+    { type: "movies", slug: "the-rise-of-skywalker" },
+  ],
+};
+
 const gameOfThronesUniverseSlider: SetConfig = {
   externalId: createStreamTVExternalId("game_of_thrones_universe_slider"),
   title: "Game of Thrones Universe Slider",
@@ -201,6 +252,10 @@ const discoverCollectionRail: SetConfig = {
       type: "set",
       slug: fastAndFuriousMoviesCollection.slug,
     },
+    {
+      type: "set",
+      slug: starWarsMoviesCollection.slug,
+    },
   ],
 };
 
@@ -215,8 +270,8 @@ const mediaReferenceHomepage: SetConfig = {
     { type: "set", slug: spotlightMovies.slug },
     { type: "set", slug: newTVReleases.slug },
     { type: "set", slug: classicKidsShows.slug },
+    { type: "set", slug: bestPictureMovies2021.slug },
     { type: "seasons", slug: "got-s01" },
-    { type: "seasons", slug: "got-s02" },
     { type: "seasons", slug: "miraculous-s05" },
     { type: "set", slug: discoverCollectionRail.slug },
   ],
@@ -231,6 +286,9 @@ export const orderedSetsToCreate = [
   tarantinoMoviesCollection,
   wesAndersonMoviesCollection,
   fastAndFuriousMoviesCollection,
+  starWarsMoviesCollection,
+  bestPictureMovies2020,
+  bestPictureMovies2021,
   // got
   gameOfThronesUniverseSlider,
   gotHighestRatedEpisodes,

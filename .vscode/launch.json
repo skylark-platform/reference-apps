@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug ingestor - (All content)",
+      "name": "Debug ingestor (with StreamTV sets)",
       "request": "launch",
       "cwd": "${workspaceFolder}/packages/ingestor",
       "runtimeArgs": ["ingest"],
@@ -17,7 +17,7 @@
       }
     },
     {
-      "name": "Debug ingestor - (StreamTV only)",
+      "name": "Debug ingestor (with SLX Demo sets)",
       "request": "launch",
       "cwd": "${workspaceFolder}/packages/ingestor",
       "runtimeArgs": ["ingest"],
@@ -25,21 +25,7 @@
       "skipFiles": ["<node_internals>/**"],
       "type": "node",
       "env": {
-        "CREATE_SETS": "true",
-        "CONTENT_TYPE": "streamtv"
-      }
-    },
-    {
-      "name": "Debug ingestor - (SLX Demos only)",
-      "request": "launch",
-      "cwd": "${workspaceFolder}/packages/ingestor",
-      "runtimeArgs": ["ingest"],
-      "runtimeExecutable": "yarn",
-      "skipFiles": ["<node_internals>/**"],
-      "type": "node",
-      "env": {
-        "CREATE_SETS": "true",
-        "CONTENT_TYPE": "slxdemos"
+        "CREATE_SLX_DEMO_SETS": "true"
       }
     }
   ]

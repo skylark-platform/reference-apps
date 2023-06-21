@@ -43,6 +43,7 @@ inputs:
     required: false
   content-type:
     description: The content type to ingest (CONTENT_TYPE) (all, streamtv or slxdemos)
+    deprecationMessage: SLX Demos have been moved to a standalone Airtable base. All content in a base is now ingested
     required: false
     default: "all"
 runs:
@@ -73,7 +74,6 @@ runs:
         CREATE_SETS: ${{ inputs.create-additional-objects }}
         SAAS_API_ENDPOINT: ${{ inputs.skylark-api-url }}
         SAAS_API_KEY: ${{ inputs.saas-api-token }}
-        CONTENT_TYPE: ${{ inputs.content-type }}
       with:
         timeout_minutes: 30
         retry_wait_seconds: 10
