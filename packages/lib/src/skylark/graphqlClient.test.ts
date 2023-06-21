@@ -12,7 +12,6 @@ describe("graphQLClient", () => {
   it("instantiates a new GraphQLClient", () => {
     const client = new GraphQLClient("https://endpoint/graphql", {
       headers: {
-        "x-api-key": "api-key",
         Authorization: "api-key",
       },
     });

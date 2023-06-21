@@ -67,7 +67,7 @@ export const mutateMultipleObjects = async <T extends { external_id?: string }>(
         try {
           const data = await graphQLClient.request<{
             [key: string]: T;
-          }>(graphQLMutation);
+          }>(graphQLMutation, {}, { "x-bypass-cache": "1" });
 
           if (!data) {
             return [];

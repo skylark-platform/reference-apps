@@ -47,10 +47,14 @@ const activateConfigurationVersion = async (version: number) => {
   return res.activateConfigurationVersion;
 };
 
-const updateSetTypes = async (version?: number) => {
+const updateEnumTypes = async (
+  enumName: string,
+  values: string[],
+  version?: number
+) => {
   const mutation = {
     mutation: {
-      __name: "UPDATE_SET_TYPES",
+      __name: `UPDATE_${enumName}`,
       __variables: {
         version: "Int!",
       },
@@ -58,9 +62,9 @@ const updateSetTypes = async (version?: number) => {
         __args: {
           version: new VariableType("version"),
           enums: {
-            name: "SetType",
+            name: enumName,
             operation: new EnumType("UPDATE"),
-            values: ENUMS.SET_TYPES,
+            values,
           },
         },
         version: true,
@@ -78,6 +82,50 @@ const updateSetTypes = async (version?: number) => {
   return {
     version: editEnumConfiguration.version,
   };
+};
+
+const addPreferredImageTypeToSeason = async (version?: number) => {
+  const UPDATE_SEASON_FIELDS = gql`
+    mutation UPDATE_SEASON_FIELDS($version: Int!) {
+      editFieldConfiguration(
+        version: $version
+        fields: {
+          name: "preferred_image_type"
+          operation: CREATE
+          type: ENUM
+          enum_name: "ImageType"
+          is_translatable: false
+        }
+        object_class: Season
+      ) {
+        messages
+        version
+      }
+    }
+  `;
+
+  try {
+    const { editFieldConfiguration } = await graphQLClient.request<{
+      editFieldConfiguration: { version: number; messages: string };
+    }>(UPDATE_SEASON_FIELDS, { version });
+    return {
+      version: editFieldConfiguration.version,
+    };
+  } catch (e) {
+    const err = e as { response?: { errors?: { message: string }[] } };
+    // Ignore error if all fields have been added already
+    if (
+      err?.response?.errors &&
+      err.response.errors.length === 1 &&
+      err.response.errors[0].message ===
+        "Some fields already exist on type Season: ['preferred_image_type']"
+    ) {
+      return {
+        version,
+      };
+    }
+    throw e;
+  }
 };
 
 export const updateSkylarkSchema = async () => {
@@ -98,7 +146,14 @@ export const updateSkylarkSchema = async () => {
     }
   }
 
-  const { version: updatedVersion } = await updateSetTypes(initialVersion);
+  const { version: updatedVersion } = await updateEnumTypes(
+    "SetType",
+    ENUMS.SET_TYPES,
+    initialVersion
+  );
+
+  await updateEnumTypes("ImageType", ENUMS.IMAGE_TYPES, updatedVersion);
+  await addPreferredImageTypeToSeason(updatedVersion);
 
   await activateConfigurationVersion(updatedVersion);
 

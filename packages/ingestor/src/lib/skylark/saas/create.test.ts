@@ -85,7 +85,9 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateBrands { createBrandbrand_1: createBrand (brand: {title: "Brand 1", availability: {link: []}, external_id: "brand_1"}) { __typename uid slug external_id } }'
+        'mutation createOrUpdateBrands { createBrandbrand_1: createBrand (brand: {title: "Brand 1", availability: {link: []}, external_id: "brand_1"}) { __typename uid slug external_id } }',
+        {},
+        expect.any(Object)
       );
     });
 
@@ -99,7 +101,9 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateBrands { updateBrandbrand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: []}}) { __typename uid slug external_id } }'
+        'mutation createOrUpdateBrands { updateBrandbrand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: []}}) { __typename uid slug external_id } }',
+        {},
+        expect.any(Object)
       );
     });
 
@@ -129,17 +133,23 @@ describe("saas/create.ts", () => {
       expect(graphQlRequest).toHaveBeenCalledTimes(numOfRequestChunks + 2);
       expect(graphQlRequest).toHaveBeenNthCalledWith(
         3,
-        expect.stringContaining("mutation createOrUpdateBrands_chunk_1")
+        expect.stringContaining("mutation createOrUpdateBrands_chunk_1"),
+        {},
+        expect.any(Object)
       );
       expect(graphQlRequest).toHaveBeenNthCalledWith(
         4,
-        expect.stringContaining("mutation createOrUpdateBrands_chunk_2")
+        expect.stringContaining("mutation createOrUpdateBrands_chunk_2"),
+        {},
+        expect.any(Object)
       );
       expect(graphQlRequest).toHaveBeenNthCalledWith(
         graphQlRequest.mock.calls.length,
         expect.stringContaining(
           `mutation createOrUpdateBrands_chunk_${numOfRequestChunks}`
-        )
+        ),
+        {},
+        expect.any(Object)
       );
     });
 
@@ -154,7 +164,9 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateBrands { updateBrandbrand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: ["default-external-id-1"]}}) { __typename uid slug external_id } }'
+        'mutation createOrUpdateBrands { updateBrandbrand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: ["default-external-id-1"]}}) { __typename uid slug external_id } }',
+        {},
+        expect.any(Object)
       );
     });
   });
@@ -237,7 +249,9 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateCredits { createCreditcredit_1: createCredit (credit: {title: "Credit 1", availability: {link: []}, relationships: {people: {link: "person_1"}, roles: {link: "role_1"}}, external_id: "credit_1"}) { __typename uid slug external_id } }'
+        'mutation createOrUpdateCredits { createCreditcredit_1: createCredit (credit: {title: "Credit 1", availability: {link: []}, relationships: {people: {link: "person_1"}, roles: {link: "role_1"}}, external_id: "credit_1"}) { __typename uid slug external_id } }',
+        {},
+        expect.any(Object)
       );
     });
 
@@ -248,7 +262,9 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateCredits { updateCreditcredit_1: updateCredit (external_id: "credit_1", credit: {title: "Credit 1", availability: {link: []}, relationships: {people: {link: "person_1"}, roles: {link: "role_1"}}}) { __typename uid slug external_id } }'
+        'mutation createOrUpdateCredits { updateCreditcredit_1: updateCredit (external_id: "credit_1", credit: {title: "Credit 1", availability: {link: []}, relationships: {people: {link: "person_1"}, roles: {link: "role_1"}}}) { __typename uid slug external_id } }',
+        {},
+        expect.any(Object)
       );
     });
   });
@@ -433,7 +449,9 @@ describe("saas/create.ts", () => {
       expect(graphQlRequest).toHaveBeenCalledTimes(11);
       expect(graphQlRequest).toHaveBeenNthCalledWith(
         11,
-        'mutation createMediaObjects { updateEpisode_airtable-episode-1: updateEpisode (external_id: "airtable-episode-1", episode: {title: "episode-1", relationships: {}, availability: {link: []}}) { __typename uid slug external_id } updateEpisode_airtable-episode-2: updateEpisode (external_id: "airtable-episode-2", episode: {title: "episode-2", relationships: {}, availability: {link: []}}) { __typename uid slug external_id } }'
+        'mutation createMediaObjects { updateEpisode_airtable-episode-1: updateEpisode (external_id: "airtable-episode-1", episode: {title: "episode-1", relationships: {}, availability: {link: []}}) { __typename uid slug external_id } updateEpisode_airtable-episode-2: updateEpisode (external_id: "airtable-episode-2", episode: {title: "episode-2", relationships: {}, availability: {link: []}}) { __typename uid slug external_id } }',
+        {},
+        expect.any(Object)
       );
     });
 
@@ -501,7 +519,9 @@ describe("saas/create.ts", () => {
       expect(graphQlRequest).toHaveBeenCalledTimes(11);
       expect(graphQlRequest).toHaveBeenNthCalledWith(
         11,
-        'mutation createMediaObjects { updateEpisode_airtable-episode-1: updateEpisode (external_id: "airtable-episode-1", episode: {title: "episode with relationships", relationships: {themes: {link: ["theme_1"]}, genres: {link: ["genre_1"]}, ratings: {link: ["rating_1"]}, tags: {link: ["tag_1"]}, credits: {link: ["credit_1"]}}, availability: {link: []}}) { __typename uid slug external_id } }'
+        'mutation createMediaObjects { updateEpisode_airtable-episode-1: updateEpisode (external_id: "airtable-episode-1", episode: {title: "episode with relationships", relationships: {themes: {link: ["theme_1"]}, genres: {link: ["genre_1"]}, ratings: {link: ["rating_1"]}, tags: {link: ["tag_1"]}, credits: {link: ["credit_1"]}}, availability: {link: []}}) { __typename uid slug external_id } }',
+        {},
+        expect.any(Object)
       );
     });
 
@@ -575,7 +595,9 @@ describe("saas/create.ts", () => {
       expect(graphQlRequest).toHaveBeenCalledTimes(12);
       expect(graphQlRequest).toHaveBeenNthCalledWith(
         12,
-        'mutation createMediaObjects { updateEpisode_airtable-episode-3: updateEpisode (external_id: "airtable-episode-3", episode: {title: "episode 3", relationships: {episodes: {link: undefined}}, availability: {link: []}}) { __typename uid slug external_id } }'
+        'mutation createMediaObjects { updateEpisode_airtable-episode-3: updateEpisode (external_id: "airtable-episode-3", episode: {title: "episode 3", relationships: {episodes: {link: undefined}}, availability: {link: []}}) { __typename uid slug external_id } }',
+        {},
+        expect.any(Object)
       );
     });
   });
@@ -636,7 +658,9 @@ describe("saas/create.ts", () => {
 
       expect(graphQlRequest).toHaveBeenNthCalledWith(
         7,
-        'mutation createMediaObjectTranslations { translation_es_ES_translation-1: updateEpisode (uid: "episode-1-uid", language: "es-ES", episode: {title: "Title in spanish"}) { __typename uid slug external_id } }'
+        'mutation createMediaObjectTranslations { translation_es_ES_translation-1: updateEpisode (uid: "episode-1-uid", language: "es-ES", episode: {title: "Title in spanish"}) { __typename uid slug external_id } }',
+        {},
+        expect.any(Object)
       );
     });
 
@@ -661,7 +685,9 @@ describe("saas/create.ts", () => {
 
       expect(graphQlRequest).toHaveBeenNthCalledWith(
         7,
-        'mutation createMediaObjectTranslations { translation_es_ES_translation-1: updateEpisode (uid: "episode-1-uid", language: "es-ES", episode: {title: "Title in spanishy portuguese"}) { __typename uid slug external_id } translation_pt_PT_translation-1: updateEpisode (uid: "episode-1-uid", language: "pt-PT", episode: {title: "Title in spanishy portuguese"}) { __typename uid slug external_id } }'
+        'mutation createMediaObjectTranslations { translation_es_ES_translation-1: updateEpisode (uid: "episode-1-uid", language: "es-ES", episode: {title: "Title in spanishy portuguese"}) { __typename uid slug external_id } translation_pt_PT_translation-1: updateEpisode (uid: "episode-1-uid", language: "pt-PT", episode: {title: "Title in spanishy portuguese"}) { __typename uid slug external_id } }',
+        {},
+        expect.any(Object)
       );
     });
 
@@ -702,7 +728,9 @@ describe("saas/create.ts", () => {
 
       expect(graphQlRequest).toHaveBeenNthCalledWith(
         7,
-        'mutation createMediaObjectTranslations { translation_es_ES_translation-1: updateEpisode (uid: "episode-1-uid", language: "es-ES", episode: {title: "Title in spanish"}) { __typename uid slug external_id } translation_pt_PT_translation-2: updateEpisode (uid: "episode-1-uid", language: "pt-PT", episode: {title: "Title in portuguese"}) { __typename uid slug external_id } translation_pt_PT_translation-3: updateBrand (uid: "brand-1-uid", language: "pt-PT", brand: {title: "Brand title in portuguese"}) { __typename uid slug external_id } }'
+        'mutation createMediaObjectTranslations { translation_es_ES_translation-1: updateEpisode (uid: "episode-1-uid", language: "es-ES", episode: {title: "Title in spanish"}) { __typename uid slug external_id } translation_pt_PT_translation-2: updateEpisode (uid: "episode-1-uid", language: "pt-PT", episode: {title: "Title in portuguese"}) { __typename uid slug external_id } translation_pt_PT_translation-3: updateBrand (uid: "brand-1-uid", language: "pt-PT", brand: {title: "Brand title in portuguese"}) { __typename uid slug external_id } }',
+        {},
+        expect.any(Object)
       );
     });
 

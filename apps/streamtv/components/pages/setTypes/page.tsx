@@ -16,18 +16,23 @@ import {
   Season,
   SetContent,
   SkylarkSet,
+  StreamTVAdditionalFields,
+  StreamTVSupportedImageType,
   StreamTVSupportedSetType,
 } from "../../../types";
 import { Grid } from "../../grid";
 import { getThumbnailVariantFromSetType } from "../../thumbnail";
+import { useSkylarkEnvironment } from "../../../hooks/useSkylarkEnvironment";
 
 const Page: NextPage<{
   slug: string;
   seo: SeoObjectData;
   notFoundMessage?: string;
 }> = ({ slug, seo, notFoundMessage }) => {
+  const { environment } = useSkylarkEnvironment();
+
   const { data, isLoading, isError } = useObject<SkylarkSet>(
-    GET_PAGE_SET,
+    GET_PAGE_SET(environment.hasUpdatedSeason),
     slug
   );
 
@@ -64,6 +69,16 @@ const Page: NextPage<{
         <div className="w-full">
           {content.map((item, index) => {
             // Only the Set Types, Sliders or Rails will show on the Home Page - as well as Seasons
+
+            // preferred_image_type is a field that would only be added if the StreamTV ingest has been run
+            // So we add it manually to ensure that the codegen doesn't affect StreamTV's without the ingest
+            // Field added in packages/ingestor/src/lib/skylark/saas/schema.ts
+            const preferredImageType = (
+              item as {
+                [StreamTVAdditionalFields.PreferredImageType]?: StreamTVSupportedImageType;
+              }
+            )?.[StreamTVAdditionalFields.PreferredImageType];
+
             if (item.__typename === "SkylarkSet") {
               if (item.type === StreamTVSupportedSetType.Slider) {
                 return (
@@ -113,7 +128,12 @@ const Page: NextPage<{
 
             if (item.__typename === "Season") {
               return (
-                <SeasonRail className="my-6" key={item.uid} season={item} />
+                <SeasonRail
+                  className="my-6"
+                  key={item.uid}
+                  preferredImageType={preferredImageType}
+                  season={item}
+                />
               );
             }
             return <Fragment key={item.uid} />;
