@@ -90,8 +90,9 @@ const homePageSlider: SetConfig = {
   slug: "media-reference-home-page-hero",
   graphQlSetType: "SLIDER",
   contents: [
-    { type: "brands", slug: "game-of-thrones" },
+    { type: "brands", slug: "the-last-of-us" },
     { type: "movies", slug: "deadpool-2" },
+    { type: "brands", slug: "yellowjackets" },
     { type: "movies", slug: "sing-2" },
     { type: "movies", slug: "us" },
   ],
@@ -269,12 +270,10 @@ const mediaReferenceHomepage: SetConfig = {
     { type: "set", slug: spotlightMovies.slug },
     { type: "set", slug: newTVReleases.slug },
     { type: "set", slug: classicKidsShows.slug },
+    { type: "set", slug: bestPictureMovies2021.slug },
     { type: "seasons", slug: "got-s01" },
-    { type: "seasons", slug: "got-s02" },
     { type: "seasons", slug: "miraculous-s05" },
     { type: "set", slug: discoverCollectionRail.slug },
-    { type: "set", slug: bestPictureMovies2020.slug },
-    { type: "set", slug: bestPictureMovies2021.slug },
   ],
 };
 
@@ -287,6 +286,9 @@ export const orderedSetsToCreate = [
   tarantinoMoviesCollection,
   wesAndersonMoviesCollection,
   fastAndFuriousMoviesCollection,
+  starWarsMoviesCollection,
+  bestPictureMovies2020,
+  bestPictureMovies2021,
   // got
   gameOfThronesUniverseSlider,
   gotHighestRatedEpisodes,
