@@ -27,21 +27,25 @@ const main = async () => {
   // eslint-disable-next-line no-console
   console.time("Completed in:");
 
-  const shouldCreateAdditionalObjects = process.env.CREATE_SETS === "true";
+  const shouldCreateAdditionalStreamTVObjects =
+    process.env.CREATE_SETS === "true";
+  const shouldCreateAdditionalSLXDemoObjects =
+    process.env.CREATE_SLX_DEMO_SETS === "true";
   // eslint-disable-next-line no-console
   console.log(
     `Additional StreamTV sets / dynamic objects creation ${
-      shouldCreateAdditionalObjects ? "enabled" : "disabled"
+      shouldCreateAdditionalStreamTVObjects ? "enabled" : "disabled"
+    }`
+  );
+  // eslint-disable-next-line no-console
+  console.log(
+    `Additional SLX Demo sets / dynamic objects creation ${
+      shouldCreateAdditionalSLXDemoObjects ? "enabled" : "disabled"
     }`
   );
 
-  // We keep StreamTV and SLX Demo data in the same Airtable, sometimes we don't want to add one type of content to an environment
-  const contentTypeToIngest =
-    (process.env.CONTENT_TYPE as "all" | "streamtv" | "slxdemos" | undefined) ||
-    "all";
   // eslint-disable-next-line no-console
-  console.log("Content type:", contentTypeToIngest);
-  const airtable = await getAllTables(contentTypeToIngest);
+  const airtable = await getAllTables();
 
   // eslint-disable-next-line no-console
   console.log(`Starting ingest to Skylark X: ${SAAS_API_ENDPOINT}`);
@@ -169,15 +173,9 @@ const main = async () => {
   console.log("Media objects created");
 
   const createdSets: GraphQLBaseObject[] = [];
-  if (shouldCreateAdditionalObjects) {
-    // SLX Demos have a special sets file
-    const setsToCreate =
-      contentTypeToIngest === "slxdemos"
-        ? slxDemoSetsToCreate
-        : orderedSetsToCreate;
-
-    for (let i = 0; i < setsToCreate.length; i += 1) {
-      const setConfig = setsToCreate[i];
+  if (shouldCreateAdditionalStreamTVObjects) {
+    for (let i = 0; i < orderedSetsToCreate.length; i += 1) {
+      const setConfig = orderedSetsToCreate[i];
       // eslint-disable-next-line no-await-in-loop
       const set = await createOrUpdateGraphQLSet(
         setConfig,
@@ -190,7 +188,25 @@ const main = async () => {
     }
 
     // eslint-disable-next-line no-console
-    console.log("Additional objects created");
+    console.log("Additional StreamTV objects created");
+  }
+
+  if (shouldCreateAdditionalSLXDemoObjects) {
+    for (let i = 0; i < slxDemoSetsToCreate.length; i += 1) {
+      const setConfig = slxDemoSetsToCreate[i];
+      // eslint-disable-next-line no-await-in-loop
+      const set = await createOrUpdateGraphQLSet(
+        setConfig,
+        [...mediaObjects, ...createdSets],
+        metadata,
+        airtable.languages,
+        airtable.setsMetadata
+      );
+      if (set) createdSets.push(set);
+    }
+
+    // eslint-disable-next-line no-console
+    console.log("Additional SLX Demo objects created");
   }
 
   const dateStamp = new Date().toISOString();

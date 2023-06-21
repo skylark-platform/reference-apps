@@ -4,7 +4,7 @@ import {
   graphQLClient,
 } from "@skylark-reference-apps/lib";
 import { Attachment, FieldSet, Records } from "airtable";
-import { jsonToGraphQLQuery } from "json-to-graphql-query";
+import { EnumType, jsonToGraphQLQuery } from "json-to-graphql-query";
 import { chunk, flatten, has, isArray, isEmpty, isString } from "lodash";
 import {
   CREATE_OBJECT_CHUNK_SIZE,
@@ -199,20 +199,10 @@ export const createOrUpdateGraphQLCredits = async (
     (previousOperations, { id, fields }) => {
       const validFields = getValidFields(fields, validProperties);
 
-      const {
-        person: [personField],
-        role: [roleField],
-      } = fields as { person: string[]; role: string[] };
-      const person = metadata.people.find(
-        ({ external_id }) => getExtId(external_id) === personField
-      );
-      const role = metadata.roles.find(
-        ({ external_id }) => getExtId(external_id) === roleField
-      );
-
-      if (!person || !role) {
-        return previousOperations;
-      }
+      const { person: personField, role: roleField } = fields as {
+        person: string[];
+        role: string[];
+      };
 
       const availability = getGraphQLObjectAvailability(
         metadata.availability,
@@ -221,18 +211,43 @@ export const createOrUpdateGraphQLCredits = async (
 
       const creditExists = existingObjects.includes(id);
 
-      const credit = {
+      const credit: Record<
+        string,
+        string | number | boolean | EnumType | object
+      > = {
         ...validFields,
         availability,
-        relationships: {
-          people: {
-            link: person.uid,
-          },
-          roles: {
-            link: role.uid,
-          },
-        },
       };
+
+      const relationships: Record<string, { link: string }> = {};
+
+      if (personField && personField.length > 0) {
+        const person = metadata.people.find(
+          ({ external_id }) => getExtId(external_id) === personField[0]
+        );
+
+        if (person?.uid) {
+          relationships.people = {
+            link: person.uid,
+          };
+        }
+      }
+
+      if (roleField && roleField.length > 0) {
+        const role = metadata.roles.find(
+          ({ external_id }) => getExtId(external_id) === roleField[0]
+        );
+
+        if (role?.uid) {
+          relationships.roles = {
+            link: role.uid,
+          };
+        }
+      }
+
+      if (Object.keys(relationships).length > 0) {
+        credit.relationships = relationships;
+      }
 
       const args = {
         credit: creditExists ? credit : { ...credit, external_id: id },
