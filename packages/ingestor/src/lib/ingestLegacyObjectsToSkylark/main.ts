@@ -18,7 +18,10 @@ import {
   updateEnumTypes,
   waitForUpdatingSchema,
 } from "../skylark/saas/schema";
-import { ALWAYS_FOREVER_AVAILABILITY_EXT_ID } from "./constants";
+import {
+  ALWAYS_FOREVER_AVAILABILITY_EXT_ID,
+  USED_LANGUAGES,
+} from "./constants";
 import { createAlwaysAndForeverAvailability } from "../skylark/saas/availability";
 import { createObjectsInSkylark } from "./skylark";
 
@@ -63,7 +66,7 @@ const updateSkylarkSchema = async ({
   assetTypes: string[];
 }) => {
   const initialVersion = await waitForUpdatingSchema();
-  console.log("--- initial schema version:", initialVersion);
+  console.log("--- Initial Schema version:", initialVersion);
 
   const { version: updatedVersion } = await updateEnumTypes(
     "AssetType",
@@ -103,7 +106,7 @@ const fetchLegacyObjects = async () => {
     LegacyObjectType.Brands
   );
 
-  return {
+  const retObj = {
     tagCategories,
     tags,
     assets,
@@ -111,6 +114,16 @@ const fetchLegacyObjects = async () => {
     seasons,
     brands,
   };
+
+  const totalObjectsFound = Object.values(retObj).reduce(
+    (previous, { totalFound }) => previous + totalFound,
+    0
+  );
+  console.log(
+    `--- ${totalObjectsFound} objects found (${USED_LANGUAGES.length} languages checked)`
+  );
+
+  return retObj;
 };
 
 const main = async () => {
@@ -126,7 +139,7 @@ const main = async () => {
         .map(({ asset_type_url }) => asset_type_url?.name)
     ),
   ].filter((name): name is string => !!name);
-  console.log("--- required asset type enums:", assetTypes.join(", "));
+  console.log("--- Required Asset type enums:", assetTypes.join(", "));
 
   console.log("\nUpdating Skylark Schema...");
   await updateSkylarkSchema({ assetTypes });

@@ -8,6 +8,32 @@ import {
   LegacyResponseListObjectsData,
 } from "./types/legacySkylark";
 import { USED_LANGUAGES } from "./constants";
+import { pause } from "../skylark/saas/utils";
+
+const outputLegacyObjectCount = ({
+  type,
+  objects,
+}: {
+  type: LegacyObjectType;
+  objects: Record<string, object[]>;
+}) => {
+  const { total, totalLanguages } = Object.values(objects).reduce(
+    (previous, arr) => ({
+      total: previous.total + arr.length,
+      totalLanguages:
+        arr.length > 0 ? previous.totalLanguages + 1 : previous.totalLanguages,
+    }),
+    { total: 0, totalLanguages: 0 }
+  );
+
+  console.log(
+    `--- ${type} found: ${total} (${totalLanguages} language${
+      totalLanguages > 1 ? "s" : ""
+    })`
+  );
+
+  return total;
+};
 
 const createLegacyAxios = (language: string) => {
   const legacyApiUrl = process.env.LEGACY_API_URL;
@@ -98,6 +124,10 @@ const getAllObjectsOfType = async <T extends LegacyCommonObject>(
     );
 
     dataArr.push(dArr.flatMap((d) => d));
+
+    // This pause will increase the time taken to run BUT it should help mitigate any Legacy Skylark crashes
+    // eslint-disable-next-line no-await-in-loop
+    await pause(2000);
   }
 
   const objects: T[] = dataArr.flatMap((data) => data);
@@ -117,7 +147,11 @@ export const fetchObjectsFromLegacySkylark = async <
   T extends LegacyCommonObject
 >(
   type: LegacyObjectType
-): Promise<{ type: LegacyObjectType; objects: Record<string, T[]> }> => {
+): Promise<{
+  type: LegacyObjectType;
+  objects: Record<string, T[]>;
+  totalFound: number;
+}> => {
   const allObjects: Record<string, T[]> = {};
 
   // eslint-disable-next-line no-restricted-syntax
@@ -136,9 +170,12 @@ export const fetchObjectsFromLegacySkylark = async <
     }
   }
 
+  const total = outputLegacyObjectCount({ type, objects: allObjects });
+
   return {
     type,
     objects: allObjects,
+    totalFound: total,
   };
 };
 /* eslint-enable no-console */
