@@ -22,3 +22,6 @@ export const USED_LANGUAGES = [
 ];
 
 export const ASSET_TYPES_TO_IGNORE = ["audiobook"];
+
+export const ALWAYS_FOREVER_AVAILABILITY_EXT_ID =
+  "skylark_legacy_ingest_availability";

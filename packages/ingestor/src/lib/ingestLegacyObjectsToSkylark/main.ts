@@ -2,7 +2,6 @@ import "../../env";
 import "./env";
 import { SAAS_API_ENDPOINT, SAAS_API_KEY } from "@skylark-reference-apps/lib";
 import { fetchObjectsFromLegacySkylark } from "./legacy";
-import { createObjectsInSkylark } from "./skylark";
 import {
   LegacyAsset,
   LegacyBrand,
@@ -19,6 +18,9 @@ import {
   updateEnumTypes,
   waitForUpdatingSchema,
 } from "../skylark/saas/schema";
+import { ALWAYS_FOREVER_AVAILABILITY_EXT_ID } from "./constants";
+import { createAlwaysAndForeverAvailability } from "../skylark/saas/availability";
+import { createObjectsInSkylark } from "./skylark";
 
 /* eslint-disable no-console */
 // For Macademia
@@ -132,6 +134,11 @@ const main = async () => {
   console.log("\nUpdating Skylark Account...");
   await setAccountConfiguration({ defaultLanguage: "en" });
 
+  console.log("\nCreating Always & Forever Availability");
+  const alwaysAvailability = await createAlwaysAndForeverAvailability(
+    ALWAYS_FOREVER_AVAILABILITY_EXT_ID
+  );
+
   console.log("\nCreating Legacy Objects in Skylark...");
 
   const skylarkObjects: CreatedSkylarkObjects = {
@@ -145,32 +152,38 @@ const main = async () => {
 
   skylarkObjects.tagCategories = await createObjectsInSkylark(
     legacyObjects.tagCategories,
-    skylarkObjects
+    skylarkObjects,
+    alwaysAvailability
   );
 
   skylarkObjects.tags = await createObjectsInSkylark(
     legacyObjects.tags,
-    skylarkObjects
+    skylarkObjects,
+    alwaysAvailability
   );
 
   skylarkObjects.assets = await createObjectsInSkylark(
     legacyObjects.assets,
-    skylarkObjects
+    skylarkObjects,
+    alwaysAvailability
   );
 
   skylarkObjects.episodes = await createObjectsInSkylark(
     legacyObjects.episodes,
-    skylarkObjects
+    skylarkObjects,
+    alwaysAvailability
   );
 
   skylarkObjects.seasons = await createObjectsInSkylark(
     legacyObjects.seasons,
-    skylarkObjects
+    skylarkObjects,
+    alwaysAvailability
   );
 
   skylarkObjects.brands = await createObjectsInSkylark(
     legacyObjects.brands,
-    skylarkObjects
+    skylarkObjects,
+    alwaysAvailability
   );
 
   console.log("\nObjects Created Successfully.");

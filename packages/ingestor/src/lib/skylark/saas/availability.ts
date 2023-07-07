@@ -1,6 +1,7 @@
 import { DimensionTypes, graphQLClient } from "@skylark-reference-apps/lib";
 import { Record, FieldSet } from "airtable";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
+import { gql } from "graphql-request";
 import {
   Airtables,
   AvailabilityTableFields,
@@ -352,4 +353,65 @@ export const createOrUpdateAvailability = async (
     "createOrUpdateAvailability",
     operations
   );
+};
+
+export const createAlwaysAndForeverAvailability = async (
+  externalId: string
+): Promise<GraphQLBaseObject> => {
+  const GET_QUERY = gql`
+    query GET_ALWAYS_AVAILABILITY($externalId: String!) {
+      getAvailability(external_id: $externalId) {
+        __typename
+        uid
+        external_id
+        slug
+      }
+    }
+  `;
+
+  const CREATE_MUTATION = gql`
+    mutation CREATE_ALWAYS_AVAILABILITY($externalId: String!) {
+      createAvailability(
+        availability: {
+          title: "Always & Forever"
+          external_id: $externalId
+          slug: "skylark_legacy_ingest_availability"
+        }
+      ) {
+        __typename
+        uid
+        external_id
+        slug
+      }
+    }
+  `;
+
+  let existingAvailability: GraphQLBaseObject | undefined;
+  try {
+    const data = await graphQLClient.request<{
+      getAvailability: GraphQLBaseObject;
+    }>(GET_QUERY, {
+      externalId,
+    });
+    existingAvailability = data.getAvailability;
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.log("--- Always & Forever Availability not found");
+  }
+
+  if (existingAvailability?.uid) {
+    // eslint-disable-next-line no-console
+    console.log("--- Always & Forever Availability already exists");
+    return existingAvailability;
+  }
+
+  const data = await graphQLClient.request<{
+    createAvailability: GraphQLBaseObject;
+  }>(CREATE_MUTATION, {
+    externalId,
+  });
+  // eslint-disable-next-line no-console
+  console.log("--- Always & Forever Availability created");
+
+  return data.createAvailability;
 };

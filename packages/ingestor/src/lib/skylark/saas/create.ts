@@ -124,11 +124,13 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
     isImage,
     language,
     relationships,
+    availabilityUids,
   }: {
     metadataAvailability?: GraphQLMetadata["availability"];
     isImage?: boolean;
     language?: string;
     relationships?: CreateOrUpdateRelationships;
+    availabilityUids?: string[];
   }
 ): Promise<GraphQLBaseObject[]> => {
   if (objects.length === 0) {
@@ -155,6 +157,10 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
             fields.availability as string[]
           )
         : { link: [] };
+
+      if (availabilityUids) {
+        availability.link.push(...availabilityUids);
+      }
 
       const argName = objectType
         .match(/[A-Z][a-z]+/g)

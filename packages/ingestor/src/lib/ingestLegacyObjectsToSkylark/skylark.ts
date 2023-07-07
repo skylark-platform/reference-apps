@@ -172,7 +172,8 @@ export const createObjectsInSkylark = async (
     type: LegacyObjectType;
     objects: Record<string, LegacyObjects>;
   },
-  relationshipObjects: CreatedSkylarkObjects
+  relationshipObjects: CreatedSkylarkObjects,
+  alwaysAvailability: GraphQLBaseObject
 ): Promise<GraphQLBaseObject[]> => {
   const objectType = convertLegacyObjectTypeToObjectType(type);
 
@@ -220,13 +221,15 @@ export const createObjectsInSkylark = async (
       language,
     }));
 
+    const availabilityUids = [alwaysAvailability.uid];
+
     const createdLanguageObjects =
       // eslint-disable-next-line no-await-in-loop
       await createOrUpdateGraphQlObjectsUsingIntrospection(
         objectType,
         existingObjects,
         objectsToCreate,
-        { language, relationships }
+        { language, relationships, availabilityUids }
       );
 
     accaArr.push(createdLanguageObjects);
