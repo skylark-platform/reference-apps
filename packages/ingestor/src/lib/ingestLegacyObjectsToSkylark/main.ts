@@ -148,14 +148,30 @@ const main = async () => {
     skylarkObjects
   );
 
-  skylarkObjects.tagCategories = await createObjectsInSkylark(
+  skylarkObjects.tags = await createObjectsInSkylark(
     legacyObjects.tags,
     skylarkObjects
   );
 
-  await createObjectsInSkylark(legacyObjects.assets, skylarkObjects);
+  skylarkObjects.assets = await createObjectsInSkylark(
+    legacyObjects.assets,
+    skylarkObjects
+  );
 
-  // await createObjectsInSkylark(legacyObjects.seasons);
+  skylarkObjects.episodes = await createObjectsInSkylark(
+    legacyObjects.episodes,
+    skylarkObjects
+  );
+
+  skylarkObjects.seasons = await createObjectsInSkylark(
+    legacyObjects.seasons,
+    skylarkObjects
+  );
+
+  skylarkObjects.brands = await createObjectsInSkylark(
+    legacyObjects.brands,
+    skylarkObjects
+  );
 
   console.log("\nObjects Created Successfully.");
 };

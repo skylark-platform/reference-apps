@@ -7,6 +7,13 @@ export enum LegacyObjectType {
   TagCategories = "tag-categories",
 }
 
+export enum LegacyObjectUidPrefix {
+  Tag = "tag__",
+  Asset = "asse_",
+  Episode = "epis_",
+  Season = "seas_",
+}
+
 interface LegacyTagRel {
   tag_url: string;
   schedule_urls: string[];

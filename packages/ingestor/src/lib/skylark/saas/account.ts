@@ -2,8 +2,10 @@ import { graphQLClient } from "@skylark-reference-apps/lib";
 import { gql } from "graphql-request";
 
 const SET_ACCOUNT_CONFIGURATION = gql`
-  mutation SET_ACCOUNT_CONFIGURATION {
-    setAccountConfiguration(account_config: { default_language: "" }) {
+  mutation SET_ACCOUNT_CONFIGURATION($defaultLanguage: String!) {
+    setAccountConfiguration(
+      account_config: { default_language: $defaultLanguage }
+    ) {
       account_id
       config {
         default_language

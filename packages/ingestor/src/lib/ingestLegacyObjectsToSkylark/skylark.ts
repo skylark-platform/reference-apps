@@ -100,6 +100,7 @@ const convertLegacyObject = (
       synopsis,
       synopsis_short: synopsisShort,
       episode_number: legacyObject.episode_number,
+      kaltura_id: legacyObject.new_flag,
     };
   }
 
@@ -117,7 +118,50 @@ const convertLegacyObject = (
     };
   }
 
+  if (legacyObjectType === LegacyObjectType.Brands) {
+    const { synopsis, synopsisShort } = getSynopsisForMedia(legacyObject);
+
+    return {
+      ...commonFields,
+      internal_title: legacyObject.name,
+      title: legacyObject.title,
+      synopsis,
+      synopsis_short: synopsisShort,
+    };
+  }
+
   return commonFields;
+};
+
+const getExistingObjectsForAllLanguages = async (
+  objectType: GraphQLObjectTypes,
+  languages: string[],
+  objects: Record<string, LegacyObjects>
+) => {
+  const existingObjectsAcca: string[][] = [];
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const language of languages) {
+    const externalIds = objects[language].map(({ uid }) => ({
+      externalId: uid,
+    }));
+
+    // eslint-disable-next-line no-await-in-loop
+    const existingObjects = await getExistingObjects(
+      objectType,
+      externalIds,
+      language
+    );
+
+    existingObjectsAcca.push(existingObjects);
+  }
+
+  const flattenedExistingObjects: string[] = existingObjectsAcca.flatMap(
+    (arr) => arr
+  );
+  const existingObjects = [...new Set(flattenedExistingObjects)] as string[];
+
+  return existingObjects;
 };
 
 export const createObjectsInSkylark = async (
@@ -138,33 +182,18 @@ export const createObjectsInSkylark = async (
     return [];
   }
 
-  const existingObjectsAcca: string[][] = [];
-
-  // eslint-disable-next-line no-restricted-syntax
-  for (const language of languages) {
-    const externalIds = legacyObjectsAndLanguage[language].map(({ uid }) => ({
-      externalId: uid,
-    }));
-
-    // eslint-disable-next-line no-await-in-loop
-    const existingObjects = await getExistingObjects(
-      objectType,
-      externalIds,
-      language
-    );
-
-    existingObjectsAcca.push(existingObjects);
-  }
-
-  const flattenedExistingObjects: string[] = existingObjectsAcca.flatMap(
-    (arr) => arr
+  const existingObjects = await getExistingObjectsForAllLanguages(
+    objectType,
+    languages,
+    legacyObjectsAndLanguage
   );
-  const existingObjects = [...new Set(flattenedExistingObjects)] as string[];
 
   const accaArr: GraphQLBaseObject[][] = [];
 
   // eslint-disable-next-line no-restricted-syntax
   for (const language of languages) {
+    // Fetch existing Ids inside language loop so that we recognise one is added if its added new in the same ingest run
+
     const legacyObjects = legacyObjectsAndLanguage[language];
     const parsedLegacyObjects = legacyObjects
       .map(convertLegacyObject)
@@ -185,8 +214,6 @@ export const createObjectsInSkylark = async (
       };
     }, {});
 
-    console.log(relationships);
-
     const objectsToCreate = parsedLegacyObjects.map((obj) => ({
       ...obj,
       _id: obj.external_id,
@@ -203,6 +230,11 @@ export const createObjectsInSkylark = async (
       );
 
     accaArr.push(createdLanguageObjects);
+
+    const newExternalIds = createdLanguageObjects.map(
+      ({ external_id }) => external_id
+    );
+    existingObjects.push(...newExternalIds); // No issue with there being duplicates in this array as we're only using it to find existing
   }
 
   const createdObjects = accaArr.flatMap((a) => a);
@@ -213,7 +245,10 @@ export const createObjectsInSkylark = async (
       self.findIndex((b) => a.uid === b.uid && a.external_id === b.external_id)
   );
 
-  console.log(createdObjects, uniqueBaseObjects);
+  // eslint-disable-next-line no-console
+  console.log(
+    `--- ${objectType}s created/updated: ${createdObjects.length} (${uniqueBaseObjects.length} unique)`
+  );
 
   return uniqueBaseObjects;
 };
