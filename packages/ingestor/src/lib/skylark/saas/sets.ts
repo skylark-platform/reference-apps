@@ -147,7 +147,7 @@ const createSetArgsWithTranslations = (
     external_id?: string;
     language: string;
     skylark_set: {
-      [key: string]: string | object | number | EnumType | boolean;
+      [key: string]: string | object | number | EnumType | boolean | null;
     };
   } = update
     ? {

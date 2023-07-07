@@ -27,6 +27,16 @@
       "env": {
         "CREATE_SLX_DEMO_SETS": "true"
       }
+    },
+    {
+      "name": "[LEGACY] Debug ingest from Legacy to Skylark",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/packages/ingestor",
+      "runtimeArgs": ["ingest:legacy-to-skylark"],
+      "runtimeExecutable": "yarn",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node",
+      "env": {}
     }
   ]
 }

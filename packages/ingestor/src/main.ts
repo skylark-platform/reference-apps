@@ -11,7 +11,7 @@ import { UNLICENSED_BY_DEFAULT } from "./lib/constants";
 import {
   createGraphQLMediaObjects,
   createOrUpdateGraphQLCredits,
-  createOrUpdateGraphQlObjectsUsingIntrospection,
+  createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection,
   createTranslationsForGraphQLObjects,
 } from "./lib/skylark/saas/create";
 import { createOrUpdateGraphQLSet } from "./lib/skylark/saas/sets";
@@ -102,47 +102,54 @@ const main = async () => {
   };
 
   metadata.call_to_actions =
-    await createOrUpdateGraphQlObjectsUsingIntrospection(
+    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
       "CallToAction",
       airtable.callToActions,
       metadataAvailability
     );
-  metadata.images = await createOrUpdateGraphQlObjectsUsingIntrospection(
-    "SkylarkImage",
-    airtable.images,
-    metadataAvailability,
-    true
-  );
-  metadata.themes = await createOrUpdateGraphQlObjectsUsingIntrospection(
-    "Theme",
-    airtable.themes,
-    metadataAvailability
-  );
-  metadata.genres = await createOrUpdateGraphQlObjectsUsingIntrospection(
-    "Genre",
-    airtable.genres,
-    metadataAvailability
-  );
-  metadata.ratings = await createOrUpdateGraphQlObjectsUsingIntrospection(
-    "Rating",
-    airtable.ratings,
-    metadataAvailability
-  );
-  metadata.tags = await createOrUpdateGraphQlObjectsUsingIntrospection(
-    "SkylarkTag",
-    airtable.tags,
-    metadataAvailability
-  );
-  metadata.people = await createOrUpdateGraphQlObjectsUsingIntrospection(
-    "Person",
-    airtable.people,
-    metadataAvailability
-  );
-  metadata.roles = await createOrUpdateGraphQlObjectsUsingIntrospection(
-    "Role",
-    airtable.roles,
-    metadataAvailability
-  );
+  metadata.images =
+    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+      "SkylarkImage",
+      airtable.images,
+      metadataAvailability,
+      true
+    );
+  metadata.themes =
+    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+      "Theme",
+      airtable.themes,
+      metadataAvailability
+    );
+  metadata.genres =
+    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+      "Genre",
+      airtable.genres,
+      metadataAvailability
+    );
+  metadata.ratings =
+    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+      "Rating",
+      airtable.ratings,
+      metadataAvailability
+    );
+  metadata.tags =
+    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+      "SkylarkTag",
+      airtable.tags,
+      metadataAvailability
+    );
+  metadata.people =
+    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+      "Person",
+      airtable.people,
+      metadataAvailability
+    );
+  metadata.roles =
+    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+      "Role",
+      airtable.roles,
+      metadataAvailability
+    );
   metadata.credits = await createOrUpdateGraphQLCredits(
     airtable.credits,
     metadata

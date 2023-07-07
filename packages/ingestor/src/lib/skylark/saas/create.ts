@@ -12,12 +12,17 @@ import {
 } from "../../constants";
 
 import {
+  CreateOrUpdateRelationships,
   GraphQLBaseObject,
   GraphQLIntrospectionProperties,
   GraphQLMetadata,
 } from "../../interfaces";
 import { RelationshipsLink, ValidMediaObjectRelationships } from "../../types";
-import { getValidPropertiesForObject, getExistingObjects } from "./get";
+import {
+  getValidPropertiesForObject,
+  getExistingObjects,
+  getValidRelationshipsForObject,
+} from "./get";
 import {
   getExtId,
   gqlObjectMeta,
@@ -109,30 +114,47 @@ export const mutateMultipleObjects = async <T extends { external_id?: string }>(
 
 export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
   objectType: GraphQLObjectTypes,
-  airtableRecords: Records<FieldSet>,
-  metadataAvailability: GraphQLMetadata["availability"],
-  isImage?: boolean
+  existingObjects: string[],
+  objects: ((
+    | FieldSet
+    | Record<string, string | null | string[] | boolean | number | object>
+  ) & { _id: string; language?: string })[],
+  {
+    metadataAvailability,
+    isImage,
+    language,
+    relationships,
+  }: {
+    metadataAvailability?: GraphQLMetadata["availability"];
+    isImage?: boolean;
+    language?: string;
+    relationships?: CreateOrUpdateRelationships;
+  }
 ): Promise<GraphQLBaseObject[]> => {
-  if (airtableRecords.length === 0) {
+  if (objects.length === 0) {
     return [];
   }
 
   const validProperties = await getValidPropertiesForObject(objectType);
 
-  const externalIds = airtableRecords.map(({ id }) => ({ externalId: id }));
+  const validRelationships: string[] = [];
+  if (relationships) {
+    const validRels = await getValidRelationshipsForObject(objectType);
+    validRelationships.push(...validRels);
+  }
 
-  const existingObjects = await getExistingObjects(objectType, externalIds);
-
-  const operations = airtableRecords.reduce(
-    (previousOperations, { id, fields }) => {
+  const operations = objects.reduce(
+    (previousOperations, { _id: id, ...fields }) => {
       const validFields = getValidFields(fields, validProperties);
 
       const objectExists = existingObjects.includes(id);
 
-      const availability = getGraphQLObjectAvailability(
-        metadataAvailability,
-        fields.availability as string[]
-      );
+      const availability = metadataAvailability
+        ? getGraphQLObjectAvailability(
+            metadataAvailability,
+            fields.availability as string[]
+          )
+        : { link: [] };
 
       const argName = objectType
         .match(/[A-Z][a-z]+/g)
@@ -154,11 +176,39 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
         }
       }
 
-      const args = {
+      if (relationships && hasProperty(relationships, id)) {
+        const relsForObject: Record<
+          string,
+          {
+            link: string[];
+          }
+        > = relationships[id];
+
+        const relationshipNames = Object.keys(relsForObject);
+
+        const allRelationshipsValid = relationshipNames.every((rel) =>
+          validRelationships.includes(rel)
+        );
+        if (!allRelationshipsValid) {
+          throw new Error(
+            `[createOrUpdateGraphQlObjectsUsingIntrospection] Invalid relationship given for ${id}: ${relationshipNames.join(
+              ", "
+            )}`
+          );
+        }
+
+        objectFields.relationships = relsForObject;
+      }
+
+      const args: Record<string, string | number | boolean | object> = {
         [argName]: objectExists
           ? objectFields
           : { ...objectFields, external_id: id },
       };
+
+      if (language) {
+        args.language = language;
+      }
 
       const { operation, method } = createGraphQLOperation(
         objectType,
@@ -185,6 +235,30 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
 
   return data;
 };
+
+export const createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection =
+  async (
+    objectType: GraphQLObjectTypes,
+    airtableRecords: Records<FieldSet>,
+    metadataAvailability: GraphQLMetadata["availability"],
+    isImage?: boolean
+  ) => {
+    const objects = airtableRecords.map(({ id, fields }) => ({
+      ...fields,
+      _id: id,
+    }));
+
+    const externalIds = objects.map(({ _id }) => ({ externalId: _id }));
+
+    const existingObjects = await getExistingObjects(objectType, externalIds);
+
+    return createOrUpdateGraphQlObjectsUsingIntrospection(
+      objectType,
+      existingObjects,
+      objects,
+      { metadataAvailability, isImage }
+    );
+  };
 
 export const createOrUpdateGraphQLCredits = async (
   airtableRecords: Records<FieldSet>,

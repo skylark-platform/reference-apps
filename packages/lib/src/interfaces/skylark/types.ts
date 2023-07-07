@@ -32,8 +32,12 @@ export type GraphQLMediaObjectTypes =
   | "Movie"
   | "SkylarkAsset";
 
+// Usually customer instances
+export type OptionalCustomGraphQLObjectTypes = "TagCategory";
+
 export type GraphQLObjectTypes =
   | GraphQLMediaObjectTypes
+  | OptionalCustomGraphQLObjectTypes
   | "Theme"
   | "Genre"
   | "Rating"

@@ -6,6 +6,7 @@ import {
   GraphQLBaseObject,
   GraphQLIntrospection,
   GraphQLIntrospectionProperties,
+  GraphQLObjectRelationshipsType,
 } from "../../interfaces";
 
 export const getValidPropertiesForObject = async (
@@ -69,19 +70,54 @@ export const getValidPropertiesForObject = async (
   return types;
 };
 
+export const getValidRelationshipsForObject = async (
+  objectType: GraphQLObjectTypes
+): Promise<string[]> => {
+  const query = {
+    query: {
+      GET_OBJECT_RELATIONSHIPS: {
+        __aliasFor: "__type",
+        __args: {
+          name: `${objectType}Relationships`,
+        },
+        inputFields: {
+          name: true,
+          type: {
+            name: true,
+          },
+        },
+      },
+    },
+  };
+
+  const graphQLGetQuery = jsonToGraphQLQuery(query);
+
+  const data = await graphQLClient.request<GraphQLObjectRelationshipsType>(
+    graphQLGetQuery,
+    {},
+    { "x-bypass-cache": "1" }
+  );
+
+  const fields =
+    data.GET_OBJECT_RELATIONSHIPS?.inputFields.map(({ name }) => name) || [];
+
+  return fields;
+};
+
 export const getExistingObjects = async (
   objectType: GraphQLObjectTypes,
-  objects: { externalId: string; language?: string | null }[]
+  objects: { externalId: string; language?: string | null }[],
+  language?: string
 ): Promise<string[]> => {
   const externalIds = objects.map(({ externalId }) => externalId);
   const getOperations = objects.reduce(
-    (previousQueries, { externalId, language }) => {
+    (previousQueries, { externalId, language: objLanguage }) => {
       const args: { [key: string]: string | boolean } = {
         external_id: externalId,
       };
 
-      if (language) {
-        args.language = language;
+      if (objLanguage || language) {
+        args.language = language || (objLanguage as string);
       }
 
       // Dimensions don't have availability

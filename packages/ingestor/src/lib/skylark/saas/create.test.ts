@@ -7,7 +7,7 @@ import { GraphQLBaseObject, GraphQLMetadata } from "../../interfaces";
 import {
   createGraphQLMediaObjects,
   createOrUpdateGraphQLCredits,
-  createOrUpdateGraphQlObjectsUsingIntrospection,
+  createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection,
   createTranslationsForGraphQLObjects,
 } from "./create";
 import { CREATE_OBJECT_CHUNK_SIZE } from "../../constants";
@@ -25,7 +25,7 @@ describe("saas/create.ts", () => {
     jest.resetAllMocks();
   });
 
-  describe("createOrUpdateGraphQlObjectsUsingIntrospection", () => {
+  describe("createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection", () => {
     const records: Partial<Record<FieldSet>>[] = [
       {
         id: "brand_1",
@@ -53,7 +53,7 @@ describe("saas/create.ts", () => {
     });
 
     it("makes a request to check whether the brand exists", async () => {
-      await createOrUpdateGraphQlObjectsUsingIntrospection(
+      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
         "Brand",
         records as Records<FieldSet>,
         {
@@ -76,7 +76,7 @@ describe("saas/create.ts", () => {
       };
       graphQlRequest.mockRejectedValueOnce(mockedGraphQLResponse);
 
-      await createOrUpdateGraphQlObjectsUsingIntrospection(
+      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
         "Brand",
         records as Records<FieldSet>,
         {
@@ -92,7 +92,7 @@ describe("saas/create.ts", () => {
     });
 
     it("makes a request to update the brand when it exists", async () => {
-      await createOrUpdateGraphQlObjectsUsingIntrospection(
+      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
         "Brand",
         records as Records<FieldSet>,
         {
@@ -119,7 +119,7 @@ describe("saas/create.ts", () => {
         })
       );
 
-      await createOrUpdateGraphQlObjectsUsingIntrospection(
+      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
         "Brand",
         manyRecords as Records<FieldSet>,
         {
@@ -154,7 +154,7 @@ describe("saas/create.ts", () => {
     });
 
     it("adds the default availability to the request", async () => {
-      await createOrUpdateGraphQlObjectsUsingIntrospection(
+      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
         "Brand",
         records as Records<FieldSet>,
         {

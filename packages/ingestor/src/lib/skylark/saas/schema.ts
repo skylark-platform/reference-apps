@@ -27,6 +27,16 @@ const ACTIVATE_CONFIGURATION_VERSION = gql`
   }
 `;
 
+const GET_ENUM_VALUES = gql`
+  query GET_ENUM_VALUES($name: String!) {
+    __type(name: $name) {
+      enumValues {
+        name
+      }
+    }
+  }
+`;
+
 const getActivationStatus = async () => {
   const res = await graphQLClient.request<{
     getActivationStatus: {
@@ -39,7 +49,7 @@ const getActivationStatus = async () => {
   return res.getActivationStatus;
 };
 
-const activateConfigurationVersion = async (version: number) => {
+export const activateConfigurationVersion = async (version: number) => {
   const res = await graphQLClient.request<{
     activateConfigurationVersion: { version: number; messages: string };
   }>(ACTIVATE_CONFIGURATION_VERSION, { version });
@@ -47,11 +57,26 @@ const activateConfigurationVersion = async (version: number) => {
   return res.activateConfigurationVersion;
 };
 
-const updateEnumTypes = async (
+const getEnumValues = async (name: string) => {
+  const data = await graphQLClient.request<{
+    __type: { enumValues: { name: string }[] };
+  }>(GET_ENUM_VALUES, { name });
+
+  // eslint-disable-next-line no-underscore-dangle
+  const values = data.__type.enumValues.map((e) => e.name.toUpperCase());
+  return values;
+};
+
+export const updateEnumTypes = async (
   enumName: string,
   values: string[],
-  version?: number
-) => {
+  version: number
+): Promise<{ version: number }> => {
+  const existingValues = await getEnumValues(enumName);
+  if (values.every((value) => existingValues.includes(value.toUpperCase()))) {
+    return { version };
+  }
+
   const mutation = {
     mutation: {
       __name: `UPDATE_${enumName}`,
@@ -128,23 +153,30 @@ const addPreferredImageTypeToSeason = async (version?: number) => {
   }
 };
 
-export const updateSkylarkSchema = async () => {
+export const waitForUpdatingSchema = async (expectedVersion?: number) => {
   const {
-    active_version: initialVersion,
-    update_in_progress: initialUpdateInProgress,
+    active_version: activeVersion,
+    update_in_progress: updateInProgress,
   } = await getActivationStatus();
 
-  if (initialUpdateInProgress) {
-    let initialUpdating = true;
-    while (initialUpdating) {
-      const { update_in_progress: initialUpdateStillRunning } =
+  if (updateInProgress) {
+    let currentlyUpdating = true;
+    while (currentlyUpdating) {
+      const { update_in_progress: updateStillRunning } =
         // eslint-disable-next-line no-await-in-loop
         await getActivationStatus();
-      initialUpdating = initialUpdateStillRunning;
+      currentlyUpdating =
+        updateStillRunning || activeVersion !== expectedVersion;
       // eslint-disable-next-line no-await-in-loop
       await pause(2500);
     }
   }
+
+  return activeVersion;
+};
+
+export const updateSkylarkSchema = async () => {
+  const initialVersion = await waitForUpdatingSchema();
 
   const { version: updatedVersion } = await updateEnumTypes(
     "SetType",
@@ -157,14 +189,7 @@ export const updateSkylarkSchema = async () => {
 
   await activateConfigurationVersion(updatedVersion);
 
-  let activeVersion = initialVersion;
-  while (`${activeVersion}` !== `${updatedVersion}`) {
-    // eslint-disable-next-line no-await-in-loop
-    const { active_version: currentVersion } = await getActivationStatus();
-    activeVersion = currentVersion;
-    // eslint-disable-next-line no-await-in-loop
-    await pause(5000);
-  }
+  const activeVersion = await waitForUpdatingSchema(updatedVersion);
 
   return { version: activeVersion };
 };
