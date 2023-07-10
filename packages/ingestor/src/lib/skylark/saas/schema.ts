@@ -40,7 +40,7 @@ const GET_ENUM_VALUES = gql`
 const getActivationStatus = async () => {
   const res = await graphQLClient.request<{
     getActivationStatus: {
-      active_version: number;
+      active_version: string;
       update_in_progress: boolean;
       update_started_at: string;
     };
@@ -70,11 +70,13 @@ const getEnumValues = async (name: string) => {
 export const updateEnumTypes = async (
   enumName: string,
   values: string[],
-  version: number
+  version: number | string
 ): Promise<{ version: number }> => {
   const existingValues = await getEnumValues(enumName);
   if (values.every((value) => existingValues.includes(value.toUpperCase()))) {
-    return { version };
+    return {
+      version: typeof version === "string" ? parseInt(version, 10) : version,
+    };
   }
 
   const mutation = {
@@ -162,17 +164,20 @@ export const waitForUpdatingSchema = async (expectedVersion?: number) => {
   if (updateInProgress) {
     let currentlyUpdating = true;
     while (currentlyUpdating) {
-      const { update_in_progress: updateStillRunning } =
+      const {
+        update_in_progress: updateStillRunning,
+        active_version: updatedVersion,
+      } =
         // eslint-disable-next-line no-await-in-loop
         await getActivationStatus();
       currentlyUpdating =
-        updateStillRunning || activeVersion !== expectedVersion;
+        updateStillRunning || parseInt(updatedVersion, 10) !== expectedVersion;
       // eslint-disable-next-line no-await-in-loop
       await pause(2500);
     }
   }
 
-  return activeVersion;
+  return parseInt(activeVersion, 10);
 };
 
 export const updateSkylarkSchema = async () => {

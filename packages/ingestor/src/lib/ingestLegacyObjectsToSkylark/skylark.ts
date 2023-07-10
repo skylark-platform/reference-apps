@@ -1,5 +1,6 @@
 import { GraphQLObjectTypes } from "@skylark-reference-apps/lib";
 import {
+  LegacyAsset,
   LegacyBrand,
   LegacyEpisode,
   LegacyObjectType,
@@ -40,7 +41,7 @@ const convertLegacyObjectTypeToObjectType = (
 };
 
 const getSynopsisForMedia = (
-  legacyObject: LegacyEpisode | LegacyBrand | LegacySeason
+  legacyObject: LegacyEpisode | LegacyBrand | LegacySeason | LegacyAsset
 ) => {
   // We want to make sure that we add synopsis, then short_synopsis in the order alternate_synopsis -> synopsis -> extended_synopsis
   const synopsis =
@@ -81,13 +82,18 @@ const convertLegacyObject = (
     if (assetType && ASSET_TYPES_TO_IGNORE.includes(assetType)) {
       return null;
     }
+    const { synopsis, synopsisShort } = getSynopsisForMedia(legacyObject);
 
     return {
       ...commonFields,
       internal_title: legacyObject.name,
+      title: legacyObject.title,
+      synopsis,
+      synopsis_short: synopsisShort,
       type: assetType,
       duration: legacyObject.duration_in_seconds,
       url: legacyObject.url !== "" ? legacyObject.url : null,
+      // state: legacyObject.state, Can't add this to SkylarkAsset
     };
   }
 

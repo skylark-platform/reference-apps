@@ -11,7 +11,6 @@ import { USED_LANGUAGES } from "./constants";
 import { pause } from "../skylark/saas/utils";
 
 const outputLegacyObjectCount = ({
-  type,
   objects,
 }: {
   type: LegacyObjectType;
@@ -27,7 +26,7 @@ const outputLegacyObjectCount = ({
   );
 
   console.log(
-    `--- ${type} found: ${total} (${totalLanguages} language${
+    `    - total found: ${total} (${totalLanguages} language${
       totalLanguages > 1 ? "s" : ""
     })`
   );
@@ -58,7 +57,7 @@ const getAllObjectsOfType = async <T extends LegacyCommonObject>(
 ): Promise<{ type: LegacyObjectType; objects: T[] }> => {
   const { legacyAxios } = createLegacyAxios(language);
 
-  const limit = 25;
+  const limit = 40;
 
   let numberOfRequests = 0;
   let count = 0;
@@ -79,12 +78,26 @@ const getAllObjectsOfType = async <T extends LegacyCommonObject>(
     throw err;
   }
 
+  if (count === 0) {
+    return {
+      type,
+      objects: [],
+    };
+  }
+
   const offsetArr = Array.from(
     { length: numberOfRequests },
     (_, index) => index * limit
   );
 
-  const chunkedOffsetArr = chunk(offsetArr, 2); // Apparently 24 connections at once crashed it
+  const chunkedOffsetArr = chunk(offsetArr, 4); // Apparently 24 connections at once crashed it
+  const numBatches = chunkedOffsetArr.length;
+
+  console.log(
+    `    - ${language.toLowerCase()}: ${count} objects found (${numberOfRequests} requests in ${numBatches} batch${
+      numBatches > 1 ? "es" : ""
+    })`
+  );
 
   const dataArr: T[][] = [];
 
@@ -152,6 +165,8 @@ export const fetchObjectsFromLegacySkylark = async <
   objects: Record<string, T[]>;
   totalFound: number;
 }> => {
+  console.log(`--- ${type} fetching...`);
+
   const allObjects: Record<string, T[]> = {};
 
   // eslint-disable-next-line no-restricted-syntax
