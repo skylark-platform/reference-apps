@@ -114,7 +114,7 @@ export const mutateMultipleObjects = async <T extends { external_id?: string }>(
 
 export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
   objectType: GraphQLObjectTypes,
-  existingObjects: string[],
+  existingObjects: Set<string>,
   objects: ((
     | FieldSet
     | Record<string, string | null | string[] | boolean | number | object>
@@ -149,7 +149,7 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
     (previousOperations, { _id: id, ...fields }) => {
       const validFields = getValidFields(fields, validProperties);
 
-      const objectExists = existingObjects.includes(id);
+      const objectExists = existingObjects.has(id);
 
       const availability = metadataAvailability
         ? getGraphQLObjectAvailability(
@@ -256,7 +256,10 @@ export const createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection =
 
     const externalIds = objects.map(({ _id }) => ({ externalId: _id }));
 
-    const existingObjects = await getExistingObjects(objectType, externalIds);
+    const { existingObjects } = await getExistingObjects(
+      objectType,
+      externalIds
+    );
 
     return createOrUpdateGraphQlObjectsUsingIntrospection(
       objectType,
@@ -273,7 +276,7 @@ export const createOrUpdateGraphQLCredits = async (
   const validProperties = await getValidPropertiesForObject("Credit");
 
   const externalIds = airtableRecords.map(({ id }) => ({ externalId: id }));
-  const existingObjects = await getExistingObjects("Credit", externalIds);
+  const { existingObjects } = await getExistingObjects("Credit", externalIds);
 
   const operations = airtableRecords.reduce(
     (previousOperations, { id, fields }) => {
@@ -289,7 +292,7 @@ export const createOrUpdateGraphQLCredits = async (
         fields.availability as string[]
       );
 
-      const creditExists = existingObjects.includes(id);
+      const creditExists = existingObjects.has(id);
 
       const credit: Record<
         string,
@@ -428,17 +431,33 @@ export const createGraphQLMediaObjects = async (
     externalId: id,
     language: getMediaObjectLanguage(fields, languagesTable),
   }));
-  const existingObjects = flatten(
-    await Promise.all(
-      ["Brand", "Season", "Episode", "Movie", "SkylarkAsset"].map(
-        (objectType) =>
-          getExistingObjects(
-            objectType as GraphQLMediaObjectTypes,
-            externalIdsAndLanguage
-          )
+
+  const existingObjectSets = await Promise.all(
+    ["Brand", "Season", "Episode", "Movie", "SkylarkAsset"].map((objectType) =>
+      getExistingObjects(
+        objectType as GraphQLMediaObjectTypes,
+        externalIdsAndLanguage
       )
     )
   );
+
+  const existingObjects = existingObjectSets.reduce(
+    (previous, { existingObjects: set }) =>
+      new Set<string>([...previous, ...set]),
+    new Set<string>([])
+  );
+
+  // const existingObjects = flatten(
+  //   await Promise.all(
+  //     ["Brand", "Season", "Episode", "Movie", "SkylarkAsset"].map(
+  //       (objectType) =>
+  //         getExistingObjects(
+  //           objectType as GraphQLMediaObjectTypes,
+  //           externalIdsAndLanguage
+  //         )
+  //     )
+  //   )
+  // );
 
   const createdMediaObjects: GraphQLBaseObject[] = [];
   while (createdMediaObjects.length < airtableRecords.length) {
@@ -479,7 +498,7 @@ export const createGraphQLMediaObjects = async (
           fields.skylark_object_type as string
         );
 
-        const objectExists = existingObjects.includes(id);
+        const objectExists = existingObjects.has(id);
         const method = objectExists ? updateFunc : createFunc;
 
         if (!hasProperty(validObjectProperties, objectType)) {

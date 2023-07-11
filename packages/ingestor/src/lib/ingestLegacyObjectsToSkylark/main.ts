@@ -1,13 +1,26 @@
 import "../../env";
 import "./env";
 import { SAAS_API_ENDPOINT, SAAS_API_KEY } from "@skylark-reference-apps/lib";
-import { ensureDir, exists, readJson, readdir, writeFile } from "fs-extra";
+import {
+  ensureDir,
+  ensureFile,
+  exists,
+  outputFile,
+  readFile,
+  readJson,
+  readdir,
+  writeFile,
+} from "fs-extra";
 import { join } from "path";
 import { fetchObjectsFromLegacySkylark } from "./legacy";
 import {
   LegacyAsset,
+  LegacyBrand,
+  LegacyCommonObject,
+  LegacyEpisode,
   LegacyObjectType,
   LegacyObjects,
+  LegacySeason,
   LegacyTag,
   LegacyTagCategory,
 } from "./types/legacySkylark";
@@ -60,6 +73,24 @@ const checkEnvVars = () => {
   console.log("Skylark API URL:", SAAS_API_ENDPOINT);
 };
 
+const calculateTotalObjects = (
+  objects: Record<
+    string,
+    {
+      type: LegacyObjectType;
+      objects: Record<string, LegacyObjects>;
+      totalFound: number;
+    }
+  >
+) => {
+  const totalObjectsFound = Object.values(objects).reduce(
+    (previous, { totalFound }) => previous + totalFound,
+    0
+  );
+
+  return totalObjectsFound;
+};
+
 const updateSkylarkSchema = async ({
   assetTypes,
 }: {
@@ -81,18 +112,53 @@ const updateSkylarkSchema = async ({
   }
 };
 
-const generateLegacyObjectsDir = () => {
+const generateEnvIdentifier = () => {
   const env = process.env.LEGACY_API_URL
     ? process.env.LEGACY_API_URL.replace("https://", "")
         .replaceAll(".", "_")
         .replaceAll("-", "_")
     : "unknown";
+  return env;
+};
+
+const generateLegacyObjectsDir = () => {
+  const env = generateEnvIdentifier();
 
   const dir = join(__dirname, "outputs", "legacy_data", env);
   return dir;
 };
 
-const writeLegacyObjectsToDisk = async (
+const createLegacyObjectsTimeStampedDir = async () => {
+  const dateStamp = new Date().toISOString();
+
+  const dir = join(generateLegacyObjectsDir(), dateStamp);
+
+  await ensureDir(dir);
+
+  return dir;
+};
+
+const writeLegacyObjectsToDisk = async <T>(
+  dir: string,
+  obj: {
+    type: LegacyObjectType;
+    objects: Record<string, T[]>;
+    totalFound: number;
+  }
+) => {
+  try {
+    await writeFile(
+      join(dir, `${obj.type}.json`),
+      JSON.stringify(obj, null, 4)
+    );
+  } catch (err) {
+    console.error(
+      `[writeLegacyObjectsToDisk] Failed to write ${obj.type} data`
+    );
+  }
+};
+
+const writeAllLegacyObjectsToDisk = async (
   objects: Record<
     string,
     {
@@ -102,58 +168,109 @@ const writeLegacyObjectsToDisk = async (
     }
   >
 ) => {
-  const dateStamp = new Date().toISOString();
+  try {
+    const dir = await createLegacyObjectsTimeStampedDir();
 
-  const dir = join(generateLegacyObjectsDir(), dateStamp);
-
-  await ensureDir(dir);
-
-  Object.values(objects).map(async (value) => {
-    await writeFile(
-      join(dir, `${value.type}.json`),
-      JSON.stringify(value, null, 4)
+    await Promise.all(
+      Object.values(objects).map((value) =>
+        writeLegacyObjectsToDisk<LegacyObjects[0]>(dir, value)
+      )
     );
-  });
+  } catch (err) {
+    console.error("[writeAllLegacyObjectsToDisk] Failed to write data");
+  }
+};
+
+const writeStatsForLegacyObjectsToDisk = async (
+  legacyObjects: Record<
+    string,
+    {
+      type: LegacyObjectType;
+      objects: Record<string, LegacyObjects>;
+      totalFound: number;
+    }
+  >
+) => {
+  try {
+    const env = generateEnvIdentifier();
+    const file = join(generateLegacyObjectsDir(), "stats.md");
+
+    await ensureFile(file);
+
+    const totalObjectsFound = calculateTotalObjects(legacyObjects);
+
+    let contents = `# Stats for ${env}\n\nTotal objects across ${USED_LANGUAGES.length} languages: ${totalObjectsFound}`;
+
+    Object.values(legacyObjects).forEach(({ type, objects, totalFound }) => {
+      contents += `\n\n## ${type} (${totalFound} total)\n`;
+
+      Object.entries(objects).forEach(([language, objs]) => {
+        contents += `  - \`${language.toLowerCase()}\`: \`${objs.length}\`\n`;
+      });
+
+      contents += "\n---";
+    });
+
+    await writeFile(file, contents);
+  } catch (err) {
+    console.error("[writeAllLegacyObjectsToDisk] Failed to write data");
+  }
+};
+
+const fetchLegacyObjectsAndWriteToDisk = async <T extends LegacyCommonObject>(
+  type: LegacyObjectType,
+  dir: string
+) => {
+  const objects = await fetchObjectsFromLegacySkylark<T>(type);
+  await writeLegacyObjectsToDisk<T>(dir, objects);
+  return objects;
 };
 
 const fetchLegacyObjects = async () => {
-  const tagCategories = await fetchObjectsFromLegacySkylark<LegacyTagCategory>(
-    LegacyObjectType.TagCategories
+  const dir = await createLegacyObjectsTimeStampedDir();
+  await ensureDir(dir);
+
+  const tagCategories =
+    await fetchLegacyObjectsAndWriteToDisk<LegacyTagCategory>(
+      LegacyObjectType.TagCategories,
+      dir
+    );
+
+  const tags = await fetchLegacyObjectsAndWriteToDisk<LegacyTag>(
+    LegacyObjectType.Tags,
+    dir
   );
 
-  const tags = await fetchObjectsFromLegacySkylark<LegacyTag>(
-    LegacyObjectType.Tags
+  const assets = await fetchLegacyObjectsAndWriteToDisk<LegacyAsset>(
+    LegacyObjectType.Assets,
+    dir
   );
 
-  const assets = await fetchObjectsFromLegacySkylark<LegacyAsset>(
-    LegacyObjectType.Assets
+  const episodes = await fetchLegacyObjectsAndWriteToDisk<LegacyEpisode>(
+    LegacyObjectType.Episodes,
+    dir
   );
 
-  // const episodes = await fetchObjectsFromLegacySkylark<LegacyEpisode>(
-  //   LegacyObjectType.Episodes
-  // );
+  const seasons = await fetchLegacyObjectsAndWriteToDisk<LegacySeason>(
+    LegacyObjectType.Seasons,
+    dir
+  );
 
-  // const seasons = await fetchObjectsFromLegacySkylark<LegacySeason>(
-  //   LegacyObjectType.Seasons
-  // );
-
-  // const brands = await fetchObjectsFromLegacySkylark<LegacyBrand>(
-  //   LegacyObjectType.Brands
-  // );
+  const brands = await fetchLegacyObjectsAndWriteToDisk<LegacyBrand>(
+    LegacyObjectType.Brands,
+    dir
+  );
 
   const retObj = {
     tagCategories,
     tags,
     assets,
-    // episodes,
-    // seasons,
-    // brands,
+    episodes,
+    seasons,
+    brands,
   };
 
-  const totalObjectsFound = Object.values(retObj).reduce(
-    (previous, { totalFound }) => previous + totalFound,
-    0
-  );
+  const totalObjectsFound = calculateTotalObjects(retObj);
   console.log(
     `--- ${totalObjectsFound} objects found (${USED_LANGUAGES.length} languages checked)`
   );
@@ -165,18 +282,22 @@ const readObjectsFromFile = async <T>(type: LegacyObjectType) => {
   const parentDir = generateLegacyObjectsDir();
   await ensureDir(parentDir);
 
-  const objectDirs = await readdir(parentDir);
+  const objectDirs = (await readdir(parentDir)).filter(
+    (dir) => dir !== "stats.md"
+  );
 
   const [mostRecentDir] = objectDirs.sort((a, b) =>
-    new Date(a).getMilliseconds() > new Date(b).getMilliseconds() ? 1 : -1
+    new Date(a).getMilliseconds() < new Date(b).getMilliseconds() ? 1 : -1
   );
 
   const file = join(parentDir, mostRecentDir, `${type}.json`);
 
-  if (!(await exists(file))) {
-    throw new Error(
-      `[readObjectsFromFile] expected ${file} to exist but it was not found`
-    );
+  if (!mostRecentDir || !(await exists(file))) {
+    return {
+      type,
+      objects: {},
+      totalFound: 0,
+    };
   }
 
   const data = (await readJson(file)) as {
@@ -199,19 +320,28 @@ const readLegacyObjectsFromFile = async () => {
     LegacyObjectType.Assets
   );
 
+  const episodes = await readObjectsFromFile<LegacyEpisode>(
+    LegacyObjectType.Episodes
+  );
+
+  const seasons = await readObjectsFromFile<LegacySeason>(
+    LegacyObjectType.Seasons
+  );
+
+  const brands = await readObjectsFromFile<LegacyBrand>(
+    LegacyObjectType.Brands
+  );
+
   const retObj = {
     tagCategories,
     tags,
     assets,
-    // episodes,
-    // seasons,
-    // brands,
+    episodes,
+    seasons,
+    brands,
   };
 
-  const totalObjectsFound = Object.values(retObj).reduce(
-    (previous, { totalFound }) => previous + totalFound,
-    0
-  );
+  const totalObjectsFound = calculateTotalObjects(retObj);
   console.log(
     `--- ${totalObjectsFound} objects read from disk (${USED_LANGUAGES.length} languages)`
   );
@@ -233,10 +363,14 @@ const main = async () => {
     console.log("\nFetching Objects from Legacy Skylark...");
     legacyObjects = await fetchLegacyObjects();
     console.log("\nWriting Legacy Objects to disk...");
-    await writeLegacyObjectsToDisk(legacyObjects);
+    await writeAllLegacyObjectsToDisk(legacyObjects);
   }
 
+  console.log("\nWriting Stats to Disk...");
+  await writeStatsForLegacyObjectsToDisk(legacyObjects);
+
   console.log("\nUpdating Skylark Schema...");
+
   const assetTypes = [
     ...new Set(
       Object.values(legacyObjects.assets.objects)
@@ -245,6 +379,7 @@ const main = async () => {
     ),
   ].filter((name): name is string => !!name);
   console.log("--- Required Asset type enums:", assetTypes.join(", "));
+
   await updateSkylarkSchema({ assetTypes });
 
   console.log("\nUpdating Skylark Account...");
@@ -252,7 +387,7 @@ const main = async () => {
     defaultLanguage: USED_LANGUAGES[0].toLowerCase(),
   });
 
-  console.log("\nCreating Always & Forever Availability");
+  console.log("\nCreating Always & Forever Availability...");
   const alwaysAvailability = await createAlwaysAndForeverAvailability(
     ALWAYS_FOREVER_AVAILABILITY_EXT_ID
   );
@@ -286,26 +421,46 @@ const main = async () => {
     alwaysAvailability
   );
 
-  // skylarkObjects.episodes = await createObjectsInSkylark(
-  //   legacyObjects.episodes,
-  //   skylarkObjects,
-  //   alwaysAvailability
-  // );
+  skylarkObjects.episodes = await createObjectsInSkylark(
+    legacyObjects.episodes,
+    skylarkObjects,
+    alwaysAvailability
+  );
 
-  // skylarkObjects.seasons = await createObjectsInSkylark(
-  //   legacyObjects.seasons,
-  //   skylarkObjects,
-  //   alwaysAvailability
-  // );
+  skylarkObjects.seasons = await createObjectsInSkylark(
+    legacyObjects.seasons,
+    skylarkObjects,
+    alwaysAvailability
+  );
 
-  // skylarkObjects.brands = await createObjectsInSkylark(
-  //   legacyObjects.brands,
-  //   skylarkObjects,
-  //   alwaysAvailability
-  // );
+  skylarkObjects.brands = await createObjectsInSkylark(
+    legacyObjects.brands,
+    skylarkObjects,
+    alwaysAvailability
+  );
 
   console.log("\nObjects Created Successfully.");
 };
 
-main().catch(console.error);
+const writeError = async (err: unknown) => {
+  const errorFile = join(__dirname, "outputs", "ingest_errors.md");
+
+  await ensureFile(errorFile);
+
+  const contents = await readFile(errorFile, "utf8");
+
+  const dateStamp = new Date().toISOString();
+  const readFromDisk = process.env.READ_LEGACY_OBJECTS_FROM_DISK === "true";
+
+  const newContents = `${contents}\n---\n\n## ${dateStamp} (${
+    readFromDisk ? "Data from disk" : "Data from Skylark"
+  })\n\n\`\`\`\n${err as string}\n\`\`\`\n`;
+
+  await outputFile(errorFile, newContents);
+};
+
+main().catch((err) => {
+  console.error(err);
+  void writeError(err);
+});
 /* eslint-enable no-console */

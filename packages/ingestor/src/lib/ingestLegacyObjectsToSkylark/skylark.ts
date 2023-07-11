@@ -1,4 +1,6 @@
 import { GraphQLObjectTypes } from "@skylark-reference-apps/lib";
+import { ensureDir, writeJSON } from "fs-extra";
+import { join } from "path";
 import {
   LegacyAsset,
   LegacyBrand,
@@ -144,7 +146,8 @@ const getExistingObjectsForAllLanguages = async (
   languages: string[],
   objects: Record<string, LegacyObjects>
 ) => {
-  const existingObjectsAcca: string[][] = [];
+  const existingObjects = new Set<string>([]);
+  const missingObjects = new Set<string>([]);
 
   // eslint-disable-next-line no-restricted-syntax
   for (const language of languages) {
@@ -152,22 +155,15 @@ const getExistingObjectsForAllLanguages = async (
       externalId: uid,
     }));
 
-    // eslint-disable-next-line no-await-in-loop
-    const existingObjects = await getExistingObjects(
-      objectType,
-      externalIds,
-      language
-    );
+    const { existingObjects: existing, missingObjects: missing } =
+      // eslint-disable-next-line no-await-in-loop
+      await getExistingObjects(objectType, externalIds, language);
 
-    existingObjectsAcca.push(existingObjects);
+    existing.forEach((item) => existingObjects.add(item));
+    missing.forEach((item) => missingObjects.add(item));
   }
 
-  const flattenedExistingObjects: string[] = existingObjectsAcca.flatMap(
-    (arr) => arr
-  );
-  const existingObjects = [...new Set(flattenedExistingObjects)] as string[];
-
-  return existingObjects;
+  return { existingObjects, missingObjects };
 };
 
 export const createObjectsInSkylark = async (
@@ -183,16 +179,40 @@ export const createObjectsInSkylark = async (
 ): Promise<GraphQLBaseObject[]> => {
   const objectType = convertLegacyObjectTypeToObjectType(type);
 
+  const totalObjectsToBeCreatedUpdated = Object.values(
+    legacyObjectsAndLanguage
+  ).reduce((previous, arr) => previous + arr.length, 0);
+  // eslint-disable-next-line no-console
+  console.log(
+    `--- ${objectType}s creating/updating: ${totalObjectsToBeCreatedUpdated}`
+  );
+
   const languages = Object.keys(legacyObjectsAndLanguage);
 
   if (languages.length === 0) {
     return [];
   }
 
-  const existingObjects = await getExistingObjectsForAllLanguages(
-    objectType,
-    languages,
-    legacyObjectsAndLanguage
+  // eslint-disable-next-line prefer-const
+  let { existingObjects, missingObjects } =
+    await getExistingObjectsForAllLanguages(
+      objectType,
+      languages,
+      legacyObjectsAndLanguage
+    );
+
+  // TODO remove this, just for debugging
+  await ensureDir(join(__dirname, "outputs", "existingObjects"));
+  await writeJSON(
+    join(__dirname, "outputs", "existingObjects", `${objectType}.json`),
+    {
+      existingObjects: [...existingObjects],
+      missingObjects: [...missingObjects],
+      count: {
+        existingObjects: existingObjects.size,
+        missingObjects: missingObjects.size,
+      },
+    }
   );
 
   const accaArr: GraphQLBaseObject[][] = [];
@@ -227,7 +247,8 @@ export const createObjectsInSkylark = async (
       language,
     }));
 
-    const availabilityUids = [alwaysAvailability.uid];
+    // TODO enable availability after fix
+    // const availabilityUids = [alwaysAvailability.uid];
 
     const createdLanguageObjects =
       // eslint-disable-next-line no-await-in-loop
@@ -235,15 +256,25 @@ export const createObjectsInSkylark = async (
         objectType,
         existingObjects,
         objectsToCreate,
-        { language, relationships, availabilityUids }
+        // { language, relationships, availabilityUids }
+        { language, relationships }
       );
 
     accaArr.push(createdLanguageObjects);
 
+    // eslint-disable-next-line no-console
+    console.log(
+      `    - ${language.toLowerCase()}: ${
+        createdLanguageObjects.length
+      } objects`
+    );
+
     const newExternalIds = createdLanguageObjects.map(
       ({ external_id }) => external_id
     );
-    existingObjects.push(...newExternalIds); // No issue with there being duplicates in this array as we're only using it to find existing
+    // existingObjects.push(...newExternalIds); // No issue with there being duplicates in this array as we're only using it to find existing and we filter duplicates out when generating relationships
+
+    existingObjects = new Set<string>([...existingObjects, ...newExternalIds]);
   }
 
   const createdObjects = accaArr.flatMap((a) => a);
@@ -256,7 +287,7 @@ export const createObjectsInSkylark = async (
 
   // eslint-disable-next-line no-console
   console.log(
-    `--- ${objectType}s created/updated: ${createdObjects.length} (${uniqueBaseObjects.length} unique)`
+    `    - created/updated: ${createdObjects.length} (${uniqueBaseObjects.length} unique)`
   );
 
   return uniqueBaseObjects;

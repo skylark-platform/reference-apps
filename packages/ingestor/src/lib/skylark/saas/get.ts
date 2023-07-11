@@ -1,5 +1,5 @@
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
-import { has, isNull } from "lodash";
+import { chunk, has, isNull } from "lodash";
 import { graphQLClient, GraphQLObjectTypes } from "@skylark-reference-apps/lib";
 
 import {
@@ -104,11 +104,11 @@ export const getValidRelationshipsForObject = async (
   return fields;
 };
 
-export const getExistingObjects = async (
+const getExistingObjectsByExternalId = async (
   objectType: GraphQLObjectTypes,
   objects: { externalId: string; language?: string | null }[],
   language?: string
-): Promise<string[]> => {
+): Promise<{ existingObjects: string[]; missingObjects: string[] }> => {
   const externalIds = objects.map(({ externalId }) => externalId);
   const getOperations = objects.reduce(
     (previousQueries, { externalId, language: objLanguage }) => {
@@ -159,7 +159,9 @@ export const getExistingObjects = async (
   try {
     // This request will error if at least one external_id doesn't exist
     await graphQLClient.request<{ [key: string]: GraphQLBaseObject }>(
-      graphQLGetQuery
+      graphQLGetQuery,
+      {},
+      { "x-bypass-cache": "1" }
     );
   } catch (err) {
     if (err && has(err, "response.data")) {
@@ -175,15 +177,70 @@ export const getExistingObjects = async (
       const notFoundObjectExternalIds = notFoundObjects.map(
         ({ externalId }) => externalId
       );
-      const objectsThatExist = externalIds.filter(
+      const existingObjects = externalIds.filter(
         (externalId) => !notFoundObjectExternalIds.includes(externalId)
       );
-      return objectsThatExist;
+      return {
+        existingObjects,
+        missingObjects: notFoundObjectExternalIds,
+      };
     }
 
     // If unexpected error, re throw
     throw err;
   }
 
-  return externalIds;
+  return {
+    existingObjects: externalIds,
+    missingObjects: [],
+  };
+};
+
+export const getExistingObjects = async (
+  objectType: GraphQLObjectTypes,
+  objects: { externalId: string; language?: string | null }[],
+  language?: string
+): Promise<{
+  existingObjects: Set<string>;
+  missingObjects: Set<string>;
+}> => {
+  const chunkSize = 100;
+
+  if (objects.length <= chunkSize) {
+    const { existingObjects, missingObjects } =
+      await getExistingObjectsByExternalId(objectType, objects, language);
+    return {
+      existingObjects: new Set(existingObjects),
+      missingObjects: new Set(missingObjects),
+    };
+  }
+
+  const chunkedObjects = chunk(objects, chunkSize);
+  const chunkedRequests = chunk(chunkedObjects, 10); // Make 10 requests at a time
+
+  const existingObjectsArr: {
+    existingObjects: string[];
+    missingObjects: string[];
+  }[] = [];
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const requests of chunkedRequests) {
+    // eslint-disable-next-line no-await-in-loop
+    const responses = await Promise.all(
+      requests.map((objs) =>
+        getExistingObjectsByExternalId(objectType, objs, language)
+      )
+    );
+
+    existingObjectsArr.push(...responses);
+  }
+
+  const existingObjects = new Set(
+    existingObjectsArr.flatMap(({ existingObjects: arr }) => arr)
+  );
+  const missingObjects = new Set(
+    existingObjectsArr.flatMap(({ missingObjects: arr }) => arr)
+  );
+
+  return { existingObjects, missingObjects };
 };

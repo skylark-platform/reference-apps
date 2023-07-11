@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
 import { hasProperty } from "@skylark-reference-apps/lib";
-import { Axios } from "axios";
+import { Axios, AxiosInstance } from "axios";
 import { chunk } from "lodash";
+import axiosRetry, { exponentialDelay } from "axios-retry";
 import {
   LegacyCommonObject,
   LegacyObjectType,
@@ -48,6 +49,11 @@ const createLegacyAxios = (language: string) => {
     },
   });
 
+  axiosRetry(legacyAxios as AxiosInstance, {
+    retries: 5,
+    retryDelay: exponentialDelay,
+  });
+
   return { legacyAxios };
 };
 
@@ -57,7 +63,8 @@ const getAllObjectsOfType = async <T extends LegacyCommonObject>(
 ): Promise<{ type: LegacyObjectType; objects: T[] }> => {
   const { legacyAxios } = createLegacyAxios(language);
 
-  const limit = 40;
+  const limit = 50; // 40 + 4 requests at once pegged the CPU at ~80% for Episodes (SL6)
+  const numRequestsAtOnce = 4;
 
   let numberOfRequests = 0;
   let count = 0;
@@ -90,7 +97,7 @@ const getAllObjectsOfType = async <T extends LegacyCommonObject>(
     (_, index) => index * limit
   );
 
-  const chunkedOffsetArr = chunk(offsetArr, 4); // Apparently 24 connections at once crashed it
+  const chunkedOffsetArr = chunk(offsetArr, numRequestsAtOnce); // Apparently 24 connections at once crashed it
   const numBatches = chunkedOffsetArr.length;
 
   console.log(

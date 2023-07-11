@@ -258,10 +258,13 @@ export const createOrUpdateAvailability = async (
   dimensions: GraphQLMetadata["dimensions"]
 ) => {
   const externalIds = schedules.map(({ id }) => ({ externalId: id }));
-  const existingObjects = await getExistingObjects("Availability", externalIds);
+  const { existingObjects } = await getExistingObjects(
+    "Availability",
+    externalIds
+  );
 
   const schedulesToCreate = schedules.filter(
-    ({ id }) => !existingObjects.includes(id)
+    ({ id }) => !existingObjects.has(id)
   );
   if (schedulesToCreate.length === 0) {
     return;
@@ -271,7 +274,7 @@ export const createOrUpdateAvailability = async (
     (previousOperations, { id, ...record }) => {
       const fields = record.fields as AvailabilityTableFields;
 
-      const objectExists = existingObjects.includes(id);
+      const objectExists = existingObjects.has(id);
 
       const availabilityInput: {
         title: string;

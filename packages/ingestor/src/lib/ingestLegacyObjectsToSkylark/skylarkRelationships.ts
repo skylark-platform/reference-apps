@@ -27,13 +27,18 @@ const getLegacyUidFromUrl = (url: string) => {
   return uid;
 };
 
-const getUidsFromExtIds = (extIds: string[], objects: GraphQLBaseObject[]) => {
+const getUidsFromExtIds = (
+  extIds: string[],
+  objects: GraphQLBaseObject[]
+): string[] => {
   const uids = extIds
     .map((extId) => objects.find(({ external_id }) => extId === external_id))
     .filter((obj): obj is GraphQLBaseObject => !!obj)
     .map(({ uid }) => uid);
 
-  return uids;
+  const uniqueUids = [...new Set(uids)] as string[];
+
+  return uniqueUids;
 };
 
 const getUidsFromUrls = (
