@@ -8,7 +8,11 @@ import {
   LegacyObjectType,
   LegacyResponseListObjectsData,
 } from "./types/legacySkylark";
-import { USED_LANGUAGES } from "./constants";
+import {
+  LAST_MONTH_MODE_DATE,
+  OBJECT_TYPES_WITHOUT_LAST_MONTH_MODE,
+  USED_LANGUAGES,
+} from "./constants";
 import { pause } from "../skylark/saas/utils";
 
 const outputLegacyObjectCount = ({
@@ -62,6 +66,11 @@ const getAllObjectsOfType = async <T extends LegacyCommonObject>(
   language: string
 ): Promise<{ type: LegacyObjectType; objects: T[] }> => {
   const { legacyAxios } = createLegacyAxios(language);
+  const onlyDataCreatedInLastMonth =
+    !OBJECT_TYPES_WITHOUT_LAST_MONTH_MODE.includes(type) &&
+    process.env.LEGACY_DATA_LAST_MONTH_ONLY === "true";
+  // https://developers.skylarkplatform.com/api/skylark_api.html#controlling-responses
+  const lastMonthQuery = `created__gte=${LAST_MONTH_MODE_DATE}`;
 
   const limit = 50; // 40 + 4 requests at once pegged the CPU at ~80% for Episodes (SL6)
   const numRequestsAtOnce = 4;
@@ -70,8 +79,14 @@ const getAllObjectsOfType = async <T extends LegacyCommonObject>(
   let count = 0;
 
   try {
+    const countQuery = ["all=true"];
+
+    if (onlyDataCreatedInLastMonth) {
+      countQuery.push(lastMonthQuery);
+    }
+
     const countResponse = await legacyAxios.get<string>(
-      `/api/${type}/count/?all=true`
+      `/api/${type}/count/?${countQuery.join("&")}`
     );
     if (countResponse.status < 200 || countResponse.status >= 300) {
       throw new Error("Unexpected response from count endpoint");
@@ -117,6 +132,10 @@ const getAllObjectsOfType = async <T extends LegacyCommonObject>(
           const query = ["all=true", `limit=${limit}`, `start=${offset}`];
           if (type === LegacyObjectType.Assets) {
             query.push("fields_to_expand=asset_type_url");
+          }
+
+          if (onlyDataCreatedInLastMonth) {
+            query.push(lastMonthQuery);
           }
 
           const listObjectsResponse = await legacyAxios.get<string>(

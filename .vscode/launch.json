@@ -36,7 +36,9 @@
       "runtimeExecutable": "yarn",
       "skipFiles": ["<node_internals>/**"],
       "type": "node",
-      "env": {}
+      "env": {
+        "LEGACY_DATA_LAST_MONTH_ONLY": "true"
+      }
     },
     {
       "name": "[LEGACY - FROM DISK] Ingest from Legacy to Skylark",
@@ -46,7 +48,9 @@
       "runtimeExecutable": "yarn",
       "skipFiles": ["<node_internals>/**"],
       "type": "node",
-      "env": {}
+      "env": {
+        "LEGACY_DATA_LAST_MONTH_ONLY": "false"
+      }
     }
   ]
 }

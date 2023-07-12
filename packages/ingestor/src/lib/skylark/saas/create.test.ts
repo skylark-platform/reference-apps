@@ -49,7 +49,7 @@ describe("saas/create.ts", () => {
           ],
         },
       };
-      graphQlRequest.mockResolvedValueOnce(mockedGraphQLResponse);
+      graphQlRequest.mockResolvedValue(mockedGraphQLResponse);
     });
 
     it("makes a request to check whether the brand exists", async () => {
@@ -61,8 +61,10 @@ describe("saas/create.ts", () => {
         }
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
-        2,
-        'query getBrands { brand_1: getBrand (external_id: "brand_1", ignore_availability: true) { __typename uid slug external_id } }'
+        1,
+        'query getBrands { brand_1: getBrand (external_id: "brand_1", ignore_availability: true) { __typename uid slug external_id } }',
+        {},
+        expect.any(Object)
       );
     });
 
@@ -85,7 +87,7 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateBrands { createBrandbrand_1: createBrand (brand: {title: "Brand 1", availability: {link: []}, external_id: "brand_1"}) { __typename uid slug external_id } }',
+        'mutation createOrUpdateBrands { createBrand_brand_1: createBrand (brand: {title: "Brand 1", availability: {link: []}, external_id: "brand_1"}) { __typename uid slug external_id } }',
         {},
         expect.any(Object)
       );
@@ -101,7 +103,7 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateBrands { updateBrandbrand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: []}}) { __typename uid slug external_id } }',
+        'mutation createOrUpdateBrands { updateBrand_brand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: []}}) { __typename uid slug external_id } }',
         {},
         expect.any(Object)
       );
@@ -164,7 +166,7 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateBrands { updateBrandbrand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: ["default-external-id-1"]}}) { __typename uid slug external_id } }',
+        'mutation createOrUpdateBrands { updateBrand_brand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: ["default-external-id-1"]}}) { __typename uid slug external_id } }',
         {},
         expect.any(Object)
       );
@@ -229,7 +231,9 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         2,
-        'query getCredits { credit_1: getCredit (external_id: "credit_1", ignore_availability: true) { __typename uid slug external_id } }'
+        'query getCredits { credit_1: getCredit (external_id: "credit_1", ignore_availability: true) { __typename uid slug external_id } }',
+        {},
+        expect.any(Object)
       );
     });
 

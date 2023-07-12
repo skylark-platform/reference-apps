@@ -113,11 +113,19 @@ const updateSkylarkSchema = async ({
 };
 
 const generateEnvIdentifier = () => {
+  const onlyDataCreatedInLastMonth =
+    process.env.LEGACY_DATA_LAST_MONTH_ONLY === "true";
+
   const env = process.env.LEGACY_API_URL
     ? process.env.LEGACY_API_URL.replace("https://", "")
         .replaceAll(".", "_")
         .replaceAll("-", "_")
     : "unknown";
+
+  if (onlyDataCreatedInLastMonth) {
+    return `${env}_last_month_only`;
+  }
+
   return env;
 };
 
@@ -278,7 +286,7 @@ const fetchLegacyObjects = async () => {
   return retObj;
 };
 
-const readObjectsFromFile = async <T>(type: LegacyObjectType) => {
+const getMostRecentLegacyObjectsDir = async () => {
   const parentDir = generateLegacyObjectsDir();
   await ensureDir(parentDir);
 
@@ -286,13 +294,17 @@ const readObjectsFromFile = async <T>(type: LegacyObjectType) => {
     (dir) => dir !== "stats.md"
   );
 
-  const [mostRecentDir] = objectDirs.sort((a, b) =>
-    new Date(a).getMilliseconds() < new Date(b).getMilliseconds() ? 1 : -1
+  const [mostRecentDir] = objectDirs.sort(
+    (a, b) => +new Date(b) - +new Date(a)
   );
 
-  const file = join(parentDir, mostRecentDir, `${type}.json`);
+  return join(parentDir, mostRecentDir);
+};
 
-  if (!mostRecentDir || !(await exists(file))) {
+const readObjectsFromFile = async <T>(dir: string, type: LegacyObjectType) => {
+  const file = join(dir, `${type}.json`);
+
+  if (!(await exists(file))) {
     return {
       type,
       objects: {},
@@ -310,25 +322,37 @@ const readObjectsFromFile = async <T>(type: LegacyObjectType) => {
 };
 
 const readLegacyObjectsFromFile = async () => {
+  const mostRecentDir = await getMostRecentLegacyObjectsDir();
+
+  console.log(`--- Using directory "${mostRecentDir}"`);
+
   const tagCategories = await readObjectsFromFile<LegacyTagCategory>(
+    mostRecentDir,
     LegacyObjectType.TagCategories
   );
 
-  const tags = await readObjectsFromFile<LegacyTag>(LegacyObjectType.Tags);
+  const tags = await readObjectsFromFile<LegacyTag>(
+    mostRecentDir,
+    LegacyObjectType.Tags
+  );
 
   const assets = await readObjectsFromFile<LegacyAsset>(
+    mostRecentDir,
     LegacyObjectType.Assets
   );
 
   const episodes = await readObjectsFromFile<LegacyEpisode>(
+    mostRecentDir,
     LegacyObjectType.Episodes
   );
 
   const seasons = await readObjectsFromFile<LegacySeason>(
+    mostRecentDir,
     LegacyObjectType.Seasons
   );
 
   const brands = await readObjectsFromFile<LegacyBrand>(
+    mostRecentDir,
     LegacyObjectType.Brands
   );
 
@@ -388,9 +412,9 @@ const main = async () => {
   });
 
   console.log("\nCreating Always & Forever Availability...");
-  const alwaysAvailability = await createAlwaysAndForeverAvailability(
-    ALWAYS_FOREVER_AVAILABILITY_EXT_ID
-  );
+  // TODO enable alwaysAvailability when Availability is fixed
+  const alwaysAvailability = undefined;
+  await createAlwaysAndForeverAvailability(ALWAYS_FOREVER_AVAILABILITY_EXT_ID);
 
   console.log("\nCreating Legacy Objects in Skylark...");
 

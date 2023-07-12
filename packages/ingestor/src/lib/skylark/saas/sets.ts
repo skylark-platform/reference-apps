@@ -222,7 +222,9 @@ export const createOrUpdateGraphQLSet = async (
     )
     .filter((lang) => lang) as string[];
 
-  const existingSets = await Promise.all([
+  const existingSets = new Set<string>();
+
+  const existingSetsArr = await Promise.all([
     getExistingObjects("SkylarkSet", [{ externalId: set.externalId }]),
     ...airtableTranslationLanguages.map((language) =>
       getExistingObjects("SkylarkSet", [
@@ -231,7 +233,11 @@ export const createOrUpdateGraphQLSet = async (
     ),
   ]);
 
-  const setExists = existingSets.findIndex((sets) => sets.length > 0) > -1;
+  existingSetsArr.forEach(({ existingObjects }) =>
+    existingObjects.forEach((obj) => existingSets.add(obj))
+  );
+
+  const setExists = existingSets.has(set.externalId);
 
   const operationName = setExists ? `updateSkylarkSet` : `createSkylarkSet`;
 

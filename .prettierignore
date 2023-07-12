@@ -4,4 +4,5 @@ build
 cdk.out
 dist
 outputs
+backup_outputs
 .vercel

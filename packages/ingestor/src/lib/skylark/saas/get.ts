@@ -104,6 +104,54 @@ export const getValidRelationshipsForObject = async (
   return fields;
 };
 
+export const getExistingObjectByExternalId = async (
+  objectType: GraphQLObjectTypes,
+  externalId: string,
+  language?: string
+): Promise<GraphQLBaseObject | null> => {
+  const args: { [key: string]: string | boolean } = {
+    external_id: externalId,
+  };
+
+  if (language) {
+    args.language = language;
+  }
+
+  // Dimensions don't have availability
+  if (
+    !objectType.startsWith("Dimension") &&
+    !objectType.startsWith("Availability")
+  ) {
+    args.ignore_availability = true;
+  }
+
+  const query = {
+    query: {
+      getObject: {
+        __aliasFor: `get${objectType}`,
+        __args: args,
+        __typename: true,
+        uid: true,
+        slug: true,
+        external_id: true,
+      },
+    },
+  };
+
+  const graphQLGetQuery = jsonToGraphQLQuery(query);
+
+  try {
+    const data = await graphQLClient.request<{ getObject: GraphQLBaseObject }>(
+      graphQLGetQuery,
+      {},
+      { "x-bypass-cache": "1" }
+    );
+    return data.getObject;
+  } catch (err) {
+    return null;
+  }
+};
+
 const getExistingObjectsByExternalId = async (
   objectType: GraphQLObjectTypes,
   objects: { externalId: string; language?: string | null }[],

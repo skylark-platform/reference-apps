@@ -175,7 +175,7 @@ export const createObjectsInSkylark = async (
     objects: Record<string, LegacyObjects>;
   },
   relationshipObjects: CreatedSkylarkObjects,
-  alwaysAvailability: GraphQLBaseObject
+  alwaysAvailability?: GraphQLBaseObject
 ): Promise<GraphQLBaseObject[]> => {
   const objectType = convertLegacyObjectTypeToObjectType(type);
 
@@ -215,7 +215,7 @@ export const createObjectsInSkylark = async (
     }
   );
 
-  const accaArr: GraphQLBaseObject[][] = [];
+  let accaArr: GraphQLBaseObject[] = [];
 
   // eslint-disable-next-line no-restricted-syntax
   for (const language of languages) {
@@ -247,20 +247,26 @@ export const createObjectsInSkylark = async (
       language,
     }));
 
-    // TODO enable availability after fix
-    // const availabilityUids = [alwaysAvailability.uid];
+    const availabilityUids = alwaysAvailability ? [alwaysAvailability.uid] : [];
 
-    const createdLanguageObjects =
+    const {
+      createdObjects: createdLanguageObjects,
+      deletedObjects: deletedLanguageObjects,
+    } =
       // eslint-disable-next-line no-await-in-loop
       await createOrUpdateGraphQlObjectsUsingIntrospection(
         objectType,
         existingObjects,
         objectsToCreate,
-        // { language, relationships, availabilityUids }
-        { language, relationships }
+        { language, relationships, availabilityUids }
       );
 
-    accaArr.push(createdLanguageObjects);
+    accaArr.push(...createdLanguageObjects);
+
+    if (deletedLanguageObjects.length > 0) {
+      const deletedUids = new Set(deletedLanguageObjects.map(({ uid }) => uid));
+      accaArr = accaArr.filter(({ uid }) => !deletedUids.has(uid));
+    }
 
     // eslint-disable-next-line no-console
     console.log(
@@ -272,7 +278,6 @@ export const createObjectsInSkylark = async (
     const newExternalIds = createdLanguageObjects.map(
       ({ external_id }) => external_id
     );
-    // existingObjects.push(...newExternalIds); // No issue with there being duplicates in this array as we're only using it to find existing and we filter duplicates out when generating relationships
 
     existingObjects = new Set<string>([...existingObjects, ...newExternalIds]);
   }
