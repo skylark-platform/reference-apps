@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { MdPlayArrow } from "react-icons/md";
+import { addCloudinaryOnTheFlyImageTransformation } from "@skylark-reference-apps/lib";
 import { List } from "../../list";
 
 export type ThumbnailContentLocation = "inside" | "below";
@@ -28,12 +29,17 @@ export interface ThumbnailProps extends BaseThumbnailWithLinkProps {
 }
 
 const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
-  backgroundImage,
+  backgroundImage: uncachedImage,
   contentLocation = "inside",
   children,
   large,
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
+
+  const backgroundImage = addCloudinaryOnTheFlyImageTransformation(
+    uncachedImage,
+    { width: 400 }
+  );
 
   useEffect(() => {
     const image = new Image();

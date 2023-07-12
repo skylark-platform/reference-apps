@@ -72,10 +72,10 @@ const updateSkylarkSchema = async ({
     initialVersion
   );
 
-  if (updatedVersion !== initialVersion) {
+  if (updatedVersion && updatedVersion !== initialVersion) {
     console.log("--- Activating Schema version:", updatedVersion);
     await activateConfigurationVersion(updatedVersion);
-    await waitForUpdatingSchema(updatedVersion);
+    await waitForUpdatingSchema();
   }
 };
 

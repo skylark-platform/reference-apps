@@ -71,11 +71,11 @@ export const updateEnumTypes = async (
   enumName: string,
   values: string[],
   version: number | string
-): Promise<{ version: number }> => {
+): Promise<{ version: number | null }> => {
   const existingValues = await getEnumValues(enumName);
   if (values.every((value) => existingValues.includes(value.toUpperCase()))) {
     return {
-      version: typeof version === "string" ? parseInt(version, 10) : version,
+      version: null,
     };
   }
 
@@ -155,7 +155,7 @@ const addPreferredImageTypeToSeason = async (version?: number) => {
   }
 };
 
-export const waitForUpdatingSchema = async (expectedVersion?: number) => {
+export const waitForUpdatingSchema = async () => {
   const {
     active_version: activeVersion,
     update_in_progress: updateInProgress,
@@ -164,16 +164,12 @@ export const waitForUpdatingSchema = async (expectedVersion?: number) => {
   if (updateInProgress) {
     let currentlyUpdating = true;
     while (currentlyUpdating) {
-      const {
-        update_in_progress: updateStillRunning,
-        active_version: updatedVersion,
-      } =
-        // eslint-disable-next-line no-await-in-loop
-        await getActivationStatus();
-      currentlyUpdating =
-        updateStillRunning || parseInt(updatedVersion, 10) !== expectedVersion;
       // eslint-disable-next-line no-await-in-loop
       await pause(2500);
+      const { update_in_progress: updateStillRunning } =
+        // eslint-disable-next-line no-await-in-loop
+        await getActivationStatus();
+      currentlyUpdating = updateStillRunning;
     }
   }
 
@@ -183,18 +179,30 @@ export const waitForUpdatingSchema = async (expectedVersion?: number) => {
 export const updateSkylarkSchema = async () => {
   const initialVersion = await waitForUpdatingSchema();
 
-  const { version: updatedVersion } = await updateEnumTypes(
+  const { version: setTypeVersion } = await updateEnumTypes(
     "SetType",
     ENUMS.SET_TYPES,
     initialVersion
   );
 
-  await updateEnumTypes("ImageType", ENUMS.IMAGE_TYPES, updatedVersion);
-  await addPreferredImageTypeToSeason(updatedVersion);
+  const { version: imageTypeVersion } = await updateEnumTypes(
+    "ImageType",
+    ENUMS.IMAGE_TYPES,
+    setTypeVersion || initialVersion
+  );
 
-  await activateConfigurationVersion(updatedVersion);
+  const { version: seasonUpdateVersion } = await addPreferredImageTypeToSeason(
+    imageTypeVersion || initialVersion
+  );
 
-  const activeVersion = await waitForUpdatingSchema(updatedVersion);
+  const finalVersionNumber = seasonUpdateVersion;
 
-  return { version: activeVersion };
+  if (finalVersionNumber && finalVersionNumber !== initialVersion) {
+    await activateConfigurationVersion(finalVersionNumber);
+
+    const activeVersion = await waitForUpdatingSchema();
+    return { version: activeVersion };
+  }
+
+  return { version: initialVersion };
 };
