@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { MdPlayArrow } from "react-icons/md";
 import { addCloudinaryOnTheFlyImageTransformation } from "@skylark-reference-apps/lib";
 import { List } from "../../list";
@@ -36,9 +36,10 @@ const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  const backgroundImage = addCloudinaryOnTheFlyImageTransformation(
-    uncachedImage,
-    { width: 400 }
+  const backgroundImage = useMemo(
+    () =>
+      addCloudinaryOnTheFlyImageTransformation(uncachedImage, { width: 400 }),
+    [uncachedImage]
   );
 
   useEffect(() => {

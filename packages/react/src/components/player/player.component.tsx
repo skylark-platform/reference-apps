@@ -1,5 +1,6 @@
 import React from "react";
 import MuxVideo from "@mux-elements/mux-video-react";
+import { addCloudinaryOnTheFlyImageTransformation } from "@skylark-reference-apps/lib";
 
 interface PlayerProps {
   src: string;
@@ -39,7 +40,13 @@ export const Player: React.FC<PlayerProps> = ({
               video_id: videoId,
               video_title: videoTitle,
             }}
-            poster={poster}
+            poster={
+              poster
+                ? addCloudinaryOnTheFlyImageTransformation(poster, {
+                    width: 1000,
+                  })
+                : undefined
+            }
             ref={undefined}
             // Convert relative URL into absolute
             src={absoluteSrc}

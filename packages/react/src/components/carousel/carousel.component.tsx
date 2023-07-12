@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { wrap } from "popmotion";
 import useTranslation from "next-translate/useTranslation";
@@ -59,12 +59,16 @@ export const Carousel: React.FC<CarouselProps> = ({
   const [areImagesLoaded, setImagesLoaded] = useState(false);
   const itemIndex = wrap(0, unparsedItems.length, page);
 
-  const items = unparsedItems.map((item) => ({
-    ...item,
-    image: addCloudinaryOnTheFlyImageTransformation(item.image, {
-      width: 2000,
-    }),
-  }));
+  const items = useMemo(
+    () =>
+      unparsedItems.map((item) => ({
+        ...item,
+        image: addCloudinaryOnTheFlyImageTransformation(item.image, {
+          width: 2000,
+        }),
+      })),
+    [unparsedItems]
+  );
 
   const paginate = (newDirection: number) => {
     setPage([page + newDirection, newDirection]);
