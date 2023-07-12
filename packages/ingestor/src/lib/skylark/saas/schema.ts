@@ -27,10 +27,20 @@ const ACTIVATE_CONFIGURATION_VERSION = gql`
   }
 `;
 
+const GET_ENUM_VALUES = gql`
+  query GET_ENUM_VALUES($name: String!) {
+    __type(name: $name) {
+      enumValues {
+        name
+      }
+    }
+  }
+`;
+
 const getActivationStatus = async () => {
   const res = await graphQLClient.request<{
     getActivationStatus: {
-      active_version: number;
+      active_version: string;
       update_in_progress: boolean;
       update_started_at: string;
     };
@@ -39,7 +49,7 @@ const getActivationStatus = async () => {
   return res.getActivationStatus;
 };
 
-const activateConfigurationVersion = async (version: number) => {
+export const activateConfigurationVersion = async (version: number) => {
   const res = await graphQLClient.request<{
     activateConfigurationVersion: { version: number; messages: string };
   }>(ACTIVATE_CONFIGURATION_VERSION, { version });
@@ -47,11 +57,28 @@ const activateConfigurationVersion = async (version: number) => {
   return res.activateConfigurationVersion;
 };
 
-const updateEnumTypes = async (
+const getEnumValues = async (name: string) => {
+  const data = await graphQLClient.request<{
+    __type: { enumValues: { name: string }[] };
+  }>(GET_ENUM_VALUES, { name });
+
+  // eslint-disable-next-line no-underscore-dangle
+  const values = data.__type.enumValues.map((e) => e.name.toUpperCase());
+  return values;
+};
+
+export const updateEnumTypes = async (
   enumName: string,
   values: string[],
-  version?: number
-) => {
+  version: number | string
+): Promise<{ version: number | null }> => {
+  const existingValues = await getEnumValues(enumName);
+  if (values.every((value) => existingValues.includes(value.toUpperCase()))) {
+    return {
+      version: null,
+    };
+  }
+
   const mutation = {
     mutation: {
       __name: `UPDATE_${enumName}`,
@@ -128,43 +155,54 @@ const addPreferredImageTypeToSeason = async (version?: number) => {
   }
 };
 
-export const updateSkylarkSchema = async () => {
+export const waitForUpdatingSchema = async () => {
   const {
-    active_version: initialVersion,
-    update_in_progress: initialUpdateInProgress,
+    active_version: activeVersion,
+    update_in_progress: updateInProgress,
   } = await getActivationStatus();
 
-  if (initialUpdateInProgress) {
-    let initialUpdating = true;
-    while (initialUpdating) {
-      const { update_in_progress: initialUpdateStillRunning } =
-        // eslint-disable-next-line no-await-in-loop
-        await getActivationStatus();
-      initialUpdating = initialUpdateStillRunning;
+  if (updateInProgress) {
+    let currentlyUpdating = true;
+    while (currentlyUpdating) {
       // eslint-disable-next-line no-await-in-loop
       await pause(2500);
+      const { update_in_progress: updateStillRunning } =
+        // eslint-disable-next-line no-await-in-loop
+        await getActivationStatus();
+      currentlyUpdating = updateStillRunning;
     }
   }
 
-  const { version: updatedVersion } = await updateEnumTypes(
+  return parseInt(activeVersion, 10);
+};
+
+export const updateSkylarkSchema = async () => {
+  const initialVersion = await waitForUpdatingSchema();
+
+  const { version: setTypeVersion } = await updateEnumTypes(
     "SetType",
     ENUMS.SET_TYPES,
     initialVersion
   );
 
-  await updateEnumTypes("ImageType", ENUMS.IMAGE_TYPES, updatedVersion);
-  await addPreferredImageTypeToSeason(updatedVersion);
+  const { version: imageTypeVersion } = await updateEnumTypes(
+    "ImageType",
+    ENUMS.IMAGE_TYPES,
+    setTypeVersion || initialVersion
+  );
 
-  await activateConfigurationVersion(updatedVersion);
+  const { version: seasonUpdateVersion } = await addPreferredImageTypeToSeason(
+    imageTypeVersion || initialVersion
+  );
 
-  let activeVersion = initialVersion;
-  while (`${activeVersion}` !== `${updatedVersion}`) {
-    // eslint-disable-next-line no-await-in-loop
-    const { active_version: currentVersion } = await getActivationStatus();
-    activeVersion = currentVersion;
-    // eslint-disable-next-line no-await-in-loop
-    await pause(5000);
+  const finalVersionNumber = seasonUpdateVersion;
+
+  if (finalVersionNumber && finalVersionNumber !== initialVersion) {
+    await activateConfigurationVersion(finalVersionNumber);
+
+    const activeVersion = await waitForUpdatingSchema();
+    return { version: activeVersion };
   }
 
-  return { version: activeVersion };
+  return { version: initialVersion };
 };

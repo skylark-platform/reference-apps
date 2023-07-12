@@ -12,12 +12,19 @@ import {
 } from "../../constants";
 
 import {
+  CreateOrUpdateRelationships,
   GraphQLBaseObject,
   GraphQLIntrospectionProperties,
   GraphQLMetadata,
+  SkylarkGraphQLError,
 } from "../../interfaces";
 import { RelationshipsLink, ValidMediaObjectRelationships } from "../../types";
-import { getValidPropertiesForObject, getExistingObjects } from "./get";
+import {
+  getValidPropertiesForObject,
+  getExistingObjects,
+  getValidRelationshipsForObject,
+  getExistingObjectByExternalId,
+} from "./get";
 import {
   getExtId,
   gqlObjectMeta,
@@ -27,7 +34,62 @@ import {
   getGraphQLObjectAvailability,
   getLanguageCodesFromAirtable,
   hasProperty,
+  pause,
 } from "./utils";
+import { deleteObject } from "./delete";
+
+const isKnownError = (errMessage: string) =>
+  errMessage.startsWith("Unable to find version None for language") ||
+  (errMessage.startsWith("External ID ") &&
+    errMessage.endsWith(" already exists"));
+
+const graphqlMutationWithRetry = async <T>(
+  mutation: string,
+  variables: object,
+  { retries = 3, everySeconds = 5 },
+  retriesCount = 0
+): Promise<T> => {
+  try {
+    return await graphQLClient.request<T>(mutation, variables, {
+      "x-bypass-cache": "1",
+    });
+  } catch (err) {
+    // Some errors we know won't be fixed on a retry, so we rethrow
+    if (err && has(err, "response.errors")) {
+      const {
+        response: { errors },
+      } = err as SkylarkGraphQLError;
+
+      const errMessage = errors?.[0]?.message;
+      if (errMessage && isKnownError(errMessage)) {
+        // eslint-disable-next-line no-console
+        console.error(
+          `[graphqlMutationWithRetry] known error hit: ${errMessage}`
+        );
+        throw err;
+      }
+    }
+
+    const updatedCount = retriesCount + 1;
+    if (updatedCount > retries) {
+      throw err;
+    }
+
+    const pauseTimeSeconds = everySeconds * updatedCount;
+    // eslint-disable-next-line no-console
+    console.error(
+      `[graphqlMutationWithRetry] Error hit. Retrying after ${pauseTimeSeconds} seconds (${updatedCount}/${retries})`
+    );
+    // Wait longer each retry
+    await pause(pauseTimeSeconds * 1000);
+    return graphqlMutationWithRetry<T>(
+      mutation,
+      variables,
+      { retries, everySeconds },
+      updatedCount
+    );
+  }
+};
 
 export const mutateMultipleObjects = async <T extends { external_id?: string }>(
   name: string,
@@ -65,9 +127,9 @@ export const mutateMultipleObjects = async <T extends { external_id?: string }>(
         const graphQLMutation = jsonToGraphQLQuery(mutation);
 
         try {
-          const data = await graphQLClient.request<{
+          const data = await graphqlMutationWithRetry<{
             [key: string]: T;
-          }>(graphQLMutation, {}, { "x-bypass-cache": "1" });
+          }>(graphQLMutation, {}, { retries: 10 });
 
           if (!data) {
             return [];
@@ -109,30 +171,56 @@ export const mutateMultipleObjects = async <T extends { external_id?: string }>(
 
 export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
   objectType: GraphQLObjectTypes,
-  airtableRecords: Records<FieldSet>,
-  metadataAvailability: GraphQLMetadata["availability"],
-  isImage?: boolean
-): Promise<GraphQLBaseObject[]> => {
-  if (airtableRecords.length === 0) {
-    return [];
+  existingObjects: Set<string>,
+  objects: ((
+    | FieldSet
+    | Record<string, string | null | string[] | boolean | number | object>
+  ) & { _id: string; language?: string })[],
+  {
+    metadataAvailability,
+    isImage,
+    language,
+    relationships,
+    availabilityUids,
+  }: {
+    metadataAvailability?: GraphQLMetadata["availability"];
+    isImage?: boolean;
+    language?: string;
+    relationships?: CreateOrUpdateRelationships;
+    availabilityUids?: string[];
+  }
+): Promise<{
+  createdObjects: GraphQLBaseObject[];
+  deletedObjects: GraphQLBaseObject[];
+}> => {
+  if (objects.length === 0) {
+    return { createdObjects: [], deletedObjects: [] };
   }
 
   const validProperties = await getValidPropertiesForObject(objectType);
 
-  const externalIds = airtableRecords.map(({ id }) => ({ externalId: id }));
+  const validRelationships: string[] = [];
+  if (relationships) {
+    const validRels = await getValidRelationshipsForObject(objectType);
+    validRelationships.push(...validRels);
+  }
 
-  const existingObjects = await getExistingObjects(objectType, externalIds);
-
-  const operations = airtableRecords.reduce(
-    (previousOperations, { id, fields }) => {
+  const operations = objects.reduce(
+    (previousOperations, { _id: id, ...fields }) => {
       const validFields = getValidFields(fields, validProperties);
 
-      const objectExists = existingObjects.includes(id);
+      const objectExists = existingObjects.has(id);
 
-      const availability = getGraphQLObjectAvailability(
-        metadataAvailability,
-        fields.availability as string[]
-      );
+      const availability = metadataAvailability
+        ? getGraphQLObjectAvailability(
+            metadataAvailability,
+            fields.availability as string[]
+          )
+        : { link: [] };
+
+      if (availabilityUids) {
+        availability.link.push(...availabilityUids);
+      }
 
       const argName = objectType
         .match(/[A-Z][a-z]+/g)
@@ -154,11 +242,39 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
         }
       }
 
-      const args = {
+      if (relationships && hasProperty(relationships, id)) {
+        const relsForObject: Record<
+          string,
+          {
+            link: string[];
+          }
+        > = relationships[id];
+
+        const relationshipNames = Object.keys(relsForObject);
+
+        const allRelationshipsValid = relationshipNames.every((rel) =>
+          validRelationships.includes(rel)
+        );
+        if (!allRelationshipsValid) {
+          throw new Error(
+            `[createOrUpdateGraphQlObjectsUsingIntrospection] Invalid relationship given for ${id}: ${relationshipNames.join(
+              ", "
+            )}`
+          );
+        }
+
+        objectFields.relationships = relsForObject;
+      }
+
+      const args: Record<string, string | number | boolean | object> = {
         [argName]: objectExists
           ? objectFields
           : { ...objectFields, external_id: id },
       };
+
+      if (language) {
+        args.language = language;
+      }
 
       const { operation, method } = createGraphQLOperation(
         objectType,
@@ -167,9 +283,12 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
         { external_id: id }
       );
 
+      // The order matters as the error handling uses _ to split the method and external ID
+      const key = `${method}_${id}`;
+
       const updatedOperations = {
         ...previousOperations,
-        [`${method}${id}`]: {
+        [key]: {
           ...operation,
         },
       };
@@ -178,13 +297,158 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
     {} as { [key: string]: object }
   );
 
-  const data = await mutateMultipleObjects<GraphQLBaseObject>(
-    `createOrUpdate${objectType}s`,
-    operations
-  );
+  try {
+    const data = await mutateMultipleObjects<GraphQLBaseObject>(
+      `createOrUpdate${objectType}s`,
+      operations
+    );
 
-  return data;
+    return { createdObjects: data, deletedObjects: [] };
+  } catch (err) {
+    // If we catch a known error, attempt to fix it before throwing it again
+    if (err && has(err, "response.errors")) {
+      const {
+        response: { errors },
+      } = err as SkylarkGraphQLError;
+
+      const alreadyExistsErrors = errors.filter(
+        ({ message, path }) =>
+          message.startsWith("External ID ") &&
+          message.endsWith(" already exists") &&
+          path.length === 1
+      );
+
+      const unableToFindVersionNoneErrors = errors.filter(
+        ({ message, path }) =>
+          message.startsWith("Unable to find version None for language") &&
+          path.length === 1
+      );
+
+      const hasKnownErrors =
+        alreadyExistsErrors.length > 0 ||
+        unableToFindVersionNoneErrors.length > 0;
+
+      const deletedObjects: GraphQLBaseObject[] = [];
+
+      if (hasKnownErrors) {
+        // eslint-disable-next-line no-console
+        console.error(
+          "[createOrUpdateGraphQlObjectsUsingIntrospection]: known error hit"
+        );
+        // eslint-disable-next-line no-console
+        console.error(err);
+        // TODO delete this when the "Unable to find version None" bug is fixed
+        if (unableToFindVersionNoneErrors.length > 0) {
+          const unableToFindVersionNoneDeletedObjects = (
+            await Promise.all(
+              unableToFindVersionNoneErrors.map(async (error) => {
+                const operationId = error.path[0];
+                const splitOperationId = operationId.split(`${objectType}_`);
+                const externalId = splitOperationId?.[1];
+                if (!externalId) {
+                  throw err;
+                }
+                const existingObject = await getExistingObjectByExternalId(
+                  objectType,
+                  externalId,
+                  language
+                );
+
+                if (existingObject) {
+                  try {
+                    // Don't send language, delete whole object
+                    await deleteObject(objectType, { uid: existingObject.uid });
+                    // eslint-disable-next-line no-console
+                    console.log(
+                      `[createOrUpdateGraphQlObjectsUsingIntrospection] Deleted object "${existingObject.external_id}" with "Unable to find version None" error`
+                    );
+                    return existingObject;
+                  } catch (deleteErr) {
+                    // If delete fails, just rethrow the previous error
+                    throw err;
+                  }
+                }
+                return null;
+              })
+            )
+          ).filter((extId): extId is GraphQLBaseObject => !!extId);
+
+          // As we've deleted the object, it needs to be removed from existingObjects
+          unableToFindVersionNoneDeletedObjects.forEach(({ external_id }) =>
+            existingObjects.delete(external_id)
+          );
+
+          deletedObjects.push(...unableToFindVersionNoneDeletedObjects);
+        }
+
+        if (alreadyExistsErrors.length > 0) {
+          // If we get already exists error, add any missing objects
+          alreadyExistsErrors.forEach((error) => {
+            const operationId = error.path[0];
+            const splitOperationId = operationId.split(`${objectType}_`);
+            const externalId = splitOperationId?.[1];
+            if (!externalId) {
+              throw err;
+            }
+
+            existingObjects.add(externalId);
+          });
+        }
+
+        const retriedData =
+          await createOrUpdateGraphQlObjectsUsingIntrospection(
+            objectType,
+            existingObjects,
+            objects,
+            {
+              metadataAvailability,
+              isImage,
+              language,
+              relationships,
+              availabilityUids,
+            }
+          );
+
+        return {
+          createdObjects: retriedData.createdObjects,
+          deletedObjects: [...retriedData.deletedObjects, ...deletedObjects],
+        };
+      }
+    }
+
+    throw err;
+  }
 };
+
+export const createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection =
+  async (
+    objectType: GraphQLObjectTypes,
+    airtableRecords: Records<FieldSet>,
+    metadataAvailability: GraphQLMetadata["availability"],
+    isImage?: boolean
+  ) => {
+    const objects = airtableRecords.map(({ id, fields }) => ({
+      ...fields,
+      _id: id,
+    }));
+
+    const externalIds = objects.map(({ _id }) => ({ externalId: _id }));
+
+    const { existingObjects } = await getExistingObjects(
+      objectType,
+      externalIds
+    );
+
+    const { createdObjects } =
+      await createOrUpdateGraphQlObjectsUsingIntrospection(
+        objectType,
+        existingObjects,
+        objects,
+        { metadataAvailability, isImage }
+      );
+
+    return createdObjects;
+  };
 
 export const createOrUpdateGraphQLCredits = async (
   airtableRecords: Records<FieldSet>,
@@ -193,7 +457,7 @@ export const createOrUpdateGraphQLCredits = async (
   const validProperties = await getValidPropertiesForObject("Credit");
 
   const externalIds = airtableRecords.map(({ id }) => ({ externalId: id }));
-  const existingObjects = await getExistingObjects("Credit", externalIds);
+  const { existingObjects } = await getExistingObjects("Credit", externalIds);
 
   const operations = airtableRecords.reduce(
     (previousOperations, { id, fields }) => {
@@ -209,7 +473,7 @@ export const createOrUpdateGraphQLCredits = async (
         fields.availability as string[]
       );
 
-      const creditExists = existingObjects.includes(id);
+      const creditExists = existingObjects.has(id);
 
       const credit: Record<
         string,
@@ -348,16 +612,20 @@ export const createGraphQLMediaObjects = async (
     externalId: id,
     language: getMediaObjectLanguage(fields, languagesTable),
   }));
-  const existingObjects = flatten(
-    await Promise.all(
-      ["Brand", "Season", "Episode", "Movie", "SkylarkAsset"].map(
-        (objectType) =>
-          getExistingObjects(
-            objectType as GraphQLMediaObjectTypes,
-            externalIdsAndLanguage
-          )
+
+  const existingObjectSets = await Promise.all(
+    ["Brand", "Season", "Episode", "Movie", "SkylarkAsset"].map((objectType) =>
+      getExistingObjects(
+        objectType as GraphQLMediaObjectTypes,
+        externalIdsAndLanguage
       )
     )
+  );
+
+  const existingObjects = existingObjectSets.reduce(
+    (previous, { existingObjects: set }) =>
+      new Set<string>([...previous, ...set]),
+    new Set<string>([])
   );
 
   const createdMediaObjects: GraphQLBaseObject[] = [];
@@ -399,7 +667,7 @@ export const createGraphQLMediaObjects = async (
           fields.skylark_object_type as string
         );
 
-        const objectExists = existingObjects.includes(id);
+        const objectExists = existingObjects.has(id);
         const method = objectExists ? updateFunc : createFunc;
 
         if (!hasProperty(validObjectProperties, objectType)) {

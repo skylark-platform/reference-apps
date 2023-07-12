@@ -1,11 +1,12 @@
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
-import { has, isNull } from "lodash";
+import { chunk, has, isNull } from "lodash";
 import { graphQLClient, GraphQLObjectTypes } from "@skylark-reference-apps/lib";
 
 import {
   GraphQLBaseObject,
   GraphQLIntrospection,
   GraphQLIntrospectionProperties,
+  GraphQLObjectRelationshipsType,
 } from "../../interfaces";
 
 export const getValidPropertiesForObject = async (
@@ -69,19 +70,102 @@ export const getValidPropertiesForObject = async (
   return types;
 };
 
-export const getExistingObjects = async (
-  objectType: GraphQLObjectTypes,
-  objects: { externalId: string; language?: string | null }[]
+export const getValidRelationshipsForObject = async (
+  objectType: GraphQLObjectTypes
 ): Promise<string[]> => {
+  const query = {
+    query: {
+      GET_OBJECT_RELATIONSHIPS: {
+        __aliasFor: "__type",
+        __args: {
+          name: `${objectType}Relationships`,
+        },
+        inputFields: {
+          name: true,
+          type: {
+            name: true,
+          },
+        },
+      },
+    },
+  };
+
+  const graphQLGetQuery = jsonToGraphQLQuery(query);
+
+  const data = await graphQLClient.request<GraphQLObjectRelationshipsType>(
+    graphQLGetQuery,
+    {},
+    { "x-bypass-cache": "1" }
+  );
+
+  const fields =
+    data.GET_OBJECT_RELATIONSHIPS?.inputFields.map(({ name }) => name) || [];
+
+  return fields;
+};
+
+export const getExistingObjectByExternalId = async (
+  objectType: GraphQLObjectTypes,
+  externalId: string,
+  language?: string
+): Promise<GraphQLBaseObject | null> => {
+  const args: { [key: string]: string | boolean } = {
+    external_id: externalId,
+  };
+
+  if (language) {
+    args.language = language;
+  }
+
+  // Dimensions don't have availability
+  if (
+    !objectType.startsWith("Dimension") &&
+    !objectType.startsWith("Availability")
+  ) {
+    args.ignore_availability = true;
+  }
+
+  const query = {
+    query: {
+      getObject: {
+        __aliasFor: `get${objectType}`,
+        __args: args,
+        __typename: true,
+        uid: true,
+        slug: true,
+        external_id: true,
+      },
+    },
+  };
+
+  const graphQLGetQuery = jsonToGraphQLQuery(query);
+
+  try {
+    const data = await graphQLClient.request<{ getObject: GraphQLBaseObject }>(
+      graphQLGetQuery,
+      {},
+      { "x-bypass-cache": "1" }
+    );
+    return data.getObject;
+  } catch (err) {
+    return null;
+  }
+};
+
+const getExistingObjectsByExternalId = async (
+  objectType: GraphQLObjectTypes,
+  objects: { externalId: string; language?: string | null }[],
+  language?: string
+): Promise<{ existingObjects: string[]; missingObjects: string[] }> => {
   const externalIds = objects.map(({ externalId }) => externalId);
   const getOperations = objects.reduce(
-    (previousQueries, { externalId, language }) => {
+    (previousQueries, { externalId, language: objLanguage }) => {
       const args: { [key: string]: string | boolean } = {
         external_id: externalId,
       };
 
-      if (language) {
-        args.language = language;
+      if (objLanguage || language) {
+        args.language = language || (objLanguage as string);
       }
 
       // Dimensions don't have availability
@@ -123,7 +207,9 @@ export const getExistingObjects = async (
   try {
     // This request will error if at least one external_id doesn't exist
     await graphQLClient.request<{ [key: string]: GraphQLBaseObject }>(
-      graphQLGetQuery
+      graphQLGetQuery,
+      {},
+      { "x-bypass-cache": "1" }
     );
   } catch (err) {
     if (err && has(err, "response.data")) {
@@ -139,15 +225,70 @@ export const getExistingObjects = async (
       const notFoundObjectExternalIds = notFoundObjects.map(
         ({ externalId }) => externalId
       );
-      const objectsThatExist = externalIds.filter(
+      const existingObjects = externalIds.filter(
         (externalId) => !notFoundObjectExternalIds.includes(externalId)
       );
-      return objectsThatExist;
+      return {
+        existingObjects,
+        missingObjects: notFoundObjectExternalIds,
+      };
     }
 
     // If unexpected error, re throw
     throw err;
   }
 
-  return externalIds;
+  return {
+    existingObjects: externalIds,
+    missingObjects: [],
+  };
+};
+
+export const getExistingObjects = async (
+  objectType: GraphQLObjectTypes,
+  objects: { externalId: string; language?: string | null }[],
+  language?: string
+): Promise<{
+  existingObjects: Set<string>;
+  missingObjects: Set<string>;
+}> => {
+  const chunkSize = 100;
+
+  if (objects.length <= chunkSize) {
+    const { existingObjects, missingObjects } =
+      await getExistingObjectsByExternalId(objectType, objects, language);
+    return {
+      existingObjects: new Set(existingObjects),
+      missingObjects: new Set(missingObjects),
+    };
+  }
+
+  const chunkedObjects = chunk(objects, chunkSize);
+  const chunkedRequests = chunk(chunkedObjects, 10); // Make 10 requests at a time
+
+  const existingObjectsArr: {
+    existingObjects: string[];
+    missingObjects: string[];
+  }[] = [];
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const requests of chunkedRequests) {
+    // eslint-disable-next-line no-await-in-loop
+    const responses = await Promise.all(
+      requests.map((objs) =>
+        getExistingObjectsByExternalId(objectType, objs, language)
+      )
+    );
+
+    existingObjectsArr.push(...responses);
+  }
+
+  const existingObjects = new Set(
+    existingObjectsArr.flatMap(({ existingObjects: arr }) => arr)
+  );
+  const missingObjects = new Set(
+    existingObjectsArr.flatMap(({ missingObjects: arr }) => arr)
+  );
+
+  return { existingObjects, missingObjects };
 };

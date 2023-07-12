@@ -3,6 +3,7 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import { TitleTypes, SynopsisTypes } from "../interfaces";
 
 import "dayjs/locale/pt";
+import { CLOUDINARY_ENVIRONMENT } from "../skylark";
 
 dayjs.extend(customParseFormat);
 
@@ -100,3 +101,30 @@ export const hasProperty = <T, K extends PropertyKey>(
   property: K
 ): object is T & Record<K, unknown> =>
   Object.prototype.hasOwnProperty.call(object, property);
+
+export const addCloudinaryOnTheFlyImageTransformation = (
+  imageUrl: string,
+  opts: { height?: number; width?: number }
+) => {
+  // If the Cloudinary Environment is falsy, return the original image URL
+  if (!imageUrl || !CLOUDINARY_ENVIRONMENT) {
+    return imageUrl;
+  }
+
+  const urlOpts = [];
+  if (opts.height) {
+    urlOpts.push(`h_${opts.height}`);
+  }
+  if (opts.width) {
+    urlOpts.push(`w_${opts.width}`);
+  }
+
+  if (opts.height && opts.width) {
+    urlOpts.push("c_fill");
+  }
+
+  const urlOptsStr = urlOpts.length > 0 ? `${urlOpts.join(",")}/` : "";
+
+  const cloudinaryUrl = `https://res.cloudinary.com/${CLOUDINARY_ENVIRONMENT}/image/fetch/${urlOptsStr}${imageUrl}`;
+  return cloudinaryUrl;
+};

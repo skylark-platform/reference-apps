@@ -7,7 +7,7 @@ import { GraphQLBaseObject, GraphQLMetadata } from "../../interfaces";
 import {
   createGraphQLMediaObjects,
   createOrUpdateGraphQLCredits,
-  createOrUpdateGraphQlObjectsUsingIntrospection,
+  createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection,
   createTranslationsForGraphQLObjects,
 } from "./create";
 import { CREATE_OBJECT_CHUNK_SIZE } from "../../constants";
@@ -25,7 +25,7 @@ describe("saas/create.ts", () => {
     jest.resetAllMocks();
   });
 
-  describe("createOrUpdateGraphQlObjectsUsingIntrospection", () => {
+  describe("createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection", () => {
     const records: Partial<Record<FieldSet>>[] = [
       {
         id: "brand_1",
@@ -49,11 +49,11 @@ describe("saas/create.ts", () => {
           ],
         },
       };
-      graphQlRequest.mockResolvedValueOnce(mockedGraphQLResponse);
+      graphQlRequest.mockResolvedValue(mockedGraphQLResponse);
     });
 
     it("makes a request to check whether the brand exists", async () => {
-      await createOrUpdateGraphQlObjectsUsingIntrospection(
+      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
         "Brand",
         records as Records<FieldSet>,
         {
@@ -61,8 +61,10 @@ describe("saas/create.ts", () => {
         }
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
-        2,
-        'query getBrands { brand_1: getBrand (external_id: "brand_1", ignore_availability: true) { __typename uid slug external_id } }'
+        1,
+        'query getBrands { brand_1: getBrand (external_id: "brand_1", ignore_availability: true) { __typename uid slug external_id } }',
+        {},
+        expect.any(Object)
       );
     });
 
@@ -76,7 +78,7 @@ describe("saas/create.ts", () => {
       };
       graphQlRequest.mockRejectedValueOnce(mockedGraphQLResponse);
 
-      await createOrUpdateGraphQlObjectsUsingIntrospection(
+      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
         "Brand",
         records as Records<FieldSet>,
         {
@@ -85,14 +87,14 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateBrands { createBrandbrand_1: createBrand (brand: {title: "Brand 1", availability: {link: []}, external_id: "brand_1"}) { __typename uid slug external_id } }',
+        'mutation createOrUpdateBrands { createBrand_brand_1: createBrand (brand: {title: "Brand 1", availability: {link: []}, external_id: "brand_1"}) { __typename uid slug external_id } }',
         {},
         expect.any(Object)
       );
     });
 
     it("makes a request to update the brand when it exists", async () => {
-      await createOrUpdateGraphQlObjectsUsingIntrospection(
+      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
         "Brand",
         records as Records<FieldSet>,
         {
@@ -101,7 +103,7 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateBrands { updateBrandbrand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: []}}) { __typename uid slug external_id } }',
+        'mutation createOrUpdateBrands { updateBrand_brand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: []}}) { __typename uid slug external_id } }',
         {},
         expect.any(Object)
       );
@@ -119,7 +121,7 @@ describe("saas/create.ts", () => {
         })
       );
 
-      await createOrUpdateGraphQlObjectsUsingIntrospection(
+      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
         "Brand",
         manyRecords as Records<FieldSet>,
         {
@@ -154,7 +156,7 @@ describe("saas/create.ts", () => {
     });
 
     it("adds the default availability to the request", async () => {
-      await createOrUpdateGraphQlObjectsUsingIntrospection(
+      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
         "Brand",
         records as Records<FieldSet>,
         {
@@ -164,7 +166,7 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateBrands { updateBrandbrand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: ["default-external-id-1"]}}) { __typename uid slug external_id } }',
+        'mutation createOrUpdateBrands { updateBrand_brand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: ["default-external-id-1"]}}) { __typename uid slug external_id } }',
         {},
         expect.any(Object)
       );
@@ -229,7 +231,9 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.request).toHaveBeenNthCalledWith(
         2,
-        'query getCredits { credit_1: getCredit (external_id: "credit_1", ignore_availability: true) { __typename uid slug external_id } }'
+        'query getCredits { credit_1: getCredit (external_id: "credit_1", ignore_availability: true) { __typename uid slug external_id } }',
+        {},
+        expect.any(Object)
       );
     });
 

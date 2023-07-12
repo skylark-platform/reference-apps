@@ -27,6 +27,30 @@
       "env": {
         "CREATE_SLX_DEMO_SETS": "true"
       }
+    },
+    {
+      "name": "[LEGACY] Ingest from Legacy to Skylark",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/packages/ingestor",
+      "runtimeArgs": ["ingest:legacy-to-skylark"],
+      "runtimeExecutable": "yarn",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node",
+      "env": {
+        "LEGACY_DATA_LAST_MONTH_ONLY": "true"
+      }
+    },
+    {
+      "name": "[LEGACY - FROM DISK] Ingest from Legacy to Skylark",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/packages/ingestor",
+      "runtimeArgs": ["ingest:legacy-to-skylark-from-disk"],
+      "runtimeExecutable": "yarn",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node",
+      "env": {
+        "LEGACY_DATA_LAST_MONTH_ONLY": "false"
+      }
     }
   ]
 }
