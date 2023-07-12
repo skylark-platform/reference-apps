@@ -16,6 +16,7 @@ import {
   GraphQLBaseObject,
   GraphQLIntrospectionProperties,
   GraphQLMetadata,
+  SkylarkGraphQLError,
 } from "../../interfaces";
 import { RelationshipsLink, ValidMediaObjectRelationships } from "../../types";
 import {
@@ -37,6 +38,11 @@ import {
 } from "./utils";
 import { deleteObject } from "./delete";
 
+const isKnownError = (errMessage: string) =>
+  errMessage.startsWith("Unable to find version None for language") ||
+  (errMessage.startsWith("External ID ") &&
+    errMessage.endsWith(" already exists"));
+
 const graphqlMutationWithRetry = async <T>(
   mutation: string,
   variables: object,
@@ -48,23 +54,14 @@ const graphqlMutationWithRetry = async <T>(
       "x-bypass-cache": "1",
     });
   } catch (err) {
-    // Some errors we know won't be fixed on a retry
+    // Some errors we know won't be fixed on a retry, so we rethrow
     if (err && has(err, "response.errors")) {
       const {
         response: { errors },
-      } = err as {
-        response: {
-          errors: { path: string[]; errorType: string; message: string }[];
-        };
-      };
+      } = err as SkylarkGraphQLError;
 
       const errMessage = errors?.[0]?.message;
-      if (
-        errMessage &&
-        (errMessage.startsWith("Unable to find version None for language") ||
-          (errMessage.startsWith("External ID ") &&
-            errMessage.endsWith(" already exists")))
-      ) {
+      if (errMessage && isKnownError(errMessage)) {
         // eslint-disable-next-line no-console
         console.error(
           `[graphqlMutationWithRetry] known error hit: ${errMessage}`
@@ -312,11 +309,7 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
     if (err && has(err, "response.errors")) {
       const {
         response: { errors },
-      } = err as {
-        response: {
-          errors: { path: string[]; errorType: string; message: string }[];
-        };
-      };
+      } = err as SkylarkGraphQLError;
 
       const alreadyExistsErrors = errors.filter(
         ({ message, path }) =>
@@ -344,6 +337,7 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
         );
         // eslint-disable-next-line no-console
         console.error(err);
+        // TODO delete this when the "Unable to find version None" bug is fixed
         if (unableToFindVersionNoneErrors.length > 0) {
           const unableToFindVersionNoneDeletedObjects = (
             await Promise.all(
@@ -633,18 +627,6 @@ export const createGraphQLMediaObjects = async (
       new Set<string>([...previous, ...set]),
     new Set<string>([])
   );
-
-  // const existingObjects = flatten(
-  //   await Promise.all(
-  //     ["Brand", "Season", "Episode", "Movie", "SkylarkAsset"].map(
-  //       (objectType) =>
-  //         getExistingObjects(
-  //           objectType as GraphQLMediaObjectTypes,
-  //           externalIdsAndLanguage
-  //         )
-  //     )
-  //   )
-  // );
 
   const createdMediaObjects: GraphQLBaseObject[] = [];
   while (createdMediaObjects.length < airtableRecords.length) {

@@ -83,3 +83,9 @@ export type CreateOrUpdateRelationships = Record<
   string,
   Record<string, { link: string[] }>
 >;
+
+export type SkylarkGraphQLError = {
+  response: {
+    errors: { path: string[]; errorType: string; message: string }[];
+  };
+};
