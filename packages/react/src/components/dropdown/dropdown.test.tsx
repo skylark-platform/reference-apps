@@ -1,6 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
-import { fireEvent, userEvent } from "@storybook/testing-library";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { Dropdown } from "./dropdown.component";
 
 describe("Dropdown component", () => {
@@ -78,7 +77,7 @@ describe("Dropdown component", () => {
     expect(screen.getByText(/Genres/)).toBeTruthy();
     expect(screen.queryByTestId(/close-genre/)).toBeFalsy();
     fireEvent.mouseOver(screen.getByText(/Genres/i));
-    userEvent.click(screen.getByText(/Children & Family/i));
+    fireEvent.click(screen.getByText(/Children & Family/i));
     expect(screen.getByTestId(/close-genre/)).toBeTruthy();
   });
 
@@ -102,9 +101,9 @@ describe("Dropdown component", () => {
       />
     );
     fireEvent.mouseOver(screen.getByText(/Genres/i));
-    userEvent.click(screen.getByText(/Children & Family/i));
+    fireEvent.click(screen.getByText(/Children & Family/i));
     expect(screen.getByTestId(/close-genre/)).toBeTruthy();
-    userEvent.click(screen.getByTestId(/close-genre/));
+    fireEvent.click(screen.getByTestId(/close-genre/));
     expect(screen.queryByTestId(/close-genre/)).toBeFalsy();
   });
 });

@@ -216,7 +216,7 @@ const getExistingObjectsByExternalId = async (
 
     return {
       existingExternalIds: externalIds,
-      existingObjects: Object.values(data),
+      existingObjects: Object.values(data || {}),
       missingExternalIds: [],
     };
   } catch (err) {
@@ -264,15 +264,6 @@ export const getExistingObjects = async (
   missingExternalIds: Set<string>;
 }> => {
   const chunkSize = 100;
-
-  // if (objects.length <= chunkSize) {
-  //   const { existingObjects, missingObjects } =
-  //     await getExistingObjectsByExternalId(objectType, objects, language);
-  //   return {
-  //     existingExternalIds: new Set(existingObjects),
-  //     missingExternalIds: new Set(missingObjects),
-  //   };
-  // }
 
   const chunkedObjects = chunk(objects, chunkSize);
   const chunkedRequests = chunk(chunkedObjects, 10); // Make 10 requests at a time

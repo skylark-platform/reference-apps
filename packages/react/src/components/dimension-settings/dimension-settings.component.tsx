@@ -26,7 +26,7 @@ const generateSkylarkAutoconnectUrl = () => {
 interface DimensionSettingsProps {
   show?: boolean;
   skylarkApiUrl?: string;
-  timeTravelEnabled: boolean;
+  timeTravelEnabled?: boolean;
   showKidsDimension?: boolean;
 }
 

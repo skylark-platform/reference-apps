@@ -143,6 +143,15 @@ describe("saas/get.ts", () => {
 
   describe("getExistingObjects", () => {
     it("makes a request with the expected query", async () => {
+      const mockedGraphQLResponse = {
+        response: {
+          data: {
+            "brand-1": null,
+          },
+        },
+      };
+      graphQlRequest.mockRejectedValueOnce(mockedGraphQLResponse);
+
       await getExistingObjects("Brand", [{ externalId: "brand-1" }]);
 
       expect(graphQlRequest).toBeCalledWith(
@@ -153,6 +162,25 @@ describe("saas/get.ts", () => {
     });
 
     it("returns all given uids when the request does not error", async () => {
+      const mockedGraphQLResponse = {
+        response: {
+          data: {
+            "brand-1": {
+              external_id: "brand-1-ext-id",
+              uid: "123",
+              __typename: "Brand",
+            },
+            "brand-2": {
+              external_id: "brand-2-ext-id",
+            },
+            "brand-3": {
+              external_id: "brand-3-ext-id",
+            },
+          },
+        },
+      };
+      graphQlRequest.mockRejectedValueOnce(mockedGraphQLResponse);
+
       const got = await getExistingObjects("Brand", [
         { externalId: "brand-1" },
         { externalId: "brand-2" },
@@ -169,6 +197,12 @@ describe("saas/get.ts", () => {
         response: {
           data: {
             "brand-1": null,
+            "brand-2": {
+              external_id: "brand-2-ext-id",
+            },
+            "brand-3": {
+              external_id: "brand-3-ext-id",
+            },
           },
         },
       };

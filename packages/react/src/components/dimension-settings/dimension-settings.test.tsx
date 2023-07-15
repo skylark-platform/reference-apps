@@ -3,8 +3,6 @@ import { render, RenderOptions, screen, fireEvent } from "../../../test-utils";
 import { DimensionSettings } from "./dimension-settings.component";
 import { DimensionsContextProvider } from "../../contexts";
 
-jest.mock("next/router");
-
 const customRender = (ui: React.ReactElement, renderOptions?: RenderOptions) =>
   render(
     <DimensionsContextProvider {...renderOptions}>
