@@ -156,7 +156,11 @@ const getExistingObjectsByExternalId = async (
   objectType: GraphQLObjectTypes,
   objects: { externalId: string; language?: string | null }[],
   language?: string
-): Promise<{ existingObjects: string[]; missingObjects: string[] }> => {
+): Promise<{
+  existingExternalIds: string[];
+  existingObjects: GraphQLBaseObject[];
+  missingExternalIds: string[];
+}> => {
   const externalIds = objects.map(({ externalId }) => externalId);
   const getOperations = objects.reduce(
     (previousQueries, { externalId, language: objLanguage }) => {
@@ -206,16 +210,22 @@ const getExistingObjectsByExternalId = async (
 
   try {
     // This request will error if at least one external_id doesn't exist
-    await graphQLClient.request<{ [key: string]: GraphQLBaseObject }>(
-      graphQLGetQuery,
-      {},
-      { "x-bypass-cache": "1" }
-    );
+    const data = await graphQLClient.request<{
+      [key: string]: GraphQLBaseObject;
+    }>(graphQLGetQuery, {}, { "x-bypass-cache": "1" });
+
+    return {
+      existingExternalIds: externalIds,
+      existingObjects: Object.values(data),
+      missingExternalIds: [],
+    };
   } catch (err) {
     if (err && has(err, "response.data")) {
       const {
         response: { data },
-      } = err as { response: { data: { [recordId: string]: null | object } } };
+      } = err as {
+        response: { data: { [recordId: string]: null | GraphQLBaseObject } };
+      };
 
       const notFoundObjects = objects.filter(({ externalId }) =>
         Object.keys(data)
@@ -225,23 +235,23 @@ const getExistingObjectsByExternalId = async (
       const notFoundObjectExternalIds = notFoundObjects.map(
         ({ externalId }) => externalId
       );
-      const existingObjects = externalIds.filter(
+      const existingExternalIds = externalIds.filter(
         (externalId) => !notFoundObjectExternalIds.includes(externalId)
       );
+      const existingObjects = existingExternalIds.map(
+        (externalId) => data[externalId] as GraphQLBaseObject
+      );
+
       return {
+        existingExternalIds,
         existingObjects,
-        missingObjects: notFoundObjectExternalIds,
+        missingExternalIds: notFoundObjectExternalIds,
       };
     }
 
     // If unexpected error, re throw
     throw err;
   }
-
-  return {
-    existingObjects: externalIds,
-    missingObjects: [],
-  };
 };
 
 export const getExistingObjects = async (
@@ -249,26 +259,28 @@ export const getExistingObjects = async (
   objects: { externalId: string; language?: string | null }[],
   language?: string
 ): Promise<{
-  existingObjects: Set<string>;
-  missingObjects: Set<string>;
+  existingExternalIds: Set<string>;
+  existingObjects: Record<string, GraphQLBaseObject>;
+  missingExternalIds: Set<string>;
 }> => {
   const chunkSize = 100;
 
-  if (objects.length <= chunkSize) {
-    const { existingObjects, missingObjects } =
-      await getExistingObjectsByExternalId(objectType, objects, language);
-    return {
-      existingObjects: new Set(existingObjects),
-      missingObjects: new Set(missingObjects),
-    };
-  }
+  // if (objects.length <= chunkSize) {
+  //   const { existingObjects, missingObjects } =
+  //     await getExistingObjectsByExternalId(objectType, objects, language);
+  //   return {
+  //     existingExternalIds: new Set(existingObjects),
+  //     missingExternalIds: new Set(missingObjects),
+  //   };
+  // }
 
   const chunkedObjects = chunk(objects, chunkSize);
   const chunkedRequests = chunk(chunkedObjects, 10); // Make 10 requests at a time
 
   const existingObjectsArr: {
-    existingObjects: string[];
-    missingObjects: string[];
+    existingExternalIds: string[];
+    existingObjects: GraphQLBaseObject[];
+    missingExternalIds: string[];
   }[] = [];
 
   // eslint-disable-next-line no-restricted-syntax
@@ -283,12 +295,22 @@ export const getExistingObjects = async (
     existingObjectsArr.push(...responses);
   }
 
-  const existingObjects = new Set(
-    existingObjectsArr.flatMap(({ existingObjects: arr }) => arr)
+  const existingExternalIds = new Set(
+    existingObjectsArr.flatMap(({ existingExternalIds: arr }) => arr)
   );
-  const missingObjects = new Set(
-    existingObjectsArr.flatMap(({ missingObjects: arr }) => arr)
+  const missingExternalIds = new Set(
+    existingObjectsArr.flatMap(({ missingExternalIds: arr }) => arr)
   );
 
-  return { existingObjects, missingObjects };
+  const existingObjects = existingObjectsArr
+    .flatMap(({ existingObjects: arr }) => arr)
+    .reduce(
+      (previous, object) => ({
+        ...previous,
+        [object.external_id]: object,
+      }),
+      {} as Record<string, GraphQLBaseObject>
+    );
+
+  return { existingExternalIds, existingObjects, missingExternalIds };
 };

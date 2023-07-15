@@ -1,34 +1,53 @@
 import React from "react";
 import NextLink, { LinkProps as NextLinkProps } from "next/link";
+import { useRouter } from "next/router";
 
 interface IProps extends NextLinkProps {
   isExternal?: boolean;
 }
 
+/**
+ * Link
+ * This component is used to extend next/link to:
+ * - Handle External Links
+ * - Persist the language query on page navigation
+ *
+ * You probably don't need this.
+ */
 export const Link: React.FC<IProps> = ({
-  children,
-  href,
-  as,
-  replace,
-  scroll,
-  shallow,
-  prefetch,
-  locale,
   isExternal = false,
+  href,
+  ...nextLinkProps
 }) => {
+  const { query: activeQuery } = useRouter();
+
   if (isExternal) {
-    return <a href={href as string}>{children}</a>;
+    return <a href={href as string}>{nextLinkProps.children}</a>;
   }
+
+  const pathname = typeof href === "object" ? href.pathname : href;
+
+  const propQuery =
+    typeof href === "object" && typeof href.query === "object"
+      ? href.query
+      : {};
+
+  const languageQuery = activeQuery.language
+    ? { language: activeQuery.language }
+    : {};
 
   return (
     <NextLink
-      {...{ href, as, replace, scroll, shallow, prefetch, locale }}
-      passHref
-    >
-      <a className="bg-blue-500 font-sans text-4xl font-extrabold tracking-widest backdrop-hue-rotate-30">
-        {children}
-      </a>
-    </NextLink>
+      {...nextLinkProps}
+      href={{
+        pathname,
+        query: {
+          ...languageQuery,
+          ...propQuery,
+        },
+      }}
+      legacyBehavior
+    />
   );
 };
 

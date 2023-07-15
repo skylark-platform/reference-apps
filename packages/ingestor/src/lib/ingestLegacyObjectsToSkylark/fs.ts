@@ -10,7 +10,16 @@ import {
   writeFile,
 } from "fs-extra";
 import { join } from "path";
-import { LegacyObjectType, LegacyObjects } from "./types/legacySkylark";
+import {
+  LegacyAsset,
+  LegacyBrand,
+  LegacyEpisode,
+  LegacyObjectType,
+  LegacyObjects,
+  LegacySeason,
+  LegacyTag,
+  LegacyTagCategory,
+} from "./types/legacySkylark";
 import { USED_LANGUAGES } from "./constants";
 import { calculateTotalObjects } from "./utils";
 
@@ -180,6 +189,58 @@ export const readObjectsFromFile = async <T>(
   };
 
   return data;
+};
+
+export const readLegacyObjectsFromFile = async () => {
+  const mostRecentDir = await getMostRecentLegacyObjectsDir();
+
+  console.log(`--- Using directory "${mostRecentDir}"`);
+
+  const tagCategories = await readObjectsFromFile<LegacyTagCategory>(
+    mostRecentDir,
+    LegacyObjectType.TagCategories
+  );
+
+  const tags = await readObjectsFromFile<LegacyTag>(
+    mostRecentDir,
+    LegacyObjectType.Tags
+  );
+
+  const assets = await readObjectsFromFile<LegacyAsset>(
+    mostRecentDir,
+    LegacyObjectType.Assets
+  );
+
+  const episodes = await readObjectsFromFile<LegacyEpisode>(
+    mostRecentDir,
+    LegacyObjectType.Episodes
+  );
+
+  const seasons = await readObjectsFromFile<LegacySeason>(
+    mostRecentDir,
+    LegacyObjectType.Seasons
+  );
+
+  const brands = await readObjectsFromFile<LegacyBrand>(
+    mostRecentDir,
+    LegacyObjectType.Brands
+  );
+
+  const retObj = {
+    tagCategories,
+    tags,
+    assets,
+    episodes,
+    seasons,
+    brands,
+  };
+
+  const totalObjectsFound = calculateTotalObjects(retObj);
+  console.log(
+    `--- ${totalObjectsFound} objects read from disk (${USED_LANGUAGES.length} languages)`
+  );
+
+  return retObj;
 };
 
 /* eslint-enable no-console */

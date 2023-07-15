@@ -1,13 +1,10 @@
-import { GraphQLObjectTypes } from "@skylark-reference-apps/lib";
+import { GraphQLObjectTypes, hasProperty } from "@skylark-reference-apps/lib";
 import { ensureDir, writeJSON } from "fs-extra";
 import { join } from "path";
 import {
-  LegacyAsset,
-  LegacyBrand,
-  LegacyEpisode,
   LegacyObjectType,
   LegacyObjects,
-  LegacySeason,
+  LegacyObjectsWithSynopsis,
 } from "./types/legacySkylark";
 import { createOrUpdateGraphQlObjectsUsingIntrospection } from "../skylark/saas/create";
 import { GraphQLBaseObject } from "../interfaces";
@@ -15,36 +12,15 @@ import { getExistingObjects } from "../skylark/saas/get";
 import { CreatedSkylarkObjects } from "./types/skylark";
 import { createRelationships } from "./skylarkRelationships";
 import { ASSET_TYPES_TO_IGNORE } from "./constants";
+import { convertLegacyObjectTypeToObjectType } from "./utils";
+import { assignAvailabilitiesToObjects } from "../skylark/saas/availability";
 
 type ConvertedLegacyObject = { external_id: string } & Record<
   string,
   string | null | string[] | boolean | number | object
 >;
 
-const convertLegacyObjectTypeToObjectType = (
-  legacyType: LegacyObjectType
-): GraphQLObjectTypes => {
-  switch (legacyType) {
-    case LegacyObjectType.TagCategories:
-      return "TagCategory";
-    case LegacyObjectType.Tags:
-      return "SkylarkTag";
-    case LegacyObjectType.Assets:
-      return "SkylarkAsset";
-    case LegacyObjectType.Episodes:
-      return "Episode";
-    case LegacyObjectType.Seasons:
-      return "Season";
-    case LegacyObjectType.Brands:
-      return "Brand";
-    default:
-      throw new Error("[convertLegacyObjectTypeToObjectType] Unknown type");
-  }
-};
-
-const getSynopsisForMedia = (
-  legacyObject: LegacyEpisode | LegacyBrand | LegacySeason | LegacyAsset
-) => {
+const getSynopsisForMedia = (legacyObject: LegacyObjectsWithSynopsis) => {
   // We want to make sure that we add synopsis, then short_synopsis in the order alternate_synopsis -> synopsis -> extended_synopsis
   const synopsis =
     legacyObject.alternate_synopsis ||
@@ -146,24 +122,50 @@ const getExistingObjectsForAllLanguages = async (
   languages: string[],
   objects: Record<string, LegacyObjects>
 ) => {
-  const existingObjects = new Set<string>([]);
-  const missingObjects = new Set<string>([]);
+  const existingExternalIds = new Set<string>([]);
+  const missingExternalIds = new Set<string>([]);
+
+  let existingObjects: Record<string, GraphQLBaseObject> = {};
+  const existingObjectsPerLanguage: Record<
+    string,
+    Record<string, GraphQLBaseObject>
+  > = {};
 
   // eslint-disable-next-line no-restricted-syntax
   for (const language of languages) {
+    if (!hasProperty(objects, language)) {
+      break;
+    }
+
     const externalIds = objects[language].map(({ uid }) => ({
       externalId: uid,
     }));
 
-    const { existingObjects: existing, missingObjects: missing } =
+    const {
+      existingExternalIds: existing,
+      missingExternalIds: missing,
+      existingObjects: existingObjs,
+    } =
       // eslint-disable-next-line no-await-in-loop
       await getExistingObjects(objectType, externalIds, language);
 
-    existing.forEach((item) => existingObjects.add(item));
-    missing.forEach((item) => missingObjects.add(item));
+    existingObjectsPerLanguage[language] = existingObjs;
+
+    existing.forEach((item) => existingExternalIds.add(item));
+    missing.forEach((item) => missingExternalIds.add(item));
+
+    existingObjects = {
+      ...existingObjects,
+      ...existingObjs,
+    };
   }
 
-  return { existingObjects, missingObjects };
+  return {
+    existingExternalIds,
+    missingExternalIds,
+    existingObjects,
+    existingObjectsPerLanguage,
+  };
 };
 
 export const createObjectsInSkylark = async (
@@ -175,7 +177,7 @@ export const createObjectsInSkylark = async (
     objects: Record<string, LegacyObjects>;
   },
   relationshipObjects: CreatedSkylarkObjects,
-  alwaysAvailability?: GraphQLBaseObject
+  opts?: { isCreateOnly?: boolean; alwaysAvailability?: GraphQLBaseObject }
 ): Promise<GraphQLBaseObject[]> => {
   const objectType = convertLegacyObjectTypeToObjectType(type);
 
@@ -194,7 +196,7 @@ export const createObjectsInSkylark = async (
   }
 
   // eslint-disable-next-line prefer-const
-  let { existingObjects, missingObjects } =
+  let { existingExternalIds, missingExternalIds, existingObjectsPerLanguage } =
     await getExistingObjectsForAllLanguages(
       objectType,
       languages,
@@ -206,11 +208,11 @@ export const createObjectsInSkylark = async (
   await writeJSON(
     join(__dirname, "outputs", "existingObjects", `${objectType}.json`),
     {
-      existingObjects: [...existingObjects],
-      missingObjects: [...missingObjects],
+      existingExternalIds: [...existingExternalIds],
+      missingExternalIds: [...missingExternalIds],
       count: {
-        existingObjects: existingObjects.size,
-        missingObjects: missingObjects.size,
+        existingObjects: existingExternalIds.size,
+        missingObjects: missingExternalIds.size,
       },
     }
   );
@@ -219,8 +221,6 @@ export const createObjectsInSkylark = async (
 
   // eslint-disable-next-line no-restricted-syntax
   for (const language of languages) {
-    // Fetch existing Ids inside language loop so that we recognise one is added if its added new in the same ingest run
-
     const legacyObjects = legacyObjectsAndLanguage[language];
     const parsedLegacyObjects = legacyObjects
       .map(convertLegacyObject)
@@ -241,13 +241,42 @@ export const createObjectsInSkylark = async (
       };
     }, {});
 
-    const objectsToCreate = parsedLegacyObjects.map((obj) => ({
-      ...obj,
-      _id: obj.external_id,
-      language,
-    }));
+    // If in create only mode, get External IDs of existing objects for this language
+    const previouslyCreatedObjectExternalIdsForThisLanguage =
+      opts?.isCreateOnly && existingObjectsPerLanguage[language]
+        ? new Set(
+            Object.values(existingObjectsPerLanguage[language]).map(
+              ({ external_id }) => external_id
+            )
+          )
+        : null;
+    if (previouslyCreatedObjectExternalIdsForThisLanguage) {
+      // eslint-disable-next-line no-console
+      console.log(
+        `    - ${language.toLowerCase()}: ${
+          previouslyCreatedObjectExternalIdsForThisLanguage.size
+        } existing`
+      );
+    }
 
-    const availabilityUids = alwaysAvailability ? [alwaysAvailability.uid] : [];
+    // If in create only mode, filter out any existing objects
+    const objectsToCreate = parsedLegacyObjects
+      .filter((obj) =>
+        previouslyCreatedObjectExternalIdsForThisLanguage
+          ? !previouslyCreatedObjectExternalIdsForThisLanguage.has(
+              obj.external_id
+            )
+          : true
+      )
+      .map((obj) => ({
+        ...obj,
+        _id: obj.external_id,
+        language,
+      }));
+
+    const availabilityUids = opts?.alwaysAvailability
+      ? [opts.alwaysAvailability.uid]
+      : [];
 
     const {
       createdObjects: createdLanguageObjects,
@@ -256,7 +285,7 @@ export const createObjectsInSkylark = async (
       // eslint-disable-next-line no-await-in-loop
       await createOrUpdateGraphQlObjectsUsingIntrospection(
         objectType,
-        existingObjects,
+        existingExternalIds,
         objectsToCreate,
         { language, relationships, availabilityUids }
       );
@@ -279,7 +308,10 @@ export const createObjectsInSkylark = async (
       ({ external_id }) => external_id
     );
 
-    existingObjects = new Set<string>([...existingObjects, ...newExternalIds]);
+    existingExternalIds = new Set<string>([
+      ...existingExternalIds,
+      ...newExternalIds,
+    ]);
   }
 
   const createdObjects = accaArr.flatMap((a) => a);
@@ -296,4 +328,43 @@ export const createObjectsInSkylark = async (
   );
 
   return uniqueBaseObjects;
+};
+
+export const addAlwaysAvailabilityToObjects = async (
+  alwaysAvailability: GraphQLBaseObject,
+  legacyObjects: {
+    type: LegacyObjectType;
+    objects: Record<string, LegacyObjects>;
+    totalFound: number;
+  }[],
+  languages: string[]
+) => {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const legacyObject of legacyObjects) {
+    const objectType = convertLegacyObjectTypeToObjectType(legacyObject.type);
+    // eslint-disable-next-line no-console
+    console.log(`--- Adding Availability to ${objectType}`);
+
+    // eslint-disable-next-line no-await-in-loop
+    const { existingObjects } = await getExistingObjectsForAllLanguages(
+      objectType,
+      languages,
+      legacyObject.objects
+    );
+
+    const uniqueUids: string[] = [
+      ...new Set(
+        Object.values(existingObjects)
+          .flatMap((arr) => arr)
+          .map(({ uid }) => uid)
+      ),
+    ] as string[];
+
+    // eslint-disable-next-line no-await-in-loop
+    await assignAvailabilitiesToObjects(
+      [alwaysAvailability],
+      objectType,
+      uniqueUids
+    );
+  }
 };

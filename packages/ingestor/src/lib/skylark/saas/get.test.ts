@@ -158,10 +158,10 @@ describe("saas/get.ts", () => {
         { externalId: "brand-2" },
         { externalId: "brand-3" },
       ]);
-      expect(got.existingObjects).toEqual(
+      expect(got.existingExternalIds).toEqual(
         new Set(["brand-1", "brand-2", "brand-3"])
       );
-      expect(got.missingObjects).toEqual(new Set([]));
+      expect(got.missingExternalIds).toEqual(new Set([]));
     });
 
     it("returns the uids that exist when some queries return a null value", async () => {
@@ -179,8 +179,8 @@ describe("saas/get.ts", () => {
         { externalId: "brand-2" },
         { externalId: "brand-3" },
       ]);
-      expect(got.existingObjects).toEqual(new Set(["brand-2", "brand-3"]));
-      expect(got.missingObjects).toEqual(new Set(["brand-1"]));
+      expect(got.existingExternalIds).toEqual(new Set(["brand-2", "brand-3"]));
+      expect(got.missingExternalIds).toEqual(new Set(["brand-1"]));
     });
 
     it("rejects when an unexpected error occurs", async () => {

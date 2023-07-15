@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Link from "next/link";
 import { MdStream, MdSearch, MdClose } from "react-icons/md";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
@@ -11,6 +10,7 @@ import {
   Button,
   DimensionSettings,
   ConnectToSkylarkModal,
+  Link,
 } from "@skylark-reference-apps/react";
 import { hasProperty } from "@skylark-reference-apps/lib";
 import { Search } from "./search";

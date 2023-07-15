@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
-import Link from "next/link";
 import React, { useState } from "react";
 import { useTailwindBreakpoint } from "../../hooks";
 import { NavigationToggle } from "./navigation-toggle";
+import { Link } from "../link";
 
 export interface NavigationProps {
   links: { text: string; href: string }[];
@@ -67,7 +67,7 @@ export const Navigation: React.FC<NavigationProps> = ({
         <ul className="flex flex-col gap-10 md:ml-md-gutter md:flex-row md:gap-6 lg:ml-lg-gutter lg:gap-8 xl:ml-xl-gutter">
           {links.map(({ text, href }) => (
             <li key={text}>
-              <Link className="gap-x-2" href={href}>
+              <Link href={href}>
                 <a
                   className={`
                     text-xl

@@ -2,7 +2,6 @@
 import "./env";
 import { SAAS_API_ENDPOINT } from "@skylark-reference-apps/lib";
 import axios from "axios";
-import { mkdir, writeFile } from "fs/promises";
 import { has } from "lodash";
 import { getAllTables } from "./lib/airtable";
 import { GraphQLBaseObject, GraphQLMetadata } from "./lib/interfaces";
@@ -22,8 +21,14 @@ import {
 } from "./lib/skylark/saas/availability";
 import { slxDemoSetsToCreate } from "./additional-objects/slxDemosSets";
 import { updateSkylarkSchema } from "./lib/skylark/saas/schema";
+import {
+  clearUnableToFindVersionNoneObjectsFile,
+  writeAirtableOutputFile,
+} from "./lib/skylark/saas/fs";
 
 const main = async () => {
+  await clearUnableToFindVersionNoneObjectsFile();
+
   // eslint-disable-next-line no-console
   console.time("Completed in:");
 
@@ -228,11 +233,7 @@ const main = async () => {
     sets: createdSets,
   };
 
-  await mkdir("./outputs", { recursive: true });
-  await writeFile(
-    `./outputs/${dateStamp}.json`,
-    JSON.stringify(output, null, 4)
-  );
+  await writeAirtableOutputFile(dateStamp, output);
 
   // eslint-disable-next-line no-console
   console.timeEnd("Completed in:");

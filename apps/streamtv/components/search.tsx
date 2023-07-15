@@ -1,12 +1,12 @@
 import { formatReleaseDate, hasProperty } from "@skylark-reference-apps/lib";
 import clsx from "clsx";
-import Link from "next/link";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { MdOutlineRotateRight, MdClear, MdSearch } from "react-icons/md";
 import { useDebounce } from "use-debounce";
 import { sanitize } from "dompurify";
 import { sentenceCase } from "sentence-case";
 
+import Link from "next/link";
 import { useSearch } from "../hooks/useSearch";
 import {
   convertGraphQLSetType,

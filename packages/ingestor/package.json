@@ -40,7 +40,8 @@
     "test": "jest --config=jest.config.js",
     "lint": "eslint -c .eslintrc.js .",
     "ingest:legacy-to-skylark": "ts-node src/lib/ingestLegacyObjectsToSkylark/main.ts",
-    "ingest:legacy-to-skylark-from-disk": "cross-env READ_LEGACY_OBJECTS_FROM_DISK=true yarn ingest:legacy-to-skylark"
+    "ingest:legacy-to-skylark-from-disk": "cross-env READ_LEGACY_OBJECTS_FROM_DISK=true yarn ingest:legacy-to-skylark",
+    "ingest:legacy-to-skylark:availability": "ts-node src/lib/ingestLegacyObjectsToSkylark/scripts/assignAlwaysAvailabilityToAllObjects.ts"
   },
   "resolutions": {
     "axios": "1.4.0"

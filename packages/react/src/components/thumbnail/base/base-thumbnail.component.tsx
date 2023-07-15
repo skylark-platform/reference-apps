@@ -1,8 +1,8 @@
-import Link from "next/link";
 import React, { useEffect, useMemo, useState } from "react";
 import { MdPlayArrow } from "react-icons/md";
 import { addCloudinaryOnTheFlyImageTransformation } from "@skylark-reference-apps/lib";
 import { List } from "../../list";
+import { Link } from "../../link";
 
 export type ThumbnailContentLocation = "inside" | "below";
 
