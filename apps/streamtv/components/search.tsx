@@ -6,7 +6,7 @@ import { useDebounce } from "use-debounce";
 import { sanitize } from "dompurify";
 import { sentenceCase } from "sentence-case";
 
-import Link from "next/link";
+import { Link } from "@skylark-reference-apps/react";
 import { useSearch } from "../hooks/useSearch";
 import {
   convertGraphQLSetType,

@@ -1,9 +1,5 @@
 /** @type {import('next').NextConfig} */
 
-// const withTM = require("next-transpile-modules")([
-//   "@skylark-reference-apps/lib",
-//   "@skylark-reference-apps/react",
-// ]);
 // eslint-disable-next-line import/no-extraneous-dependencies
 const nextTranslate = require("next-translate-plugin");
 const { withPlausibleProxy } = require("next-plausible");
