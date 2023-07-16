@@ -61,7 +61,11 @@ const DimensionsContext = createContext<DimensionsContextType>({
   setTimeTravel: () => {},
 });
 
-export const DimensionsContextProvider: React.FC = ({ children }) => {
+export const DimensionsContextProvider = ({
+  children,
+}: {
+  children?: React.ReactNode;
+}) => {
   const deviceType = useDeviceType();
   const { lang } = useTranslation();
 

@@ -4,6 +4,7 @@ export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
 interface HProps {
   className?: string;
+  children?: React.ReactNode;
 }
 
 interface HeadingProps extends HProps {

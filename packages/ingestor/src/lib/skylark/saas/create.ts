@@ -6,6 +6,7 @@ import {
 import { Attachment, FieldSet, Records } from "airtable";
 import { EnumType, jsonToGraphQLQuery } from "json-to-graphql-query";
 import { chunk, flatten, has, isArray, isEmpty, isString } from "lodash";
+import { Variables } from "graphql-request";
 import {
   CREATE_OBJECT_CHUNK_SIZE,
   CONCURRENT_CREATE_REQUESTS_NUM,
@@ -46,7 +47,7 @@ const isKnownError = (errMessage: string) =>
 
 const graphqlMutationWithRetry = async <T>(
   mutation: string,
-  variables: object,
+  variables: Variables,
   { retries = 3, everySeconds = 5 },
   retriesCount = 0
 ): Promise<T> => {

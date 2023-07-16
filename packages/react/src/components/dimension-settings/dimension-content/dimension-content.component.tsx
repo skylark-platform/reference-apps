@@ -2,6 +2,7 @@ import React from "react";
 
 interface DimensionContentProps {
   label?: string;
+  children?: React.ReactNode;
 }
 
 export const DimensionContent: React.FC<DimensionContentProps> = (props) => (

@@ -1,6 +1,6 @@
 import { formatReleaseDate, hasProperty } from "@skylark-reference-apps/lib";
 import clsx from "clsx";
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MdOutlineRotateRight, MdClear, MdSearch } from "react-icons/md";
 import { useDebounce } from "use-debounce";
 import { sanitize } from "dompurify";
@@ -289,7 +289,7 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
                   );
                 }
 
-                return <Fragment key={obj.uid} />;
+                return null;
               })}
           </div>
         </div>

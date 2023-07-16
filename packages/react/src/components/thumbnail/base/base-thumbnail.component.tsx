@@ -10,6 +10,7 @@ export interface BaseThumbnailProps {
   backgroundImage: string;
   contentLocation?: ThumbnailContentLocation;
   large?: boolean;
+  children?: React.ReactNode;
 }
 
 export interface BaseThumbnailWithLinkProps extends BaseThumbnailProps {

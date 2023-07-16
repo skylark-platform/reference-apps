@@ -20,6 +20,7 @@ interface Props {
   tvShowsHref: string;
   skylarkApiUrl?: string;
   timeTravelEnabled?: boolean;
+  children?: React.ReactNode;
 }
 
 export const StreamTVLayout: React.FC<Props> = ({

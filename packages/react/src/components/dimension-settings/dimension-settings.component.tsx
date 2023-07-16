@@ -28,6 +28,7 @@ interface DimensionSettingsProps {
   skylarkApiUrl?: string;
   timeTravelEnabled?: boolean;
   showKidsDimension?: boolean;
+  children?: React.ReactNode;
 }
 
 const variants = {

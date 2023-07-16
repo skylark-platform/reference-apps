@@ -8,6 +8,7 @@ export interface NavigationProps {
   links: { text: string; href: string }[];
   activeHref: string;
   defaultOpen?: boolean;
+  children?: React.ReactNode;
 }
 
 const variants = {

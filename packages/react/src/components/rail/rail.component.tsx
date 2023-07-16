@@ -8,6 +8,7 @@ interface RailProps {
   header?: string;
   displayCount?: boolean;
   className?: string;
+  children?: React.ReactNode;
 }
 
 const directionArrowClassName = `

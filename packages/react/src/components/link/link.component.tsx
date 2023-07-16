@@ -2,8 +2,9 @@ import React from "react";
 import NextLink, { LinkProps as NextLinkProps } from "next/link";
 import { useRouter } from "next/router";
 
-interface IProps extends NextLinkProps {
+interface LinkProps extends NextLinkProps {
   isExternal?: boolean;
+  children?: React.ReactNode;
 }
 
 /**
@@ -14,7 +15,7 @@ interface IProps extends NextLinkProps {
  *
  * You probably don't need this.
  */
-export const Link: React.FC<IProps> = ({
+export const Link: React.FC<LinkProps> = ({
   isExternal = false,
   href,
   ...nextLinkProps

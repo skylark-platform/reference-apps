@@ -5,6 +5,7 @@ interface TitleScreenProps {
   title: string;
   logo?: JSX.Element;
   exitBackgroundColor?: string;
+  children?: React.ReactNode;
 }
 
 const durationToShowAfterAnimationComplete = 0.4;

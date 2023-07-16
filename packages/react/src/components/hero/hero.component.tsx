@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 interface HeroProps {
   bgImage: string;
+  children?: React.ReactNode;
 }
 
 export const Hero: React.FC<HeroProps> = ({ bgImage, children }) => {
