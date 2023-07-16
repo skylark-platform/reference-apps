@@ -68,17 +68,16 @@ export const Navigation: React.FC<NavigationProps> = ({
         <ul className="flex flex-col gap-10 md:ml-md-gutter md:flex-row md:gap-6 lg:ml-lg-gutter lg:gap-8 xl:ml-xl-gutter">
           {links.map(({ text, href }) => (
             <li key={text}>
-              <Link href={href}>
-                <a
-                  className={`
+              <Link
+                className={`
                     text-xl
                     transition-colors hover:text-white md:text-sm lg:text-base
                     ${activeHref === href ? "text-white" : "text-gray-500"}
                   `}
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {text}
-                </a>
+                href={href}
+                onClick={() => setMobileOpen(false)}
+              >
+                {text}
               </Link>
             </li>
           ))}

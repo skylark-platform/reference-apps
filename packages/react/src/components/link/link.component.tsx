@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 interface LinkProps extends NextLinkProps {
   isExternal?: boolean;
   children?: React.ReactNode;
+  className?: string;
 }
 
 /**
@@ -15,15 +16,20 @@ interface LinkProps extends NextLinkProps {
  *
  * You probably don't need this.
  */
-export const Link: React.FC<LinkProps> = ({
+export const Link = ({
   isExternal = false,
   href,
+  className,
   ...nextLinkProps
-}) => {
+}: LinkProps) => {
   const { query: activeQuery } = useRouter();
 
   if (isExternal) {
-    return <a href={href as string}>{nextLinkProps.children}</a>;
+    return (
+      <a className={className} href={href as string}>
+        {nextLinkProps.children}
+      </a>
+    );
   }
 
   const pathname = typeof href === "object" ? href.pathname : href;
@@ -40,6 +46,7 @@ export const Link: React.FC<LinkProps> = ({
   return (
     <NextLink
       {...nextLinkProps}
+      className={className}
       href={{
         pathname,
         query: {
@@ -47,7 +54,6 @@ export const Link: React.FC<LinkProps> = ({
           ...propQuery,
         },
       }}
-      legacyBehavior
     />
   );
 };

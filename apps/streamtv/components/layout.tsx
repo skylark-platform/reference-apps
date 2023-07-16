@@ -70,9 +70,7 @@ export const StreamTVLayout: React.FC<Props> = ({
           <div className="flex items-center justify-center text-3xl text-gray-100">
             <MdStream className="h-9 w-9 md:ml-8 md:h-10 md:w-10 lg:ml-16 lg:h-12 lg:w-12 xl:ml-20" />
             <h2 className="ml-1 text-base md:ml-2 md:text-xl lg:text-2xl">
-              <Link href="/">
-                <a>{appTitle}</a>
-              </Link>
+              <Link href="/">{appTitle}</Link>
             </h2>
             <span className="absolute right-2 md:hidden">
               <Button

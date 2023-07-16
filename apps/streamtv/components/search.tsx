@@ -95,45 +95,44 @@ const SearchResultItem = ({
   typename: string;
   onClick: () => void;
 }) => (
-  <Link href={href}>
-    <a
-      className="group mb-4  grid grid-cols-[4fr_1fr] items-center gap-4 last:mb-0"
-      onClick={() => onClick()}
-    >
-      <div className="flex h-full flex-col">
-        <div className="flex flex-col">
+  <Link
+    className="group mb-4  grid grid-cols-[4fr_1fr] items-center gap-4 last:mb-0"
+    href={href}
+    onClick={() => onClick()}
+  >
+    <div className="flex h-full flex-col">
+      <div className="flex flex-col">
+        <HighlightedSearchResultText
+          className="text-lg font-medium text-gray-100 transition-colors group-hover:text-purple-400"
+          matchClassName="[&>span]:font-bold"
+          text={title}
+        />
+        {description && (
           <HighlightedSearchResultText
-            className="text-lg font-medium text-gray-100 transition-colors group-hover:text-purple-400"
-            matchClassName="[&>span]:font-bold"
-            text={title}
-          />
-          {description && (
-            <HighlightedSearchResultText
-              className="line-clamp-3 text-sm text-gray-400 transition-colors group-hover:text-purple-400"
-              matchClassName="[&>span]:font-semibold"
-              text={description}
-            />
-          )}
-        </div>
-        <div className="flex flex-row justify-between gap-2 text-sm text-gray-600 transition-colors group-hover:text-purple-400">
-          <HighlightedSearchResultText
+            className="line-clamp-3 text-sm text-gray-400 transition-colors group-hover:text-purple-400"
             matchClassName="[&>span]:font-semibold"
-            text={typename}
+            text={description}
           />
-          {date && <p>{formatReleaseDate(date)}</p>}
-        </div>
+        )}
       </div>
-      {image && (
-        <div className="flex justify-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            alt={title}
-            className="h-auto max-h-[4rem] w-auto max-w-full"
-            src={image}
-          />
-        </div>
-      )}
-    </a>
+      <div className="flex flex-row justify-between gap-2 text-sm text-gray-600 transition-colors group-hover:text-purple-400">
+        <HighlightedSearchResultText
+          matchClassName="[&>span]:font-semibold"
+          text={typename}
+        />
+        {date && <p>{formatReleaseDate(date)}</p>}
+      </div>
+    </div>
+    {image && (
+      <div className="flex justify-center">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          alt={title}
+          className="h-auto max-h-[4rem] w-auto max-w-full"
+          src={image}
+        />
+      </div>
+    )}
   </Link>
 );
 
