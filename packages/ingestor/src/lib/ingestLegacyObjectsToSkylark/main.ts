@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 import "../../env";
 import "./env";
-import { SAAS_API_ENDPOINT, SAAS_API_KEY } from "@skylark-reference-apps/lib";
 import { ensureDir } from "fs-extra";
 import { fetchObjectsFromLegacySkylark } from "./legacy";
 import {
@@ -29,34 +28,14 @@ import { createObjectsInSkylark } from "./skylark";
 import { CreatedSkylarkObjects } from "./types/skylark";
 import {
   createLegacyObjectsTimeStampedDir,
-  getMostRecentLegacyObjectsDir,
-  readObjectsFromFile,
+  readLegacyObjectsFromFile,
   writeAllLegacyObjectsToDisk,
   writeError,
   writeLegacyObjectsToDisk,
   writeStatsForLegacyObjectsToDisk,
 } from "./fs";
-import { calculateTotalObjects } from "./utils";
-
-const checkEnvVars = () => {
-  const legacyApiUrl = process.env.LEGACY_API_URL;
-  const legacyToken = process.env.LEGACY_SKYLARK_TOKEN;
-
-  if (!legacyApiUrl)
-    throw new Error("process.env.LEGACY_API_URL cannot be undefined");
-
-  if (!legacyToken)
-    throw new Error("process.env.LEGACY_SKYLARK_TOKEN cannot be undefined");
-
-  if (!SAAS_API_ENDPOINT)
-    throw new Error("process.env.SAAS_API_ENDPOINT cannot be undefined");
-
-  if (!SAAS_API_KEY)
-    throw new Error("process.env.SAAS_API_KEY cannot be undefined");
-
-  console.log("Legacy API URL:", legacyApiUrl);
-  console.log("Skylark API URL:", SAAS_API_ENDPOINT);
-};
+import { calculateTotalObjects, checkEnvVars } from "./utils";
+import { clearUnableToFindVersionNoneObjectsFile } from "../skylark/saas/fs";
 
 const updateSkylarkSchema = async ({
   assetTypes,
@@ -140,59 +119,8 @@ const fetchLegacyObjects = async () => {
   return retObj;
 };
 
-const readLegacyObjectsFromFile = async () => {
-  const mostRecentDir = await getMostRecentLegacyObjectsDir();
-
-  console.log(`--- Using directory "${mostRecentDir}"`);
-
-  const tagCategories = await readObjectsFromFile<LegacyTagCategory>(
-    mostRecentDir,
-    LegacyObjectType.TagCategories
-  );
-
-  const tags = await readObjectsFromFile<LegacyTag>(
-    mostRecentDir,
-    LegacyObjectType.Tags
-  );
-
-  const assets = await readObjectsFromFile<LegacyAsset>(
-    mostRecentDir,
-    LegacyObjectType.Assets
-  );
-
-  const episodes = await readObjectsFromFile<LegacyEpisode>(
-    mostRecentDir,
-    LegacyObjectType.Episodes
-  );
-
-  const seasons = await readObjectsFromFile<LegacySeason>(
-    mostRecentDir,
-    LegacyObjectType.Seasons
-  );
-
-  const brands = await readObjectsFromFile<LegacyBrand>(
-    mostRecentDir,
-    LegacyObjectType.Brands
-  );
-
-  const retObj = {
-    tagCategories,
-    tags,
-    assets,
-    episodes,
-    seasons,
-    brands,
-  };
-
-  const totalObjectsFound = calculateTotalObjects(retObj);
-  console.log(
-    `--- ${totalObjectsFound} objects read from disk (${USED_LANGUAGES.length} languages)`
-  );
-
-  return retObj;
-};
-
 const main = async () => {
+  console.time("Total ingest time:");
   checkEnvVars();
 
   const readFromDisk = process.env.READ_LEGACY_OBJECTS_FROM_DISK === "true";
@@ -231,11 +159,21 @@ const main = async () => {
   });
 
   console.log("\nCreating Always & Forever Availability...");
-  // TODO enable alwaysAvailability when Availability is fixed
-  const alwaysAvailability = undefined;
-  await createAlwaysAndForeverAvailability(ALWAYS_FOREVER_AVAILABILITY_EXT_ID);
+  const alwaysAvailability = await createAlwaysAndForeverAvailability(
+    ALWAYS_FOREVER_AVAILABILITY_EXT_ID
+  );
 
   console.log("\nCreating Legacy Objects in Skylark...");
+
+  const isCreateOnly = process.env.CREATE_ONLY === "true";
+  console.log(`--- Mode: ${isCreateOnly ? "Create Only" : "Create & Update"}`);
+
+  await clearUnableToFindVersionNoneObjectsFile();
+
+  const opts = {
+    isCreateOnly,
+    alwaysAvailability,
+  };
 
   const skylarkObjects: CreatedSkylarkObjects = {
     tagCategories: [],
@@ -249,40 +187,41 @@ const main = async () => {
   skylarkObjects.tagCategories = await createObjectsInSkylark(
     legacyObjects.tagCategories,
     skylarkObjects,
-    alwaysAvailability
+    opts
   );
 
   skylarkObjects.tags = await createObjectsInSkylark(
     legacyObjects.tags,
     skylarkObjects,
-    alwaysAvailability
+    opts
   );
 
   skylarkObjects.assets = await createObjectsInSkylark(
     legacyObjects.assets,
     skylarkObjects,
-    alwaysAvailability
+    opts
   );
 
   skylarkObjects.episodes = await createObjectsInSkylark(
     legacyObjects.episodes,
     skylarkObjects,
-    alwaysAvailability
+    opts
   );
 
   skylarkObjects.seasons = await createObjectsInSkylark(
     legacyObjects.seasons,
     skylarkObjects,
-    alwaysAvailability
+    opts
   );
 
   skylarkObjects.brands = await createObjectsInSkylark(
     legacyObjects.brands,
     skylarkObjects,
-    alwaysAvailability
+    opts
   );
 
   console.log("\nObjects Created Successfully.");
+  console.timeEnd("Total ingest time:");
 };
 
 main().catch((err) => {

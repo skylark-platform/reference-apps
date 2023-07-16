@@ -6,6 +6,7 @@ import {
 import { Attachment, FieldSet, Records } from "airtable";
 import { EnumType, jsonToGraphQLQuery } from "json-to-graphql-query";
 import { chunk, flatten, has, isArray, isEmpty, isString } from "lodash";
+import { Variables } from "graphql-request";
 import {
   CREATE_OBJECT_CHUNK_SIZE,
   CONCURRENT_CREATE_REQUESTS_NUM,
@@ -37,6 +38,7 @@ import {
   pause,
 } from "./utils";
 import { deleteObject } from "./delete";
+import { writeUnableToFindVersionNoneObjectsFile } from "./fs";
 
 const isKnownError = (errMessage: string) =>
   errMessage.startsWith("Unable to find version None for language") ||
@@ -45,7 +47,7 @@ const isKnownError = (errMessage: string) =>
 
 const graphqlMutationWithRetry = async <T>(
   mutation: string,
-  variables: object,
+  variables: Variables,
   { retries = 3, everySeconds = 5 },
   retriesCount = 0
 ): Promise<T> => {
@@ -80,6 +82,9 @@ const graphqlMutationWithRetry = async <T>(
     console.error(
       `[graphqlMutationWithRetry] Error hit. Retrying after ${pauseTimeSeconds} seconds (${updatedCount}/${retries})`
     );
+    // eslint-disable-next-line no-console
+    console.error(err);
+
     // Wait longer each retry
     await pause(pauseTimeSeconds * 1000);
     return graphqlMutationWithRetry<T>(
@@ -222,11 +227,6 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
         availability.link.push(...availabilityUids);
       }
 
-      const argName = objectType
-        .match(/[A-Z][a-z]+/g)
-        ?.join("_")
-        .toLowerCase() as string;
-
       const objectFields: Record<string, string | object> = {
         ...validFields,
         availability,
@@ -265,6 +265,11 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
 
         objectFields.relationships = relsForObject;
       }
+
+      const argName = objectType
+        .match(/[A-Z][a-z]+/g)
+        ?.join("_")
+        .toLowerCase() as string;
 
       const args: Record<string, string | number | boolean | object> = {
         [argName]: objectExists
@@ -378,6 +383,10 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
             existingObjects.delete(external_id)
           );
 
+          await writeUnableToFindVersionNoneObjectsFile(
+            unableToFindVersionNoneDeletedObjects
+          );
+
           deletedObjects.push(...unableToFindVersionNoneDeletedObjects);
         }
 
@@ -434,7 +443,7 @@ export const createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection =
 
     const externalIds = objects.map(({ _id }) => ({ externalId: _id }));
 
-    const { existingObjects } = await getExistingObjects(
+    const { existingExternalIds } = await getExistingObjects(
       objectType,
       externalIds
     );
@@ -442,7 +451,7 @@ export const createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection =
     const { createdObjects } =
       await createOrUpdateGraphQlObjectsUsingIntrospection(
         objectType,
-        existingObjects,
+        existingExternalIds,
         objects,
         { metadataAvailability, isImage }
       );
@@ -457,7 +466,10 @@ export const createOrUpdateGraphQLCredits = async (
   const validProperties = await getValidPropertiesForObject("Credit");
 
   const externalIds = airtableRecords.map(({ id }) => ({ externalId: id }));
-  const { existingObjects } = await getExistingObjects("Credit", externalIds);
+  const { existingExternalIds } = await getExistingObjects(
+    "Credit",
+    externalIds
+  );
 
   const operations = airtableRecords.reduce(
     (previousOperations, { id, fields }) => {
@@ -473,7 +485,7 @@ export const createOrUpdateGraphQLCredits = async (
         fields.availability as string[]
       );
 
-      const creditExists = existingObjects.has(id);
+      const creditExists = existingExternalIds.has(id);
 
       const credit: Record<
         string,
@@ -623,7 +635,7 @@ export const createGraphQLMediaObjects = async (
   );
 
   const existingObjects = existingObjectSets.reduce(
-    (previous, { existingObjects: set }) =>
+    (previous, { existingExternalIds: set }) =>
       new Set<string>([...previous, ...set]),
     new Set<string>([])
   );

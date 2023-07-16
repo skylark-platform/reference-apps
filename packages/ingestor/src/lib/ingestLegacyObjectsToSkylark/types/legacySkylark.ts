@@ -215,6 +215,12 @@ export interface LegacyTagCategory extends LegacyCommonObject {
   name: string;
 }
 
+export type LegacyObjectsWithSynopsis =
+  | LegacyEpisode
+  | LegacyBrand
+  | LegacySeason
+  | LegacyAsset;
+
 export type LegacyObjects =
   | LegacyTagCategory[]
   | LegacyTag[]

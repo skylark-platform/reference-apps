@@ -233,8 +233,8 @@ export const createOrUpdateGraphQLSet = async (
     ),
   ]);
 
-  existingSetsArr.forEach(({ existingObjects }) =>
-    existingObjects.forEach((obj) => existingSets.add(obj))
+  existingSetsArr.forEach(({ existingExternalIds }) =>
+    existingExternalIds.forEach((obj) => existingSets.add(obj))
   );
 
   const setExists = existingSets.has(set.externalId);

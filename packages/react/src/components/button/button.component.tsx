@@ -1,5 +1,5 @@
-import Link from "next/link";
 import React from "react";
+import { Link } from "../link";
 
 interface ButtonProps {
   size?: "xl" | "lg" | "sm";
@@ -69,11 +69,9 @@ font-body cursor-pointer
 
   if (href && !disabled) {
     return (
-      <Link href={href}>
-        <a className={className} target={externalHref ? "_blank" : undefined}>
-          {icon && <span className={iconClassName}>{icon}</span>}
-          {text && <span>{text}</span>}
-        </a>
+      <Link className={className} href={href} isExternal={externalHref}>
+        {icon && <span className={iconClassName}>{icon}</span>}
+        {text && <span>{text}</span>}
       </Link>
     );
   }

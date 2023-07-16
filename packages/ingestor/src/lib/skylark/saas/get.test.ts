@@ -143,6 +143,15 @@ describe("saas/get.ts", () => {
 
   describe("getExistingObjects", () => {
     it("makes a request with the expected query", async () => {
+      const mockedGraphQLResponse = {
+        response: {
+          data: {
+            "brand-1": null,
+          },
+        },
+      };
+      graphQlRequest.mockRejectedValueOnce(mockedGraphQLResponse);
+
       await getExistingObjects("Brand", [{ externalId: "brand-1" }]);
 
       expect(graphQlRequest).toBeCalledWith(
@@ -153,22 +162,20 @@ describe("saas/get.ts", () => {
     });
 
     it("returns all given uids when the request does not error", async () => {
-      const got = await getExistingObjects("Brand", [
-        { externalId: "brand-1" },
-        { externalId: "brand-2" },
-        { externalId: "brand-3" },
-      ]);
-      expect(got.existingObjects).toEqual(
-        new Set(["brand-1", "brand-2", "brand-3"])
-      );
-      expect(got.missingObjects).toEqual(new Set([]));
-    });
-
-    it("returns the uids that exist when some queries return a null value", async () => {
       const mockedGraphQLResponse = {
         response: {
           data: {
-            "brand-1": null,
+            "brand-1": {
+              external_id: "brand-1-ext-id",
+              uid: "123",
+              __typename: "Brand",
+            },
+            "brand-2": {
+              external_id: "brand-2-ext-id",
+            },
+            "brand-3": {
+              external_id: "brand-3-ext-id",
+            },
           },
         },
       };
@@ -179,8 +186,35 @@ describe("saas/get.ts", () => {
         { externalId: "brand-2" },
         { externalId: "brand-3" },
       ]);
-      expect(got.existingObjects).toEqual(new Set(["brand-2", "brand-3"]));
-      expect(got.missingObjects).toEqual(new Set(["brand-1"]));
+      expect(got.existingExternalIds).toEqual(
+        new Set(["brand-1", "brand-2", "brand-3"])
+      );
+      expect(got.missingExternalIds).toEqual(new Set([]));
+    });
+
+    it("returns the uids that exist when some queries return a null value", async () => {
+      const mockedGraphQLResponse = {
+        response: {
+          data: {
+            "brand-1": null,
+            "brand-2": {
+              external_id: "brand-2-ext-id",
+            },
+            "brand-3": {
+              external_id: "brand-3-ext-id",
+            },
+          },
+        },
+      };
+      graphQlRequest.mockRejectedValueOnce(mockedGraphQLResponse);
+
+      const got = await getExistingObjects("Brand", [
+        { externalId: "brand-1" },
+        { externalId: "brand-2" },
+        { externalId: "brand-3" },
+      ]);
+      expect(got.existingExternalIds).toEqual(new Set(["brand-2", "brand-3"]));
+      expect(got.missingExternalIds).toEqual(new Set(["brand-1"]));
     });
 
     it("rejects when an unexpected error occurs", async () => {

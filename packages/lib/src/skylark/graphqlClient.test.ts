@@ -15,6 +15,6 @@ describe("graphQLClient", () => {
         Authorization: "api-key",
       },
     });
-    expect(graphQLClient).toEqual(client);
+    expect(graphQLClient.requestConfig).toEqual(client.requestConfig);
   });
 });

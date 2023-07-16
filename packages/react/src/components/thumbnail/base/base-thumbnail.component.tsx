@@ -1,8 +1,8 @@
-import Link from "next/link";
 import React, { useEffect, useMemo, useState } from "react";
 import { MdPlayArrow } from "react-icons/md";
 import { addCloudinaryOnTheFlyImageTransformation } from "@skylark-reference-apps/lib";
 import { List } from "../../list";
+import { Link } from "../../link";
 
 export type ThumbnailContentLocation = "inside" | "below";
 
@@ -10,6 +10,7 @@ export interface BaseThumbnailProps {
   backgroundImage: string;
   contentLocation?: ThumbnailContentLocation;
   large?: boolean;
+  children?: React.ReactNode;
 }
 
 export interface BaseThumbnailWithLinkProps extends BaseThumbnailProps {
@@ -86,10 +87,12 @@ const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
 export const BaseThumbnailWithLink: React.FC<BaseThumbnailWithLinkProps> = (
   props
 ) => (
-  <Link href={props.href}>
-    <a aria-label={"base-thumbnail-with-link"} className="group">
-      <BaseThumbnail {...props} />
-    </a>
+  <Link
+    aria-label={"base-thumbnail-with-link"}
+    className="group"
+    href={props.href}
+  >
+    <BaseThumbnail {...props} />
   </Link>
 );
 
@@ -104,49 +107,44 @@ export const MediaThumbnail: React.FC<ThumbnailProps> = (props) => {
     children,
   } = props;
   return (
-    <Link href={href}>
-      <a className="group">
-        <BaseThumbnail {...props}>
-          {duration && (
-            <div className="absolute right-3 top-3 rounded-xl bg-gray-900 px-2 py-0.5 text-xs font-light md:group-hover:opacity-0">
-              {duration}
-            </div>
-          )}
-          <div className="flex flex-row items-center gap-2 font-light lg:gap-4">
-            <div className="hidden w-auto rounded-full bg-gray-600/[.65] p-2 md:inline-block md:group-hover:bg-black/[.3]">
-              <MdPlayArrow className="text-lg lg:text-3xl" />
-            </div>
-            {callToAction && (
-              <p
-                className={`text-xs font-medium transition-opacity sm:text-sm lg:text-base ${
-                  callToAction?.display === "always"
-                    ? "opacity-100"
-                    : "opacity-0 md:group-hover:opacity-100"
-                }`}
-              >
-                {callToAction.text}
-              </p>
-            )}
+    <Link className="group" href={href}>
+      <BaseThumbnail {...props}>
+        {duration && (
+          <div className="absolute right-3 top-3 rounded-xl bg-gray-900 px-2 py-0.5 text-xs font-light md:group-hover:opacity-0">
+            {duration}
           </div>
-          {contentLocation === "inside" && (
-            <div>
-              <h4 className="line-clamp-3 text-xs font-normal text-white sm:text-sm md:mb-0.5 md:text-base">
-                {title}
-              </h4>
-              <div className="hidden sm:block">
-                <List
-                  contents={[
-                    duration,
-                    ...(tags && tags.length > 0 ? tags : []),
-                  ]}
-                  highlightFirst
-                />
-              </div>
-            </div>
+        )}
+        <div className="flex flex-row items-center gap-2 font-light lg:gap-4">
+          <div className="hidden w-auto rounded-full bg-gray-600/[.65] p-2 md:inline-block md:group-hover:bg-black/[.3]">
+            <MdPlayArrow className="text-lg lg:text-3xl" />
+          </div>
+          {callToAction && (
+            <p
+              className={`text-xs font-medium transition-opacity sm:text-sm lg:text-base ${
+                callToAction?.display === "always"
+                  ? "opacity-100"
+                  : "opacity-0 md:group-hover:opacity-100"
+              }`}
+            >
+              {callToAction.text}
+            </p>
           )}
-        </BaseThumbnail>
-        {contentLocation === "below" && children}
-      </a>
+        </div>
+        {contentLocation === "inside" && (
+          <div>
+            <h4 className="line-clamp-3 text-xs font-normal text-white sm:text-sm md:mb-0.5 md:text-base">
+              {title}
+            </h4>
+            <div className="hidden sm:block">
+              <List
+                contents={[duration, ...(tags && tags.length > 0 ? tags : [])]}
+                highlightFirst
+              />
+            </div>
+          </div>
+        )}
+      </BaseThumbnail>
+      {contentLocation === "below" && children}
     </Link>
   );
 };

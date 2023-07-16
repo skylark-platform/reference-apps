@@ -32,7 +32,7 @@ export const getImageSrcAndSizeByWindow = (
 export const skylarkRequestWithLocalStorage = <T>(
   query: string,
   headers: Record<string, string>,
-  variables?: object
+  variables?: Record<string, unknown>
 ) => {
   if (typeof window !== "undefined") {
     // Allow users to give their own Skylark to connect to
@@ -56,7 +56,7 @@ export const skylarkRequestWithLocalStorage = <T>(
 export const skylarkRequestWithDimensions = <T>(
   query: string,
   dimensions: Dimensions,
-  variables?: object
+  variables?: Record<string, unknown>
 ) => {
   const headers: Record<string, string> = {};
 

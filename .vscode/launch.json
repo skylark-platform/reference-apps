@@ -37,7 +37,7 @@
       "skipFiles": ["<node_internals>/**"],
       "type": "node",
       "env": {
-        "LEGACY_DATA_LAST_MONTH_ONLY": "true"
+        "LEGACY_DATA_LAST_MONTH_ONLY": "false"
       }
     },
     {
@@ -49,8 +49,19 @@
       "skipFiles": ["<node_internals>/**"],
       "type": "node",
       "env": {
-        "LEGACY_DATA_LAST_MONTH_ONLY": "false"
+        "LEGACY_DATA_LAST_MONTH_ONLY": "false",
+        "CREATE_ONLY": "true"
       }
+    },
+    {
+      "name": "[LEGACY - FROM DISK] Link Availability to Existing Objects",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/packages/ingestor",
+      "runtimeArgs": ["ingest:legacy-to-skylark:availability"],
+      "runtimeExecutable": "yarn",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node",
+      "env": {}
     }
   ]
 }
