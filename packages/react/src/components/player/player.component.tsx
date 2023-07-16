@@ -1,5 +1,5 @@
 import React from "react";
-import MuxVideo from "@mux-elements/mux-video-react";
+import MuxVideo from "@mux/mux-video-react";
 import { addCloudinaryOnTheFlyImageTransformation } from "@skylark-reference-apps/lib";
 
 interface PlayerProps {

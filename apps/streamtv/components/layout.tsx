@@ -48,7 +48,7 @@ export const StreamTVLayout: React.FC<Props> = ({
     <DimensionsContextProvider>
       <div className="relative w-full">
         {isMobileSearchOpen && (
-          <div className="fixed inset-0 z-20 bg-gray-900/30 md:hidden">
+          <div className="fixed inset-0 z-20 bg-gray-900/40 md:hidden">
             <Search onSearch={() => setMobileSearchOpen(false)} />
           </div>
         )}

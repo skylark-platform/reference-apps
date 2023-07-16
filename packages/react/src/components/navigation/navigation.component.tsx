@@ -15,6 +15,7 @@ const variants = {
   initialOpen: {
     opacity: 1,
     x: 0,
+    display: "flex",
   },
   open: {
     opacity: 1,
@@ -24,9 +25,6 @@ const variants = {
   closed: {
     opacity: 0,
     x: "-100%",
-    transitionEnd: {
-      display: "none",
-    },
   },
 };
 
@@ -45,6 +43,8 @@ export const Navigation: React.FC<NavigationProps> = ({
   const [openOnMobile, setMobileOpen] = useState(defaultOpen || false);
   const [twBreakpoint] = useTailwindBreakpoint("");
   const onDesktop = !["", "sm"].includes(twBreakpoint as string);
+
+  const animate = onDesktop || openOnMobile ? "open" : "closed";
   return (
     <>
       <div className="absolute left-0 top-0 z-90 flex md:hidden">
@@ -54,7 +54,7 @@ export const Navigation: React.FC<NavigationProps> = ({
         />
       </div>
       <motion.nav
-        animate={onDesktop || openOnMobile ? "open" : "closed"}
+        animate={animate}
         className={`
           fixed inset-0 z-80 items-center justify-center bg-gray-900 text-center font-body
           opacity-0 md:relative md:inset-auto md:h-full md:w-full md:justify-start
