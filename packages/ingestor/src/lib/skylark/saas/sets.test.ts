@@ -14,7 +14,7 @@ describe("saas/sets.ts", () => {
   let graphQlRequest: jest.Mock;
 
   beforeEach(() => {
-    graphQlRequest = graphQLClient.request as jest.Mock;
+    graphQlRequest = graphQLClient.uncachedRequest as jest.Mock;
   });
 
   afterEach(() => {

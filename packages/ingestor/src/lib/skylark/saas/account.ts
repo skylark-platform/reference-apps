@@ -17,5 +17,5 @@ const SET_ACCOUNT_CONFIGURATION = gql`
 export const setAccountConfiguration = async (variables: {
   defaultLanguage: string;
 }) => {
-  await graphQLClient.request(SET_ACCOUNT_CONFIGURATION, variables);
+  await graphQLClient.uncachedRequest(SET_ACCOUNT_CONFIGURATION, variables);
 };

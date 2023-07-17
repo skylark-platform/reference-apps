@@ -194,7 +194,7 @@ const createOrUpdateSet = async (
 
   const graphQLMutation = jsonToGraphQLQuery(mutation);
 
-  const data = await graphQLClient.request<{
+  const data = await graphQLClient.uncachedRequest<{
     [key: string]: GraphQLBaseObject;
   }>(graphQLMutation);
 

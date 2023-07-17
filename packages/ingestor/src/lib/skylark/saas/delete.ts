@@ -25,9 +25,8 @@ export const deleteObject = async (
 
   const graphQLGetQuery = jsonToGraphQLQuery(mutation);
 
-  await graphQLClient.request<{ getObject: GraphQLBaseObject }>(
+  await graphQLClient.uncachedRequest<{ getObject: GraphQLBaseObject }>(
     graphQLGetQuery,
-    variables,
-    { "x-bypass-cache": "1" }
+    variables
   );
 };

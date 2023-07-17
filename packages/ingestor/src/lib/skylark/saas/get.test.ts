@@ -8,7 +8,7 @@ describe("saas/get.ts", () => {
   let graphQlRequest: jest.Mock;
 
   beforeEach(() => {
-    graphQlRequest = graphQLClient.request as jest.Mock;
+    graphQlRequest = graphQLClient.uncachedRequest as jest.Mock;
   });
 
   afterEach(() => {
@@ -28,8 +28,7 @@ describe("saas/get.ts", () => {
 
       expect(graphQlRequest).toBeCalledWith(
         'query { IntrospectionOnType: __type (name: "Brand") { name fields { name type { name kind } } } IntrospectionOnInputType: __type (name: "BrandInput") { name inputFields { name type { name kind } } } }',
-        {},
-        expect.any(Object)
+        {}
       );
     });
 
@@ -156,8 +155,7 @@ describe("saas/get.ts", () => {
 
       expect(graphQlRequest).toBeCalledWith(
         'query getBrands { brand-1: getBrand (external_id: "brand-1", ignore_availability: true) { __typename uid slug external_id } }',
-        {},
-        expect.any(Object)
+        {}
       );
     });
 

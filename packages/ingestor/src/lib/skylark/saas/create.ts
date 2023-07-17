@@ -52,9 +52,7 @@ const graphqlMutationWithRetry = async <T>(
   retriesCount = 0
 ): Promise<T> => {
   try {
-    return await graphQLClient.request<T>(mutation, variables, {
-      "x-bypass-cache": "1",
-    });
+    return await graphQLClient.uncachedRequest<T>(mutation, variables);
   } catch (err) {
     // Some errors we know won't be fixed on a retry, so we rethrow
     if (err && has(err, "response.errors")) {

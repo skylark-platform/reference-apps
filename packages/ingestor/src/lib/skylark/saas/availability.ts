@@ -55,9 +55,9 @@ const getExistingDimensions = async (
 
   const graphQLQuery = jsonToGraphQLQuery(query, { pretty: true });
 
-  const data = await graphQLClient.request<{
+  const data = await graphQLClient.uncachedRequest<{
     listDimensions: { objects: GraphQLDimension[]; next_token: string };
-  }>(graphQLQuery);
+  }>(graphQLQuery, {});
 
   if (data.listDimensions.next_token) {
     const some = await getExistingDimensions(data.listDimensions.next_token);
@@ -97,11 +97,11 @@ const getExistingDimensionValues = async (
 
   const graphQLQuery = jsonToGraphQLQuery(query, { pretty: true });
 
-  const data = await graphQLClient.request<{
+  const data = await graphQLClient.uncachedRequest<{
     getDimension: {
       values: { next_token: string; objects: GraphQLBaseObject[] };
     };
-  }>(graphQLQuery);
+  }>(graphQLQuery, {});
 
   const { objects } = data.getDimension.values;
 
@@ -397,7 +397,7 @@ export const createAlwaysAndForeverAvailability = async (
 
   let existingAvailability: GraphQLBaseObject | undefined;
   try {
-    const data = await graphQLClient.request<{
+    const data = await graphQLClient.uncachedRequest<{
       getAvailability: GraphQLBaseObject;
     }>(GET_QUERY, {
       externalId,
@@ -414,7 +414,7 @@ export const createAlwaysAndForeverAvailability = async (
     return existingAvailability;
   }
 
-  const data = await graphQLClient.request<{
+  const data = await graphQLClient.uncachedRequest<{
     createAvailability: GraphQLBaseObject;
   }>(CREATE_MUTATION, {
     externalId,

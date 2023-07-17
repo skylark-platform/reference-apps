@@ -75,6 +75,6 @@ export const updateObjectConfigurations = async () => {
   const mutations = createMutation();
 
   await Promise.all(
-    mutations.map((mutation) => graphQLClient.request(mutation))
+    mutations.map((mutation) => graphQLClient.uncachedRequest(mutation))
   );
 };
