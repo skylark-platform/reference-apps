@@ -52,11 +52,13 @@ export const writeUnableToFindVersionNoneObjectsFile = async (
 };
 
 export const clearUnableToFindVersionNoneObjectsFile = async () => {
-  const dateStamp = new Date().toISOString();
-  await move(
-    unableToFindVersionNoneObjectsFile,
-    `./outputs/${unableToFindVersionNoneObjectsFileName}_old/${unableToFindVersionNoneObjectsFileName}_${dateStamp}.json`
-  );
+  if (await exists(unableToFindVersionNoneObjectsFile)) {
+    const dateStamp = new Date().toISOString();
+    await move(
+      unableToFindVersionNoneObjectsFile,
+      `./outputs/${unableToFindVersionNoneObjectsFileName}_old/${unableToFindVersionNoneObjectsFileName}_${dateStamp}.json`
+    );
+  }
 
   await writeGraphQLBaseObjectsToDisk(unableToFindVersionNoneObjectsFile, []);
 };
