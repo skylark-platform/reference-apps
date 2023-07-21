@@ -175,12 +175,6 @@ const main = async () => {
     airtable.languages
   );
 
-  await createTranslationsForGraphQLObjects(
-    mediaObjects,
-    airtable.translations.mediaObjects,
-    airtable.languages
-  );
-
   // eslint-disable-next-line no-console
   console.log("Media objects created");
 
@@ -220,6 +214,15 @@ const main = async () => {
     // eslint-disable-next-line no-console
     console.log("Additional SLX Demo objects created");
   }
+
+  await createTranslationsForGraphQLObjects(
+    mediaObjects,
+    airtable.translations.mediaObjects,
+    airtable.languages
+  );
+
+  // eslint-disable-next-line no-console
+  console.log("Media object translations created");
 
   const dateStamp = new Date().toISOString();
   const output = {
