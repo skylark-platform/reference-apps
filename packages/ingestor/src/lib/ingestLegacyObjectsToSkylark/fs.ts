@@ -11,6 +11,7 @@ import {
 } from "fs-extra";
 import { join } from "path";
 import {
+  FetchedLegacyObjects,
   LegacyAsset,
   LegacyBrand,
   LegacyEpisode,
@@ -89,11 +90,11 @@ export const createLegacyObjectsTimeStampedDir = async () => {
   return dir;
 };
 
-export const writeLegacyObjectsToDisk = async <T>(
+export const writeLegacyObjectsToDisk = async (
   dir: string,
   obj: {
     type: LegacyObjectType;
-    objects: Record<string, T[]>;
+    objects: Record<string, object[]>;
     totalFound: number;
   }
 ) => {
@@ -110,21 +111,14 @@ export const writeLegacyObjectsToDisk = async <T>(
 };
 
 export const writeAllLegacyObjectsToDisk = async (
-  objects: Record<
-    string,
-    {
-      type: LegacyObjectType;
-      objects: Record<string, LegacyObjects>;
-      totalFound: number;
-    }
-  >
+  objects: Record<string, FetchedLegacyObjects<LegacyObjects[0]>>
 ) => {
   try {
     const dir = await createLegacyObjectsTimeStampedDir();
 
     await Promise.all(
       Object.values(objects).map((value) =>
-        writeLegacyObjectsToDisk<LegacyObjects[0]>(dir, value)
+        writeLegacyObjectsToDisk(dir, value)
       )
     );
   } catch (err) {
@@ -133,14 +127,7 @@ export const writeAllLegacyObjectsToDisk = async (
 };
 
 export const writeStatsForLegacyObjectsToDisk = async (
-  legacyObjects: Record<
-    string,
-    {
-      type: LegacyObjectType;
-      objects: Record<string, LegacyObjects>;
-      totalFound: number;
-    }
-  >
+  legacyObjects: Record<string, FetchedLegacyObjects<LegacyObjects[0]>>
 ) => {
   try {
     const env = generateEnvIdentifier();
@@ -191,7 +178,7 @@ export const readObjectsFromFile = async <T>(
   return data;
 };
 
-export const readLegacyObjectsFromFile = async () => {
+export const readLegacyObjectsFromFile = async <T>() => {
   const mostRecentDir = await getMostRecentLegacyObjectsDir();
 
   console.log(`--- Using directory "${mostRecentDir}"`);
@@ -240,7 +227,7 @@ export const readLegacyObjectsFromFile = async () => {
     `--- ${totalObjectsFound} objects read from disk (${USED_LANGUAGES.length} languages)`
   );
 
-  return retObj;
+  return retObj as T;
 };
 
 /* eslint-enable no-console */

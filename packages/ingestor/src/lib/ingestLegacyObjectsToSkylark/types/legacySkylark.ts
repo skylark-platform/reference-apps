@@ -228,3 +228,9 @@ export type LegacyObjects =
   | LegacyEpisode[]
   | LegacySeason[]
   | LegacyBrand[];
+
+export interface FetchedLegacyObjects<T> {
+  type: LegacyObjectType;
+  objects: Record<string, T[]>;
+  totalFound: number;
+}

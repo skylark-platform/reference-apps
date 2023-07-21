@@ -4,6 +4,7 @@ import { Axios, AxiosInstance } from "axios";
 import { chunk } from "lodash";
 import axiosRetry, { exponentialDelay } from "axios-retry";
 import {
+  FetchedLegacyObjects,
   LegacyCommonObject,
   LegacyObjectType,
   LegacyResponseListObjectsData,
@@ -14,6 +15,7 @@ import {
   USED_LANGUAGES,
 } from "./constants";
 import { pause } from "../skylark/saas/utils";
+import { writeLegacyObjectsToDisk } from "./fs";
 
 const outputLegacyObjectCount = ({
   objects,
@@ -186,11 +188,7 @@ export const fetchObjectsFromLegacySkylark = async <
   T extends LegacyCommonObject
 >(
   type: LegacyObjectType
-): Promise<{
-  type: LegacyObjectType;
-  objects: Record<string, T[]>;
-  totalFound: number;
-}> => {
+): Promise<FetchedLegacyObjects<T>> => {
   console.log(`--- ${type} fetching...`);
 
   const allObjects: Record<string, T[]> = {};
@@ -218,5 +216,16 @@ export const fetchObjectsFromLegacySkylark = async <
     objects: allObjects,
     totalFound: total,
   };
+};
+
+export const fetchLegacyObjectsAndWriteToDisk = async <
+  T extends LegacyCommonObject
+>(
+  type: LegacyObjectType,
+  dir: string
+) => {
+  const objects = await fetchObjectsFromLegacySkylark<T>(type);
+  await writeLegacyObjectsToDisk(dir, objects);
+  return objects;
 };
 /* eslint-enable no-console */
