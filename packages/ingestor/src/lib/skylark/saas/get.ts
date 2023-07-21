@@ -47,10 +47,9 @@ export const getValidPropertiesForObject = async (
 
   const graphQLGetQuery = jsonToGraphQLQuery(query);
 
-  const data = await graphQLClient.request<GraphQLIntrospection>(
+  const data = await graphQLClient.uncachedRequest<GraphQLIntrospection>(
     graphQLGetQuery,
-    {},
-    { "x-bypass-cache": "1" }
+    {}
   );
 
   const supportedKinds = ["SCALAR", "ENUM", "NON_NULL"];
@@ -92,11 +91,11 @@ export const getValidRelationshipsForObject = async (
 
   const graphQLGetQuery = jsonToGraphQLQuery(query);
 
-  const data = await graphQLClient.request<GraphQLObjectRelationshipsType>(
-    graphQLGetQuery,
-    {},
-    { "x-bypass-cache": "1" }
-  );
+  const data =
+    await graphQLClient.uncachedRequest<GraphQLObjectRelationshipsType>(
+      graphQLGetQuery,
+      {}
+    );
 
   const fields =
     data.GET_OBJECT_RELATIONSHIPS?.inputFields.map(({ name }) => name) || [];
@@ -141,11 +140,9 @@ export const getExistingObjectByExternalId = async (
   const graphQLGetQuery = jsonToGraphQLQuery(query);
 
   try {
-    const data = await graphQLClient.request<{ getObject: GraphQLBaseObject }>(
-      graphQLGetQuery,
-      {},
-      { "x-bypass-cache": "1" }
-    );
+    const data = await graphQLClient.uncachedRequest<{
+      getObject: GraphQLBaseObject;
+    }>(graphQLGetQuery, {});
     return data.getObject;
   } catch (err) {
     return null;
@@ -210,9 +207,9 @@ const getExistingObjectsByExternalId = async (
 
   try {
     // This request will error if at least one external_id doesn't exist
-    const data = await graphQLClient.request<{
+    const data = await graphQLClient.uncachedRequest<{
       [key: string]: GraphQLBaseObject;
-    }>(graphQLGetQuery, {}, { "x-bypass-cache": "1" });
+    }>(graphQLGetQuery, {});
 
     return {
       existingExternalIds: externalIds,

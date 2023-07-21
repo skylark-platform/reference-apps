@@ -38,7 +38,7 @@ const GET_ENUM_VALUES = gql`
 `;
 
 const getActivationStatus = async () => {
-  const res = await graphQLClient.request<{
+  const res = await graphQLClient.uncachedRequest<{
     getActivationStatus: {
       active_version: string;
       update_in_progress: boolean;
@@ -50,7 +50,7 @@ const getActivationStatus = async () => {
 };
 
 export const activateConfigurationVersion = async (version: number) => {
-  const res = await graphQLClient.request<{
+  const res = await graphQLClient.uncachedRequest<{
     activateConfigurationVersion: { version: number; messages: string };
   }>(ACTIVATE_CONFIGURATION_VERSION, { version });
 
@@ -58,7 +58,7 @@ export const activateConfigurationVersion = async (version: number) => {
 };
 
 const getEnumValues = async (name: string) => {
-  const data = await graphQLClient.request<{
+  const data = await graphQLClient.uncachedRequest<{
     __type: { enumValues: { name: string }[] };
   }>(GET_ENUM_VALUES, { name });
 
@@ -102,7 +102,7 @@ export const updateEnumTypes = async (
 
   const graphQLQuery = jsonToGraphQLQuery(mutation);
 
-  const { editEnumConfiguration } = await graphQLClient.request<{
+  const { editEnumConfiguration } = await graphQLClient.uncachedRequest<{
     editEnumConfiguration: { version: number; messages: string };
   }>(graphQLQuery, { version });
 
@@ -132,7 +132,7 @@ const addPreferredImageTypeToSeason = async (version?: number) => {
   `;
 
   try {
-    const { editFieldConfiguration } = await graphQLClient.request<{
+    const { editFieldConfiguration } = await graphQLClient.uncachedRequest<{
       editFieldConfiguration: { version: number; messages: string };
     }>(UPDATE_SEASON_FIELDS, { version });
     return {
