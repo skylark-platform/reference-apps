@@ -2,125 +2,23 @@ import { GraphQLObjectTypes, hasProperty } from "@skylark-reference-apps/lib";
 import { ensureDir, writeJSON } from "fs-extra";
 import { join } from "path";
 import {
+  FetchedLegacyObjects,
   LegacyObjectType,
   LegacyObjects,
-  LegacyObjectsWithSynopsis,
+  ParsedSL8Credits,
 } from "./types/legacySkylark";
 import { createOrUpdateGraphQlObjectsUsingIntrospection } from "../skylark/saas/create";
 import { GraphQLBaseObject } from "../interfaces";
 import { getExistingObjects } from "../skylark/saas/get";
-import { CreatedSkylarkObjects } from "./types/skylark";
+import { ConvertedLegacyObject, CreatedSkylarkObjects } from "./types/skylark";
 import { createRelationships } from "./skylarkRelationships";
-import { ASSET_TYPES_TO_IGNORE } from "./constants";
 import { convertLegacyObjectTypeToObjectType } from "./utils";
 import { assignAvailabilitiesToObjects } from "../skylark/saas/availability";
-
-type ConvertedLegacyObject = { external_id: string } & Record<
-  string,
-  string | null | string[] | boolean | number | object
->;
-
-const getSynopsisForMedia = (legacyObject: LegacyObjectsWithSynopsis) => {
-  // We want to make sure that we add synopsis, then short_synopsis in the order alternate_synopsis -> synopsis -> extended_synopsis
-  const synopsis =
-    legacyObject.alternate_synopsis ||
-    legacyObject.synopsis ||
-    legacyObject.extended_synopsis;
-  const synopsisShort =
-    (synopsis && synopsis !== legacyObject.synopsis && legacyObject.synopsis) ||
-    (synopsis !== legacyObject.extended_synopsis &&
-      legacyObject.extended_synopsis) ||
-    "";
-
-  return {
-    synopsis,
-    synopsisShort,
-  };
-};
-
-const convertLegacyObject = (
-  legacyObject: LegacyObjects[0]
-): ConvertedLegacyObject | null => {
-  // eslint-disable-next-line no-underscore-dangle
-  const legacyObjectType = legacyObject._type;
-  const legacyUid = legacyObject.uid;
-  if (!legacyObjectType) {
-    throw new Error(
-      `[convertLegacyObject] Unknown legacy object type: ${legacyUid}`
-    );
-  }
-
-  const commonFields = {
-    ...legacyObject, // By adding the whole legacy object to each object, the introspection create will add any missing fields that are
-    external_id: legacyObject.uid,
-  };
-
-  if (legacyObjectType === LegacyObjectType.Assets) {
-    const assetType = legacyObject.asset_type_url?.name || null;
-    if (assetType && ASSET_TYPES_TO_IGNORE.includes(assetType)) {
-      return null;
-    }
-    const { synopsis, synopsisShort } = getSynopsisForMedia(legacyObject);
-
-    return {
-      ...commonFields,
-      internal_title: legacyObject.name,
-      title: legacyObject.title,
-      synopsis,
-      synopsis_short: synopsisShort,
-      type: assetType,
-      duration: legacyObject.duration_in_seconds,
-      url: legacyObject.url !== "" ? legacyObject.url : null,
-      // state: legacyObject.state, Can't add this to SkylarkAsset
-    };
-  }
-
-  if (legacyObjectType === LegacyObjectType.Episodes) {
-    const { synopsis, synopsisShort } = getSynopsisForMedia(legacyObject);
-    return {
-      ...commonFields,
-      internal_title: legacyObject.name,
-      title: legacyObject.title,
-      synopsis,
-      synopsis_short: synopsisShort,
-      episode_number: legacyObject.episode_number,
-      kaltura_id: legacyObject.new_flag,
-    };
-  }
-
-  if (legacyObjectType === LegacyObjectType.Seasons) {
-    const { synopsis, synopsisShort } = getSynopsisForMedia(legacyObject);
-
-    return {
-      ...commonFields,
-      internal_title: legacyObject.name,
-      title: legacyObject.title,
-      synopsis,
-      synopsis_short: synopsisShort,
-      season_number: legacyObject.season_number,
-      number_of_episodes: legacyObject.number_of_episodes,
-    };
-  }
-
-  if (legacyObjectType === LegacyObjectType.Brands) {
-    const { synopsis, synopsisShort } = getSynopsisForMedia(legacyObject);
-
-    return {
-      ...commonFields,
-      internal_title: legacyObject.name,
-      title: legacyObject.title,
-      synopsis,
-      synopsis_short: synopsisShort,
-    };
-  }
-
-  return commonFields;
-};
 
 const getExistingObjectsForAllLanguages = async (
   objectType: GraphQLObjectTypes,
   languages: string[],
-  objects: Record<string, LegacyObjects>
+  objects: Record<string, LegacyObjects | ParsedSL8Credits[]>
 ) => {
   const existingExternalIds = new Set<string>([]);
   const missingExternalIds = new Set<string>([]);
@@ -174,11 +72,20 @@ export const createObjectsInSkylark = async (
     objects: legacyObjectsAndLanguage,
   }: {
     type: LegacyObjectType;
-    objects: Record<string, LegacyObjects>;
+    objects: Record<string, LegacyObjects | ParsedSL8Credits[]>;
   },
-  relationshipObjects: CreatedSkylarkObjects,
-  opts?: { isCreateOnly?: boolean; alwaysAvailability?: GraphQLBaseObject }
+  args: {
+    relationshipObjects: CreatedSkylarkObjects;
+    legacyObjectConverter: (
+      legacyObject: LegacyObjects[0] | ParsedSL8Credits
+    ) => ConvertedLegacyObject | null;
+    legacyCredits?: FetchedLegacyObjects<ParsedSL8Credits>;
+    isCreateOnly?: boolean;
+    alwaysAvailability?: GraphQLBaseObject;
+  }
 ): Promise<GraphQLBaseObject[]> => {
+  const { relationshipObjects, legacyObjectConverter, ...opts } = args;
+
   const objectType = convertLegacyObjectTypeToObjectType(type);
 
   const totalObjectsToBeCreatedUpdated = Object.values(
@@ -223,7 +130,7 @@ export const createObjectsInSkylark = async (
   for (const language of languages) {
     const legacyObjects = legacyObjectsAndLanguage[language];
     const parsedLegacyObjects = legacyObjects
-      .map(convertLegacyObject)
+      .map(legacyObjectConverter)
       .filter((obj): obj is ConvertedLegacyObject => !!obj);
 
     const relationships: Record<string, Record<string, { link: string[] }>> = (
@@ -329,6 +236,8 @@ export const createObjectsInSkylark = async (
 
   return uniqueBaseObjects;
 };
+
+// export const createCreditsInSkylark = async(legacyCredits: Record<string, ParsedSL8Credits>) => {};
 
 export const addAlwaysAvailabilityToObjects = async (
   alwaysAvailability: GraphQLBaseObject,

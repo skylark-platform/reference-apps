@@ -5,17 +5,22 @@ import { chunk } from "lodash";
 import axiosRetry, { exponentialDelay } from "axios-retry";
 import {
   FetchedLegacyObjects,
+  LegacyAsset,
+  LegacyBrand,
   LegacyCommonObject,
+  LegacyEpisode,
   LegacyObjectType,
   LegacyResponseListObjectsData,
+  LegacySeason,
+  ParsedSL8Credits,
 } from "./types/legacySkylark";
 import {
   LAST_MONTH_MODE_DATE,
   OBJECT_TYPES_WITHOUT_LAST_MONTH_MODE,
-  USED_LANGUAGES,
 } from "./constants";
 import { pause } from "../skylark/saas/utils";
 import { writeLegacyObjectsToDisk } from "./fs";
+import { getLegacyUidFromUrl } from "./utils";
 
 const outputLegacyObjectCount = ({
   objects,
@@ -91,14 +96,20 @@ const getAllObjectsOfType = async <T extends LegacyCommonObject>(
       `/api/${type}/count/?${countQuery.join("&")}`
     );
     if (countResponse.status < 200 || countResponse.status >= 300) {
-      throw new Error("Unexpected response from count endpoint");
+      throw new Error(
+        `Unexpected response from count endpoint (language: ${language})`
+      );
     }
 
     const { count: c } = JSON.parse(countResponse.data) as { count: number };
     numberOfRequests = Math.ceil(c / limit);
     count = c;
   } catch (err) {
-    console.log("[getAllObjectsOfType] Failed to fetch count for", type);
+    console.log(
+      "[getAllObjectsOfType] Failed to fetch count for",
+      type,
+      `(language: ${language})`
+    );
     throw err;
   }
 
@@ -187,14 +198,15 @@ const getAllObjectsOfType = async <T extends LegacyCommonObject>(
 export const fetchObjectsFromLegacySkylark = async <
   T extends LegacyCommonObject
 >(
-  type: LegacyObjectType
+  type: LegacyObjectType,
+  languagesToCheck: string[]
 ): Promise<FetchedLegacyObjects<T>> => {
   console.log(`--- ${type} fetching...`);
 
   const allObjects: Record<string, T[]> = {};
 
   // eslint-disable-next-line no-restricted-syntax
-  for (const language of USED_LANGUAGES) {
+  for (const language of languagesToCheck) {
     // eslint-disable-next-line no-await-in-loop
     const { objects } = await getAllObjectsOfType<T>(type, language);
 
@@ -222,10 +234,67 @@ export const fetchLegacyObjectsAndWriteToDisk = async <
   T extends LegacyCommonObject
 >(
   type: LegacyObjectType,
-  dir: string
+  dir: string,
+  languagesToCheck: string[]
 ) => {
-  const objects = await fetchObjectsFromLegacySkylark<T>(type);
+  const objects = await fetchObjectsFromLegacySkylark<T>(
+    type,
+    languagesToCheck
+  );
   await writeLegacyObjectsToDisk(dir, objects);
   return objects;
 };
+
+export const generateSL8CreditUid = (
+  peopleUrl: string,
+  roleUrl: string,
+  character: string
+) => {
+  const arr = [
+    getLegacyUidFromUrl(peopleUrl),
+    roleUrl && getLegacyUidFromUrl(roleUrl),
+    character,
+  ].filter((str) => !!str);
+
+  return arr.join("_");
+};
+
+export const convertSL8CreditsToLegacyObjects = (
+  assets: Record<string, LegacyAsset[]>,
+  episodes: Record<string, LegacyEpisode[]>,
+  seasons: Record<string, LegacySeason[]>,
+  brands: Record<string, LegacyBrand[]>
+): FetchedLegacyObjects<ParsedSL8Credits> => {
+  const sl8Credits = [
+    ...Object.values(assets)[0],
+    ...Object.values(episodes)[0],
+    ...Object.values(seasons)[0],
+    ...Object.values(brands)[0],
+  ]
+    .map(({ credits }) => credits || [])
+    .flatMap((credits) => credits);
+
+  const convertedCredits: ParsedSL8Credits[] = sl8Credits.map((credit) => ({
+    _type: LegacyObjectType.Credits,
+    uid: generateSL8CreditUid(
+      credit.people_url,
+      credit.role_url,
+      credit.character
+    ),
+    data_source_id: null,
+    ...credit,
+  }));
+
+  const creditUids = convertedCredits.map(({ uid }) => uid);
+  const uniqueCredits = convertedCredits.filter(
+    (obj, index) => creditUids.indexOf(obj.uid) !== index
+  );
+
+  return {
+    type: LegacyObjectType.Credits,
+    objects: { [Object.keys(assets)[0]]: uniqueCredits },
+    totalFound: uniqueCredits.length,
+  };
+};
+
 /* eslint-enable no-console */

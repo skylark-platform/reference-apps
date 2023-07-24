@@ -254,8 +254,11 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
           validRelationships.includes(rel)
         );
         if (!allRelationshipsValid) {
+          const invalidRelationships = relationshipNames.filter(
+            (rel) => !validRelationships.includes(rel)
+          );
           throw new Error(
-            `[createOrUpdateGraphQlObjectsUsingIntrospection] Invalid relationship given for ${id}: ${relationshipNames.join(
+            `[createOrUpdateGraphQlObjectsUsingIntrospection] Invalid relationship given for ${id}: ${invalidRelationships.join(
               ", "
             )}`
           );

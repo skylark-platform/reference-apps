@@ -1,4 +1,5 @@
 import { GraphQLBaseObject } from "../interfaces";
+import { generateSL8CreditUid } from "./legacy";
 import {
   LegacyAsset,
   LegacyBrand,
@@ -7,25 +8,10 @@ import {
   LegacyObjectType,
   LegacyObjectUidPrefix,
   LegacySeason,
+  ParsedSL8Credits,
 } from "./types/legacySkylark";
 import { CreatedSkylarkObjects } from "./types/skylark";
-
-const getLegacyUidFromUrl = (url: string) => {
-  if (!url.includes("/")) {
-    throw new Error(
-      `[getLegacyUidFromUrl] URL does not contain array separator" ${url}`
-    );
-  }
-
-  // e.g. /api/tag-categories/cate_44ef19d0f44a4775af16bf7cf35f25b9/
-  const uid = url.split("/")?.[3];
-  if (!uid) {
-    throw new Error(
-      `[getLegacyUidFromUrl] Unable to parse legacy UID from "${url}"`
-    );
-  }
-  return uid;
-};
+import { getLegacyUidFromUrl } from "./utils";
 
 const getUidsFromExtIds = (
   extIds: string[],
@@ -55,7 +41,7 @@ const getUidsFromUrls = (
 };
 
 const getTags = (
-  legacyObject: LegacyAsset | LegacyEpisode | LegacySeason | LegacyBrand,
+  legacyObject: LegacyBrand | LegacyAsset | LegacyEpisode | LegacySeason,
   skylarkTags: GraphQLBaseObject[]
 ) => {
   const legacyTagExtIds = legacyObject.tags.map(({ tag_url }) =>
@@ -66,8 +52,29 @@ const getTags = (
   return tagUids;
 };
 
+const getCredits = (
+  legacyObject: LegacyBrand | LegacyAsset | LegacyEpisode | LegacySeason,
+  skylarkCredits: GraphQLBaseObject[]
+) => {
+  const creditUids =
+    legacyObject.credits
+      ?.map((credit) => {
+        const externalId = generateSL8CreditUid(
+          credit.people_url,
+          credit.role_url,
+          credit.character
+        );
+        const createdCredit = skylarkCredits.find(
+          ({ external_id }) => external_id === externalId
+        );
+        return createdCredit?.uid;
+      })
+      .filter((credit): credit is string => !!credit) || [];
+  return creditUids;
+};
+
 export const createRelationships = (
-  legacyObject: LegacyObjects[0],
+  legacyObject: LegacyObjects[0] | ParsedSL8Credits,
   relationshipObjects: CreatedSkylarkObjects
 ): Record<string, { link: string[] }> | undefined => {
   // eslint-disable-next-line no-underscore-dangle
@@ -86,6 +93,9 @@ export const createRelationships = (
     return undefined;
   }
 
+  const relationships: Record<string, { link: string[] }> = {};
+
+  // TAG CATEGORIES
   if (legacyObjectType === LegacyObjectType.Tags) {
     const categoryExtId = getLegacyUidFromUrl(legacyObject.category_url);
     const createdCategory = relationshipObjects.tagCategories.find(
@@ -98,109 +108,130 @@ export const createRelationships = (
     };
   }
 
-  if (legacyObjectType === LegacyObjectType.Assets) {
+  // TAGS
+  if (
+    LegacyObjectType.Assets === legacyObjectType ||
+    LegacyObjectType.Brands === legacyObjectType ||
+    LegacyObjectType.Episodes === legacyObjectType ||
+    LegacyObjectType.Seasons === legacyObjectType
+  ) {
     const tagUids = getTags(legacyObject, relationshipObjects.tags);
-    return {
-      tags: {
-        link: tagUids,
-      },
-    };
+    relationships.tags = { link: tagUids };
   }
 
-  if (legacyObjectType === LegacyObjectType.Episodes) {
-    const tagUids = getTags(legacyObject, relationshipObjects.tags);
+  // IMAGES
+  if (
+    LegacyObjectType.Ratings === legacyObjectType ||
+    LegacyObjectType.People === legacyObjectType ||
+    LegacyObjectType.Genres === legacyObjectType ||
+    LegacyObjectType.Assets === legacyObjectType ||
+    LegacyObjectType.Brands === legacyObjectType ||
+    LegacyObjectType.Episodes === legacyObjectType ||
+    LegacyObjectType.Seasons === legacyObjectType
+  ) {
+    const imageUids = getUidsFromUrls(
+      legacyObject.image_urls || [],
+      relationshipObjects.images,
+      LegacyObjectUidPrefix.Image
+    );
+    relationships.images = { link: imageUids };
+  }
 
+  // GENRES
+  if (
+    // LegacyObjectType.Assets === legacyObjectType || // TODO enable Assets to relationships to Genres and enable
+    LegacyObjectType.Brands === legacyObjectType ||
+    LegacyObjectType.Episodes === legacyObjectType ||
+    LegacyObjectType.Seasons === legacyObjectType
+  ) {
+    const genreUids = getUidsFromUrls(
+      legacyObject.genre_urls || [],
+      relationshipObjects.genres,
+      LegacyObjectUidPrefix.Genre
+    );
+    relationships.genres = { link: genreUids };
+  }
+
+  // RATINGS
+  if (
+    LegacyObjectType.Assets === legacyObjectType ||
+    LegacyObjectType.Brands === legacyObjectType ||
+    LegacyObjectType.Episodes === legacyObjectType ||
+    LegacyObjectType.Seasons === legacyObjectType
+  ) {
+    const ratingUids = getUidsFromUrls(
+      legacyObject.rating_urls || [],
+      relationshipObjects.ratings,
+      LegacyObjectUidPrefix.Rating
+    );
+    relationships.ratings = { link: ratingUids };
+  }
+
+  // CREDITS
+  if (
+    // LegacyObjectType.Assets === legacyObjectType || // TODO enable Assets to relationships to Genres and enable
+    LegacyObjectType.Brands === legacyObjectType ||
+    LegacyObjectType.Episodes === legacyObjectType ||
+    LegacyObjectType.Seasons === legacyObjectType
+  ) {
+    const creditUids = getCredits(legacyObject, relationshipObjects.credits);
+    relationships.credits = { link: creditUids };
+  }
+
+  // ASSETS
+  if (
+    LegacyObjectType.Brands === legacyObjectType ||
+    LegacyObjectType.Episodes === legacyObjectType ||
+    LegacyObjectType.Seasons === legacyObjectType
+  ) {
     const assetUids = getUidsFromUrls(
       legacyObject.items,
       relationshipObjects.assets,
       LegacyObjectUidPrefix.Asset
     );
-    return {
-      tags: {
-        link: tagUids,
-      },
-      assets: {
-        link: assetUids,
-      },
-    };
+    relationships.assets = { link: assetUids };
   }
 
-  if (legacyObjectType === LegacyObjectType.Seasons) {
-    const tagUids = getTags(legacyObject, relationshipObjects.tags);
-
-    const assetUids = getUidsFromUrls(
-      legacyObject.items,
-      relationshipObjects.assets,
-      LegacyObjectUidPrefix.Asset
-    );
-
+  // EPISODES
+  if (
+    LegacyObjectType.Brands === legacyObjectType ||
+    LegacyObjectType.Seasons === legacyObjectType
+  ) {
     const episodeUids = getUidsFromUrls(
       legacyObject.items,
       relationshipObjects.episodes,
       LegacyObjectUidPrefix.Episode
     );
-    return {
-      tags: {
-        link: tagUids,
-      },
-      assets: {
-        link: assetUids,
-      },
-      episodes: {
-        link: episodeUids,
-      },
-    };
+    relationships.episodes = { link: episodeUids };
   }
 
-  if (legacyObjectType === LegacyObjectType.Brands) {
-    const tagUids = getTags(legacyObject, relationshipObjects.tags);
-
-    const assetUids = getUidsFromUrls(
-      legacyObject.items,
-      relationshipObjects.assets,
-      LegacyObjectUidPrefix.Asset
-    );
-
-    const episodeUids = getUidsFromUrls(
-      legacyObject.items,
-      relationshipObjects.episodes,
-      LegacyObjectUidPrefix.Episode
-    );
-
+  // SEASONS
+  if (LegacyObjectType.Brands === legacyObjectType) {
     const seasonUids = getUidsFromUrls(
       legacyObject.items,
       relationshipObjects.seasons,
       LegacyObjectUidPrefix.Season
     );
+    relationships.seasons = { link: seasonUids };
+  }
 
-    return {
-      tags: {
-        link: tagUids,
-      },
-      assets: {
-        link: assetUids,
-      },
-      episodes: {
-        link: episodeUids,
-      },
-      seasons: {
-        link: seasonUids,
-      },
-      // TODO confirm this is needed. Implementation is a bit tricky
-      // brands: {
-      //   link: brandUids,
-      // },
+  // [CREDITS SPECIFIC]: ROLES & PEOPLE
+  if (LegacyObjectType.Credits === legacyObjectType) {
+    relationships.people = {
+      link: getUidsFromUrls(
+        [legacyObject.people_url],
+        relationshipObjects.people,
+        LegacyObjectUidPrefix.People
+      ),
+    };
+    relationships.roles = {
+      link: getUidsFromUrls(
+        [legacyObject.role_url],
+        relationshipObjects.roles,
+        LegacyObjectUidPrefix.Role
+      ),
     };
   }
 
-  if (legacyObjectType === LegacyObjectType.Brands) {
-    const tagUids = getTags(legacyObject, relationshipObjects.tags);
-    return {
-      tags: {
-        link: tagUids,
-      },
-    };
-  }
-
-  return undefined;
+  return relationships;
 };

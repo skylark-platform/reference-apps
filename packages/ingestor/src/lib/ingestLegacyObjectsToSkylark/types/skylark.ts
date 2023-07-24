@@ -6,9 +6,20 @@ export type CreatedSkylarkObjectKeys =
   | "assets"
   | "episodes"
   | "seasons"
-  | "brands";
+  | "brands"
+  | "people"
+  | "genres"
+  | "ratings"
+  | "roles"
+  | "images"
+  | "credits";
 
 export type CreatedSkylarkObjects = Record<
   CreatedSkylarkObjectKeys,
   GraphQLBaseObject[]
+>;
+
+export type ConvertedLegacyObject = { external_id: string } & Record<
+  string,
+  string | null | string[] | boolean | number | object
 >;

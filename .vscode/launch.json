@@ -50,7 +50,7 @@
       "type": "node",
       "env": {
         "LEGACY_DATA_LAST_MONTH_ONLY": "false",
-        "CREATE_ONLY": "true"
+        "CREATE_ONLY": "false"
       }
     },
     {

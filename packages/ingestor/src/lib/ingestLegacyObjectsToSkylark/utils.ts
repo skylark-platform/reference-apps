@@ -89,25 +89,68 @@ export const convertLegacyObjectTypeToObjectType = (
       return "Season";
     case LegacyObjectType.Brands:
       return "Brand";
+    case LegacyObjectType.Ratings:
+      return "Rating";
+    case LegacyObjectType.Roles:
+      return "Role";
+    case LegacyObjectType.Genres:
+      return "Genre";
+    case LegacyObjectType.People:
+      return "Person";
+    case LegacyObjectType.Images:
+      return "SkylarkImage";
+    case LegacyObjectType.Credits:
+      return "Credit";
     default:
       throw new Error("[convertLegacyObjectTypeToObjectType] Unknown type");
   }
 };
 
+export const getLegacyUidFromUrl = (url: string) => {
+  if (!url.includes("/")) {
+    throw new Error(
+      `[getLegacyUidFromUrl] URL does not contain array separator" ${url}`
+    );
+  }
+
+  // e.g. /api/tag-categories/cate_44ef19d0f44a4775af16bf7cf35f25b9/
+  const uid = url.split("/")?.[3];
+  if (!uid) {
+    throw new Error(
+      `[getLegacyUidFromUrl] Unable to parse legacy UID from "${url}"`
+    );
+  }
+  return uid;
+};
+
 export const updateSkylarkSchema = async ({
   assetTypes,
+  imageTypes,
 }: {
   assetTypes: string[];
+  imageTypes: string[] | null;
 }) => {
   const initialVersion = await waitForUpdatingSchema();
   // eslint-disable-next-line no-console
   console.log("--- Initial Schema version:", initialVersion);
 
-  const { version: updatedVersion } = await updateEnumTypes(
+  const { version: assetTypeVersion } = await updateEnumTypes(
     "AssetType",
     assetTypes,
     initialVersion
   );
+
+  let updatedVersion = assetTypeVersion;
+
+  if (imageTypes) {
+    const { version: imageTypeVersion } = await updateEnumTypes(
+      "ImageType",
+      imageTypes,
+      initialVersion
+    );
+
+    updatedVersion = imageTypeVersion;
+  }
 
   if (updatedVersion && updatedVersion !== initialVersion) {
     // eslint-disable-next-line no-console
