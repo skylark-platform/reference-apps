@@ -43,7 +43,7 @@ export interface LegacyCommonObject {
   _type: LegacyObjectType;
   all_languages: string[];
   data_source_fields: string[] | null;
-  items: string[];
+  items: string[] | LegacySetItem[];
   modified_by: string;
   parent_url: string;
   self: string;
@@ -86,8 +86,73 @@ export interface LegacyResponseListObjectsData<T extends LegacyCommonObject> {
   objects: T[];
 }
 
+export interface LegacySetItem {
+  content_type: string;
+  content_url: string;
+  expired: boolean;
+  future: boolean;
+  image_urls: string[];
+  schedule_urls: string[];
+  scheduled_item_modified: string;
+  self: string;
+  set_url: string;
+  uid: string;
+  position: number;
+  archived: boolean;
+  modified: string;
+  all_languages?: string[];
+  modified_by?: string;
+  editability?: string;
+  created?: string;
+  sub_collection?: boolean;
+  is_data_source?: boolean;
+  publish_on?: string;
+  version_number?: number;
+  version_url?: string;
+  metadata_modified_by?: string;
+  metadata_modified?: string;
+  language?: string;
+  language_is_data_source?: boolean;
+  language_modified_by?: string;
+  language_publish_on?: string;
+  language_version_number?: number;
+  language_version_url?: string;
+  language_modified?: string;
+  text_review?: string;
+}
+
+export interface LegacySet extends LegacyCommonObject {
+  _type: LegacyObjectType.Sets;
+  image_urls: string[];
+  plan_urls: string[];
+  rating_urls: string[];
+  language: string;
+  title: string;
+  slug: string;
+  tags: LegacyTagRel[];
+  items: LegacySetItem[];
+
+  set_type_slug: string;
+  set_type_url: string;
+
+  // SL8 Fields
+  title_short?: string;
+  title_medium?: string;
+  title_long?: string;
+  synopsis_short?: string;
+  synopsis_medium?: string;
+  synopsis_long?: string;
+  release_date?: string;
+
+  // SL8 Relationships
+  credits?: LegacyCreditRel[];
+  genre_urls?: string[];
+  theme_urls?: string[];
+}
+
 export interface LegacyBrand extends LegacyCommonObject {
   _type: LegacyObjectType.Brands;
+  items: string[];
   brand_type_url: null;
   image_urls: string[];
   plan_urls: string[];
@@ -126,6 +191,7 @@ export interface LegacyBrand extends LegacyCommonObject {
 
 export interface LegacySeason extends LegacyCommonObject {
   _type: LegacyObjectType.Seasons;
+  items: string[];
   image_urls: string[];
   plan_urls: string[];
   rating_urls: string[];
@@ -167,6 +233,7 @@ export interface LegacySeason extends LegacyCommonObject {
 
 export interface LegacyEpisode extends LegacyCommonObject {
   _type: LegacyObjectType.Episodes;
+  items: string[];
   episode_type_url: null | string;
   image_urls: string[];
   plan_urls: string[];
@@ -211,6 +278,7 @@ export interface LegacyAsset extends LegacyCommonObject {
   asset_type_url: {
     name: string;
   } | null;
+  items: string[];
   cc_urls: string[];
   image_urls: string[];
   ovps: string[];
@@ -355,7 +423,8 @@ export type LegacyObjects =
   | LegacyGenre[]
   | LegacyRating[]
   | LegacyRole[]
-  | LegacyImage[];
+  | LegacyImage[]
+  | LegacySet[];
 
 export interface FetchedLegacyObjects<T> {
   type: LegacyObjectType;

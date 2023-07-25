@@ -101,6 +101,8 @@ export const convertLegacyObjectTypeToObjectType = (
       return "SkylarkImage";
     case LegacyObjectType.Credits:
       return "Credit";
+    case LegacyObjectType.Sets:
+      return "SkylarkSet";
     default:
       throw new Error("[convertLegacyObjectTypeToObjectType] Unknown type");
   }
@@ -123,12 +125,25 @@ export const getLegacyUidFromUrl = (url: string) => {
   return uid;
 };
 
+export const getLegacyObjectTypeFromUrl = (url: string) => {
+  if (!url.includes("/")) {
+    throw new Error(
+      `[getLegacyObjectTypeFromUrl] URL does not contain array separator" ${url}`
+    );
+  }
+
+  const legacyObjectType = url.split("/")[2] as LegacyObjectType; // e.g. "/api/brands/bran_02744c9321ef402ea29231109c3ec806/"
+  return legacyObjectType;
+};
+
 export const updateSkylarkSchema = async ({
   assetTypes,
   imageTypes,
+  setTypes,
 }: {
   assetTypes: string[];
   imageTypes: string[] | null;
+  setTypes: string[] | null;
 }) => {
   const initialVersion = await waitForUpdatingSchema();
   // eslint-disable-next-line no-console
@@ -140,16 +155,26 @@ export const updateSkylarkSchema = async ({
     initialVersion
   );
 
-  let updatedVersion = assetTypeVersion;
+  let updatedVersion = assetTypeVersion || initialVersion;
 
   if (imageTypes) {
     const { version: imageTypeVersion } = await updateEnumTypes(
       "ImageType",
       imageTypes,
-      initialVersion
+      updatedVersion
     );
 
-    updatedVersion = imageTypeVersion;
+    if (imageTypeVersion) updatedVersion = imageTypeVersion;
+  }
+
+  if (setTypes) {
+    const { version: setTypeVersion } = await updateEnumTypes(
+      "SetType",
+      setTypes,
+      updatedVersion
+    );
+
+    if (setTypeVersion) updatedVersion = setTypeVersion;
   }
 
   if (updatedVersion && updatedVersion !== initialVersion) {

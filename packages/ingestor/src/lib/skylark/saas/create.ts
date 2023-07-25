@@ -48,7 +48,7 @@ const isKnownError = (errMessage: string) =>
 const graphqlMutationWithRetry = async <T>(
   mutation: string,
   variables: Variables,
-  { retries = 3, everySeconds = 5 },
+  { retries = 3, everySeconds = 10 },
   retriesCount = 0
 ): Promise<T> => {
   try {
@@ -132,7 +132,7 @@ export const mutateMultipleObjects = async <T extends { external_id?: string }>(
         try {
           const data = await graphqlMutationWithRetry<{
             [key: string]: T;
-          }>(graphQLMutation, {}, { retries: 10 });
+          }>(graphQLMutation, {}, { retries: 3 });
 
           if (!data) {
             return [];

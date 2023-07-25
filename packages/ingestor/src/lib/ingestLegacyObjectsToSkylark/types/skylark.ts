@@ -12,7 +12,8 @@ export type CreatedSkylarkObjectKeys =
   | "ratings"
   | "roles"
   | "images"
-  | "credits";
+  | "credits"
+  | "sets";
 
 export type CreatedSkylarkObjects = Record<
   CreatedSkylarkObjectKeys,

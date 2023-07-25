@@ -1,6 +1,7 @@
 import { GraphQLBaseObject } from "../interfaces";
 import { generateSL8CreditUid } from "./legacy";
 import {
+  FetchedLegacyObjects,
   LegacyAsset,
   LegacyBrand,
   LegacyEpisode,
@@ -8,10 +9,17 @@ import {
   LegacyObjectType,
   LegacyObjectUidPrefix,
   LegacySeason,
+  LegacySet,
+  LegacySetItem,
   ParsedSL8Credits,
 } from "./types/legacySkylark";
 import { CreatedSkylarkObjects } from "./types/skylark";
-import { getLegacyUidFromUrl } from "./utils";
+import {
+  convertLegacyObjectTypeToObjectType,
+  getLegacyObjectTypeFromUrl,
+  getLegacyUidFromUrl,
+} from "./utils";
+import { addContentToCreatedSets } from "../skylark/saas/sets";
 
 const getUidsFromExtIds = (
   extIds: string[],
@@ -40,6 +48,23 @@ const getUidsFromUrls = (
   return uids;
 };
 
+const getUidsFromItems = (
+  items: string[] | LegacySetItem[],
+  objects: GraphQLBaseObject[],
+  prefix: string
+) => {
+  if (items.length === 0) {
+    return [];
+  }
+
+  if (typeof items[0] === "string") {
+    return getUidsFromUrls(items as string[], objects, prefix);
+  }
+
+  const contentUrls = (items as LegacySetItem[]).map((obj) => obj.content_url);
+  return getUidsFromUrls(contentUrls, objects, prefix);
+};
+
 const getTags = (
   legacyObject: LegacyBrand | LegacyAsset | LegacyEpisode | LegacySeason,
   skylarkTags: GraphQLBaseObject[]
@@ -53,7 +78,12 @@ const getTags = (
 };
 
 const getCredits = (
-  legacyObject: LegacyBrand | LegacyAsset | LegacyEpisode | LegacySeason,
+  legacyObject:
+    | LegacyBrand
+    | LegacyAsset
+    | LegacyEpisode
+    | LegacySeason
+    | LegacySet,
   skylarkCredits: GraphQLBaseObject[]
 ) => {
   const creditUids =
@@ -83,7 +113,7 @@ export const createRelationships = (
   if (!legacyObjectType) {
     throw new Error(
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      `[convertLegacyObject] Unknown legacy object type: ${legacyUid}`
+      `[createRelationships] Unknown legacy object type: ${legacyUid}`
     );
   }
 
@@ -127,7 +157,8 @@ export const createRelationships = (
     LegacyObjectType.Assets === legacyObjectType ||
     LegacyObjectType.Brands === legacyObjectType ||
     LegacyObjectType.Episodes === legacyObjectType ||
-    LegacyObjectType.Seasons === legacyObjectType
+    LegacyObjectType.Seasons === legacyObjectType ||
+    LegacyObjectType.Sets === legacyObjectType
   ) {
     const imageUids = getUidsFromUrls(
       legacyObject.image_urls || [],
@@ -142,7 +173,8 @@ export const createRelationships = (
     // LegacyObjectType.Assets === legacyObjectType || // TODO enable Assets to relationships to Genres and enable
     LegacyObjectType.Brands === legacyObjectType ||
     LegacyObjectType.Episodes === legacyObjectType ||
-    LegacyObjectType.Seasons === legacyObjectType
+    LegacyObjectType.Seasons === legacyObjectType ||
+    LegacyObjectType.Sets === legacyObjectType
   ) {
     const genreUids = getUidsFromUrls(
       legacyObject.genre_urls || [],
@@ -157,7 +189,8 @@ export const createRelationships = (
     LegacyObjectType.Assets === legacyObjectType ||
     LegacyObjectType.Brands === legacyObjectType ||
     LegacyObjectType.Episodes === legacyObjectType ||
-    LegacyObjectType.Seasons === legacyObjectType
+    LegacyObjectType.Seasons === legacyObjectType ||
+    LegacyObjectType.Sets === legacyObjectType
   ) {
     const ratingUids = getUidsFromUrls(
       legacyObject.rating_urls || [],
@@ -172,7 +205,8 @@ export const createRelationships = (
     // LegacyObjectType.Assets === legacyObjectType || // TODO enable Assets to relationships to Genres and enable
     LegacyObjectType.Brands === legacyObjectType ||
     LegacyObjectType.Episodes === legacyObjectType ||
-    LegacyObjectType.Seasons === legacyObjectType
+    LegacyObjectType.Seasons === legacyObjectType ||
+    LegacyObjectType.Sets === legacyObjectType
   ) {
     const creditUids = getCredits(legacyObject, relationshipObjects.credits);
     relationships.credits = { link: creditUids };
@@ -184,7 +218,7 @@ export const createRelationships = (
     LegacyObjectType.Episodes === legacyObjectType ||
     LegacyObjectType.Seasons === legacyObjectType
   ) {
-    const assetUids = getUidsFromUrls(
+    const assetUids = getUidsFromItems(
       legacyObject.items,
       relationshipObjects.assets,
       LegacyObjectUidPrefix.Asset
@@ -197,7 +231,7 @@ export const createRelationships = (
     LegacyObjectType.Brands === legacyObjectType ||
     LegacyObjectType.Seasons === legacyObjectType
   ) {
-    const episodeUids = getUidsFromUrls(
+    const episodeUids = getUidsFromItems(
       legacyObject.items,
       relationshipObjects.episodes,
       LegacyObjectUidPrefix.Episode
@@ -207,7 +241,7 @@ export const createRelationships = (
 
   // SEASONS
   if (LegacyObjectType.Brands === legacyObjectType) {
-    const seasonUids = getUidsFromUrls(
+    const seasonUids = getUidsFromItems(
       legacyObject.items,
       relationshipObjects.seasons,
       LegacyObjectUidPrefix.Season
@@ -234,4 +268,54 @@ export const createRelationships = (
   }
 
   return relationships;
+};
+
+export const createSetContent = async (
+  createdSets: GraphQLBaseObject[],
+  legacySets: FetchedLegacyObjects<LegacySet>,
+  createdObjects: CreatedSkylarkObjects
+) => {
+  const allCreatedObjects = Object.values(createdObjects).flatMap((arr) => arr);
+
+  const createdSetsWithContent = createdSets.map((set) => {
+    const legacySet = Object.values(legacySets.objects)
+      .flatMap((arr) => arr)
+      .find(({ uid }) => uid === set.external_id);
+
+    if (!legacySet) {
+      return {
+        ...set,
+        content: [],
+      };
+    }
+
+    const content = legacySet.items.map((item) => {
+      const externalId = getLegacyUidFromUrl(item.content_url);
+      const legacyObjectType = getLegacyObjectTypeFromUrl(item.content_url);
+
+      const objectType = convertLegacyObjectTypeToObjectType(legacyObjectType);
+
+      const createdItemObject = allCreatedObjects.find(
+        ({ external_id }) => external_id === externalId
+      );
+      if (!createdItemObject) {
+        throw new Error(
+          `[createSetContent] Set content item not found in createdObjects array`
+        );
+      }
+
+      return {
+        uid: createdItemObject.uid,
+        objectType,
+        position: item.position,
+      };
+    });
+
+    return {
+      ...set,
+      content,
+    };
+  });
+
+  await addContentToCreatedSets(createdSetsWithContent);
 };

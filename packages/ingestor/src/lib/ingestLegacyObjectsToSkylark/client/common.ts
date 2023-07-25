@@ -14,6 +14,7 @@ import {
   LegacyImage,
   LegacyObjectType,
   LegacyObjects,
+  LegacySet,
 } from "../types/legacySkylark";
 import { calculateTotalObjects, updateSkylarkSchema } from "../utils";
 import { setAccountConfiguration } from "../../skylark/saas/account";
@@ -83,10 +84,12 @@ export const fetchAndWriteLegacyObjects = async <
 export const commonSkylarkConfigurationUpdates = async ({
   assets,
   images,
+  sets,
   defaultLanguage,
 }: {
   assets: Record<string, LegacyAsset[]>;
   images?: Record<string, LegacyImage[]>;
+  sets?: Record<string, LegacySet[]>;
   defaultLanguage: string;
 }) => {
   console.log("\nUpdating Skylark Schema...");
@@ -113,7 +116,20 @@ export const commonSkylarkConfigurationUpdates = async ({
   if (imageTypes)
     console.log("--- Required Image type enums:", imageTypes.join(", "));
 
-  await updateSkylarkSchema({ assetTypes, imageTypes });
+  const setTypes = sets
+    ? [
+        ...new Set(
+          Object.values(sets)
+            .flatMap((arr) => arr)
+            .map(({ set_type_slug }) => set_type_slug)
+        ),
+      ].filter((name): name is string => !!name)
+    : null;
+
+  if (setTypes)
+    console.log("--- Required Set type enums:", setTypes.join(", "));
+
+  await updateSkylarkSchema({ assetTypes, imageTypes, setTypes });
 
   console.log("\nUpdating Skylark Account...");
   await setAccountConfiguration({
@@ -134,6 +150,7 @@ export const createEmptySkylarkObjects = (): CreatedSkylarkObjects => ({
   episodes: [],
   seasons: [],
   brands: [],
+  sets: [],
 });
 
 /* eslint-enable no-console */

@@ -13,6 +13,7 @@ import {
   LegacyRating,
   LegacyRole,
   LegacySeason,
+  LegacySet,
   LegacyTag,
   LegacyTagCategory,
   ParsedSL8Credits,
@@ -29,6 +30,8 @@ import {
 } from "./common";
 import { convertSL8CreditsToLegacyObjects } from "../legacy";
 
+import { createSetContent } from "../skylarkRelationships";
+
 interface CustomerCLegacyObjects
   extends Record<string, FetchedLegacyObjects<LegacyObjects[0]>> {
   tagCategories: FetchedLegacyObjects<LegacyTagCategory>;
@@ -42,6 +45,7 @@ interface CustomerCLegacyObjects
   episodes: FetchedLegacyObjects<LegacyEpisode>;
   seasons: FetchedLegacyObjects<LegacySeason>;
   brands: FetchedLegacyObjects<LegacyBrand>;
+  sets: FetchedLegacyObjects<LegacySet>;
 }
 
 const languagesToCheck = ["en-gb"];
@@ -117,6 +121,28 @@ const convertLegacyObject = (
       title_short: legacyObject.title_short || null,
       synopsis: legacyObject.synopsis_medium || null,
       synopsis_short: legacyObject.synopsis_short || null,
+      release_date: legacyObject.release_date || null,
+    };
+  }
+
+  if (legacyObjectType === LegacyObjectType.Sets) {
+    const setType = legacyObject.set_type_slug || null;
+
+    const tLong = legacyObject.title_long;
+    const tMed = legacyObject.title_medium;
+    const tShort = legacyObject.title_short;
+    const title = tLong || tMed;
+    const titleShort = tLong ? tMed || tShort : tShort;
+
+    return {
+      ...commonFields,
+      type: setType,
+      internal_title: legacyObject.title,
+      title: title || null,
+      title_short: titleShort || null,
+      synopsis: legacyObject.synopsis_medium || null,
+      synopsis_short: legacyObject.synopsis_short || null,
+      description: legacyObject.synopsis_long || null,
       release_date: legacyObject.release_date || null,
     };
   }
@@ -219,6 +245,7 @@ export const ingestClientC = async ({
   await commonSkylarkConfigurationUpdates({
     assets: legacyObjects.assets.objects,
     images: legacyObjects.images.objects,
+    sets: legacyObjects.sets.objects,
     defaultLanguage: languagesToCheck[0].toLowerCase(),
   });
 
@@ -295,6 +322,17 @@ export const ingestClientC = async ({
   skylarkObjects.brands = await createObjectsInSkylark(
     legacyObjects.brands,
     commonArgs
+  );
+
+  skylarkObjects.sets = await createObjectsInSkylark(
+    legacyObjects.sets,
+    commonArgs
+  );
+
+  await createSetContent(
+    skylarkObjects.sets,
+    legacyObjects.sets,
+    skylarkObjects
   );
 };
 
