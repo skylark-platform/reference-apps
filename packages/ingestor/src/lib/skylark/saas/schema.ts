@@ -195,9 +195,10 @@ export const updateSkylarkSchema = async () => {
     imageTypeVersion || initialVersion
   );
 
-  const finalVersionNumber = seasonUpdateVersion;
+  const finalVersionNumber: number =
+    seasonUpdateVersion || imageTypeVersion || setTypeVersion || initialVersion;
 
-  if (finalVersionNumber && finalVersionNumber !== initialVersion) {
+  if (finalVersionNumber !== initialVersion) {
     await activateConfigurationVersion(finalVersionNumber);
 
     const activeVersion = await waitForUpdatingSchema();

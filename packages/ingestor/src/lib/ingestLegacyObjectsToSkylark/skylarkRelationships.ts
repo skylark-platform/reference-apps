@@ -1,5 +1,7 @@
 import { GraphQLBaseObject } from "../interfaces";
+import { generateSL8CreditUid } from "./legacy";
 import {
+  FetchedLegacyObjects,
   LegacyAsset,
   LegacyBrand,
   LegacyEpisode,
@@ -7,25 +9,17 @@ import {
   LegacyObjectType,
   LegacyObjectUidPrefix,
   LegacySeason,
+  LegacySet,
+  LegacySetItem,
+  ParsedSL8Credits,
 } from "./types/legacySkylark";
 import { CreatedSkylarkObjects } from "./types/skylark";
-
-const getLegacyUidFromUrl = (url: string) => {
-  if (!url.includes("/")) {
-    throw new Error(
-      `[getLegacyUidFromUrl] URL does not contain array separator" ${url}`
-    );
-  }
-
-  // e.g. /api/tag-categories/cate_44ef19d0f44a4775af16bf7cf35f25b9/
-  const uid = url.split("/")?.[3];
-  if (!uid) {
-    throw new Error(
-      `[getLegacyUidFromUrl] Unable to parse legacy UID from "${url}"`
-    );
-  }
-  return uid;
-};
+import {
+  convertLegacyObjectTypeToObjectType,
+  getLegacyObjectTypeFromUrl,
+  getLegacyUidFromUrl,
+} from "./utils";
+import { addContentToCreatedSets } from "../skylark/saas/sets";
 
 const getUidsFromExtIds = (
   extIds: string[],
@@ -54,8 +48,25 @@ const getUidsFromUrls = (
   return uids;
 };
 
+const getUidsFromItems = (
+  items: string[] | LegacySetItem[],
+  objects: GraphQLBaseObject[],
+  prefix: string
+) => {
+  if (items.length === 0) {
+    return [];
+  }
+
+  if (typeof items[0] === "string") {
+    return getUidsFromUrls(items as string[], objects, prefix);
+  }
+
+  const contentUrls = (items as LegacySetItem[]).map((obj) => obj.content_url);
+  return getUidsFromUrls(contentUrls, objects, prefix);
+};
+
 const getTags = (
-  legacyObject: LegacyAsset | LegacyEpisode | LegacySeason | LegacyBrand,
+  legacyObject: LegacyBrand | LegacyAsset | LegacyEpisode | LegacySeason,
   skylarkTags: GraphQLBaseObject[]
 ) => {
   const legacyTagExtIds = legacyObject.tags.map(({ tag_url }) =>
@@ -66,8 +77,34 @@ const getTags = (
   return tagUids;
 };
 
+const getCredits = (
+  legacyObject:
+    | LegacyBrand
+    | LegacyAsset
+    | LegacyEpisode
+    | LegacySeason
+    | LegacySet,
+  skylarkCredits: GraphQLBaseObject[]
+) => {
+  const creditUids =
+    legacyObject.credits
+      ?.map((credit) => {
+        const externalId = generateSL8CreditUid(
+          credit.people_url,
+          credit.role_url,
+          credit.character
+        );
+        const createdCredit = skylarkCredits.find(
+          ({ external_id }) => external_id === externalId
+        );
+        return createdCredit?.uid;
+      })
+      .filter((credit): credit is string => !!credit) || [];
+  return creditUids;
+};
+
 export const createRelationships = (
-  legacyObject: LegacyObjects[0],
+  legacyObject: LegacyObjects[0] | ParsedSL8Credits,
   relationshipObjects: CreatedSkylarkObjects
 ): Record<string, { link: string[] }> | undefined => {
   // eslint-disable-next-line no-underscore-dangle
@@ -76,7 +113,7 @@ export const createRelationships = (
   if (!legacyObjectType) {
     throw new Error(
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      `[convertLegacyObject] Unknown legacy object type: ${legacyUid}`
+      `[createRelationships] Unknown legacy object type: ${legacyUid}`
     );
   }
 
@@ -86,6 +123,9 @@ export const createRelationships = (
     return undefined;
   }
 
+  const relationships: Record<string, { link: string[] }> = {};
+
+  // TAG CATEGORIES
   if (legacyObjectType === LegacyObjectType.Tags) {
     const categoryExtId = getLegacyUidFromUrl(legacyObject.category_url);
     const createdCategory = relationshipObjects.tagCategories.find(
@@ -98,109 +138,184 @@ export const createRelationships = (
     };
   }
 
-  if (legacyObjectType === LegacyObjectType.Assets) {
+  // TAGS
+  if (
+    LegacyObjectType.Assets === legacyObjectType ||
+    LegacyObjectType.Brands === legacyObjectType ||
+    LegacyObjectType.Episodes === legacyObjectType ||
+    LegacyObjectType.Seasons === legacyObjectType
+  ) {
     const tagUids = getTags(legacyObject, relationshipObjects.tags);
-    return {
-      tags: {
-        link: tagUids,
-      },
-    };
+    relationships.tags = { link: tagUids };
   }
 
-  if (legacyObjectType === LegacyObjectType.Episodes) {
-    const tagUids = getTags(legacyObject, relationshipObjects.tags);
+  // IMAGES
+  if (
+    LegacyObjectType.Ratings === legacyObjectType ||
+    LegacyObjectType.People === legacyObjectType ||
+    LegacyObjectType.Genres === legacyObjectType ||
+    LegacyObjectType.Assets === legacyObjectType ||
+    LegacyObjectType.Brands === legacyObjectType ||
+    LegacyObjectType.Episodes === legacyObjectType ||
+    LegacyObjectType.Seasons === legacyObjectType ||
+    LegacyObjectType.Sets === legacyObjectType
+  ) {
+    const imageUids = getUidsFromUrls(
+      legacyObject.image_urls || [],
+      relationshipObjects.images,
+      LegacyObjectUidPrefix.Image
+    );
+    relationships.images = { link: imageUids };
+  }
 
-    const assetUids = getUidsFromUrls(
+  // GENRES
+  if (
+    LegacyObjectType.Assets === legacyObjectType ||
+    LegacyObjectType.Brands === legacyObjectType ||
+    LegacyObjectType.Episodes === legacyObjectType ||
+    LegacyObjectType.Seasons === legacyObjectType ||
+    LegacyObjectType.Sets === legacyObjectType
+  ) {
+    const genreUids = getUidsFromUrls(
+      legacyObject.genre_urls || [],
+      relationshipObjects.genres,
+      LegacyObjectUidPrefix.Genre
+    );
+    relationships.genres = { link: genreUids };
+  }
+
+  // RATINGS
+  if (
+    LegacyObjectType.Assets === legacyObjectType ||
+    LegacyObjectType.Brands === legacyObjectType ||
+    LegacyObjectType.Episodes === legacyObjectType ||
+    LegacyObjectType.Seasons === legacyObjectType ||
+    LegacyObjectType.Sets === legacyObjectType
+  ) {
+    const ratingUids = getUidsFromUrls(
+      legacyObject.rating_urls || [],
+      relationshipObjects.ratings,
+      LegacyObjectUidPrefix.Rating
+    );
+    relationships.ratings = { link: ratingUids };
+  }
+
+  // CREDITS
+  if (
+    LegacyObjectType.Assets === legacyObjectType ||
+    LegacyObjectType.Brands === legacyObjectType ||
+    LegacyObjectType.Episodes === legacyObjectType ||
+    LegacyObjectType.Seasons === legacyObjectType ||
+    LegacyObjectType.Sets === legacyObjectType
+  ) {
+    const creditUids = getCredits(legacyObject, relationshipObjects.credits);
+    relationships.credits = { link: creditUids };
+  }
+
+  // ASSETS
+  if (
+    LegacyObjectType.Brands === legacyObjectType ||
+    LegacyObjectType.Episodes === legacyObjectType ||
+    LegacyObjectType.Seasons === legacyObjectType
+  ) {
+    const assetUids = getUidsFromItems(
       legacyObject.items,
       relationshipObjects.assets,
       LegacyObjectUidPrefix.Asset
     );
-    return {
-      tags: {
-        link: tagUids,
-      },
-      assets: {
-        link: assetUids,
-      },
-    };
+    relationships.assets = { link: assetUids };
   }
 
-  if (legacyObjectType === LegacyObjectType.Seasons) {
-    const tagUids = getTags(legacyObject, relationshipObjects.tags);
-
-    const assetUids = getUidsFromUrls(
-      legacyObject.items,
-      relationshipObjects.assets,
-      LegacyObjectUidPrefix.Asset
-    );
-
-    const episodeUids = getUidsFromUrls(
+  // EPISODES
+  if (
+    LegacyObjectType.Brands === legacyObjectType ||
+    LegacyObjectType.Seasons === legacyObjectType
+  ) {
+    const episodeUids = getUidsFromItems(
       legacyObject.items,
       relationshipObjects.episodes,
       LegacyObjectUidPrefix.Episode
     );
-    return {
-      tags: {
-        link: tagUids,
-      },
-      assets: {
-        link: assetUids,
-      },
-      episodes: {
-        link: episodeUids,
-      },
-    };
+    relationships.episodes = { link: episodeUids };
   }
 
-  if (legacyObjectType === LegacyObjectType.Brands) {
-    const tagUids = getTags(legacyObject, relationshipObjects.tags);
-
-    const assetUids = getUidsFromUrls(
-      legacyObject.items,
-      relationshipObjects.assets,
-      LegacyObjectUidPrefix.Asset
-    );
-
-    const episodeUids = getUidsFromUrls(
-      legacyObject.items,
-      relationshipObjects.episodes,
-      LegacyObjectUidPrefix.Episode
-    );
-
-    const seasonUids = getUidsFromUrls(
+  // SEASONS
+  if (LegacyObjectType.Brands === legacyObjectType) {
+    const seasonUids = getUidsFromItems(
       legacyObject.items,
       relationshipObjects.seasons,
       LegacyObjectUidPrefix.Season
     );
+    relationships.seasons = { link: seasonUids };
+  }
 
-    return {
-      tags: {
-        link: tagUids,
-      },
-      assets: {
-        link: assetUids,
-      },
-      episodes: {
-        link: episodeUids,
-      },
-      seasons: {
-        link: seasonUids,
-      },
-      // TODO confirm this is needed. Implementation is a bit tricky
-      // brands: {
-      //   link: brandUids,
-      // },
+  // [CREDITS SPECIFIC]: ROLES & PEOPLE
+  if (LegacyObjectType.Credits === legacyObjectType) {
+    relationships.people = {
+      link: getUidsFromUrls(
+        [legacyObject.people_url],
+        relationshipObjects.people,
+        LegacyObjectUidPrefix.People
+      ),
+    };
+    relationships.roles = {
+      link: getUidsFromUrls(
+        [legacyObject.role_url],
+        relationshipObjects.roles,
+        LegacyObjectUidPrefix.Role
+      ),
     };
   }
 
-  if (legacyObjectType === LegacyObjectType.Brands) {
-    const tagUids = getTags(legacyObject, relationshipObjects.tags);
-    return {
-      tags: {
-        link: tagUids,
-      },
-    };
-  }
+  return relationships;
+};
 
-  return undefined;
+export const createSetContent = async (
+  createdSets: GraphQLBaseObject[],
+  legacySets: FetchedLegacyObjects<LegacySet>,
+  createdObjects: CreatedSkylarkObjects
+) => {
+  const allCreatedObjects = Object.values(createdObjects).flatMap((arr) => arr);
+
+  const createdSetsWithContent = createdSets.map((set) => {
+    const legacySet = Object.values(legacySets.objects)
+      .flatMap((arr) => arr)
+      .find(({ uid }) => uid === set.external_id);
+
+    if (!legacySet) {
+      return {
+        ...set,
+        content: [],
+      };
+    }
+
+    const content = legacySet.items.map((item) => {
+      const externalId = getLegacyUidFromUrl(item.content_url);
+      const legacyObjectType = getLegacyObjectTypeFromUrl(item.content_url);
+
+      const objectType = convertLegacyObjectTypeToObjectType(legacyObjectType);
+
+      const createdItemObject = allCreatedObjects.find(
+        ({ external_id }) => external_id === externalId
+      );
+      if (!createdItemObject) {
+        throw new Error(
+          `[createSetContent] Set content item not found in createdObjects array`
+        );
+      }
+
+      return {
+        uid: createdItemObject.uid,
+        objectType,
+        position: item.position,
+      };
+    });
+
+    return {
+      ...set,
+      content,
+    };
+  });
+
+  await addContentToCreatedSets(createdSetsWithContent);
 };

@@ -11,16 +11,11 @@ import {
 } from "fs-extra";
 import { join } from "path";
 import {
-  LegacyAsset,
+  FetchedLegacyObjects,
   LegacyBrand,
-  LegacyEpisode,
   LegacyObjectType,
   LegacyObjects,
-  LegacySeason,
-  LegacyTag,
-  LegacyTagCategory,
 } from "./types/legacySkylark";
-import { USED_LANGUAGES } from "./constants";
 import { calculateTotalObjects } from "./utils";
 
 export const writeError = async (err: unknown) => {
@@ -44,17 +39,23 @@ const generateEnvIdentifier = () => {
   const onlyDataCreatedInLastMonth =
     process.env.LEGACY_DATA_LAST_MONTH_ONLY === "true";
 
+  const client = process.env.CLIENT
+    ? `${process.env.CLIENT.toLowerCase()}/`
+    : "";
+
   const env = process.env.LEGACY_API_URL
     ? process.env.LEGACY_API_URL.replace("https://", "")
         .replaceAll(".", "_")
         .replaceAll("-", "_")
     : "unknown";
 
+  const dir = `${client}${env}`;
+
   if (onlyDataCreatedInLastMonth) {
-    return `${env}_last_month_only`;
+    return `${dir}_last_month_only`;
   }
 
-  return env;
+  return dir;
 };
 
 const generateLegacyObjectsDir = () => {
@@ -89,11 +90,11 @@ export const createLegacyObjectsTimeStampedDir = async () => {
   return dir;
 };
 
-export const writeLegacyObjectsToDisk = async <T>(
+export const writeLegacyObjectsToDisk = async (
   dir: string,
   obj: {
     type: LegacyObjectType;
-    objects: Record<string, T[]>;
+    objects: Record<string, object[]>;
     totalFound: number;
   }
 ) => {
@@ -110,21 +111,14 @@ export const writeLegacyObjectsToDisk = async <T>(
 };
 
 export const writeAllLegacyObjectsToDisk = async (
-  objects: Record<
-    string,
-    {
-      type: LegacyObjectType;
-      objects: Record<string, LegacyObjects>;
-      totalFound: number;
-    }
-  >
+  objects: Record<string, FetchedLegacyObjects<LegacyObjects[0]>>
 ) => {
   try {
     const dir = await createLegacyObjectsTimeStampedDir();
 
     await Promise.all(
       Object.values(objects).map((value) =>
-        writeLegacyObjectsToDisk<LegacyObjects[0]>(dir, value)
+        writeLegacyObjectsToDisk(dir, value)
       )
     );
   } catch (err) {
@@ -133,14 +127,8 @@ export const writeAllLegacyObjectsToDisk = async (
 };
 
 export const writeStatsForLegacyObjectsToDisk = async (
-  legacyObjects: Record<
-    string,
-    {
-      type: LegacyObjectType;
-      objects: Record<string, LegacyObjects>;
-      totalFound: number;
-    }
-  >
+  legacyObjects: Record<string, FetchedLegacyObjects<LegacyObjects[0]>>,
+  languages: string[]
 ) => {
   try {
     const env = generateEnvIdentifier();
@@ -150,7 +138,7 @@ export const writeStatsForLegacyObjectsToDisk = async (
 
     const totalObjectsFound = calculateTotalObjects(legacyObjects);
 
-    let contents = `# Stats for ${env}\n\nTotal objects across ${USED_LANGUAGES.length} languages: ${totalObjectsFound}`;
+    let contents = `# Stats for ${env}\n\nTotal objects across ${languages.length} languages: ${totalObjectsFound}`;
 
     Object.values(legacyObjects).forEach(({ type, objects, totalFound }) => {
       contents += `\n\n## ${type} (${totalFound} total)\n`;
@@ -191,56 +179,30 @@ export const readObjectsFromFile = async <T>(
   return data;
 };
 
-export const readLegacyObjectsFromFile = async () => {
+export const readLegacyObjectsFromFile = async <T>(
+  objectsToFetch: Record<string, LegacyObjectType>
+): Promise<T> => {
   const mostRecentDir = await getMostRecentLegacyObjectsDir();
 
   console.log(`--- Using directory "${mostRecentDir}"`);
 
-  const tagCategories = await readObjectsFromFile<LegacyTagCategory>(
-    mostRecentDir,
-    LegacyObjectType.TagCategories
-  );
+  const retObj: Record<string, FetchedLegacyObjects<LegacyObjects[0]>> = {};
 
-  const tags = await readObjectsFromFile<LegacyTag>(
-    mostRecentDir,
-    LegacyObjectType.Tags
-  );
+  // eslint-disable-next-line no-restricted-syntax
+  for (const [key, legacyObjectType] of Object.entries(objectsToFetch)) {
+    // eslint-disable-next-line no-await-in-loop
+    const objects = await readObjectsFromFile<LegacyBrand>(
+      mostRecentDir,
+      legacyObjectType
+    );
 
-  const assets = await readObjectsFromFile<LegacyAsset>(
-    mostRecentDir,
-    LegacyObjectType.Assets
-  );
-
-  const episodes = await readObjectsFromFile<LegacyEpisode>(
-    mostRecentDir,
-    LegacyObjectType.Episodes
-  );
-
-  const seasons = await readObjectsFromFile<LegacySeason>(
-    mostRecentDir,
-    LegacyObjectType.Seasons
-  );
-
-  const brands = await readObjectsFromFile<LegacyBrand>(
-    mostRecentDir,
-    LegacyObjectType.Brands
-  );
-
-  const retObj = {
-    tagCategories,
-    tags,
-    assets,
-    episodes,
-    seasons,
-    brands,
-  };
+    retObj[key] = objects;
+  }
 
   const totalObjectsFound = calculateTotalObjects(retObj);
-  console.log(
-    `--- ${totalObjectsFound} objects read from disk (${USED_LANGUAGES.length} languages)`
-  );
+  console.log(`--- ${totalObjectsFound} objects read from disk`);
 
-  return retObj;
+  return retObj as T;
 };
 
 /* eslint-enable no-console */

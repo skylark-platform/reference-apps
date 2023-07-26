@@ -18,6 +18,7 @@ import {
   createDimensions,
   createOrUpdateAvailability,
   createOrUpdateScheduleDimensionValues,
+  showcaseDimensionsConfig,
 } from "./lib/skylark/saas/availability";
 import { slxDemoSetsToCreate } from "./additional-objects/slxDemosSets";
 import { updateSkylarkSchema } from "./lib/skylark/saas/schema";
@@ -64,7 +65,7 @@ const main = async () => {
   // // eslint-disable-next-line no-console
   // console.log("Object configuration updated");
 
-  await createDimensions();
+  await createDimensions(showcaseDimensionsConfig);
 
   const dimensions = await createOrUpdateScheduleDimensionValues(
     airtable.dimensions

@@ -48,7 +48,7 @@ const isKnownError = (errMessage: string) =>
 const graphqlMutationWithRetry = async <T>(
   mutation: string,
   variables: Variables,
-  { retries = 3, everySeconds = 5 },
+  { retries = 3, everySeconds = 10 },
   retriesCount = 0
 ): Promise<T> => {
   try {
@@ -132,7 +132,7 @@ export const mutateMultipleObjects = async <T extends { external_id?: string }>(
         try {
           const data = await graphqlMutationWithRetry<{
             [key: string]: T;
-          }>(graphQLMutation, {}, { retries: 10 });
+          }>(graphQLMutation, {}, { retries: 3 });
 
           if (!data) {
             return [];
@@ -184,13 +184,13 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
     isImage,
     language,
     relationships,
-    availabilityUids,
+    availabilities,
   }: {
     metadataAvailability?: GraphQLMetadata["availability"];
     isImage?: boolean;
     language?: string;
     relationships?: CreateOrUpdateRelationships;
-    availabilityUids?: string[];
+    availabilities?: Record<string, string[]>;
   }
 ): Promise<{
   createdObjects: GraphQLBaseObject[];
@@ -221,8 +221,8 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
           )
         : { link: [] };
 
-      if (availabilityUids) {
-        availability.link.push(...availabilityUids);
+      if (availabilities && hasProperty(availabilities, id)) {
+        availability.link.push(...availabilities[id]);
       }
 
       const objectFields: Record<string, string | object> = {
@@ -254,8 +254,11 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
           validRelationships.includes(rel)
         );
         if (!allRelationshipsValid) {
+          const invalidRelationships = relationshipNames.filter(
+            (rel) => !validRelationships.includes(rel)
+          );
           throw new Error(
-            `[createOrUpdateGraphQlObjectsUsingIntrospection] Invalid relationship given for ${id}: ${relationshipNames.join(
+            `[createOrUpdateGraphQlObjectsUsingIntrospection] Invalid relationship given for ${id}: ${invalidRelationships.join(
               ", "
             )}`
           );
@@ -412,7 +415,7 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
               isImage,
               language,
               relationships,
-              availabilityUids,
+              availabilities,
             }
           );
 
