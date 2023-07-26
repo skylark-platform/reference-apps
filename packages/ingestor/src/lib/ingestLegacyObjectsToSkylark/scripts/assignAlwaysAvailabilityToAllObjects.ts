@@ -9,6 +9,15 @@ import { addAlwaysAvailabilityToObjects } from "../skylark";
 import { LegacyObjectType, LegacyObjects } from "../types/legacySkylark";
 import { checkEnvVars } from "../utils";
 
+const objectsToFetch: Record<string, LegacyObjectType> = {
+  tagCategories: LegacyObjectType.TagCategories,
+  tags: LegacyObjectType.Tags,
+  assets: LegacyObjectType.Assets,
+  episodes: LegacyObjectType.Episodes,
+  seasons: LegacyObjectType.Seasons,
+  brands: LegacyObjectType.Brands,
+};
+
 const main = async () => {
   checkEnvVars();
 
@@ -24,7 +33,7 @@ const main = async () => {
       objects: Record<string, LegacyObjects>;
       totalFound: number;
     }[]
-  >();
+  >(objectsToFetch);
 
   const values = Object.values(legacyObjects);
 

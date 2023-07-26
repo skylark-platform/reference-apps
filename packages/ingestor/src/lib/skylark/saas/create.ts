@@ -184,13 +184,13 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
     isImage,
     language,
     relationships,
-    availabilityUids,
+    availabilities,
   }: {
     metadataAvailability?: GraphQLMetadata["availability"];
     isImage?: boolean;
     language?: string;
     relationships?: CreateOrUpdateRelationships;
-    availabilityUids?: string[];
+    availabilities?: Record<string, string[]>;
   }
 ): Promise<{
   createdObjects: GraphQLBaseObject[];
@@ -221,8 +221,8 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
           )
         : { link: [] };
 
-      if (availabilityUids) {
-        availability.link.push(...availabilityUids);
+      if (availabilities && hasProperty(availabilities, id)) {
+        availability.link.push(...availabilities[id]);
       }
 
       const objectFields: Record<string, string | object> = {
@@ -415,7 +415,7 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
               isImage,
               language,
               relationships,
-              availabilityUids,
+              availabilities,
             }
           );
 

@@ -12,7 +12,10 @@ import { GraphQLBaseObject } from "../interfaces";
 import { getExistingObjects } from "../skylark/saas/get";
 import { ConvertedLegacyObject, CreatedSkylarkObjects } from "./types/skylark";
 import { createRelationships } from "./skylarkRelationships";
-import { convertLegacyObjectTypeToObjectType } from "./utils";
+import {
+  convertLegacyObjectTypeToObjectType,
+  getLegacyUidFromUrl,
+} from "./utils";
 import { assignAvailabilitiesToObjects } from "../skylark/saas/availability";
 
 const getExistingObjectsForAllLanguages = async (
@@ -82,6 +85,7 @@ export const createObjectsInSkylark = async (
     legacyCredits?: FetchedLegacyObjects<ParsedSL8Credits>;
     isCreateOnly?: boolean;
     alwaysAvailability?: GraphQLBaseObject;
+    availabilities?: GraphQLBaseObject[];
   }
 ): Promise<GraphQLBaseObject[]> => {
   const { relationshipObjects, legacyObjectConverter, ...opts } = args;
@@ -148,6 +152,36 @@ export const createObjectsInSkylark = async (
       };
     }, {});
 
+    const availabilitiesToAdd: Record<string, string[]> = opts.availabilities
+      ? (legacyObjects as LegacyObjects[0][]).reduce((previous, obj) => {
+          const legacyUids = obj.schedule_urls?.map(getLegacyUidFromUrl);
+
+          if (!legacyUids) {
+            return opts.alwaysAvailability
+              ? { ...previous, [obj.uid]: [opts.alwaysAvailability.uid] }
+              : previous;
+          }
+
+          const uids = legacyUids
+            .map((legacyUid) => {
+              const availability = opts.availabilities?.find(
+                ({ external_id }) => external_id === legacyUid
+              );
+              return availability?.uid;
+            })
+            .filter((str): str is string => !!str);
+
+          if (opts.alwaysAvailability) {
+            uids.push(opts.alwaysAvailability.uid);
+          }
+
+          return {
+            ...previous,
+            [obj.uid]: uids,
+          };
+        }, {})
+      : {};
+
     // If in create only mode, get External IDs of existing objects for this language
     const previouslyCreatedObjectExternalIdsForThisLanguage =
       opts?.isCreateOnly && existingObjectsPerLanguage[language]
@@ -181,10 +215,6 @@ export const createObjectsInSkylark = async (
         language,
       }));
 
-    const availabilityUids = opts?.alwaysAvailability
-      ? [opts.alwaysAvailability.uid]
-      : [];
-
     const {
       createdObjects: createdLanguageObjects,
       deletedObjects: deletedLanguageObjects,
@@ -194,7 +224,7 @@ export const createObjectsInSkylark = async (
         objectType,
         existingExternalIds,
         objectsToCreate,
-        { language, relationships, availabilityUids }
+        { language, relationships, availabilities: availabilitiesToAdd }
       );
 
     accaArr.push(...createdLanguageObjects);
@@ -236,8 +266,6 @@ export const createObjectsInSkylark = async (
 
   return uniqueBaseObjects;
 };
-
-// export const createCreditsInSkylark = async(legacyCredits: Record<string, ParsedSL8Credits>) => {};
 
 export const addAlwaysAvailabilityToObjects = async (
   alwaysAvailability: GraphQLBaseObject,

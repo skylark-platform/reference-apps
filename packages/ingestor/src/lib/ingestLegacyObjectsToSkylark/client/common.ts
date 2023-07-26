@@ -138,6 +138,7 @@ export const commonSkylarkConfigurationUpdates = async ({
 };
 
 export const createEmptySkylarkObjects = (): CreatedSkylarkObjects => ({
+  availabilities: [],
   tagCategories: [],
   tags: [],
   people: [],

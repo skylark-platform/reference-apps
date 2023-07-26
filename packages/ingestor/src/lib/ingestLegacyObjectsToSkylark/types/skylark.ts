@@ -1,6 +1,7 @@
 import { GraphQLBaseObject } from "../../interfaces";
 
 export type CreatedSkylarkObjectKeys =
+  | "availabilities"
   | "tagCategories"
   | "tags"
   | "assets"

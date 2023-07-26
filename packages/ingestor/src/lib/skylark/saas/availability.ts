@@ -3,8 +3,13 @@ import {
   GraphQLObjectTypes,
   graphQLClient,
 } from "@skylark-reference-apps/lib";
-import { Record as AirtableRecord, FieldSet } from "airtable";
-import { jsonToGraphQLQuery } from "json-to-graphql-query";
+import {
+  Record as AirtableRecord,
+  Attachment,
+  Collaborator,
+  FieldSet,
+} from "airtable";
+import { EnumType, jsonToGraphQLQuery } from "json-to-graphql-query";
 import { gql } from "graphql-request";
 import {
   Airtables,
@@ -18,7 +23,10 @@ import { mutateMultipleObjects } from "./create";
 import { getExistingObjects, getValidPropertiesForObject } from "./get";
 import { createGraphQLOperation, getValidFields } from "./utils";
 
-const dimensionsConfig: { slug: DimensionTypes; title: string }[] = [
+export const showcaseDimensionsConfig: {
+  slug: DimensionTypes;
+  title: string;
+}[] = [
   {
     title: "Customer Type",
     slug: "customer-types",
@@ -29,7 +37,7 @@ const dimensionsConfig: { slug: DimensionTypes; title: string }[] = [
   },
 ];
 
-const getExistingDimensions = async (
+export const getExistingDimensions = async (
   nextToken?: string
 ): Promise<GraphQLDimension[]> => {
   const query = {
@@ -116,7 +124,9 @@ const getExistingDimensionValues = async (
   return objects;
 };
 
-export const createDimensions = async () => {
+export const createDimensions = async (
+  dimensionsConfig: { title: string; slug: string }[]
+) => {
   const existingTypes: GraphQLDimension[] = await getExistingDimensions();
 
   const existingSlugs = existingTypes.map(({ slug }) => slug);
@@ -157,10 +167,23 @@ export const createDimensions = async () => {
   return arr;
 };
 
-const createOrUpdateDimensionValues = async (
-  type: DimensionTypes,
+export const createOrUpdateDimensionValues = async (
+  type: DimensionTypes | string,
   validProperties: GraphQLIntrospectionProperties[],
-  airtableRecords: AirtableRecord<FieldSet>[],
+  valuesToCreate: (Record<
+    string,
+    | EnumType
+    | undefined
+    | null
+    | object
+    | string
+    | number
+    | boolean
+    | Collaborator
+    | ReadonlyArray<Collaborator>
+    | ReadonlyArray<string>
+    | ReadonlyArray<Attachment>
+  > & { _id: string })[],
   dimensions: GraphQLDimension[]
 ) => {
   const dimension = dimensions.find(({ slug }) => slug === type);
@@ -173,8 +196,8 @@ const createOrUpdateDimensionValues = async (
   );
   const existingObjectSlugs = existingDimensionValues.map(({ slug }) => slug);
 
-  const operations = airtableRecords.reduce(
-    (previousOperations, { fields, id }) => {
+  const operations = valuesToCreate.reduce(
+    (previousOperations, { _id, ...fields }) => {
       const validFields = getValidFields(fields, validProperties);
 
       const objectExists = existingObjectSlugs.includes(fields.slug as string);
@@ -189,7 +212,7 @@ const createOrUpdateDimensionValues = async (
           ? validFields
           : {
               ...validFields,
-              external_id: id,
+              external_id: _id,
             },
       };
 
@@ -206,12 +229,12 @@ const createOrUpdateDimensionValues = async (
         "DimensionValue",
         objectExists,
         args,
-        { dimension_id: type, value_external_id: id }
+        { dimension_id: type, value_external_id: _id }
       );
 
       const updatedOperations: { [key: string]: object } = {
         ...previousOperations,
-        [`${method}${id}`]: operation,
+        [`${method}${_id}`]: operation,
       };
       return updatedOperations;
     },
@@ -241,9 +264,18 @@ export const createOrUpdateScheduleDimensionValues = async (
   const validProperties = await getValidPropertiesForObject("DimensionValue");
 
   const [customerTypes, deviceTypes] = await Promise.all(
-    dimensionValues.map(({ data, type }) =>
-      createOrUpdateDimensionValues(type, validProperties, data, dimensions)
-    )
+    dimensionValues.map(({ data, type }) => {
+      const formattedValuesToCreate = data.map(({ id, fields }) => ({
+        ...fields,
+        _id: id,
+      }));
+      return createOrUpdateDimensionValues(
+        type,
+        validProperties,
+        formattedValuesToCreate,
+        dimensions
+      );
+    })
   );
   return {
     customerTypes,
@@ -260,7 +292,7 @@ const getValueSlugs = (
     .map(({ slug }) => slug);
 
 export const createOrUpdateAvailability = async (
-  schedules: AirtableRecord<FieldSet>[],
+  schedules: { id: string; fields: FieldSet }[],
   dimensions: GraphQLMetadata["dimensions"]
 ) => {
   const externalIds = schedules.map(({ id }) => ({ externalId: id }));
@@ -269,14 +301,7 @@ export const createOrUpdateAvailability = async (
     externalIds
   );
 
-  const schedulesToCreate = schedules.filter(
-    ({ id }) => !existingExternalIds.has(id)
-  );
-  if (schedulesToCreate.length === 0) {
-    return;
-  }
-
-  const operations = schedulesToCreate.reduce(
+  const operations = schedules.reduce(
     (previousOperations, { id, ...record }) => {
       const fields = record.fields as AvailabilityTableFields;
 
@@ -289,7 +314,7 @@ export const createOrUpdateAvailability = async (
         end?: string;
         dimensions?: {
           link: {
-            dimension_slug: DimensionTypes;
+            dimension_slug: DimensionTypes | string;
             value_slugs: string[];
           }[];
         };
@@ -299,7 +324,7 @@ export const createOrUpdateAvailability = async (
       };
 
       const availabilityDimensions: {
-        dimension_slug: DimensionTypes;
+        dimension_slug: DimensionTypes | string;
         value_slugs: string[];
       }[] = [
         {
@@ -313,7 +338,7 @@ export const createOrUpdateAvailability = async (
           dimension_slug: "device-types",
           value_slugs: getValueSlugs(dimensions.deviceTypes, fields.devices),
         },
-      ];
+      ].filter(({ value_slugs }) => value_slugs.length > 0);
 
       // Filter out any dimensions that are empty, only add the dimensions property to the input if at least one dimension is given
       const filteredDimensions = availabilityDimensions.filter(
@@ -358,10 +383,12 @@ export const createOrUpdateAvailability = async (
     {} as { [key: string]: object }
   );
 
-  await mutateMultipleObjects<GraphQLBaseObject>(
+  const createdAvailabilities = await mutateMultipleObjects<GraphQLBaseObject>(
     "createOrUpdateAvailability",
     operations
   );
+
+  return createdAvailabilities;
 };
 
 export const createAlwaysAndForeverAvailability = async (

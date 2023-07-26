@@ -6,8 +6,8 @@ import axiosRetry, { exponentialDelay } from "axios-retry";
 import {
   FetchedLegacyObjects,
   LegacyAsset,
+  LegacyBaseObject,
   LegacyBrand,
-  LegacyCommonObject,
   LegacyEpisode,
   LegacyObjectType,
   LegacyResponseListObjectsData,
@@ -68,7 +68,7 @@ const createLegacyAxios = (language: string) => {
   return { legacyAxios };
 };
 
-const getAllObjectsOfType = async <T extends LegacyCommonObject>(
+const getAllObjectsOfType = async <T extends LegacyBaseObject>(
   type: LegacyObjectType,
   language: string
 ): Promise<{ type: LegacyObjectType; objects: T[] }> => {
@@ -146,6 +146,9 @@ const getAllObjectsOfType = async <T extends LegacyCommonObject>(
           if (type === LegacyObjectType.Assets) {
             query.push("fields_to_expand=asset_type_url");
           }
+          if (type === LegacyObjectType.Schedules) {
+            query.push("fields_to_expand=customer_type_urls,device_type_urls");
+          }
 
           if (onlyDataCreatedInLastMonth) {
             query.push(lastMonthQuery);
@@ -195,9 +198,7 @@ const getAllObjectsOfType = async <T extends LegacyCommonObject>(
   return { type, objects };
 };
 
-export const fetchObjectsFromLegacySkylark = async <
-  T extends LegacyCommonObject
->(
+export const fetchObjectsFromLegacySkylark = async <T extends LegacyBaseObject>(
   type: LegacyObjectType,
   languagesToCheck: string[]
 ): Promise<FetchedLegacyObjects<T>> => {
@@ -219,6 +220,11 @@ export const fetchObjectsFromLegacySkylark = async <
     if (objects.length > 0) {
       allObjects[language] = objectsWithType;
     }
+
+    // Schedules don't have languages
+    if (type === LegacyObjectType.Schedules) {
+      break;
+    }
   }
 
   const total = outputLegacyObjectCount({ type, objects: allObjects });
@@ -231,7 +237,7 @@ export const fetchObjectsFromLegacySkylark = async <
 };
 
 export const fetchLegacyObjectsAndWriteToDisk = async <
-  T extends LegacyCommonObject
+  T extends LegacyBaseObject
 >(
   type: LegacyObjectType,
   dir: string,

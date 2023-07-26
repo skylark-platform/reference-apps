@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import dayjs from "dayjs";
+import { FieldSet } from "airtable";
 import {
   FetchedLegacyObjects,
   LegacyAsset,
@@ -12,6 +13,7 @@ import {
   LegacyPerson,
   LegacyRating,
   LegacyRole,
+  LegacySchedule,
   LegacySeason,
   LegacySet,
   LegacyTag,
@@ -31,6 +33,14 @@ import {
 import { convertSL8CreditsToLegacyObjects } from "../legacy";
 
 import { createSetContent } from "../skylarkRelationships";
+import {
+  createDimensions,
+  createOrUpdateAvailability,
+  createOrUpdateDimensionValues,
+  getExistingDimensions,
+} from "../../skylark/saas/availability";
+import { GraphQLDimension } from "../../interfaces";
+import { getValidPropertiesForObject } from "../../skylark/saas/get";
 
 interface CustomerCLegacyObjects
   extends Record<string, FetchedLegacyObjects<LegacyObjects[0]>> {
@@ -46,6 +56,7 @@ interface CustomerCLegacyObjects
   seasons: FetchedLegacyObjects<LegacySeason>;
   brands: FetchedLegacyObjects<LegacyBrand>;
   sets: FetchedLegacyObjects<LegacySet>;
+  schedules: FetchedLegacyObjects<LegacySchedule>;
 }
 
 const languagesToCheck = ["en-gb"];
@@ -67,6 +78,12 @@ const convertLegacyObject = (
     external_id: legacyObject.uid,
     title_sort: legacyObject.data_source_id, // Switch this to External ID when client happy
   };
+
+  if (legacyObjectType === LegacyObjectType.Schedules) {
+    return {
+      ...commonFields,
+    };
+  }
 
   if (legacyObjectType === LegacyObjectType.Assets) {
     const assetType = legacyObject.asset_type_url?.name || null;
@@ -151,8 +168,6 @@ const convertLegacyObject = (
     return {
       ...commonFields,
       internal_title: legacyObject.title,
-      // Handle both potentially valid fields (after a fix)
-      schema: legacyObject.scheme,
       scheme: legacyObject.scheme,
     };
   }
@@ -203,6 +218,29 @@ const convertLegacyObject = (
   return commonFields;
 };
 
+const parseSL8Dimensions = (schedules: Record<string, LegacySchedule[]>) => {
+  // Never has a language
+  const allCustomerTypes = Object.values(schedules)[0].reduce(
+    (previous, schedule) => {
+      const parsedTypes = schedule.customer_type_urls.map((cust) => ({
+        _id: cust.uid,
+        title: cust.name,
+        slug: cust.slug,
+      }));
+      return [...previous, ...parsedTypes];
+    },
+    [] as { _id: string; title: string; slug: string }[]
+  );
+
+  const uniqueCustomerTypes = allCustomerTypes.filter(
+    (customerType, index) =>
+      // eslint-disable-next-line no-underscore-dangle
+      allCustomerTypes.findIndex((ct) => ct._id === customerType._id) === index
+  );
+
+  return uniqueCustomerTypes;
+};
+
 export const ingestClientC = async ({
   readFromDisk,
   isCreateOnly,
@@ -212,6 +250,7 @@ export const ingestClientC = async ({
 }) => {
   const objectsToFetch: Record<keyof CustomerCLegacyObjects, LegacyObjectType> =
     {
+      schedules: LegacyObjectType.Schedules,
       tagCategories: LegacyObjectType.TagCategories,
       tags: LegacyObjectType.Tags,
       genres: LegacyObjectType.Genres,
@@ -253,6 +292,43 @@ export const ingestClientC = async ({
 
   await clearUnableToFindVersionNoneObjectsFile();
 
+  const dimensionsToCreate = [
+    {
+      title: "Customer Type",
+      slug: "customer-types",
+    },
+  ];
+  await createDimensions(dimensionsToCreate);
+
+  const customerTypes = parseSL8Dimensions(legacyObjects.schedules.objects);
+
+  const dimensions: GraphQLDimension[] = await getExistingDimensions();
+  const validProperties = await getValidPropertiesForObject("DimensionValue");
+  const createdDimensions = await createOrUpdateDimensionValues(
+    dimensionsToCreate[0].slug,
+    validProperties,
+    customerTypes,
+    dimensions
+  );
+
+  const sl8SchedulesInAirtableFormat = Object.values(
+    legacyObjects.schedules.objects
+  )[0].map((obj) => ({
+    id: obj.uid,
+    fields: {
+      ...obj,
+      customers: obj.customer_type_urls.map(({ uid }) => uid),
+      title: obj.rights ? `${obj.title} (License)` : obj.title,
+    } as unknown as FieldSet,
+  }));
+  const availabilities = await createOrUpdateAvailability(
+    sl8SchedulesInAirtableFormat,
+    {
+      customerTypes: createdDimensions,
+      deviceTypes: [],
+    }
+  );
+
   const skylarkObjects = createEmptySkylarkObjects();
 
   const commonArgs = {
@@ -261,6 +337,7 @@ export const ingestClientC = async ({
     isCreateOnly,
     legacyCredits,
     // alwaysAvailability,
+    availabilities,
   };
 
   skylarkObjects.tagCategories = await createObjectsInSkylark(
@@ -299,10 +376,13 @@ export const ingestClientC = async ({
   );
 
   // Create Credits after People and Roles but before Assets/Episodes/Seasons/Brands/Sets
-  skylarkObjects.credits = await createObjectsInSkylark(
-    legacyCredits,
-    commonArgs
-  );
+  const alwaysAvailabilityForCredit = availabilities.find(
+    (availability) => availability.slug === "always"
+  ); // This should be the always schedule (not license)
+  skylarkObjects.credits = await createObjectsInSkylark(legacyCredits, {
+    ...commonArgs,
+    alwaysAvailability: alwaysAvailabilityForCredit,
+  });
 
   skylarkObjects.assets = await createObjectsInSkylark(
     legacyObjects.assets,
