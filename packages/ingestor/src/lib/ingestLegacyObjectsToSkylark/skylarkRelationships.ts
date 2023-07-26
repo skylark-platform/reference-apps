@@ -170,7 +170,7 @@ export const createRelationships = (
 
   // GENRES
   if (
-    // LegacyObjectType.Assets === legacyObjectType || // TODO enable Assets to relationships to Genres and enable
+    LegacyObjectType.Assets === legacyObjectType ||
     LegacyObjectType.Brands === legacyObjectType ||
     LegacyObjectType.Episodes === legacyObjectType ||
     LegacyObjectType.Seasons === legacyObjectType ||
@@ -202,7 +202,7 @@ export const createRelationships = (
 
   // CREDITS
   if (
-    // LegacyObjectType.Assets === legacyObjectType || // TODO enable Assets to relationships to Genres and enable
+    LegacyObjectType.Assets === legacyObjectType ||
     LegacyObjectType.Brands === legacyObjectType ||
     LegacyObjectType.Episodes === legacyObjectType ||
     LegacyObjectType.Seasons === legacyObjectType ||
