@@ -94,8 +94,6 @@ export const TagRail = ({
 
   const objects = [...episodes, ...movies];
 
-  console.log({ objects, tag });
-
   return (
     <Rail className={className} displayCount>
       {objects?.map((object) =>
