@@ -9,3 +9,5 @@ export const LOCAL_STORAGE = {
   uri: "streamtv:uri",
   apikey: "streamtv:apikey",
 };
+export const CLOUDINARY_ENVIRONMENT = process.env
+  .NEXT_PUBLIC_CLOUDINARY_ENVIRONMENT as string;

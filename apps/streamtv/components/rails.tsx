@@ -5,43 +5,24 @@ import {
   Season,
   SetContent,
   SkylarkSet,
-  StreamTVSupportedSetType,
+  StreamTVSupportedImageType,
 } from "../types";
-import { Thumbnail, ThumbnailVariant } from "./thumbnail";
-
-const getThumbnailVariantFromSetType = (
-  setType: SkylarkSet["type"]
-): ThumbnailVariant => {
-  if (setType === StreamTVSupportedSetType.RailInset) {
-    return "landscape-inside";
-  }
-
-  if (setType === StreamTVSupportedSetType.RailWithSynopsis) {
-    return "landscape-synopsis";
-  }
-
-  if (setType === StreamTVSupportedSetType.RailMovie) {
-    return "landscape-movie";
-  }
-
-  if (
-    setType === StreamTVSupportedSetType.RailPortrait ||
-    setType === StreamTVSupportedSetType.Collection
-  ) {
-    return "portrait";
-  }
-
-  return "landscape";
-};
+import {
+  Thumbnail,
+  ThumbnailVariant,
+  getThumbnailVariantFromSetType,
+} from "./thumbnail";
 
 export const SeasonRail = ({
   season,
   header,
   className,
+  preferredImageType,
 }: {
   season: Season;
   header?: string;
   className?: string;
+  preferredImageType?: StreamTVSupportedImageType;
 }) => (
   <Rail
     className={className}
@@ -53,6 +34,7 @@ export const SeasonRail = ({
         <Thumbnail
           key={object.uid}
           objectType={ObjectTypes.Episode}
+          preferredImageType={preferredImageType}
           uid={object.uid}
           variant="landscape-synopsis"
         />

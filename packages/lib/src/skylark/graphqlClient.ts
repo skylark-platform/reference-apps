@@ -1,9 +1,26 @@
-import { GraphQLClient, request } from "graphql-request";
+import {
+  GraphQLClient,
+  RequestDocument,
+  Variables,
+  request,
+} from "graphql-request";
 import { SAAS_API_ENDPOINT, SAAS_API_KEY } from "./skylark.constants";
 
-export const graphQLClient = new GraphQLClient(SAAS_API_ENDPOINT, {
+class SkylarkGraphQLClient extends GraphQLClient {
+  uncachedRequest<T>(
+    document: RequestDocument,
+    variables?: Variables | undefined,
+    requestHeaders?: HeadersInit | undefined
+  ) {
+    return this.request<T>(document, variables, {
+      ...requestHeaders,
+      "x-bypass-cache": "1",
+    });
+  }
+}
+
+export const graphQLClient = new SkylarkGraphQLClient(SAAS_API_ENDPOINT, {
   headers: {
-    "x-api-key": SAAS_API_KEY,
     Authorization: SAAS_API_KEY,
   },
 });
@@ -12,11 +29,10 @@ export const skylarkRequest = <T>(
   uri: string,
   apiKey: string,
   query: string,
-  variables: object,
+  variables: Variables,
   headers: object
 ) =>
   request<T>(uri, query, variables, {
     ...headers,
-    "x-api-key": apiKey,
     Authorization: apiKey,
   });

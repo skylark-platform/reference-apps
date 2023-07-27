@@ -12,10 +12,9 @@ describe("graphQLClient", () => {
   it("instantiates a new GraphQLClient", () => {
     const client = new GraphQLClient("https://endpoint/graphql", {
       headers: {
-        "x-api-key": "api-key",
         Authorization: "api-key",
       },
     });
-    expect(graphQLClient).toEqual(client);
+    expect(graphQLClient.requestConfig).toEqual(client.requestConfig);
   });
 });

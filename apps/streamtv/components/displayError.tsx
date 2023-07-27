@@ -28,8 +28,12 @@ export const DisplayError = ({ error, notFoundMessage }: DisplayErrorProps) => {
 
   return (
     <div className="flex h-screen flex-col items-center justify-center text-white">
-      <p className="mb-4 text-lg font-medium">{header}</p>
-      <p className="max-w-md text-center text-sm">{message.toString()}</p>
+      <p className="mb-4 mt-20 text-lg font-medium">{header}</p>
+      {typeof message === "object" ? (
+        <pre className="text-sm">{JSON.stringify(message, null, 4)}</pre>
+      ) : (
+        <p className="max-w-md text-center text-sm">{message}</p>
+      )}
     </div>
   );
 };

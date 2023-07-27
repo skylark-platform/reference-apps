@@ -66,3 +66,26 @@ export interface GraphQLDimension {
   slug: string;
   description?: string;
 }
+
+export interface GraphQLObjectRelationshipsType {
+  GET_OBJECT_RELATIONSHIPS: {
+    name: string;
+    inputFields: {
+      name: string;
+      type: {
+        name: string;
+      };
+    }[];
+  } | null;
+}
+
+export type CreateOrUpdateRelationships = Record<
+  string,
+  Record<string, { link: string[] }>
+>;
+
+export type SkylarkGraphQLError = {
+  response: {
+    errors: { path: string[]; errorType: string; message: string }[];
+  };
+};

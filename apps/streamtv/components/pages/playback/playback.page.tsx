@@ -1,5 +1,4 @@
 import React from "react";
-import type { NextPage } from "next";
 import { formatReleaseDate } from "@skylark-reference-apps/lib";
 import useTranslation from "next-translate/useTranslation";
 import {
@@ -18,9 +17,10 @@ import {
   SkeletonPage,
 } from "@skylark-reference-apps/react";
 import { Dayjs } from "dayjs";
+import { NextPage } from "next";
 import { getTimeFromNow } from "../../../lib/utils";
 
-interface Props {
+interface PlaybackPageProps {
   loading?: boolean;
   title: string;
   synopsis: string;
@@ -53,7 +53,7 @@ interface Props {
   availabilityEndDate: Dayjs | null;
 }
 
-export const PlaybackPage: NextPage<Props> = ({
+export const PlaybackPage: NextPage<PlaybackPageProps> = ({
   loading,
   title,
   synopsis,

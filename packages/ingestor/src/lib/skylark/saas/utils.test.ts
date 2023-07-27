@@ -94,7 +94,7 @@ describe("saas/utils.ts", () => {
       slug: "a-title",
       phone_number: "07777777",
       theme: ["theme-1"],
-      enum: "enum",
+      enum: "ENUM",
     };
 
     it("returns fields object containing only properties that exist in the validProperties array", () => {

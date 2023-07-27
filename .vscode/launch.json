@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug ingestor - (All content)",
+      "name": "Debug ingestor (with StreamTV sets)",
       "request": "launch",
       "cwd": "${workspaceFolder}/packages/ingestor",
       "runtimeArgs": ["ingest"],
@@ -17,7 +17,7 @@
       }
     },
     {
-      "name": "Debug ingestor - (StreamTV only)",
+      "name": "Debug ingestor (with SLX Demo sets)",
       "request": "launch",
       "cwd": "${workspaceFolder}/packages/ingestor",
       "runtimeArgs": ["ingest"],
@@ -25,22 +25,43 @@
       "skipFiles": ["<node_internals>/**"],
       "type": "node",
       "env": {
-        "CREATE_SETS": "true",
-        "CONTENT_TYPE": "streamtv"
+        "CREATE_SLX_DEMO_SETS": "true"
       }
     },
     {
-      "name": "Debug ingestor - (SLX Demos only)",
+      "name": "[LEGACY] Ingest from Legacy to Skylark",
       "request": "launch",
       "cwd": "${workspaceFolder}/packages/ingestor",
-      "runtimeArgs": ["ingest"],
+      "runtimeArgs": ["ingest:legacy-to-skylark"],
       "runtimeExecutable": "yarn",
       "skipFiles": ["<node_internals>/**"],
       "type": "node",
       "env": {
-        "CREATE_SETS": "true",
-        "CONTENT_TYPE": "slxdemos"
+        "LEGACY_DATA_LAST_MONTH_ONLY": "false"
       }
+    },
+    {
+      "name": "[LEGACY - FROM DISK] Ingest from Legacy to Skylark",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/packages/ingestor",
+      "runtimeArgs": ["ingest:legacy-to-skylark-from-disk"],
+      "runtimeExecutable": "yarn",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node",
+      "env": {
+        "LEGACY_DATA_LAST_MONTH_ONLY": "false",
+        "CREATE_ONLY": "false"
+      }
+    },
+    {
+      "name": "[LEGACY - FROM DISK] Link Availability to Existing Objects",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/packages/ingestor",
+      "runtimeArgs": ["ingest:legacy-to-skylark:availability"],
+      "runtimeExecutable": "yarn",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node",
+      "env": {}
     }
   ]
 }

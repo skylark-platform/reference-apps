@@ -27,10 +27,20 @@ const ACTIVATE_CONFIGURATION_VERSION = gql`
   }
 `;
 
+const GET_ENUM_VALUES = gql`
+  query GET_ENUM_VALUES($name: String!) {
+    __type(name: $name) {
+      enumValues {
+        name
+      }
+    }
+  }
+`;
+
 const getActivationStatus = async () => {
-  const res = await graphQLClient.request<{
+  const res = await graphQLClient.uncachedRequest<{
     getActivationStatus: {
-      active_version: number;
+      active_version: string;
       update_in_progress: boolean;
       update_started_at: string;
     };
@@ -39,18 +49,39 @@ const getActivationStatus = async () => {
   return res.getActivationStatus;
 };
 
-const activateConfigurationVersion = async (version: number) => {
-  const res = await graphQLClient.request<{
+export const activateConfigurationVersion = async (version: number) => {
+  const res = await graphQLClient.uncachedRequest<{
     activateConfigurationVersion: { version: number; messages: string };
   }>(ACTIVATE_CONFIGURATION_VERSION, { version });
 
   return res.activateConfigurationVersion;
 };
 
-const updateSetTypes = async (version?: number) => {
+const getEnumValues = async (name: string) => {
+  const data = await graphQLClient.uncachedRequest<{
+    __type: { enumValues: { name: string }[] };
+  }>(GET_ENUM_VALUES, { name });
+
+  // eslint-disable-next-line no-underscore-dangle
+  const values = data.__type.enumValues.map((e) => e.name.toUpperCase());
+  return values;
+};
+
+export const updateEnumTypes = async (
+  enumName: string,
+  values: string[],
+  version: number | string
+): Promise<{ version: number | null }> => {
+  const existingValues = await getEnumValues(enumName);
+  if (values.every((value) => existingValues.includes(value.toUpperCase()))) {
+    return {
+      version: null,
+    };
+  }
+
   const mutation = {
     mutation: {
-      __name: "UPDATE_SET_TYPES",
+      __name: `UPDATE_${enumName}`,
       __variables: {
         version: "Int!",
       },
@@ -58,9 +89,9 @@ const updateSetTypes = async (version?: number) => {
         __args: {
           version: new VariableType("version"),
           enums: {
-            name: "SetType",
+            name: enumName,
             operation: new EnumType("UPDATE"),
-            values: ENUMS.SET_TYPES,
+            values,
           },
         },
         version: true,
@@ -71,7 +102,7 @@ const updateSetTypes = async (version?: number) => {
 
   const graphQLQuery = jsonToGraphQLQuery(mutation);
 
-  const { editEnumConfiguration } = await graphQLClient.request<{
+  const { editEnumConfiguration } = await graphQLClient.uncachedRequest<{
     editEnumConfiguration: { version: number; messages: string };
   }>(graphQLQuery, { version });
 
@@ -80,36 +111,99 @@ const updateSetTypes = async (version?: number) => {
   };
 };
 
-export const updateSkylarkSchema = async () => {
+const addPreferredImageTypeToSeason = async (version?: number) => {
+  const UPDATE_SEASON_FIELDS = gql`
+    mutation UPDATE_SEASON_FIELDS($version: Int!) {
+      editFieldConfiguration(
+        version: $version
+        fields: {
+          name: "preferred_image_type"
+          operation: CREATE
+          type: ENUM
+          enum_name: "ImageType"
+          is_translatable: false
+        }
+        object_class: Season
+      ) {
+        messages
+        version
+      }
+    }
+  `;
+
+  try {
+    const { editFieldConfiguration } = await graphQLClient.uncachedRequest<{
+      editFieldConfiguration: { version: number; messages: string };
+    }>(UPDATE_SEASON_FIELDS, { version });
+    return {
+      version: editFieldConfiguration.version,
+    };
+  } catch (e) {
+    const err = e as { response?: { errors?: { message: string }[] } };
+    // Ignore error if all fields have been added already
+    if (
+      err?.response?.errors &&
+      err.response.errors.length === 1 &&
+      err.response.errors[0].message ===
+        "Some fields already exist on type Season: ['preferred_image_type']"
+    ) {
+      return {
+        version,
+      };
+    }
+    throw e;
+  }
+};
+
+export const waitForUpdatingSchema = async () => {
   const {
-    active_version: initialVersion,
-    update_in_progress: initialUpdateInProgress,
+    active_version: activeVersion,
+    update_in_progress: updateInProgress,
   } = await getActivationStatus();
 
-  if (initialUpdateInProgress) {
-    let initialUpdating = true;
-    while (initialUpdating) {
-      const { update_in_progress: initialUpdateStillRunning } =
-        // eslint-disable-next-line no-await-in-loop
-        await getActivationStatus();
-      initialUpdating = initialUpdateStillRunning;
+  if (updateInProgress) {
+    let currentlyUpdating = true;
+    while (currentlyUpdating) {
       // eslint-disable-next-line no-await-in-loop
       await pause(2500);
+      const { update_in_progress: updateStillRunning } =
+        // eslint-disable-next-line no-await-in-loop
+        await getActivationStatus();
+      currentlyUpdating = updateStillRunning;
     }
   }
 
-  const { version: updatedVersion } = await updateSetTypes(initialVersion);
+  return parseInt(activeVersion, 10);
+};
 
-  await activateConfigurationVersion(updatedVersion);
+export const updateSkylarkSchema = async () => {
+  const initialVersion = await waitForUpdatingSchema();
 
-  let activeVersion = initialVersion;
-  while (`${activeVersion}` !== `${updatedVersion}`) {
-    // eslint-disable-next-line no-await-in-loop
-    const { active_version: currentVersion } = await getActivationStatus();
-    activeVersion = currentVersion;
-    // eslint-disable-next-line no-await-in-loop
-    await pause(5000);
+  const { version: setTypeVersion } = await updateEnumTypes(
+    "SetType",
+    ENUMS.SET_TYPES,
+    initialVersion
+  );
+
+  const { version: imageTypeVersion } = await updateEnumTypes(
+    "ImageType",
+    ENUMS.IMAGE_TYPES,
+    setTypeVersion || initialVersion
+  );
+
+  const { version: seasonUpdateVersion } = await addPreferredImageTypeToSeason(
+    imageTypeVersion || initialVersion
+  );
+
+  const finalVersionNumber: number =
+    seasonUpdateVersion || imageTypeVersion || setTypeVersion || initialVersion;
+
+  if (finalVersionNumber !== initialVersion) {
+    await activateConfigurationVersion(finalVersionNumber);
+
+    const activeVersion = await waitForUpdatingSchema();
+    return { version: activeVersion };
   }
 
-  return { version: activeVersion };
+  return { version: initialVersion };
 };

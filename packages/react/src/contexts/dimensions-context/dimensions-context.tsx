@@ -2,6 +2,7 @@ import { Dimensions } from "@skylark-reference-apps/lib";
 import React, { createContext, useContext, useEffect, useReducer } from "react";
 import setLanguage from "next-translate/setLanguage";
 import useTranslation from "next-translate/useTranslation";
+import { useRouter } from "next/router";
 import { useDeviceType } from "../../hooks";
 
 interface ReducerAction {
@@ -60,7 +61,11 @@ const DimensionsContext = createContext<DimensionsContextType>({
   setTimeTravel: () => {},
 });
 
-export const DimensionsContextProvider: React.FC = ({ children }) => {
+export const DimensionsContextProvider = ({
+  children,
+}: {
+  children?: React.ReactNode;
+}) => {
   const deviceType = useDeviceType();
   const { lang } = useTranslation();
 
@@ -97,4 +102,15 @@ export const DimensionsContextProvider: React.FC = ({ children }) => {
   );
 };
 
-export const useDimensions = () => useContext(DimensionsContext);
+export const useDimensions = (): DimensionsContextType => {
+  const { query } = useRouter();
+  const { dimensions, ...context } = useContext(DimensionsContext);
+
+  return {
+    ...context,
+    dimensions: {
+      ...dimensions,
+      language: (query.language as string) || dimensions.language,
+    },
+  };
+};

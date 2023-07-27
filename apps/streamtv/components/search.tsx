@@ -1,12 +1,12 @@
 import { formatReleaseDate, hasProperty } from "@skylark-reference-apps/lib";
 import clsx from "clsx";
-import Link from "next/link";
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MdOutlineRotateRight, MdClear, MdSearch } from "react-icons/md";
 import { useDebounce } from "use-debounce";
 import { sanitize } from "dompurify";
 import { sentenceCase } from "sentence-case";
 
+import { Link } from "@skylark-reference-apps/react";
 import { useSearch } from "../hooks/useSearch";
 import {
   convertGraphQLSetType,
@@ -95,45 +95,44 @@ const SearchResultItem = ({
   typename: string;
   onClick: () => void;
 }) => (
-  <Link href={href}>
-    <a
-      className="group mb-4  grid grid-cols-[4fr_1fr] items-center gap-4 last:mb-0"
-      onClick={() => onClick()}
-    >
-      <div className="flex h-full flex-col">
-        <div className="flex flex-col">
+  <Link
+    className="group mb-4  grid grid-cols-[4fr_1fr] items-center gap-4 last:mb-0"
+    href={href}
+    onClick={() => onClick()}
+  >
+    <div className="flex h-full flex-col">
+      <div className="flex flex-col">
+        <HighlightedSearchResultText
+          className="text-lg font-medium text-gray-100 transition-colors group-hover:text-purple-400"
+          matchClassName="[&>span]:font-bold"
+          text={title}
+        />
+        {description && (
           <HighlightedSearchResultText
-            className="text-lg font-medium text-gray-100 transition-colors group-hover:text-purple-400"
-            matchClassName="[&>span]:font-bold"
-            text={title}
-          />
-          {description && (
-            <HighlightedSearchResultText
-              className="line-clamp-3 text-sm text-gray-400 transition-colors group-hover:text-purple-400"
-              matchClassName="[&>span]:font-semibold"
-              text={description}
-            />
-          )}
-        </div>
-        <div className="flex flex-row justify-between gap-2 text-sm text-gray-600 transition-colors group-hover:text-purple-400">
-          <HighlightedSearchResultText
+            className="line-clamp-3 text-sm text-gray-400 transition-colors group-hover:text-purple-400"
             matchClassName="[&>span]:font-semibold"
-            text={typename}
+            text={description}
           />
-          {date && <p>{formatReleaseDate(date)}</p>}
-        </div>
+        )}
       </div>
-      {image && (
-        <div className="flex justify-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            alt={title}
-            className="h-auto max-h-[4rem] w-auto max-w-full"
-            src={image}
-          />
-        </div>
-      )}
-    </a>
+      <div className="flex flex-row justify-between gap-2 text-sm text-gray-600 transition-colors group-hover:text-purple-400">
+        <HighlightedSearchResultText
+          matchClassName="[&>span]:font-semibold"
+          text={typename}
+        />
+        {date && <p>{formatReleaseDate(date)}</p>}
+      </div>
+    </div>
+    {image && (
+      <div className="flex justify-center">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          alt={title}
+          className="h-auto max-h-[4rem] w-auto max-w-full"
+          src={image}
+        />
+      </div>
+    )}
   </Link>
 );
 
@@ -289,7 +288,7 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
                   );
                 }
 
-                return <Fragment key={obj.uid} />;
+                return null;
               })}
           </div>
         </div>

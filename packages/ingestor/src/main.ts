@@ -2,7 +2,6 @@
 import "./env";
 import { SAAS_API_ENDPOINT } from "@skylark-reference-apps/lib";
 import axios from "axios";
-import { mkdir, writeFile } from "fs/promises";
 import { has } from "lodash";
 import { getAllTables } from "./lib/airtable";
 import { GraphQLBaseObject, GraphQLMetadata } from "./lib/interfaces";
@@ -11,7 +10,7 @@ import { UNLICENSED_BY_DEFAULT } from "./lib/constants";
 import {
   createGraphQLMediaObjects,
   createOrUpdateGraphQLCredits,
-  createOrUpdateGraphQlObjectsUsingIntrospection,
+  createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection,
   createTranslationsForGraphQLObjects,
 } from "./lib/skylark/saas/create";
 import { createOrUpdateGraphQLSet } from "./lib/skylark/saas/sets";
@@ -19,29 +18,40 @@ import {
   createDimensions,
   createOrUpdateAvailability,
   createOrUpdateScheduleDimensionValues,
+  showcaseDimensionsConfig,
 } from "./lib/skylark/saas/availability";
 import { slxDemoSetsToCreate } from "./additional-objects/slxDemosSets";
 import { updateSkylarkSchema } from "./lib/skylark/saas/schema";
+import {
+  clearUnableToFindVersionNoneObjectsFile,
+  writeAirtableOutputFile,
+} from "./lib/skylark/saas/fs";
 
 const main = async () => {
+  await clearUnableToFindVersionNoneObjectsFile();
+
   // eslint-disable-next-line no-console
   console.time("Completed in:");
 
-  const shouldCreateAdditionalObjects = process.env.CREATE_SETS === "true";
+  const shouldCreateAdditionalStreamTVObjects =
+    process.env.CREATE_SETS === "true";
+  const shouldCreateAdditionalSLXDemoObjects =
+    process.env.CREATE_SLX_DEMO_SETS === "true";
   // eslint-disable-next-line no-console
   console.log(
     `Additional StreamTV sets / dynamic objects creation ${
-      shouldCreateAdditionalObjects ? "enabled" : "disabled"
+      shouldCreateAdditionalStreamTVObjects ? "enabled" : "disabled"
+    }`
+  );
+  // eslint-disable-next-line no-console
+  console.log(
+    `Additional SLX Demo sets / dynamic objects creation ${
+      shouldCreateAdditionalSLXDemoObjects ? "enabled" : "disabled"
     }`
   );
 
-  // We keep StreamTV and SLX Demo data in the same Airtable, sometimes we don't want to add one type of content to an environment
-  const contentTypeToIngest =
-    (process.env.CONTENT_TYPE as "all" | "streamtv" | "slxdemos" | undefined) ||
-    "all";
   // eslint-disable-next-line no-console
-  console.log("Content type:", contentTypeToIngest);
-  const airtable = await getAllTables(contentTypeToIngest);
+  const airtable = await getAllTables();
 
   // eslint-disable-next-line no-console
   console.log(`Starting ingest to Skylark X: ${SAAS_API_ENDPOINT}`);
@@ -55,7 +65,7 @@ const main = async () => {
   // // eslint-disable-next-line no-console
   // console.log("Object configuration updated");
 
-  await createDimensions();
+  await createDimensions(showcaseDimensionsConfig);
 
   const dimensions = await createOrUpdateScheduleDimensionValues(
     airtable.dimensions
@@ -98,47 +108,54 @@ const main = async () => {
   };
 
   metadata.call_to_actions =
-    await createOrUpdateGraphQlObjectsUsingIntrospection(
+    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
       "CallToAction",
       airtable.callToActions,
       metadataAvailability
     );
-  metadata.images = await createOrUpdateGraphQlObjectsUsingIntrospection(
-    "SkylarkImage",
-    airtable.images,
-    metadataAvailability,
-    true
-  );
-  metadata.themes = await createOrUpdateGraphQlObjectsUsingIntrospection(
-    "Theme",
-    airtable.themes,
-    metadataAvailability
-  );
-  metadata.genres = await createOrUpdateGraphQlObjectsUsingIntrospection(
-    "Genre",
-    airtable.genres,
-    metadataAvailability
-  );
-  metadata.ratings = await createOrUpdateGraphQlObjectsUsingIntrospection(
-    "Rating",
-    airtable.ratings,
-    metadataAvailability
-  );
-  metadata.tags = await createOrUpdateGraphQlObjectsUsingIntrospection(
-    "SkylarkTag",
-    airtable.tags,
-    metadataAvailability
-  );
-  metadata.people = await createOrUpdateGraphQlObjectsUsingIntrospection(
-    "Person",
-    airtable.people,
-    metadataAvailability
-  );
-  metadata.roles = await createOrUpdateGraphQlObjectsUsingIntrospection(
-    "Role",
-    airtable.roles,
-    metadataAvailability
-  );
+  metadata.images =
+    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+      "SkylarkImage",
+      airtable.images,
+      metadataAvailability,
+      true
+    );
+  metadata.themes =
+    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+      "Theme",
+      airtable.themes,
+      metadataAvailability
+    );
+  metadata.genres =
+    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+      "Genre",
+      airtable.genres,
+      metadataAvailability
+    );
+  metadata.ratings =
+    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+      "Rating",
+      airtable.ratings,
+      metadataAvailability
+    );
+  metadata.tags =
+    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+      "SkylarkTag",
+      airtable.tags,
+      metadataAvailability
+    );
+  metadata.people =
+    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+      "Person",
+      airtable.people,
+      metadataAvailability
+    );
+  metadata.roles =
+    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+      "Role",
+      airtable.roles,
+      metadataAvailability
+    );
   metadata.credits = await createOrUpdateGraphQLCredits(
     airtable.credits,
     metadata
@@ -159,25 +176,13 @@ const main = async () => {
     airtable.languages
   );
 
-  await createTranslationsForGraphQLObjects(
-    mediaObjects,
-    airtable.translations.mediaObjects,
-    airtable.languages
-  );
-
   // eslint-disable-next-line no-console
   console.log("Media objects created");
 
   const createdSets: GraphQLBaseObject[] = [];
-  if (shouldCreateAdditionalObjects) {
-    // SLX Demos have a special sets file
-    const setsToCreate =
-      contentTypeToIngest === "slxdemos"
-        ? slxDemoSetsToCreate
-        : orderedSetsToCreate;
-
-    for (let i = 0; i < setsToCreate.length; i += 1) {
-      const setConfig = setsToCreate[i];
+  if (shouldCreateAdditionalStreamTVObjects) {
+    for (let i = 0; i < orderedSetsToCreate.length; i += 1) {
+      const setConfig = orderedSetsToCreate[i];
       // eslint-disable-next-line no-await-in-loop
       const set = await createOrUpdateGraphQLSet(
         setConfig,
@@ -190,8 +195,35 @@ const main = async () => {
     }
 
     // eslint-disable-next-line no-console
-    console.log("Additional objects created");
+    console.log("Additional StreamTV objects created");
   }
+
+  if (shouldCreateAdditionalSLXDemoObjects) {
+    for (let i = 0; i < slxDemoSetsToCreate.length; i += 1) {
+      const setConfig = slxDemoSetsToCreate[i];
+      // eslint-disable-next-line no-await-in-loop
+      const set = await createOrUpdateGraphQLSet(
+        setConfig,
+        [...mediaObjects, ...createdSets],
+        metadata,
+        airtable.languages,
+        airtable.setsMetadata
+      );
+      if (set) createdSets.push(set);
+    }
+
+    // eslint-disable-next-line no-console
+    console.log("Additional SLX Demo objects created");
+  }
+
+  await createTranslationsForGraphQLObjects(
+    mediaObjects,
+    airtable.translations.mediaObjects,
+    airtable.languages
+  );
+
+  // eslint-disable-next-line no-console
+  console.log("Media object translations created");
 
   const dateStamp = new Date().toISOString();
   const output = {
@@ -205,11 +237,7 @@ const main = async () => {
     sets: createdSets,
   };
 
-  await mkdir("./outputs", { recursive: true });
-  await writeFile(
-    `./outputs/${dateStamp}.json`,
-    JSON.stringify(output, null, 4)
-  );
+  await writeAirtableOutputFile(dateStamp, output);
 
   // eslint-disable-next-line no-console
   console.timeEnd("Completed in:");

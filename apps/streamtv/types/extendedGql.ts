@@ -20,6 +20,7 @@ export enum StreamTVSupportedSetType {
   RailMovie = "RAIL_MOVIE",
   RailPortrait = "RAIL_PORTRAIT",
   RailWithSynopsis = "RAIL_WITH_SYNOPSIS",
+  Grid = "GRID",
 }
 
 export enum StreamTVSupportCallToActionType {
@@ -28,4 +29,26 @@ export enum StreamTVSupportCallToActionType {
   ComingSoon = "COMING_SOON",
   LinkToRelatedObject = "LINK_TO_RELATED_OBJECT",
   LinkToUrl = "LINK_TO_URL",
+}
+
+export enum StreamTVSupportedImageType {
+  // Built in
+  Background = "BACKGROUND",
+  Feature = "FEATURE",
+  Footer = "FOOTER",
+  Header = "HEADER",
+  Landscape = "LANDSCAPE",
+  Main = "MAIN",
+  Poster = "POSTER",
+  PostLive = "POST_LIVE",
+  Preview = "PREVIEW",
+  PreLive = "PRE_LIVE",
+  Thumbnail = "THUMBNAIL",
+  // Additional, added by ingestor
+  Character = "CHARACTER",
+}
+
+// Additional fields added by ingestor
+export enum StreamTVAdditionalFields {
+  PreferredImageType = "preferred_image_type",
 }

@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { wrap } from "popmotion";
 import useTranslation from "next-translate/useTranslation";
-import { formatYear, ObjectTypes } from "@skylark-reference-apps/lib";
+import {
+  addCloudinaryOnTheFlyImageTransformation,
+  formatYear,
+  ObjectTypes,
+} from "@skylark-reference-apps/lib";
 import { MdPlayCircleFilled, MdArrowForward } from "react-icons/md";
 import { CarouselButton } from "./carousel-button.component";
 import { List } from "../list";
@@ -47,13 +51,24 @@ const variants = {
 };
 
 export const Carousel: React.FC<CarouselProps> = ({
-  items,
+  items: unparsedItems,
   changeInterval,
 }) => {
   const [loadedImages, setLoadedImages] = useState<string[]>([]);
   const [[page, direction], setPage] = useState([0, 0]);
   const [areImagesLoaded, setImagesLoaded] = useState(false);
-  const itemIndex = wrap(0, items.length, page);
+  const itemIndex = wrap(0, unparsedItems.length, page);
+
+  const items = useMemo(
+    () =>
+      unparsedItems.map((item) => ({
+        ...item,
+        image: addCloudinaryOnTheFlyImageTransformation(item.image, {
+          width: 2000,
+        }),
+      })),
+    [unparsedItems]
+  );
 
   const paginate = (newDirection: number) => {
     setPage([page + newDirection, newDirection]);

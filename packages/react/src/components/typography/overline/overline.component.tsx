@@ -4,6 +4,7 @@ export type OverlineLevel = 1 | 2;
 
 interface OverlineProps {
   level: OverlineLevel;
+  children?: React.ReactNode;
 }
 
 export const Overline: React.FC<OverlineProps> = ({

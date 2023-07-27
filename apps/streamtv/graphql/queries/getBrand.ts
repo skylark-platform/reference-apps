@@ -1,4 +1,5 @@
 import { gql } from "graphql-request";
+import { StreamTVAdditionalFields } from "../../types";
 
 export const GET_BRAND_THUMBNAIL = gql`
   query GET_BRAND_THUMBNAIL(
@@ -31,7 +32,7 @@ export const GET_BRAND_THUMBNAIL = gql`
   }
 `;
 
-export const GET_BRAND = gql`
+export const GET_BRAND = (streamTVIngestorSchemaLoaded: boolean) => gql`
   query GET_BRAND(
     $uid: String
     $externalId: String
@@ -65,6 +66,11 @@ export const GET_BRAND = gql`
           season_number
           title
           title_short
+          ${
+            streamTVIngestorSchemaLoaded
+              ? StreamTVAdditionalFields.PreferredImageType
+              : ""
+          }
           episodes {
             objects {
               uid

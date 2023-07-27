@@ -14,7 +14,9 @@ export const UNLICENSED_BY_DEFAULT =
   (process.env.DEFAULT_UNLICENSED as string) === "true";
 export const CREATE_ONLY = process.env.CREATE_ONLY === "true";
 export const CHECK_MISSING = (process.env.CHECK_MISSING as string) === "true";
+
 export const CREATE_OBJECT_CHUNK_SIZE = 1;
+export const CONCURRENT_CREATE_REQUESTS_NUM = 50;
 
 export const ENUMS = {
   SET_TYPES: [
@@ -26,5 +28,19 @@ export const ENUMS = {
     "RAIL_PORTRAIT",
     "RAIL_INSET",
     "RAIL_MOVIE",
-  ] as const,
+    "GRID",
+  ] as string[],
+  IMAGE_TYPES: [
+    "BACKGROUND",
+    "FEATURE",
+    "FOOTER",
+    "HEADER",
+    "MAIN",
+    "POSTER",
+    "POST_LIVE",
+    "PREVIEW",
+    "PRE_LIVE",
+    "THUMBNAIL",
+    "CHARACTER",
+  ] as string[],
 };

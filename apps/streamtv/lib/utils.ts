@@ -24,6 +24,7 @@ import {
   SkylarkTagListing,
   ThemeListing,
   Availability,
+  StreamTVSupportedImageType,
 } from "../types";
 
 dayjs.extend(relativeTime);
@@ -79,7 +80,7 @@ export const getFirstRatingValue = (
 
 export const getGraphQLImageSrc = (
   images: Maybe<SkylarkImageListing> | undefined,
-  type: ImageType
+  type: ImageType | StreamTVSupportedImageType
 ): string => {
   if (!images || !images.objects || images.objects.length === 0) {
     return "";

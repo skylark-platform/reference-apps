@@ -19,6 +19,11 @@ import { DisplayError } from "../../components/displayError";
 import { useObject } from "../../hooks/useObject";
 import { GET_BRAND } from "../../graphql/queries";
 import { SeasonRail } from "../../components/rails";
+import {
+  StreamTVAdditionalFields,
+  StreamTVSupportedImageType,
+} from "../../types";
+import { useSkylarkEnvironment } from "../../hooks/useSkylarkEnvironment";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject(
@@ -36,12 +41,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
+  const { environment } = useSkylarkEnvironment();
 
   const {
     data: brand,
     isError,
     isLoading,
-  } = useObject<Brand>(GET_BRAND, query?.slug as string);
+  } = useObject<Brand>(
+    GET_BRAND(environment.hasUpdatedSeason),
+    query?.slug as string
+  );
 
   const { t } = useTranslation("common");
 
@@ -107,16 +116,28 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           </Hero>
         </div>
 
-        {seasons.map((season) => (
-          <SeasonRail
-            className="my-6"
-            header={`${t("skylark.object.season")} ${
-              season.season_number || "-"
-            }`}
-            key={season.uid}
-            season={season}
-          />
-        ))}
+        {seasons.map((season) => {
+          // preferred_image_type is a field that would only be added if the StreamTV ingest has been run
+          // So we add it manually to ensure that the codegen doesn't affect StreamTV's without the ingest
+          // Field added in packages/ingestor/src/lib/skylark/saas/schema.ts
+          const preferredImageType = (
+            season as {
+              [StreamTVAdditionalFields.PreferredImageType]?: StreamTVSupportedImageType;
+            }
+          )?.[StreamTVAdditionalFields.PreferredImageType];
+
+          return (
+            <SeasonRail
+              className="my-6"
+              header={`${t("skylark.object.season")} ${
+                season.season_number || "-"
+              }`}
+              key={season.uid}
+              preferredImageType={preferredImageType}
+              season={season}
+            />
+          );
+        })}
       </SkeletonPage>
     </div>
   );

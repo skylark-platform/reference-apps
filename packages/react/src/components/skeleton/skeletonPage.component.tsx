@@ -4,6 +4,7 @@ import { useNumberOfThumbnailsByBreakpoint } from "../../hooks";
 
 interface SkeletonProps {
   show: boolean;
+  children?: React.ReactNode;
 }
 
 const container = {

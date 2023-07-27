@@ -1,11 +1,5 @@
 import { GraphQLObjectTypes } from "@skylark-reference-apps/lib";
-import {
-  Attachment,
-  Collaborator,
-  FieldSet,
-  Record as AirtableRecord,
-  Records,
-} from "airtable";
+import { Attachment, Collaborator, FieldSet, Records } from "airtable";
 import { EnumType } from "json-to-graphql-query";
 import { has, isArray, isString } from "lodash";
 import {
@@ -109,6 +103,8 @@ export const getValidFields = (
     [key: string]:
       | EnumType
       | undefined
+      | null
+      | object
       | string
       | number
       | boolean
@@ -118,7 +114,7 @@ export const getValidFields = (
       | ReadonlyArray<Attachment>;
   },
   validProperties: GraphQLIntrospectionProperties[]
-): { [key: string]: string | number | boolean | EnumType } => {
+): { [key: string]: string | number | boolean | EnumType | null } => {
   const validObjectFields = validProperties.filter(({ property }) =>
     has(fields, property)
   );
@@ -129,8 +125,8 @@ export const getValidFields = (
     return {
       ...obj,
       [property]:
-        kind === "ENUM"
-          ? new EnumType(val as string)
+        kind === "ENUM" && typeof val === "string"
+          ? new EnumType(val.toUpperCase())
           : (val as string | number | boolean | EnumType),
     };
   }, {} as { [key: string]: string | number | boolean | EnumType });
@@ -188,38 +184,6 @@ export const getLanguageCodesFromAirtable = (
     });
 
   return languageCodes;
-};
-
-// Utility filter to remove either SLXDemo content OR StreamTV content depending on what Airtable data we want in the environment
-export const filterSLXDemos = (
-  table: string,
-  record: AirtableRecord<FieldSet>,
-  removeSLXDemoContent: boolean
-) => {
-  const tablesToFilter: string[] = [
-    "Media Content",
-    "Media Content - Translations",
-    "roles",
-    "people",
-    "images",
-    "sets-metadata",
-  ];
-  const SLX_PREFIX = "SLX";
-
-  const { title, slx_demo_only: slxDemoOnly } = record.fields;
-
-  if (!tablesToFilter.includes(table)) {
-    return true;
-  }
-
-  const isSLXDemoContent =
-    (title && isString(title) && title.startsWith(SLX_PREFIX)) || slxDemoOnly;
-  if (removeSLXDemoContent) {
-    // If we want to remove the SLX Demo Content, rather than remove anything but it
-    return !isSLXDemoContent;
-  }
-
-  return isSLXDemoContent;
 };
 
 export const hasProperty = <T, K extends PropertyKey>(

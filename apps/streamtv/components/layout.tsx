@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Link from "next/link";
 import { MdStream, MdSearch, MdClose } from "react-icons/md";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
@@ -11,7 +10,9 @@ import {
   Button,
   DimensionSettings,
   ConnectToSkylarkModal,
+  Link,
 } from "@skylark-reference-apps/react";
+import { hasProperty } from "@skylark-reference-apps/lib";
 import { Search } from "./search";
 
 interface Props {
@@ -19,6 +20,7 @@ interface Props {
   tvShowsHref: string;
   skylarkApiUrl?: string;
   timeTravelEnabled?: boolean;
+  children?: React.ReactNode;
 }
 
 export const StreamTVLayout: React.FC<Props> = ({
@@ -28,7 +30,7 @@ export const StreamTVLayout: React.FC<Props> = ({
   timeTravelEnabled,
   children,
 }) => {
-  const { asPath } = useRouter();
+  const { asPath, query } = useRouter();
   const { t } = useTranslation("common");
   const [isMobileSearchOpen, setMobileSearchOpen] = useState(false);
 
@@ -40,33 +42,35 @@ export const StreamTVLayout: React.FC<Props> = ({
 
   const [modalOpen, setModalOpen] = useState(false);
 
+  const skipTitleScreen = hasProperty(query, "skipTitleScreen");
+
   return (
     <DimensionsContextProvider>
       <div className="relative w-full">
         {isMobileSearchOpen && (
-          <div className="fixed inset-0 z-20 bg-gray-900/30 md:hidden">
+          <div className="fixed inset-0 z-20 bg-gray-900/40 md:hidden">
             <Search onSearch={() => setMobileSearchOpen(false)} />
           </div>
         )}
-        <TitleScreen
-          exitBackgroundColor="#5B45CE"
-          logo={
-            <MdStream className="h-12 w-12 rounded-md bg-purple-500 sm:h-14 sm:w-14 lg:h-16 lg:w-16" />
-          }
-          title={appTitle}
-        >
-          <p className="text-xs text-gray-500 sm:text-sm lg:text-lg">
-            {t("by-skylark")}
-          </p>
-        </TitleScreen>
+        {!skipTitleScreen && (
+          <TitleScreen
+            exitBackgroundColor="#5B45CE"
+            logo={
+              <MdStream className="h-12 w-12 rounded-md bg-purple-500 sm:h-14 sm:w-14 lg:h-16 lg:w-16" />
+            }
+            title={appTitle}
+          >
+            <p className="text-xs text-gray-500 sm:text-sm lg:text-lg">
+              {t("by-skylark")}
+            </p>
+          </TitleScreen>
+        )}
         <AppBackgroundGradient />
         <AppHeader activeHref={asPath} links={links}>
           <div className="flex items-center justify-center text-3xl text-gray-100">
             <MdStream className="h-9 w-9 md:ml-8 md:h-10 md:w-10 lg:ml-16 lg:h-12 lg:w-12 xl:ml-20" />
             <h2 className="ml-1 text-base md:ml-2 md:text-xl lg:text-2xl">
-              <Link href="/">
-                <a>{appTitle}</a>
-              </Link>
+              <Link href="/">{appTitle}</Link>
             </h2>
             <span className="absolute right-2 md:hidden">
               <Button
@@ -91,6 +95,7 @@ export const StreamTVLayout: React.FC<Props> = ({
           {children}
         </div>
         <DimensionSettings
+          showKidsDimension={hasProperty(query, "withKidsDimension")}
           skylarkApiUrl={skylarkApiUrl}
           timeTravelEnabled={!!timeTravelEnabled}
         />

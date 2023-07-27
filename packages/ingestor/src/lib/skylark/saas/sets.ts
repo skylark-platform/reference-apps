@@ -14,8 +14,9 @@ import {
   getGraphQLObjectAvailability,
   getLanguageCodesFromAirtable,
   hasProperty,
+  createGraphQLOperation,
 } from "./utils";
-import { getMediaObjectRelationships } from "./create";
+import { getMediaObjectRelationships, mutateMultipleObjects } from "./create";
 
 interface SetItem {
   uid: string;
@@ -147,7 +148,7 @@ const createSetArgsWithTranslations = (
     external_id?: string;
     language: string;
     skylark_set: {
-      [key: string]: string | object | number | EnumType | boolean;
+      [key: string]: string | object | number | EnumType | boolean | null;
     };
   } = update
     ? {
@@ -194,7 +195,7 @@ const createOrUpdateSet = async (
 
   const graphQLMutation = jsonToGraphQLQuery(mutation);
 
-  const data = await graphQLClient.request<{
+  const data = await graphQLClient.uncachedRequest<{
     [key: string]: GraphQLBaseObject;
   }>(graphQLMutation);
 
@@ -222,7 +223,9 @@ export const createOrUpdateGraphQLSet = async (
     )
     .filter((lang) => lang) as string[];
 
-  const existingSets = await Promise.all([
+  const existingSets = new Set<string>();
+
+  const existingSetsArr = await Promise.all([
     getExistingObjects("SkylarkSet", [{ externalId: set.externalId }]),
     ...airtableTranslationLanguages.map((language) =>
       getExistingObjects("SkylarkSet", [
@@ -231,7 +234,11 @@ export const createOrUpdateGraphQLSet = async (
     ),
   ]);
 
-  const setExists = existingSets.findIndex((sets) => sets.length > 0) > -1;
+  existingSetsArr.forEach(({ existingExternalIds }) =>
+    existingExternalIds.forEach((obj) => existingSets.add(obj))
+  );
+
+  const setExists = existingSets.has(set.externalId);
 
   const operationName = setExists ? `updateSkylarkSet` : `createSkylarkSet`;
 
@@ -294,4 +301,56 @@ export const createOrUpdateGraphQLSet = async (
   const data = await createOrUpdateSet(operationName, args, mutationKey);
 
   return data[mutationKey];
+};
+
+export const addContentToCreatedSets = async (
+  setsWithContent: (GraphQLBaseObject & {
+    content: {
+      uid: string;
+      position: number;
+      objectType: GraphQLObjectTypes;
+    }[];
+  })[]
+) => {
+  const operations = setsWithContent.reduce((previous, set) => {
+    const content = set.content.reduce(
+      (previousContent, { objectType, ...item }) => ({
+        ...previousContent,
+        [objectType]: {
+          link: hasProperty(previousContent, objectType)
+            ? [...previousContent[objectType as string].link, item]
+            : [item],
+        },
+      }),
+      {} as Record<string, { link: { uid: string; position: number }[] }>
+    );
+
+    const args = {
+      skylark_set: {
+        content,
+      },
+    };
+
+    const { operation, method } = createGraphQLOperation(
+      "SkylarkSet",
+      true,
+      args,
+      { external_id: set.external_id }
+    );
+
+    const key = `${method}_${set.external_id}`;
+
+    const updatedOperations = {
+      ...previous,
+      [key]: {
+        ...operation,
+      },
+    };
+    return updatedOperations;
+  }, {} as Record<string, object>);
+
+  await mutateMultipleObjects<GraphQLBaseObject>(
+    "addContentToSets",
+    operations
+  );
 };

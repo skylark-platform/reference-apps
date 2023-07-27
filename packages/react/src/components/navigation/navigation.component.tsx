@@ -1,19 +1,21 @@
 import { motion } from "framer-motion";
-import Link from "next/link";
 import React, { useState } from "react";
 import { useTailwindBreakpoint } from "../../hooks";
 import { NavigationToggle } from "./navigation-toggle";
+import { Link } from "../link";
 
 export interface NavigationProps {
   links: { text: string; href: string }[];
   activeHref: string;
   defaultOpen?: boolean;
+  children?: React.ReactNode;
 }
 
 const variants = {
   initialOpen: {
     opacity: 1,
     x: 0,
+    display: "flex",
   },
   open: {
     opacity: 1,
@@ -23,9 +25,6 @@ const variants = {
   closed: {
     opacity: 0,
     x: "-100%",
-    transitionEnd: {
-      display: "none",
-    },
   },
 };
 
@@ -44,6 +43,8 @@ export const Navigation: React.FC<NavigationProps> = ({
   const [openOnMobile, setMobileOpen] = useState(defaultOpen || false);
   const [twBreakpoint] = useTailwindBreakpoint("");
   const onDesktop = !["", "sm"].includes(twBreakpoint as string);
+
+  const animate = onDesktop || openOnMobile ? "open" : "closed";
   return (
     <>
       <div className="absolute left-0 top-0 z-90 flex md:hidden">
@@ -53,7 +54,7 @@ export const Navigation: React.FC<NavigationProps> = ({
         />
       </div>
       <motion.nav
-        animate={onDesktop || openOnMobile ? "open" : "closed"}
+        animate={animate}
         className={`
           fixed inset-0 z-80 items-center justify-center bg-gray-900 text-center font-body
           opacity-0 md:relative md:inset-auto md:h-full md:w-full md:justify-start
@@ -67,17 +68,16 @@ export const Navigation: React.FC<NavigationProps> = ({
         <ul className="flex flex-col gap-10 md:ml-md-gutter md:flex-row md:gap-6 lg:ml-lg-gutter lg:gap-8 xl:ml-xl-gutter">
           {links.map(({ text, href }) => (
             <li key={text}>
-              <Link className="gap-x-2" href={href}>
-                <a
-                  className={`
+              <Link
+                className={`
                     text-xl
                     transition-colors hover:text-white md:text-sm lg:text-base
                     ${activeHref === href ? "text-white" : "text-gray-500"}
                   `}
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {text}
-                </a>
+                href={href}
+                onClick={() => setMobileOpen(false)}
+              >
+                {text}
               </Link>
             </li>
           ))}

@@ -4,6 +4,7 @@ export type SubtitleLevel = 1 | 2 | 3;
 
 interface SubtitleProps {
   level: SubtitleLevel;
+  children?: React.ReactNode;
 }
 
 export const Subtitle: React.FC<SubtitleProps> = ({
