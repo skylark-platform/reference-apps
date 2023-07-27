@@ -191,3 +191,11 @@ export const hasProperty = <T, K extends PropertyKey>(
   property: K
 ): object is T & Record<K, unknown> =>
   Object.prototype.hasOwnProperty.call(object, property);
+
+export const convertGraphQLObjectTypeToArgName = (
+  objectType: GraphQLObjectTypes
+) =>
+  objectType
+    .match(/[A-Z][a-z]+/g)
+    ?.join("_")
+    .toLowerCase() as string;

@@ -102,7 +102,7 @@ export const convertLegacyObjectTypeToObjectType = (
     case LegacyObjectType.Credits:
       return "Credit";
     case LegacyObjectType.Sets:
-      return "SkylarkSet";
+      return "CountrylineSet" as GraphQLObjectTypes;
     default:
       throw new Error("[convertLegacyObjectTypeToObjectType] Unknown type");
   }

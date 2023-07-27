@@ -35,9 +35,12 @@ export type GraphQLMediaObjectTypes =
 // Usually customer instances
 export type OptionalCustomGraphQLObjectTypes = "TagCategory";
 
+export type GraphQLSetObjectTypes = "SkylarkSet";
+
 export type GraphQLObjectTypes =
   | GraphQLMediaObjectTypes
   | OptionalCustomGraphQLObjectTypes
+  | GraphQLSetObjectTypes
   | "Theme"
   | "Genre"
   | "Rating"
@@ -45,7 +48,6 @@ export type GraphQLObjectTypes =
   | "Role"
   | "SkylarkTag"
   | "Credit"
-  | "SkylarkSet"
   | "Dimension"
   | "DimensionValue"
   | "Availability"

@@ -1,3 +1,4 @@
+import { GraphQLSetObjectTypes } from "@skylark-reference-apps/lib";
 import { GraphQLBaseObject } from "../interfaces";
 import { generateSL8CreditUid } from "./legacy";
 import {
@@ -157,8 +158,8 @@ export const createRelationships = (
     LegacyObjectType.Assets === legacyObjectType ||
     LegacyObjectType.Brands === legacyObjectType ||
     LegacyObjectType.Episodes === legacyObjectType ||
-    LegacyObjectType.Seasons === legacyObjectType ||
-    LegacyObjectType.Sets === legacyObjectType
+    LegacyObjectType.Seasons === legacyObjectType
+    // LegacyObjectType.Sets === legacyObjectType
   ) {
     const imageUids = getUidsFromUrls(
       legacyObject.image_urls || [],
@@ -317,5 +318,9 @@ export const createSetContent = async (
     };
   });
 
-  await addContentToCreatedSets(createdSetsWithContent);
+  // Change to actual Set
+  await addContentToCreatedSets(
+    "CountrylineSet" as GraphQLSetObjectTypes,
+    createdSetsWithContent
+  );
 };
