@@ -4,18 +4,20 @@ import { NextSeo } from "next-seo";
 import { Fragment } from "react";
 import { Carousel } from "../../carousel";
 import { DisplayError } from "../../displayError";
-import { SeasonRail, SetRail } from "../../rails";
+import { SeasonRail, SetRail, TagRail } from "../../rails";
 import { GET_PAGE_SET } from "../../../graphql/queries";
 import { useObject } from "../../../hooks/useObject";
 import { SeoObjectData } from "../../../lib/getPageSeoData";
 import {
   Brand,
+  CallToAction,
   Episode,
   Metadata,
   Movie,
   Season,
   SetContent,
   SkylarkSet,
+  SkylarkTag,
   StreamTVAdditionalFields,
   StreamTVSupportedImageType,
   StreamTVSupportedSetType,
@@ -23,6 +25,7 @@ import {
 import { Grid } from "../../grid";
 import { getThumbnailVariantFromSetType } from "../../thumbnail";
 import { useSkylarkEnvironment } from "../../../hooks/useSkylarkEnvironment";
+import { CTA } from "../../cta";
 
 const Page: NextPage<{
   slug: string;
@@ -58,7 +61,15 @@ const Page: NextPage<{
 
   const content = data?.content?.objects
     ? (data.content.objects as SetContent[])?.map(
-        ({ object }) => object as Episode | Movie | Brand | Season | SkylarkSet
+        ({ object }) =>
+          object as
+            | Episode
+            | Movie
+            | Brand
+            | Season
+            | SkylarkSet
+            | CallToAction
+            | SkylarkTag
       )
     : [];
 
@@ -136,6 +147,15 @@ const Page: NextPage<{
                 />
               );
             }
+
+            if (item.__typename === "SkylarkTag") {
+              return <TagRail key={item.uid} tag={item} />;
+            }
+
+            if (item.__typename === "CallToAction") {
+              return <CTA key={item.uid} uid={item.uid} />;
+            }
+
             return <Fragment key={item.uid} />;
           })}
         </div>

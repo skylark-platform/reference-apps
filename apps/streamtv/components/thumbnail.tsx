@@ -92,6 +92,16 @@ const getThumbnailQuery = (objectType: ObjectTypes) => {
   return "";
 };
 
+const getStatusTag = (tags: Entertainment["tags"]): string | undefined => {
+  const statusTag = tags?.objects?.find(
+    (tag) => tag?.type === "SCHEDULE_STATUS"
+  );
+
+  const name = statusTag?.name;
+
+  return typeof name === "string" ? name : undefined;
+};
+
 export const Thumbnail = ({
   uid,
   objectType,
@@ -137,6 +147,7 @@ export const Thumbnail = ({
                   ? (data.episode_number as number)
                   : undefined
               }
+              statusTag={getStatusTag(data.tags)}
               title={data?.title_short || data?.title || ""}
             />
           )}
@@ -152,6 +163,7 @@ export const Thumbnail = ({
                   ? formatYear(data.release_date as string)
                   : undefined
               }
+              statusTag={getStatusTag(data.tags)}
               title={data?.title_short || data?.title || ""}
             />
           )}
@@ -167,6 +179,7 @@ export const Thumbnail = ({
                   ? formatYear(data.release_date as string)
                   : undefined
               }
+              statusTag={getStatusTag(data.tags)}
               title={data?.title_short || data?.title || ""}
             />
           )}
@@ -176,6 +189,7 @@ export const Thumbnail = ({
               backgroundImage={backgroundImage}
               href={href}
               key={uid}
+              statusTag={getStatusTag(data.tags)}
               title={data?.title_short || data?.title || ""}
             />
           )}
@@ -186,6 +200,7 @@ export const Thumbnail = ({
               contentLocation="below"
               href={href}
               key={uid}
+              statusTag={getStatusTag(data.tags)}
               title={data?.title_short || data?.title || ""}
             />
           )}

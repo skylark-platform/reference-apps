@@ -4367,6 +4367,7 @@ export type SubSkylarkSetInput = {
 
 export enum TagType {
   Default = "DEFAULT",
+  ScheduleStatus = "SCHEDULE_STATUS",
 }
 
 export type Theme = Metadata &

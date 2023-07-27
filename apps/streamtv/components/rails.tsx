@@ -1,10 +1,13 @@
 import { hasProperty } from "@skylark-reference-apps/lib";
 import { Rail } from "@skylark-reference-apps/react";
 import {
+  Episode,
+  Movie,
   ObjectTypes,
   Season,
   SetContent,
   SkylarkSet,
+  SkylarkTag,
   StreamTVSupportedImageType,
 } from "../types";
 import {
@@ -68,6 +71,41 @@ export const SetRail = ({
             objectType={object.__typename as ObjectTypes}
             uid={object.uid}
             variant={variant}
+          />
+        ) : (
+          <></>
+        )
+      )}
+    </Rail>
+  );
+};
+
+export const TagRail = ({
+  tag,
+  className,
+}: {
+  tag: SkylarkTag;
+  className?: string;
+}) => {
+  const episodes =
+    tag.episodes?.objects?.filter((obj): obj is Episode => !!obj) || [];
+  const movies =
+    tag.movies?.objects?.filter((obj): obj is Movie => !!obj) || [];
+
+  const objects = [...episodes, ...movies];
+
+  console.log({ objects, tag });
+
+  return (
+    <Rail className={className} displayCount>
+      {objects?.map((object) =>
+        // Without __typename, the Thumbnail will not know what query to use
+        object && hasProperty(object, "__typename") ? (
+          <Thumbnail
+            key={object.uid}
+            objectType={object.__typename as ObjectTypes}
+            uid={object.uid}
+            variant={"landscape-synopsis"}
           />
         ) : (
           <></>
