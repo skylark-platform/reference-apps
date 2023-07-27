@@ -24,14 +24,14 @@ const spotlightMovies: SetConfig = {
   slug: "spotlight-movies",
   graphQlSetType: "RAIL_MOVIE",
   contents: [
-    { type: "movies", slug: "the-hustle" },
+    { type: "movies", slug: "asteroid-city" },
     { type: "movies", slug: "the-kid-who-would-be-king" },
     { type: "movies", slug: "tenet" },
     { type: "movies", slug: "mank" },
     { type: "movies", slug: "escape-from-pretoria" },
     { type: "movies", slug: "emma" },
     { type: "movies", slug: "cruella" },
-    { type: "movies", slug: "6-underground" },
+    { type: "movies", slug: "the-hustle" },
     { type: "movies", slug: "1917" },
     { type: "movies", slug: "anna" },
     { type: "movies", slug: "once-upon-a-time-in-hollywood" },
@@ -47,10 +47,10 @@ const bestPictureMovies2020: SetConfig = {
   contents: [
     { type: "movies", slug: "once-upon-a-time-in-hollywood" },
     { type: "movies", slug: "1917" },
+    { type: "movies", slug: "parasite" },
     { type: "movies", slug: "jojo-rabbit" },
     { type: "movies", slug: "little-women" },
     { type: "movies", slug: "the-irishman" },
-    { type: "movies", slug: "parasite" },
     { type: "movies", slug: "marriage-story" },
   ],
 };
@@ -65,9 +65,9 @@ const bestPictureMovies2021: SetConfig = {
     { type: "movies", slug: "minari" },
     { type: "movies", slug: "judas-and-the-black-messiah" },
     { type: "movies", slug: "promising-young-woman" },
+    { type: "movies", slug: "nomadland" },
     { type: "movies", slug: "the-father" },
     { type: "movies", slug: "mank" },
-    { type: "movies", slug: "nomadland" },
   ],
 };
 

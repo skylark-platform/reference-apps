@@ -1,6 +1,6 @@
 // Import dotenv must be first
 import "./env";
-import { SAAS_API_ENDPOINT } from "@skylark-reference-apps/lib";
+import { SAAS_API_ENDPOINT, hasProperty } from "@skylark-reference-apps/lib";
 import axios from "axios";
 import { has } from "lodash";
 import { getAllTables } from "./lib/airtable";
@@ -56,7 +56,21 @@ const main = async () => {
   // eslint-disable-next-line no-console
   console.log(`Starting ingest to Skylark X: ${SAAS_API_ENDPOINT}`);
 
-  const { version } = await updateSkylarkSchema();
+  const assetTypes = airtable.assetTypes
+    .map(({ fields }) => hasProperty(fields, "enum") && fields.enum)
+    .filter((val): val is string => typeof val === "string");
+  const imageTypes = airtable.imageTypes
+    .map(({ fields }) => hasProperty(fields, "enum") && fields.enum)
+    .filter((val): val is string => typeof val === "string");
+  const tagTypes = airtable.tagTypes
+    .map(({ fields }) => hasProperty(fields, "enum") && fields.enum)
+    .filter((val): val is string => typeof val === "string");
+
+  const { version } = await updateSkylarkSchema({
+    assetTypes,
+    imageTypes,
+    tagTypes,
+  });
   // eslint-disable-next-line no-console
   console.log("Schema updated to version:", version);
 

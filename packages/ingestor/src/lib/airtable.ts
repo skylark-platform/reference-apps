@@ -85,7 +85,7 @@ export const getAllTables = async (): Promise<Airtables> => {
     "sets-metadata",
     "asset-types",
     "image-types",
-    "tag-categories",
+    "tag-types",
     "languages",
     "call-to-actions",
     "call-to-actions - Translations",
