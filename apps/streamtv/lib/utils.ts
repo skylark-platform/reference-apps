@@ -16,7 +16,6 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import {
   Credit,
   Entertainment,
-  Episode,
   GenreListing,
   SkylarkImageListing,
   ImageType,
@@ -173,9 +172,6 @@ export const convertGraphQLSetType = (setType?: string): SetTypes => {
       return "page";
   }
 };
-
-export const sortEpisodesByNumber = (a: Maybe<Episode>, b: Maybe<Episode>) =>
-  (a?.episode_number || 0) > (b?.episode_number || 0) ? 1 : -1;
 
 export const getFurthestAvailabilityEndDate = (
   objects?: Availability[] | null

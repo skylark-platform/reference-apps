@@ -229,6 +229,24 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
                 }
               }
             }
+            ... on CallToAction {
+              uid
+            }
+            ... on SkylarkTag {
+              uid
+              brands(limit: 50) {
+                objects {
+                  __typename
+                  uid
+                }
+              }
+              movies(limit: 50) {
+                objects {
+                  __typename
+                  uid
+                }
+              }
+            }
           }
         }
       }

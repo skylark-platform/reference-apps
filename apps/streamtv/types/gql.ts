@@ -2091,7 +2091,7 @@ export type Person = Metadata &
     images?: Maybe<SkylarkImageListing>;
     name?: Maybe<Scalars["String"]>;
     name_sort?: Maybe<Scalars["String"]>;
-    place_of_birth?: Maybe<Scalars["AWSDate"]>;
+    place_of_birth?: Maybe<Scalars["String"]>;
     slug?: Maybe<Scalars["String"]>;
     tags?: Maybe<SkylarkTagListing>;
     themes?: Maybe<ThemeListing>;
@@ -2162,7 +2162,7 @@ export type PersonCreateInput = {
   genre?: InputMaybe<Scalars["String"]>;
   name?: InputMaybe<Scalars["String"]>;
   name_sort?: InputMaybe<Scalars["String"]>;
-  place_of_birth?: InputMaybe<Scalars["AWSDate"]>;
+  place_of_birth?: InputMaybe<Scalars["String"]>;
   relationships?: InputMaybe<PersonRelationships>;
   slug?: InputMaybe<Scalars["String"]>;
 };
@@ -2179,7 +2179,7 @@ export type PersonInput = {
   genre?: InputMaybe<Scalars["String"]>;
   name?: InputMaybe<Scalars["String"]>;
   name_sort?: InputMaybe<Scalars["String"]>;
-  place_of_birth?: InputMaybe<Scalars["AWSDate"]>;
+  place_of_birth?: InputMaybe<Scalars["String"]>;
   relationships?: InputMaybe<PersonRelationships>;
   slug?: InputMaybe<Scalars["String"]>;
 };
@@ -4367,6 +4367,7 @@ export type SubSkylarkSetInput = {
 
 export enum TagType {
   Default = "DEFAULT",
+  ScheduleStatus = "SCHEDULE_STATUS",
 }
 
 export type Theme = Metadata &
@@ -4886,7 +4887,7 @@ export type _PersonGlobal = _Global & {
   history?: Maybe<Array<Maybe<_PersonGlobal>>>;
   modified?: Maybe<_Audit>;
   name_sort?: Maybe<Scalars["String"]>;
-  place_of_birth?: Maybe<Scalars["AWSDate"]>;
+  place_of_birth?: Maybe<Scalars["String"]>;
   publish_stage?: Maybe<PublishStage>;
   version?: Maybe<Scalars["Int"]>;
 };

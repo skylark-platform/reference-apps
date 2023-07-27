@@ -14,7 +14,6 @@ import {
   getGraphQLImageSrc,
   getSynopsisByOrderForGraphQLObject,
   getTitleByOrderForGraphQLObject,
-  sortEpisodesByNumber,
 } from "../../lib/utils";
 import { DisplayError } from "../../components/displayError";
 import { useObject } from "../../hooks/useObject";
@@ -67,14 +66,10 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const title = getTitleByOrderForGraphQLObject(brand);
   const synopsis = getSynopsisByOrderForGraphQLObject(brand);
 
-  const seasons =
-    (brand?.seasons?.objects?.sort((s1, s2) =>
-      (s1?.season_number || 0) > (s2?.season_number || 0) ? 1 : -1
-    ) as Season[]) || [];
+  const seasons = (brand?.seasons?.objects as Season[]) || [];
 
   const firstEpisodeOfFirstSeason =
-    seasons.length > 0 &&
-    seasons?.[0].episodes?.objects?.sort(sortEpisodesByNumber)?.[0];
+    seasons.length > 0 && seasons?.[0].episodes?.objects?.[0];
 
   return (
     <div className="mb-20 mt-48 flex min-h-screen w-full flex-col items-center bg-gray-900 font-body">

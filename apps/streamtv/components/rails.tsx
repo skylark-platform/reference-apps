@@ -1,11 +1,13 @@
 import { hasProperty } from "@skylark-reference-apps/lib";
 import { Rail } from "@skylark-reference-apps/react";
-import { sortEpisodesByNumber } from "../lib/utils";
 import {
+  Brand,
+  Movie,
   ObjectTypes,
   Season,
   SetContent,
   SkylarkSet,
+  SkylarkTag,
   StreamTVSupportedImageType,
 } from "../types";
 import {
@@ -30,21 +32,19 @@ export const SeasonRail = ({
     displayCount
     header={header || season.title || season.title_short || undefined}
   >
-    {season.episodes?.objects
-      ?.sort(sortEpisodesByNumber)
-      .map((object) =>
-        object ? (
-          <Thumbnail
-            key={object.uid}
-            objectType={ObjectTypes.Episode}
-            preferredImageType={preferredImageType}
-            uid={object.uid}
-            variant="landscape-synopsis"
-          />
-        ) : (
-          <></>
-        )
-      )}
+    {season.episodes?.objects?.map((object) =>
+      object ? (
+        <Thumbnail
+          key={object.uid}
+          objectType={ObjectTypes.Episode}
+          preferredImageType={preferredImageType}
+          uid={object.uid}
+          variant="landscape-synopsis"
+        />
+      ) : (
+        <></>
+      )
+    )}
   </Rail>
 );
 
@@ -71,6 +71,41 @@ export const SetRail = ({
             objectType={object.__typename as ObjectTypes}
             uid={object.uid}
             variant={variant}
+          />
+        ) : (
+          <></>
+        )
+      )}
+    </Rail>
+  );
+};
+
+export const TagRail = ({
+  tag,
+  className,
+}: {
+  tag: SkylarkTag;
+  className?: string;
+}) => {
+  const movies =
+    tag.movies?.objects?.filter((obj): obj is Movie => !!obj) || [];
+  const brands =
+    tag.brands?.objects?.filter((obj): obj is Brand => !!obj) || [];
+
+  const objects = [...brands, ...movies];
+
+  console.log({ tag, objects });
+
+  return (
+    <Rail className={className} displayCount>
+      {objects?.map((object) =>
+        // Without __typename, the Thumbnail will not know what query to use
+        object && hasProperty(object, "__typename") ? (
+          <Thumbnail
+            key={object.uid}
+            objectType={object.__typename as ObjectTypes}
+            uid={object.uid}
+            variant={"landscape-synopsis"}
           />
         ) : (
           <></>
