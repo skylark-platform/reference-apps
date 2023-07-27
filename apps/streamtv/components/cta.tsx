@@ -12,7 +12,7 @@ export const CTA = ({ uid }: CallToActionProps) => {
   const { data: cta, isLoading } = useObject<CallToAction>(GET_CTA, uid);
 
   return (
-    <div className="flex min-h-[] w-full items-center justify-center">
+    <div className="my-6 flex w-full items-center justify-center">
       {!isLoading && cta && (
         <a
           className="flex w-full items-center justify-center gap-8 rounded bg-gray-700 px-4 py-4 md:max-w-xl md:px-8 lg:max-w-2xl lg:px-12"

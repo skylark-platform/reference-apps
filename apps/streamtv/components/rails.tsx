@@ -1,7 +1,7 @@
 import { hasProperty } from "@skylark-reference-apps/lib";
 import { Rail } from "@skylark-reference-apps/react";
 import {
-  Episode,
+  Brand,
   Movie,
   ObjectTypes,
   Season,
@@ -87,12 +87,14 @@ export const TagRail = ({
   tag: SkylarkTag;
   className?: string;
 }) => {
-  const episodes =
-    tag.episodes?.objects?.filter((obj): obj is Episode => !!obj) || [];
   const movies =
     tag.movies?.objects?.filter((obj): obj is Movie => !!obj) || [];
+  const brands =
+    tag.brands?.objects?.filter((obj): obj is Brand => !!obj) || [];
 
-  const objects = [...episodes, ...movies];
+  const objects = [...brands, ...movies];
+
+  console.log({ tag, objects });
 
   return (
     <Rail className={className} displayCount>

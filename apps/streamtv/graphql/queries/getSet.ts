@@ -234,7 +234,7 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
             }
             ... on SkylarkTag {
               uid
-              episodes(limit: 50) {
+              brands(limit: 50) {
                 objects {
                   __typename
                   uid
