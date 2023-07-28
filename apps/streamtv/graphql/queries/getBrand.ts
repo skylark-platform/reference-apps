@@ -28,6 +28,12 @@ export const GET_BRAND_THUMBNAIL = gql`
           url
         }
       }
+      tags {
+        objects {
+          name
+          type
+        }
+      }
     }
   }
 `;

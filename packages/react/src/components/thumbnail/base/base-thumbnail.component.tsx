@@ -11,6 +11,7 @@ export interface BaseThumbnailProps {
   contentLocation?: ThumbnailContentLocation;
   large?: boolean;
   children?: React.ReactNode;
+  statusTag?: string;
 }
 
 export interface BaseThumbnailWithLinkProps extends BaseThumbnailProps {
@@ -34,6 +35,7 @@ const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
   contentLocation = "inside",
   children,
   large,
+  statusTag,
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -77,6 +79,11 @@ const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
               shadow-gray-900 transition-all sm:p-3 md:hover:scale-[1.005] md:group-hover:bg-purple-500/[.85] lg:p-4
             `}
         >
+          {statusTag && (
+            <div className="absolute right-0 top-2 rounded-l-sm bg-purple-500 px-2 py-0.5 text-xs">
+              {statusTag}
+            </div>
+          )}
           {children}
         </div>
       </div>

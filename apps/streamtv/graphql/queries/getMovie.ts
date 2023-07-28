@@ -28,6 +28,12 @@ export const GET_MOVIE_THUMBNAIL = gql`
           url
         }
       }
+      tags {
+        objects {
+          name
+          type
+        }
+      }
     }
   }
 `;
@@ -102,6 +108,12 @@ export const GET_MOVIE = gql`
       ratings {
         objects {
           value
+        }
+      }
+      tags {
+        objects {
+          name
+          type
         }
       }
       availability(limit: 20) {

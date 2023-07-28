@@ -29,6 +29,12 @@ export const GET_EPISODE_THUMBNAIL = gql`
           url
         }
       }
+      tags {
+        objects {
+          name
+          type
+        }
+      }
     }
   }
 `;
@@ -112,6 +118,12 @@ export const GET_EPISODE = gql`
       ratings {
         objects {
           value
+        }
+      }
+      tags {
+        objects {
+          name
+          type
         }
       }
       availability(limit: 20) {
