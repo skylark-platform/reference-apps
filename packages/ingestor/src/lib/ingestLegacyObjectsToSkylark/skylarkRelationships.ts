@@ -158,8 +158,8 @@ export const createRelationships = (
     LegacyObjectType.Assets === legacyObjectType ||
     LegacyObjectType.Brands === legacyObjectType ||
     LegacyObjectType.Episodes === legacyObjectType ||
-    LegacyObjectType.Seasons === legacyObjectType
-    // LegacyObjectType.Sets === legacyObjectType
+    LegacyObjectType.Seasons === legacyObjectType ||
+    LegacyObjectType.Sets === legacyObjectType
   ) {
     const imageUids = getUidsFromUrls(
       legacyObject.image_urls || [],
@@ -320,7 +320,7 @@ export const createSetContent = async (
 
   // Change to actual Set
   await addContentToCreatedSets(
-    "CountrylineSet" as GraphQLSetObjectTypes,
+    "CustomSetName" as GraphQLSetObjectTypes,
     createdSetsWithContent
   );
 };
