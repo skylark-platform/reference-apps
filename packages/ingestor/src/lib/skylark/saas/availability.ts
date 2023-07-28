@@ -21,7 +21,11 @@ import {
 } from "../../interfaces";
 import { mutateMultipleObjects } from "./create";
 import { getExistingObjects, getValidPropertiesForObject } from "./get";
-import { createGraphQLOperation, getValidFields } from "./utils";
+import {
+  convertGraphQLObjectTypeToArgName,
+  createGraphQLOperation,
+  getValidFields,
+} from "./utils";
 
 export const showcaseDimensionsConfig: {
   slug: DimensionTypes;
@@ -460,10 +464,7 @@ export const assignAvailabilitiesToObjects = async (
   const operations = uids.reduce((previousOperations, uid) => {
     const availabilityUids = availabilityArr.map((avail) => avail.uid);
 
-    const argName = objectType
-      .match(/[A-Z][a-z]+/g)
-      ?.join("_")
-      .toLowerCase() as string;
+    const argName = convertGraphQLObjectTypeToArgName(objectType);
 
     const args: Record<string, string | number | boolean | object> = {
       [argName]: {

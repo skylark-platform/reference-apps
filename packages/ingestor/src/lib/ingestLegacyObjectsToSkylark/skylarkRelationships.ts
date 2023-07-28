@@ -1,3 +1,4 @@
+import { GraphQLSetObjectTypes } from "@skylark-reference-apps/lib";
 import { GraphQLBaseObject } from "../interfaces";
 import { generateSL8CreditUid } from "./legacy";
 import {
@@ -317,5 +318,9 @@ export const createSetContent = async (
     };
   });
 
-  await addContentToCreatedSets(createdSetsWithContent);
+  // Change to actual Set
+  await addContentToCreatedSets(
+    "CustomSetName" as GraphQLSetObjectTypes,
+    createdSetsWithContent
+  );
 };

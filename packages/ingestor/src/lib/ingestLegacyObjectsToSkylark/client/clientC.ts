@@ -106,11 +106,12 @@ const convertLegacyObject = (
     return {
       ...commonFields,
       internal_title: legacyObject.title,
-      title: legacyObject.title_medium || legacyObject.title_long || null,
       title_short: legacyObject.title_short || null,
-      synopsis: legacyObject.synopsis_long || null,
-      synopsis_short:
-        legacyObject.synopsis_medium || legacyObject.synopsis_short || null,
+      title_medium: legacyObject.title_medium || null,
+      title_long: legacyObject.title_long || null,
+      synopsis_short: legacyObject.synopsis_short || null,
+      synopsis_medium: legacyObject.synopsis_medium || null,
+      synopsis_long: legacyObject.synopsis_long || null,
       episode_number: legacyObject.episode_number,
       release_date: legacyObject.release_date || null,
     };
@@ -120,10 +121,12 @@ const convertLegacyObject = (
     return {
       ...commonFields,
       internal_title: legacyObject.title,
-      title: legacyObject.title_medium || legacyObject.title_long || null,
       title_short: legacyObject.title_short || null,
-      synopsis: legacyObject.synopsis_medium || null,
+      title_medium: legacyObject.title_medium || null,
+      title_long: legacyObject.title_long || null,
       synopsis_short: legacyObject.synopsis_short || null,
+      synopsis_medium: legacyObject.synopsis_medium || null,
+      synopsis_long: legacyObject.synopsis_long || null,
       season_number: legacyObject.season_number,
       number_of_episodes: legacyObject.number_of_episodes,
       release_date: legacyObject.release_date || null,
@@ -134,10 +137,12 @@ const convertLegacyObject = (
     return {
       ...commonFields,
       internal_title: legacyObject.title,
-      title: legacyObject.title_medium || legacyObject.title_long || null,
       title_short: legacyObject.title_short || null,
-      synopsis: legacyObject.synopsis_medium || null,
+      title_medium: legacyObject.title_medium || null,
+      title_long: legacyObject.title_long || null,
       synopsis_short: legacyObject.synopsis_short || null,
+      synopsis_medium: legacyObject.synopsis_medium || null,
+      synopsis_long: legacyObject.synopsis_long || null,
       release_date: legacyObject.release_date || null,
     };
   }
@@ -145,21 +150,16 @@ const convertLegacyObject = (
   if (legacyObjectType === LegacyObjectType.Sets) {
     const setType = legacyObject.set_type_slug || null;
 
-    const tLong = legacyObject.title_long;
-    const tMed = legacyObject.title_medium;
-    const tShort = legacyObject.title_short;
-    const title = tLong || tMed;
-    const titleShort = tLong ? tMed || tShort : tShort;
-
     return {
       ...commonFields,
       type: setType,
       internal_title: legacyObject.title,
-      title: title || null,
-      title_short: titleShort || null,
-      synopsis: legacyObject.synopsis_medium || null,
+      title_short: legacyObject.title_short || null,
+      title_medium: legacyObject.title_medium || null,
+      title_long: legacyObject.title_long || null,
       synopsis_short: legacyObject.synopsis_short || null,
-      description: legacyObject.synopsis_long || null,
+      synopsis_medium: legacyObject.synopsis_medium || null,
+      synopsis_long: legacyObject.synopsis_long || null,
       release_date: legacyObject.release_date || null,
     };
   }

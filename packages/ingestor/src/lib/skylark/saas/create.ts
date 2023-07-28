@@ -36,6 +36,7 @@ import {
   getLanguageCodesFromAirtable,
   hasProperty,
   pause,
+  convertGraphQLObjectTypeToArgName,
 } from "./utils";
 import { deleteObject } from "./delete";
 import { writeUnableToFindVersionNoneObjectsFile } from "./fs";
@@ -267,10 +268,7 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
         objectFields.relationships = relsForObject;
       }
 
-      const argName = objectType
-        .match(/[A-Z][a-z]+/g)
-        ?.join("_")
-        .toLowerCase() as string;
+      const argName = convertGraphQLObjectTypeToArgName(objectType);
 
       const args: Record<string, string | number | boolean | object> = {
         [argName]: objectExists

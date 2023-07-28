@@ -1,5 +1,9 @@
 import { EnumType, jsonToGraphQLQuery } from "json-to-graphql-query";
-import { graphQLClient, GraphQLObjectTypes } from "@skylark-reference-apps/lib";
+import {
+  graphQLClient,
+  GraphQLObjectTypes,
+  GraphQLSetObjectTypes,
+} from "@skylark-reference-apps/lib";
 import { FieldSet, Records } from "airtable";
 import {
   SetConfig,
@@ -15,6 +19,7 @@ import {
   getLanguageCodesFromAirtable,
   hasProperty,
   createGraphQLOperation,
+  convertGraphQLObjectTypeToArgName,
 } from "./utils";
 import { getMediaObjectRelationships, mutateMultipleObjects } from "./create";
 
@@ -304,6 +309,7 @@ export const createOrUpdateGraphQLSet = async (
 };
 
 export const addContentToCreatedSets = async (
+  setObjectType: GraphQLSetObjectTypes,
   setsWithContent: (GraphQLBaseObject & {
     content: {
       uid: string;
@@ -325,14 +331,16 @@ export const addContentToCreatedSets = async (
       {} as Record<string, { link: { uid: string; position: number }[] }>
     );
 
+    const argName = convertGraphQLObjectTypeToArgName(setObjectType);
+
     const args = {
-      skylark_set: {
+      [argName]: {
         content,
       },
     };
 
     const { operation, method } = createGraphQLOperation(
-      "SkylarkSet",
+      setObjectType,
       true,
       args,
       { external_id: set.external_id }
