@@ -2,6 +2,7 @@ import { Record, FieldSet } from "airtable";
 import axios from "axios";
 import { Airtables } from "./interfaces";
 import { AIRTABLE_API_KEY, AIRTABLE_BASE_ID } from "./constants";
+import { pause } from "./skylark/saas/utils";
 
 /**
  * getTable - fetches a table from Airtable and filters empty rows
@@ -90,6 +91,21 @@ export const getAllTables = async (): Promise<Airtables> => {
     "call-to-actions",
     "call-to-actions - Translations",
   ];
+
+  const responses: Record<FieldSet>[][] = [];
+
+  // API is limited to 5 requests per second https://airtable.com/developers/web/api/rate-limits
+  // eslint-disable-next-line no-restricted-syntax
+  for (const table of tables) {
+    // eslint-disable-next-line no-await-in-loop
+    const res = await getTable(table);
+
+    responses.push(res);
+
+    // eslint-disable-next-line no-await-in-loop
+    await pause(500);
+  }
+
   const [
     mediaObjects,
     mediaObjectsTranslations,
@@ -109,7 +125,7 @@ export const getAllTables = async (): Promise<Airtables> => {
     languages,
     callToActions,
     callToActionsTranslations,
-  ] = await Promise.all(tables.map((table) => getTable(table)));
+  ] = responses;
 
   return {
     dimensions: {
