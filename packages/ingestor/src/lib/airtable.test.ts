@@ -9,15 +9,32 @@ jest.mock("./constants", () => ({
   AIRTABLE_BASE_ID: "base-id",
 }));
 
+const getAllTablesTimerWrapper = async () => {
+  const promise = getAllTables();
+
+  // No reason for 100, it just works
+  for (let i = 0; i < 100; i += 1) {
+    jest.runAllTimers();
+    // eslint-disable-next-line no-await-in-loop
+    await Promise.resolve(); // allow any pending jobs in the PromiseJobs queue to run
+  }
+
+  return promise;
+};
+
 describe("airtable", () => {
   let mockedGet: jest.Mock;
 
   beforeEach(() => {
     mockedGet = axios.get as jest.Mock;
+
+    jest.useFakeTimers();
   });
 
   afterEach(() => {
     jest.clearAllMocks();
+
+    jest.clearAllTimers();
   });
 
   describe("getAllTables", () => {
@@ -59,7 +76,7 @@ describe("airtable", () => {
         Object.keys(tables.translations).length;
 
       // Act.
-      await getAllTables();
+      await getAllTablesTimerWrapper();
 
       // Assert.
       expect(mockedGet).toBeCalledWith(
@@ -109,7 +126,7 @@ describe("airtable", () => {
         Object.keys(tables.translations).length;
 
       // Act.
-      await getAllTables();
+      await getAllTablesTimerWrapper();
 
       // Assert.
       expect(mockedGet).toBeCalledWith(
@@ -133,7 +150,7 @@ describe("airtable", () => {
       mockedGet.mockResolvedValue({ data: { records } });
 
       // Act.
-      const data = await getAllTables();
+      const data = await getAllTablesTimerWrapper();
 
       // Assert.
       expect(data.mediaObjects).toEqual(records);
@@ -155,7 +172,7 @@ describe("airtable", () => {
       mockedGet.mockResolvedValue({ data: { records } });
 
       // Act.
-      const data = await getAllTables();
+      const data = await getAllTablesTimerWrapper();
 
       // Assert.
       expect(data.mediaObjects).toEqual([
@@ -177,7 +194,7 @@ describe("airtable", () => {
       mockedGet.mockRejectedValue(err);
 
       // Act.
-      await getAllTables();
+      await getAllTablesTimerWrapper();
 
       // Assert.
       // eslint-disable-next-line no-console
