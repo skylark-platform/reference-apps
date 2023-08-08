@@ -64,7 +64,7 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const synopsis = getSynopsisByOrderForGraphQLObject(movie);
 
   const asset = movie?.assets?.objects?.[0];
-  const playbackUrl = asset?.url || "/mux-video-intro.mp4";
+  const playbackUrl = asset?.hls_url || asset?.url || "/mux-video-intro.mp4";
 
   const availabilityEndDate = getFurthestAvailabilityEndDate(
     movie?.availability?.objects as Availability[] | undefined

@@ -73,6 +73,7 @@ export const GET_EPISODE = gql`
         objects {
           uid
           url
+          hls_url
         }
       }
       seasons {

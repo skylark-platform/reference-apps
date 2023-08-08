@@ -71,6 +71,7 @@ export const GET_MOVIE = gql`
         objects {
           uid
           url
+          hls_url
         }
       }
       brands {
