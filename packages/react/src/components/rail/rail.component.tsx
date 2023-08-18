@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { MdArrowForward, MdArrowBack } from "react-icons/md";
 import { useDebouncedCallback } from "use-debounce";
+import { MdArrowBack, MdArrowForward } from "react-icons/md";
 import { useNumberOfThumbnailsByBreakpoint } from "../../hooks";
+import { useHtmlDirection } from "../../hooks/useHtmlDirection";
 
 interface RailProps {
   initial?: number;
@@ -17,6 +18,8 @@ const directionArrowClassName = `
   text-2xl text-gray-300 hover:text-white transition-all z-50
   md:w-12 lg:w-16 xl:w-24 from-gray-900 to-gray-900/[.4]
 `;
+
+const directionArrowIconClassName = "transition-all md:group-hover:scale-110";
 
 const determineScrollAmount = (
   el: Element,
@@ -39,6 +42,8 @@ export const Rail: React.FC<RailProps> = ({
   displayCount,
   className,
 }) => {
+  const { dir, isLtr } = useHtmlDirection();
+
   const numChildren = React.Children.toArray(children).length;
 
   const myRef = useRef<HTMLDivElement>(null);
@@ -51,8 +56,13 @@ export const Rail: React.FC<RailProps> = ({
     // The scroll position relative to the scrollWidth
     const scrollPos = scrollLeft + clientWidth;
 
-    const showPrevious = scrollLeft > 20;
-    const showNext = scrollPos < scrollWidth - 20;
+    const showPreviousLtr = scrollLeft > 20;
+    const showPreviousRtl = scrollLeft < -20;
+    const showPrevious = isLtr ? showPreviousLtr : showPreviousRtl;
+
+    const showNextLtr = scrollPos < scrollWidth - 20;
+    const showNextRtl = scrollLeft * -1 + clientWidth < scrollWidth - 20;
+    const showNext = isLtr ? showNextLtr : showNextRtl;
 
     // Only update when values change
     if (showPreviousButton !== showPrevious)
@@ -88,9 +98,9 @@ export const Rail: React.FC<RailProps> = ({
   }, []);
 
   return (
-    <div className={`w-full ${className || ""}`}>
+    <div className={`w-full ${className || ""}`} dir={dir}>
       {header && (
-        <h2 className="ml-sm-gutter text-2xl font-normal text-white md:ml-md-gutter lg:ml-lg-gutter xl:ml-xl-gutter">
+        <h2 className="mx-sm-gutter text-2xl font-normal text-white md:mx-md-gutter lg:mx-lg-gutter xl:mx-xl-gutter">
           {header}
           {displayCount && (
             <span className="ml-1 text-gray-500 lg:ml-2">{`(${numChildren})`}</span>
@@ -102,25 +112,33 @@ export const Rail: React.FC<RailProps> = ({
           <>
             <button
               aria-label="previous-rail-elements-button"
-              className={`left-0 bg-gradient-to-r ${directionArrowClassName} ${
+              className={`ltr:left-0 ltr:bg-gradient-to-r rtl:right-0 rtl:bg-gradient-to-l ${directionArrowClassName} ${
                 showPreviousButton ? "opacity-100" : "opacity-0"
               }`}
               data-testid="previous-button"
               type="button"
-              onClick={() => scrollToNextBlock(false)}
+              onClick={() => scrollToNextBlock(!isLtr)}
             >
-              <MdArrowBack className="transition-all md:group-hover:scale-110" />
+              {isLtr ? (
+                <MdArrowBack className={directionArrowIconClassName} />
+              ) : (
+                <MdArrowForward className={directionArrowIconClassName} />
+              )}
             </button>
             <button
               aria-label="next-rail-elements-button"
-              className={`right-0 bg-gradient-to-l ${directionArrowClassName} ${
+              className={`ltr:right-0 ltr:bg-gradient-to-l rtl:left-0 rtl:bg-gradient-to-r ${directionArrowClassName} ${
                 showNextButton ? "opacity-100" : "opacity-0"
               }`}
               data-testid="forward-button"
               type="button"
-              onClick={() => scrollToNextBlock(true)}
+              onClick={() => scrollToNextBlock(!!isLtr)}
             >
-              <MdArrowForward className="transition-all md:group-hover:scale-110" />
+              {isLtr ? (
+                <MdArrowForward className={directionArrowIconClassName} />
+              ) : (
+                <MdArrowBack className={directionArrowIconClassName} />
+              )}
             </button>
           </>
         )}
@@ -144,7 +162,7 @@ export const Rail: React.FC<RailProps> = ({
             <div
               className={`
                 mx-1
-                w-1/2 min-w-[calc(50%-0.75rem)] max-w-[calc(50%-0.75rem)] snap-end
+                w-1/2 min-w-[calc(50%-0.75rem)] max-w-[calc(50%-0.75rem)] ltr:snap-end rtl:snap-start
                 md:mx-2 md:w-1/3 md:min-w-[calc(33.333333%-0.8rem)] md:max-w-[calc(33.333333%-0.8rem)]
                 lg:mx-0 lg:w-1/4 lg:min-w-[calc(25%-1rem)] lg:max-w-[calc(25%-1rem)]
                 xl:mx-0 xl:w-1/5 xl:min-w-[calc(20%-1rem)] xl:max-w-[calc(20%-1rem)]

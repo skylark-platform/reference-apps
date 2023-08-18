@@ -68,8 +68,8 @@ export const StreamTVLayout: React.FC<Props> = ({
         <AppBackgroundGradient />
         <AppHeader activeHref={asPath} links={links}>
           <div className="flex items-center justify-center text-3xl text-gray-100">
-            <MdStream className="h-9 w-9 md:ml-8 md:h-10 md:w-10 lg:ml-16 lg:h-12 lg:w-12 xl:ml-20" />
-            <h2 className="ml-1 text-base md:ml-2 md:text-xl lg:text-2xl">
+            <MdStream className="h-9 w-9 md:h-10 md:w-10 ltr:md:ml-8 rtl:md:mr-8 lg:h-12 lg:w-12 ltr:lg:ml-16 rtl:lg:mr-16 ltr:xl:ml-20 rtl:xl:mr-20" />
+            <h2 className="mx-1 text-base md:mx-2 md:text-xl lg:text-2xl">
               <Link href="/">{appTitle}</Link>
             </h2>
             <span className="absolute right-2 md:hidden">

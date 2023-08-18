@@ -146,7 +146,7 @@ export const Carousel: React.FC<CarouselProps> = ({
             className={`
             flex h-full w-full flex-row items-end justify-between bg-gradient-to-t from-gray-900
             to-gray-900/5 px-sm-gutter pb-5
-            md:pb-20 md:pl-md-gutter md:pr-0 lg:pl-lg-gutter xl:pl-xl-gutter
+            md:px-md-gutter md:pb-20 md:pr-0 lg:px-lg-gutter xl:px-xl-gutter
           `}
           >
             <div className="flex flex-col">
@@ -207,7 +207,7 @@ export const Carousel: React.FC<CarouselProps> = ({
           </div>
         </motion.div>
       </AnimatePresence>
-      <div className="absolute bottom-5 z-50 flex items-start justify-center text-white md:bottom-20 md:right-lg-gutter">
+      <div className="absolute bottom-5 z-50 flex items-start justify-center text-white md:bottom-20 ltr:md:right-lg-gutter rtl:md:left-lg-gutter">
         {items.length > 1 &&
           items.map(({ title: itemTitle, image: itemImage }, i) => (
             <CarouselButton

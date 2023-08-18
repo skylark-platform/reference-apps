@@ -198,7 +198,7 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
         />
       </div>
       {searchResultsOpen && searchQuery && (
-        <div className="right-0 z-100 mt-2 md:absolute">
+        <div className="z-100 mt-2 ltr:right-0 rtl:left-0 md:absolute">
           <div className="max-h-[70vh] min-h-[2rem] w-[94vw] overflow-y-auto rounded bg-gray-800 px-4 py-6 md:max-h-[24rem] md:w-[34rem] md:px-8 md:py-8">
             {(isLoading || data?.objects?.length === 0) && (
               <p className="text-lg font-medium text-gray-100">

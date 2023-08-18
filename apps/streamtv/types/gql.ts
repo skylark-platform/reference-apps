@@ -44,7 +44,6 @@ export type AccountDetails = {
 export enum AssetType {
   Feature = "FEATURE",
   Main = "MAIN",
-  Thumbnail = "THUMBNAIL",
   Trailer = "TRAILER",
 }
 
