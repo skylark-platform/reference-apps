@@ -28,8 +28,6 @@ export const useHtmlDirection = (): {
     const htmlTag = document.getElementsByTagName("html")[0];
     if (typeof queryDir === "string") {
       htmlTag.setAttribute("dir", queryDir);
-    } else {
-      htmlTag.removeAttribute("dir");
     }
   }, [queryDir]);
 
