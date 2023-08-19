@@ -26,7 +26,7 @@ export const CallToAction: React.FC<CallToActionProps> = ({
   return (
     <div className="flex w-full items-center py-2 text-sm text-white md:text-base lg:text-lg">
       <Button href={href} icon={<MdPlayArrow size={30} />} size="xl" />
-      <div className="flex flex-col pl-3">
+      <div className="flex flex-col px-3">
         <span className="pb-1 font-medium">
           {inProgress ? t("cta.continue-watching") : t("cta.start-watching")}
         </span>

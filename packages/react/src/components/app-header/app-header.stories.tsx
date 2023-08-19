@@ -25,8 +25,8 @@ Default.args = {
   children: (
     <>
       <div className="flex items-center justify-center text-3xl text-gray-100">
-        <MdStream className="h-9 w-9 md:ml-8 md:h-10 md:w-10 lg:ml-16 lg:h-12 lg:w-12 xl:ml-20" />
-        <h2 className="ml-1 text-base md:ml-2 md:text-xl lg:text-2xl">
+        <MdStream className="h-9 w-9 md:mx-8 md:h-10 md:w-10 lg:mx-16 lg:h-12 lg:w-12 xl:mx-20" />
+        <h2 className="mx-1 text-base md:mx-2 md:text-xl lg:text-2xl">
           <a>{`StreamTV`}</a>
         </h2>
         <span className="absolute right-2 md:hidden">
@@ -38,11 +38,17 @@ Default.args = {
         </span>
       </div>
       <div className="hidden gap-1 md:flex">
-        <Button icon={<MdAccountCircle size={25} />} text="Sign in" />
+        <Button text="Sign in" />
         <Button text="Register" variant="tertiary" />
       </div>
     </>
   ),
+};
+
+export const DefaultRTL = Template.bind({});
+DefaultRTL.args = {
+  ...Default.args,
+  forceRtl: true,
 };
 
 export const Mobile = Template.bind({});

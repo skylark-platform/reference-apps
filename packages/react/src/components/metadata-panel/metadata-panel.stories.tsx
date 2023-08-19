@@ -14,7 +14,9 @@ export default {
 } as ComponentMeta<typeof MetadataPanel>;
 
 const Template: ComponentStory<typeof MetadataPanel> = (args) => (
-  <MetadataPanel {...args} />
+  <div dir="ltr">
+    <MetadataPanel {...args} />
+  </div>
 );
 
 export const Default = Template.bind({});

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useTailwindBreakpoint } from "../../hooks";
 import { NavigationToggle } from "./navigation-toggle";
 import { Link } from "../link";
+import { useHtmlDirection } from "../../hooks/useHtmlDirection";
 
 export interface NavigationProps {
   links: { text: string; href: string }[];
@@ -40,6 +41,8 @@ export const Navigation: React.FC<NavigationProps> = ({
   activeHref,
   defaultOpen,
 }) => {
+  const { dir } = useHtmlDirection();
+
   const [openOnMobile, setMobileOpen] = useState(defaultOpen || false);
   const [twBreakpoint] = useTailwindBreakpoint("");
   const onDesktop = !["", "sm"].includes(twBreakpoint as string);
@@ -47,7 +50,7 @@ export const Navigation: React.FC<NavigationProps> = ({
   const animate = onDesktop || openOnMobile ? "open" : "closed";
   return (
     <>
-      <div className="absolute left-0 top-0 z-90 flex md:hidden">
+      <div className="absolute left-0 top-0 z-90 flex md:hidden" dir={dir}>
         <NavigationToggle
           variant={openOnMobile ? "close" : "open"}
           onClick={() => setMobileOpen(!openOnMobile)}
@@ -65,7 +68,7 @@ export const Navigation: React.FC<NavigationProps> = ({
         transition={transition}
         variants={variants}
       >
-        <ul className="flex flex-col gap-10 md:ml-md-gutter md:flex-row md:gap-6 lg:ml-lg-gutter lg:gap-8 xl:ml-xl-gutter">
+        <ul className="flex flex-col gap-10 md:flex-row md:gap-6 ltr:md:ml-md-gutter rtl:md:mr-md-gutter lg:gap-8 ltr:lg:ml-lg-gutter rtl:lg:mr-lg-gutter ltr:xl:ml-xl-gutter rtl:xl:mr-xl-gutter">
           {links.map(({ text, href }) => (
             <li key={text}>
               <Link

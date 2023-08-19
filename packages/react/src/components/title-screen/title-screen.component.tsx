@@ -91,6 +91,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           <motion.p
             animate="show"
             className="flex items-center text-4xl text-white sm:text-5xl lg:text-6xl"
+            dir="ltr"
             exit="exit"
             initial="hidden"
             variants={text}

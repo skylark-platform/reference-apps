@@ -42,6 +42,7 @@ export const Link = ({
   const languageQuery = activeQuery.language
     ? { language: activeQuery.language }
     : {};
+  const dirQuery = activeQuery.dir ? { dir: activeQuery.dir } : {};
 
   return (
     <NextLink
@@ -51,6 +52,7 @@ export const Link = ({
         pathname,
         query: {
           ...languageQuery,
+          ...dirQuery,
           ...propQuery,
         },
       }}

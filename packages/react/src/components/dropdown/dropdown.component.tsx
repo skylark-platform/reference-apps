@@ -35,16 +35,17 @@ export const Dropdown: React.FC<DropdownProps> = ({
           w-full
           items-center
           py-2.5
-          pl-5
           text-sm
           text-white
+          ltr:pl-5
+          rtl:pr-5
         "
           type="button"
           onClick={() => setOpen(!isOpen)}
         >
           {selected || label}
         </button>
-        <div className="sm: flex w-full justify-end pr-1 pt-2 text-white">
+        <div className="sm: flex w-full justify-end px-1 pt-2 text-white">
           {!selected && <MdArrowDropDown size={25} />}
           {selected && (
             <div
