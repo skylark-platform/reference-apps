@@ -169,6 +169,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                   <DimensionContent label="Time Travel">
                     <DimensionRadioButton
                       initial={dimensions.timeTravel}
+                      labelClassName="chromatic-ignore"
                       options={[
                         { text: "Now", value: "" },
                         {

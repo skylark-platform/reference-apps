@@ -2,13 +2,14 @@ import React from "react";
 import { Navigation, NavigationProps } from "../navigation";
 import { useHtmlDirection } from "../../hooks/useHtmlDirection";
 
-export const AppHeader: React.FC<NavigationProps> = ({
+export const AppHeader: React.FC<NavigationProps & { forceRtl?: boolean }> = ({
   children,
   links,
   activeHref,
   defaultOpen,
+  forceRtl,
 }) => {
-  const { dir } = useHtmlDirection();
+  const { dir } = useHtmlDirection(forceRtl);
   return (
     <header
       className="fixed top-0 z-80 flex w-full flex-col font-display md:h-24 md:flex-row-reverse lg:h-28"

@@ -10,12 +10,14 @@ interface RadioButtonProps {
   initial?: Option["value"];
   options: Option[];
   onChange: (value: string) => void;
+  labelClassName?: string;
 }
 
 export const DimensionRadioButton: React.FC<RadioButtonProps> = ({
   initial,
   options,
   onChange,
+  labelClassName,
 }) => {
   const [active, setActive] = useState(
     options.find((opt) => opt.value === initial)
@@ -39,7 +41,9 @@ export const DimensionRadioButton: React.FC<RadioButtonProps> = ({
             onChange={() => handleOnChange(option)}
           />
           <label
-            className="m-2 ml-3 align-top text-sm font-normal text-gray-500 peer-checked:text-black"
+            className={`m-2 ml-3 align-top text-sm font-normal text-gray-500 peer-checked:text-black ${
+              labelClassName || ""
+            }`}
             htmlFor={`dimension-radio-${option.value}`}
             onClick={() => handleOnChange(option)}
           >

@@ -70,6 +70,12 @@ FiftyThumbnails.args = {
   children: getMovieThumbnails(50),
 };
 
+export const FiftyThumbnailsRTL = Template.bind({});
+FiftyThumbnailsRTL.args = {
+  children: getMovieThumbnails(50),
+  forceRtl: true,
+};
+
 export const WithEpisodeThumbnails = Template.bind({});
 WithEpisodeThumbnails.args = {
   children: episodeThumbnails.map((props) => (
@@ -77,11 +83,27 @@ WithEpisodeThumbnails.args = {
   )),
 };
 
+export const WithEpisodeThumbnailsRTL = Template.bind({});
+WithEpisodeThumbnailsRTL.args = {
+  children: episodeThumbnails.map((props) => (
+    <EpisodeThumbnailComponent key={props.title} {...props} />
+  )),
+  forceRtl: true,
+};
+
 export const WithCollectionThumbnails = Template.bind({});
 WithCollectionThumbnails.args = {
   children: collectionThumbnails.map((props: ThumbnailProps) => (
     <CollectionThumbnailComponent key={props.title} {...props} />
   )),
+};
+
+export const WithCollectionThumbnailsRTL = Template.bind({});
+WithCollectionThumbnailsRTL.args = {
+  children: collectionThumbnails.map((props: ThumbnailProps) => (
+    <CollectionThumbnailComponent key={props.title} {...props} />
+  )),
+  forceRtl: true,
 };
 
 export const WithHeader = Template.bind({});
@@ -94,6 +116,13 @@ export const WithHeaderAndCount = Template.bind({});
 WithHeaderAndCount.args = {
   ...WithHeader.args,
   displayCount: true,
+};
+
+export const WithHeaderAndCountRTL = Template.bind({});
+WithHeaderAndCountRTL.args = {
+  ...WithHeader.args,
+  displayCount: true,
+  forceRtl: true,
 };
 
 export const WithText = Template.bind({});

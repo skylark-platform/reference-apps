@@ -10,6 +10,7 @@ interface RailProps {
   displayCount?: boolean;
   className?: string;
   children?: React.ReactNode;
+  forceRtl?: boolean;
 }
 
 const directionArrowClassName = `
@@ -35,14 +36,35 @@ const determineScrollAmount = (
   return ascending ? scrollLeft + scrollAmount : scrollLeft - scrollAmount;
 };
 
+export const RailHeader = ({
+  header,
+  displayCount,
+  count,
+}: {
+  header: RailProps["header"];
+  displayCount: RailProps["displayCount"];
+  count: number;
+}) =>
+  header ? (
+    <div className="mx-sm-gutter flex text-2xl font-normal md:mx-md-gutter lg:mx-lg-gutter xl:mx-xl-gutter">
+      <h2 className="text-white">{header}</h2>
+      {displayCount && (
+        <span className="mx-1 text-gray-500 lg:mx-2">{`(${count})`}</span>
+      )}
+    </div>
+  ) : (
+    <></>
+  );
+
 export const Rail: React.FC<RailProps> = ({
   initial,
   children,
   header,
   displayCount,
   className,
+  forceRtl,
 }) => {
-  const { dir, isLtr } = useHtmlDirection();
+  const { dir, isLtr } = useHtmlDirection(forceRtl);
 
   const numChildren = React.Children.toArray(children).length;
 
@@ -95,18 +117,15 @@ export const Rail: React.FC<RailProps> = ({
         left: amount,
       });
     }
-  }, []);
+  }, [dir]);
 
   return (
     <div className={`w-full ${className || ""}`} dir={dir}>
-      {header && (
-        <h2 className="mx-sm-gutter text-2xl font-normal text-white md:mx-md-gutter lg:mx-lg-gutter xl:mx-xl-gutter">
-          {header}
-          {displayCount && (
-            <span className="ml-1 text-gray-500 lg:ml-2">{`(${numChildren})`}</span>
-          )}
-        </h2>
-      )}
+      <RailHeader
+        count={numChildren}
+        displayCount={displayCount}
+        header={header}
+      />
       <div className="relative flex items-center justify-center">
         {numChildren > numChildrenOnScreen && (
           <>

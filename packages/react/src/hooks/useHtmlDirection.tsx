@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 type HTMLDir = "ltr" | "rtl" | undefined;
 
 // https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/dir
-export const useHtmlDirection = (): {
+export const useHtmlDirection = (
+  forceRtl?: boolean
+): {
   dir: HTMLDir;
   isRtl: boolean;
   isLtr: boolean;
@@ -22,6 +24,10 @@ export const useHtmlDirection = (): {
   const queryDir = query.dir;
   if (typeof queryDir === "string" && ["ltr", "rtl"].includes(queryDir)) {
     dir = queryDir as HTMLDir;
+  }
+
+  if (forceRtl) {
+    dir = "rtl";
   }
 
   useEffect(() => {

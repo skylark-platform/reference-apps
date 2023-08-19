@@ -11,6 +11,7 @@ import { MdPlayCircleFilled, MdArrowForward } from "react-icons/md";
 import { CarouselButton } from "./carousel-button.component";
 import { List } from "../list";
 import { Button } from "../button";
+import { useHtmlDirection } from "../../hooks/useHtmlDirection";
 
 export interface CarouselItem {
   title: string;
@@ -31,6 +32,7 @@ export interface CarouselItem {
 interface CarouselProps {
   items: CarouselItem[];
   changeInterval?: number;
+  forceRtl?: boolean;
 }
 
 const variants = {
@@ -53,7 +55,10 @@ const variants = {
 export const Carousel: React.FC<CarouselProps> = ({
   items: unparsedItems,
   changeInterval,
+  forceRtl,
 }) => {
+  const { dir } = useHtmlDirection(forceRtl);
+
   const [loadedImages, setLoadedImages] = useState<string[]>([]);
   const [[page, direction], setPage] = useState([0, 0]);
   const [areImagesLoaded, setImagesLoaded] = useState(false);
@@ -120,6 +125,7 @@ export const Carousel: React.FC<CarouselProps> = ({
         relative flex h-full w-full items-center
         justify-center overflow-hidden pb-32 md:pb-0
       `}
+      dir={dir}
     >
       <AnimatePresence custom={direction} initial={false}>
         <motion.div
@@ -146,7 +152,7 @@ export const Carousel: React.FC<CarouselProps> = ({
             className={`
             flex h-full w-full flex-row items-end justify-between bg-gradient-to-t from-gray-900
             to-gray-900/5 px-sm-gutter pb-5
-            md:px-md-gutter md:pb-20 md:pr-0 lg:px-lg-gutter xl:px-xl-gutter
+            md:px-md-gutter md:pb-20 lg:px-lg-gutter xl:px-xl-gutter
           `}
           >
             <div className="flex flex-col">

@@ -23,6 +23,12 @@ Default.args = {
   items: heros,
 };
 
+export const DefaultRTL = Template.bind({});
+DefaultRTL.args = {
+  items: heros,
+  forceRtl: true,
+};
+
 export const WithSingleItem = Template.bind({});
 WithSingleItem.args = {
   items: [heros[0]],
