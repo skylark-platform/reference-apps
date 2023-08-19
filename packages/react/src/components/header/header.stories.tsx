@@ -8,7 +8,7 @@ export default {
 } as ComponentMeta<typeof Header>;
 
 const Template: ComponentStory<typeof Header> = (args) => (
-  <div className="bg-gray-900">
+  <div className="bg-gray-900" dir="ltr">
     <Header {...args} />
   </div>
 );

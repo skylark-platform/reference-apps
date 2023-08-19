@@ -8,7 +8,7 @@ export default {
 } as ComponentMeta<typeof Navigation>;
 
 const Template: ComponentStory<typeof Navigation> = (args) => (
-  <div className="h-screen w-screen bg-gray-500 md:h-48 md:w-full">
+  <div className="h-screen w-screen bg-gray-500 md:h-48 md:w-full" dir="ltr">
     <Navigation {...args} />
   </div>
 );
