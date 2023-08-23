@@ -23,9 +23,9 @@ import { getTimeFromNow } from "../../../lib/utils";
 interface PlaybackPageProps {
   loading?: boolean;
   title: string;
-  synopsis: string;
-  genres: string[];
-  themes: string[];
+  synopsis?: string;
+  genres?: string[];
+  themes?: string[];
   tags: string[];
   rating?: string;
   player: {
@@ -43,7 +43,7 @@ interface PlaybackPageProps {
     title?: string;
     number?: string | number;
   };
-  credits: {
+  credits?: {
     actors: string[];
     directors: string[];
     writers: string[];
@@ -110,27 +110,27 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
                 {
                   icon: <MdRecentActors />,
                   header: t("skylark.role.key-cast"),
-                  body: credits.actors,
+                  body: credits?.actors || [],
                 },
                 {
                   icon: <MdMovie />,
                   header: t("skylark.role.directors"),
-                  body: credits.directors,
+                  body: credits?.directors || [],
                 },
                 {
                   icon: <MdMode />,
                   header: t("skylark.role.writers"),
-                  body: credits.writers,
+                  body: credits?.writers || [],
                 },
                 {
                   icon: <MdPhotoCameraFront />,
                   header: t("skylark.role.presenters"),
-                  body: credits.presenters || [],
+                  body: credits?.presenters || [],
                 },
                 {
                   icon: <MdSettings />,
                   header: t("skylark.role.engineers"),
-                  body: credits.engineers || [],
+                  body: credits?.engineers || [],
                 },
                 {
                   icon: <MdCalendarToday />,

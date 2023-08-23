@@ -42,8 +42,8 @@ export type AccountDetails = {
 };
 
 export enum AssetType {
-  Feature = "FEATURE",
   Main = "MAIN",
+  Thumbnail = "THUMBNAIL",
   Trailer = "TRAILER",
 }
 
@@ -1109,7 +1109,6 @@ export type HiddenObject = {
 
 export enum ImageType {
   Background = "BACKGROUND",
-  Character = "CHARACTER",
   Feature = "FEATURE",
   Footer = "FOOTER",
   Header = "HEADER",
@@ -1119,7 +1118,6 @@ export enum ImageType {
   PostLive = "POST_LIVE",
   Preview = "PREVIEW",
   PreLive = "PRE_LIVE",
-  Profile = "PROFILE",
   Thumbnail = "THUMBNAIL",
 }
 
@@ -3102,7 +3100,6 @@ export type Season = Metadata &
     images?: Maybe<SkylarkImageListing>;
     internal_title?: Maybe<Scalars["String"]>;
     number_of_episodes?: Maybe<Scalars["Int"]>;
-    preferred_image_type?: Maybe<Scalars["String"]>;
     ratings?: Maybe<RatingListing>;
     release_date?: Maybe<Scalars["AWSDate"]>;
     season_number?: Maybe<Scalars["Int"]>;
@@ -3210,7 +3207,6 @@ export type SeasonCreateInput = {
   external_id?: InputMaybe<Scalars["String"]>;
   internal_title?: InputMaybe<Scalars["String"]>;
   number_of_episodes?: InputMaybe<Scalars["Int"]>;
-  preferred_image_type?: InputMaybe<ImageType>;
   relationships?: InputMaybe<SeasonRelationships>;
   release_date?: InputMaybe<Scalars["AWSDate"]>;
   season_number?: InputMaybe<Scalars["Int"]>;
@@ -3228,7 +3224,6 @@ export type SeasonInput = {
   external_id?: InputMaybe<Scalars["String"]>;
   internal_title?: InputMaybe<Scalars["String"]>;
   number_of_episodes?: InputMaybe<Scalars["Int"]>;
-  preferred_image_type?: InputMaybe<ImageType>;
   relationships?: InputMaybe<SeasonRelationships>;
   release_date?: InputMaybe<Scalars["AWSDate"]>;
   season_number?: InputMaybe<Scalars["Int"]>;
@@ -3333,13 +3328,8 @@ export type SetListing = {
 
 export enum SetType {
   Collection = "COLLECTION",
-  Grid = "GRID",
   Page = "PAGE",
   Rail = "RAIL",
-  RailInset = "RAIL_INSET",
-  RailMovie = "RAIL_MOVIE",
-  RailPortrait = "RAIL_PORTRAIT",
-  RailWithSynopsis = "RAIL_WITH_SYNOPSIS",
   Slider = "SLIDER",
 }
 
@@ -3366,6 +3356,7 @@ export type SkylarkAsset = Metadata &
     images?: Maybe<SkylarkImageListing>;
     ingest_file?: Maybe<Scalars["String"]>;
     internal_title?: Maybe<Scalars["String"]>;
+    live_streams?: Maybe<SkylarkLiveStreamListing>;
     movies?: Maybe<MovieListing>;
     provider?: Maybe<Scalars["String"]>;
     ratings?: Maybe<RatingListing>;
@@ -3428,6 +3419,13 @@ export type SkylarkAssetGenresArgs = {
 };
 
 export type SkylarkAssetImagesArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+  order_direction?: InputMaybe<OrderDirections>;
+};
+
+export type SkylarkAssetLive_StreamsArgs = {
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
   next_token?: InputMaybe<Scalars["String"]>;
@@ -3534,6 +3532,7 @@ export type SkylarkAssetRelationships = {
   episodes?: InputMaybe<EpisodeRelationshipInput>;
   genres?: InputMaybe<GenreRelationshipInput>;
   images?: InputMaybe<SkylarkImageRelationshipInput>;
+  live_streams?: InputMaybe<SkylarkLiveStreamRelationshipInput>;
   movies?: InputMaybe<MovieRelationshipInput>;
   ratings?: InputMaybe<RatingRelationshipInput>;
   seasons?: InputMaybe<SeasonRelationshipInput>;
@@ -3988,6 +3987,7 @@ export type SkylarkLiveStream = Metadata &
     _config?: Maybe<ObjectConfig>;
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_SkylarkLiveStreamMeta>;
+    assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
     content_of?: Maybe<SetListing>;
     epg_programs?: Maybe<SkylarkEpgProgramListing>;
@@ -3997,6 +3997,7 @@ export type SkylarkLiveStream = Metadata &
     name?: Maybe<Scalars["String"]>;
     name_sort?: Maybe<Scalars["String"]>;
     slug?: Maybe<Scalars["String"]>;
+    status?: Maybe<Scalars["String"]>;
     tags?: Maybe<SkylarkTagListing>;
     uid: Scalars["String"];
     url?: Maybe<Scalars["String"]>;
@@ -4006,6 +4007,13 @@ export type SkylarkLiveStream_MetaArgs = {
   global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
   language_version?: InputMaybe<Scalars["Int"]>;
+};
+
+export type SkylarkLiveStreamAssetsArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+  order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkLiveStreamAvailabilityArgs = {
@@ -4048,6 +4056,7 @@ export type SkylarkLiveStreamCreateInput = {
   name_sort?: InputMaybe<Scalars["String"]>;
   relationships?: InputMaybe<SkylarkLiveStreamRelationships>;
   slug?: InputMaybe<Scalars["String"]>;
+  status?: InputMaybe<Scalars["String"]>;
   url?: InputMaybe<Scalars["AWSURL"]>;
 };
 
@@ -4059,6 +4068,7 @@ export type SkylarkLiveStreamInput = {
   name_sort?: InputMaybe<Scalars["String"]>;
   relationships?: InputMaybe<SkylarkLiveStreamRelationships>;
   slug?: InputMaybe<Scalars["String"]>;
+  status?: InputMaybe<Scalars["String"]>;
   url?: InputMaybe<Scalars["AWSURL"]>;
 };
 
@@ -4076,6 +4086,7 @@ export type SkylarkLiveStreamRelationshipInput = {
 };
 
 export type SkylarkLiveStreamRelationships = {
+  assets?: InputMaybe<SkylarkAssetRelationshipInput>;
   epg_programs?: InputMaybe<SkylarkEpgProgramRelationshipInput>;
   images?: InputMaybe<SkylarkImageRelationshipInput>;
   tags?: InputMaybe<SkylarkTagRelationshipInput>;
@@ -4448,8 +4459,6 @@ export type SubSkylarkSetInput = {
 
 export enum TagType {
   Default = "DEFAULT",
-  ScheduleStatus = "SCHEDULE_STATUS",
-  Status = "STATUS",
 }
 
 export type Theme = Metadata &
@@ -5080,7 +5089,6 @@ export type _SeasonGlobal = _Global & {
   internal_title?: Maybe<Scalars["String"]>;
   modified?: Maybe<_Audit>;
   number_of_episodes?: Maybe<Scalars["Int"]>;
-  preferred_image_type?: Maybe<Scalars["String"]>;
   publish_stage?: Maybe<PublishStage>;
   release_date?: Maybe<Scalars["AWSDate"]>;
   season_number?: Maybe<Scalars["Int"]>;
@@ -5276,6 +5284,7 @@ export type _SkylarkLiveStreamGlobal = _Global & {
   modified?: Maybe<_Audit>;
   name_sort?: Maybe<Scalars["String"]>;
   publish_stage?: Maybe<PublishStage>;
+  status?: Maybe<Scalars["String"]>;
   url?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["Int"]>;
 };

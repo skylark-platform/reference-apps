@@ -52,4 +52,5 @@ export type GraphQLObjectTypes =
   | "DimensionValue"
   | "Availability"
   | "SkylarkImage"
-  | "CallToAction";
+  | "CallToAction"
+  | "SkylarkLiveStream";
