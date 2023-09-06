@@ -8,7 +8,7 @@ export const GET_LIVE_STREAM = gql`
     $deviceType: String!
     $customerType: String!
   ) {
-    getObject: getSkylarkLiveStream(
+    getObject: getLiveStream(
       uid: $uid
       external_id: $externalId
       language: $language
@@ -17,7 +17,8 @@ export const GET_LIVE_STREAM = gql`
         { dimension: "customer-types", value: $customerType }
       ]
     ) {
-      name
+      title
+      title_short
       images {
         objects {
           title

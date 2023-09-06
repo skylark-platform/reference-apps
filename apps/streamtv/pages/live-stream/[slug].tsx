@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 import { convertObjectToName, getGraphQLImageSrc } from "../../lib/utils";
-import { ImageType, SkylarkLiveStream } from "../../types/gql";
+import { ImageType, LiveStream } from "../../types/gql";
 import { DisplayError } from "../../components/displayError";
 import { useObject } from "../../hooks/useObject";
 import { GET_LIVE_STREAM } from "../../graphql/queries";
@@ -29,7 +29,7 @@ const LiveStreamPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     data: liveStream,
     isError,
     isLoading,
-  } = useObject<SkylarkLiveStream>(GET_LIVE_STREAM, query?.slug as string);
+  } = useObject<LiveStream>(GET_LIVE_STREAM, query?.slug as string);
 
   if (!isLoading && isError) {
     return (
@@ -48,7 +48,7 @@ const LiveStreamPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
       <NextSeo
         description={seo.synopsis}
         openGraph={{ images: seo.images }}
-        title={liveStream?.name || seo.title}
+        title={liveStream?.title || liveStream?.title_short || seo.title}
       />
       <PlaybackPage
         availabilityEndDate={null}
@@ -59,7 +59,7 @@ const LiveStreamPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           src: playbackUrl,
         }}
         tags={convertObjectToName(liveStream?.tags)}
-        title={liveStream?.name || "Live Stream"}
+        title={liveStream?.title || liveStream?.title_short || "Live Stream"}
       />
     </>
   );
