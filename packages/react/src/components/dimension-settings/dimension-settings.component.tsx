@@ -15,7 +15,7 @@ import { useDimensions } from "../../contexts";
 import { ConnectToSkylarkModal } from "../connect-to-skylark-modal";
 
 const generateSkylarkAutoconnectUrl = () => {
-  const isBrowser = typeof window === "undefined";
+  const isBrowser = typeof window !== "undefined";
   const url =
     (isBrowser && localStorage.getItem(LOCAL_STORAGE.uri)) || SAAS_API_ENDPOINT;
   const apikey =
