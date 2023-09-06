@@ -64,8 +64,5 @@ export const skylarkRequestWithDimensions = <T>(
     headers["x-time-travel"] = dimensions.timeTravel;
   }
 
-  // TODO remove this
-  headers["x-ignore-availability"] = "true";
-
   return skylarkRequestWithLocalStorage<T>(query, headers, variables);
 };
