@@ -2,8 +2,15 @@ import type { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
-import { convertObjectToName, getGraphQLImageSrc } from "../../lib/utils";
-import { ImageType, LiveStream } from "../../types/gql";
+import {
+  convertObjectToName,
+  getFirstRatingValue,
+  getFurthestAvailabilityEndDate,
+  getGraphQLImageSrc,
+  getSynopsisByOrderForGraphQLObject,
+  splitAndFormatGraphQLCreditsByInternalTitle,
+} from "../../lib/utils";
+import { Availability, ImageType, LiveStream } from "../../types/gql";
 import { DisplayError } from "../../components/displayError";
 import { useObject } from "../../hooks/useObject";
 import { GET_LIVE_STREAM } from "../../graphql/queries";
@@ -40,8 +47,19 @@ const LiveStreamPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     );
   }
 
+  const liveAsset = liveStream?.live_assets?.objects?.[0];
   const asset = liveStream?.assets?.objects?.[0];
-  const playbackUrl = asset?.hls_url || asset?.url || "/mux-video-intro.mp4";
+  const playbackUrl =
+    liveAsset?.hls_url ||
+    liveAsset?.url ||
+    asset?.hls_url ||
+    asset?.url ||
+    "/mux-video-intro.mp4";
+
+  const synopsis = getSynopsisByOrderForGraphQLObject(liveStream);
+  const availabilityEndDate = getFurthestAvailabilityEndDate(
+    liveStream?.availability?.objects as Availability[] | undefined
+  );
 
   return (
     <>
@@ -51,14 +69,23 @@ const LiveStreamPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         title={liveStream?.title || liveStream?.title_short || seo.title}
       />
       <PlaybackPage
-        availabilityEndDate={null}
+        availabilityEndDate={availabilityEndDate}
+        credits={splitAndFormatGraphQLCreditsByInternalTitle(
+          liveStream?.credits?.objects
+        )}
+        genres={convertObjectToName(liveStream?.genres)}
         loading={!liveStream}
         player={{
-          assetId: asset?.external_id || asset?.uid || "1",
+          assetId: liveAsset
+            ? liveAsset.external_id || liveAsset.uid
+            : asset?.external_id || asset?.uid || "1",
           poster: getGraphQLImageSrc(liveStream?.images, ImageType.Poster),
           src: playbackUrl,
         }}
+        rating={getFirstRatingValue(liveStream?.ratings)}
+        synopsis={synopsis}
         tags={convertObjectToName(liveStream?.tags)}
+        themes={convertObjectToName(liveStream?.themes)}
         title={liveStream?.title || liveStream?.title_short || "Live Stream"}
       />
     </>

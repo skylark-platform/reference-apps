@@ -4,13 +4,12 @@ import { useRouter } from "next/router";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 import {
   convertObjectToName,
-  formatGraphQLCredits,
   getFirstRatingValue,
   getFurthestAvailabilityEndDate,
-  getGraphQLCreditsByType,
   getGraphQLImageSrc,
   getSynopsisByOrderForGraphQLObject,
   getTitleByOrderForGraphQLObject,
+  splitAndFormatGraphQLCreditsByInternalTitle,
 } from "../../lib/utils";
 import { Availability, Episode, ImageType } from "../../types/gql";
 import { DisplayError } from "../../components/displayError";
@@ -76,23 +75,9 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
             episode?.seasons?.objects?.[0]?.brands?.objects?.[0]
           ),
         }}
-        credits={{
-          actors: formatGraphQLCredits(
-            getGraphQLCreditsByType(episode?.credits?.objects, "Actor")
-          ),
-          writers: formatGraphQLCredits(
-            getGraphQLCreditsByType(episode?.credits?.objects, "Writer")
-          ),
-          directors: formatGraphQLCredits(
-            getGraphQLCreditsByType(episode?.credits?.objects, "Director")
-          ),
-          presenters: formatGraphQLCredits(
-            getGraphQLCreditsByType(episode?.credits?.objects, "Presenter")
-          ),
-          engineers: formatGraphQLCredits(
-            getGraphQLCreditsByType(episode?.credits?.objects, "Engineer")
-          ),
-        }}
+        credits={splitAndFormatGraphQLCreditsByInternalTitle(
+          episode?.credits?.objects
+        )}
         genres={convertObjectToName(episode?.genres)}
         number={episode?.episode_number || ""}
         player={{

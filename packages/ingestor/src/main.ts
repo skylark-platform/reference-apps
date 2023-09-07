@@ -181,6 +181,30 @@ const main = async () => {
     airtable.languages
   );
 
+  await createTranslationsForGraphQLObjects(
+    metadata.themes,
+    airtable.translations.themes,
+    airtable.languages
+  );
+
+  await createTranslationsForGraphQLObjects(
+    metadata.genres,
+    airtable.translations.genres,
+    airtable.languages
+  );
+
+  await createTranslationsForGraphQLObjects(
+    metadata.credits,
+    airtable.translations.credits,
+    airtable.languages
+  );
+
+  await createTranslationsForGraphQLObjects(
+    metadata.roles,
+    airtable.translations.roles,
+    airtable.languages
+  );
+
   // eslint-disable-next-line no-console
   console.log("Metadata objects created");
 

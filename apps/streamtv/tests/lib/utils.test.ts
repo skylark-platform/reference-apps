@@ -40,22 +40,10 @@ const images: SkylarkImageListing = {
 };
 
 describe("utils.ts", () => {
-  describe("getGraphQLCreditsByType", () => {
-    it("returns all the Actors", () => {
-      const got = utils.getGraphQLCreditsByType(credits, "Actor");
-      expect(got).toEqual([credits[0], credits[1], credits[3], credits[4]]);
-    });
-
-    it("returns empty array when credits is empty", () => {
-      const got = utils.getGraphQLCreditsByType([], "Actor");
-      expect(got).toEqual([]);
-    });
-  });
-
   describe("formatGraphQLCredits", () => {
     it("returns credits with the character name when credits has a length of 2", () => {
       const got = utils.formatGraphQLCredits([credits[0], credits[1]]);
-      expect(got).toEqual(["Donald Glover as Childish Gambino", "Brad Pitt"]);
+      expect(got).toEqual(["Donald Glover - Childish Gambino", "Brad Pitt"]);
     });
 
     it("returns credits without the character name when credits has a length of 5", () => {

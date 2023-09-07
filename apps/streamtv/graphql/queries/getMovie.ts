@@ -91,7 +91,9 @@ export const GET_MOVIE = gql`
           }
           roles {
             objects {
+              internal_title
               title
+              title_sort
             }
           }
         }

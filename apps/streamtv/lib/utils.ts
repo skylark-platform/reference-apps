@@ -1,11 +1,11 @@
 import {
-  CreditTypes,
   Dimensions,
   DimensionTypes,
   EntertainmentType,
   getSynopsisByOrder,
   getTitleByOrder,
   GraphQLObjectTypes,
+  hasProperty,
   MetadataType,
   SetTypes,
   SynopsisTypes,
@@ -29,19 +29,6 @@ import {
 
 dayjs.extend(relativeTime);
 
-export const getGraphQLCreditsByType = (
-  credits: Maybe<Maybe<Credit>[]> | null | undefined,
-  type: CreditTypes
-): Credit[] => {
-  if (!credits) {
-    return [];
-  }
-
-  return credits.filter(
-    (credit) => credit?.roles?.objects?.[0]?.title === type
-  ) as Credit[];
-};
-
 export const formatGraphQLCredits = (credits: Credit[]) => {
   const showCharacterName = credits.length <= 4;
   return credits.map((credit) => {
@@ -49,9 +36,57 @@ export const formatGraphQLCredits = (credits: Credit[]) => {
     return showCharacterName &&
       credit?.character &&
       credit?.people?.objects?.[0]?.name
-      ? `${name} as ${credit?.character}`
+      ? `${name} - ${credit?.character}`
       : name;
   });
+};
+
+export const splitAndFormatGraphQLCreditsByInternalTitle = (
+  gqlCredits: Maybe<Maybe<Credit>[]> | null | undefined
+): Record<string, { formattedCredits: string[]; translatedRole: string }> => {
+  if (!gqlCredits) {
+    return {};
+  }
+
+  const splitCredits = gqlCredits.reduce((prev, credit) => {
+    // This filtering needs on the role internal_title field
+    // It assumes there is only one role
+    if (
+      !credit ||
+      !credit?.roles?.objects ||
+      credit.roles.objects.length === 0 ||
+      !hasProperty(credit.roles.objects[0], "internal_title") ||
+      !credit.roles.objects[0].internal_title
+    ) {
+      return prev;
+    }
+
+    const role = credit.roles.objects[0].internal_title;
+
+    if (hasProperty(prev, role) && prev[role]) {
+      return {
+        ...prev,
+        [role]: [...prev[role], credit],
+      };
+    }
+
+    return {
+      ...prev,
+      [role]: [credit],
+    };
+  }, {} as Record<string, Credit[]>);
+
+  const formattedCredits = Object.fromEntries(
+    Object.entries(splitCredits).map(([role, credits]) => [
+      role,
+      {
+        formattedCredits: formatGraphQLCredits(credits),
+        translatedRole: credits?.[0].roles?.objects?.[0]?.title || "test",
+      },
+    ])
+  );
+
+  return formattedCredits;
 };
 
 export const convertObjectToName = (
@@ -155,8 +190,13 @@ export const convertTypenameToObjectType = (
       return "season";
     case "Person":
       return "person";
-    default:
+    case "LiveStream":
+      return "live-stream";
+    case "Brand":
       return "brand";
+    default:
+      // Best guess
+      return (typename?.toLowerCase() || "unknown") as MetadataType;
   }
 };
 

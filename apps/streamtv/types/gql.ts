@@ -28,10 +28,12 @@ export type Scalars = {
 export type AccountConfig = {
   __typename?: "AccountConfig";
   default_language?: Maybe<Scalars["String"]>;
+  draft_update?: Maybe<Scalars["Boolean"]>;
 };
 
 export type AccountConfigInput = {
   default_language?: InputMaybe<Scalars["String"]>;
+  draft_update?: InputMaybe<Scalars["Boolean"]>;
 };
 
 export type AccountDetails = {
@@ -2046,6 +2048,7 @@ export type MutationUpdateAvailabilityArgs = {
 
 export type MutationUpdateBrandArgs = {
   brand?: InputMaybe<BrandInput>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2055,6 +2058,7 @@ export type MutationUpdateBrandArgs = {
 
 export type MutationUpdateCallToActionArgs = {
   call_to_action?: InputMaybe<CallToActionInput>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2064,6 +2068,7 @@ export type MutationUpdateCallToActionArgs = {
 
 export type MutationUpdateCreditArgs = {
   credit?: InputMaybe<CreditInput>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2086,6 +2091,7 @@ export type MutationUpdateDimensionValueArgs = {
 };
 
 export type MutationUpdateEpisodeArgs = {
+  draft?: InputMaybe<Scalars["Boolean"]>;
   episode?: InputMaybe<EpisodeInput>;
   external_id?: InputMaybe<Scalars["String"]>;
   global_version?: InputMaybe<Scalars["Int"]>;
@@ -2095,6 +2101,7 @@ export type MutationUpdateEpisodeArgs = {
 };
 
 export type MutationUpdateGenreArgs = {
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   genre?: InputMaybe<GenreInput>;
   global_version?: InputMaybe<Scalars["Int"]>;
@@ -2104,6 +2111,7 @@ export type MutationUpdateGenreArgs = {
 };
 
 export type MutationUpdateLiveStreamArgs = {
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2113,6 +2121,7 @@ export type MutationUpdateLiveStreamArgs = {
 };
 
 export type MutationUpdateMovieArgs = {
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2122,6 +2131,7 @@ export type MutationUpdateMovieArgs = {
 };
 
 export type MutationUpdateParentalGuidanceArgs = {
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2131,6 +2141,7 @@ export type MutationUpdateParentalGuidanceArgs = {
 };
 
 export type MutationUpdatePersonArgs = {
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2140,6 +2151,7 @@ export type MutationUpdatePersonArgs = {
 };
 
 export type MutationUpdateRatingArgs = {
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2149,6 +2161,7 @@ export type MutationUpdateRatingArgs = {
 };
 
 export type MutationUpdateRoleArgs = {
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2158,6 +2171,7 @@ export type MutationUpdateRoleArgs = {
 };
 
 export type MutationUpdateSeasonArgs = {
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2167,6 +2181,7 @@ export type MutationUpdateSeasonArgs = {
 };
 
 export type MutationUpdateSkylarkAssetArgs = {
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2176,6 +2191,7 @@ export type MutationUpdateSkylarkAssetArgs = {
 };
 
 export type MutationUpdateSkylarkEpgProgramArgs = {
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2185,6 +2201,7 @@ export type MutationUpdateSkylarkEpgProgramArgs = {
 };
 
 export type MutationUpdateSkylarkFavoriteListArgs = {
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2194,6 +2211,7 @@ export type MutationUpdateSkylarkFavoriteListArgs = {
 };
 
 export type MutationUpdateSkylarkImageArgs = {
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2203,6 +2221,7 @@ export type MutationUpdateSkylarkImageArgs = {
 };
 
 export type MutationUpdateSkylarkLiveAssetArgs = {
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2212,6 +2231,7 @@ export type MutationUpdateSkylarkLiveAssetArgs = {
 };
 
 export type MutationUpdateSkylarkSetArgs = {
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2221,6 +2241,7 @@ export type MutationUpdateSkylarkSetArgs = {
 };
 
 export type MutationUpdateSkylarkTagArgs = {
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2230,6 +2251,7 @@ export type MutationUpdateSkylarkTagArgs = {
 };
 
 export type MutationUpdateThemeArgs = {
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;

@@ -101,7 +101,9 @@ export const GET_EPISODE = gql`
           }
           roles {
             objects {
+              internal_title
               title
+              title_sort
             }
           }
         }

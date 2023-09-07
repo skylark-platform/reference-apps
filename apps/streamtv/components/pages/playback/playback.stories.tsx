@@ -17,16 +17,25 @@ Episode.args = {
     title: "Better Call Saul",
   },
   credits: {
-    actors: [
-      "Bob Odenkirk",
-      "Jonathon Banks",
-      "Rhea Seehorn",
-      "Patrick Fabian",
-      "Tony Dalton",
-      "Michael Mando",
-    ],
-    writers: ["Vince Gilligan", "Peter Gould"],
-    directors: ["Michael Morris"],
+    Actors: {
+      formattedCredits: [
+        "Bob Odenkirk",
+        "Jonathon Banks",
+        "Rhea Seehorn",
+        "Patrick Fabian",
+        "Tony Dalton",
+        "Michael Mando",
+      ],
+      translatedRole: "Actors",
+    },
+    Writers: {
+      formattedCredits: ["Vince Gilligan", "Peter Gould"],
+      translatedRole: "Writers",
+    },
+    Directors: {
+      formattedCredits: ["Michael Morris"],
+      translatedRole: "Directors",
+    },
   },
   genres: ["Action", "Crime", "Drama", "Suspense"],
   number: 1,
@@ -51,9 +60,23 @@ Episode.args = {
 export const Movie = Template.bind({});
 Movie.args = {
   credits: {
-    actors: ["Ryan Reynolds", "Josh Brolin", "Morena Baccarin", "Zazie Beetz"],
-    writers: ["Rhett Reese", "Paul Wernick"],
-    directors: ["Tim Miller"],
+    Actors: {
+      formattedCredits: [
+        "Ryan Reynolds",
+        "Josh Brolin",
+        "Morena Baccarin",
+        "Zazie Beetz",
+      ],
+      translatedRole: "Actors",
+    },
+    Writers: {
+      formattedCredits: ["Rhett Reese", "Paul Wernick"],
+      translatedRole: "Writers",
+    },
+    Directors: {
+      formattedCredits: ["Tim Miller"],
+      translatedRole: "Directors",
+    },
   },
   genres: [
     "Action",

@@ -423,10 +423,10 @@ describe("saas/create.ts", () => {
       };
 
       graphQlRequest.mockImplementation(() => {
-        if (graphQlRequest.mock.calls.length <= 5) {
+        if (graphQlRequest.mock.calls.length <= 7) {
           return mockedIntrospectionResponse;
         }
-        if (graphQlRequest.mock.calls.length === 6) {
+        if (graphQlRequest.mock.calls.length === 8) {
           return mockedGetEpisodesResponse;
         }
         return mockedGraphQLResponse;
@@ -493,10 +493,10 @@ describe("saas/create.ts", () => {
       };
 
       graphQlRequest.mockImplementation(() => {
-        if (graphQlRequest.mock.calls.length <= 5) {
+        if (graphQlRequest.mock.calls.length <= 7) {
           return mockedIntrospectionResponse;
         }
-        if (graphQlRequest.mock.calls.length === 6) {
+        if (graphQlRequest.mock.calls.length === 8) {
           return mockedGetEpisodesResponse;
         }
         return mockedGraphQLResponse;
@@ -510,9 +510,9 @@ describe("saas/create.ts", () => {
       );
 
       // Assert.
-      expect(graphQlRequest).toHaveBeenCalledTimes(11);
+      expect(graphQlRequest).toHaveBeenCalledTimes(15);
       expect(graphQlRequest).toHaveBeenNthCalledWith(
-        11,
+        15,
         'mutation createMediaObjects { updateEpisode_airtable-episode-1: updateEpisode (external_id: "airtable-episode-1", episode: {title: "episode with relationships", relationships: {themes: {link: ["theme_1"]}, genres: {link: ["genre_1"]}, ratings: {link: ["rating_1"]}, tags: {link: ["tag_1"]}, credits: {link: ["credit_1"]}}, availability: {link: []}}) { __typename uid slug external_id } }',
         {}
       );
@@ -568,10 +568,10 @@ describe("saas/create.ts", () => {
       };
 
       graphQlRequest.mockImplementation(() => {
-        if (graphQlRequest.mock.calls.length <= 5) {
+        if (graphQlRequest.mock.calls.length <= 7) {
           return mockedIntrospectionResponse;
         }
-        if (graphQlRequest.mock.calls.length === 6) {
+        if (graphQlRequest.mock.calls.length === 8) {
           return mockedGetEpisodesResponse;
         }
         return mockedGraphQLResponse;
@@ -649,7 +649,7 @@ describe("saas/create.ts", () => {
       );
 
       expect(graphQlRequest).toHaveBeenNthCalledWith(
-        7,
+        3,
         'mutation createMediaObjectTranslations { translation_es_ES_translation-1: updateEpisode (uid: "episode-1-uid", language: "es-ES", episode: {title: "Title in spanish"}) { __typename uid slug external_id } }',
         {}
       );
@@ -742,7 +742,7 @@ describe("saas/create.ts", () => {
         languageTable as Records<FieldSet>
       );
 
-      expect(graphQlRequest).toBeCalledTimes(6);
+      expect(graphQlRequest).toBeCalledTimes(0);
     });
   });
 });

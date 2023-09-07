@@ -51,6 +51,7 @@ const createSetContent = (
     Brand: { link: [] },
     Movie: { link: [] },
     SkylarkSet: { link: [] },
+    LiveStream: { link: [] },
   };
 
   for (let i = 0; i < setItems.length; i += 1) {
