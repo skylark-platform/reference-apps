@@ -4,13 +4,12 @@ import { NextSeo } from "next-seo";
 import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
 import {
   convertObjectToName,
-  formatGraphQLCredits,
   getFirstRatingValue,
   getFurthestAvailabilityEndDate,
-  getGraphQLCreditsByType,
   getGraphQLImageSrc,
   getSynopsisByOrderForGraphQLObject,
   getTitleByOrderForGraphQLObject,
+  splitAndFormatGraphQLCreditsByInternalTitle,
 } from "../../lib/utils";
 import { Availability, ImageType, Movie } from "../../types/gql";
 import { DisplayError } from "../../components/displayError";
@@ -82,17 +81,9 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         brand={{
           title: brandTitle,
         }}
-        credits={{
-          actors: formatGraphQLCredits(
-            getGraphQLCreditsByType(movie?.credits?.objects, "Actor")
-          ),
-          writers: formatGraphQLCredits(
-            getGraphQLCreditsByType(movie?.credits?.objects, "Writer")
-          ),
-          directors: formatGraphQLCredits(
-            getGraphQLCreditsByType(movie?.credits?.objects, "Director")
-          ),
-        }}
+        credits={splitAndFormatGraphQLCreditsByInternalTitle(
+          movie?.credits?.objects
+        )}
         genres={convertObjectToName(movie?.genres)}
         loading={!movie}
         player={{

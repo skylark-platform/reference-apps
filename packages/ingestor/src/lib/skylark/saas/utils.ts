@@ -93,8 +93,58 @@ export const gqlObjectMeta = (
         argName: "call_to_action",
         relName: "call_to_actions",
       };
+    case "Role":
+      return {
+        createFunc: "createRole",
+        updateFunc: "updateRole",
+        objectType: "Role",
+        argName: "role",
+        relName: "roles",
+      };
+    case "Credit":
+      return {
+        createFunc: "createCredit",
+        updateFunc: "updateCredit",
+        objectType: "Credit",
+        argName: "credit",
+        relName: "credits",
+      };
+    case "Theme":
+      return {
+        createFunc: "createTheme",
+        updateFunc: "updateTheme",
+        objectType: "Theme",
+        argName: "theme",
+        relName: "themes",
+      };
+    case "Genre":
+      return {
+        createFunc: "createGenre",
+        updateFunc: "updateGenre",
+        objectType: "Genre",
+        argName: "genre",
+        relName: "genres",
+      };
+    case "SkylarkLiveAsset":
+      return {
+        createFunc: "createSkylarkLiveAsset",
+        updateFunc: "updateSkylarkLiveAsset",
+        objectType: "SkylarkLiveAsset",
+        argName: "skylark_live_asset",
+        relName: "live_assets",
+      };
+    case "LiveStream":
+      return {
+        createFunc: "createLiveStream",
+        updateFunc: "updateLiveStream",
+        objectType: "LiveStream",
+        argName: "live_stream",
+        relName: "live_streams",
+      };
     default:
-      throw new Error(`Case ${type} does not have values`);
+      throw new Error(
+        `[gqlObjectMeta] Object type "${type}" does not have GQL values`
+      );
   }
 };
 
@@ -186,10 +236,10 @@ export const getLanguageCodesFromAirtable = (
   return languageCodes;
 };
 
-export const hasProperty = <T, K extends PropertyKey>(
+export const hasProperty = <T, K extends PropertyKey, P = unknown>(
   object: T,
   property: K
-): object is T & Record<K, unknown> =>
+): object is T & Record<K, P> =>
   Object.prototype.hasOwnProperty.call(object, property);
 
 export const convertGraphQLObjectTypeToArgName = (

@@ -5,3 +5,4 @@ export * from "./getSet";
 export * from "./listMovies";
 export * from "./listGenres";
 export * from "./search";
+export * from "./getLiveStream";

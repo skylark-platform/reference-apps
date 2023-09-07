@@ -1,6 +1,12 @@
-import { Brand, Episode, Movie, Season, SkylarkSet } from "./gql";
+import { Brand, Episode, LiveStream, Movie, Season, SkylarkSet } from "./gql";
 
-export type Entertainment = Episode | Movie | Brand | Season | SkylarkSet;
+export type Entertainment =
+  | Episode
+  | Movie
+  | Brand
+  | Season
+  | SkylarkSet
+  | LiveStream;
 
 export type GQLError = {
   response: {

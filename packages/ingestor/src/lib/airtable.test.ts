@@ -61,6 +61,10 @@ describe("airtable", () => {
         translations: {
           mediaObjects: [],
           callToActions: [],
+          themes: [],
+          genres: [],
+          roles: [],
+          credits: [],
         },
         dimensions: {
           customerTypes: [],
@@ -111,6 +115,10 @@ describe("airtable", () => {
         translations: {
           mediaObjects: [],
           callToActions: [],
+          themes: [],
+          genres: [],
+          roles: [],
+          credits: [],
         },
         dimensions: {
           customerTypes: [],

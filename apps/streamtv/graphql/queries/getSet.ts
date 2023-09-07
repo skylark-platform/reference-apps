@@ -108,6 +108,18 @@ export const GET_SET_FOR_CAROUSEL = gql`
                 ...callToActionListingFragment
               }
             }
+            ... on LiveStream {
+              title
+              title_short
+              synopsis
+              synopsis_short
+              images {
+                ...imageListingFragment
+              }
+              call_to_actions(limit: 1) {
+                ...callToActionListingFragment
+              }
+            }
             ... on SkylarkSet {
               title
               title_short

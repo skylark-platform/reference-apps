@@ -3,8 +3,6 @@
     "description": "A showcase application build to demonstrate the power of Skylark. Visit https://www.skylarkplatform.com to learn more."
   },
   "cta": {
-    "subscribe": "30 day free trial available. £12.99/mo after.",
-    "watch-free": "Watch for free",
     "start-watching": "Start Watching",
     "continue-watching": "Continue Watching"
   },
@@ -14,7 +12,7 @@
       "episode": "Episode",
       "season": "Season",
       "brand": "Brand",
-      "asset": "SkylarkAsset",
+      "asset": "Asset",
       "count": {
         "season": {
           "0": "0 Seasons",
@@ -27,13 +25,6 @@
           "other": "{{count}} Movies"
         }
       }
-    },
-    "role": {
-      "key-cast": "Key Cast",
-      "directors": "Directors",
-      "writers": "Writers",
-      "presenters": "Presenters",
-      "engineers": "Engineers"
     }
   },
   "sign-in": "Sign in",

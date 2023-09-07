@@ -1,13 +1,13 @@
 import { gql } from "graphql-request";
 
-export const GET_MOVIE_THUMBNAIL = gql`
-  query GET_MOVIE_THUMBNAIL(
+export const GET_LIVE_STREAM_THUMBNAIL = gql`
+  query GET_LIVE_STREAM_THUMBNAIL(
     $uid: String!
     $language: String!
     $deviceType: String!
     $customerType: String!
   ) {
-    getObject: getMovie(
+    getObject: getLiveStream(
       uid: $uid
       language: $language
       dimensions: [
@@ -20,7 +20,6 @@ export const GET_MOVIE_THUMBNAIL = gql`
       title_short
       synopsis
       synopsis_short
-      release_date
       images {
         objects {
           title
@@ -38,15 +37,15 @@ export const GET_MOVIE_THUMBNAIL = gql`
   }
 `;
 
-export const GET_MOVIE = gql`
-  query GET_MOVIE(
+export const GET_LIVE_STREAM = gql`
+  query GET_LIVE_STREAM(
     $uid: String
     $externalId: String
     $language: String!
     $deviceType: String!
     $customerType: String!
   ) {
-    getObject: getMovie(
+    getObject: getLiveStream(
       uid: $uid
       external_id: $externalId
       language: $language
@@ -59,7 +58,6 @@ export const GET_MOVIE = gql`
       title_short
       synopsis
       synopsis_short
-      release_date
       images {
         objects {
           title
@@ -74,11 +72,11 @@ export const GET_MOVIE = gql`
           hls_url
         }
       }
-      brands {
+      live_assets {
         objects {
           uid
-          title
-          title_short
+          url
+          hls_url
         }
       }
       credits {

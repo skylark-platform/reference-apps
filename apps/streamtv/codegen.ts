@@ -1,6 +1,9 @@
 import type { CodegenConfig } from "@graphql-codegen/cli";
 import { SAAS_API_ENDPOINT, SAAS_API_KEY } from "@skylark-reference-apps/lib";
 
+// eslint-disable-next-line no-console
+console.log(`[Codegen] URL: ${SAAS_API_ENDPOINT}`);
+
 const config: CodegenConfig = {
   overwrite: true,
   schema: {

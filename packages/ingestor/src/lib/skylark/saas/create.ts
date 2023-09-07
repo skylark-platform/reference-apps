@@ -5,7 +5,7 @@ import {
 } from "@skylark-reference-apps/lib";
 import { Attachment, FieldSet, Records } from "airtable";
 import { EnumType, jsonToGraphQLQuery } from "json-to-graphql-query";
-import { chunk, flatten, has, isArray, isEmpty, isString } from "lodash";
+import { chunk, flatten, has, isArray, isEmpty } from "lodash";
 import { Variables } from "graphql-request";
 import {
   CREATE_OBJECT_CHUNK_SIZE,
@@ -617,6 +617,8 @@ export const createGraphQLMediaObjects = async (
     Brand: await getValidPropertiesForObject("Brand"),
     Movie: await getValidPropertiesForObject("Movie"),
     SkylarkAsset: await getValidPropertiesForObject("SkylarkAsset"),
+    SkylarkLiveAsset: await getValidPropertiesForObject("SkylarkLiveAsset"),
+    LiveStream: await getValidPropertiesForObject("LiveStream"),
   };
 
   const externalIdsAndLanguage = airtableRecords.map(({ id, fields }) => ({
@@ -625,7 +627,15 @@ export const createGraphQLMediaObjects = async (
   }));
 
   const existingObjectSets = await Promise.all(
-    ["Brand", "Season", "Episode", "Movie", "SkylarkAsset"].map((objectType) =>
+    [
+      "Brand",
+      "Season",
+      "Episode",
+      "Movie",
+      "SkylarkAsset",
+      "SkylarkLiveAsset",
+      "LiveStream",
+    ].map((objectType) =>
       getExistingObjects(
         objectType as GraphQLMediaObjectTypes,
         externalIdsAndLanguage
@@ -670,10 +680,6 @@ export const createGraphQLMediaObjects = async (
 
     const operations = objectsToCreateUpdate.reduce(
       (previousOperations, { id, fields }) => {
-        if (!has(fields, "title") || !isString(fields.title)) {
-          return previousOperations;
-        }
-
         const { objectType, argName, createFunc, updateFunc } = gqlObjectMeta(
           fields.skylark_object_type as string
         );
@@ -693,6 +699,10 @@ export const createGraphQLMediaObjects = async (
           objectType
         ] as GraphQLIntrospectionProperties[];
         const validFields = getValidFields(fields, validProperties);
+
+        if (validFields.length === 0) {
+          return previousOperations;
+        }
 
         const relationships: RelationshipsLink = getMediaObjectRelationships(
           fields,
@@ -779,19 +789,29 @@ export const createTranslationsForGraphQLObjects = async (
   translationsTable: Records<FieldSet>,
   languagesTable: Records<FieldSet>
 ) => {
+  const languageCodes = getLanguageCodesFromAirtable(languagesTable);
+
+  const objectTypesAndValidProperties = await Promise.all(
+    [
+      ...new Set(
+        originalObjects.map(
+          ({ __typename }) => __typename as GraphQLObjectTypes
+        )
+      ),
+    ].map(
+      async (
+        objectType: GraphQLObjectTypes
+      ): Promise<[GraphQLObjectTypes, GraphQLIntrospectionProperties[]]> => [
+        objectType,
+        await getValidPropertiesForObject(objectType),
+      ]
+    )
+  );
+
   const validObjectProperties: Record<
     string,
     GraphQLIntrospectionProperties[]
-  > = {
-    Episode: await getValidPropertiesForObject("Episode"),
-    Season: await getValidPropertiesForObject("Season"),
-    Brand: await getValidPropertiesForObject("Brand"),
-    Movie: await getValidPropertiesForObject("Movie"),
-    SkylarkAsset: await getValidPropertiesForObject("SkylarkAsset"),
-    CallToAction: await getValidPropertiesForObject("CallToAction"),
-  };
-
-  const languageCodes = getLanguageCodesFromAirtable(languagesTable);
+  > = Object.fromEntries(objectTypesAndValidProperties);
 
   const translationOperations = translationsTable.reduce(
     (previousOperations, { fields, id }) => {
@@ -818,6 +838,18 @@ export const createTranslationsForGraphQLObjects = async (
         // eslint-disable-next-line no-underscore-dangle
         originalObject.__typename as GraphQLMediaObjectTypes
       );
+
+      if (
+        !hasProperty<
+          typeof validObjectProperties,
+          GraphQLObjectTypes,
+          GraphQLIntrospectionProperties[]
+        >(validObjectProperties, objectType)
+      ) {
+        throw new Error(
+          `Properties have not been fetched for object type ${objectType}`
+        );
+      }
 
       const validFields = getValidFields(
         fields,

@@ -2,11 +2,12 @@ import React from "react";
 import { formatReleaseDate } from "@skylark-reference-apps/lib";
 import useTranslation from "next-translate/useTranslation";
 import {
-  MdRecentActors,
-  MdMovie,
-  MdMode,
   MdCalendarToday,
+  MdGrade,
+  MdMode,
+  MdMovie,
   MdPhotoCameraFront,
+  MdRecentActors,
   MdSettings,
   MdTag,
 } from "react-icons/md";
@@ -23,9 +24,9 @@ import { getTimeFromNow } from "../../../lib/utils";
 interface PlaybackPageProps {
   loading?: boolean;
   title: string;
-  synopsis: string;
-  genres: string[];
-  themes: string[];
+  synopsis?: string;
+  genres?: string[];
+  themes?: string[];
   tags: string[];
   rating?: string;
   player: {
@@ -43,15 +44,49 @@ interface PlaybackPageProps {
     title?: string;
     number?: string | number;
   };
-  credits: {
-    actors: string[];
-    directors: string[];
-    writers: string[];
-    presenters?: string[];
-    engineers?: string[];
-  };
+  credits?: Record<
+    string,
+    { formattedCredits: string[]; translatedRole: string }
+  >;
   availabilityEndDate: Dayjs | null;
 }
+
+const getIconForCreditRole = (role: string) => {
+  switch (role) {
+    case "Actor":
+      return <MdRecentActors />;
+    case "Director":
+      return <MdMovie />;
+    case "Writer":
+      return <MdMode />;
+    case "Presenter":
+      return <MdPhotoCameraFront />;
+    case "Engineer":
+      return <MdSettings />;
+
+    default:
+      return <MdGrade />;
+  }
+};
+
+const convertCreditsToMetadataContent = (
+  credits?: Record<
+    string,
+    { formattedCredits: string[]; translatedRole: string }
+  >
+) => {
+  if (!credits || Object.keys(credits).length === 0) {
+    return [];
+  }
+
+  return Object.entries(credits).map(
+    ([role, { formattedCredits, translatedRole }]) => ({
+      header: translatedRole,
+      body: formattedCredits,
+      icon: getIconForCreditRole(role),
+    })
+  );
+};
 
 export const PlaybackPage: NextPage<PlaybackPageProps> = ({
   loading,
@@ -107,31 +142,7 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
             </div>
             <MetadataPanel
               content={[
-                {
-                  icon: <MdRecentActors />,
-                  header: t("skylark.role.key-cast"),
-                  body: credits.actors,
-                },
-                {
-                  icon: <MdMovie />,
-                  header: t("skylark.role.directors"),
-                  body: credits.directors,
-                },
-                {
-                  icon: <MdMode />,
-                  header: t("skylark.role.writers"),
-                  body: credits.writers,
-                },
-                {
-                  icon: <MdPhotoCameraFront />,
-                  header: t("skylark.role.presenters"),
-                  body: credits.presenters || [],
-                },
-                {
-                  icon: <MdSettings />,
-                  header: t("skylark.role.engineers"),
-                  body: credits.engineers || [],
-                },
+                ...convertCreditsToMetadataContent(credits),
                 {
                   icon: <MdCalendarToday />,
                   header: t("released"),

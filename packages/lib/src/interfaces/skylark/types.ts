@@ -4,7 +4,8 @@ export type EntertainmentType =
   | "episode"
   | "season"
   | "brand"
-  | "asset";
+  | "asset"
+  | "live-stream";
 export type MetadataType = "person";
 export type ObjectTypes = EntertainmentType | SetTypes | MetadataType | null;
 
@@ -30,7 +31,9 @@ export type GraphQLMediaObjectTypes =
   | "Season"
   | "Episode"
   | "Movie"
-  | "SkylarkAsset";
+  | "SkylarkAsset"
+  | "SkylarkLiveAsset"
+  | "LiveStream";
 
 // Usually customer instances
 export type OptionalCustomGraphQLObjectTypes = "TagCategory";
@@ -52,4 +55,5 @@ export type GraphQLObjectTypes =
   | "DimensionValue"
   | "Availability"
   | "SkylarkImage"
-  | "CallToAction";
+  | "CallToAction"
+  | "SkylarkLiveStream";
