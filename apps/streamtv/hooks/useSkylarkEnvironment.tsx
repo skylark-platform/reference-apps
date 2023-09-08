@@ -14,14 +14,21 @@ interface SkylarkEnvironmentResponse {
       };
     }[];
   };
+  objectTypes?: {
+    possibleTypes: {
+      name: string;
+    }[];
+  };
 }
 
 interface SkylarkEnvironment {
   hasUpdatedSeason: boolean;
+  hasStreamTVConfig: boolean;
+  objectTypes: string[];
 }
 
 export const useSkylarkEnvironment = () => {
-  const { data, error, ...rest } = useQuery({
+  const { data, error } = useQuery({
     queryKey: ["SkylarkEnvironment"],
     queryFn: () =>
       skylarkRequestWithLocalStorage<SkylarkEnvironmentResponse>(
@@ -39,14 +46,20 @@ export const useSkylarkEnvironment = () => {
         ) > -1
     );
 
+    const objectTypes =
+      data?.objectTypes?.possibleTypes.map(({ name }) => name) || [];
+
+    const hasStreamTVConfig = objectTypes.includes("StreamtvConfig");
+
     return {
       hasUpdatedSeason,
+      hasStreamTVConfig,
+      objectTypes,
     };
   }, [data]);
 
   return {
     environment,
-    ...rest,
     error: error as GQLError,
   };
 };

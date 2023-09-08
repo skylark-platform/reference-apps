@@ -13,17 +13,17 @@ interface ButtonProps {
   disabled?: boolean;
 }
 
-const primaryStyles = "bg-button-primary";
-const secondaryStyles = "bg-button-secondary";
-const tertiaryStyles = "bg-button-tertiary";
-const outlineStyles = "text-gray-600 hover:text-gray-100 font-medium";
-const xlStyles = "px-8 md:px-10 lg:px-12 py-4 text-base md:text-lg";
-const lgStyles =
+const primaryClassName = "bg-streamtv-primary";
+const secondaryClassName = "bg-button-secondary";
+const tertiaryClassName = "bg-button-tertiary";
+const outlineClassName = "text-gray-600 hover:text-gray-100 font-medium";
+const xlClassName = "px-8 md:px-10 lg:px-12 py-4 text-base md:text-lg";
+const lgClassName =
   "px-4 md:px-6 lg:px-8 xl:px-10 py-2 lg:py-3 text-sm lg:text-base";
-const smStyles = "px-2 md:px-4 lg:px-6 py-2 text-xs md:text-sm";
-const onlyIconXlStyles = "p-4 md:p-5";
-const onlyIconLgStyles = "p-3";
-const onlyIconSmStyles = "p-2";
+const smClassName = "px-2 md:px-4 lg:px-6 py-2 text-xs md:text-sm";
+const onlyIconXlClassName = "p-4 md:p-5";
+const onlyIconLgClassName = "p-3";
+const onlyIconSmClassName = "p-2";
 
 export const Button: React.FC<ButtonProps> = ({
   size = "lg",
@@ -37,26 +37,30 @@ export const Button: React.FC<ButtonProps> = ({
   onClick,
 }) => {
   let className = `
-  ${variant === "primary" ? primaryStyles : ""}
-  ${variant === "secondary" ? secondaryStyles : ""}
-  ${variant === "tertiary" ? tertiaryStyles : ""}
-  ${variant === "outline" ? outlineStyles : "text-white disabled:text-gray-300"}
+  ${variant === "primary" ? primaryClassName : ""}
+  ${variant === "secondary" ? secondaryClassName : ""}
+  ${variant === "tertiary" ? tertiaryClassName : ""}
+  ${
+    variant === "outline"
+      ? outlineClassName
+      : "text-white disabled:text-gray-300"
+  }
 flex justify-center items-center h-full
-hover:bg-button-hover disabled:bg-button-disabled transition-colors
+hover:bg-streamtv-accent disabled:bg-gray-100 transition-colors
 font-body cursor-pointer
 `;
 
   if (text) {
     className += ` rounded-sm w-full md:w-fit px-2
-      ${size === "sm" ? smStyles : ""}
-      ${size === "lg" ? lgStyles : ""}
-      ${size === "xl" ? xlStyles : ""}
+      ${size === "sm" ? smClassName : ""}
+      ${size === "lg" ? lgClassName : ""}
+      ${size === "xl" ? xlClassName : ""}
     `;
   } else {
     className += ` rounded-full
-      ${size === "sm" ? onlyIconSmStyles : ""}
-      ${size === "lg" ? onlyIconLgStyles : ""}
-      ${size === "xl" ? onlyIconXlStyles : ""}
+      ${size === "sm" ? onlyIconSmClassName : ""}
+      ${size === "lg" ? onlyIconLgClassName : ""}
+      ${size === "xl" ? onlyIconXlClassName : ""}
     `;
   }
 

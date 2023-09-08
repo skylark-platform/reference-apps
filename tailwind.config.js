@@ -22,7 +22,26 @@ module.exports = {
         ol2: ["10px", "10px"],
       },
       colors: {
-        "skylark-blue": "#226DFF",
+        skylark: {
+          blue: "#226DFF",
+        },
+        streamtv: {
+          primary: "var(--streamtv-primary-color)",
+          accent: "var(--streamtv-accent-color)",
+          purple: {
+            50: "#EDE8F9",
+            100: "#D0C7F0",
+            300: "#917CDE",
+            400: "#7760D6",
+            500: "#5B45CE",
+            700: "#4138BE",
+          },
+          pink: {
+            400: "#FF7E96",
+            500: "#FF385C",
+            600: "#D82646",
+          },
+        },
         gray: {
           50: "#F7F7FC",
           100: "#F3F3FB",
@@ -34,24 +53,8 @@ module.exports = {
           800: "#3C3A41",
           900: "#1B1A20",
         },
-        purple: {
-          50: "#EDE8F9",
-          100: "#D0C7F0",
-          300: "#917CDE",
-          400: "#7760D6",
-          500: "#5B45CE",
-          700: "#4138BE",
-        },
-        pink: {
-          400: "#FF7E96",
-          500: "#FF385C",
-          600: "#D82646",
-        },
         button: {
-          primary: "#5B45CE",
           secondary: "rgba(104, 108, 119, 0.65)",
-          hover: "#FF385C",
-          disabled: "#F3F3FB",
           tertiary: "rgba(27, 26, 32, 0.25)",
         },
       },

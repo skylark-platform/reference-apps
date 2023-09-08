@@ -161,6 +161,36 @@ const addPreferredImageTypeToSeason = async (version?: number) => {
   }
 };
 
+const addStreamTVConfigObjectType = () => {
+  const CREATE_STREAMTV_CONFIG_OBJECT_TYPE = gql`
+    mutation CREATE_STREAMTV_CONFIG_OBJECT_TYPE($version: Int!) {
+      createObjectType(
+        version: $version
+        object_types: {
+          name: "streamtv_config"
+          relationships: [
+            {
+              operation: CREATE
+              to_class: SkylarkImage
+              relationship_name: "logo"
+              reverse_relationship_name: "streamtv_config"
+            }
+          ]
+          fields: [
+            { name: "app_name", operation: CREATE, type: STRING }
+            { name: "primary_color", operation: CREATE, type: STRING }
+            { name: "accent_color", operation: CREATE, type: STRING }
+            { name: "google_analytics_id", operation: CREATE, type: STRING }
+          ]
+        }
+      ) {
+        messages
+        version
+      }
+    }
+  `;
+};
+
 export const waitForUpdatingSchema = async () => {
   const {
     active_version: activeVersion,
