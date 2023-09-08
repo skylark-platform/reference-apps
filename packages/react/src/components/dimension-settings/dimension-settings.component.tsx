@@ -44,8 +44,6 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
   const { dimensions, setLanguage, setCustomerType, setRegion, setTimeTravel } =
     useDimensions();
 
-  console.log(dimensions);
-
   const nextWeek = dayjs().add(7, "days");
   const nextWeekReadable = nextWeek.format("DD MMMM, h:mm A");
   const nextWeekIso = nextWeek.toISOString();
