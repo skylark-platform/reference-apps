@@ -18,9 +18,6 @@ const movieListingFromGenreFetcher = (
     dimensions,
     {
       uid: genreUid,
-      language: dimensions.language,
-      customerType: dimensions.customerType,
-      deviceType: dimensions.deviceType,
       nextToken,
     }
   );

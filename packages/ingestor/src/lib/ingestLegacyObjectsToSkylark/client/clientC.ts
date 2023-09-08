@@ -326,6 +326,7 @@ export const ingestClientC = async ({
     {
       customerTypes: createdDimensions,
       deviceTypes: [],
+      regions: [],
     }
   );
 

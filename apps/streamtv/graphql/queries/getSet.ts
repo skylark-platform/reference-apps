@@ -1,5 +1,9 @@
 import { gql } from "graphql-request";
-import { CallToActionListingFragment, ImageListingFragment } from "./fragments";
+import {
+  CallToActionListingFragment,
+  ImageListingFragment,
+  ObjectLanguageFragment,
+} from "./fragments";
 import { StreamTVAdditionalFields } from "../../types";
 
 export const GET_SET_THUMBNAIL = gql`
@@ -10,6 +14,7 @@ export const GET_SET_THUMBNAIL = gql`
     $language: String!
     $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
     getObject: getSkylarkSet(
       uid: $uid
@@ -17,6 +22,7 @@ export const GET_SET_THUMBNAIL = gql`
       dimensions: [
         { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
       ]
     ) {
       __typename
@@ -35,12 +41,14 @@ export const GET_SET_THUMBNAIL = gql`
 export const GET_SET_FOR_CAROUSEL = gql`
   ${ImageListingFragment}
   ${CallToActionListingFragment}
+  ${ObjectLanguageFragment}
 
   query GET_SET_FOR_CAROUSEL(
     $uid: String!
     $language: String!
     $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
     getObject: getSkylarkSet(
       uid: $uid
@@ -48,6 +56,7 @@ export const GET_SET_FOR_CAROUSEL = gql`
       dimensions: [
         { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
       ]
     ) {
       uid
@@ -56,6 +65,7 @@ export const GET_SET_FOR_CAROUSEL = gql`
           object {
             uid
             __typename
+            ...objectLanguageFragment
             ... on Movie {
               title
               title_short
@@ -141,6 +151,7 @@ export const GET_SET_FOR_CAROUSEL = gql`
 
 export const GET_COLLECTION_SET = gql`
   ${ImageListingFragment}
+  ${ObjectLanguageFragment}
 
   query GET_COLLECTION_SET(
     $uid: String
@@ -148,6 +159,7 @@ export const GET_COLLECTION_SET = gql`
     $language: String!
     $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
     getObject: getSkylarkSet(
       uid: $uid
@@ -156,6 +168,7 @@ export const GET_COLLECTION_SET = gql`
       dimensions: [
         { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
       ]
     ) {
       uid
@@ -178,6 +191,7 @@ export const GET_COLLECTION_SET = gql`
           object {
             __typename
             uid
+            ...objectLanguageFragment
           }
         }
       }
@@ -186,12 +200,15 @@ export const GET_COLLECTION_SET = gql`
 `;
 
 export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
+  ${ObjectLanguageFragment}
+
   query GET_PAGE_SET(
     $uid: String
     $externalId: String
     $language: String!
     $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
     getObject: getSkylarkSet(
       uid: $uid
@@ -200,6 +217,7 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
       dimensions: [
         { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
       ]
     ) {
       __typename
@@ -210,6 +228,7 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
         objects {
           object {
             __typename
+            ... objectLanguageFragment
             ... on Season {
               uid
               title
@@ -224,6 +243,7 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
                   uid
                   episode_number
                   title
+                  ... objectLanguageFragment
                 }
               }
             }
@@ -237,6 +257,7 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
                   object {
                     __typename
                     uid
+                    ... objectLanguageFragment
                   }
                 }
               }

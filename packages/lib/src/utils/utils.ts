@@ -96,10 +96,10 @@ export const sortArrayIntoAlphabeticalOrder = (a: string, b: string) => {
   return aUpper < bUpper ? -1 : aUpper > bUpper ? 1 : 0;
 };
 
-export const hasProperty = <T, K extends PropertyKey>(
+export const hasProperty = <T, K extends PropertyKey, V = unknown>(
   object: T,
   property: K
-): object is T & Record<K, unknown> =>
+): object is T & Record<K, V> =>
   Object.prototype.hasOwnProperty.call(object, property);
 
 export const addCloudinaryOnTheFlyImageTransformation = (

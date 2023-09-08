@@ -95,7 +95,6 @@ export const StreamTVLayout: React.FC<Props> = ({
           {children}
         </div>
         <DimensionSettings
-          showKidsDimension={hasProperty(query, "withKidsDimension")}
           skylarkApiUrl={skylarkApiUrl}
           timeTravelEnabled={!!timeTravelEnabled}
         />

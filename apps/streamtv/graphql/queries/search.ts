@@ -9,6 +9,7 @@ export const SEARCH = gql`
     $language: String!
     $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
     search(
       query: $query
@@ -16,6 +17,7 @@ export const SEARCH = gql`
       dimensions: [
         { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
       ]
       highlight_results: true
     ) {

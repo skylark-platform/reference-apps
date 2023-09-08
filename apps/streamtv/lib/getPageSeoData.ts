@@ -40,6 +40,7 @@ export const getSeoDataForObject = async (
             customerType: "premium",
             deviceType: "pc",
             timeTravel: "",
+            region: "europe",
           }),
         },
         uid: true,

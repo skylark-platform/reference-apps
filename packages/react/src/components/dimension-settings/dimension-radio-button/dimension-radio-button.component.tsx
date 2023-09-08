@@ -1,30 +1,26 @@
-import React, { useState } from "react";
+import React from "react";
 
 interface Option {
   text: string;
   value: string;
   activeOverride?: boolean;
+  disabled?: boolean;
 }
 
 interface RadioButtonProps {
-  initial?: Option["value"];
+  active: Option["value"];
   options: Option[];
   onChange: (value: string) => void;
   labelClassName?: string;
 }
 
 export const DimensionRadioButton: React.FC<RadioButtonProps> = ({
-  initial,
+  active,
   options,
   onChange,
   labelClassName,
 }) => {
-  const [active, setActive] = useState(
-    options.find((opt) => opt.value === initial)
-  );
-
   const handleOnChange = (newValue: Option) => {
-    setActive(newValue);
     onChange(newValue.value);
   };
 
@@ -33,15 +29,16 @@ export const DimensionRadioButton: React.FC<RadioButtonProps> = ({
       {options.map((option) => (
         <div className="m-1 flex flex-row items-center" key={option.value}>
           <input
-            checked={option.activeOverride || option.value === active?.value}
-            className="peer form-radio border-none bg-gray-200 p-3 ring-offset-0 checked:bg-skylark-blue focus:shadow-none focus:outline-none focus:ring-0 md:p-4"
+            checked={option.activeOverride || option.value === active}
+            className="peer form-radio border-none bg-gray-200 p-3 ring-offset-0 checked:bg-skylark-blue focus:shadow-none focus:outline-none focus:ring-0 disabled:bg-gray-50 md:p-4"
+            disabled={option.disabled}
             id={`dimension-radio-${option.value}`}
             type="radio"
             value={option.value}
             onChange={() => handleOnChange(option)}
           />
           <label
-            className={`m-2 ml-3 align-top text-sm font-normal text-gray-500 peer-checked:text-black ${
+            className={`m-2 ml-3 align-top text-sm font-normal text-gray-600 peer-checked:text-black peer-disabled:text-gray-300 ${
               labelClassName || ""
             }`}
             htmlFor={`dimension-radio-${option.value}`}

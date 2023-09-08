@@ -8,7 +8,6 @@ const createStreamTVExternalId = (id: string) => `streamtv_${id}`;
 
 const homePageSlider: SetConfig = {
   externalId: createStreamTVExternalId("home_page_slider"),
-  title: "Home page hero",
   slug: "home-page-hero",
   graphQlSetType: "SLIDER",
   contents: [
@@ -19,7 +18,6 @@ const homePageSlider: SetConfig = {
 
 const mediaReferenceHomepage: SetConfig = {
   externalId: createStreamTVExternalId("homepage"),
-  title: "Homepage",
   slug: "media-reference-homepage",
   graphQlSetType: "PAGE",
   contents: [

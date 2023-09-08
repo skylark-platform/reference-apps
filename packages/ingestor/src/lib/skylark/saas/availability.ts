@@ -39,6 +39,10 @@ export const showcaseDimensionsConfig: {
     title: "Device Type",
     slug: "device-types",
   },
+  {
+    title: "Region",
+    slug: "regions",
+  },
 ];
 
 export const getExistingDimensions = async (
@@ -262,12 +266,13 @@ export const createOrUpdateScheduleDimensionValues = async (
   }[] = [
     { type: "customer-types", data: airtable.customerTypes },
     { type: "device-types", data: airtable.deviceTypes },
+    { type: "regions", data: airtable.regions },
   ];
 
   const dimensions: GraphQLDimension[] = await getExistingDimensions();
   const validProperties = await getValidPropertiesForObject("DimensionValue");
 
-  const [customerTypes, deviceTypes] = await Promise.all(
+  const [customerTypes, deviceTypes, regions] = await Promise.all(
     dimensionValues.map(({ data, type }) => {
       const formattedValuesToCreate = data.map(({ id, fields }) => ({
         ...fields,
@@ -284,6 +289,7 @@ export const createOrUpdateScheduleDimensionValues = async (
   return {
     customerTypes,
     deviceTypes,
+    regions,
   };
 };
 
@@ -341,6 +347,10 @@ export const createOrUpdateAvailability = async (
         {
           dimension_slug: "device-types",
           value_slugs: getValueSlugs(dimensions.deviceTypes, fields.devices),
+        },
+        {
+          dimension_slug: "regions",
+          value_slugs: getValueSlugs(dimensions.regions, fields.regions),
         },
       ].filter(({ value_slugs }) => value_slugs.length > 0);
 

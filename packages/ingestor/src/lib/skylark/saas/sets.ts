@@ -90,7 +90,6 @@ const createBasicSetArgs = (
 
   const validFields = getValidFields(
     {
-      title: set.title,
       slug: set.slug,
       type: set.graphQlSetType,
     },
@@ -143,7 +142,6 @@ const createSetArgsWithTranslations = (
   const validFields = getValidFields(
     {
       ...fields,
-      title: set.title,
       slug: set.slug,
       type: set.graphQlSetType,
     },

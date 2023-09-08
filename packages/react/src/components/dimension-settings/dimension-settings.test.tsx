@@ -43,13 +43,13 @@ describe("Dimension Settings component", () => {
     expect(getCheckBox("Premium").checked).toBeFalsy();
   });
 
-  it("should change the active dimension device type", () => {
+  it("should change the active dimension region", () => {
     customRender(<DimensionSettings show />);
-    fireEvent.click(screen.getByText("Desktop"));
-    expect(getCheckBox("Desktop").checked).toBeTruthy();
-    expect(getCheckBox("Phone").checked).toBeFalsy();
-    fireEvent.click(screen.getByText("Phone"));
-    expect(getCheckBox("Phone").checked).toBeTruthy();
-    expect(getCheckBox("Desktop").checked).toBeFalsy();
+    fireEvent.click(screen.getByText("Europe"));
+    expect(getCheckBox("Europe").checked).toBeTruthy();
+    expect(getCheckBox("North America").checked).toBeFalsy();
+    fireEvent.click(screen.getByText("North America"));
+    expect(getCheckBox("North America").checked).toBeTruthy();
+    expect(getCheckBox("Europe").checked).toBeFalsy();
   });
 });

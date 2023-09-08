@@ -7,6 +7,7 @@ export const GET_CTA = gql`
     $language: String!
     $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
     getObject: getCallToAction(
       uid: $uid
@@ -15,6 +16,7 @@ export const GET_CTA = gql`
       dimensions: [
         { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
       ]
     ) {
       uid

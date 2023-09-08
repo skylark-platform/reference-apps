@@ -66,8 +66,8 @@ const getTable = async (
  * @returns Object containing Airtable tables
  */
 export const getAllTables = async (): Promise<Airtables> => {
-  const dimensionTables = ["customer-types", "device-types"];
-  const [customerTypes, deviceTypes] = await Promise.all(
+  const dimensionTables = ["customer-types", "device-types", "regions"];
+  const [customerTypes, deviceTypes, regions] = await Promise.all(
     dimensionTables.map((table) => getTable(table))
   );
 
@@ -139,6 +139,7 @@ export const getAllTables = async (): Promise<Airtables> => {
     dimensions: {
       customerTypes,
       deviceTypes,
+      regions,
     },
     translations: {
       mediaObjects: mediaObjectsTranslations,

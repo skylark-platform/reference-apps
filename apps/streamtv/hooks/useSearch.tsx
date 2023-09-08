@@ -23,9 +23,6 @@ interface SearchResult extends Omit<SearchResultListing, "objects"> {
 const fetcher = (query: string, dimensions: Dimensions) =>
   skylarkRequestWithDimensions<{ search: SearchResult }>(SEARCH, dimensions, {
     query,
-    language: dimensions.language,
-    customerType: dimensions.customerType,
-    deviceType: dimensions.deviceType,
   }).then(({ search: data }): SearchResult => data);
 
 export const useSearch = (query: string) => {

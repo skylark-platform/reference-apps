@@ -23,3 +23,64 @@ export const CallToActionListingFragment = gql`
     }
   }
 `;
+
+export const ObjectLanguageFragment = gql`
+  fragment objectLanguageFragment on Metadata {
+    ... on Episode {
+      _meta {
+        language_data {
+          language
+        }
+      }
+    }
+    ... on Season {
+      _meta {
+        language_data {
+          language
+        }
+      }
+    }
+    ... on Brand {
+      _meta {
+        language_data {
+          language
+        }
+      }
+    }
+    ... on Movie {
+      _meta {
+        language_data {
+          language
+        }
+      }
+    }
+    ... on SkylarkSet {
+      _meta {
+        language_data {
+          language
+        }
+      }
+    }
+    ... on SkylarkAsset {
+      _meta {
+        language_data {
+          language
+        }
+      }
+    }
+    ... on SkylarkLiveAsset {
+      _meta {
+        language_data {
+          language
+        }
+      }
+    }
+    ... on LiveStream {
+      _meta {
+        language_data {
+          language
+        }
+      }
+    }
+  }
+`;

@@ -170,6 +170,7 @@ export const createGraphQLQueryDimensions = (activeDimensions: Dimensions) => {
   const dimensions: { dimension: DimensionTypes; value: string }[] = [
     { dimension: "device-types", value: activeDimensions.deviceType },
     { dimension: "customer-types", value: activeDimensions.customerType },
+    { dimension: "regions", value: activeDimensions.region },
   ];
 
   return {
@@ -271,3 +272,11 @@ export const isSkylarkUid = (uid: string) => {
   const regex = new RegExp("[0-7][0-9A-HJKMNP-TV-Z]{25}");
   return regex.test(uid);
 };
+
+export const getLanguageFromObjectLanguageData = (object: object) =>
+  (hasProperty(object, "_meta") &&
+    hasProperty(object._meta, "language_data") &&
+    hasProperty(object._meta.language_data, "language") &&
+    typeof object._meta.language_data.language === "string" &&
+    object._meta.language_data.language) ||
+  undefined;

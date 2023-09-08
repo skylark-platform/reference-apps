@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useDimensions } from "../contexts";
 
 type HTMLDir = "ltr" | "rtl" | undefined;
 
@@ -14,6 +15,10 @@ export const useHtmlDirection = (
   const [documentDir, setDocumentDir] = useState<HTMLDir>(undefined);
 
   const { query } = useRouter();
+
+  const {
+    dimensions: { language },
+  } = useDimensions();
 
   useEffect(() => {
     setDocumentDir((document.dir as HTMLDir) || "ltr");
@@ -32,10 +37,25 @@ export const useHtmlDirection = (
 
   useEffect(() => {
     const htmlTag = document.getElementsByTagName("html")[0];
-    if (typeof queryDir === "string") {
-      htmlTag.setAttribute("dir", queryDir);
+
+    let updatedDir: "ltr" | "rtl" = "ltr";
+
+    if (
+      typeof queryDir === "string" &&
+      (queryDir === "rtl" || queryDir === "ltr")
+    ) {
+      updatedDir = queryDir;
+    } else if (language.toLowerCase().startsWith("ar")) {
+      updatedDir = "rtl";
+    } else {
+      updatedDir = "ltr";
     }
-  }, [queryDir]);
+
+    if (documentDir !== updatedDir) {
+      htmlTag.setAttribute("dir", updatedDir);
+      setDocumentDir(updatedDir);
+    }
+  }, [queryDir, language, documentDir]);
 
   return {
     dir,

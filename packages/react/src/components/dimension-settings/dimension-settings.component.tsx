@@ -27,7 +27,6 @@ interface DimensionSettingsProps {
   show?: boolean;
   skylarkApiUrl?: string;
   timeTravelEnabled?: boolean;
-  showKidsDimension?: boolean;
   children?: React.ReactNode;
 }
 
@@ -40,16 +39,12 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
   show: propShow = false,
   timeTravelEnabled,
   skylarkApiUrl,
-  showKidsDimension,
 }) => {
   const [show, setShow] = useState(propShow);
-  const {
-    dimensions,
-    setLanguage,
-    setCustomerType,
-    setDeviceType,
-    setTimeTravel,
-  } = useDimensions();
+  const { dimensions, setLanguage, setCustomerType, setRegion, setTimeTravel } =
+    useDimensions();
+
+  console.log(dimensions);
 
   const nextWeek = dayjs().add(7, "days");
   const nextWeekReadable = nextWeek.format("DD MMMM, h:mm A");
@@ -60,11 +55,8 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
   const customerTypeOptions = [
     { text: "Premium", value: "premium" },
     { text: "Standard", value: "standard" },
+    { text: "Kids", value: "kids" },
   ];
-
-  if (showKidsDimension) {
-    customerTypeOptions.push({ text: "Kids", value: "kids" });
-  }
 
   return (
     <>
@@ -80,11 +72,20 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
           <motion.div
             animate="animate"
             className={`fixed bottom-0 left-0 right-0 z-50 block h-[75vh] bg-white font-skylark-branding md:h-auto`}
+            dir="ltr"
             exit="hidden"
             initial="hidden"
             key="dimension-settings"
             transition={{ type: "spring", bounce: 0.2 }}
             variants={variants}
+            // For debug dimensions
+            {...Object.entries(dimensions).reduce(
+              (prev, [dimension, value]) => ({
+                ...prev,
+                [`data-dimension-${dimension.toLowerCase()}`]: value as string,
+              }),
+              {} as Record<string, string>
+            )}
           >
             <div className="absolute -top-9 right-sm-gutter flex md:right-md-gutter lg:right-lg-gutter xl:right-xl-gutter">
               <DimensionToggle variant="close" onClick={() => setShow(false)} />
@@ -107,15 +108,12 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                   <a
                     className="text-skylark-blue md:pl-1"
                     href={
-                      process.env.NEXT_PUBLIC_REGISTER_BUTTON_HREF ||
                       "mailto:hello@skylarkplatform.com?subject=Enquiry from StreamTV"
                     }
                     rel="noreferrer"
                     target="_blank"
                   >
-                    {process.env.NEXT_PUBLIC_REGISTER_BUTTON_HREF
-                      ? "Learn more"
-                      : "hello@skylarkplatform.com"}
+                    {"hello@skylarkplatform.com"}
                   </a>
                 </div>
               </div>
@@ -138,37 +136,59 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                 </button>
               </div>
               <div className="grid grid-cols-1 gap-8 pt-7 md:grid-cols-2 md:pt-10 lg:grid-cols-4">
-                <DimensionContent label="Language">
-                  <DimensionRadioButton
-                    initial={dimensions.language}
-                    options={[
-                      { text: "English", value: "en-gb" },
-                      { text: "Portuguese", value: "pt-pt" },
-                    ]}
-                    onChange={(value: string) => setLanguage(value)}
-                  />
-                </DimensionContent>
                 <DimensionContent label="Customer Type">
                   <DimensionRadioButton
-                    initial={dimensions.customerType}
+                    active={dimensions.customerType}
                     options={customerTypeOptions}
                     onChange={(value: string) => setCustomerType(value)}
                   />
                 </DimensionContent>
-                <DimensionContent label="Device Type">
+                <DimensionContent label="Region">
                   <DimensionRadioButton
-                    initial={dimensions.deviceType}
+                    active={dimensions.region}
                     options={[
-                      { text: "Desktop", value: "pc" },
-                      { text: "Phone", value: "smartphone" },
+                      { text: "Europe", value: "europe" },
+                      { text: "North America", value: "north-america" },
+                      {
+                        text: "Middle East (Coming soon)",
+                        value: "mena",
+                        disabled: true,
+                      },
                     ]}
-                    onChange={(value: string) => setDeviceType(value)}
+                    onChange={(value: string) => {
+                      setRegion(value);
+                      if (
+                        (value === "europe" &&
+                          !["en-gb", "pt-pt"].includes(dimensions.language)) ||
+                        (value === "mena" &&
+                          !["en-gb", "ar"].includes(dimensions.language))
+                      ) {
+                        setLanguage("en-gb");
+                      }
+                    }}
+                  />
+                </DimensionContent>
+                <DimensionContent label="Language">
+                  <DimensionRadioButton
+                    active={dimensions.language}
+                    options={
+                      dimensions.region === "mena"
+                        ? [
+                            { text: "English", value: "en-gb" },
+                            { text: "Arabic (RTL)", value: "ar" },
+                          ]
+                        : [
+                            { text: "English", value: "en-gb" },
+                            { text: "Portuguese", value: "pt-pt" },
+                          ]
+                    }
+                    onChange={(value) => setLanguage(value)}
                   />
                 </DimensionContent>
                 {timeTravelEnabled && (
                   <DimensionContent label="Time Travel">
                     <DimensionRadioButton
-                      initial={dimensions.timeTravel}
+                      active={dimensions.timeTravel}
                       labelClassName="chromatic-ignore"
                       options={[
                         { text: "Now", value: "" },

@@ -6,6 +6,7 @@ export const GET_LIVE_STREAM_THUMBNAIL = gql`
     $language: String!
     $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
     getObject: getLiveStream(
       uid: $uid
@@ -13,6 +14,7 @@ export const GET_LIVE_STREAM_THUMBNAIL = gql`
       dimensions: [
         { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
       ]
     ) {
       __typename
@@ -44,6 +46,7 @@ export const GET_LIVE_STREAM = gql`
     $language: String!
     $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
     getObject: getLiveStream(
       uid: $uid
@@ -52,6 +55,7 @@ export const GET_LIVE_STREAM = gql`
       dimensions: [
         { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
       ]
     ) {
       title

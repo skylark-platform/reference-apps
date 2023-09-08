@@ -5,12 +5,14 @@ export const LIST_GENRES = gql`
   query LIST_GENRES(
     $deviceType: String!
     $customerType: String!
+    $region: String!
     $nextToken: String
   ) {
     listObjects: listGenre(
       dimensions: [
         { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
       ]
       next_token: $nextToken
       limit: 10

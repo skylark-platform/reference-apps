@@ -6,6 +6,7 @@ export const GET_MOVIE_THUMBNAIL = gql`
     $language: String!
     $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
     getObject: getMovie(
       uid: $uid
@@ -13,6 +14,7 @@ export const GET_MOVIE_THUMBNAIL = gql`
       dimensions: [
         { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
       ]
     ) {
       __typename
@@ -45,6 +47,7 @@ export const GET_MOVIE = gql`
     $language: String!
     $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
     getObject: getMovie(
       uid: $uid
@@ -53,6 +56,7 @@ export const GET_MOVIE = gql`
       dimensions: [
         { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
       ]
     ) {
       title

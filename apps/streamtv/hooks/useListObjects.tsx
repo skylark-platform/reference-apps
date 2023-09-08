@@ -21,9 +21,6 @@ const fetcher = <T extends Metadata>(
     query,
     dimensions,
     {
-      language: dimensions.language,
-      customerType: dimensions.customerType,
-      deviceType: dimensions.deviceType,
       nextToken,
     }
   );

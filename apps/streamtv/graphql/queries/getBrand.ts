@@ -7,6 +7,7 @@ export const GET_BRAND_THUMBNAIL = gql`
     $language: String!
     $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
     getObject: getBrand(
       uid: $uid
@@ -14,6 +15,7 @@ export const GET_BRAND_THUMBNAIL = gql`
       dimensions: [
         { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
       ]
     ) {
       __typename
@@ -45,6 +47,7 @@ export const GET_BRAND = (streamTVIngestorSchemaLoaded: boolean) => gql`
     $language: String!
     $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
     getObject: getBrand(
       uid: $uid
@@ -53,6 +56,7 @@ export const GET_BRAND = (streamTVIngestorSchemaLoaded: boolean) => gql`
       dimensions: [
         { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
       ]
     ) {
       title
