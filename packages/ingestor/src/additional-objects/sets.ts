@@ -226,6 +226,41 @@ const streamingNowRail: SetConfig = {
   ],
 };
 
+const setInEuropeRail: SetConfig = {
+  externalId: createStreamTVExternalId("set_in_europe"),
+  slug: "set-in-europe",
+  graphQlSetType: "RAIL",
+  contents: [
+    { type: "movie", slug: "jojo-rabbit" },
+    { type: "movie", slug: "the-father" },
+    { type: "movie", slug: "emma" },
+    { type: "movie", slug: "fantastic-mr-fox" },
+    { type: "movie", slug: "cruella" },
+    { type: "movie", slug: "inglorious-basterds" },
+    { type: "brand", slug: "chucklevision" },
+  ],
+};
+
+const setInAmericaRail: SetConfig = {
+  externalId: createStreamTVExternalId("set_in_america"),
+  slug: "set-in-america",
+  graphQlSetType: "RAIL",
+  contents: [
+    { type: "brand", slug: "better-call-saul" },
+    { type: "movie", slug: "nomadland" },
+    { type: "brand", slug: "the-last-of-us" },
+    { type: "movie", slug: "once-upon-a-time-in-hollywood" },
+    { type: "movie", slug: "four-rooms" },
+    { type: "movie", slug: "asteroid-city" },
+    { type: "movie", slug: "pulp-fiction" },
+    { type: "movie", slug: "deadpool-2" },
+    { type: "movie", slug: "true-romance" },
+    { type: "movie", slug: "mank" },
+    { type: "movie", slug: "e-t-the-extra-terrestrial" },
+    { type: "set", slug: fastAndFuriousMoviesCollection.slug },
+  ],
+};
+
 const discoverCollectionRail: SetConfig = {
   externalId: createStreamTVExternalId("discover_collection"),
   slug: "discover-collection",
@@ -267,6 +302,8 @@ const mediaReferenceHomepage: SetConfig = {
     { type: "set", slug: bestPictureMovies2021.slug },
     { type: "seasons", slug: "got-s01" },
     { type: "seasons", slug: "miraculous-s05" },
+    { type: "set", slug: setInEuropeRail.slug },
+    { type: "set", slug: setInAmericaRail.slug },
     { type: "set", slug: streamingNowRail.slug },
     { type: "set", slug: discoverCollectionRail.slug },
   ],
@@ -285,6 +322,8 @@ export const orderedSetsToCreate = [
   bestPictureMovies2020,
   bestPictureMovies2021,
   streamingNowRail,
+  setInEuropeRail,
+  setInAmericaRail,
   // got
   gameOfThronesUniverseSlider,
   gotHighestRatedEpisodes,
