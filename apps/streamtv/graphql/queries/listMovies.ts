@@ -5,6 +5,7 @@ export const LIST_MOVIES = gql`
     $language: String!
     $deviceType: String!
     $customerType: String!
+    $region: String!
     $nextToken: String
   ) {
     listObjects: listMovie(
@@ -12,6 +13,7 @@ export const LIST_MOVIES = gql`
       dimensions: [
         { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
       ]
       next_token: $nextToken
       limit: 20
@@ -31,6 +33,7 @@ export const LIST_MOVIES_BY_GENRE = gql`
     $language: String!
     $deviceType: String!
     $customerType: String!
+    $region: String!
     $nextToken: String
   ) {
     getObject: getGenre(
@@ -38,6 +41,7 @@ export const LIST_MOVIES_BY_GENRE = gql`
       dimensions: [
         { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
       ]
     ) {
       movies(next_token: $nextToken, language: $language) {

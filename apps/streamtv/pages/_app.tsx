@@ -12,6 +12,7 @@ import { withPasswordProtect } from "next-password-protect";
 import { LOCAL_STORAGE } from "@skylark-reference-apps/lib";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { DimensionsContextProvider } from "@skylark-reference-apps/react";
 import createDefaultSeo from "../next-seo.config";
 import { StreamTVLayout } from "../components/layout";
 
@@ -45,15 +46,17 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <PlausibleProvider domain={process.env.NEXT_PUBLIC_APP_DOMAIN as string}>
       <QueryClientProvider client={queryClient}>
-        <StreamTVLayout
-          appTitle={appTitle}
-          skylarkApiUrl={skylarkApiUrl}
-          timeTravelEnabled
-          tvShowsHref={tvShowsHref}
-        >
-          <DefaultSeo {...createDefaultSeo(appTitle, t("seo.description"))} />
-          <Component {...pageProps} />
-        </StreamTVLayout>
+        <DimensionsContextProvider>
+          <StreamTVLayout
+            appTitle={appTitle}
+            skylarkApiUrl={skylarkApiUrl}
+            timeTravelEnabled
+            tvShowsHref={tvShowsHref}
+          >
+            <DefaultSeo {...createDefaultSeo(appTitle, t("seo.description"))} />
+            <Component {...pageProps} />
+          </StreamTVLayout>
+        </DimensionsContextProvider>
       </QueryClientProvider>
     </PlausibleProvider>
   );

@@ -22,6 +22,7 @@ export interface GraphQLMetadata {
   dimensions: {
     deviceTypes: GraphQLBaseObject[];
     customerTypes: GraphQLBaseObject[];
+    regions: GraphQLBaseObject[];
   };
 }
 

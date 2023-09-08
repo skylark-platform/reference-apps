@@ -141,6 +141,7 @@ describe("utils.ts", () => {
         language: "en-GB",
         deviceType: "smartphone",
         customerType: "premium",
+        region: "europe",
         timeTravel: "",
       };
 
@@ -150,6 +151,7 @@ describe("utils.ts", () => {
         dimensions: [
           { dimension: "device-types", value: "smartphone" },
           { dimension: "customer-types", value: "premium" },
+          { dimension: "regions", value: "europe" },
         ],
         language: dimensions.language,
       });

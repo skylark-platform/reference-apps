@@ -2,7 +2,6 @@ import { ENUMS } from "../constants";
 
 export interface SetConfig {
   externalId: string;
-  title: string;
   slug: string;
   graphQlSetType: typeof ENUMS.SET_TYPES[number];
   contents: (

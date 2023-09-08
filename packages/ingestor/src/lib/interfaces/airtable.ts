@@ -3,6 +3,7 @@ import { FieldSet, Record } from "airtable";
 export interface DimensionAirtables {
   customerTypes: Record<FieldSet>[];
   deviceTypes: Record<FieldSet>[];
+  regions: Record<FieldSet>[];
 }
 
 export interface TranslationAirtables {
@@ -43,4 +44,5 @@ export interface AvailabilityTableFields extends FieldSet {
   ends?: string;
   devices?: string[];
   customers?: string[];
+  regions?: string[];
 }

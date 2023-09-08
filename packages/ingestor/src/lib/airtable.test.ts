@@ -69,6 +69,7 @@ describe("airtable", () => {
         dimensions: {
           customerTypes: [],
           deviceTypes: [],
+          regions: [],
         },
       };
 
@@ -123,6 +124,7 @@ describe("airtable", () => {
         dimensions: {
           customerTypes: [],
           deviceTypes: [],
+          regions: [],
         },
       };
 

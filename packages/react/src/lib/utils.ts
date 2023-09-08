@@ -56,13 +56,21 @@ export const skylarkRequestWithLocalStorage = <T>(
 export const skylarkRequestWithDimensions = <T>(
   query: string,
   dimensions: Dimensions,
-  variables?: Record<string, unknown>
+  optVariables?: Record<string, unknown>
 ) => {
   const headers: Record<string, string> = {};
 
   if (dimensions.timeTravel) {
     headers["x-time-travel"] = dimensions.timeTravel;
   }
+
+  const variables = {
+    language: dimensions.language,
+    customerType: dimensions.customerType,
+    deviceType: dimensions.deviceType,
+    region: dimensions.region,
+    ...optVariables,
+  };
 
   return skylarkRequestWithLocalStorage<T>(query, headers, variables);
 };

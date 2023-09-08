@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useDeviceType } from "../../hooks";
 
 interface ReducerAction {
-  type: "language" | "customerType" | "deviceType" | "timeTravel";
+  type: "language" | "customerType" | "deviceType" | "region" | "timeTravel";
   value: string;
 }
 
@@ -15,6 +15,7 @@ export type DimensionsContextType = {
   setLanguage: (language: Dimensions["language"]) => void;
   setCustomerType: (customerType: Dimensions["customerType"]) => void;
   setDeviceType: (deviceType: Dimensions["deviceType"]) => void;
+  setRegion: (region: Dimensions["region"]) => void;
   setTimeTravel: (timeTravel: Dimensions["timeTravel"]) => void;
 };
 
@@ -38,6 +39,11 @@ const dimensionsReducer = (
         ...state,
         deviceType: action.value,
       };
+    case "region":
+      return {
+        ...state,
+        region: action.value,
+      };
     case "timeTravel":
       return {
         ...state,
@@ -53,11 +59,13 @@ const DimensionsContext = createContext<DimensionsContextType>({
     language: "en-gb",
     customerType: "standard",
     deviceType: "",
+    region: "",
     timeTravel: "",
   },
   setLanguage: () => {},
   setCustomerType: () => {},
   setDeviceType: () => {},
+  setRegion: () => {},
   setTimeTravel: () => {},
 });
 
@@ -73,6 +81,7 @@ export const DimensionsContextProvider = ({
     language: lang,
     customerType: "premium",
     deviceType,
+    region: "europe",
     timeTravel: "",
   });
 
@@ -92,8 +101,10 @@ export const DimensionsContextProvider = ({
         setCustomerType: (value) => dispatch({ type: "customerType", value }),
         setLanguage: (value) => {
           void setLanguage(value);
+          dispatch({ type: "language", value });
         },
         setDeviceType: (value) => dispatch({ type: "deviceType", value }),
+        setRegion: (value) => dispatch({ type: "region", value }),
         setTimeTravel: (value) => dispatch({ type: "timeTravel", value }),
       }}
     >

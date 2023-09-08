@@ -10,6 +10,7 @@ export const GET_SET_THUMBNAIL = gql`
     $language: String!
     $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
     getObject: getSkylarkSet(
       uid: $uid
@@ -17,6 +18,7 @@ export const GET_SET_THUMBNAIL = gql`
       dimensions: [
         { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
       ]
     ) {
       __typename
@@ -41,6 +43,7 @@ export const GET_SET_FOR_CAROUSEL = gql`
     $language: String!
     $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
     getObject: getSkylarkSet(
       uid: $uid
@@ -48,6 +51,7 @@ export const GET_SET_FOR_CAROUSEL = gql`
       dimensions: [
         { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
       ]
     ) {
       uid
@@ -148,6 +152,7 @@ export const GET_COLLECTION_SET = gql`
     $language: String!
     $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
     getObject: getSkylarkSet(
       uid: $uid
@@ -156,6 +161,7 @@ export const GET_COLLECTION_SET = gql`
       dimensions: [
         { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
       ]
     ) {
       uid
@@ -192,6 +198,7 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
     $language: String!
     $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
     getObject: getSkylarkSet(
       uid: $uid
@@ -200,6 +207,7 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
       dimensions: [
         { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
       ]
     ) {
       __typename

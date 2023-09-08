@@ -367,6 +367,7 @@ describe("saas/create.ts", () => {
       dimensions: {
         customerTypes: [],
         deviceTypes: [],
+        regions: [],
       },
     };
 

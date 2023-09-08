@@ -81,11 +81,21 @@ describe("utils", () => {
         deviceType: "",
         customerType: "",
         language: "",
+        region: "",
       };
 
       await skylarkRequestWithDimensions("query", dimensions);
 
-      expect(graphQLClient.request).toBeCalledWith("query", {}, {});
+      expect(graphQLClient.request).toBeCalledWith(
+        "query",
+        {
+          deviceType: "",
+          customerType: "",
+          language: "",
+          region: "",
+        },
+        {}
+      );
     });
 
     it("makes a request and adds the time travel header when its populated", async () => {
@@ -97,13 +107,14 @@ describe("utils", () => {
         deviceType: "",
         customerType: "",
         language: "",
+        region: "",
       };
 
       await skylarkRequestWithDimensions("query", dimensions);
 
       expect(graphQLClient.request).toBeCalledWith(
         "query",
-        {},
+        { deviceType: "", customerType: "", language: "", region: "" },
         { "x-time-travel": "next week" }
       );
     });

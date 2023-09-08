@@ -8,7 +8,6 @@ const createStreamTVExternalId = (id: string) => `streamtv_${id}`;
 
 const newTVReleases: SetConfig = {
   externalId: createStreamTVExternalId("new_tv_releases"),
-  title: "New TV Releases",
   slug: "new-tv-releases",
   graphQlSetType: "RAIL",
   contents: [
@@ -20,7 +19,6 @@ const newTVReleases: SetConfig = {
 
 const spotlightMovies: SetConfig = {
   externalId: createStreamTVExternalId("spotlight_movies"),
-  title: "Spotlight movies",
   slug: "spotlight-movies",
   graphQlSetType: "RAIL_MOVIE",
   contents: [
@@ -41,7 +39,6 @@ const spotlightMovies: SetConfig = {
 
 const bestPictureMovies2020: SetConfig = {
   externalId: createStreamTVExternalId("best_picture_nominees_2020"),
-  title: "Best Picture Nominees 2020",
   slug: "best-picture-nominees-2020",
   graphQlSetType: "RAIL_WITH_SYNOPSIS",
   contents: [
@@ -57,7 +54,6 @@ const bestPictureMovies2020: SetConfig = {
 
 const bestPictureMovies2021: SetConfig = {
   externalId: createStreamTVExternalId("best_picture_nominees_2021"),
-  title: "Best Picture Nominees 2021",
   slug: "best-picture-nominees-2021",
   graphQlSetType: "RAIL_WITH_SYNOPSIS",
   contents: [
@@ -73,7 +69,6 @@ const bestPictureMovies2021: SetConfig = {
 
 const classicKidsShows: SetConfig = {
   externalId: createStreamTVExternalId("classic_kids_shows"),
-  title: "Classic kids shows",
   slug: "classic-kids-shows",
   graphQlSetType: "RAIL",
   contents: [
@@ -86,7 +81,6 @@ const classicKidsShows: SetConfig = {
 
 const homePageSlider: SetConfig = {
   externalId: createStreamTVExternalId("home_page_slider"),
-  title: "Home page hero",
   slug: "media-reference-home-page-hero",
   graphQlSetType: "SLIDER",
   contents: [
@@ -100,7 +94,6 @@ const homePageSlider: SetConfig = {
 
 const kidsHomePageSlider: SetConfig = {
   externalId: createStreamTVExternalId("home_page_slider_kids"),
-  title: "Kids Home page hero",
   slug: "media-reference-home-page-hero-kids",
   graphQlSetType: "SLIDER",
   contents: [
@@ -114,7 +107,6 @@ const kidsHomePageSlider: SetConfig = {
 // Skylark X does not support dynamic objects yet
 const tarantinoMoviesCollection: SetConfig = {
   externalId: createStreamTVExternalId("tarantino_movies"),
-  title: "Tarantino Movies Collection",
   slug: "tarantino-movies-collection",
   graphQlSetType: "COLLECTION",
   contents: [
@@ -137,7 +129,6 @@ const tarantinoMoviesCollection: SetConfig = {
 
 const wesAndersonMoviesCollection: SetConfig = {
   externalId: createStreamTVExternalId("wes_anderson_movies"),
-  title: "Wes Anderson Movies Collection",
   slug: "wes-anderson-movies-collection",
   graphQlSetType: "COLLECTION",
   contents: [
@@ -151,7 +142,6 @@ const wesAndersonMoviesCollection: SetConfig = {
 
 const fastAndFuriousMoviesCollection: SetConfig = {
   externalId: createStreamTVExternalId("fast_and_furious_movies"),
-  title: "Fast & Furious Movies Collection",
   slug: "fast-and-furious-movies-collection",
   graphQlSetType: "COLLECTION",
   contents: [
@@ -171,7 +161,6 @@ const fastAndFuriousMoviesCollection: SetConfig = {
 
 const starWarsMoviesCollection: SetConfig = {
   externalId: createStreamTVExternalId("star_wars_skywalker_saga"),
-  title: "Star Wars: The Skywalker Saga",
   slug: "star-wars-the-skywalker-saga",
   graphQlSetType: "COLLECTION",
   contents: [
@@ -189,7 +178,6 @@ const starWarsMoviesCollection: SetConfig = {
 
 const gameOfThronesUniverseSlider: SetConfig = {
   externalId: createStreamTVExternalId("game_of_thrones_universe_slider"),
-  title: "Game of Thrones Universe Slider",
   slug: "game-of-thrones-universe-slider",
   graphQlSetType: "SLIDER",
   contents: [
@@ -200,7 +188,6 @@ const gameOfThronesUniverseSlider: SetConfig = {
 
 const gotHighestRatedEpisodes: SetConfig = {
   externalId: createStreamTVExternalId("got_highest_rated_episodes"),
-  title: "GOT Highest Rated Episodes",
   slug: "got-highest-rated-episodes",
   graphQlSetType: "GRID",
   contents: [
@@ -215,7 +202,6 @@ const gotHighestRatedEpisodes: SetConfig = {
 
 const gameOfThronesUniversePage: SetConfig = {
   externalId: createStreamTVExternalId("game_of_thrones_universe"),
-  title: "Game of Thrones Universe",
   slug: "game-of-thrones-universe",
   graphQlSetType: "PAGE",
   contents: [
@@ -232,15 +218,71 @@ const gameOfThronesUniversePage: SetConfig = {
 
 const streamingNowRail: SetConfig = {
   externalId: createStreamTVExternalId("streaming_now"),
-  title: "Streaming Now",
   slug: "streaming-now",
   graphQlSetType: "RAIL",
-  contents: [{ type: "live-stream", slug: "tears-of-steel" }],
+  contents: [
+    { type: "live-stream", slug: "tears-of-steel" },
+    { type: "live-stream", slug: "asharq-documentary" },
+  ],
+};
+
+const setInEuropeRail: SetConfig = {
+  externalId: createStreamTVExternalId("set_in_europe"),
+  slug: "set-in-europe",
+  graphQlSetType: "RAIL",
+  contents: [
+    { type: "movie", slug: "jojo-rabbit" },
+    { type: "movie", slug: "the-father" },
+    { type: "movie", slug: "emma" },
+    { type: "movie", slug: "fantastic-mr-fox" },
+    { type: "movie", slug: "cruella" },
+    { type: "movie", slug: "inglorious-basterds" },
+    { type: "brand", slug: "chucklevision" },
+  ],
+};
+
+const setInAmericaRail: SetConfig = {
+  externalId: createStreamTVExternalId("set_in_america"),
+  slug: "set-in-america",
+  graphQlSetType: "RAIL",
+  contents: [
+    { type: "brand", slug: "better-call-saul" },
+    { type: "movie", slug: "nomadland" },
+    { type: "brand", slug: "the-last-of-us" },
+    { type: "movie", slug: "once-upon-a-time-in-hollywood" },
+    { type: "movie", slug: "four-rooms" },
+    { type: "movie", slug: "asteroid-city" },
+    { type: "movie", slug: "pulp-fiction" },
+    { type: "movie", slug: "deadpool-2" },
+    { type: "movie", slug: "true-romance" },
+    { type: "movie", slug: "mank" },
+    { type: "movie", slug: "e-t-the-extra-terrestrial" },
+    { type: "set", slug: fastAndFuriousMoviesCollection.slug },
+  ],
+};
+
+const topArabicMovies: SetConfig = {
+  externalId: createStreamTVExternalId("top_arabic_movies"),
+  slug: "top-arabic-movies",
+  graphQlSetType: "RAIL_WITH_SYNOPSIS",
+  contents: [
+    { type: "movie", slug: "theeb" },
+    { type: "movie", slug: "capernaum" },
+    { type: "movie", slug: "the-square" },
+    { type: "movie", slug: "l-insuite" },
+    { type: "movie", slug: "heaven-without-people" },
+    { type: "movie", slug: "wajib" },
+    { type: "movie", slug: "yomeddine" },
+    { type: "movie", slug: "five-broken-cameras" },
+    { type: "movie", slug: "beauty-and-the-dogs" },
+    { type: "movie", slug: "west-beirut" },
+    { type: "movie", slug: "paradise-now" },
+    { type: "movie", slug: "the-day-i-lost-my-shadow" },
+  ],
 };
 
 const discoverCollectionRail: SetConfig = {
   externalId: createStreamTVExternalId("discover_collection"),
-  title: "Discover",
   slug: "discover-collection",
   graphQlSetType: "RAIL_PORTRAIT",
   contents: [
@@ -269,18 +311,20 @@ const discoverCollectionRail: SetConfig = {
 
 const mediaReferenceHomepage: SetConfig = {
   externalId: createStreamTVExternalId("homepage"),
-  title: "Homepage",
   slug: "media-reference-homepage",
   graphQlSetType: "PAGE",
   contents: [
     { type: "set", slug: homePageSlider.slug },
     { type: "set", slug: kidsHomePageSlider.slug },
     { type: "set", slug: spotlightMovies.slug },
+    { type: "set", slug: topArabicMovies.slug },
     { type: "set", slug: newTVReleases.slug },
     { type: "set", slug: classicKidsShows.slug },
     { type: "set", slug: bestPictureMovies2021.slug },
     { type: "seasons", slug: "got-s01" },
     { type: "seasons", slug: "miraculous-s05" },
+    { type: "set", slug: setInEuropeRail.slug },
+    { type: "set", slug: setInAmericaRail.slug },
     { type: "set", slug: streamingNowRail.slug },
     { type: "set", slug: discoverCollectionRail.slug },
   ],
@@ -299,6 +343,9 @@ export const orderedSetsToCreate = [
   bestPictureMovies2020,
   bestPictureMovies2021,
   streamingNowRail,
+  setInEuropeRail,
+  setInAmericaRail,
+  topArabicMovies,
   // got
   gameOfThronesUniverseSlider,
   gotHighestRatedEpisodes,

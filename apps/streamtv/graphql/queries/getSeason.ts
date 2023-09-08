@@ -7,6 +7,7 @@ export const GET_SEASON_THUMBNAIL = gql`
     $language: String!
     $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
     getObject: getSeason(
       uid: $uid
@@ -15,6 +16,7 @@ export const GET_SEASON_THUMBNAIL = gql`
       dimensions: [
         { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
       ]
     ) {
       __typename
