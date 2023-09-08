@@ -7,6 +7,7 @@ import { sanitize } from "dompurify";
 import { sentenceCase } from "sentence-case";
 
 import { Link } from "@skylark-reference-apps/react";
+import useTranslation from "next-translate/useTranslation";
 import { useSearch } from "../hooks/useSearch";
 import {
   convertGraphQLSetType,
@@ -137,6 +138,8 @@ const SearchResultItem = ({
 );
 
 export const Search = ({ onSearch }: { onSearch?: () => void }) => {
+  const { t } = useTranslation("common");
+
   const [searchResultsOpen, setSearchResultsOpen] = useState(false);
   const onFocus = () => setSearchResultsOpen(true);
 
@@ -186,7 +189,7 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
           className={clsx(
             "w-full border-none bg-transparent px-2 py-0 shadow-none outline-none ring-0 placeholder:text-gray-300 focus:border-none focus:shadow-none focus:outline-none focus:ring-0 focus:placeholder:text-white focus-visible:border-none focus-visible:outline-none md:w-44"
           )}
-          placeholder="Search"
+          placeholder={t("search")}
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -202,7 +205,7 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
           <div className="max-h-[70vh] min-h-[2rem] w-[94vw] overflow-y-auto rounded bg-gray-800 px-4 py-6 md:max-h-[24rem] md:w-[34rem] md:px-8 md:py-8">
             {(isLoading || data?.objects?.length === 0) && (
               <p className="text-lg font-medium text-gray-100">
-                {isLoading ? "Loading..." : "Nothing found"}
+                {isLoading ? t("loading") : t("nothing-found")}
               </p>
             )}
             {!isLoading &&

@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdStream, MdSearch, MdClose } from "react-icons/md";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import {
-  DimensionsContextProvider,
   TitleScreen,
   AppBackgroundGradient,
   AppHeader,
@@ -11,6 +10,7 @@ import {
   DimensionSettings,
   ConnectToSkylarkModal,
   Link,
+  useDimensions,
 } from "@skylark-reference-apps/react";
 import { hasProperty } from "@skylark-reference-apps/lib";
 import { Search } from "./search";
@@ -44,8 +44,16 @@ export const StreamTVLayout: React.FC<Props> = ({
 
   const skipTitleScreen = hasProperty(query, "skipTitleScreen");
 
+  const { dimensions, setRegion } = useDimensions();
+
+  useEffect(() => {
+    if (dimensions.language === "ar") {
+      setRegion("mena");
+    }
+  }, [dimensions.language]);
+
   return (
-    <DimensionsContextProvider>
+    <>
       <div className="relative w-full">
         {isMobileSearchOpen && (
           <div className="fixed inset-0 z-20 bg-gray-900/40 md:hidden">
@@ -103,6 +111,6 @@ export const StreamTVLayout: React.FC<Props> = ({
         closeModal={() => setModalOpen(false)}
         isOpen={modalOpen}
       />
-    </DimensionsContextProvider>
+    </>
   );
 };

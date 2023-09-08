@@ -42,5 +42,15 @@
   "show-more": "Show more",
   "show-less": "Show less",
   "released": "Released",
-  "tags": "Tags"
+  "tags": "Tags",
+  "search": "Search",
+  "loading": "Loading...",
+  "nothing-found": "Nothing found",
+  "errors": {
+    "error-fetching-page": "Error occured fetching page",
+    "object-not-found": "Object Not Found",
+    "object-not-found-desc": "The requested object doesn't exist in Skylark with the given Availability Dimensions",
+    "unauthorized": "Invalid Skylark Account API Key",
+    "unauthorized-desc": "Open the Skylark Account Connection modal to update your API Key."
+  }
 }

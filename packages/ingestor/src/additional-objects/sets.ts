@@ -261,6 +261,26 @@ const setInAmericaRail: SetConfig = {
   ],
 };
 
+const topArabicMovies: SetConfig = {
+  externalId: createStreamTVExternalId("top_arabic_movies"),
+  slug: "top-arabic-movies",
+  graphQlSetType: "RAIL_WITH_SYNOPSIS",
+  contents: [
+    { type: "movie", slug: "theeb" },
+    { type: "movie", slug: "capernaum" },
+    { type: "movie", slug: "the-square" },
+    { type: "movie", slug: "l-insuite" },
+    { type: "movie", slug: "heaven-without-people" },
+    { type: "movie", slug: "wajib" },
+    { type: "movie", slug: "yomeddine" },
+    { type: "movie", slug: "five-broken-cameras" },
+    { type: "movie", slug: "beauty-and-the-dogs" },
+    { type: "movie", slug: "west-beirut" },
+    { type: "movie", slug: "paradise-now" },
+    { type: "movie", slug: "the-day-i-lost-my-shadow" },
+  ],
+};
+
 const discoverCollectionRail: SetConfig = {
   externalId: createStreamTVExternalId("discover_collection"),
   slug: "discover-collection",
@@ -297,6 +317,7 @@ const mediaReferenceHomepage: SetConfig = {
     { type: "set", slug: homePageSlider.slug },
     { type: "set", slug: kidsHomePageSlider.slug },
     { type: "set", slug: spotlightMovies.slug },
+    { type: "set", slug: topArabicMovies.slug },
     { type: "set", slug: newTVReleases.slug },
     { type: "set", slug: classicKidsShows.slug },
     { type: "set", slug: bestPictureMovies2021.slug },
@@ -324,6 +345,7 @@ export const orderedSetsToCreate = [
   streamingNowRail,
   setInEuropeRail,
   setInAmericaRail,
+  topArabicMovies,
   // got
   gameOfThronesUniverseSlider,
   gotHighestRatedEpisodes,

@@ -42,5 +42,15 @@
   "show-more": "Mostre mais",
   "show-less": "Mostre menos",
   "released": "Lançado",
-  "tags": "Tags"
+  "tags": "Tags",
+  "search": "Procurar",
+  "loading": "Carregando...",
+  "nothing-found": "Nada encontrado",
+  "errors": {
+    "error-fetching-page": "Ocorreu um erro ao buscar a página",
+    "object-not-found": "Objeto não encontrado",
+    "object-not-found-desc": "O objeto solicitado não existe no Skylark com as dimensões de disponibilidade fornecidas",
+    "unauthorized": "Chave de API da conta Skylark inválida",
+    "unauthorized-desc": "Abra o modal Skylark Account Connection para atualizar sua chave API."
+  }
 }
