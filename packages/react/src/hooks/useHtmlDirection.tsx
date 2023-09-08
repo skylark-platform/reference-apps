@@ -51,7 +51,7 @@ export const useHtmlDirection = (
       updatedDir = "ltr";
     }
 
-    if (documentDir !== updatedDir) {
+    if (!forceRtl && documentDir !== updatedDir) {
       htmlTag.setAttribute("dir", updatedDir);
       setDocumentDir(updatedDir);
     }
