@@ -1,9 +1,5 @@
 import { gql } from "graphql-request";
-import {
-  CallToActionListingFragment,
-  ImageListingFragment,
-  ObjectLanguageFragment,
-} from "./fragments";
+import { CallToActionListingFragment, ImageListingFragment } from "./fragments";
 import { StreamTVAdditionalFields } from "../../types";
 
 export const GET_SET_THUMBNAIL = gql`
@@ -41,7 +37,6 @@ export const GET_SET_THUMBNAIL = gql`
 export const GET_SET_FOR_CAROUSEL = gql`
   ${ImageListingFragment}
   ${CallToActionListingFragment}
-  ${ObjectLanguageFragment}
 
   query GET_SET_FOR_CAROUSEL(
     $uid: String!
@@ -65,7 +60,6 @@ export const GET_SET_FOR_CAROUSEL = gql`
           object {
             uid
             __typename
-            ...objectLanguageFragment
             ... on Movie {
               title
               title_short
@@ -151,7 +145,6 @@ export const GET_SET_FOR_CAROUSEL = gql`
 
 export const GET_COLLECTION_SET = gql`
   ${ImageListingFragment}
-  ${ObjectLanguageFragment}
 
   query GET_COLLECTION_SET(
     $uid: String
@@ -191,7 +184,6 @@ export const GET_COLLECTION_SET = gql`
           object {
             __typename
             uid
-            ...objectLanguageFragment
           }
         }
       }
@@ -200,8 +192,6 @@ export const GET_COLLECTION_SET = gql`
 `;
 
 export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
-  ${ObjectLanguageFragment}
-
   query GET_PAGE_SET(
     $uid: String
     $externalId: String
@@ -228,7 +218,6 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
         objects {
           object {
             __typename
-            ... objectLanguageFragment
             ... on Season {
               uid
               title
@@ -243,7 +232,6 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
                   uid
                   episode_number
                   title
-                  ... objectLanguageFragment
                 }
               }
             }
@@ -257,7 +245,6 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
                   object {
                     __typename
                     uid
-                    ... objectLanguageFragment
                   }
                 }
               }
