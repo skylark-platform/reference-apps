@@ -54,7 +54,12 @@ const createMutation = (): string[] => {
             object_config: {
               colour: `#${OBJECT_CONFIG[objectType].colour.toLowerCase()}`,
               primary_field: OBJECT_CONFIG[objectType].primaryField,
-              field_config: OBJECT_CONFIG[objectType].fieldConfig,
+              field_config: OBJECT_CONFIG[objectType].fieldConfig.map(
+                (fieldConfig) => ({
+                  ...fieldConfig,
+                  ui_field_type: new EnumType(fieldConfig.ui_field_type),
+                })
+              ),
             },
           },
           colour: true,

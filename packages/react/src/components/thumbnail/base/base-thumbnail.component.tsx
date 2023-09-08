@@ -74,9 +74,9 @@ const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
         <div
           className={`
               ${contentLocation === "below" ? "justify-end" : "justify-between"}
-              relative flex h-full w-full flex-col rounded-sm
-              bg-gradient-to-t from-gray-900 to-transparent bg-clip-border bg-no-repeat p-2 font-display text-white shadow
-              shadow-gray-900 transition-all sm:p-3 md:hover:scale-[1.005] md:group-hover:bg-streamtv-primary/[.85] lg:p-4
+              md:group-hover:bg-streamtv-primary/[.85] relative flex h-full w-full flex-col
+              rounded-sm bg-gradient-to-t from-gray-900 to-transparent bg-clip-border bg-no-repeat p-2 font-display text-white
+              shadow shadow-gray-900 transition-all sm:p-3 md:hover:scale-[1.005] lg:p-4
             `}
         >
           {statusTag && (

@@ -181,7 +181,7 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
     >
       <div
         className={clsx(
-          "flex items-center justify-center rounded-full border-0 border-gray-300 bg-streamtv-primary/90 p-3 px-4 transition-colors  focus-within:border-white focus-within:text-white  md:bg-button-tertiary",
+          "bg-streamtv-primary/90 flex items-center justify-center rounded-full border-0 border-gray-300 p-3 px-4 transition-colors  focus-within:border-white focus-within:text-white  md:bg-button-tertiary",
           searchQuery ? "text-white" : "text-gray-300"
         )}
       >

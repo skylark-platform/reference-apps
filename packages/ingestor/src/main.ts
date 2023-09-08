@@ -26,6 +26,7 @@ import {
   clearUnableToFindVersionNoneObjectsFile,
   writeAirtableOutputFile,
 } from "./lib/skylark/saas/fs";
+import { updateObjectConfigurations } from "./lib/skylark/saas/objectConfiguration";
 
 const main = async () => {
   await clearUnableToFindVersionNoneObjectsFile();
@@ -74,10 +75,9 @@ const main = async () => {
   // eslint-disable-next-line no-console
   console.log("Schema updated to version:", version);
 
-  // Comment updateObjectConfigurations as we can use the defaults
-  // await updateObjectConfigurations();
-  // // eslint-disable-next-line no-console
-  // console.log("Object configuration updated");
+  await updateObjectConfigurations();
+  // eslint-disable-next-line no-console
+  console.log("Object configuration updated");
 
   await createDimensions(showcaseDimensionsConfig);
 
