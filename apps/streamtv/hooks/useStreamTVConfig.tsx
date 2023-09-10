@@ -10,6 +10,7 @@ import {
   addGoogleTagManagerNoScriptToBody,
   removeGoogleTagManagerNoScriptFromBody,
 } from "../components/googleTagManager";
+import { useSkylarkEnvironment } from "./useSkylarkEnvironment";
 
 interface StreamTVConfigResponse {
   listStreamtvConfig?: {
@@ -37,6 +38,8 @@ interface StreamTVConfig {
 export const useStreamTVConfig = () => {
   const { dimensions } = useDimensions();
 
+  const { environment } = useSkylarkEnvironment();
+
   const { data, error } = useQuery({
     queryKey: ["StreamTVConfig", dimensions],
     queryFn: () =>
@@ -46,6 +49,7 @@ export const useStreamTVConfig = () => {
         {}
       ),
     cacheTime: Infinity,
+    enabled: environment.hasStreamTVConfig,
   });
 
   const config = useMemo((): StreamTVConfig | undefined => {
