@@ -34,10 +34,16 @@ const main = async () => {
   // eslint-disable-next-line no-console
   console.time("Completed in:");
 
+  const streamtvSetupOnly = process.env.STREAMTV_SETUP_ONLY === "true";
   const shouldCreateAdditionalStreamTVObjects =
-    process.env.CREATE_SETS === "true";
+    !streamtvSetupOnly && process.env.CREATE_SETS === "true";
   const shouldCreateAdditionalSLXDemoObjects =
-    process.env.CREATE_SLX_DEMO_SETS === "true";
+    !streamtvSetupOnly && process.env.CREATE_SLX_DEMO_SETS === "true";
+  if (streamtvSetupOnly)
+    // eslint-disable-next-line no-console
+    console.log(
+      `StreamTV setup only mode\n- Schema updates, object configuration updates, dimensions, dimension values & availabilities`
+    );
   // eslint-disable-next-line no-console
   console.log(
     `Additional StreamTV sets / dynamic objects creation ${
@@ -87,195 +93,197 @@ const main = async () => {
 
   await createOrUpdateAvailability(airtable.availability, dimensions);
 
-  const defaultSchedule = airtable.availability.find(
-    ({ fields }) =>
-      has(fields, "default") && fields.default && has(fields, "slug")
-  );
-
-  // eslint-disable-next-line no-console
-  console.log(
-    `Default license: ${
-      UNLICENSED_BY_DEFAULT || !defaultSchedule
-        ? "undefined"
-        : `${defaultSchedule?.fields.slug as string} (${defaultSchedule.id})`
-    }`
-  );
-
-  const metadataAvailability: GraphQLMetadata["availability"] = {
-    // We use the Airtable IDs (external_id within Skylark) for Availability
-    all: airtable.availability.map(({ id }) => id),
-    default: UNLICENSED_BY_DEFAULT ? undefined : defaultSchedule?.id,
-  };
-
-  const metadata: GraphQLMetadata = {
-    dimensions,
-    availability: metadataAvailability,
-    people: [],
-    roles: [],
-    genres: [],
-    themes: [],
-    ratings: [],
-    tags: [],
-    credits: [],
-    images: [],
-    call_to_actions: [],
-  };
-
-  metadata.call_to_actions =
-    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
-      "CallToAction",
-      airtable.callToActions,
-      metadataAvailability
+  if (!streamtvSetupOnly) {
+    const defaultSchedule = airtable.availability.find(
+      ({ fields }) =>
+        has(fields, "default") && fields.default && has(fields, "slug")
     );
-  metadata.images =
-    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
-      "SkylarkImage",
-      airtable.images,
-      metadataAvailability,
-      true
-    );
-  metadata.themes =
-    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
-      "Theme",
-      airtable.themes,
-      metadataAvailability
-    );
-  metadata.genres =
-    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
-      "Genre",
-      airtable.genres,
-      metadataAvailability
-    );
-  metadata.ratings =
-    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
-      "Rating",
-      airtable.ratings,
-      metadataAvailability
-    );
-  metadata.tags =
-    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
-      "SkylarkTag",
-      airtable.tags,
-      metadataAvailability
-    );
-  metadata.people =
-    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
-      "Person",
-      airtable.people,
-      metadataAvailability
-    );
-  metadata.roles =
-    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
-      "Role",
-      airtable.roles,
-      metadataAvailability
-    );
-  metadata.credits = await createOrUpdateGraphQLCredits(
-    airtable.credits,
-    metadata
-  );
-
-  await createTranslationsForGraphQLObjects(
-    metadata.call_to_actions,
-    airtable.translations.callToActions,
-    airtable.languages
-  );
-
-  await createTranslationsForGraphQLObjects(
-    metadata.themes,
-    airtable.translations.themes,
-    airtable.languages
-  );
-
-  await createTranslationsForGraphQLObjects(
-    metadata.genres,
-    airtable.translations.genres,
-    airtable.languages
-  );
-
-  await createTranslationsForGraphQLObjects(
-    metadata.credits,
-    airtable.translations.credits,
-    airtable.languages
-  );
-
-  await createTranslationsForGraphQLObjects(
-    metadata.roles,
-    airtable.translations.roles,
-    airtable.languages
-  );
-
-  // eslint-disable-next-line no-console
-  console.log("Metadata objects created");
-
-  const mediaObjects = await createGraphQLMediaObjects(
-    airtable.mediaObjects,
-    metadata,
-    airtable.languages
-  );
-
-  // eslint-disable-next-line no-console
-  console.log("Media objects created");
-
-  const createdSets: GraphQLBaseObject[] = [];
-  if (shouldCreateAdditionalStreamTVObjects) {
-    for (let i = 0; i < orderedSetsToCreate.length; i += 1) {
-      const setConfig = orderedSetsToCreate[i];
-      // eslint-disable-next-line no-await-in-loop
-      const set = await createOrUpdateGraphQLSet(
-        setConfig,
-        [...mediaObjects, ...createdSets],
-        metadata,
-        airtable.languages,
-        airtable.setsMetadata
-      );
-      if (set) createdSets.push(set);
-    }
 
     // eslint-disable-next-line no-console
-    console.log("Additional StreamTV objects created");
-  }
+    console.log(
+      `Default license: ${
+        UNLICENSED_BY_DEFAULT || !defaultSchedule
+          ? "undefined"
+          : `${defaultSchedule?.fields.slug as string} (${defaultSchedule.id})`
+      }`
+    );
 
-  if (shouldCreateAdditionalSLXDemoObjects) {
-    for (let i = 0; i < slxDemoSetsToCreate.length; i += 1) {
-      const setConfig = slxDemoSetsToCreate[i];
-      // eslint-disable-next-line no-await-in-loop
-      const set = await createOrUpdateGraphQLSet(
-        setConfig,
-        [...mediaObjects, ...createdSets],
-        metadata,
-        airtable.languages,
-        airtable.setsMetadata
+    const metadataAvailability: GraphQLMetadata["availability"] = {
+      // We use the Airtable IDs (external_id within Skylark) for Availability
+      all: airtable.availability.map(({ id }) => id),
+      default: UNLICENSED_BY_DEFAULT ? undefined : defaultSchedule?.id,
+    };
+
+    const metadata: GraphQLMetadata = {
+      dimensions,
+      availability: metadataAvailability,
+      people: [],
+      roles: [],
+      genres: [],
+      themes: [],
+      ratings: [],
+      tags: [],
+      credits: [],
+      images: [],
+      call_to_actions: [],
+    };
+
+    metadata.call_to_actions =
+      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+        "CallToAction",
+        airtable.callToActions,
+        metadataAvailability
       );
-      if (set) createdSets.push(set);
-    }
+    metadata.images =
+      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+        "SkylarkImage",
+        airtable.images,
+        metadataAvailability,
+        true
+      );
+    metadata.themes =
+      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+        "Theme",
+        airtable.themes,
+        metadataAvailability
+      );
+    metadata.genres =
+      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+        "Genre",
+        airtable.genres,
+        metadataAvailability
+      );
+    metadata.ratings =
+      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+        "Rating",
+        airtable.ratings,
+        metadataAvailability
+      );
+    metadata.tags =
+      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+        "SkylarkTag",
+        airtable.tags,
+        metadataAvailability
+      );
+    metadata.people =
+      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+        "Person",
+        airtable.people,
+        metadataAvailability
+      );
+    metadata.roles =
+      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+        "Role",
+        airtable.roles,
+        metadataAvailability
+      );
+    metadata.credits = await createOrUpdateGraphQLCredits(
+      airtable.credits,
+      metadata
+    );
+
+    await createTranslationsForGraphQLObjects(
+      metadata.call_to_actions,
+      airtable.translations.callToActions,
+      airtable.languages
+    );
+
+    await createTranslationsForGraphQLObjects(
+      metadata.themes,
+      airtable.translations.themes,
+      airtable.languages
+    );
+
+    await createTranslationsForGraphQLObjects(
+      metadata.genres,
+      airtable.translations.genres,
+      airtable.languages
+    );
+
+    await createTranslationsForGraphQLObjects(
+      metadata.credits,
+      airtable.translations.credits,
+      airtable.languages
+    );
+
+    await createTranslationsForGraphQLObjects(
+      metadata.roles,
+      airtable.translations.roles,
+      airtable.languages
+    );
 
     // eslint-disable-next-line no-console
-    console.log("Additional SLX Demo objects created");
+    console.log("Metadata objects created");
+
+    const mediaObjects = await createGraphQLMediaObjects(
+      airtable.mediaObjects,
+      metadata,
+      airtable.languages
+    );
+
+    // eslint-disable-next-line no-console
+    console.log("Media objects created");
+
+    const createdSets: GraphQLBaseObject[] = [];
+    if (shouldCreateAdditionalStreamTVObjects) {
+      for (let i = 0; i < orderedSetsToCreate.length; i += 1) {
+        const setConfig = orderedSetsToCreate[i];
+        // eslint-disable-next-line no-await-in-loop
+        const set = await createOrUpdateGraphQLSet(
+          setConfig,
+          [...mediaObjects, ...createdSets],
+          metadata,
+          airtable.languages,
+          airtable.setsMetadata
+        );
+        if (set) createdSets.push(set);
+      }
+
+      // eslint-disable-next-line no-console
+      console.log("Additional StreamTV objects created");
+    }
+
+    if (shouldCreateAdditionalSLXDemoObjects) {
+      for (let i = 0; i < slxDemoSetsToCreate.length; i += 1) {
+        const setConfig = slxDemoSetsToCreate[i];
+        // eslint-disable-next-line no-await-in-loop
+        const set = await createOrUpdateGraphQLSet(
+          setConfig,
+          [...mediaObjects, ...createdSets],
+          metadata,
+          airtable.languages,
+          airtable.setsMetadata
+        );
+        if (set) createdSets.push(set);
+      }
+
+      // eslint-disable-next-line no-console
+      console.log("Additional SLX Demo objects created");
+    }
+
+    await createTranslationsForGraphQLObjects(
+      mediaObjects,
+      airtable.translations.mediaObjects,
+      airtable.languages
+    );
+
+    // eslint-disable-next-line no-console
+    console.log("Media object translations created");
+
+    const dateStamp = new Date().toISOString();
+    const output = {
+      environment_meta: {
+        date_stamp: dateStamp,
+        endpoint: SAAS_API_ENDPOINT,
+      },
+      airtable_data: airtable,
+      metadata,
+      media_objects: mediaObjects,
+      sets: createdSets,
+    };
+
+    await writeAirtableOutputFile(dateStamp, output);
   }
-
-  await createTranslationsForGraphQLObjects(
-    mediaObjects,
-    airtable.translations.mediaObjects,
-    airtable.languages
-  );
-
-  // eslint-disable-next-line no-console
-  console.log("Media object translations created");
-
-  const dateStamp = new Date().toISOString();
-  const output = {
-    environment_meta: {
-      date_stamp: dateStamp,
-      endpoint: SAAS_API_ENDPOINT,
-    },
-    airtable_data: airtable,
-    metadata,
-    media_objects: mediaObjects,
-    sets: createdSets,
-  };
-
-  await writeAirtableOutputFile(dateStamp, output);
 
   // eslint-disable-next-line no-console
   console.timeEnd("Completed in:");

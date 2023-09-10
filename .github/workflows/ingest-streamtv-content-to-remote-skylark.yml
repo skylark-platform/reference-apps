@@ -11,6 +11,11 @@ on:
         type: string
         required: true
         description: Your Skylark API Key.
+      streamtv_setup_only:
+        type: boolean
+        required: false
+        default: false
+        description: Only setup StreamTV - Add object types, enum values, dimensions etc
 concurrency:
   group: ingest-streamtv-content-${{ github.event.inputs.skylark_url }}
   cancel-in-progress: true
@@ -35,3 +40,4 @@ jobs:
           saas-ingest: "true"
           saas-api-token: ${{ env.SKYLARK_API_KEY }}
           content-type: "streamtv"
+          streamtv-setup-only: ${{ github.event.inputs.streamtv_setup_only }}
