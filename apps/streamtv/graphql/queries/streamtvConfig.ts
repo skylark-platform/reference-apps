@@ -30,6 +30,7 @@ export const GET_STREAMTV_CONFIG = gql`
             uid
             url
             title
+            slug
           }
         }
         primary_color

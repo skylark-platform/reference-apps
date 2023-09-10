@@ -34,7 +34,7 @@ export const useStreamTVConfig = () => {
   const { dimensions } = useDimensions();
 
   const { data, error } = useQuery({
-    queryKey: ["StreamTVConfig"],
+    queryKey: ["StreamTVConfig", dimensions],
     queryFn: () =>
       skylarkRequestWithDimensions<StreamTVConfigResponse>(
         GET_STREAMTV_CONFIG,
@@ -67,7 +67,7 @@ export const useStreamTVConfig = () => {
       logo:
         logo && logo.url
           ? {
-              alt: logo.title || logo.url,
+              alt: logo.title || logo.slug || logo.url,
               src: logo.url,
             }
           : undefined,
@@ -75,16 +75,14 @@ export const useStreamTVConfig = () => {
   }, [data]);
 
   useEffect(() => {
-    if (config) {
-      document.documentElement.style.setProperty(
-        "--streamtv-primary-color",
-        config.primaryColor
-      );
-      document.documentElement.style.setProperty(
-        "--streamtv-accent-color",
-        config.accentColor
-      );
-    }
+    document.documentElement.style.setProperty(
+      "--streamtv-primary-color",
+      config?.primaryColor || "#5b45ce"
+    );
+    document.documentElement.style.setProperty(
+      "--streamtv-accent-color",
+      config?.accentColor || "#ff385c"
+    );
   }, [config]);
 
   return {

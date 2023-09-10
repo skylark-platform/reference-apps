@@ -78,10 +78,14 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
   };
 
   const [show, setShow] = useState(true);
+  const [animationComplete, setShown] = useState(false);
 
   return (
-    <AnimatePresence>
-      {show && (
+    <AnimatePresence
+      key={title} // Makes this reset when the title changes so the name is always right on load
+      onExitComplete={() => setShown(true)}
+    >
+      {show && !animationComplete && (
         <motion.div
           className="fixed inset-0 z-[999] flex flex-col items-center justify-center gap-y-1 bg-gray-900 font-display text-white sm:gap-y-2 lg:gap-y-4"
           exit="exit"
