@@ -20,7 +20,7 @@ export const CTA = ({ uid }: CallToActionProps) => {
           rel="noreferrer"
           target="_blank"
         >
-          <p className="rounded border-2 bg-purple-500 p-2 px-4 text-center text-white">
+          <p className="rounded border-2 bg-streamtv-primary p-2 px-4 text-center text-white">
             {cta?.text?.split(" ").map((word) => (
               <span className="block" key={word}>
                 {word}

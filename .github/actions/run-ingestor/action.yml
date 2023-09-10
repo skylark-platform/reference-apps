@@ -46,6 +46,10 @@ inputs:
     deprecationMessage: SLX Demos have been moved to a standalone Airtable base. All content in a base is now ingested
     required: false
     default: "all"
+  streamtv-setup-only:
+    description: Only make set up changes (Add object types, enum values, dimensions)
+    required: false
+    default: "false"
 runs:
   using: composite
   steps:
@@ -74,6 +78,7 @@ runs:
         CREATE_SETS: ${{ inputs.create-additional-objects }}
         SAAS_API_ENDPOINT: ${{ inputs.skylark-api-url }}
         SAAS_API_KEY: ${{ inputs.saas-api-token }}
+        STREAMTV_SETUP_ONLY: ${{ inputs.streamtv-setup-only }}
       with:
         timeout_minutes: 30
         retry_wait_seconds: 10

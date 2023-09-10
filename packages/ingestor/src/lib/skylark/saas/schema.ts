@@ -37,6 +37,16 @@ const GET_ENUM_VALUES = gql`
   }
 `;
 
+const GET_OBJECT_TYPES = gql`
+  query GET_OBJECT_TYPES {
+    objectTypes: __type(name: "Metadata") {
+      possibleTypes {
+        name
+      }
+    }
+  }
+`;
+
 const getActivationStatus = async () => {
   const res = await graphQLClient.uncachedRequest<{
     getActivationStatus: {
@@ -55,6 +65,21 @@ export const activateConfigurationVersion = async (version: number) => {
   }>(ACTIVATE_CONFIGURATION_VERSION, { version });
 
   return res.activateConfigurationVersion;
+};
+
+const getObjectTypes = async () => {
+  const data = await graphQLClient.uncachedRequest<{
+    objectTypes?: {
+      possibleTypes: {
+        name: string;
+      }[];
+    };
+  }>(GET_OBJECT_TYPES);
+
+  const objectTypes =
+    data?.objectTypes?.possibleTypes.map(({ name }) => name) || [];
+
+  return objectTypes;
 };
 
 const getEnumValues = async (name: string) => {
@@ -161,6 +186,51 @@ const addPreferredImageTypeToSeason = async (version?: number) => {
   }
 };
 
+const addStreamTVConfigObjectType = async (version?: number) => {
+  const objectTypes = await getObjectTypes();
+
+  if (objectTypes.includes("StreamtvConfig")) {
+    // eslint-disable-next-line no-console
+    return { version };
+  }
+
+  const CREATE_STREAMTV_CONFIG_OBJECT_TYPE = gql`
+    mutation CREATE_STREAMTV_CONFIG_OBJECT_TYPE($version: Int!) {
+      createObjectType(
+        version: $version
+        object_types: {
+          name: "streamtv_config"
+          relationships: [
+            {
+              operation: CREATE
+              to_class: SkylarkImage
+              relationship_name: "logo"
+              reverse_relationship_name: "streamtv_config"
+            }
+          ]
+          fields: [
+            { name: "app_name", operation: CREATE, type: STRING }
+            { name: "primary_color", operation: CREATE, type: STRING }
+            { name: "accent_color", operation: CREATE, type: STRING }
+            { name: "google_tag_manager_id", operation: CREATE, type: STRING }
+          ]
+        }
+      ) {
+        messages
+        version
+      }
+    }
+  `;
+
+  const { createObjectType } = await graphQLClient.uncachedRequest<{
+    createObjectType: { version: number; messages: string };
+  }>(CREATE_STREAMTV_CONFIG_OBJECT_TYPE, { version });
+
+  return {
+    version: createObjectType.version,
+  };
+};
+
 export const waitForUpdatingSchema = async () => {
   const {
     active_version: activeVersion,
@@ -237,6 +307,11 @@ export const updateSkylarkSchema = async ({
     updatedVersion
   );
   if (seasonUpdateVersion) updatedVersion = seasonUpdateVersion;
+
+  const { version: streamtvConfigVersion } = await addStreamTVConfigObjectType(
+    updatedVersion
+  );
+  if (streamtvConfigVersion) updatedVersion = streamtvConfigVersion;
 
   if (updatedVersion !== initialVersion) {
     await activateConfigurationVersion(updatedVersion);

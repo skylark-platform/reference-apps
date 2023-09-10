@@ -45,7 +45,7 @@ export const CarouselButton: React.FC<CarouselButtonProps> = ({
         {duration && active && (
           <motion.circle
             animate="visible"
-            className="fill-transparent stroke-pink-500 stroke-[6]"
+            className="fill-transparent stroke-streamtv-accent stroke-[6]"
             custom={1}
             cx="50"
             cy="50"

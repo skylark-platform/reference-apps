@@ -13,10 +13,14 @@ import {
   useDimensions,
 } from "@skylark-reference-apps/react";
 import { hasProperty } from "@skylark-reference-apps/lib";
+import { DefaultSeo } from "next-seo";
 import { Search } from "./search";
+import { useStreamTVConfig } from "../hooks/useStreamTVConfig";
+import createDefaultSeo from "../next-seo.config";
+import { GoogleTagManagerScript } from "./googleTagManager";
 
 interface Props {
-  appTitle: string;
+  appTitle?: string;
   tvShowsHref: string;
   skylarkApiUrl?: string;
   timeTravelEnabled?: boolean;
@@ -24,12 +28,16 @@ interface Props {
 }
 
 export const StreamTVLayout: React.FC<Props> = ({
-  appTitle,
+  appTitle: propAppTitle,
   tvShowsHref,
   skylarkApiUrl,
   timeTravelEnabled,
   children,
 }) => {
+  const { config } = useStreamTVConfig();
+
+  const appTitle = config?.appName || propAppTitle || "StreamTV";
+
   const { asPath, query } = useRouter();
   const { t } = useTranslation("common");
   const [isMobileSearchOpen, setMobileSearchOpen] = useState(false);
@@ -54,6 +62,10 @@ export const StreamTVLayout: React.FC<Props> = ({
 
   return (
     <>
+      <DefaultSeo {...createDefaultSeo(appTitle, t("seo.description"))} />
+      {config?.googleTagManagerId && (
+        <GoogleTagManagerScript id={config.googleTagManagerId} />
+      )}
       <div className="relative w-full">
         {isMobileSearchOpen && (
           <div className="fixed inset-0 z-20 bg-gray-900/40 md:hidden">
@@ -64,7 +76,16 @@ export const StreamTVLayout: React.FC<Props> = ({
           <TitleScreen
             exitBackgroundColor="#5B45CE"
             logo={
-              <MdStream className="h-12 w-12 rounded-md bg-purple-500 sm:h-14 sm:w-14 lg:h-16 lg:w-16" />
+              config?.logo ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  alt={config.logo.alt}
+                  className="block max-h-20"
+                  src={config.logo.src}
+                />
+              ) : (
+                <MdStream className="h-12 w-12 rounded-md bg-streamtv-primary sm:h-14 sm:w-14 lg:h-16 lg:w-16" />
+              )
             }
             title={appTitle}
           >
@@ -75,8 +96,19 @@ export const StreamTVLayout: React.FC<Props> = ({
         )}
         <AppBackgroundGradient />
         <AppHeader activeHref={asPath} links={links}>
-          <div className="flex items-center justify-center text-3xl text-gray-100">
-            <MdStream className="h-9 w-9 md:h-10 md:w-10 ltr:md:ml-8 rtl:md:mr-8 lg:h-12 lg:w-12 ltr:lg:ml-16 rtl:lg:mr-16 ltr:xl:ml-20 rtl:xl:mr-20" />
+          <div className="flex h-full items-center justify-center text-3xl text-gray-100">
+            <div className="flex h-full items-center ltr:md:ml-8 rtl:md:mr-8 ltr:lg:ml-16 rtl:lg:mr-16 ltr:xl:ml-20 rtl:xl:mr-20">
+              {config?.logo ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  alt={config.logo.alt}
+                  className="block h-full py-2 md:py-4 lg:py-8"
+                  src={config.logo.src}
+                />
+              ) : (
+                <MdStream className="h-9 w-9 md:h-10 md:w-10 lg:h-12 lg:w-12" />
+              )}
+            </div>
             <h2 className="mx-1 text-base md:mx-2 md:text-xl lg:text-2xl">
               <Link href="/">{appTitle}</Link>
             </h2>

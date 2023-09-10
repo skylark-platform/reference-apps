@@ -64,7 +64,7 @@ const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
           }
           relative z-30 block w-full scale-[1.0001] rounded-sm bg-cover bg-clip-border
           bg-center bg-no-repeat transition-all md:hover:z-40
-          ${!imageLoaded ? "animate-pulse bg-purple-500" : ""}
+          ${!imageLoaded ? "animate-pulse bg-streamtv-primary" : ""}
         `}
       style={{
         backgroundImage: imageLoaded ? `url('${backgroundImage}')` : "",
@@ -74,13 +74,13 @@ const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
         <div
           className={`
               ${contentLocation === "below" ? "justify-end" : "justify-between"}
-              relative flex h-full w-full flex-col rounded-sm
-              bg-gradient-to-t from-gray-900 to-transparent bg-clip-border bg-no-repeat p-2 font-display text-white shadow
-              shadow-gray-900 transition-all sm:p-3 md:hover:scale-[1.005] md:group-hover:bg-purple-500/[.85] lg:p-4
+              md:group-hover:bg-streamtv-primary/[.85] relative flex h-full w-full flex-col
+              rounded-sm bg-gradient-to-t from-gray-900 to-transparent bg-clip-border bg-no-repeat p-2 font-display text-white
+              shadow shadow-gray-900 transition-all sm:p-3 md:hover:scale-[1.005] lg:p-4
             `}
         >
           {statusTag && (
-            <div className="absolute right-0 top-2 rounded-l-sm bg-purple-500 px-2 py-0.5 text-xs">
+            <div className="absolute right-0 top-2 rounded-l-sm bg-streamtv-primary px-2 py-0.5 text-xs">
               {statusTag}
             </div>
           )}
