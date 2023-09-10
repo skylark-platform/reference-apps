@@ -6,6 +6,10 @@ import {
 import { useEffect, useMemo } from "react";
 import { GQLError, SkylarkImageListing } from "../types";
 import { GET_STREAMTV_CONFIG } from "../graphql/queries/streamtvConfig";
+import {
+  addGoogleTagManagerNoScriptToBody,
+  removeGoogleTagManagerNoScriptFromBody,
+} from "../components/googleTagManager";
 
 interface StreamTVConfigResponse {
   listStreamtvConfig?: {
@@ -13,7 +17,7 @@ interface StreamTVConfigResponse {
       app_name: string;
       primary_color: string;
       accent_color: string;
-      google_analytics_id: string;
+      google_tag_manager_id: string;
       logo: SkylarkImageListing;
     }[];
   };
@@ -23,7 +27,7 @@ interface StreamTVConfig {
   appName: string;
   primaryColor: string;
   accentColor: string;
-  gaCode: string;
+  googleTagManagerId: string;
   logo?: {
     alt: string;
     src: string;
@@ -63,7 +67,7 @@ export const useStreamTVConfig = () => {
       appName: gqlConfig.app_name,
       primaryColor: gqlConfig.primary_color,
       accentColor: gqlConfig.accent_color,
-      gaCode: gqlConfig.google_analytics_id,
+      googleTagManagerId: gqlConfig.google_tag_manager_id,
       logo:
         logo && logo.url
           ? {
@@ -83,6 +87,12 @@ export const useStreamTVConfig = () => {
       "--streamtv-accent-color",
       config?.accentColor || "#ff385c"
     );
+
+    if (config?.googleTagManagerId) {
+      addGoogleTagManagerNoScriptToBody(config?.googleTagManagerId);
+    } else {
+      removeGoogleTagManagerNoScriptFromBody();
+    }
   }, [config]);
 
   return {

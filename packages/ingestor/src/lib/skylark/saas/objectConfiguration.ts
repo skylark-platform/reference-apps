@@ -32,7 +32,7 @@ const OBJECT_CONFIG: Record<
         ui_position: 3,
       },
       {
-        name: "google_analytics_id",
+        name: "google_tag_manager_id",
         ui_field_type: "STRING",
         ui_position: 4,
       },

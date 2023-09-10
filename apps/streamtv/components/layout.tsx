@@ -17,6 +17,7 @@ import { DefaultSeo } from "next-seo";
 import { Search } from "./search";
 import { useStreamTVConfig } from "../hooks/useStreamTVConfig";
 import createDefaultSeo from "../next-seo.config";
+import { GoogleTagManagerScript } from "./googleTagManager";
 
 interface Props {
   appTitle?: string;
@@ -62,6 +63,9 @@ export const StreamTVLayout: React.FC<Props> = ({
   return (
     <>
       <DefaultSeo {...createDefaultSeo(appTitle, t("seo.description"))} />
+      {config?.googleTagManagerId && (
+        <GoogleTagManagerScript id={config.googleTagManagerId} />
+      )}
       <div className="relative w-full">
         {isMobileSearchOpen && (
           <div className="fixed inset-0 z-20 bg-gray-900/40 md:hidden">

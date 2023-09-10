@@ -212,7 +212,7 @@ const addStreamTVConfigObjectType = async (version?: number) => {
             { name: "app_name", operation: CREATE, type: STRING }
             { name: "primary_color", operation: CREATE, type: STRING }
             { name: "accent_color", operation: CREATE, type: STRING }
-            { name: "google_analytics_id", operation: CREATE, type: STRING }
+            { name: "google_tag_manager_id", operation: CREATE, type: STRING }
           ]
         }
       ) {

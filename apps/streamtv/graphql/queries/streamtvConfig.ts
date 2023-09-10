@@ -24,7 +24,7 @@ export const GET_STREAMTV_CONFIG = gql`
       objects {
         accent_color
         app_name
-        google_analytics_id
+        google_tag_manager_id
         logo(limit: 1) {
           objects {
             uid
