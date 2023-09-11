@@ -148,9 +148,8 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                       { text: "Europe", value: "europe" },
                       { text: "North America", value: "north-america" },
                       {
-                        text: "Middle East (Coming soon)",
+                        text: "Middle East",
                         value: "mena",
-                        disabled: true,
                       },
                     ]}
                     onChange={(value: string) => {
