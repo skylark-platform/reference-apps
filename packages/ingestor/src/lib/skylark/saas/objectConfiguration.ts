@@ -8,7 +8,11 @@ const OBJECT_CONFIG: Record<
   {
     colour: string;
     primaryField: string;
-    fieldConfig: { name: string; ui_field_type: string; ui_position: number }[];
+    fieldConfig: {
+      name: string;
+      ui_field_type: string | null;
+      ui_position: number;
+    }[];
   }
 > = {
   // Object created in schema section of ingestor
@@ -32,9 +36,14 @@ const OBJECT_CONFIG: Record<
         ui_position: 3,
       },
       {
+        name: "featured_page_url",
+        ui_field_type: null,
+        ui_position: 4,
+      },
+      {
         name: "google_tag_manager_id",
         ui_field_type: "STRING",
-        ui_position: 4,
+        ui_position: 5,
       },
     ],
   },
@@ -57,7 +66,9 @@ const createMutation = (): string[] => {
               field_config: OBJECT_CONFIG[objectType].fieldConfig.map(
                 (fieldConfig) => ({
                   ...fieldConfig,
-                  ui_field_type: new EnumType(fieldConfig.ui_field_type),
+                  ui_field_type: fieldConfig.ui_field_type
+                    ? new EnumType(fieldConfig.ui_field_type)
+                    : null,
                 })
               ),
             },

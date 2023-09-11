@@ -216,9 +216,9 @@ const gameOfThronesUniversePage: SetConfig = {
   ],
 };
 
-const streamingNowRail: SetConfig = {
-  externalId: createStreamTVExternalId("streaming_now"),
-  slug: "streaming-now",
+const liveNowRail: SetConfig = {
+  externalId: createStreamTVExternalId("live_now"),
+  slug: "live-now",
   graphQlSetType: "RAIL",
   contents: [
     { type: "live-stream", slug: "tears-of-steel" },
@@ -325,7 +325,7 @@ const mediaReferenceHomepage: SetConfig = {
     { type: "seasons", slug: "miraculous-s05" },
     { type: "set", slug: setInEuropeRail.slug },
     { type: "set", slug: setInAmericaRail.slug },
-    { type: "set", slug: streamingNowRail.slug },
+    { type: "set", slug: liveNowRail.slug },
     { type: "set", slug: discoverCollectionRail.slug },
   ],
 };
@@ -342,7 +342,7 @@ export const orderedSetsToCreate = [
   starWarsMoviesCollection,
   bestPictureMovies2020,
   bestPictureMovies2021,
-  streamingNowRail,
+  liveNowRail,
   setInEuropeRail,
   setInAmericaRail,
   topArabicMovies,

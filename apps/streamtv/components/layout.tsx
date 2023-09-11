@@ -20,23 +20,39 @@ import createDefaultSeo from "../next-seo.config";
 import { GoogleTagManagerScript } from "./googleTagManager";
 
 interface Props {
-  appTitle?: string;
-  tvShowsHref: string;
   skylarkApiUrl?: string;
   timeTravelEnabled?: boolean;
   children?: React.ReactNode;
 }
 
+const convertUrlWithSameOriginToPath = (url: string): string => {
+  if (url.startsWith("/")) {
+    return url;
+  }
+
+  try {
+    const parsedUrl = new URL(url);
+    if (
+      typeof window !== "undefined" &&
+      window.location.origin === parsedUrl.origin
+    ) {
+      return parsedUrl.pathname;
+    }
+    return url;
+  } catch {
+    return url;
+  }
+};
+
 export const StreamTVLayout: React.FC<Props> = ({
-  appTitle: propAppTitle,
-  tvShowsHref,
   skylarkApiUrl,
   timeTravelEnabled,
   children,
 }) => {
   const { config } = useStreamTVConfig();
 
-  const appTitle = config?.appName || propAppTitle || "StreamTV";
+  const appTitle =
+    config?.appName || process.env.NEXT_PUBLIC_APP_TITLE || "StreamTV";
 
   const { asPath, query } = useRouter();
   const { t } = useTranslation("common");
@@ -45,7 +61,14 @@ export const StreamTVLayout: React.FC<Props> = ({
   const links = [
     { text: t("discover"), href: "/" },
     { text: t("movies"), href: "/movies" },
-    { text: t("tv-shows"), href: tvShowsHref },
+    {
+      text: t("featured"),
+      href: convertUrlWithSameOriginToPath(
+        config?.featuredPageUrl ||
+          process.env.NEXT_PUBLIC_TV_SHOWS_HREF ||
+          "/brand/reculg97iNzbkEZCK" // StreamTV Ingest External ID
+      ),
+    },
   ];
 
   const [modalOpen, setModalOpen] = useState(false);

@@ -13,9 +13,6 @@ import { useEffect, useState } from "react";
 import { DimensionsContextProvider } from "@skylark-reference-apps/react";
 import { StreamTVLayout } from "../components/layout";
 
-const tvShowsHref =
-  process.env.NEXT_PUBLIC_TV_SHOWS_HREF || "/brand/reculg97iNzbkEZCK";
-
 function MyApp({ Component, pageProps }: AppProps) {
   const [skylarkApiUrl, setSkylarkApiUrl] = useState(
     process.env.NEXT_PUBLIC_SAAS_API_ENDPOINT
@@ -42,12 +39,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <PlausibleProvider domain={process.env.NEXT_PUBLIC_APP_DOMAIN as string}>
       <QueryClientProvider client={queryClient}>
         <DimensionsContextProvider>
-          <StreamTVLayout
-            appTitle={process.env.NEXT_PUBLIC_APP_TITLE}
-            skylarkApiUrl={skylarkApiUrl}
-            timeTravelEnabled
-            tvShowsHref={tvShowsHref}
-          >
+          <StreamTVLayout skylarkApiUrl={skylarkApiUrl} timeTravelEnabled>
             <Component {...pageProps} />
           </StreamTVLayout>
         </DimensionsContextProvider>

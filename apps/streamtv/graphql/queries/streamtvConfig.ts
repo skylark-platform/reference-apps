@@ -22,8 +22,10 @@ export const GET_STREAMTV_CONFIG = gql`
       ]
     ) {
       objects {
-        accent_color
         app_name
+        primary_color
+        accent_color
+        featured_page_url
         google_tag_manager_id
         logo(limit: 1) {
           objects {
@@ -33,7 +35,6 @@ export const GET_STREAMTV_CONFIG = gql`
             slug
           }
         }
-        primary_color
       }
     }
   }
