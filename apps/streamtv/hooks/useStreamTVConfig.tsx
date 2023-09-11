@@ -19,6 +19,7 @@ interface StreamTVConfigResponse {
       primary_color: string;
       accent_color: string;
       google_tag_manager_id: string;
+      featured_page_url: string;
       logo: SkylarkImageListing;
     }[];
   };
@@ -29,6 +30,7 @@ interface StreamTVConfig {
   primaryColor: string;
   accentColor: string;
   googleTagManagerId: string;
+  featuredPageUrl: string;
   logo?: {
     alt: string;
     src: string;
@@ -72,6 +74,7 @@ export const useStreamTVConfig = () => {
       primaryColor: gqlConfig.primary_color,
       accentColor: gqlConfig.accent_color,
       googleTagManagerId: gqlConfig.google_tag_manager_id,
+      featuredPageUrl: gqlConfig.featured_page_url,
       logo:
         logo && logo.url
           ? {
