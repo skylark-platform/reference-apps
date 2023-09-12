@@ -23,8 +23,8 @@ const spotlightMovies: SetConfig = {
   graphQlSetType: "RAIL_MOVIE",
   contents: [
     { type: "movies", slug: "asteroid-city" },
-    { type: "movies", slug: "the-kid-who-would-be-king" },
-    { type: "movies", slug: "tenet" },
+    { type: "movies", slug: "oppenheimer" },
+    { type: "movies", slug: "barbie" },
     { type: "movies", slug: "mank" },
     { type: "movies", slug: "escape-from-pretoria" },
     { type: "movies", slug: "emma" },
@@ -85,6 +85,7 @@ const homePageSlider: SetConfig = {
   graphQlSetType: "SLIDER",
   contents: [
     { type: "brands", slug: "the-last-of-us" },
+    { type: "movies", slug: "theeb" },
     { type: "movies", slug: "deadpool-2" },
     { type: "brands", slug: "yellowjackets" },
     { type: "movies", slug: "sing-2" },
