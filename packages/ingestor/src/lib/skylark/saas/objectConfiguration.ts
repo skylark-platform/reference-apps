@@ -53,32 +53,35 @@ const createMutation = (): string[] => {
   const chunks = chunk(Object.keys(OBJECT_CONFIG), CREATE_OBJECT_CHUNK_SIZE);
 
   const mutations = chunks.map((objectConfigurations) => {
-    const mutation = objectConfigurations.reduce((prev, objectType) => {
-      const updatedOperations = {
-        ...prev,
-        [objectType]: {
-          __aliasFor: "setObjectConfiguration",
-          __args: {
-            object: new EnumType(objectType),
-            object_config: {
-              colour: `#${OBJECT_CONFIG[objectType].colour.toLowerCase()}`,
-              primary_field: OBJECT_CONFIG[objectType].primaryField,
-              field_config: OBJECT_CONFIG[objectType].fieldConfig.map(
-                (fieldConfig) => ({
-                  ...fieldConfig,
-                  ui_field_type: fieldConfig.ui_field_type
-                    ? new EnumType(fieldConfig.ui_field_type)
-                    : null,
-                })
-              ),
+    const mutation = objectConfigurations.reduce(
+      (prev, objectType) => {
+        const updatedOperations = {
+          ...prev,
+          [objectType]: {
+            __aliasFor: "setObjectConfiguration",
+            __args: {
+              object: new EnumType(objectType),
+              object_config: {
+                colour: `#${OBJECT_CONFIG[objectType].colour.toLowerCase()}`,
+                primary_field: OBJECT_CONFIG[objectType].primaryField,
+                field_config: OBJECT_CONFIG[objectType].fieldConfig.map(
+                  (fieldConfig) => ({
+                    ...fieldConfig,
+                    ui_field_type: fieldConfig.ui_field_type
+                      ? new EnumType(fieldConfig.ui_field_type)
+                      : null,
+                  }),
+                ),
+              },
             },
+            colour: true,
+            primary_field: true,
           },
-          colour: true,
-          primary_field: true,
-        },
-      };
-      return updatedOperations;
-    }, {} as { [key: string]: object });
+        };
+        return updatedOperations;
+      },
+      {} as { [key: string]: object },
+    );
 
     const parsedMutation = jsonToGraphQLQuery({ mutation });
 
@@ -92,6 +95,6 @@ export const updateObjectConfigurations = async () => {
   const mutations = createMutation();
 
   await Promise.all(
-    mutations.map((mutation) => graphQLClient.uncachedRequest(mutation))
+    mutations.map((mutation) => graphQLClient.uncachedRequest(mutation)),
   );
 };

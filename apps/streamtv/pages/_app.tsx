@@ -15,7 +15,7 @@ import { StreamTVLayout } from "../components/layout";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [skylarkApiUrl, setSkylarkApiUrl] = useState(
-    process.env.NEXT_PUBLIC_SAAS_API_ENDPOINT
+    process.env.NEXT_PUBLIC_SAAS_API_ENDPOINT,
   );
 
   useEffect(() => {

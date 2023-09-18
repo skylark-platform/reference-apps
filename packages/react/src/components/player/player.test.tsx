@@ -8,7 +8,7 @@ describe("Player component", () => {
     await waitFor(() => {
       expect(screen.getByTestId("player")).toHaveProperty(
         "src",
-        "http://localhost/something.mp4"
+        "http://localhost/something.mp4",
       );
     });
   });

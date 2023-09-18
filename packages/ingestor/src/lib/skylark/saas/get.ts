@@ -10,7 +10,7 @@ import {
 } from "../../interfaces";
 
 export const getValidPropertiesForObject = async (
-  objectType: GraphQLObjectTypes
+  objectType: GraphQLObjectTypes,
 ): Promise<GraphQLIntrospectionProperties[]> => {
   const query = {
     query: {
@@ -49,7 +49,7 @@ export const getValidPropertiesForObject = async (
 
   const data = await graphQLClient.uncachedRequest<GraphQLIntrospection>(
     graphQLGetQuery,
-    {}
+    {},
   );
 
   const supportedKinds = ["SCALAR", "ENUM", "NON_NULL"];
@@ -60,17 +60,17 @@ export const getValidPropertiesForObject = async (
     data.IntrospectionOnType.fields;
   const filteredFields = fields.filter(
     ({ name: property, type: { kind } }) =>
-      supportedKinds.includes(kind) || supportedObjects.includes(property)
+      supportedKinds.includes(kind) || supportedObjects.includes(property),
   );
   const types: GraphQLIntrospectionProperties[] = filteredFields.map(
-    ({ name, type: { kind } }) => ({ property: name, kind })
+    ({ name, type: { kind } }) => ({ property: name, kind }),
   );
 
   return types;
 };
 
 export const getValidRelationshipsForObject = async (
-  objectType: GraphQLObjectTypes
+  objectType: GraphQLObjectTypes,
 ): Promise<string[]> => {
   const query = {
     query: {
@@ -94,7 +94,7 @@ export const getValidRelationshipsForObject = async (
   const data =
     await graphQLClient.uncachedRequest<GraphQLObjectRelationshipsType>(
       graphQLGetQuery,
-      {}
+      {},
     );
 
   const fields =
@@ -106,7 +106,7 @@ export const getValidRelationshipsForObject = async (
 export const getExistingObjectByExternalId = async (
   objectType: GraphQLObjectTypes,
   externalId: string,
-  language?: string
+  language?: string,
 ): Promise<GraphQLBaseObject | null> => {
   const args: { [key: string]: string | boolean } = {
     external_id: externalId,
@@ -152,7 +152,7 @@ export const getExistingObjectByExternalId = async (
 const getExistingObjectsByExternalId = async (
   objectType: GraphQLObjectTypes,
   objects: { externalId: string; language?: string | null }[],
-  language?: string
+  language?: string,
 ): Promise<{
   existingExternalIds: string[];
   existingObjects: GraphQLBaseObject[];
@@ -193,7 +193,7 @@ const getExistingObjectsByExternalId = async (
 
       return queries;
     },
-    {} as { [key: string]: object }
+    {} as { [key: string]: object },
   );
 
   const query = {
@@ -227,16 +227,16 @@ const getExistingObjectsByExternalId = async (
       const notFoundObjects = objects.filter(({ externalId }) =>
         Object.keys(data)
           .filter((recordId) => isNull(data[recordId]))
-          .includes(externalId)
+          .includes(externalId),
       );
       const notFoundObjectExternalIds = notFoundObjects.map(
-        ({ externalId }) => externalId
+        ({ externalId }) => externalId,
       );
       const existingExternalIds = externalIds.filter(
-        (externalId) => !notFoundObjectExternalIds.includes(externalId)
+        (externalId) => !notFoundObjectExternalIds.includes(externalId),
       );
       const existingObjects = existingExternalIds.map(
-        (externalId) => data[externalId] as GraphQLBaseObject
+        (externalId) => data[externalId] as GraphQLBaseObject,
       );
 
       return {
@@ -254,7 +254,7 @@ const getExistingObjectsByExternalId = async (
 export const getExistingObjects = async (
   objectType: GraphQLObjectTypes,
   objects: { externalId: string; language?: string | null }[],
-  language?: string
+  language?: string,
 ): Promise<{
   existingExternalIds: Set<string>;
   existingObjects: Record<string, GraphQLBaseObject>;
@@ -276,18 +276,18 @@ export const getExistingObjects = async (
     // eslint-disable-next-line no-await-in-loop
     const responses = await Promise.all(
       requests.map((objs) =>
-        getExistingObjectsByExternalId(objectType, objs, language)
-      )
+        getExistingObjectsByExternalId(objectType, objs, language),
+      ),
     );
 
     existingObjectsArr.push(...responses);
   }
 
   const existingExternalIds = new Set(
-    existingObjectsArr.flatMap(({ existingExternalIds: arr }) => arr)
+    existingObjectsArr.flatMap(({ existingExternalIds: arr }) => arr),
   );
   const missingExternalIds = new Set(
-    existingObjectsArr.flatMap(({ missingExternalIds: arr }) => arr)
+    existingObjectsArr.flatMap(({ missingExternalIds: arr }) => arr),
   );
 
   const existingObjects = existingObjectsArr
@@ -297,7 +297,7 @@ export const getExistingObjects = async (
         ...previous,
         [object.external_id]: object,
       }),
-      {} as Record<string, GraphQLBaseObject>
+      {} as Record<string, GraphQLBaseObject>,
     );
 
   return { existingExternalIds, existingObjects, missingExternalIds };

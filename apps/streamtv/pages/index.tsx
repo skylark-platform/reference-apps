@@ -6,7 +6,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const seo = await getSeoDataForObject(
     "SkylarkSet",
     "streamtv_homepage",
-    locale || ""
+    locale || "",
   );
   return {
     revalidate: 300,

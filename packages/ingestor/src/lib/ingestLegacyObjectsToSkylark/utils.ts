@@ -22,14 +22,14 @@ export const checkEnvVars = () => {
   const validClients = ["CLIENT_A", "CLIENT_C"];
   if (!client) {
     throw new Error(
-      "process.env.CLIENT must be specified so we know which data model set up to use. Each corresponds to a Skylark Legacy Customer."
+      "process.env.CLIENT must be specified so we know which data model set up to use. Each corresponds to a Skylark Legacy Customer.",
     );
   }
   if (!validClients.includes(client)) {
     throw new Error(
       `value given for process.env.CLIENT is not a valid option (value: ${client}). Valid Options: ${validClients.join(
-        ", "
-      )}`
+        ", ",
+      )}`,
     );
   }
 
@@ -50,7 +50,7 @@ export const checkEnvVars = () => {
     "Legacy API URL:",
     legacyApiUrl,
     "\nSkylark API URL:",
-    SAAS_API_ENDPOINT
+    SAAS_API_ENDPOINT,
   );
 
   const readFromDisk = process.env.READ_LEGACY_OBJECTS_FROM_DISK === "true";
@@ -63,18 +63,18 @@ export const checkEnvVars = () => {
 };
 
 export const calculateTotalObjects = (
-  objects: Record<string, FetchedLegacyObjects<LegacyObjects[0]>>
+  objects: Record<string, FetchedLegacyObjects<LegacyObjects[0]>>,
 ) => {
   const totalObjectsFound = Object.values(objects).reduce(
     (previous, { totalFound }) => previous + totalFound,
-    0
+    0,
   );
 
   return totalObjectsFound;
 };
 
 export const convertLegacyObjectTypeToObjectType = (
-  legacyType: LegacyObjectType
+  legacyType: LegacyObjectType,
 ): GraphQLObjectTypes => {
   switch (legacyType) {
     case LegacyObjectType.TagCategories:
@@ -111,7 +111,7 @@ export const convertLegacyObjectTypeToObjectType = (
 export const getLegacyUidFromUrl = (url: string) => {
   if (!url.includes("/")) {
     throw new Error(
-      `[getLegacyUidFromUrl] URL does not contain array separator" ${url}`
+      `[getLegacyUidFromUrl] URL does not contain array separator" ${url}`,
     );
   }
 
@@ -119,7 +119,7 @@ export const getLegacyUidFromUrl = (url: string) => {
   const uid = url.split("/")?.[3];
   if (!uid) {
     throw new Error(
-      `[getLegacyUidFromUrl] Unable to parse legacy UID from "${url}"`
+      `[getLegacyUidFromUrl] Unable to parse legacy UID from "${url}"`,
     );
   }
   return uid;
@@ -128,7 +128,7 @@ export const getLegacyUidFromUrl = (url: string) => {
 export const getLegacyObjectTypeFromUrl = (url: string) => {
   if (!url.includes("/")) {
     throw new Error(
-      `[getLegacyObjectTypeFromUrl] URL does not contain array separator" ${url}`
+      `[getLegacyObjectTypeFromUrl] URL does not contain array separator" ${url}`,
     );
   }
 
@@ -152,7 +152,7 @@ export const updateSkylarkSchema = async ({
   const { version: assetTypeVersion } = await updateEnumTypes(
     "AssetType",
     assetTypes,
-    initialVersion
+    initialVersion,
   );
 
   let updatedVersion = assetTypeVersion || initialVersion;
@@ -161,7 +161,7 @@ export const updateSkylarkSchema = async ({
     const { version: imageTypeVersion } = await updateEnumTypes(
       "ImageType",
       imageTypes,
-      updatedVersion
+      updatedVersion,
     );
 
     if (imageTypeVersion) updatedVersion = imageTypeVersion;
@@ -171,7 +171,7 @@ export const updateSkylarkSchema = async ({
     const { version: setTypeVersion } = await updateEnumTypes(
       "SetType",
       setTypes,
-      updatedVersion
+      updatedVersion,
     );
 
     if (setTypeVersion) updatedVersion = setTypeVersion;

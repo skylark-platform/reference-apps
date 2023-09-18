@@ -7,7 +7,7 @@ const customRender = (ui: React.ReactElement, renderOptions?: RenderOptions) =>
     <DimensionsContextProvider {...renderOptions}>
       {ui}
     </DimensionsContextProvider>,
-    renderOptions
+    renderOptions,
   );
 
 const Consumer: React.FC<{ customerType?: string; deviceType?: string }> = ({
@@ -37,7 +37,7 @@ describe("Dimensions Context", () => {
   it("Returns the active customer type", () => {
     customRender(<Consumer />);
     expect(screen.getByText(/^Customer Type:/).textContent).toBe(
-      "Customer Type: premium"
+      "Customer Type: premium",
     );
   });
 
@@ -45,14 +45,14 @@ describe("Dimensions Context", () => {
     customRender(<Consumer customerType="standard" />);
     fireEvent.click(screen.getByText(/^Customer Type:/));
     expect(screen.getByText(/^Customer Type:/).textContent).toBe(
-      "Customer Type: standard"
+      "Customer Type: standard",
     );
   });
 
   it("Returns the active device type", () => {
     customRender(<Consumer />);
     expect(screen.getByText(/^Device Type:/).textContent).toBe(
-      "Device Type: pc"
+      "Device Type: pc",
     );
   });
 
@@ -60,7 +60,7 @@ describe("Dimensions Context", () => {
     customRender(<Consumer deviceType="phone" />);
     fireEvent.click(screen.getByText(/^Device Type:/));
     expect(screen.getByText(/^Device Type:/).textContent).toBe(
-      "Device Type: phone"
+      "Device Type: phone",
     );
   });
 });

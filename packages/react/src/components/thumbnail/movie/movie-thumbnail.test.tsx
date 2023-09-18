@@ -10,12 +10,12 @@ describe("MovieThumbnail component", () => {
         href="http://localhost/some-href"
         subtitle="A Subtitle"
         title="Movie"
-      />
+      />,
     );
     expect(screen.getByText(/Movie/)).toBeTruthy();
     expect(screen.getByRole("link")).toHaveProperty(
       "href",
-      "http://localhost/some-href"
+      "http://localhost/some-href",
     );
   });
 });

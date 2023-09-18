@@ -17,7 +17,7 @@ import {
 import { ImageType, Maybe } from "../types";
 
 const findMatchOrReturnFirst = (
-  strings: (string | Maybe<string> | undefined)[]
+  strings: (string | Maybe<string> | undefined)[],
 ): string => {
   const filteredStrings = strings.filter((str) => !!str) as string[];
   return (
@@ -72,7 +72,7 @@ const HighlightedSearchResultText = ({
       className={clsx(
         className,
         matchClassName,
-        "[&>span]:text-streamtv-accent [&>span]:transition-colors group-hover:[&>span]:text-streamtv-accent"
+        "[&>span]:text-streamtv-accent [&>span]:transition-colors group-hover:[&>span]:text-streamtv-accent",
       )}
       dangerouslySetInnerHTML={{ __html: cleanHTML }}
     />
@@ -182,12 +182,12 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
       <div
         className={clsx(
           "bg-streamtv-primary/90 flex items-center justify-center rounded-full border-0 border-gray-300 p-3 px-4 transition-colors  focus-within:border-white focus-within:text-white  md:bg-button-tertiary",
-          searchQuery ? "text-white" : "text-gray-300"
+          searchQuery ? "text-white" : "text-gray-300",
         )}
       >
         <input
           className={clsx(
-            "w-full border-none bg-transparent px-2 py-0 shadow-none outline-none ring-0 placeholder:text-gray-300 focus:border-none focus:shadow-none focus:outline-none focus:ring-0 focus:placeholder:text-white focus-visible:border-none focus-visible:outline-none md:w-44"
+            "w-full border-none bg-transparent px-2 py-0 shadow-none outline-none ring-0 placeholder:text-gray-300 focus:border-none focus:shadow-none focus:outline-none focus:ring-0 focus:placeholder:text-white focus-visible:border-none focus-visible:outline-none md:w-44",
           )}
           placeholder={t("search")}
           type="text"
@@ -250,7 +250,7 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
                       href={setHref}
                       image={getGraphQLImageSrc(
                         obj?.images,
-                        ImageType.Thumbnail
+                        ImageType.Thumbnail,
                       )}
                       key={obj.uid}
                       title={findMatchOrReturnFirst([
@@ -278,7 +278,7 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
                       href={href}
                       image={getGraphQLImageSrc(
                         obj?.images,
-                        ImageType.Thumbnail
+                        ImageType.Thumbnail,
                       )}
                       key={obj.uid}
                       title={findMatchOrReturnFirst([

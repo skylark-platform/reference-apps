@@ -14,7 +14,7 @@ export default {
 } as ComponentMeta<typeof CollectionThumbnailComponent>;
 
 const Template: ComponentStory<typeof CollectionThumbnailComponent> = (
-  args
+  args,
 ) => (
   <div className="mt-10 flex h-[400px] w-full flex-col justify-center overflow-y-visible">
     <div className="w-96 bg-gray-900 p-10">

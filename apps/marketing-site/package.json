@@ -1,0 +1,37 @@
+{
+  "name": "@skylark-apps/marketing-site",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "tsc": "tsc",
+    "codegen": "DOTENV_CONFIG_PATH=.env.local graphql-codegen -r dotenv/config --config codegen.ts",
+    "prebuild": "yarn codegen",
+    "predev": "yarn codegen"
+  },
+  "dependencies": {
+    "@skylark-reference-apps/lib": "*",
+    "autoprefixer": "10.4.15",
+    "clsx": "^2.0.0",
+    "graphql": "^16.8.0",
+    "graphql-request": "^6.1.0",
+    "next": "13.4.19",
+    "postcss": "8.4.29",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/client-preset": "^4.1.0",
+    "@types/node": "20.6.2",
+    "@types/react": "18.2.21",
+    "@types/react-dom": "18.2.7",
+    "eslint": "8.49.0",
+    "eslint-config-next": "13.4.19",
+    "tailwindcss": "3.3.3",
+    "typescript": "^5.2.2"
+  }
+}

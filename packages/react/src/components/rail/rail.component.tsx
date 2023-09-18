@@ -26,7 +26,7 @@ const determineScrollAmount = (
   el: Element,
   ascending: boolean,
   totalThumbnails: number,
-  numElements: number
+  numElements: number,
 ) => {
   const { scrollWidth, scrollLeft } = el;
   const maxValue = scrollWidth;
@@ -97,7 +97,7 @@ export const Rail: React.FC<RailProps> = ({
       myRef.current as Element,
       ascending,
       numChildren,
-      numChildrenOnScreen
+      numChildrenOnScreen,
     );
 
     myRef.current?.scrollTo({
@@ -111,7 +111,7 @@ export const Rail: React.FC<RailProps> = ({
         myRef.current,
         true,
         numChildren,
-        initial
+        initial,
       );
       myRef.current.scrollTo({
         left: amount,

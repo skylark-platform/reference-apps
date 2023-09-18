@@ -8,7 +8,7 @@ describe("Skylark Branding component", () => {
       <DimensionRadioButton
         options={[{ text: "radio test", value: "" }]}
         onChange={jest.fn}
-      />
+      />,
     );
     expect(screen.getByText(/radio test/i)).toBeTruthy();
   });
@@ -22,7 +22,7 @@ describe("Skylark Branding component", () => {
           { text: "another test", value: "another-test" },
         ]}
         onChange={onChange}
-      />
+      />,
     );
     fireEvent.click(screen.getByText(/another test/i));
     expect(onChange).toBeCalledWith("another-test");

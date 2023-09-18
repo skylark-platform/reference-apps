@@ -20,7 +20,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject(
     "SkylarkLiveStream",
     context.query.slug as string,
-    context.locale || ""
+    context.locale || "",
   );
 
   return {
@@ -58,7 +58,7 @@ const LiveStreamPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
 
   const synopsis = getSynopsisByOrderForGraphQLObject(liveStream);
   const availabilityEndDate = getFurthestAvailabilityEndDate(
-    liveStream?.availability?.objects as Availability[] | undefined
+    liveStream?.availability?.objects as Availability[] | undefined,
   );
 
   return (
@@ -71,7 +71,7 @@ const LiveStreamPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
       <PlaybackPage
         availabilityEndDate={availabilityEndDate}
         credits={splitAndFormatGraphQLCreditsByInternalTitle(
-          liveStream?.credits?.objects
+          liveStream?.credits?.objects,
         )}
         genres={convertObjectToName(liveStream?.genres)}
         loading={!liveStream}

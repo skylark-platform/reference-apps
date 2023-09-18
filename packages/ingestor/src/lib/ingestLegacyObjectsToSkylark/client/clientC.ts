@@ -62,14 +62,14 @@ interface CustomerCLegacyObjects
 const languagesToCheck = ["en-gb"];
 
 const convertLegacyObject = (
-  legacyObject: LegacyObjects[0] | ParsedSL8Credits
+  legacyObject: LegacyObjects[0] | ParsedSL8Credits,
 ): ConvertedLegacyObject | null => {
   // eslint-disable-next-line no-underscore-dangle
   const legacyObjectType = legacyObject._type;
   const legacyUid = legacyObject.uid;
   if (!legacyObjectType) {
     throw new Error(
-      `[convertLegacyObject] Unknown legacy object type: ${legacyUid}`
+      `[convertLegacyObject] Unknown legacy object type: ${legacyUid}`,
     );
   }
 
@@ -229,13 +229,13 @@ const parseSL8Dimensions = (schedules: Record<string, LegacySchedule[]>) => {
       }));
       return [...previous, ...parsedTypes];
     },
-    [] as { _id: string; title: string; slug: string }[]
+    [] as { _id: string; title: string; slug: string }[],
   );
 
   const uniqueCustomerTypes = allCustomerTypes.filter(
     (customerType, index) =>
       // eslint-disable-next-line no-underscore-dangle
-      allCustomerTypes.findIndex((ct) => ct._id === customerType._id) === index
+      allCustomerTypes.findIndex((ct) => ct._id === customerType._id) === index,
   );
 
   return uniqueCustomerTypes;
@@ -271,14 +271,14 @@ export const ingestClientC = async ({
       languagesToCheck,
       {
         readFromDisk,
-      }
+      },
     );
 
   const legacyCredits = convertSL8CreditsToLegacyObjects(
     legacyObjects.assets.objects,
     legacyObjects.episodes.objects,
     legacyObjects.seasons.objects,
-    legacyObjects.brands.objects
+    legacyObjects.brands.objects,
   );
 
   await commonSkylarkConfigurationUpdates({
@@ -308,11 +308,11 @@ export const ingestClientC = async ({
     dimensionsToCreate[0].slug,
     validProperties,
     customerTypes,
-    dimensions
+    dimensions,
   );
 
   const sl8SchedulesInAirtableFormat = Object.values(
-    legacyObjects.schedules.objects
+    legacyObjects.schedules.objects,
   )[0].map((obj) => ({
     id: obj.uid,
     fields: {
@@ -327,7 +327,7 @@ export const ingestClientC = async ({
       customerTypes: createdDimensions,
       deviceTypes: [],
       regions: [],
-    }
+    },
   );
 
   const skylarkObjects = createEmptySkylarkObjects();
@@ -343,42 +343,42 @@ export const ingestClientC = async ({
 
   skylarkObjects.tagCategories = await createObjectsInSkylark(
     legacyObjects.tagCategories,
-    commonArgs
+    commonArgs,
   );
 
   skylarkObjects.tags = await createObjectsInSkylark(
     legacyObjects.tags,
-    commonArgs
+    commonArgs,
   );
 
   skylarkObjects.images = await createObjectsInSkylark(
     legacyObjects.images,
-    commonArgs
+    commonArgs,
   );
 
   skylarkObjects.ratings = await createObjectsInSkylark(
     legacyObjects.ratings,
-    commonArgs
+    commonArgs,
   );
 
   skylarkObjects.genres = await createObjectsInSkylark(
     legacyObjects.genres,
-    commonArgs
+    commonArgs,
   );
 
   skylarkObjects.people = await createObjectsInSkylark(
     legacyObjects.people,
-    commonArgs
+    commonArgs,
   );
 
   skylarkObjects.roles = await createObjectsInSkylark(
     legacyObjects.roles,
-    commonArgs
+    commonArgs,
   );
 
   // Create Credits after People and Roles but before Assets/Episodes/Seasons/Brands/Sets
   const alwaysAvailabilityForCredit = availabilities.find(
-    (availability) => availability.slug === "always"
+    (availability) => availability.slug === "always",
   ); // This should be the always schedule (not license)
   skylarkObjects.credits = await createObjectsInSkylark(legacyCredits, {
     ...commonArgs,
@@ -387,33 +387,33 @@ export const ingestClientC = async ({
 
   skylarkObjects.assets = await createObjectsInSkylark(
     legacyObjects.assets,
-    commonArgs
+    commonArgs,
   );
 
   skylarkObjects.episodes = await createObjectsInSkylark(
     legacyObjects.episodes,
-    commonArgs
+    commonArgs,
   );
 
   skylarkObjects.seasons = await createObjectsInSkylark(
     legacyObjects.seasons,
-    commonArgs
+    commonArgs,
   );
 
   skylarkObjects.brands = await createObjectsInSkylark(
     legacyObjects.brands,
-    commonArgs
+    commonArgs,
   );
 
   skylarkObjects.sets = await createObjectsInSkylark(
     legacyObjects.sets,
-    commonArgs
+    commonArgs,
   );
 
   await createSetContent(
     skylarkObjects.sets,
     legacyObjects.sets,
-    skylarkObjects
+    skylarkObjects,
   );
 };
 

@@ -13,7 +13,7 @@ const unableToFindVersionNoneObjectsFile = `./outputs/${unableToFindVersionNoneO
 
 export const writeAirtableOutputFile = async (
   dateStamp: string,
-  output: object
+  output: object,
 ) => {
   await ensureDir("./outputs/airtable");
   await writeJSON(`./outputs/airtable/${dateStamp}.json`, output);
@@ -21,7 +21,7 @@ export const writeAirtableOutputFile = async (
 
 const writeGraphQLBaseObjectsToDisk = async (
   file: string,
-  objects: GraphQLBaseObject[]
+  objects: GraphQLBaseObject[],
 ) => {
   try {
     const { objects: existingObjects } = (await exists(file))
@@ -35,7 +35,7 @@ const writeGraphQLBaseObjectsToDisk = async (
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error(
-      "[writeGraphQLBaseObjectsToDisk] Error writing GraphQL Base Objects to disk"
+      "[writeGraphQLBaseObjectsToDisk] Error writing GraphQL Base Objects to disk",
     );
     // eslint-disable-next-line no-console
     console.error(err);
@@ -43,11 +43,11 @@ const writeGraphQLBaseObjectsToDisk = async (
 };
 
 export const writeUnableToFindVersionNoneObjectsFile = async (
-  objects: GraphQLBaseObject[]
+  objects: GraphQLBaseObject[],
 ) => {
   await writeGraphQLBaseObjectsToDisk(
     unableToFindVersionNoneObjectsFile,
-    objects
+    objects,
   );
 };
 
@@ -56,7 +56,7 @@ export const clearUnableToFindVersionNoneObjectsFile = async () => {
     const dateStamp = new Date().toISOString();
     await move(
       unableToFindVersionNoneObjectsFile,
-      `./outputs/${unableToFindVersionNoneObjectsFileName}_old/${unableToFindVersionNoneObjectsFileName}_${dateStamp}.json`
+      `./outputs/${unableToFindVersionNoneObjectsFileName}_old/${unableToFindVersionNoneObjectsFileName}_${dateStamp}.json`,
     );
   }
 

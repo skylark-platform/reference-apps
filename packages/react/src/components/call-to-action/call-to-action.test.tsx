@@ -11,7 +11,7 @@ describe("CallToAction component", () => {
         href="/"
         inProgress={false}
         seasonNumber={1}
-      />
+      />,
     );
     expect(screen.getByText(/Start Watching/)).toBeTruthy();
     expect(screen.getByText(/Winter is Coming/)).toBeTruthy();
@@ -25,7 +25,7 @@ describe("CallToAction component", () => {
         href="/"
         inProgress={true}
         seasonNumber={1}
-      />
+      />,
     );
     expect(screen.getByText(/Continue Watching/)).toBeTruthy();
     expect(screen.getByText(/Winter is Coming/)).toBeTruthy();

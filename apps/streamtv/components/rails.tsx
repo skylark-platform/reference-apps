@@ -43,7 +43,7 @@ export const SeasonRail = ({
         />
       ) : (
         <></>
-      )
+      ),
     )}
   </Rail>
 );
@@ -74,7 +74,7 @@ export const SetRail = ({
           />
         ) : (
           <></>
-        )
+        ),
       )}
     </Rail>
   );
@@ -107,7 +107,7 @@ export const TagRail = ({
           />
         ) : (
           <></>
-        )
+        ),
       )}
     </Rail>
   );

@@ -47,7 +47,7 @@ describe("converters", () => {
           "items__content_url__items__content_url",
           "items__content_url__items__content_url__image_urls",
           "items__content_url__items__image_urls",
-        ].join(",")
+        ].join(","),
       );
     });
 
@@ -65,7 +65,7 @@ describe("converters", () => {
           "items__content_url__items__content_url__image_urls",
           "items__content_url__items__content_url__title_short",
           "items__content_url__items__content_url__self",
-        ].join(",")
+        ].join(","),
       );
     });
   });

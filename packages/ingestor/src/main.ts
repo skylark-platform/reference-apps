@@ -42,19 +42,19 @@ const main = async () => {
   if (streamtvSetupOnly)
     // eslint-disable-next-line no-console
     console.log(
-      `StreamTV setup only mode\n- Schema updates, object configuration updates, dimensions, dimension values & availabilities`
+      `StreamTV setup only mode\n- Schema updates, object configuration updates, dimensions, dimension values & availabilities`,
     );
   // eslint-disable-next-line no-console
   console.log(
     `Additional StreamTV sets / dynamic objects creation ${
       shouldCreateAdditionalStreamTVObjects ? "enabled" : "disabled"
-    }`
+    }`,
   );
   // eslint-disable-next-line no-console
   console.log(
     `Additional SLX Demo sets / dynamic objects creation ${
       shouldCreateAdditionalSLXDemoObjects ? "enabled" : "disabled"
-    }`
+    }`,
   );
 
   // eslint-disable-next-line no-console
@@ -88,7 +88,7 @@ const main = async () => {
   await createDimensions(showcaseDimensionsConfig);
 
   const dimensions = await createOrUpdateScheduleDimensionValues(
-    airtable.dimensions
+    airtable.dimensions,
   );
 
   await createOrUpdateAvailability(airtable.availability, dimensions);
@@ -96,7 +96,7 @@ const main = async () => {
   if (!streamtvSetupOnly) {
     const defaultSchedule = airtable.availability.find(
       ({ fields }) =>
-        has(fields, "default") && fields.default && has(fields, "slug")
+        has(fields, "default") && fields.default && has(fields, "slug"),
     );
 
     // eslint-disable-next-line no-console
@@ -105,7 +105,7 @@ const main = async () => {
         UNLICENSED_BY_DEFAULT || !defaultSchedule
           ? "undefined"
           : `${defaultSchedule?.fields.slug as string} (${defaultSchedule.id})`
-      }`
+      }`,
     );
 
     const metadataAvailability: GraphQLMetadata["availability"] = {
@@ -132,84 +132,84 @@ const main = async () => {
       await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
         "CallToAction",
         airtable.callToActions,
-        metadataAvailability
+        metadataAvailability,
       );
     metadata.images =
       await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
         "SkylarkImage",
         airtable.images,
         metadataAvailability,
-        true
+        true,
       );
     metadata.themes =
       await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
         "Theme",
         airtable.themes,
-        metadataAvailability
+        metadataAvailability,
       );
     metadata.genres =
       await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
         "Genre",
         airtable.genres,
-        metadataAvailability
+        metadataAvailability,
       );
     metadata.ratings =
       await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
         "Rating",
         airtable.ratings,
-        metadataAvailability
+        metadataAvailability,
       );
     metadata.tags =
       await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
         "SkylarkTag",
         airtable.tags,
-        metadataAvailability
+        metadataAvailability,
       );
     metadata.people =
       await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
         "Person",
         airtable.people,
-        metadataAvailability
+        metadataAvailability,
       );
     metadata.roles =
       await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
         "Role",
         airtable.roles,
-        metadataAvailability
+        metadataAvailability,
       );
     metadata.credits = await createOrUpdateGraphQLCredits(
       airtable.credits,
-      metadata
+      metadata,
     );
 
     await createTranslationsForGraphQLObjects(
       metadata.call_to_actions,
       airtable.translations.callToActions,
-      airtable.languages
+      airtable.languages,
     );
 
     await createTranslationsForGraphQLObjects(
       metadata.themes,
       airtable.translations.themes,
-      airtable.languages
+      airtable.languages,
     );
 
     await createTranslationsForGraphQLObjects(
       metadata.genres,
       airtable.translations.genres,
-      airtable.languages
+      airtable.languages,
     );
 
     await createTranslationsForGraphQLObjects(
       metadata.credits,
       airtable.translations.credits,
-      airtable.languages
+      airtable.languages,
     );
 
     await createTranslationsForGraphQLObjects(
       metadata.roles,
       airtable.translations.roles,
-      airtable.languages
+      airtable.languages,
     );
 
     // eslint-disable-next-line no-console
@@ -218,7 +218,7 @@ const main = async () => {
     const mediaObjects = await createGraphQLMediaObjects(
       airtable.mediaObjects,
       metadata,
-      airtable.languages
+      airtable.languages,
     );
 
     // eslint-disable-next-line no-console
@@ -234,7 +234,7 @@ const main = async () => {
           [...mediaObjects, ...createdSets],
           metadata,
           airtable.languages,
-          airtable.setsMetadata
+          airtable.setsMetadata,
         );
         if (set) createdSets.push(set);
       }
@@ -252,7 +252,7 @@ const main = async () => {
           [...mediaObjects, ...createdSets],
           metadata,
           airtable.languages,
-          airtable.setsMetadata
+          airtable.setsMetadata,
         );
         if (set) createdSets.push(set);
       }
@@ -264,7 +264,7 @@ const main = async () => {
     await createTranslationsForGraphQLObjects(
       mediaObjects,
       airtable.translations.mediaObjects,
-      airtable.languages
+      airtable.languages,
     );
 
     // eslint-disable-next-line no-console

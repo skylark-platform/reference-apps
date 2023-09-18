@@ -15,19 +15,19 @@ interface ListData<T extends Metadata> {
 const fetcher = <T extends Metadata>(
   query: string,
   dimensions: Dimensions,
-  nextToken?: string | null
+  nextToken?: string | null,
 ) =>
   skylarkRequestWithDimensions<{ listObjects: ListData<T> }>(
     query,
     dimensions,
     {
       nextToken,
-    }
+    },
   );
 
 export const useListObjects = <T extends Metadata>(
   query: string,
-  disabled?: boolean
+  disabled?: boolean,
 ) => {
   const { dimensions } = useDimensions();
 

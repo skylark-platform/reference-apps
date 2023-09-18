@@ -94,7 +94,7 @@ describe("utils", () => {
           language: "",
           region: "",
         },
-        {}
+        {},
       );
     });
 
@@ -115,7 +115,7 @@ describe("utils", () => {
       expect(graphQLClient.request).toBeCalledWith(
         "query",
         { deviceType: "", customerType: "", language: "", region: "" },
-        { "x-time-travel": "next week" }
+        { "x-time-travel": "next week" },
       );
     });
   });

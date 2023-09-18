@@ -36,7 +36,7 @@ const Page: NextPage<{
 
   const { data, isLoading, isError } = useObject<SkylarkSet>(
     GET_PAGE_SET(environment.hasUpdatedSeason),
-    slug
+    slug,
   );
 
   if (!isLoading && isError) {
@@ -69,7 +69,7 @@ const Page: NextPage<{
             | Season
             | SkylarkSet
             | CallToAction
-            | SkylarkTag
+            | SkylarkTag,
       )
     : [];
 

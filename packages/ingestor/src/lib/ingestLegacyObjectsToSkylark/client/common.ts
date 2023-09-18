@@ -22,7 +22,7 @@ import { CreatedSkylarkObjects } from "../types/skylark";
 
 const fetchLegacyObjects = async <T>(
   objectsToFetch: Record<string, LegacyObjectType>,
-  languagesToCheck: string[]
+  languagesToCheck: string[],
 ) => {
   const dir = await createLegacyObjectsTimeStampedDir();
   await ensureDir(dir);
@@ -35,7 +35,7 @@ const fetchLegacyObjects = async <T>(
     const objects = await fetchLegacyObjectsAndWriteToDisk<LegacyObjects[0]>(
       legacyObjectType,
       dir,
-      languagesToCheck
+      languagesToCheck,
     );
 
     retObj[key] = objects;
@@ -43,14 +43,14 @@ const fetchLegacyObjects = async <T>(
 
   const totalObjectsFound = calculateTotalObjects(retObj);
   console.log(
-    `--- ${totalObjectsFound} objects found (${languagesToCheck.length} languages checked)`
+    `--- ${totalObjectsFound} objects found (${languagesToCheck.length} languages checked)`,
   );
 
   return retObj as T;
 };
 
 export const fetchAndWriteLegacyObjects = async <
-  T extends Record<string, FetchedLegacyObjects<LegacyObjects[0]>>
+  T extends Record<string, FetchedLegacyObjects<LegacyObjects[0]>>,
 >(
   objectsToFetch: Record<string, LegacyObjectType>,
   languagesToCheck: string[],
@@ -58,7 +58,7 @@ export const fetchAndWriteLegacyObjects = async <
     readFromDisk,
   }: {
     readFromDisk?: boolean;
-  }
+  },
 ): Promise<T> => {
   let legacyObjects: T | null = null;
 
@@ -69,7 +69,7 @@ export const fetchAndWriteLegacyObjects = async <
     console.log("\nFetching Objects from Legacy Skylark...");
     legacyObjects = await fetchLegacyObjects<T>(
       objectsToFetch,
-      languagesToCheck
+      languagesToCheck,
     );
     console.log("\nWriting Legacy Objects to disk...");
     await writeAllLegacyObjectsToDisk(legacyObjects);
@@ -98,7 +98,7 @@ export const commonSkylarkConfigurationUpdates = async ({
     ...new Set(
       Object.values(assets)
         .flatMap((arr) => arr)
-        .map(({ asset_type_url }) => asset_type_url?.name)
+        .map(({ asset_type_url }) => asset_type_url?.name),
     ),
   ].filter((name): name is string => !!name);
   console.log("--- Required Asset type enums:", assetTypes.join(", "));
@@ -108,7 +108,7 @@ export const commonSkylarkConfigurationUpdates = async ({
         ...new Set(
           Object.values(images)
             .flatMap((arr) => arr)
-            .map(({ image_type }) => image_type)
+            .map(({ image_type }) => image_type),
         ),
       ].filter((name): name is string => !!name)
     : null;
@@ -121,7 +121,7 @@ export const commonSkylarkConfigurationUpdates = async ({
         ...new Set(
           Object.values(sets)
             .flatMap((arr) => arr)
-            .map(({ set_type_slug }) => set_type_slug)
+            .map(({ set_type_slug }) => set_type_slug),
         ),
       ].filter((name): name is string => !!name)
     : null;

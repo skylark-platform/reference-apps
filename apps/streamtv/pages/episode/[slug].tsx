@@ -21,7 +21,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject(
     "Episode",
     context.query.slug as string,
-    context.locale || ""
+    context.locale || "",
   );
 
   return {
@@ -58,7 +58,7 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const playbackUrl = asset?.hls_url || asset?.url || "/mux-video-intro.mp4";
 
   const availabilityEndDate = getFurthestAvailabilityEndDate(
-    episode?.availability?.objects as Availability[] | undefined
+    episode?.availability?.objects as Availability[] | undefined,
   );
 
   return (
@@ -72,11 +72,11 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         availabilityEndDate={availabilityEndDate}
         brand={{
           title: getTitleByOrderForGraphQLObject(
-            episode?.seasons?.objects?.[0]?.brands?.objects?.[0]
+            episode?.seasons?.objects?.[0]?.brands?.objects?.[0],
           ),
         }}
         credits={splitAndFormatGraphQLCreditsByInternalTitle(
-          episode?.credits?.objects
+          episode?.credits?.objects,
         )}
         genres={convertObjectToName(episode?.genres)}
         number={episode?.episode_number || ""}
@@ -89,7 +89,7 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         releaseDate={(episode?.release_date as string | undefined) || ""}
         season={{
           title: getTitleByOrderForGraphQLObject(
-            episode?.seasons?.objects?.[0]
+            episode?.seasons?.objects?.[0],
           ),
           number: episode?.seasons?.objects?.[0]?.season_number as number,
         }}

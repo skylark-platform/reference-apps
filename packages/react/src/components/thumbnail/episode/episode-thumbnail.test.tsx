@@ -11,13 +11,13 @@ describe("EpisodeThumbnail component", () => {
         href="http://localhost/some-href"
         number={1000}
         title="Episode"
-      />
+      />,
     );
     expect(screen.getByText(/Episode/)).toBeTruthy();
     expect(screen.getByText("a description")).toBeTruthy();
     expect(screen.getByRole("link")).toHaveProperty(
       "href",
-      "http://localhost/some-href"
+      "http://localhost/some-href",
     );
   });
 });

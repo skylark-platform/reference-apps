@@ -21,7 +21,7 @@ const Movies: NextPage = () => {
     useListObjects<Genre>(LIST_GENRES);
   const unfilteredMovies = useListObjects<Movie>(LIST_MOVIES);
   const filteredMoviesByGenre = useMovieListingFromGenre(
-    activeGenre?.uid || null
+    activeGenre?.uid || null,
   );
 
   const {
@@ -80,7 +80,7 @@ const Movies: NextPage = () => {
         {movies && (
           <Grid
             objects={movies.map(
-              (movie): Movie => ({ ...movie, __typename: ObjectTypes.Movie })
+              (movie): Movie => ({ ...movie, __typename: ObjectTypes.Movie }),
             )}
             variant="landscape-movie"
           />

@@ -128,7 +128,7 @@ describe("saas/utils.ts", () => {
         "Episode",
         false,
         { title: "title" },
-        { external_id: "id" }
+        { external_id: "id" },
       );
 
       expect(got).toEqual({
@@ -151,7 +151,7 @@ describe("saas/utils.ts", () => {
         "Episode",
         true,
         { title: "title" },
-        { external_id: "id" }
+        { external_id: "id" },
       );
 
       expect(got).toEqual({

@@ -51,7 +51,7 @@ describe("cognito", () => {
           storageBucket: "bucket",
         });
       expect(func).toThrowError(
-        "Identity Pool ID must be given with Storage Bucket"
+        "Identity Pool ID must be given with Storage Bucket",
       );
     });
   });

@@ -6,7 +6,7 @@ type HTMLDir = "ltr" | "rtl" | undefined;
 
 // https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/dir
 export const useHtmlDirection = (
-  forceRtl?: boolean
+  forceRtl?: boolean,
 ): {
   dir: HTMLDir;
   isRtl: boolean;

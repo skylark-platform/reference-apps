@@ -9,12 +9,12 @@ describe("CollectionThumbnail component", () => {
         backgroundImage=""
         href="http://localhost/some-href"
         title="Collection"
-      />
+      />,
     );
     expect(screen.getByText("Collection")).toBeTruthy();
     expect(screen.getByRole("link")).toHaveProperty(
       "href",
-      "http://localhost/some-href"
+      "http://localhost/some-href",
     );
   });
 });

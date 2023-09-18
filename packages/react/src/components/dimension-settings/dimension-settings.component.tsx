@@ -82,7 +82,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                 ...prev,
                 [`data-dimension-${dimension.toLowerCase()}`]: value as string,
               }),
-              {} as Record<string, string>
+              {} as Record<string, string>,
             )}
           >
             <div className="absolute -top-9 right-sm-gutter flex md:right-md-gutter lg:right-lg-gutter xl:right-xl-gutter">

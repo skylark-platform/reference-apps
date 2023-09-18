@@ -79,14 +79,14 @@ const getSynopsisForMedia = (legacyObject: LegacyObjectsWithSynopsis) => {
 };
 
 const convertLegacyObject = (
-  legacyObject: LegacyObjects[0] | ParsedSL8Credits
+  legacyObject: LegacyObjects[0] | ParsedSL8Credits,
 ): ConvertedLegacyObject | null => {
   // eslint-disable-next-line no-underscore-dangle
   const legacyObjectType = legacyObject._type;
   const legacyUid = legacyObject.uid;
   if (!legacyObjectType) {
     throw new Error(
-      `[convertLegacyObject] Unknown legacy object type: ${legacyUid}`
+      `[convertLegacyObject] Unknown legacy object type: ${legacyUid}`,
     );
   }
 
@@ -180,7 +180,7 @@ export const ingestClientA = async ({
       languagesToCheck,
       {
         readFromDisk,
-      }
+      },
     );
 
   await commonSkylarkConfigurationUpdates({
@@ -190,7 +190,7 @@ export const ingestClientA = async ({
 
   console.log("\nCreating Always & Forever Availability...");
   const alwaysAvailability = await createAlwaysAndForeverAvailability(
-    ALWAYS_FOREVER_AVAILABILITY_EXT_ID
+    ALWAYS_FOREVER_AVAILABILITY_EXT_ID,
   );
 
   console.log("\nCreating Legacy Objects in Skylark...");
@@ -208,32 +208,32 @@ export const ingestClientA = async ({
 
   skylarkObjects.tagCategories = await createObjectsInSkylark(
     legacyObjects.tagCategories,
-    commonArgs
+    commonArgs,
   );
 
   skylarkObjects.tags = await createObjectsInSkylark(
     legacyObjects.tags,
-    commonArgs
+    commonArgs,
   );
 
   skylarkObjects.assets = await createObjectsInSkylark(
     legacyObjects.assets,
-    commonArgs
+    commonArgs,
   );
 
   skylarkObjects.episodes = await createObjectsInSkylark(
     legacyObjects.episodes,
-    commonArgs
+    commonArgs,
   );
 
   skylarkObjects.seasons = await createObjectsInSkylark(
     legacyObjects.seasons,
-    commonArgs
+    commonArgs,
   );
 
   skylarkObjects.brands = await createObjectsInSkylark(
     legacyObjects.brands,
-    commonArgs
+    commonArgs,
   );
 };
 

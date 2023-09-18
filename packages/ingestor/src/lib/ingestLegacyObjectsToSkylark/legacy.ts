@@ -34,13 +34,13 @@ const outputLegacyObjectCount = ({
       totalLanguages:
         arr.length > 0 ? previous.totalLanguages + 1 : previous.totalLanguages,
     }),
-    { total: 0, totalLanguages: 0 }
+    { total: 0, totalLanguages: 0 },
   );
 
   console.log(
     `    - total found: ${total} (${totalLanguages} language${
       totalLanguages > 1 ? "s" : ""
-    })`
+    })`,
   );
 
   return total;
@@ -70,7 +70,7 @@ const createLegacyAxios = (language: string) => {
 
 const getAllObjectsOfType = async <T extends LegacyBaseObject>(
   type: LegacyObjectType,
-  language: string
+  language: string,
 ): Promise<{ type: LegacyObjectType; objects: T[] }> => {
   const { legacyAxios } = createLegacyAxios(language);
   const onlyDataCreatedInLastMonth =
@@ -93,11 +93,11 @@ const getAllObjectsOfType = async <T extends LegacyBaseObject>(
     }
 
     const countResponse = await legacyAxios.get<string>(
-      `/api/${type}/count/?${countQuery.join("&")}`
+      `/api/${type}/count/?${countQuery.join("&")}`,
     );
     if (countResponse.status < 200 || countResponse.status >= 300) {
       throw new Error(
-        `Unexpected response from count endpoint (language: ${language})`
+        `Unexpected response from count endpoint (language: ${language})`,
       );
     }
 
@@ -108,7 +108,7 @@ const getAllObjectsOfType = async <T extends LegacyBaseObject>(
     console.log(
       "[getAllObjectsOfType] Failed to fetch count for",
       type,
-      `(language: ${language})`
+      `(language: ${language})`,
     );
     throw err;
   }
@@ -122,7 +122,7 @@ const getAllObjectsOfType = async <T extends LegacyBaseObject>(
 
   const offsetArr = Array.from(
     { length: numberOfRequests },
-    (_, index) => index * limit
+    (_, index) => index * limit,
   );
 
   const chunkedOffsetArr = chunk(offsetArr, numRequestsAtOnce); // Apparently 24 connections at once crashed it
@@ -131,7 +131,7 @@ const getAllObjectsOfType = async <T extends LegacyBaseObject>(
   console.log(
     `    - ${language.toLowerCase()}: ${count} objects found (${numberOfRequests} requests in ${numBatches} batch${
       numBatches > 1 ? "es" : ""
-    })`
+    })`,
   );
 
   const dataArr: T[][] = [];
@@ -155,16 +155,16 @@ const getAllObjectsOfType = async <T extends LegacyBaseObject>(
           }
 
           const listObjectsResponse = await legacyAxios.get<string>(
-            `/api/${type}/?${query.join("&")}`
+            `/api/${type}/?${query.join("&")}`,
           );
 
           const data = JSON.parse(
-            listObjectsResponse.data
+            listObjectsResponse.data,
           ) as LegacyResponseListObjectsData<T>;
 
           if (!hasProperty(data, "objects")) {
             throw new Error(
-              `[getAllObjectsOfType] Unexpected response format for ${type}`
+              `[getAllObjectsOfType] Unexpected response format for ${type}`,
             );
           }
 
@@ -175,7 +175,7 @@ const getAllObjectsOfType = async <T extends LegacyBaseObject>(
           console.log("[getAllObjectsOfType] Failed to parse JSON for", type);
           throw err;
         }
-      })
+      }),
     );
 
     dataArr.push(dArr.flatMap((d) => d));
@@ -192,7 +192,7 @@ const getAllObjectsOfType = async <T extends LegacyBaseObject>(
       type,
       count,
       objects.length,
-      `- Missing objects ${count - objects.length}`
+      `- Missing objects ${count - objects.length}`,
     );
 
   return { type, objects };
@@ -200,7 +200,7 @@ const getAllObjectsOfType = async <T extends LegacyBaseObject>(
 
 export const fetchObjectsFromLegacySkylark = async <T extends LegacyBaseObject>(
   type: LegacyObjectType,
-  languagesToCheck: string[]
+  languagesToCheck: string[],
 ): Promise<FetchedLegacyObjects<T>> => {
   console.log(`--- ${type} fetching...`);
 
@@ -237,15 +237,15 @@ export const fetchObjectsFromLegacySkylark = async <T extends LegacyBaseObject>(
 };
 
 export const fetchLegacyObjectsAndWriteToDisk = async <
-  T extends LegacyBaseObject
+  T extends LegacyBaseObject,
 >(
   type: LegacyObjectType,
   dir: string,
-  languagesToCheck: string[]
+  languagesToCheck: string[],
 ) => {
   const objects = await fetchObjectsFromLegacySkylark<T>(
     type,
-    languagesToCheck
+    languagesToCheck,
   );
   await writeLegacyObjectsToDisk(dir, objects);
   return objects;
@@ -254,7 +254,7 @@ export const fetchLegacyObjectsAndWriteToDisk = async <
 export const generateSL8CreditUid = (
   peopleUrl: string,
   roleUrl: string,
-  character: string
+  character: string,
 ) => {
   const arr = [
     getLegacyUidFromUrl(peopleUrl),
@@ -269,7 +269,7 @@ export const convertSL8CreditsToLegacyObjects = (
   assets: Record<string, LegacyAsset[]>,
   episodes: Record<string, LegacyEpisode[]>,
   seasons: Record<string, LegacySeason[]>,
-  brands: Record<string, LegacyBrand[]>
+  brands: Record<string, LegacyBrand[]>,
 ): FetchedLegacyObjects<ParsedSL8Credits> => {
   const sl8Credits = [
     ...Object.values(assets)[0],
@@ -285,7 +285,7 @@ export const convertSL8CreditsToLegacyObjects = (
     uid: generateSL8CreditUid(
       credit.people_url,
       credit.role_url,
-      credit.character
+      credit.character,
     ),
     data_source_id: null,
     ...credit,
@@ -293,7 +293,7 @@ export const convertSL8CreditsToLegacyObjects = (
 
   const creditUids = convertedCredits.map(({ uid }) => uid);
   const uniqueCredits = convertedCredits.filter(
-    (obj, index) => creditUids.indexOf(obj.uid) !== index
+    (obj, index) => creditUids.indexOf(obj.uid) !== index,
   );
 
   return {

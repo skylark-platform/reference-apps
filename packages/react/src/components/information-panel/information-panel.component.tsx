@@ -22,7 +22,7 @@ interface InformationPanelProps {
 
 const getTranslationStringForAvailability = (
   unit: "day" | "month" | "year" | "never",
-  number: number
+  number: number,
 ) => {
   switch (unit) {
     case "day":
@@ -99,9 +99,9 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
                 t(
                   getTranslationStringForAvailability(
                     availableUntil.unit,
-                    availableUntil.number
+                    availableUntil.number,
                   ),
-                  { number: availableUntil?.number }
+                  { number: availableUntil?.number },
                 ),
             ]}
             highlightFirst
@@ -137,7 +137,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
                 >
                   <List contents={items} />
                 </div>
-              )
+              ),
           )}
         </div>
       </div>

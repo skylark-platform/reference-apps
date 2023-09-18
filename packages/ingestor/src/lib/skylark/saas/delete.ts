@@ -4,7 +4,7 @@ import { GraphQLBaseObject } from "../../interfaces";
 
 export const deleteObject = async (
   objectType: GraphQLObjectTypes,
-  variables: { uid: string }
+  variables: { uid: string },
 ) => {
   const mutation = {
     mutation: {
@@ -27,6 +27,6 @@ export const deleteObject = async (
 
   await graphQLClient.uncachedRequest<{ getObject: GraphQLBaseObject }>(
     graphQLGetQuery,
-    variables
+    variables,
   );
 };

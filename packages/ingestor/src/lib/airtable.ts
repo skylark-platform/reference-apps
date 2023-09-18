@@ -11,7 +11,7 @@ import { pause } from "./skylark/saas/utils";
  */
 const getTable = async (
   name: string,
-  offset = ""
+  offset = "",
 ): Promise<Record<FieldSet>[]> => {
   try {
     const res = await axios.get<{
@@ -23,7 +23,7 @@ const getTable = async (
         headers: {
           Authorization: `Bearer ${AIRTABLE_API_KEY}`,
         },
-      }
+      },
     );
     const dataWithoutEmptyRecords = res.data.records.filter(
       ({ id, fields }) =>
@@ -32,7 +32,7 @@ const getTable = async (
           id !== "" &&
           Object.keys(fields).length === 0 &&
           Object.getPrototypeOf(fields) === Object.prototype
-        )
+        ),
     );
 
     const parsedRecords: Record<FieldSet>[] = dataWithoutEmptyRecords.map(
@@ -41,7 +41,7 @@ const getTable = async (
         _table: {
           name,
         },
-      })
+      }),
     ) as Record<FieldSet>[];
 
     if (res.data.offset) {
@@ -68,7 +68,7 @@ const getTable = async (
 export const getAllTables = async (): Promise<Airtables> => {
   const dimensionTables = ["customer-types", "device-types", "regions"];
   const [customerTypes, deviceTypes, regions] = await Promise.all(
-    dimensionTables.map((table) => getTable(table))
+    dimensionTables.map((table) => getTable(table)),
   );
 
   const tables = [

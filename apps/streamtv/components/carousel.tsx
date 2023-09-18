@@ -23,7 +23,7 @@ interface CarouselProps {
 }
 
 const getFirstCallToAction = (
-  callToActions: Entertainment["call_to_actions"]
+  callToActions: Entertainment["call_to_actions"],
 ): CarouselItem["callToAction"] => {
   if (!callToActions?.objects?.[0]?.type) {
     return undefined;

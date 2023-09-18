@@ -86,7 +86,7 @@ describe("airtable", () => {
       // Assert.
       expect(mockedGet).toBeCalledWith(
         "https://api.airtable.com/v0/base-id/customer-types?offset=",
-        { headers: { Authorization: "Bearer api-key" } }
+        { headers: { Authorization: "Bearer api-key" } },
       );
       expect(mockedGet).toBeCalledTimes(numTables);
     });
@@ -141,7 +141,7 @@ describe("airtable", () => {
       // Assert.
       expect(mockedGet).toBeCalledWith(
         "https://api.airtable.com/v0/base-id/customer-types?offset=returnedoffset",
-        { headers: { Authorization: "Bearer api-key" } }
+        { headers: { Authorization: "Bearer api-key" } },
       );
       expect(mockedGet).toBeCalledTimes(numTables + 1); // +1 for offset call
     });
@@ -209,7 +209,7 @@ describe("airtable", () => {
       // Assert.
       // eslint-disable-next-line no-console
       expect(console.warn).toBeCalledWith(
-        `warn: Table "customer-types" does not exist`
+        `warn: Table "customer-types" does not exist`,
       );
     });
 

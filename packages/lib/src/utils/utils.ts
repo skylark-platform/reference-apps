@@ -18,13 +18,13 @@ dayjs.extend(customParseFormat);
 export const getTitleByOrder = (
   titles: { [k in TitleTypes]: string } | undefined,
   priority?: TitleTypes[],
-  objectTitle?: string
+  objectTitle?: string,
 ): string => {
   if (!titles) return objectTitle || "";
 
   const defaultPriority: TitleTypes[] = ["title", "title_short"];
   const foundType = (priority || defaultPriority).find(
-    (type) => titles[type] || null
+    (type) => titles[type] || null,
   );
 
   return foundType ? titles[foundType] : objectTitle || "";
@@ -39,13 +39,13 @@ export const getTitleByOrder = (
  */
 export const getSynopsisByOrder = (
   synopsis: { [s in SynopsisTypes]: string } | undefined,
-  priority?: SynopsisTypes[]
+  priority?: SynopsisTypes[],
 ): string => {
   if (!synopsis) return "";
 
   const defaultPriority: SynopsisTypes[] = ["synopsis", "synopsis_short"];
   const foundType = (priority || defaultPriority).find(
-    (type) => synopsis[type] || null
+    (type) => synopsis[type] || null,
   );
 
   return foundType ? synopsis[foundType] : "";
@@ -60,7 +60,7 @@ export const getSynopsisByOrder = (
 export const formatReleaseDate = (
   date?: string,
   locale = "en-gb",
-  format = "MMMM D, YYYY"
+  format = "MMMM D, YYYY",
 ): string =>
   date
     ? dayjs(date, ["YYYY-MM-DD", "YYYY-MM-DDZ", "X", "x"])
@@ -82,7 +82,7 @@ export const formatYear = (date?: string, locale?: string) =>
  */
 export const sortObjectByNumberProperty = (
   a: { number?: number },
-  b: { number?: number }
+  b: { number?: number },
 ) => ((a.number || 0) > (b.number || 0) ? 1 : -1);
 
 /**
@@ -98,13 +98,13 @@ export const sortArrayIntoAlphabeticalOrder = (a: string, b: string) => {
 
 export const hasProperty = <T, K extends PropertyKey, V = unknown>(
   object: T,
-  property: K
+  property: K,
 ): object is T & Record<K, V> =>
   Object.prototype.hasOwnProperty.call(object, property);
 
 export const addCloudinaryOnTheFlyImageTransformation = (
   imageUrl: string,
-  opts: { height?: number; width?: number }
+  opts: { height?: number; width?: number },
 ) => {
   // If the Cloudinary Environment is falsy, return the original image URL
   if (!imageUrl || !CLOUDINARY_ENVIRONMENT) {

@@ -45,7 +45,7 @@ interface ThumbnailProps {
 }
 
 export const getThumbnailVariantFromSetType = (
-  setType: SkylarkSet["type"]
+  setType: SkylarkSet["type"],
 ): ThumbnailVariant => {
   if (setType === StreamTVSupportedSetType.RailInset) {
     return "landscape-inside";
@@ -99,7 +99,7 @@ const getThumbnailQuery = (objectType: ObjectTypes) => {
 
 const getStatusTag = (tags: Entertainment["tags"]): string | undefined => {
   const statusTag = tags?.objects?.find(
-    (tag) => tag?.type === "SCHEDULE_STATUS"
+    (tag) => tag?.type === "SCHEDULE_STATUS",
   );
 
   const name = statusTag?.name;
@@ -130,7 +130,7 @@ export const Thumbnail = ({
 
   const backgroundImage = getGraphQLImageSrc(
     data?.images,
-    preferredImageType || ImageType.Thumbnail
+    preferredImageType || ImageType.Thumbnail,
   );
 
   return (

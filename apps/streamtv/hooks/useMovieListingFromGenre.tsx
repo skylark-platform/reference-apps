@@ -11,7 +11,7 @@ import { LIST_MOVIES_BY_GENRE } from "../graphql/queries";
 const movieListingFromGenreFetcher = (
   genreUid: string,
   dimensions: Dimensions,
-  nextToken?: string
+  nextToken?: string,
 ) =>
   skylarkRequestWithDimensions<{ getObject: Genre }>(
     LIST_MOVIES_BY_GENRE,
@@ -19,7 +19,7 @@ const movieListingFromGenreFetcher = (
     {
       uid: genreUid,
       nextToken,
-    }
+    },
   );
 
 export const useMovieListingFromGenre = (genreUid: string | null) => {

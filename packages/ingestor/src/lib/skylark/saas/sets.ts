@@ -31,7 +31,7 @@ interface SetItem {
 
 const createSetContent = (
   contents: SetConfig["contents"],
-  mediaObjects: GraphQLBaseObject[]
+  mediaObjects: GraphQLBaseObject[],
 ): SetRelationshipsLink => {
   const setItems = contents.map((content, index): SetItem => {
     const { slug } = content as { slug: string };
@@ -64,8 +64,8 @@ const createSetContent = (
     if (!hasProperty(content, graphqlObjectType)) {
       throw new Error(
         `Object Type ${graphqlObjectType} is not a valid property. Valid ones are ${Object.keys(
-          content
-        ).join(", ")}`
+          content,
+        ).join(", ")}`,
       );
     }
 
@@ -84,7 +84,7 @@ const createBasicSetArgs = (
   validProperties: GraphQLIntrospectionProperties[],
   content: SetRelationshipsLink,
   metadata: GraphQLMetadata,
-  update: boolean
+  update: boolean,
 ) => {
   const availability = getGraphQLObjectAvailability(metadata.availability);
 
@@ -93,7 +93,7 @@ const createBasicSetArgs = (
       slug: set.slug,
       type: set.graphQlSetType,
     },
-    validProperties
+    validProperties,
   );
 
   const args = update
@@ -125,18 +125,18 @@ const createSetArgsWithTranslations = (
   metadata: GraphQLMetadata,
   language: string,
   update: boolean,
-  addRelationships: boolean
+  addRelationships: boolean,
 ) => {
   const { availability: availabilityField, ...fields } = airtableFields;
 
   const availability = getGraphQLObjectAvailability(
     metadata.availability,
-    availabilityField as string[]
+    availabilityField as string[],
   );
 
   const relationships: RelationshipsLink = getMediaObjectRelationships(
     fields,
-    metadata
+    metadata,
   );
 
   const validFields = getValidFields(
@@ -145,7 +145,7 @@ const createSetArgsWithTranslations = (
       slug: set.slug,
       type: set.graphQlSetType,
     },
-    validProperties
+    validProperties,
   );
 
   const args: {
@@ -182,7 +182,7 @@ const createSetArgsWithTranslations = (
 const createOrUpdateSet = async (
   method: string,
   args: object,
-  mutationKey: string
+  mutationKey: string,
 ) => {
   const mutation = {
     mutation: {
@@ -211,19 +211,19 @@ export const createOrUpdateGraphQLSet = async (
   mediaObjects: GraphQLBaseObject[],
   metadata: GraphQLMetadata,
   languagesTable: Records<FieldSet>,
-  airtableSetsMetadata: Records<FieldSet>
+  airtableSetsMetadata: Records<FieldSet>,
 ): Promise<GraphQLBaseObject | undefined> => {
   const validProperties = await getValidPropertiesForObject("SkylarkSet");
 
   const languageCodes = getLanguageCodesFromAirtable(languagesTable);
 
   const airtableTranslationsForThisSet = airtableSetsMetadata?.filter(
-    ({ fields }) => fields.slug === set.slug
+    ({ fields }) => fields.slug === set.slug,
   );
   const airtableTranslationLanguages = airtableTranslationsForThisSet
     .map(
       ({ fields }) =>
-        fields.language && languageCodes[fields.language as string]
+        fields.language && languageCodes[fields.language as string],
     )
     .filter((lang) => lang) as string[];
 
@@ -234,12 +234,12 @@ export const createOrUpdateGraphQLSet = async (
     ...airtableTranslationLanguages.map((language) =>
       getExistingObjects("SkylarkSet", [
         { externalId: set.externalId, language },
-      ])
+      ]),
     ),
   ]);
 
   existingSetsArr.forEach(({ existingExternalIds }) =>
-    existingExternalIds.forEach((obj) => existingSets.add(obj))
+    existingExternalIds.forEach((obj) => existingSets.add(obj)),
   );
 
   const setExists = existingSets.has(set.externalId);
@@ -274,7 +274,7 @@ export const createOrUpdateGraphQLSet = async (
         metadata,
         language,
         updateObject,
-        firstRequest
+        firstRequest,
       );
 
       // Always updateSkylarkSet after firstRequest to add more langauges
@@ -298,7 +298,7 @@ export const createOrUpdateGraphQLSet = async (
     validProperties,
     content,
     metadata,
-    setExists
+    setExists,
   );
   const mutationKey = `${operationName}_${set.externalId}`;
 
@@ -315,49 +315,52 @@ export const addContentToCreatedSets = async (
       position: number;
       objectType: GraphQLObjectTypes;
     }[];
-  })[]
+  })[],
 ) => {
-  const operations = setsWithContent.reduce((previous, set) => {
-    const content = set.content.reduce(
-      (previousContent, { objectType, ...item }) => ({
-        ...previousContent,
-        [objectType]: {
-          link: hasProperty(previousContent, objectType)
-            ? [...previousContent[objectType as string].link, item]
-            : [item],
+  const operations = setsWithContent.reduce(
+    (previous, set) => {
+      const content = set.content.reduce(
+        (previousContent, { objectType, ...item }) => ({
+          ...previousContent,
+          [objectType]: {
+            link: hasProperty(previousContent, objectType)
+              ? [...previousContent[objectType as string].link, item]
+              : [item],
+          },
+        }),
+        {} as Record<string, { link: { uid: string; position: number }[] }>,
+      );
+
+      const argName = convertGraphQLObjectTypeToArgName(setObjectType);
+
+      const args = {
+        [argName]: {
+          content,
         },
-      }),
-      {} as Record<string, { link: { uid: string; position: number }[] }>
-    );
+      };
 
-    const argName = convertGraphQLObjectTypeToArgName(setObjectType);
+      const { operation, method } = createGraphQLOperation(
+        setObjectType,
+        true,
+        args,
+        { external_id: set.external_id },
+      );
 
-    const args = {
-      [argName]: {
-        content,
-      },
-    };
+      const key = `${method}_${set.external_id}`;
 
-    const { operation, method } = createGraphQLOperation(
-      setObjectType,
-      true,
-      args,
-      { external_id: set.external_id }
-    );
-
-    const key = `${method}_${set.external_id}`;
-
-    const updatedOperations = {
-      ...previous,
-      [key]: {
-        ...operation,
-      },
-    };
-    return updatedOperations;
-  }, {} as Record<string, object>);
+      const updatedOperations = {
+        ...previous,
+        [key]: {
+          ...operation,
+        },
+      };
+      return updatedOperations;
+    },
+    {} as Record<string, object>,
+  );
 
   await mutateMultipleObjects<GraphQLBaseObject>(
     "addContentToSets",
-    operations
+    operations,
   );
 };
