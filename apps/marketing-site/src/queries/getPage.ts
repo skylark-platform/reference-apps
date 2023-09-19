@@ -1,6 +1,32 @@
 import { gql } from "graphql-request";
 
+export const ImageListingFragment = gql`
+  fragment imageListingFragment on SkylarkImageListing {
+    objects {
+      title
+      type
+      url
+    }
+  }
+`;
+
+export const CallToActionListingFragment = gql`
+  fragment callToActionListingFragment on CallToActionListing {
+    objects {
+      type
+      text
+      text_short
+      description
+      description_short
+      url
+      url_path
+    }
+  }
+`;
+
 export const GET_PAGE = gql`
+  ${ImageListingFragment}
+
   query GET_PAGE {
     getPage(external_id: "marketing-site-homepage") {
       seo_description
@@ -18,6 +44,9 @@ export const GET_PAGE = gql`
               copy
               appearance
               uid
+              images {
+                ...imageListingFragment
+              }
             }
             ... on Embed {
               external_id
@@ -44,6 +73,22 @@ export const GET_PAGE = gql`
                       title
                       type
                       uid
+                      images {
+                        ...imageListingFragment
+                      }
+                    }
+                    ... on Testimonial {
+                      uid
+                      external_id
+                      slug
+                      copy
+                      description
+                      industry
+                      title
+                      internal_title
+                      images {
+                        ...imageListingFragment
+                      }
                     }
                   }
                 }
@@ -58,6 +103,9 @@ export const GET_PAGE = gql`
               uid
               url
               url_path
+              images {
+                ...imageListingFragment
+              }
             }
           }
           position

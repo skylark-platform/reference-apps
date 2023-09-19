@@ -10,6 +10,8 @@ module.exports = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
+    "./src/pages/**/*.{js,ts,jsx,tsx}",
+    "./src/components/**/*.{js,ts,jsx,tsx}",
     "../../packages/react/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
@@ -24,6 +26,9 @@ module.exports = {
       colors: {
         skylark: {
           blue: "#226DFF",
+          darkblue: "#2165EE",
+          black: "#0E1825",
+          orange: "#ff6c51",
         },
         streamtv: {
           primary: "var(--streamtv-primary-color)",
