@@ -13,10 +13,10 @@ export const EmbedComponent = ({ embed }: EmbedComponentProps) => {
   }
 
   return (
-    <div className="w-full">
+    <div className="h-[900px] w-full" id="calendly">
       {type === EmbedType.Calendly && embed.embed_id && (
         <InlineWidget
-          styles={{ height: 700, marginBottom: 40 }}
+          styles={{ height: "100%", marginBottom: 40 }}
           url={embed.embed_id}
         />
       )}

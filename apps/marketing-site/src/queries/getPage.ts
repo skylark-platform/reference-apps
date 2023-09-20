@@ -3,6 +3,7 @@ import { gql } from "graphql-request";
 export const ImageListingFragment = gql`
   fragment imageListingFragment on SkylarkImageListing {
     objects {
+      uid
       title
       type
       url
@@ -10,22 +11,24 @@ export const ImageListingFragment = gql`
   }
 `;
 
-export const CallToActionListingFragment = gql`
-  fragment callToActionListingFragment on CallToActionListing {
-    objects {
-      type
-      text
-      text_short
-      description
-      description_short
-      url
-      url_path
-    }
+export const CallToActionFragment = gql`
+  fragment callToActionFragment on CallToAction {
+    external_id
+    slug
+    appearance
+    copy
+    type
+    uid
+    url
+    url_path
+    button_text
+    scroll_to_id
   }
 `;
 
 export const GET_PAGE = gql`
   ${ImageListingFragment}
+  ${CallToActionFragment}
 
   query GET_PAGE {
     getPage(external_id: "marketing-site-homepage") {
@@ -46,6 +49,11 @@ export const GET_PAGE = gql`
               uid
               images {
                 ...imageListingFragment
+              }
+              call_to_actions {
+                objects {
+                  ...callToActionFragment
+                }
               }
             }
             ... on Embed {
@@ -76,6 +84,20 @@ export const GET_PAGE = gql`
                       images {
                         ...imageListingFragment
                       }
+                      content {
+                        objects {
+                          object {
+                            ... on FrequentlyAskedQuestion {
+                              uid
+                              external_id
+                              slug
+                              answer
+                              question
+                              internal_title
+                            }
+                          }
+                        }
+                      }
                     }
                     ... on Testimonial {
                       uid
@@ -95,14 +117,7 @@ export const GET_PAGE = gql`
               }
             }
             ... on CallToAction {
-              external_id
-              slug
-              appearance
-              copy
-              type
-              uid
-              url
-              url_path
+              ...callToActionFragment
               images {
                 ...imageListingFragment
               }

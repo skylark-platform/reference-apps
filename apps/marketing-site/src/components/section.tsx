@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { useState } from "react";
 import {
   Block,
   Section,
@@ -8,6 +9,7 @@ import {
 } from "../../types/gql";
 import { BlockComponent } from "./block";
 import { TestimonialCard } from "./testimonialCard";
+import { Button } from "./button";
 
 interface SectionProps {
   section: Section;
@@ -42,7 +44,7 @@ const TestimonialSectionComponent = ({ section }: SectionProps) => {
     : [];
 
   return (
-    <div className="gutter my-20 w-full bg-gray-100 py-16">
+    <div className="gutter my-10 w-full bg-gray-100 py-16">
       {section.title && (
         <p className="mb-12 text-center text-4xl font-semibold">
           {section.title}
@@ -52,6 +54,47 @@ const TestimonialSectionComponent = ({ section }: SectionProps) => {
         {testimonials?.map((testimonial) => (
           <TestimonialCard key={testimonial.uid} testimonial={testimonial} />
         ))}
+      </div>
+    </div>
+  );
+};
+
+const VerticalTabsSection = ({ section }: SectionProps) => {
+  const blocks = section?.content?.objects
+    ? (section.content.objects as SetContent[])?.map(
+        ({ object }) => object as Block,
+      )
+    : [];
+
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  return (
+    <div className="gutter my-10 flex min-h-[80vh] w-full flex-col bg-white">
+      {section.title && (
+        <h3 className="text-center text-5xl font-semibold">{section.title}</h3>
+      )}
+      <div className="grid h-full w-full grow grid-cols-4 gap-10 py-16">
+        <div className="col-span-1 h-full rounded-lg bg-gray-100 p-8">
+          {/* <p className="text-2xl font-semibold">{`Key`}</p> */}
+          <ul className="mt-8 border-l-2 border-gray-200 pl-4">
+            {blocks.map((block, index) => (
+              <li className="my-8" key={block.uid}>
+                <Button
+                  disableHover={index === activeIndex}
+                  variant={index === activeIndex ? "primary" : "tertiary"}
+                  onClick={() => setActiveIndex(index)}
+                >
+                  {block.title}
+                </Button>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="col-span-3 h-full rounded-lg bg-gray-100 p-8">
+          {blocks[activeIndex] && (
+            <BlockComponent block={blocks[activeIndex]} />
+          )}
+        </div>
       </div>
     </div>
   );
@@ -67,6 +110,9 @@ export const SectionComponent = ({ section }: SectionProps) => {
       )}
       {type === SectionType.TestimonialCards && (
         <TestimonialSectionComponent section={section} />
+      )}
+      {type === SectionType.TabsVertical && (
+        <VerticalTabsSection section={section} />
       )}
     </>
   );

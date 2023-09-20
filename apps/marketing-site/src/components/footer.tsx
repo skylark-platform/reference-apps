@@ -2,7 +2,7 @@ import { SkylarkLogo } from "./skylarkBranding";
 
 export const Footer = () => (
   <div className="gutter relative h-96 w-full bg-skylark-black pt-20">
-    <div className="grid  w-full grid-cols-2 ">
+    <div className="grid w-full grid-cols-2 text-white ">
       <div>
         <SkylarkLogo />
       </div>

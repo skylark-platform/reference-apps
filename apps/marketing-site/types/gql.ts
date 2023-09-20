@@ -164,6 +164,7 @@ export type Block = Metadata &
     internal_title?: Maybe<Scalars["String"]["output"]>;
     slug?: Maybe<Scalars["String"]["output"]>;
     title?: Maybe<Scalars["String"]["output"]>;
+    title_sort?: Maybe<Scalars["String"]["output"]>;
     type?: Maybe<Scalars["String"]["output"]>;
     uid: Scalars["String"]["output"];
   };
@@ -223,6 +224,7 @@ export type BlockCreateInput = {
   relationships?: InputMaybe<BlockRelationships>;
   slug?: InputMaybe<Scalars["String"]["input"]>;
   title?: InputMaybe<Scalars["String"]["input"]>;
+  title_sort?: InputMaybe<Scalars["String"]["input"]>;
   type: BlockType;
 };
 
@@ -236,6 +238,7 @@ export type BlockInput = {
   relationships?: InputMaybe<BlockRelationships>;
   slug?: InputMaybe<Scalars["String"]["input"]>;
   title?: InputMaybe<Scalars["String"]["input"]>;
+  title_sort?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<BlockType>;
 };
 
@@ -285,6 +288,7 @@ export type CallToAction = Metadata &
     appearance?: Maybe<Scalars["String"]["output"]>;
     availability?: Maybe<AvailabilityListing>;
     blocks?: Maybe<BlockListing>;
+    button_text?: Maybe<Scalars["String"]["output"]>;
     content_of?: Maybe<SetListing>;
     copy?: Maybe<Scalars["String"]["output"]>;
     embeds?: Maybe<EmbedListing>;
@@ -345,6 +349,7 @@ export enum CallToActionAppearance {
 export type CallToActionCreateInput = {
   appearance: CallToActionAppearance;
   availability?: InputMaybe<AssignAvailabilityInput>;
+  button_text?: InputMaybe<Scalars["String"]["input"]>;
   copy?: InputMaybe<Scalars["String"]["input"]>;
   external_id?: InputMaybe<Scalars["String"]["input"]>;
   internal_title: Scalars["String"]["input"];
@@ -359,6 +364,7 @@ export type CallToActionCreateInput = {
 export type CallToActionInput = {
   appearance?: InputMaybe<CallToActionAppearance>;
   availability?: InputMaybe<AssignAvailabilityInput>;
+  button_text?: InputMaybe<Scalars["String"]["input"]>;
   copy?: InputMaybe<Scalars["String"]["input"]>;
   external_id?: InputMaybe<Scalars["String"]["input"]>;
   internal_title?: InputMaybe<Scalars["String"]["input"]>;
@@ -3427,6 +3433,7 @@ export type _BlockGlobal = _Global & {
   internal_title?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
+  title_sort?: Maybe<Scalars["String"]["output"]>;
   type?: Maybe<Scalars["String"]["output"]>;
   version?: Maybe<Scalars["Int"]["output"]>;
 };
@@ -3472,6 +3479,7 @@ export type _CallToActionGlobal = _Global & {
 
 export type _CallToActionLanguage = _Language & {
   __typename?: "_CallToActionLanguage";
+  button_text?: Maybe<Scalars["String"]["output"]>;
   copy?: Maybe<Scalars["String"]["output"]>;
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_CallToActionLanguage>>>;

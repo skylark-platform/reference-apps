@@ -9,6 +9,8 @@ import { BlockComponent } from "src/components/block";
 import { SectionComponent } from "src/components/section";
 import { CTAComponent } from "src/components/cta";
 import { EmbedComponent } from "src/components/embed";
+import Head from "next/head";
+import { Banner } from "src/components/banner";
 import {
   Block,
   CallToAction,
@@ -29,14 +31,40 @@ export default function Home({
       )
     : [];
 
-  console.log({ page, content });
   return (
     <main
       className={clsx(
-        "flex min-h-screen flex-col items-center justify-between gap-0 bg-white text-black",
+        "flex min-h-screen flex-col items-center justify-between gap-0 bg-white pt-20 text-black",
         workSans.className,
       )}
     >
+      <Head>
+        <title>{page.seo_title || "Skylark"}</title>
+        {page.seo_description && (
+          <meta content={page.seo_description} key="desc" name="description" />
+        )}
+        <meta content="initial-scale=1.0, width=device-width" name="viewport" />
+        <link
+          href="/favicons/apple-touch-icon.png"
+          rel="apple-touch-icon"
+          sizes="180x180"
+        />
+        <link
+          href="/favicons/favicon-32x32.png"
+          rel="icon"
+          sizes="32x32"
+          type="image/png"
+        />
+        <link
+          href="/favicons/favicon-16x16.png"
+          rel="icon"
+          sizes="16x16"
+          type="image/png"
+        />
+        <link href="/favicons/site.webmanifest" rel="manifest" />
+        <link href="/favicons/favicon.ico" rel="icon" />
+      </Head>
+      <Banner />
       {content?.map((object, index) => {
         if (object.__typename === "Block") {
           return <BlockComponent block={object} key={object.uid} />;
@@ -65,9 +93,10 @@ export const getStaticProps = (async () => {
     ${GET_PAGE}
   `);
 
-  console.log({ page });
-
-  return { props: { page } };
+  return {
+    props: { page },
+    revalidate: 10, // In seconds
+  };
 }) satisfies GetStaticProps<{
   page: Page;
 }>;
