@@ -26,7 +26,7 @@ describe("saas/get.ts", () => {
 
       await getValidPropertiesForObject("Brand");
 
-      expect(graphQlRequest).toBeCalledWith(
+      expect(graphQlRequest).toHaveBeenCalledWith(
         'query { IntrospectionOnType: __type (name: "Brand") { name fields { name type { name kind } } } IntrospectionOnInputType: __type (name: "BrandInput") { name inputFields { name type { name kind } } } }',
         {},
       );
@@ -153,7 +153,7 @@ describe("saas/get.ts", () => {
 
       await getExistingObjects("Brand", [{ externalId: "brand-1" }]);
 
-      expect(graphQlRequest).toBeCalledWith(
+      expect(graphQlRequest).toHaveBeenCalledWith(
         'query getBrands { brand-1: getBrand (external_id: "brand-1", ignore_availability: true) { __typename uid slug external_id } }',
         {},
       );

@@ -38,7 +38,7 @@ describe("cognito", () => {
           identityPoolId: "",
           storageBucket: "",
         });
-      expect(func).toThrowError("Invalid Amplify config supplied");
+      expect(func).toThrow("Invalid Amplify config supplied");
     });
 
     it("throws an error when a bucket is given with no identity pool", () => {
@@ -50,7 +50,7 @@ describe("cognito", () => {
           identityPoolId: "",
           storageBucket: "bucket",
         });
-      expect(func).toThrowError(
+      expect(func).toThrow(
         "Identity Pool ID must be given with Storage Bucket",
       );
     });

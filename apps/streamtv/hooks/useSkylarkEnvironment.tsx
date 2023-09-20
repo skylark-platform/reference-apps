@@ -42,7 +42,9 @@ export const useSkylarkEnvironment = () => {
     const hasUpdatedSeason = Boolean(
       data?.seasonFields?.fields &&
         data.seasonFields.fields.findIndex(
-          ({ name }) => name === StreamTVAdditionalFields.PreferredImageType,
+          ({ name }) =>
+            (name as StreamTVAdditionalFields) ===
+            StreamTVAdditionalFields.PreferredImageType,
         ) > -1,
     );
 

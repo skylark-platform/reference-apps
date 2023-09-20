@@ -176,7 +176,7 @@ export const createDimensions = async (
 };
 
 export const createOrUpdateDimensionValues = async (
-  type: DimensionTypes | string,
+  type: string,
   validProperties: GraphQLIntrospectionProperties[],
   valuesToCreate: (Record<
     string,
@@ -324,7 +324,7 @@ export const createOrUpdateAvailability = async (
         end?: string;
         dimensions?: {
           link: {
-            dimension_slug: DimensionTypes | string;
+            dimension_slug: string;
             value_slugs: string[];
           }[];
         };
@@ -334,7 +334,7 @@ export const createOrUpdateAvailability = async (
       };
 
       const availabilityDimensions: {
-        dimension_slug: DimensionTypes | string;
+        dimension_slug: string;
         value_slugs: string[];
       }[] = [
         {

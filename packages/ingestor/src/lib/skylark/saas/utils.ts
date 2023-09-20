@@ -31,7 +31,7 @@ export const getUidsFromField = (
 };
 
 export const gqlObjectMeta = (
-  type: GraphQLObjectTypes | string,
+  type: string,
 ): {
   createFunc: string;
   updateFunc: string;

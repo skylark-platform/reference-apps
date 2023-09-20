@@ -25,6 +25,6 @@ describe("Skylark Branding component", () => {
       />,
     );
     fireEvent.click(screen.getByText(/another test/i));
-    expect(onChange).toBeCalledWith("another-test");
+    expect(onChange).toHaveBeenCalledWith("another-test");
   });
 });
