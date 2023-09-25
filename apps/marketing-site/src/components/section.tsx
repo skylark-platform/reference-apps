@@ -23,7 +23,7 @@ const DefaultSectionComponent = ({ section }: SectionProps) => {
     : [];
 
   return (
-    <div className="my-10 bg-white">
+    <div className="my-10 bg-white" data-testid="default-section">
       {blocks?.map((block, index) => (
         <div
           className={clsx("w-full", index !== blocks.length - 1 && "border-b")}
@@ -44,7 +44,10 @@ const TestimonialSectionComponent = ({ section }: SectionProps) => {
     : [];
 
   return (
-    <div className="gutter my-10 w-full bg-gray-100 py-16">
+    <div
+      className="gutter my-10 w-full bg-gray-100 py-16"
+      data-testid="testimonial-section"
+    >
       {section.title && (
         <p className="mb-12 text-center text-4xl font-semibold">
           {section.title}
@@ -69,7 +72,10 @@ const VerticalTabsSection = ({ section }: SectionProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <div className="gutter my-10 flex min-h-[80vh] w-full flex-col bg-white">
+    <div
+      className="gutter my-10 flex min-h-[80vh] w-full flex-col bg-white"
+      data-testid="vertical-tabs-section"
+    >
       {section.title && (
         <h3 className="text-center text-5xl font-semibold">{section.title}</h3>
       )}

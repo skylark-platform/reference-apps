@@ -40,6 +40,7 @@ const GenericBlock = ({
         hasImages && !imageLeft && "text-left",
         hasImages && imageLeft && "text-right",
       )}
+      data-testid="generic-block"
     >
       {hasImages && imageLeft && <FirstValidImage images={images} />}
       <div className="w-full">
@@ -66,7 +67,7 @@ const ImageRailBlock = ({
   block,
   images,
 }: BlockProps & { hasImages?: boolean; images: SkylarkImage[] }) => (
-  <div className="py-16">
+  <div className="py-16" data-testid="image-rail-block">
     <p className="text-center text-3xl">{block.title}</p>
     {hasImages && (
       <div className="mt-4 flex justify-around">
@@ -84,8 +85,8 @@ const ImageRailBlock = ({
   </div>
 );
 
-const AccordianBlock = ({ block }: BlockProps) => {
-  const accordianItems: AccordionItem[] = block?.content?.objects
+const AccordionBlock = ({ block }: BlockProps) => {
+  const accordionItems: AccordionItem[] = block?.content?.objects
     ? (block.content.objects as SetContent[])?.map(({ object }) => {
         const item = object as FrequentlyAskedQuestion;
         return {
@@ -96,13 +97,13 @@ const AccordianBlock = ({ block }: BlockProps) => {
     : [];
 
   return (
-    <div className="w-full py-4">
+    <div className="w-full py-4" data-testid="accordion-block">
       <div className="flex justify-between">
         <p className="text-left text-3xl font-semibold">{block.title}</p>
         <Button variant="primary">{`Expand All`}</Button>
       </div>
       <div className="mt-4">
-        <Accordion items={accordianItems} />
+        <Accordion items={accordionItems} />
       </div>
     </div>
   );
@@ -148,7 +149,7 @@ export const BlockComponent = ({ block, imageLeft }: BlockProps) => {
         />
       )}
       {type === BlockType.Accordian && (
-        <AccordianBlock block={block} imageLeft={imageLeft} />
+        <AccordionBlock block={block} imageLeft={imageLeft} />
       )}
     </div>
   );
