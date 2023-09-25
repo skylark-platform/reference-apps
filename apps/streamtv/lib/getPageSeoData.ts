@@ -21,7 +21,7 @@ export interface SeoObjectData {
 export const getSeoDataForObject = async (
   type: GraphQLObjectTypes,
   lookupValue: string,
-  language: string
+  language: string,
 ): Promise<SeoObjectData> => {
   // Helper to use the external_id when an airtable record ID is given
   const lookupField = lookupValue.startsWith("rec") ? "external_id" : "uid";
@@ -79,7 +79,7 @@ export const getSeoDataForObject = async (
 
     const images =
       data.images?.objects?.map(
-        (image): SeoObjectImage => ({ url: image?.url || "" })
+        (image): SeoObjectImage => ({ url: image?.url || "" }),
       ) || [];
 
     return {

@@ -48,7 +48,7 @@ export const useStreamTVConfig = () => {
       skylarkRequestWithDimensions<StreamTVConfigResponse>(
         GET_STREAMTV_CONFIG,
         dimensions,
-        {}
+        {},
       ),
     cacheTime: Infinity,
     enabled: environment.hasStreamTVConfig,
@@ -88,11 +88,11 @@ export const useStreamTVConfig = () => {
   useEffect(() => {
     document.documentElement.style.setProperty(
       "--streamtv-primary-color",
-      config?.primaryColor || "#5b45ce"
+      config?.primaryColor || "#5b45ce",
     );
     document.documentElement.style.setProperty(
       "--streamtv-accent-color",
-      config?.accentColor || "#ff385c"
+      config?.accentColor || "#ff385c",
     );
 
     if (config?.googleTagManagerId) {

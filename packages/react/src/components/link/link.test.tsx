@@ -7,7 +7,7 @@ describe("Link component", () => {
     render(<Link href="some-href">{"Link text"}</Link>);
     expect(screen.getByRole("link")).toHaveProperty(
       "href",
-      "http://localhost/some-href"
+      "http://localhost/some-href",
     );
   });
 });

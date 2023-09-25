@@ -34,7 +34,7 @@ export const useSkylarkEnvironment = () => {
       skylarkRequestWithLocalStorage<SkylarkEnvironmentResponse>(
         GET_SKYLARK_ENVIRONMENT,
         {},
-        {}
+        {},
       ),
   });
 
@@ -42,8 +42,10 @@ export const useSkylarkEnvironment = () => {
     const hasUpdatedSeason = Boolean(
       data?.seasonFields?.fields &&
         data.seasonFields.fields.findIndex(
-          ({ name }) => name === StreamTVAdditionalFields.PreferredImageType
-        ) > -1
+          ({ name }) =>
+            (name as StreamTVAdditionalFields) ===
+            StreamTVAdditionalFields.PreferredImageType,
+        ) > -1,
     );
 
     const objectTypes =

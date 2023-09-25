@@ -27,7 +27,7 @@ export const GoogleTagManagerBodyNoScript = ({ id }: GoogleTagManagerProps) => {
 const noScriptId = "google-tag-manager-no-script";
 
 export const addGoogleTagManagerNoScriptToBody = (
-  id: GoogleTagManagerProps["id"]
+  id: GoogleTagManagerProps["id"],
 ) => {
   if (!document.getElementById(noScriptId)) {
     const noscript = document.createElement("noscript");

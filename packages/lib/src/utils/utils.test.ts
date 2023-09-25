@@ -66,7 +66,7 @@ describe("utils", () => {
       const title = getTitleByOrder(
         titles,
         ["short", "medium", "long"],
-        "objectTitle"
+        "objectTitle",
       );
       expect(title).toEqual("objectTitle");
     });
@@ -75,7 +75,7 @@ describe("utils", () => {
       const title = getTitleByOrder(
         undefined,
         ["short", "medium", "long"],
-        "objectTitle"
+        "objectTitle",
       );
       expect(title).toEqual("objectTitle");
     });

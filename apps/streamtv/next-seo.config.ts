@@ -6,7 +6,7 @@ const appUrl = process.env.NEXT_PUBLIC_APP_DOMAIN
 
 const createDefaultSeo = (
   appTitle: string,
-  description: string
+  description: string,
 ): DefaultSeoProps => ({
   dangerouslySetAllPagesToNoFollow: true,
   dangerouslySetAllPagesToNoIndex: true,

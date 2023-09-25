@@ -52,7 +52,7 @@ export const getToken = async () => {
 export const uploadToWorkflowServiceWatchBucket = async (
   filename: string,
   body: string,
-  assetId: string
+  assetId: string,
 ) => {
   // Get credentials and authenticate with bucket
   // https://github.com/aws-amplify/amplify-js/issues/335#issuecomment-367629338

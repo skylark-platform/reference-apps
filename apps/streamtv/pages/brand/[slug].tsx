@@ -29,7 +29,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject(
     "Brand",
     context.query.slug as string,
-    context.locale || ""
+    context.locale || "",
   );
 
   return {
@@ -49,7 +49,7 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     isLoading,
   } = useObject<Brand>(
     GET_BRAND(environment.hasUpdatedSeason),
-    query?.slug as string
+    query?.slug as string,
   );
 
   const { t } = useTranslation("common");

@@ -18,7 +18,7 @@ export const getExtId = (externalId: string) =>
 
 export const getUidsFromField = (
   field: string[] | null,
-  skylarkData: GraphQLBaseObject[]
+  skylarkData: GraphQLBaseObject[],
 ) => {
   if (!field || field.length === 0) {
     return null;
@@ -31,7 +31,7 @@ export const getUidsFromField = (
 };
 
 export const gqlObjectMeta = (
-  type: GraphQLObjectTypes | string
+  type: string,
 ): {
   createFunc: string;
   updateFunc: string;
@@ -143,7 +143,7 @@ export const gqlObjectMeta = (
       };
     default:
       throw new Error(
-        `[gqlObjectMeta] Object type "${type}" does not have GQL values`
+        `[gqlObjectMeta] Object type "${type}" does not have GQL values`,
       );
   }
 };
@@ -163,23 +163,26 @@ export const getValidFields = (
       | ReadonlyArray<string>
       | ReadonlyArray<Attachment>;
   },
-  validProperties: GraphQLIntrospectionProperties[]
+  validProperties: GraphQLIntrospectionProperties[],
 ): { [key: string]: string | number | boolean | EnumType | null } => {
   const validObjectFields = validProperties.filter(({ property }) =>
-    has(fields, property)
+    has(fields, property),
   );
-  const validFields = validObjectFields.reduce((obj, { property, kind }) => {
-    const val = isArray(fields[property])
-      ? (fields[property] as string[])[0]
-      : fields[property];
-    return {
-      ...obj,
-      [property]:
-        kind === "ENUM" && typeof val === "string"
-          ? new EnumType(val.toUpperCase())
-          : (val as string | number | boolean | EnumType),
-    };
-  }, {} as { [key: string]: string | number | boolean | EnumType });
+  const validFields = validObjectFields.reduce(
+    (obj, { property, kind }) => {
+      const val = isArray(fields[property])
+        ? (fields[property] as string[])[0]
+        : fields[property];
+      return {
+        ...obj,
+        [property]:
+          kind === "ENUM" && typeof val === "string"
+            ? new EnumType(val.toUpperCase())
+            : (val as string | number | boolean | EnumType),
+      };
+    },
+    {} as { [key: string]: string | number | boolean | EnumType },
+  );
 
   return validFields;
 };
@@ -188,7 +191,7 @@ export const createGraphQLOperation = (
   objectType: GraphQLObjectTypes,
   objectExists: boolean,
   args: { [key: string]: string | number | boolean | object },
-  updateLookupFields: { [key: string]: string }
+  updateLookupFields: { [key: string]: string },
 ) => {
   const method = objectExists ? `update${objectType}` : `create${objectType}`;
 
@@ -213,7 +216,7 @@ export const createGraphQLOperation = (
 
 export const getGraphQLObjectAvailability = (
   availabilityMetadata: GraphQLMetadata["availability"],
-  availabilityField?: string[]
+  availabilityField?: string[],
 ): { link: string[] } => {
   const { default: defaultAvailability } = availabilityMetadata;
   if (!availabilityField || availabilityField.length === 0) {
@@ -224,7 +227,7 @@ export const getGraphQLObjectAvailability = (
 };
 
 export const getLanguageCodesFromAirtable = (
-  languagesTable: Records<FieldSet>
+  languagesTable: Records<FieldSet>,
 ) => {
   const languageCodes: { [key: string]: string } = {};
   languagesTable
@@ -238,12 +241,12 @@ export const getLanguageCodesFromAirtable = (
 
 export const hasProperty = <T, K extends PropertyKey, P = unknown>(
   object: T,
-  property: K
+  property: K,
 ): object is T & Record<K, P> =>
   Object.prototype.hasOwnProperty.call(object, property);
 
 export const convertGraphQLObjectTypeToArgName = (
-  objectType: GraphQLObjectTypes
+  objectType: GraphQLObjectTypes,
 ) =>
   objectType
     .match(/[A-Z][a-z]+/g)

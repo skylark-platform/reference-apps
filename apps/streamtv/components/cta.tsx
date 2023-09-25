@@ -29,23 +29,25 @@ export const CTA = ({ uid }: CallToActionProps) => {
           </p>
           <div>
             {/* TODO change this to support parsing HTML */}
-            {cta?.description?.split("\n").map((line, index) => (
-              <Fragment key={line || index}>
-                {line === "" ? (
-                  <br />
-                ) : (
-                  <p
-                    className={clsx(
-                      "text-center text-gray-200",
-                      index === 0 && "text-center text-2xl font-medium",
-                      index === 0 ? "mb-2" : "mb-1"
-                    )}
-                  >
-                    {line}
-                  </p>
-                )}
-              </Fragment>
-            ))}
+            {cta?.description
+              ?.split("\n")
+              .map((line, index) => (
+                <Fragment key={line || index}>
+                  {line === "" ? (
+                    <br />
+                  ) : (
+                    <p
+                      className={clsx(
+                        "text-center text-gray-200",
+                        index === 0 && "text-center text-2xl font-medium",
+                        index === 0 ? "mb-2" : "mb-1",
+                      )}
+                    >
+                      {line}
+                    </p>
+                  )}
+                </Fragment>
+              ))}
           </div>
         </a>
       )}

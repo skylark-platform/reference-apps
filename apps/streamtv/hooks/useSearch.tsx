@@ -39,7 +39,7 @@ export const useSearch = (query: string) => {
   const objects = data?.objects.filter(
     (obj) =>
       obj.__typename !== "SkylarkSet" ||
-      obj.type === StreamTVSupportedSetType.Collection
+      obj.type === StreamTVSupportedSetType.Collection,
   );
 
   return {

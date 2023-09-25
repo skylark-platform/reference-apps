@@ -17,7 +17,7 @@ import {
 export const getImageSrc = (
   images: UnexpandedObjects | ImageUrls | undefined,
   type: ImageTypes,
-  size?: string
+  size?: string,
 ): string => {
   if (!images || !images.isExpanded || images.items.length === 0) {
     return "";
@@ -47,7 +47,7 @@ export const getImageSrc = (
  */
 export const getCreditsByType = (
   credits: UnexpandedObjects | Credits | undefined,
-  type: CreditTypes
+  type: CreditTypes,
 ): Credit[] => {
   if (!credits || !credits.isExpanded) {
     return [];

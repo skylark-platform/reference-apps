@@ -22,7 +22,7 @@ describe("cognito", () => {
     it("calls Auth.signIn using the username and password from the environment", async () => {
       await signInToCognito();
 
-      expect(signIn).toBeCalledWith("email", "password");
+      expect(signIn).toHaveBeenCalledWith("email", "password");
     });
 
     it("throws when Auth.signIn throws", async () => {

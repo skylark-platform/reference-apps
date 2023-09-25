@@ -42,7 +42,7 @@ const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
   const backgroundImage = useMemo(
     () =>
       addCloudinaryOnTheFlyImageTransformation(uncachedImage, { width: 400 }),
-    [uncachedImage]
+    [uncachedImage],
   );
 
   useEffect(() => {
@@ -92,7 +92,7 @@ const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
 };
 
 export const BaseThumbnailWithLink: React.FC<BaseThumbnailWithLinkProps> = (
-  props
+  props,
 ) => (
   <Link
     aria-label={"base-thumbnail-with-link"}

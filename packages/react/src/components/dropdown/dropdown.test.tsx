@@ -22,7 +22,7 @@ describe("Dropdown component", () => {
         ]}
         label={"Genres"}
         onChange={onChange}
-      />
+      />,
     );
     expect(screen.getByText(/Genres/)).toBeTruthy();
     expect(screen.queryByText(/Sci-fi & Fantasy/)).toBeNull();
@@ -47,7 +47,7 @@ describe("Dropdown component", () => {
         ]}
         label={"Genres"}
         onChange={onChange}
-      />
+      />,
     );
     expect(screen.getByText(/Genres/)).toBeTruthy();
     expect(screen.queryByText(/Children & Family/)).toBeNull();
@@ -72,7 +72,7 @@ describe("Dropdown component", () => {
         ]}
         label={"Genres"}
         onChange={onChange}
-      />
+      />,
     );
     expect(screen.getByText(/Genres/)).toBeTruthy();
     expect(screen.queryByTestId(/close-genre/)).toBeFalsy();
@@ -98,7 +98,7 @@ describe("Dropdown component", () => {
         ]}
         label={"Genres"}
         onChange={onChange}
-      />
+      />,
     );
     fireEvent.mouseOver(screen.getByText(/Genres/i));
     fireEvent.click(screen.getByText(/Children & Family/i));

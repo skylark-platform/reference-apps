@@ -84,11 +84,11 @@ describe("airtable", () => {
       await getAllTablesTimerWrapper();
 
       // Assert.
-      expect(mockedGet).toBeCalledWith(
+      expect(mockedGet).toHaveBeenCalledWith(
         "https://api.airtable.com/v0/base-id/customer-types?offset=",
-        { headers: { Authorization: "Bearer api-key" } }
+        { headers: { Authorization: "Bearer api-key" } },
       );
-      expect(mockedGet).toBeCalledTimes(numTables);
+      expect(mockedGet).toHaveBeenCalledTimes(numTables);
     });
 
     it("makes a subsequent table request when an offset is returned in the airtable response", async () => {
@@ -139,11 +139,11 @@ describe("airtable", () => {
       await getAllTablesTimerWrapper();
 
       // Assert.
-      expect(mockedGet).toBeCalledWith(
+      expect(mockedGet).toHaveBeenCalledWith(
         "https://api.airtable.com/v0/base-id/customer-types?offset=returnedoffset",
-        { headers: { Authorization: "Bearer api-key" } }
+        { headers: { Authorization: "Bearer api-key" } },
       );
-      expect(mockedGet).toBeCalledTimes(numTables + 1); // +1 for offset call
+      expect(mockedGet).toHaveBeenCalledTimes(numTables + 1); // +1 for offset call
     });
 
     it("returns the fields from records returned by Airtable", async () => {
@@ -208,8 +208,8 @@ describe("airtable", () => {
 
       // Assert.
       // eslint-disable-next-line no-console
-      expect(console.warn).toBeCalledWith(
-        `warn: Table "customer-types" does not exist`
+      expect(console.warn).toHaveBeenCalledWith(
+        `warn: Table "customer-types" does not exist`,
       );
     });
 

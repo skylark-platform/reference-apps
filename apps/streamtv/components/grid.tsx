@@ -35,7 +35,7 @@ export const Grid = ({
           />
         ) : (
           <></>
-        )
+        ),
       )}
     </div>
   </div>

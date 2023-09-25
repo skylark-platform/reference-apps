@@ -24,7 +24,7 @@ import { addContentToCreatedSets } from "../skylark/saas/sets";
 
 const getUidsFromExtIds = (
   extIds: string[],
-  objects: GraphQLBaseObject[]
+  objects: GraphQLBaseObject[],
 ): string[] => {
   const uids = extIds
     .map((extId) => objects.find(({ external_id }) => extId === external_id))
@@ -39,7 +39,7 @@ const getUidsFromExtIds = (
 const getUidsFromUrls = (
   urls: string[],
   objects: GraphQLBaseObject[],
-  prefix: string
+  prefix: string,
 ) => {
   const extIds = urls
     .map(getLegacyUidFromUrl)
@@ -52,7 +52,7 @@ const getUidsFromUrls = (
 const getUidsFromItems = (
   items: string[] | LegacySetItem[],
   objects: GraphQLBaseObject[],
-  prefix: string
+  prefix: string,
 ) => {
   if (items.length === 0) {
     return [];
@@ -68,10 +68,10 @@ const getUidsFromItems = (
 
 const getTags = (
   legacyObject: LegacyBrand | LegacyAsset | LegacyEpisode | LegacySeason,
-  skylarkTags: GraphQLBaseObject[]
+  skylarkTags: GraphQLBaseObject[],
 ) => {
   const legacyTagExtIds = legacyObject.tags.map(({ tag_url }) =>
-    getLegacyUidFromUrl(tag_url)
+    getLegacyUidFromUrl(tag_url),
   );
   const tagUids = getUidsFromExtIds(legacyTagExtIds, skylarkTags);
 
@@ -85,7 +85,7 @@ const getCredits = (
     | LegacyEpisode
     | LegacySeason
     | LegacySet,
-  skylarkCredits: GraphQLBaseObject[]
+  skylarkCredits: GraphQLBaseObject[],
 ) => {
   const creditUids =
     legacyObject.credits
@@ -93,10 +93,10 @@ const getCredits = (
         const externalId = generateSL8CreditUid(
           credit.people_url,
           credit.role_url,
-          credit.character
+          credit.character,
         );
         const createdCredit = skylarkCredits.find(
-          ({ external_id }) => external_id === externalId
+          ({ external_id }) => external_id === externalId,
         );
         return createdCredit?.uid;
       })
@@ -106,7 +106,7 @@ const getCredits = (
 
 export const createRelationships = (
   legacyObject: LegacyObjects[0] | ParsedSL8Credits,
-  relationshipObjects: CreatedSkylarkObjects
+  relationshipObjects: CreatedSkylarkObjects,
 ): Record<string, { link: string[] }> | undefined => {
   // eslint-disable-next-line no-underscore-dangle
   const legacyObjectType = legacyObject._type;
@@ -114,7 +114,7 @@ export const createRelationships = (
   if (!legacyObjectType) {
     throw new Error(
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      `[createRelationships] Unknown legacy object type: ${legacyUid}`
+      `[createRelationships] Unknown legacy object type: ${legacyUid}`,
     );
   }
 
@@ -130,7 +130,7 @@ export const createRelationships = (
   if (legacyObjectType === LegacyObjectType.Tags) {
     const categoryExtId = getLegacyUidFromUrl(legacyObject.category_url);
     const createdCategory = relationshipObjects.tagCategories.find(
-      ({ external_id }) => external_id === categoryExtId
+      ({ external_id }) => external_id === categoryExtId,
     );
     return {
       tag_categories: {
@@ -164,7 +164,7 @@ export const createRelationships = (
     const imageUids = getUidsFromUrls(
       legacyObject.image_urls || [],
       relationshipObjects.images,
-      LegacyObjectUidPrefix.Image
+      LegacyObjectUidPrefix.Image,
     );
     relationships.images = { link: imageUids };
   }
@@ -180,7 +180,7 @@ export const createRelationships = (
     const genreUids = getUidsFromUrls(
       legacyObject.genre_urls || [],
       relationshipObjects.genres,
-      LegacyObjectUidPrefix.Genre
+      LegacyObjectUidPrefix.Genre,
     );
     relationships.genres = { link: genreUids };
   }
@@ -196,7 +196,7 @@ export const createRelationships = (
     const ratingUids = getUidsFromUrls(
       legacyObject.rating_urls || [],
       relationshipObjects.ratings,
-      LegacyObjectUidPrefix.Rating
+      LegacyObjectUidPrefix.Rating,
     );
     relationships.ratings = { link: ratingUids };
   }
@@ -222,7 +222,7 @@ export const createRelationships = (
     const assetUids = getUidsFromItems(
       legacyObject.items,
       relationshipObjects.assets,
-      LegacyObjectUidPrefix.Asset
+      LegacyObjectUidPrefix.Asset,
     );
     relationships.assets = { link: assetUids };
   }
@@ -235,7 +235,7 @@ export const createRelationships = (
     const episodeUids = getUidsFromItems(
       legacyObject.items,
       relationshipObjects.episodes,
-      LegacyObjectUidPrefix.Episode
+      LegacyObjectUidPrefix.Episode,
     );
     relationships.episodes = { link: episodeUids };
   }
@@ -245,7 +245,7 @@ export const createRelationships = (
     const seasonUids = getUidsFromItems(
       legacyObject.items,
       relationshipObjects.seasons,
-      LegacyObjectUidPrefix.Season
+      LegacyObjectUidPrefix.Season,
     );
     relationships.seasons = { link: seasonUids };
   }
@@ -256,14 +256,14 @@ export const createRelationships = (
       link: getUidsFromUrls(
         [legacyObject.people_url],
         relationshipObjects.people,
-        LegacyObjectUidPrefix.People
+        LegacyObjectUidPrefix.People,
       ),
     };
     relationships.roles = {
       link: getUidsFromUrls(
         [legacyObject.role_url],
         relationshipObjects.roles,
-        LegacyObjectUidPrefix.Role
+        LegacyObjectUidPrefix.Role,
       ),
     };
   }
@@ -274,7 +274,7 @@ export const createRelationships = (
 export const createSetContent = async (
   createdSets: GraphQLBaseObject[],
   legacySets: FetchedLegacyObjects<LegacySet>,
-  createdObjects: CreatedSkylarkObjects
+  createdObjects: CreatedSkylarkObjects,
 ) => {
   const allCreatedObjects = Object.values(createdObjects).flatMap((arr) => arr);
 
@@ -297,11 +297,11 @@ export const createSetContent = async (
       const objectType = convertLegacyObjectTypeToObjectType(legacyObjectType);
 
       const createdItemObject = allCreatedObjects.find(
-        ({ external_id }) => external_id === externalId
+        ({ external_id }) => external_id === externalId,
       );
       if (!createdItemObject) {
         throw new Error(
-          `[createSetContent] Set content item not found in createdObjects array`
+          `[createSetContent] Set content item not found in createdObjects array`,
         );
       }
 
@@ -321,6 +321,6 @@ export const createSetContent = async (
   // Change to actual Set
   await addContentToCreatedSets(
     "CustomSetName" as GraphQLSetObjectTypes,
-    createdSetsWithContent
+    createdSetsWithContent,
   );
 };

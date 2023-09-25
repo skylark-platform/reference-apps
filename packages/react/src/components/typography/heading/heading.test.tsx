@@ -8,7 +8,7 @@ describe("Heading components", () => {
   levels.forEach((level) => {
     it(`the H${level} component renders correctly`, () => {
       const { container } = render(
-        <Heading level={level}>{`Heading ${level}`}</Heading>
+        <Heading level={level}>{`Heading ${level}`}</Heading>,
       );
       expect(container.querySelector(`h${level}`)).toBeTruthy();
       expect(screen.getByText(`Heading ${level}`)).toBeTruthy();

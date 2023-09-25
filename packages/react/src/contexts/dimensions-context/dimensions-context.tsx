@@ -21,7 +21,7 @@ export type DimensionsContextType = {
 
 const dimensionsReducer = (
   state: Dimensions,
-  action: ReducerAction
+  action: ReducerAction,
 ): Dimensions => {
   switch (action.type) {
     case "language":

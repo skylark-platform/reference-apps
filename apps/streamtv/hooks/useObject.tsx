@@ -17,7 +17,7 @@ const fetcher = <T extends Metadata>(
   query: string,
   uid: string,
   dimensions: Dimensions,
-  opts: UseObjectOpts
+  opts: UseObjectOpts,
 ) =>
   skylarkRequestWithDimensions<{ getObject: T }>(query, dimensions, {
     [opts.useExternalId ? "externalId" : "uid"]: uid,
@@ -26,7 +26,7 @@ const fetcher = <T extends Metadata>(
 export const useObject = <T extends Metadata>(
   query: string,
   uid: string,
-  opts?: UseObjectOpts
+  opts?: UseObjectOpts,
 ) => {
   const { dimensions } = useDimensions();
 

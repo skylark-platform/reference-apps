@@ -21,7 +21,7 @@ import { assignAvailabilitiesToObjects } from "../skylark/saas/availability";
 const getExistingObjectsForAllLanguages = async (
   objectType: GraphQLObjectTypes,
   languages: string[],
-  objects: Record<string, LegacyObjects | ParsedSL8Credits[]>
+  objects: Record<string, LegacyObjects | ParsedSL8Credits[]>,
 ) => {
   const existingExternalIds = new Set<string>([]);
   const missingExternalIds = new Set<string>([]);
@@ -80,24 +80,24 @@ export const createObjectsInSkylark = async (
   args: {
     relationshipObjects: CreatedSkylarkObjects;
     legacyObjectConverter: (
-      legacyObject: LegacyObjects[0] | ParsedSL8Credits
+      legacyObject: LegacyObjects[0] | ParsedSL8Credits,
     ) => ConvertedLegacyObject | null;
     legacyCredits?: FetchedLegacyObjects<ParsedSL8Credits>;
     isCreateOnly?: boolean;
     alwaysAvailability?: GraphQLBaseObject;
     availabilities?: GraphQLBaseObject[];
-  }
+  },
 ): Promise<GraphQLBaseObject[]> => {
   const { relationshipObjects, legacyObjectConverter, ...opts } = args;
 
   const objectType = convertLegacyObjectTypeToObjectType(type);
 
   const totalObjectsToBeCreatedUpdated = Object.values(
-    legacyObjectsAndLanguage
+    legacyObjectsAndLanguage,
   ).reduce((previous, arr) => previous + arr.length, 0);
   // eslint-disable-next-line no-console
   console.log(
-    `--- ${objectType}s creating/updating: ${totalObjectsToBeCreatedUpdated}`
+    `--- ${objectType}s creating/updating: ${totalObjectsToBeCreatedUpdated}`,
   );
 
   const languages = Object.keys(legacyObjectsAndLanguage);
@@ -111,7 +111,7 @@ export const createObjectsInSkylark = async (
     await getExistingObjectsForAllLanguages(
       objectType,
       languages,
-      legacyObjectsAndLanguage
+      legacyObjectsAndLanguage,
     );
 
   // TODO remove this, just for debugging
@@ -125,7 +125,7 @@ export const createObjectsInSkylark = async (
         existingObjects: existingExternalIds.size,
         missingObjects: missingExternalIds.size,
       },
-    }
+    },
   );
 
   let accaArr: GraphQLBaseObject[] = [];
@@ -165,7 +165,7 @@ export const createObjectsInSkylark = async (
           const uids = legacyUids
             .map((legacyUid) => {
               const availability = opts.availabilities?.find(
-                ({ external_id }) => external_id === legacyUid
+                ({ external_id }) => external_id === legacyUid,
               );
               return availability?.uid;
             })
@@ -187,8 +187,8 @@ export const createObjectsInSkylark = async (
       opts?.isCreateOnly && existingObjectsPerLanguage[language]
         ? new Set(
             Object.values(existingObjectsPerLanguage[language]).map(
-              ({ external_id }) => external_id
-            )
+              ({ external_id }) => external_id,
+            ),
           )
         : null;
     if (previouslyCreatedObjectExternalIdsForThisLanguage) {
@@ -196,7 +196,7 @@ export const createObjectsInSkylark = async (
       console.log(
         `    - ${language.toLowerCase()}: ${
           previouslyCreatedObjectExternalIdsForThisLanguage.size
-        } existing`
+        } existing`,
       );
     }
 
@@ -205,9 +205,9 @@ export const createObjectsInSkylark = async (
       .filter((obj) =>
         previouslyCreatedObjectExternalIdsForThisLanguage
           ? !previouslyCreatedObjectExternalIdsForThisLanguage.has(
-              obj.external_id
+              obj.external_id,
             )
-          : true
+          : true,
       )
       .map((obj) => ({
         ...obj,
@@ -224,7 +224,7 @@ export const createObjectsInSkylark = async (
         objectType,
         existingExternalIds,
         objectsToCreate,
-        { language, relationships, availabilities: availabilitiesToAdd }
+        { language, relationships, availabilities: availabilitiesToAdd },
       );
 
     accaArr.push(...createdLanguageObjects);
@@ -238,11 +238,11 @@ export const createObjectsInSkylark = async (
     console.log(
       `    - ${language.toLowerCase()}: ${
         createdLanguageObjects.length
-      } objects`
+      } objects`,
     );
 
     const newExternalIds = createdLanguageObjects.map(
-      ({ external_id }) => external_id
+      ({ external_id }) => external_id,
     );
 
     existingExternalIds = new Set<string>([
@@ -256,12 +256,12 @@ export const createObjectsInSkylark = async (
   const uniqueBaseObjects = createdObjects.filter(
     (a, index, self) =>
       index ===
-      self.findIndex((b) => a.uid === b.uid && a.external_id === b.external_id)
+      self.findIndex((b) => a.uid === b.uid && a.external_id === b.external_id),
   );
 
   // eslint-disable-next-line no-console
   console.log(
-    `    - created/updated: ${createdObjects.length} (${uniqueBaseObjects.length} unique)`
+    `    - created/updated: ${createdObjects.length} (${uniqueBaseObjects.length} unique)`,
   );
 
   return uniqueBaseObjects;
@@ -274,7 +274,7 @@ export const addAlwaysAvailabilityToObjects = async (
     objects: Record<string, LegacyObjects>;
     totalFound: number;
   }[],
-  languages: string[]
+  languages: string[],
 ) => {
   // eslint-disable-next-line no-restricted-syntax
   for (const legacyObject of legacyObjects) {
@@ -286,14 +286,14 @@ export const addAlwaysAvailabilityToObjects = async (
     const { existingObjects } = await getExistingObjectsForAllLanguages(
       objectType,
       languages,
-      legacyObject.objects
+      legacyObject.objects,
     );
 
     const uniqueUids: string[] = [
       ...new Set(
         Object.values(existingObjects)
           .flatMap((arr) => arr)
-          .map(({ uid }) => uid)
+          .map(({ uid }) => uid),
       ),
     ] as string[];
 
@@ -301,7 +301,7 @@ export const addAlwaysAvailabilityToObjects = async (
     await assignAvailabilitiesToObjects(
       [alwaysAvailability],
       objectType,
-      uniqueUids
+      uniqueUids,
     );
   }
 };

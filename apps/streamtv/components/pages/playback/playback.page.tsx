@@ -73,7 +73,7 @@ const convertCreditsToMetadataContent = (
   credits?: Record<
     string,
     { formattedCredits: string[]; translatedRole: string }
-  >
+  >,
 ) => {
   if (!credits || Object.keys(credits).length === 0) {
     return [];
@@ -84,7 +84,7 @@ const convertCreditsToMetadataContent = (
       header: translatedRole,
       body: formattedCredits,
       icon: getIconForCreditRole(role),
-    })
+    }),
   );
 };
 

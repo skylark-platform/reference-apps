@@ -23,7 +23,7 @@ const main = async () => {
 
   console.log("\nCreating Always & Forever Availability...");
   const alwaysAvailability = await createAlwaysAndForeverAvailability(
-    ALWAYS_FOREVER_AVAILABILITY_EXT_ID
+    ALWAYS_FOREVER_AVAILABILITY_EXT_ID,
   );
 
   console.log("\nReading Legacy Objects from Disk...");

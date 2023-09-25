@@ -31,7 +31,7 @@ const convertWidthToBreakpoint = (width: number) => {
 
 export const useTailwindBreakpoint = (initialValue?: string) => {
   const [breakpoint, setBreakpoint] = useState<string | undefined>(
-    initialValue
+    initialValue,
   );
 
   const handleResize = () => {

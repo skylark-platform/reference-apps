@@ -42,39 +42,42 @@ export const formatGraphQLCredits = (credits: Credit[]) => {
 };
 
 export const splitAndFormatGraphQLCreditsByInternalTitle = (
-  gqlCredits: Maybe<Maybe<Credit>[]> | null | undefined
+  gqlCredits: Maybe<Maybe<Credit>[]> | null | undefined,
 ): Record<string, { formattedCredits: string[]; translatedRole: string }> => {
   if (!gqlCredits) {
     return {};
   }
 
-  const splitCredits = gqlCredits.reduce((prev, credit) => {
-    // This filtering needs on the role internal_title field
-    // It assumes there is only one role
-    if (
-      !credit ||
-      !credit?.roles?.objects ||
-      credit.roles.objects.length === 0 ||
-      !hasProperty(credit.roles.objects[0], "internal_title") ||
-      !credit.roles.objects[0].internal_title
-    ) {
-      return prev;
-    }
+  const splitCredits = gqlCredits.reduce(
+    (prev, credit) => {
+      // This filtering needs on the role internal_title field
+      // It assumes there is only one role
+      if (
+        !credit ||
+        !credit?.roles?.objects ||
+        credit.roles.objects.length === 0 ||
+        !hasProperty(credit.roles.objects[0], "internal_title") ||
+        !credit.roles.objects[0].internal_title
+      ) {
+        return prev;
+      }
 
-    const role = credit.roles.objects[0].internal_title;
+      const role = credit.roles.objects[0].internal_title;
 
-    if (hasProperty(prev, role) && prev[role]) {
+      if (hasProperty(prev, role) && prev[role]) {
+        return {
+          ...prev,
+          [role]: [...prev[role], credit],
+        };
+      }
+
       return {
         ...prev,
-        [role]: [...prev[role], credit],
+        [role]: [credit],
       };
-    }
-
-    return {
-      ...prev,
-      [role]: [credit],
-    };
-  }, {} as Record<string, Credit[]>);
+    },
+    {} as Record<string, Credit[]>,
+  );
 
   const formattedCredits = Object.fromEntries(
     Object.entries(splitCredits).map(([role, credits]) => [
@@ -83,7 +86,7 @@ export const splitAndFormatGraphQLCreditsByInternalTitle = (
         formattedCredits: formatGraphQLCredits(credits),
         translatedRole: credits?.[0].roles?.objects?.[0]?.title || "test",
       },
-    ])
+    ]),
   );
 
   return formattedCredits;
@@ -94,7 +97,7 @@ export const convertObjectToName = (
     | Maybe<ThemeListing>
     | Maybe<GenreListing>
     | Maybe<SkylarkTagListing>
-    | undefined
+    | undefined,
 ): string[] => {
   if (!listing || !listing.objects || listing.objects.length === 0) {
     return [];
@@ -105,7 +108,7 @@ export const convertObjectToName = (
 };
 
 export const getFirstRatingValue = (
-  ratings: Maybe<RatingListing> | undefined
+  ratings: Maybe<RatingListing> | undefined,
 ): string => {
   if (!ratings || !ratings.objects || ratings.objects.length === 0) {
     return "";
@@ -115,7 +118,7 @@ export const getFirstRatingValue = (
 
 export const getGraphQLImageSrc = (
   images: Maybe<SkylarkImageListing> | undefined,
-  type: ImageType | StreamTVSupportedImageType
+  type: ImageType | StreamTVSupportedImageType,
 ): string => {
   if (!images || !images.objects || images.objects.length === 0) {
     return "";
@@ -136,7 +139,7 @@ export const getGraphQLImageSrc = (
 
 export const getTitleByOrderForGraphQLObject = (
   obj?: Entertainment | Maybe<Entertainment>,
-  priority?: TitleTypes[]
+  priority?: TitleTypes[],
 ) => {
   if (!obj) {
     return "";
@@ -146,13 +149,13 @@ export const getTitleByOrderForGraphQLObject = (
       title: obj?.title || "",
       title_short: obj?.title_short || "",
     },
-    priority
+    priority,
   );
 };
 
 export const getSynopsisByOrderForGraphQLObject = (
   obj?: Entertainment,
-  priority?: SynopsisTypes[]
+  priority?: SynopsisTypes[],
 ) => {
   if (!obj) {
     return "";
@@ -162,7 +165,7 @@ export const getSynopsisByOrderForGraphQLObject = (
       synopsis: obj?.synopsis || "",
       synopsis_short: obj?.synopsis_short || "",
     },
-    priority
+    priority,
   );
 };
 
@@ -180,7 +183,7 @@ export const createGraphQLQueryDimensions = (activeDimensions: Dimensions) => {
 };
 
 export const convertTypenameToObjectType = (
-  typename: GraphQLObjectTypes | undefined
+  typename: GraphQLObjectTypes | undefined,
 ): EntertainmentType | MetadataType => {
   switch (typename) {
     case "Episode":
@@ -215,7 +218,7 @@ export const convertGraphQLSetType = (setType?: string): SetTypes => {
 };
 
 export const getFurthestAvailabilityEndDate = (
-  objects?: Availability[] | null
+  objects?: Availability[] | null,
 ): Dayjs | null => {
   if (!objects || objects.length === 0) {
     return null;
@@ -224,7 +227,7 @@ export const getFurthestAvailabilityEndDate = (
   const orderedDates = objects
     ?.filter(({ end }) => !!end)
     .sort(({ end: endA }, { end: endB }) =>
-      dayjs(endA as string).isBefore(endB as string) ? 1 : -1
+      dayjs(endA as string).isBefore(endB as string) ? 1 : -1,
     );
   return dayjs(orderedDates[0].end as string);
 };
@@ -233,7 +236,7 @@ export const is2038Problem = (date: Dayjs) =>
   date.isSame("2038-01-19T03:14:07.000Z");
 
 export const getTimeFromNow = (
-  d: Dayjs
+  d: Dayjs,
 ): { unit: "day" | "month" | "year" | "never"; number: number } => {
   if (is2038Problem(d)) {
     return {

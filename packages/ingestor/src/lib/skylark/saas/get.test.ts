@@ -26,9 +26,9 @@ describe("saas/get.ts", () => {
 
       await getValidPropertiesForObject("Brand");
 
-      expect(graphQlRequest).toBeCalledWith(
+      expect(graphQlRequest).toHaveBeenCalledWith(
         'query { IntrospectionOnType: __type (name: "Brand") { name fields { name type { name kind } } } IntrospectionOnInputType: __type (name: "BrandInput") { name inputFields { name type { name kind } } } }',
-        {}
+        {},
       );
     });
 
@@ -153,9 +153,9 @@ describe("saas/get.ts", () => {
 
       await getExistingObjects("Brand", [{ externalId: "brand-1" }]);
 
-      expect(graphQlRequest).toBeCalledWith(
+      expect(graphQlRequest).toHaveBeenCalledWith(
         'query getBrands { brand-1: getBrand (external_id: "brand-1", ignore_availability: true) { __typename uid slug external_id } }',
-        {}
+        {},
       );
     });
 
@@ -185,7 +185,7 @@ describe("saas/get.ts", () => {
         { externalId: "brand-3" },
       ]);
       expect(got.existingExternalIds).toEqual(
-        new Set(["brand-1", "brand-2", "brand-3"])
+        new Set(["brand-1", "brand-2", "brand-3"]),
       );
       expect(got.missingExternalIds).toEqual(new Set([]));
     });
@@ -222,7 +222,7 @@ describe("saas/get.ts", () => {
           { externalId: "brand-1" },
           { externalId: "brand-2" },
           { externalId: "brand-3" },
-        ])
+        ]),
       ).rejects.toThrow("Unexpected error");
     });
   });

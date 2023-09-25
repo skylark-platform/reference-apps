@@ -93,7 +93,7 @@ describe("utils.ts", () => {
     it("returns an empty string when no images are given", () => {
       const got = utils.getGraphQLImageSrc(
         { objects: [] },
-        ImageType.Thumbnail
+        ImageType.Thumbnail,
       );
       expect(got).toEqual("");
     });
@@ -116,7 +116,7 @@ describe("utils.ts", () => {
           title: "title",
           title_short: "Short title",
         } as Entertainment,
-        ["title", "title_short"]
+        ["title", "title_short"],
       );
       expect(got).toEqual("title");
     });
@@ -129,7 +129,7 @@ describe("utils.ts", () => {
           synopsis: "synopsis",
           synopsis_short: "Short synopsis",
         } as Entertainment,
-        ["synopsis", "synopsis_short"]
+        ["synopsis", "synopsis_short"],
       );
       expect(got).toEqual("synopsis");
     });

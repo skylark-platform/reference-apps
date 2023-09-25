@@ -10,7 +10,7 @@ class SkylarkGraphQLClient extends GraphQLClient {
   uncachedRequest<T>(
     document: RequestDocument,
     variables?: Variables | undefined,
-    requestHeaders?: HeadersInit | undefined
+    requestHeaders?: HeadersInit | undefined,
   ) {
     return this.request<T>(document, variables, {
       ...requestHeaders,
@@ -30,7 +30,7 @@ export const skylarkRequest = <T>(
   apiKey: string,
   query: string,
   variables: Variables,
-  headers: object
+  headers: object,
 ) =>
   request<T>(uri, query, variables, {
     ...headers,

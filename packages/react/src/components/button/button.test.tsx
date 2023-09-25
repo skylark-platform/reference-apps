@@ -18,6 +18,6 @@ describe("Label component", () => {
     render(<Button text="click me" onClick={onClick} />);
 
     fireEvent.click(screen.getByText(/click me/i));
-    expect(onClick).toBeCalled();
+    expect(onClick).toHaveBeenCalled();
   });
 });

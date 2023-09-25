@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+} */
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+  -webkit-font-smoothing: antialiased;
+}
+@layer components {
+  .gutter {
+    @apply px-20;
+  }
+
+  .skylark-wysiwyg h1 {
+    @apply mb-8 text-5xl;
+  }
+
+  .skylark-wysiwyg h2 {
+    @apply mb-6 text-4xl;
+  }
+
+  .skylark-wysiwyg h3 {
+    @apply mb-4 text-4xl;
+  }
+
+  .skylark-wysiwyg h4 {
+    @apply mb-4 text-2xl;
+  }
+
+  .skylark-wysiwyg h5,
+  .skylark-wysiwyg h6 {
+    @apply mb-2 text-xl;
+  }
+
+  .skylark-wysiwyg p {
+    @apply text-xl;
+  }
+}

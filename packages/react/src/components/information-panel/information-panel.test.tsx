@@ -17,7 +17,7 @@ describe("InformationPanel component", () => {
         }}
         themes={["Action", "Adventure"]}
         title="1. Winter is Coming"
-      />
+      />,
     );
     expect(screen.getByText(/Game of Thrones/)).toBeTruthy();
     expect(screen.getByText(/1. Winter is Coming/)).toBeTruthy();

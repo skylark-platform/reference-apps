@@ -14,7 +14,7 @@ describe("Header component", () => {
         releaseDate={"2011"}
         title={"Game of Thrones"}
         typeOfItems={"season"}
-      />
+      />,
     );
     expect(screen.getByText(/Game of Thrones/)).toBeTruthy();
     expect(screen.getByText(/8 Seasons/)).toBeTruthy();

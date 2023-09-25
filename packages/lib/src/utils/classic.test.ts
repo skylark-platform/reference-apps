@@ -34,7 +34,7 @@ describe("utils", () => {
     it("returns empty string if the images have not been expanded by the API", () => {
       const src = getImageSrc(
         { isExpanded: false, items: [{ self: "/api/image/1" }] },
-        "Main"
+        "Main",
       );
       expect(src).toEqual("");
     });

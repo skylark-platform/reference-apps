@@ -70,11 +70,11 @@ export const getMostRecentLegacyObjectsDir = async () => {
   await ensureDir(parentDir);
 
   const objectDirs = (await readdir(parentDir)).filter(
-    (dir) => dir !== "stats.md"
+    (dir) => dir !== "stats.md",
   );
 
   const [mostRecentDir] = objectDirs.sort(
-    (a, b) => +new Date(b) - +new Date(a)
+    (a, b) => +new Date(b) - +new Date(a),
   );
 
   return join(parentDir, mostRecentDir);
@@ -96,30 +96,30 @@ export const writeLegacyObjectsToDisk = async (
     type: LegacyObjectType;
     objects: Record<string, object[]>;
     totalFound: number;
-  }
+  },
 ) => {
   try {
     await writeFile(
       join(dir, `${obj.type}.json`),
-      JSON.stringify(obj, null, 4)
+      JSON.stringify(obj, null, 4),
     );
   } catch (err) {
     console.error(
-      `[writeLegacyObjectsToDisk] Failed to write ${obj.type} data`
+      `[writeLegacyObjectsToDisk] Failed to write ${obj.type} data`,
     );
   }
 };
 
 export const writeAllLegacyObjectsToDisk = async (
-  objects: Record<string, FetchedLegacyObjects<LegacyObjects[0]>>
+  objects: Record<string, FetchedLegacyObjects<LegacyObjects[0]>>,
 ) => {
   try {
     const dir = await createLegacyObjectsTimeStampedDir();
 
     await Promise.all(
       Object.values(objects).map((value) =>
-        writeLegacyObjectsToDisk(dir, value)
-      )
+        writeLegacyObjectsToDisk(dir, value),
+      ),
     );
   } catch (err) {
     console.error("[writeAllLegacyObjectsToDisk] Failed to write data");
@@ -128,7 +128,7 @@ export const writeAllLegacyObjectsToDisk = async (
 
 export const writeStatsForLegacyObjectsToDisk = async (
   legacyObjects: Record<string, FetchedLegacyObjects<LegacyObjects[0]>>,
-  languages: string[]
+  languages: string[],
 ) => {
   try {
     const env = generateEnvIdentifier();
@@ -158,7 +158,7 @@ export const writeStatsForLegacyObjectsToDisk = async (
 
 export const readObjectsFromFile = async <T>(
   dir: string,
-  type: LegacyObjectType
+  type: LegacyObjectType,
 ) => {
   const file = join(dir, `${type}.json`);
 
@@ -180,7 +180,7 @@ export const readObjectsFromFile = async <T>(
 };
 
 export const readLegacyObjectsFromFile = async <T>(
-  objectsToFetch: Record<string, LegacyObjectType>
+  objectsToFetch: Record<string, LegacyObjectType>,
 ): Promise<T> => {
   const mostRecentDir = await getMostRecentLegacyObjectsDir();
 
@@ -193,7 +193,7 @@ export const readLegacyObjectsFromFile = async <T>(
     // eslint-disable-next-line no-await-in-loop
     const objects = await readObjectsFromFile<LegacyBrand>(
       mostRecentDir,
-      legacyObjectType
+      legacyObjectType,
     );
 
     retObj[key] = objects;

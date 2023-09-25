@@ -14,7 +14,7 @@ import {
  */
 export const convertObjectToSkylarkApiFields = (
   obj: object,
-  prefix?: string
+  prefix?: string,
 ): string => {
   const keys = Object.entries(obj).map(
     ([key, value]: [key: string, value: object]) => {
@@ -22,11 +22,11 @@ export const convertObjectToSkylarkApiFields = (
       if (value && Object.keys(value).length > 0) {
         return `${keyWithPrefix},${convertObjectToSkylarkApiFields(
           value,
-          keyWithPrefix
+          keyWithPrefix,
         )}`;
       }
       return keyWithPrefix;
-    }
+    },
   );
 
   return keys.join(",");
@@ -38,7 +38,7 @@ export const convertObjectToSkylarkApiFields = (
  * @returns {ObjectTypes}
  */
 export const convertUrlToObjectType = (
-  url: string
+  url: string,
 ): EntertainmentType | null => {
   if (!url) throw new Error("Unknown url provided");
 
@@ -71,7 +71,7 @@ export const convertUrlToObjectType = (
  * @returns
  */
 export const convertToUnexpandedObjects = (
-  urls: string[]
+  urls: string[],
 ): UnexpandedObjects => {
   const items: UnexpandedObject[] = urls.map((url) => ({
     self: url,
@@ -88,7 +88,7 @@ export const convertToUnexpandedObjects = (
  * @returns
  */
 export const convertToUnexpandedSkylarkObjects = (
-  urls: string[]
+  urls: string[],
 ): UnexpandedSkylarkObjects => {
   const objects: UnexpandedSkylarkObject[] = urls.map((url) => ({
     self: url,

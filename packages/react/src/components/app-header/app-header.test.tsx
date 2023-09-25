@@ -7,12 +7,12 @@ describe("AppHeader component", () => {
     render(
       <AppHeader activeHref="/" links={[{ text: "Home", href: "/homepage" }]}>
         {`test title`}
-      </AppHeader>
+      </AppHeader>,
     );
     expect(screen.getByText("test title")).toBeTruthy();
     expect(screen.getByText("Home").closest("a")).toHaveProperty(
       "href",
-      "http://localhost/homepage"
+      "http://localhost/homepage",
     );
   });
 });

@@ -4,7 +4,7 @@ import { useTailwindBreakpoint } from "./useTailwindBreakpoint";
 export const useNumberOfThumbnailsByBreakpoint = (initialValue?: number) => {
   const [tailwindBreakpoint] = useTailwindBreakpoint();
   const [numOnScreen, setNumOnScreen] = useState(
-    initialValue !== undefined ? initialValue : 2
+    initialValue !== undefined ? initialValue : 2,
   );
 
   useEffect(() => {

@@ -95,7 +95,7 @@ const getEnumValues = async (name: string) => {
 export const updateEnumTypes = async (
   enumName: string,
   values: string[],
-  version: number | string
+  version: number | string,
 ): Promise<{ version: number | null }> => {
   const existingValues = await getEnumValues(enumName);
   if (values.every((value) => existingValues.includes(value.toUpperCase()))) {
@@ -130,7 +130,7 @@ export const updateEnumTypes = async (
   // eslint-disable-next-line no-console
   console.log(
     `--- Modifying enum "${enumName}"  to have values: `,
-    values.join(", ")
+    values.join(", "),
   );
 
   const { editEnumConfiguration } = await graphQLClient.uncachedRequest<{
@@ -275,14 +275,14 @@ export const updateSkylarkSchema = async ({
   const { version: setTypeVersion } = await updateEnumTypes(
     "SetType",
     ENUMS.SET_TYPES,
-    updatedVersion
+    updatedVersion,
   );
   if (setTypeVersion) updatedVersion = setTypeVersion;
 
   const { version: imageTypeVersion } = await updateEnumTypes(
     "ImageType",
     [...new Set([...ENUMS.IMAGE_TYPES, ...imageTypes])] as string[],
-    updatedVersion
+    updatedVersion,
   );
   if (imageTypeVersion) updatedVersion = imageTypeVersion;
 
@@ -290,7 +290,7 @@ export const updateSkylarkSchema = async ({
     const { version: assetTypeVersion } = await updateEnumTypes(
       "AssetType",
       assetTypes,
-      updatedVersion
+      updatedVersion,
     );
     if (assetTypeVersion) updatedVersion = assetTypeVersion;
   }
@@ -299,19 +299,17 @@ export const updateSkylarkSchema = async ({
     const { version: tagTypeVersion } = await updateEnumTypes(
       "TagType",
       tagTypes,
-      updatedVersion
+      updatedVersion,
     );
     if (tagTypeVersion) updatedVersion = tagTypeVersion;
   }
 
-  const { version: seasonUpdateVersion } = await addPreferredImageTypeToSeason(
-    updatedVersion
-  );
+  const { version: seasonUpdateVersion } =
+    await addPreferredImageTypeToSeason(updatedVersion);
   if (seasonUpdateVersion) updatedVersion = seasonUpdateVersion;
 
-  const { version: streamtvConfigVersion } = await addStreamTVConfigObjectType(
-    updatedVersion
-  );
+  const { version: streamtvConfigVersion } =
+    await addStreamTVConfigObjectType(updatedVersion);
   if (streamtvConfigVersion) updatedVersion = streamtvConfigVersion;
 
   if (updatedVersion !== initialVersion) {

@@ -18,7 +18,7 @@ import {
  */
 export const getImageSrcAndSizeByWindow = (
   images: UnexpandedObjects | ImageUrls | undefined,
-  type: ImageTypes
+  type: ImageTypes,
 ): string => {
   const imageSize =
     typeof window !== "undefined" &&
@@ -32,7 +32,7 @@ export const getImageSrcAndSizeByWindow = (
 export const skylarkRequestWithLocalStorage = <T>(
   query: string,
   headers: Record<string, string>,
-  variables?: Record<string, unknown>
+  variables?: Record<string, unknown>,
 ) => {
   if (typeof window !== "undefined") {
     // Allow users to give their own Skylark to connect to
@@ -44,7 +44,7 @@ export const skylarkRequestWithLocalStorage = <T>(
         localStorageApiKey,
         query,
         variables || {},
-        headers
+        headers,
       );
     }
   }
@@ -56,7 +56,7 @@ export const skylarkRequestWithLocalStorage = <T>(
 export const skylarkRequestWithDimensions = <T>(
   query: string,
   dimensions: Dimensions,
-  optVariables?: Record<string, unknown>
+  optVariables?: Record<string, unknown>,
 ) => {
   const headers: Record<string, string> = {};
 

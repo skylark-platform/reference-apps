@@ -9,11 +9,11 @@ describe("BaseThumbnail component", () => {
         backgroundImage=""
         contentLocation="inside"
         href="http://localhost/some-href"
-      />
+      />,
     );
     expect(screen.getByRole("link")).toHaveProperty(
       "href",
-      "http://localhost/some-href"
+      "http://localhost/some-href",
     );
   });
 });

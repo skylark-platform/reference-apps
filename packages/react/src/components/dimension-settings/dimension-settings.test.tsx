@@ -8,7 +8,7 @@ const customRender = (ui: React.ReactElement, renderOptions?: RenderOptions) =>
     <DimensionsContextProvider {...renderOptions}>
       {ui}
     </DimensionsContextProvider>,
-    renderOptions
+    renderOptions,
   );
 
 const getCheckBox = (label: string): HTMLInputElement =>

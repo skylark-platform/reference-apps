@@ -92,7 +92,7 @@ export const movieThumbnails: MovieThumbnailProps[] = [
 ];
 
 export const allMovieBackgroundImages = movieThumbnails.map(
-  ({ backgroundImage }) => backgroundImage
+  ({ backgroundImage }) => backgroundImage,
 );
 
 export const episodeThumbnails: EpisodeThumbnailProps[] = [

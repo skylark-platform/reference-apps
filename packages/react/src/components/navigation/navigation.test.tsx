@@ -9,11 +9,11 @@ describe("Navigation component", () => {
         activeHref="/"
         defaultOpen
         links={[{ text: "JW", href: "/homepage" }]}
-      />
+      />,
     );
     expect(screen.getByRole("link")).toHaveProperty(
       "href",
-      "http://localhost/homepage"
+      "http://localhost/homepage",
     );
   });
 });

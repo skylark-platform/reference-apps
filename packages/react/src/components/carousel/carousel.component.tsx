@@ -72,7 +72,7 @@ export const Carousel: React.FC<CarouselProps> = ({
           width: 2000,
         }),
       })),
-    [unparsedItems]
+    [unparsedItems],
   );
 
   const paginate = (newDirection: number) => {

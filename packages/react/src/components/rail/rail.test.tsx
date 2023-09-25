@@ -14,7 +14,7 @@ describe("Rail component", () => {
     render(
       <Rail>
         <MovieThumbnail {...movieThumbnails[0]} />
-      </Rail>
+      </Rail>,
     );
     expect(screen.queryByTestId(/previous-button/i)).toBeNull();
     expect(screen.queryByTestId(/forward-button/i)).toBeNull();
@@ -27,7 +27,7 @@ describe("Rail component", () => {
         {Array.from({ length: 20 }, (_, index) => index).map((text) => (
           <p key={text}>{text}</p>
         ))}
-      </Rail>
+      </Rail>,
     );
     fireEvent.click(screen.getByTestId("forward-button"));
     expect(window.HTMLElement.prototype.scrollTo).toHaveBeenCalled();

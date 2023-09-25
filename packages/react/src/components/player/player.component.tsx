@@ -20,7 +20,7 @@ export const Player: React.FC<PlayerProps> = ({
     isClient && src
       ? new URL(
           src,
-          `${window.location.protocol}//${window.location.host}`
+          `${window.location.protocol}//${window.location.host}`,
         ).toString()
       : undefined;
 

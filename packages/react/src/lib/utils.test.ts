@@ -86,7 +86,7 @@ describe("utils", () => {
 
       await skylarkRequestWithDimensions("query", dimensions);
 
-      expect(graphQLClient.request).toBeCalledWith(
+      expect(graphQLClient.request).toHaveBeenCalledWith(
         "query",
         {
           deviceType: "",
@@ -94,7 +94,7 @@ describe("utils", () => {
           language: "",
           region: "",
         },
-        {}
+        {},
       );
     });
 
@@ -112,10 +112,10 @@ describe("utils", () => {
 
       await skylarkRequestWithDimensions("query", dimensions);
 
-      expect(graphQLClient.request).toBeCalledWith(
+      expect(graphQLClient.request).toHaveBeenCalledWith(
         "query",
         { deviceType: "", customerType: "", language: "", region: "" },
-        { "x-time-travel": "next week" }
+        { "x-time-travel": "next week" },
       );
     });
   });

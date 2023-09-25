@@ -19,7 +19,7 @@ describe("Carousel component", () => {
     render(<Carousel items={heros} />);
     expect(screen.getByText(heros[0].title)).toBeTruthy();
     expect(
-      screen.getByText("30 day free trial available. £12.99/mo after.")
+      screen.getByText("30 day free trial available. £12.99/mo after."),
     ).toBeTruthy();
     expect(screen.getByText("Watch for free")).toBeTruthy();
   });

@@ -2,6 +2,9 @@ flags:
   streamTV:
     paths:
       - apps/streamtv/
+  marketingSite:
+    paths:
+      - apps/marketing-site/
   ingestor:
     paths:
       - packages/ingestor/
@@ -21,9 +24,10 @@ coverage:
           - react
         target: 80%
         threshold: 1%
-      streamTV:
+      apps:
         flags:
           - streamTV
+          - marketingSite
         target: 80%
       ingestor:
         flags:

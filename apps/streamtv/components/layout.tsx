@@ -66,7 +66,7 @@ export const StreamTVLayout: React.FC<Props> = ({
       href: convertUrlWithSameOriginToPath(
         config?.featuredPageUrl ||
           process.env.NEXT_PUBLIC_TV_SHOWS_HREF ||
-          "/brand/reculg97iNzbkEZCK" // StreamTV Ingest External ID
+          "/brand/reculg97iNzbkEZCK", // StreamTV Ingest External ID
       ),
     },
   ];

@@ -21,7 +21,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject(
     "Movie",
     context.query.slug as string,
-    context.locale || ""
+    context.locale || "",
   );
 
   return {
@@ -66,7 +66,7 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const playbackUrl = asset?.hls_url || asset?.url || "/mux-video-intro.mp4";
 
   const availabilityEndDate = getFurthestAvailabilityEndDate(
-    movie?.availability?.objects as Availability[] | undefined
+    movie?.availability?.objects as Availability[] | undefined,
   );
 
   return (
@@ -82,7 +82,7 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           title: brandTitle,
         }}
         credits={splitAndFormatGraphQLCreditsByInternalTitle(
-          movie?.credits?.objects
+          movie?.credits?.objects,
         )}
         genres={convertObjectToName(movie?.genres)}
         loading={!movie}

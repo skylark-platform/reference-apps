@@ -7,7 +7,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject(
     "SkylarkSet",
     context.query.slug as string,
-    context.locale || ""
+    context.locale || "",
   );
 
   return {
