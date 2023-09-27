@@ -6,15 +6,15 @@ export interface TestimonialCardProps {
 }
 
 export const TestimonialCard = ({ testimonial }: TestimonialCardProps) => (
-  <div className="flex w-full max-w-md flex-col items-start">
+  <div className="mx-auto flex w-full max-w-md flex-col items-center md:items-start">
     <FirstValidImage
-      className="mb-6 h-48 w-full object-cover"
+      className="mb-4 max-h-28 w-1/2 object-cover md:mb-6 md:h-48 md:w-full"
       images={testimonial.images?.objects}
     />
-    <h3 className="text-3xl font-semibold">{testimonial.title}</h3>
-    <p className="h-8 text-lg font-semibold uppercase text-gray-600">
+    <h3 className="text-2xl font-semibold md:text-3xl">{testimonial.title}</h3>
+    <p className="text-base font-semibold uppercase text-gray-600 md:h-8 md:text-lg">
       {testimonial.industry}
     </p>
-    <p>{testimonial.description}</p>
+    <p className="text-center md:text-left">{testimonial.description}</p>
   </div>
 );
