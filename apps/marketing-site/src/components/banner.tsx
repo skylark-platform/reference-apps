@@ -1,9 +1,9 @@
 import { ArrowRightIcon, ChatBubbleIcon } from "@radix-ui/react-icons";
 
 export const Banner = () => (
-  <div className="gutter absolute left-0 right-0 top-0 flex h-10 w-full items-center justify-between bg-skylark-blue text-sm font-medium">
+  <div className="gutter absolute left-0 right-0 top-0 flex h-10 w-full items-center justify-end bg-skylark-blue text-sm font-medium sm:justify-between">
     <a
-      className="flex items-center justify-center space-x-2 text-white hover:underline"
+      className="hidden items-center justify-center space-x-2 text-white hover:underline sm:flex"
       href={"mailto:hello@skylarkplatform.com?subject=Hello"}
       rel="noreferrer"
       target="_blank"

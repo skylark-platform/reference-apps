@@ -23,7 +23,7 @@ const DefaultSectionComponent = ({ section }: SectionProps) => {
     : [];
 
   return (
-    <div className="my-10 bg-white" data-testid="default-section">
+    <div className="my-4 bg-white md:my-10" data-testid="default-section">
       {blocks?.map((block, index) => (
         <div
           className={clsx("w-full", index !== blocks.length - 1 && "border-b")}
@@ -49,11 +49,11 @@ const TestimonialSectionComponent = ({ section }: SectionProps) => {
       data-testid="testimonial-section"
     >
       {section.title && (
-        <p className="mb-12 text-center text-4xl font-semibold">
+        <p className="mb-12 text-center text-3xl font-semibold lg:text-4xl">
           {section.title}
         </p>
       )}
-      <div className="flex justify-around gap-8">
+      <div className="grid grid-cols-1 items-start justify-around gap-8 md:grid-cols-2">
         {testimonials?.map((testimonial) => (
           <TestimonialCard key={testimonial.uid} testimonial={testimonial} />
         ))}
@@ -77,12 +77,13 @@ const VerticalTabsSection = ({ section }: SectionProps) => {
       data-testid="vertical-tabs-section"
     >
       {section.title && (
-        <h3 className="text-center text-5xl font-semibold">{section.title}</h3>
+        <h3 className="text-center text-4xl font-semibold lg:text-5xl">
+          {section.title}
+        </h3>
       )}
-      <div className="grid h-full w-full grow grid-cols-4 gap-10 py-16">
-        <div className="col-span-1 h-full rounded-lg bg-gray-100 p-8">
-          {/* <p className="text-2xl font-semibold">{`Key`}</p> */}
-          <ul className="mt-8 border-l-2 border-gray-200 pl-4">
+      <div className="grid h-full w-full grow grid-cols-4 gap-4 py-16 lg:gap-10">
+        <div className="col-span-1 h-full rounded-lg bg-gray-100 p-2 md:p-4 lg:p-8">
+          <ul className="mt-6 border-gray-200 lg:mt-8 lg:border-l-2 lg:pl-4">
             {blocks.map((block, index) => (
               <li className="my-8" key={block.uid}>
                 <Button

@@ -28,31 +28,35 @@ body {
 }
 @layer components {
   .gutter {
-    @apply px-20;
+    @apply px-4 md:px-16 lg:px-20;
   }
 
   .skylark-wysiwyg h1 {
-    @apply mb-8 text-5xl;
+    @apply mb-8 text-4xl md:text-5xl;
   }
 
   .skylark-wysiwyg h2 {
-    @apply mb-6 text-4xl;
+    @apply mb-6 text-3xl md:text-4xl;
   }
 
   .skylark-wysiwyg h3 {
-    @apply mb-4 text-4xl;
+    @apply mb-4 text-3xl md:text-4xl;
   }
 
   .skylark-wysiwyg h4 {
-    @apply mb-4 text-2xl;
+    @apply mb-4 text-xl md:text-2xl;
   }
 
   .skylark-wysiwyg h5,
   .skylark-wysiwyg h6 {
-    @apply mb-2 text-xl;
+    @apply mb-2 text-lg md:text-xl;
   }
 
   .skylark-wysiwyg p {
-    @apply text-xl;
+    @apply my-2 text-base md:my-4 md:text-lg;
+  }
+
+  .skylark-wysiwyg blockquote {
+    @apply my-4 border-l-4 border-skylark-blue px-4 py-2 text-base md:my-8 md:text-lg lg:p-10;
   }
 }

@@ -35,18 +35,19 @@ const GenericBlock = ({
   return (
     <div
       className={clsx(
-        "grid w-full items-center gap-x-4 py-20 md:gap-x-10 lg:gap-x-20",
-        hasImages ? "grid-cols-2" : "grid-cols-1 text-center",
-        hasImages && !imageLeft && "text-left",
-        hasImages && imageLeft && "text-right",
+        "flex w-full flex-col items-center gap-y-4 py-12 md:gap-x-10 md:py-20 lg:gap-x-20",
+        hasImages ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1 text-center",
+        hasImages && !imageLeft && "text-center md:flex-row md:text-left",
+        hasImages &&
+          imageLeft &&
+          "text-center md:flex-row-reverse md:text-right",
       )}
       data-testid="generic-block"
     >
-      {hasImages && imageLeft && <FirstValidImage images={images} />}
-      <div className="w-full">
+      <div className={clsx(hasImages ? "w-full md:w-1/2" : "w-full")}>
         <CopyComponent copy={block.copy} />
         {hasCtas && (
-          <div className="mt-8 flex justify-start space-x-4">
+          <div className="mt-8 flex justify-center space-x-4 md:justify-start">
             {ctas.map((cta, index) => (
               <CTAButton
                 cta={cta}
@@ -57,7 +58,11 @@ const GenericBlock = ({
           </div>
         )}
       </div>
-      {hasImages && !imageLeft && <FirstValidImage images={images} />}
+      {hasImages && (
+        <div className="w-full md:w-1/2">
+          <FirstValidImage images={images} />
+        </div>
+      )}
     </div>
   );
 };
@@ -68,14 +73,14 @@ const ImageRailBlock = ({
   images,
 }: BlockProps & { hasImages?: boolean; images: SkylarkImage[] }) => (
   <div className="py-16" data-testid="image-rail-block">
-    <p className="text-center text-3xl">{block.title}</p>
+    <p className="text-center text-2xl lg:text-3xl">{block.title}</p>
     {hasImages && (
-      <div className="mt-4 flex justify-around">
+      <div className="mt-4 flex flex-wrap justify-around gap-4">
         {images.map((image) => (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             alt={image.title || image.uid}
-            className="h-36 rounded-lg shadow"
+            className="h-28 rounded-lg shadow md:h-36"
             key={`block-${block.uid}-image-rail-${image.uid}`}
             src={image?.url || ""}
           />

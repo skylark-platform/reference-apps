@@ -36,11 +36,11 @@ export const CTAComponent = ({ cta }: CTAProps) => {
   return (
     <div
       className={clsx(
-        "gutter flex items-center gap-4 py-10 text-white",
+        "flex flex-col items-center gap-8 px-8 py-10 text-white md:flex-row md:px-16 lg:px-20",
         appearance === CallToActionAppearance.Banner &&
           "w-full bg-skylark-darkblue",
         appearance === CallToActionAppearance.Island &&
-          "my-10 w-11/12 rounded-2xl bg-skylark-blue",
+          "my-4 w-11/12 rounded-2xl bg-skylark-blue shadow md:my-10",
         hasText ? "justify-between text-left" : "justify-center text-center",
       )}
     >
