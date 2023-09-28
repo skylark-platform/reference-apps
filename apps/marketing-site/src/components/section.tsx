@@ -53,7 +53,7 @@ const TestimonialSectionComponent = ({ section }: SectionProps) => {
           {section.title}
         </p>
       )}
-      <div className="grid grid-cols-1 items-center justify-around gap-8 md:grid-cols-2">
+      <div className="grid grid-cols-1 items-start justify-around gap-8 md:grid-cols-2">
         {testimonials?.map((testimonial) => (
           <TestimonialCard key={testimonial.uid} testimonial={testimonial} />
         ))}
