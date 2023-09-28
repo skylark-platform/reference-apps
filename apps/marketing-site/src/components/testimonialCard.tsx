@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { Testimonial } from "../../types/gql";
+import { Button } from "./button";
 import { FirstValidImage } from "./image";
 
 export interface TestimonialCardProps {
@@ -16,5 +18,10 @@ export const TestimonialCard = ({ testimonial }: TestimonialCardProps) => (
       {testimonial.industry}
     </p>
     <p className="text-center md:text-left">{testimonial.description}</p>
+    {testimonial.external_id && (
+      <Link className="my-4" href={`/customers/${testimonial.external_id}`}>
+        <Button variant="secondary">{`Read more`}</Button>
+      </Link>
+    )}
   </div>
 );
