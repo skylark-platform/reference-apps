@@ -9,6 +9,13 @@ import { GET_TESTIMONIAL } from "src/queries/getTestimonial";
 import { CopyComponent } from "src/components/copy";
 import { PersonCard } from "src/components/personCard";
 import { FirstValidImage } from "src/components/image";
+import { motion } from "framer-motion";
+
+import {
+  fmAnimate,
+  fmFromBelowInitial,
+  fmTransition,
+} from "src/utils/framerMotionVariants";
 import { Testimonial } from "../../../types/gql";
 
 const workSans = Work_Sans({ subsets: ["latin"] });
@@ -56,7 +63,12 @@ export default function TestimonialPage({
         <link href="/favicons/favicon.ico" rel="icon" />
       </Head>
       <Banner />
-      <div className="gutter mx-auto mb-10 max-w-5xl">
+      <motion.div
+        animate={fmAnimate}
+        className="gutter mx-auto mb-10 max-w-5xl"
+        initial={fmFromBelowInitial}
+        transition={fmTransition}
+      >
         <FirstValidImage
           className="mb-10 md:mb-20"
           images={testimonial.images?.objects}
@@ -71,7 +83,7 @@ export default function TestimonialPage({
         <div className="my-10">
           <CopyComponent copy={testimonial.copy} />
         </div>
-      </div>
+      </motion.div>
     </main>
   );
 }

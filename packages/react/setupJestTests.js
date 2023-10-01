@@ -4,3 +4,12 @@ import "@testing-library/jest-dom/jest-globals";
 
 // eslint-disable-next-line global-require, @typescript-eslint/no-unsafe-return, import/no-extraneous-dependencies
 jest.mock("next/router", () => require("next-router-mock"));
+
+const intersectionObserverMock = () => ({
+  observe: () => null,
+  unobserve: () => null,
+  disconnect: () => null,
+});
+window.IntersectionObserver = jest
+  .fn()
+  .mockImplementation(intersectionObserverMock);

@@ -1,5 +1,12 @@
 import clsx from "clsx";
 import { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  fmAnimate,
+  fmFromLeftInitial,
+  fmTransition,
+  fmViewport,
+} from "src/utils/framerMotionVariants";
 import {
   Block,
   Section,
@@ -49,9 +56,15 @@ const TestimonialSectionComponent = ({ section }: SectionProps) => {
       data-testid="testimonial-section"
     >
       {section.title && (
-        <p className="mb-12 text-center text-3xl font-semibold lg:text-4xl">
+        <motion.p
+          className="mb-12 text-center text-3xl font-semibold lg:text-4xl"
+          initial={fmFromLeftInitial}
+          transition={fmTransition}
+          viewport={fmViewport}
+          whileInView={fmAnimate}
+        >
           {section.title}
-        </p>
+        </motion.p>
       )}
       <div className="grid grid-cols-1 items-start justify-around gap-8 md:grid-cols-2">
         {testimonials?.map((testimonial) => (
@@ -77,9 +90,15 @@ const VerticalTabsSection = ({ section }: SectionProps) => {
       data-testid="vertical-tabs-section"
     >
       {section.title && (
-        <h3 className="text-center text-4xl font-semibold lg:text-5xl">
+        <motion.h3
+          className="text-center text-4xl font-semibold lg:text-5xl"
+          initial={fmFromLeftInitial}
+          transition={fmTransition}
+          viewport={fmViewport}
+          whileInView={fmAnimate}
+        >
           {section.title}
-        </h3>
+        </motion.h3>
       )}
       <div className="grid h-full w-full grow grid-cols-4 gap-4 py-16 lg:gap-10">
         <div className="col-span-1 h-full rounded-lg bg-gray-100 p-2 md:p-4 lg:p-8">
