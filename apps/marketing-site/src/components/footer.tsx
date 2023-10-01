@@ -1,11 +1,12 @@
+import Link from "next/link";
 import { SkylarkLogo } from "./skylarkBranding";
 
 export const Footer = () => (
   <div className="gutter relative h-96 w-full bg-skylark-black pt-20">
     <div className="grid w-full grid-cols-2 text-white ">
-      <div>
+      <Link href="/">
         <SkylarkLogo />
-      </div>
+      </Link>
       <div className="flex w-full justify-end">
         <div className="w-64 text-sm font-normal">
           <h6 className="mb-8 font-bold">{`Get in touch`}</h6>

@@ -60,22 +60,43 @@ const languagesToCheck = [
 
 const assetTypesToIgnore = ["audiobook"];
 
+/**
+ * As per Slack messages
+ * - Alternative Synopsis -> Synopsis
+ * - Synopsis             -> Episode Number
+ * So this function isn't required
+ */
 const getSynopsisForMedia = (legacyObject: LegacyObjectsWithSynopsis) => {
   // We want to make sure that we add synopsis, then short_synopsis in the order alternate_synopsis -> synopsis -> extended_synopsis
-  const synopsis =
-    legacyObject.alternate_synopsis ||
-    legacyObject.synopsis ||
-    legacyObject.extended_synopsis;
-  const synopsisShort =
-    (synopsis && synopsis !== legacyObject.synopsis && legacyObject.synopsis) ||
-    (synopsis !== legacyObject.extended_synopsis &&
-      legacyObject.extended_synopsis) ||
-    "";
+  const synopsis = legacyObject.alternate_synopsis;
+  // const synopsisShort =
+  //   (synopsis && synopsis !== legacyObject.synopsis && legacyObject.synopsis) ||
+  //   (synopsis !== legacyObject.extended_synopsis &&
+  //     legacyObject.extended_synopsis) ||
+  //   "";
 
   return {
     synopsis,
-    synopsisShort,
+    // synopsisShort,
   };
+};
+
+/**
+ * As per Slack messages
+ * - Synopsis -> Episode Number
+ */
+const parseEpisodeNumberFromSynopsisField = (
+  legacyObject: LegacyObjectsWithSynopsis,
+): number | null => {
+  try {
+    if (legacyObject.synopsis) {
+      const int = parseInt(legacyObject.synopsis, 10);
+      return int;
+    }
+  } catch {
+    return null;
+  }
+  return null;
 };
 
 const convertLegacyObject = (
@@ -100,14 +121,18 @@ const convertLegacyObject = (
     if (assetType && assetTypesToIgnore.includes(assetType)) {
       return null;
     }
-    const { synopsis, synopsisShort } = getSynopsisForMedia(legacyObject);
+    const { synopsis } = getSynopsisForMedia(legacyObject);
+
+    if (assetType?.toUpperCase() === "GAME") {
+      // TODO add Game stuff
+      return null;
+    }
 
     return {
       ...commonFields,
       internal_title: legacyObject.name,
       title: legacyObject.title,
       synopsis,
-      synopsis_short: synopsisShort,
       type: assetType,
       duration: legacyObject.duration_in_seconds,
       url: legacyObject.url !== "" ? legacyObject.url : null,
@@ -116,41 +141,40 @@ const convertLegacyObject = (
   }
 
   if (legacyObjectType === LegacyObjectType.Episodes) {
-    const { synopsis, synopsisShort } = getSynopsisForMedia(legacyObject);
+    const { synopsis } = getSynopsisForMedia(legacyObject);
     return {
       ...commonFields,
       internal_title: legacyObject.name,
       title: legacyObject.title,
       synopsis,
-      synopsis_short: synopsisShort,
-      episode_number: legacyObject.episode_number,
+      episode_number:
+        parseEpisodeNumberFromSynopsisField(legacyObject) ||
+        legacyObject.episode_number, // Client hasn't mentioned not to default to episode_number
       kaltura_id: legacyObject.new_flag,
     };
   }
 
   if (legacyObjectType === LegacyObjectType.Seasons) {
-    const { synopsis, synopsisShort } = getSynopsisForMedia(legacyObject);
+    const { synopsis } = getSynopsisForMedia(legacyObject);
 
     return {
       ...commonFields,
       internal_title: legacyObject.name,
       title: legacyObject.title,
       synopsis,
-      synopsis_short: synopsisShort,
       season_number: legacyObject.season_number,
       number_of_episodes: legacyObject.number_of_episodes,
     };
   }
 
   if (legacyObjectType === LegacyObjectType.Brands) {
-    const { synopsis, synopsisShort } = getSynopsisForMedia(legacyObject);
+    const { synopsis } = getSynopsisForMedia(legacyObject);
 
     return {
       ...commonFields,
       internal_title: legacyObject.name,
       title: legacyObject.title,
       synopsis,
-      synopsis_short: synopsisShort,
     };
   }
 
@@ -216,6 +240,7 @@ export const ingestClientA = async ({
     commonArgs,
   );
 
+  // TODO Split this into assets and games
   skylarkObjects.assets = await createObjectsInSkylark(
     legacyObjects.assets,
     commonArgs,

@@ -16,6 +16,11 @@
   }
 } */
 
+html {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
@@ -25,7 +30,15 @@ body {
     )
     rgb(var(--background-start-rgb));
   -webkit-font-smoothing: antialiased;
+
+  position: relative;
+  max-width: 100vw;
 }
+
+#__root {
+  overflow-x: hidden;
+}
+
 @layer components {
   .gutter {
     @apply px-4 md:px-16 lg:px-20;

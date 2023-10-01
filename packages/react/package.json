@@ -35,7 +35,7 @@
     "@mux/mux-video-react": "^0.7.15",
     "@skylark-reference-apps/lib": "*",
     "dayjs": "^1.11.3",
-    "framer-motion": "^10.12.21",
+    "framer-motion": "10.16.4",
     "next": "13.4.19",
     "next-translate": "^2.4.4",
     "popmotion": "^11.0.5",
