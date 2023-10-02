@@ -58,7 +58,7 @@ const languagesToCheck = [
   "MN",
 ];
 
-const assetTypesToIgnore = ["audiobook"];
+const assetTypesToIgnore = ["audiobook", "app"];
 
 /**
  * As per Slack messages
@@ -101,6 +101,7 @@ const parseEpisodeNumberFromSynopsisField = (
 
 const convertLegacyObject = (
   legacyObject: LegacyObjects[0] | ParsedSL8Credits,
+  language?: string,
 ): ConvertedLegacyObject | null => {
   // eslint-disable-next-line no-underscore-dangle
   const legacyObjectType = legacyObject._type;
@@ -116,17 +117,23 @@ const convertLegacyObject = (
     external_id: legacyObject.uid,
   };
 
+  if (legacyObjectType === LegacyObjectType.Games) {
+    const { synopsis } = getSynopsisForMedia(legacyObject);
+
+    return {
+      ...commonFields,
+      internal_title: legacyObject.name,
+      title: legacyObject.title,
+      synopsis,
+    };
+  }
+
   if (legacyObjectType === LegacyObjectType.Assets) {
     const assetType = legacyObject.asset_type_url?.name || null;
     if (assetType && assetTypesToIgnore.includes(assetType)) {
       return null;
     }
     const { synopsis } = getSynopsisForMedia(legacyObject);
-
-    if (assetType?.toUpperCase() === "GAME") {
-      // TODO add Game stuff
-      return null;
-    }
 
     return {
       ...commonFields,
@@ -142,8 +149,8 @@ const convertLegacyObject = (
 
   if (legacyObjectType === LegacyObjectType.Episodes) {
     const { synopsis } = getSynopsisForMedia(legacyObject);
-    return {
-      ...commonFields,
+
+    const fields: Record<string, string | number | null> = {
       internal_title: legacyObject.name,
       title: legacyObject.title,
       synopsis,
@@ -151,6 +158,17 @@ const convertLegacyObject = (
         parseEpisodeNumberFromSynopsisField(legacyObject) ||
         legacyObject.episode_number, // Client hasn't mentioned not to default to episode_number
       kaltura_id: legacyObject.new_flag,
+    };
+
+    if (language?.toUpperCase() === "EN") {
+      // Synopsis is sometimes a string version of an episode_number
+      // BUT Client A has said to only carry it over when the language is "en" as it is a Global field
+      fields.episode_number_string = legacyObject.synopsis;
+    }
+
+    return {
+      ...commonFields,
+      ...fields,
     };
   }
 
@@ -181,6 +199,68 @@ const convertLegacyObject = (
   return commonFields;
 };
 
+const splitAssetsAndGames = (
+  fetchedAssets: FetchedLegacyObjects<LegacyAsset>,
+): {
+  assets: FetchedLegacyObjects<LegacyAsset>;
+  games: FetchedLegacyObjects<LegacyAsset>;
+} => {
+  const totalAssetsAndGames = Object.values(fetchedAssets.objects).reduce(
+    (previous, arr) => previous + arr.length,
+    0,
+  );
+
+  const assetObjects: typeof fetchedAssets.objects = Object.fromEntries(
+    Object.entries(fetchedAssets.objects).map(([language, objects]) => {
+      const nonAppAssets = objects.filter(
+        (obj) => obj.asset_type_url?.name.toUpperCase() !== "APP",
+      );
+      return [language, nonAppAssets];
+    }),
+  );
+
+  const gameObjects: FetchedLegacyObjects<LegacyAsset>["objects"] =
+    Object.fromEntries(
+      Object.entries(fetchedAssets.objects).map(([language, objects]) => {
+        const appAssets: LegacyAsset[] = objects
+          .filter(
+            (obj) =>
+              obj.asset_type_url?.name &&
+              obj.asset_type_url.name.toUpperCase() === "APP",
+          )
+          .map((obj) => ({ ...obj, _type: LegacyObjectType.Games }));
+        return [language, appAssets];
+      }),
+    );
+
+  const totalAssets = Object.values(assetObjects).reduce(
+    (previous, arr) => previous + arr.length,
+    0,
+  );
+
+  const totalGames = Object.values(gameObjects).reduce(
+    (previous, arr) => previous + arr.length,
+    0,
+  );
+
+  if (totalAssets + totalGames !== totalAssetsAndGames) {
+    throw new Error(
+      `[splitAssetsAndGames] Assets and Games don't add up to total fetched assets - Assets: ${totalAssets}, Games: ${totalGames}, Originally fetched: ${totalAssetsAndGames}`,
+    );
+  }
+
+  return {
+    assets: {
+      ...fetchedAssets,
+      objects: assetObjects,
+    },
+    games: {
+      ...fetchedAssets,
+      objects: gameObjects,
+    },
+  };
+};
+
 export const ingestClientA = async ({
   readFromDisk,
   isCreateOnly,
@@ -209,6 +289,7 @@ export const ingestClientA = async ({
 
   await commonSkylarkConfigurationUpdates({
     assets: legacyObjects.assets.objects,
+    assetTypesToIgnore,
     defaultLanguage: languagesToCheck[0].toLowerCase(),
   });
 
@@ -240,11 +321,17 @@ export const ingestClientA = async ({
     commonArgs,
   );
 
-  // TODO Split this into assets and games
-  skylarkObjects.assets = await createObjectsInSkylark(
-    legacyObjects.assets,
+  const { assets, games } = splitAssetsAndGames(legacyObjects.assets);
+
+  skylarkObjects.games = await createObjectsInSkylark(
+    {
+      ...games,
+      type: LegacyObjectType.Games, // Override
+    },
     commonArgs,
   );
+
+  skylarkObjects.assets = await createObjectsInSkylark(assets, commonArgs);
 
   skylarkObjects.episodes = await createObjectsInSkylark(
     legacyObjects.episodes,

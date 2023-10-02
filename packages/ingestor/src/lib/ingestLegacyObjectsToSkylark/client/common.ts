@@ -83,11 +83,13 @@ export const fetchAndWriteLegacyObjects = async <
 
 export const commonSkylarkConfigurationUpdates = async ({
   assets,
+  assetTypesToIgnore,
   images,
   sets,
   defaultLanguage,
 }: {
   assets: Record<string, LegacyAsset[]>;
+  assetTypesToIgnore?: string[];
   images?: Record<string, LegacyImage[]>;
   sets?: Record<string, LegacySet[]>;
   defaultLanguage: string;
@@ -100,8 +102,18 @@ export const commonSkylarkConfigurationUpdates = async ({
         .flatMap((arr) => arr)
         .map(({ asset_type_url }) => asset_type_url?.name),
     ),
-  ].filter((name): name is string => !!name);
-  console.log("--- Required Asset type enums:", assetTypes.join(", "));
+  ]
+    .filter((name): name is string => !!name)
+    .filter((name) => !assetTypesToIgnore?.includes(name.toLowerCase()));
+  console.log(
+    "--- Required Asset type enums:",
+    assetTypes.map((str) => str.toUpperCase()).join(", "),
+    assetTypesToIgnore
+      ? `(Ignored values ${assetTypesToIgnore
+          .map((str) => str.toUpperCase())
+          .join(", ")})`
+      : "",
+  );
 
   const imageTypes = images
     ? [
@@ -114,7 +126,10 @@ export const commonSkylarkConfigurationUpdates = async ({
     : null;
 
   if (imageTypes)
-    console.log("--- Required Image type enums:", imageTypes.join(", "));
+    console.log(
+      "--- Required Image type enums:",
+      imageTypes.map((str) => str.toUpperCase()).join(", "),
+    );
 
   const setTypes = sets
     ? [
@@ -127,7 +142,10 @@ export const commonSkylarkConfigurationUpdates = async ({
     : null;
 
   if (setTypes)
-    console.log("--- Required Set type enums:", setTypes.join(", "));
+    console.log(
+      "--- Required Set type enums:",
+      setTypes.map((str) => str.toUpperCase()).join(", "),
+    );
 
   await updateSkylarkSchema({ assetTypes, imageTypes, setTypes });
 
@@ -152,6 +170,7 @@ export const createEmptySkylarkObjects = (): CreatedSkylarkObjects => ({
   seasons: [],
   brands: [],
   sets: [],
+  games: [],
 });
 
 /* eslint-enable no-console */

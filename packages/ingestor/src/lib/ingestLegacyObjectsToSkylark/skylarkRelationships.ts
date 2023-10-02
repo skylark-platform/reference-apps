@@ -142,6 +142,7 @@ export const createRelationships = (
   // TAGS
   if (
     LegacyObjectType.Assets === legacyObjectType ||
+    LegacyObjectType.Games === legacyObjectType ||
     LegacyObjectType.Brands === legacyObjectType ||
     LegacyObjectType.Episodes === legacyObjectType ||
     LegacyObjectType.Seasons === legacyObjectType
@@ -156,6 +157,7 @@ export const createRelationships = (
     LegacyObjectType.People === legacyObjectType ||
     LegacyObjectType.Genres === legacyObjectType ||
     LegacyObjectType.Assets === legacyObjectType ||
+    LegacyObjectType.Games === legacyObjectType ||
     LegacyObjectType.Brands === legacyObjectType ||
     LegacyObjectType.Episodes === legacyObjectType ||
     LegacyObjectType.Seasons === legacyObjectType ||
@@ -172,6 +174,7 @@ export const createRelationships = (
   // GENRES
   if (
     LegacyObjectType.Assets === legacyObjectType ||
+    LegacyObjectType.Games === legacyObjectType ||
     LegacyObjectType.Brands === legacyObjectType ||
     LegacyObjectType.Episodes === legacyObjectType ||
     LegacyObjectType.Seasons === legacyObjectType ||
@@ -188,6 +191,7 @@ export const createRelationships = (
   // RATINGS
   if (
     LegacyObjectType.Assets === legacyObjectType ||
+    LegacyObjectType.Games === legacyObjectType ||
     LegacyObjectType.Brands === legacyObjectType ||
     LegacyObjectType.Episodes === legacyObjectType ||
     LegacyObjectType.Seasons === legacyObjectType ||
@@ -204,6 +208,7 @@ export const createRelationships = (
   // CREDITS
   if (
     LegacyObjectType.Assets === legacyObjectType ||
+    LegacyObjectType.Games === legacyObjectType ||
     LegacyObjectType.Brands === legacyObjectType ||
     LegacyObjectType.Episodes === legacyObjectType ||
     LegacyObjectType.Seasons === legacyObjectType ||

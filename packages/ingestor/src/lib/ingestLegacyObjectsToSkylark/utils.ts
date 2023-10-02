@@ -53,6 +53,9 @@ export const checkEnvVars = () => {
     SAAS_API_ENDPOINT,
   );
 
+  // eslint-disable-next-line no-console
+  console.log(`--- Client: ${client}`);
+
   const readFromDisk = process.env.READ_LEGACY_OBJECTS_FROM_DISK === "true";
 
   const isCreateOnly = process.env.CREATE_ONLY === "true";
@@ -101,6 +104,8 @@ export const convertLegacyObjectTypeToObjectType = (
       return "SkylarkImage";
     case LegacyObjectType.Credits:
       return "Credit";
+    case LegacyObjectType.Games:
+      return "Game";
     case LegacyObjectType.Sets:
       return "CustomSetName" as GraphQLObjectTypes;
     default:

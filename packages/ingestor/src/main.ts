@@ -27,6 +27,7 @@ import {
   writeAirtableOutputFile,
 } from "./lib/skylark/saas/fs";
 import { updateObjectConfigurations } from "./lib/skylark/saas/objectConfiguration";
+import { configureCache } from "./lib/skylark/saas/cacheConfiguration";
 
 const main = async () => {
   await clearUnableToFindVersionNoneObjectsFile();
@@ -84,6 +85,10 @@ const main = async () => {
   await updateObjectConfigurations();
   // eslint-disable-next-line no-console
   console.log("Object configuration updated");
+
+  await configureCache();
+  // eslint-disable-next-line no-console
+  console.log("Cache configuration updated");
 
   await createDimensions(showcaseDimensionsConfig);
 
