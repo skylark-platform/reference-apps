@@ -13,6 +13,7 @@ export enum LegacyObjectType {
   Credits = "credits", // Credits never existed as objects before SLX
   Sets = "sets",
   Schedules = "schedules",
+  Games = "games", // This doesn't actually exist, its a custom type used for Client A ingest as they wanted to change Assets with type "Game" to its own object
 }
 
 export enum LegacyObjectUidPrefix {
@@ -279,7 +280,7 @@ export interface LegacyEpisode extends LegacyCommonObject {
 }
 
 export interface LegacyAsset extends LegacyCommonObject {
-  _type: LegacyObjectType.Assets;
+  _type: LegacyObjectType.Assets | LegacyObjectType.Games; // Override for Client A
   asset_type_url: {
     name: string;
   } | null;

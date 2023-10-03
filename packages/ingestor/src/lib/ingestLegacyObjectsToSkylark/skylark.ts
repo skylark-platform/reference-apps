@@ -81,6 +81,7 @@ export const createObjectsInSkylark = async (
     relationshipObjects: CreatedSkylarkObjects;
     legacyObjectConverter: (
       legacyObject: LegacyObjects[0] | ParsedSL8Credits,
+      language?: string,
     ) => ConvertedLegacyObject | null;
     legacyCredits?: FetchedLegacyObjects<ParsedSL8Credits>;
     isCreateOnly?: boolean;
@@ -134,7 +135,7 @@ export const createObjectsInSkylark = async (
   for (const language of languages) {
     const legacyObjects = legacyObjectsAndLanguage[language];
     const parsedLegacyObjects = legacyObjects
-      .map(legacyObjectConverter)
+      .map((obj) => legacyObjectConverter(obj, language))
       .filter((obj): obj is ConvertedLegacyObject => !!obj);
 
     const relationships: Record<string, Record<string, { link: string[] }>> = (
@@ -152,35 +153,36 @@ export const createObjectsInSkylark = async (
       };
     }, {});
 
-    const availabilitiesToAdd: Record<string, string[]> = opts.availabilities
-      ? (legacyObjects as LegacyObjects[0][]).reduce((previous, obj) => {
-          const legacyUids = obj.schedule_urls?.map(getLegacyUidFromUrl);
+    const availabilitiesToAdd: Record<string, string[]> =
+      opts.availabilities || opts.alwaysAvailability
+        ? (legacyObjects as LegacyObjects[0][]).reduce((previous, obj) => {
+            const legacyUids = obj.schedule_urls?.map(getLegacyUidFromUrl);
 
-          if (!legacyUids) {
-            return opts.alwaysAvailability
-              ? { ...previous, [obj.uid]: [opts.alwaysAvailability.uid] }
-              : previous;
-          }
+            if (!legacyUids) {
+              return opts.alwaysAvailability
+                ? { ...previous, [obj.uid]: [opts.alwaysAvailability.uid] }
+                : previous;
+            }
 
-          const uids = legacyUids
-            .map((legacyUid) => {
-              const availability = opts.availabilities?.find(
-                ({ external_id }) => external_id === legacyUid,
-              );
-              return availability?.uid;
-            })
-            .filter((str): str is string => !!str);
+            const uids = legacyUids
+              .map((legacyUid) => {
+                const availability = opts.availabilities?.find(
+                  ({ external_id }) => external_id === legacyUid,
+                );
+                return availability?.uid;
+              })
+              .filter((str): str is string => !!str);
 
-          if (opts.alwaysAvailability) {
-            uids.push(opts.alwaysAvailability.uid);
-          }
+            if (opts.alwaysAvailability) {
+              uids.push(opts.alwaysAvailability.uid);
+            }
 
-          return {
-            ...previous,
-            [obj.uid]: uids,
-          };
-        }, {})
-      : {};
+            return {
+              ...previous,
+              [obj.uid]: uids,
+            };
+          }, {})
+        : {};
 
     // If in create only mode, get External IDs of existing objects for this language
     const previouslyCreatedObjectExternalIdsForThisLanguage =
