@@ -1,4 +1,4 @@
-import { Dimensions } from "@skylark-reference-apps/lib";
+import { DimensionKey, Dimensions } from "@skylark-reference-apps/lib";
 import * as utils from "../../lib/utils";
 import { Entertainment } from "../../types";
 import { Credit, SkylarkImageListing, ImageType } from "../../types/gql";
@@ -138,11 +138,11 @@ describe("utils.ts", () => {
   describe("createGraphQLQueryDimensions", () => {
     it("translates the active dimensions into the expected GraphQL format", () => {
       const dimensions: Dimensions = {
-        language: "en-GB",
-        deviceType: "smartphone",
-        customerType: "premium",
-        region: "europe",
-        timeTravel: "",
+        [DimensionKey.Language]: "en-GB",
+        [DimensionKey.DeviceType]: "smartphone",
+        [DimensionKey.CustomerType]: "premium",
+        [DimensionKey.Region]: "europe",
+        [DimensionKey.TimeTravel]: "",
       };
 
       const got = utils.createGraphQLQueryDimensions(dimensions);

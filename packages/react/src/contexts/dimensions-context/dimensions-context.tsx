@@ -1,22 +1,28 @@
-import { Dimensions } from "@skylark-reference-apps/lib";
+import {
+  ALL_DIMENSION_QUERY_KEYS,
+  DimensionKey,
+  Dimensions,
+} from "@skylark-reference-apps/lib";
 import React, { createContext, useContext, useEffect, useReducer } from "react";
 import setLanguage from "next-translate/setLanguage";
 import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
+import { NextParsedUrlQuery } from "next/dist/server/request-meta";
 import { useDeviceType } from "../../hooks";
+import { persistQueryValues } from "../../lib/utils";
 
 interface ReducerAction {
-  type: "language" | "customerType" | "deviceType" | "region" | "timeTravel";
+  type: DimensionKey;
   value: string;
 }
 
 export type DimensionsContextType = {
   dimensions: Dimensions;
-  setLanguage: (language: Dimensions["language"]) => void;
-  setCustomerType: (customerType: Dimensions["customerType"]) => void;
-  setDeviceType: (deviceType: Dimensions["deviceType"]) => void;
-  setRegion: (region: Dimensions["region"]) => void;
-  setTimeTravel: (timeTravel: Dimensions["timeTravel"]) => void;
+  setLanguage: (language: string) => void;
+  setCustomerType: (customerType: string) => void;
+  setDeviceType: (deviceType: string) => void;
+  setRegion: (region: string) => void;
+  setTimeTravel: (timeTravel: string) => void;
 };
 
 const dimensionsReducer = (
@@ -24,30 +30,30 @@ const dimensionsReducer = (
   action: ReducerAction,
 ): Dimensions => {
   switch (action.type) {
-    case "language":
+    case DimensionKey.Language:
       return {
         ...state,
-        language: action.value,
+        [DimensionKey.Language]: action.value,
       };
-    case "customerType":
+    case DimensionKey.CustomerType:
       return {
         ...state,
-        customerType: action.value,
+        [DimensionKey.CustomerType]: action.value,
       };
-    case "deviceType":
+    case DimensionKey.DeviceType:
       return {
         ...state,
-        deviceType: action.value,
+        [DimensionKey.DeviceType]: action.value,
       };
-    case "region":
+    case DimensionKey.Region:
       return {
         ...state,
-        region: action.value,
+        [DimensionKey.Region]: action.value,
       };
-    case "timeTravel":
+    case DimensionKey.TimeTravel:
       return {
         ...state,
-        timeTravel: action.value,
+        [DimensionKey.TimeTravel]: action.value,
       };
     default:
       throw new Error();
@@ -56,11 +62,11 @@ const dimensionsReducer = (
 
 const DimensionsContext = createContext<DimensionsContextType>({
   dimensions: {
-    language: "en-gb",
-    customerType: "standard",
-    deviceType: "",
-    region: "",
-    timeTravel: "",
+    [DimensionKey.Language]: "en-gb",
+    [DimensionKey.CustomerType]: "standard",
+    [DimensionKey.DeviceType]: "",
+    [DimensionKey.Region]: "",
+    [DimensionKey.TimeTravel]: "",
   },
   setLanguage: () => {},
   setCustomerType: () => {},
@@ -78,34 +84,38 @@ export const DimensionsContextProvider = ({
   const { lang } = useTranslation();
 
   const [dimensions, dispatch] = useReducer(dimensionsReducer, {
-    language: lang,
-    customerType: "premium",
-    deviceType,
-    region: "europe",
-    timeTravel: "",
+    [DimensionKey.Language]: lang,
+    [DimensionKey.CustomerType]: "premium",
+    [DimensionKey.DeviceType]: "",
+    [DimensionKey.Region]: "europe",
+    [DimensionKey.TimeTravel]: "",
   });
 
   // Automatically updates device type dimension depending on screen size
   useEffect(() => {
-    dispatch({ type: "deviceType", value: deviceType });
+    dispatch({ type: DimensionKey.DeviceType, value: deviceType });
   }, [deviceType]);
 
   useEffect(() => {
-    dispatch({ type: "language", value: lang });
+    dispatch({ type: DimensionKey.Language, value: lang });
   }, [lang]);
 
   return (
     <DimensionsContext.Provider
       value={{
         dimensions,
-        setCustomerType: (value) => dispatch({ type: "customerType", value }),
-        setLanguage: (value) => {
+        setCustomerType: (value: string) =>
+          dispatch({ type: DimensionKey.CustomerType, value }),
+        setLanguage: (value: string) => {
           void setLanguage(value);
-          dispatch({ type: "language", value });
+          dispatch({ type: DimensionKey.Language, value });
         },
-        setDeviceType: (value) => dispatch({ type: "deviceType", value }),
-        setRegion: (value) => dispatch({ type: "region", value }),
-        setTimeTravel: (value) => dispatch({ type: "timeTravel", value }),
+        setDeviceType: (value: string) =>
+          dispatch({ type: DimensionKey.DeviceType, value }),
+        setRegion: (value: string) =>
+          dispatch({ type: DimensionKey.Region, value }),
+        setTimeTravel: (value: string) =>
+          dispatch({ type: DimensionKey.TimeTravel, value }),
       }}
     >
       {children}
@@ -113,15 +123,45 @@ export const DimensionsContextProvider = ({
   );
 };
 
+const getDimensionsFromQuery = (
+  query: NextParsedUrlQuery,
+): Record<string, string> => {
+  const persistedQuery = persistQueryValues(query, ALL_DIMENSION_QUERY_KEYS);
+
+  const dimensionsQuery: Record<string, string> = Object.entries(
+    persistedQuery,
+  ).reduce(
+    (prev, [key, value]) => {
+      if (value && typeof value === "string") {
+        return {
+          ...prev,
+          [key]: value,
+        };
+      }
+
+      return prev;
+    },
+    {} as Record<string, string>,
+  );
+
+  return dimensionsQuery;
+};
+
 export const useDimensions = (): DimensionsContextType => {
   const { query } = useRouter();
-  const { dimensions, ...context } = useContext(DimensionsContext);
+  const { dimensions: contextDimensions, ...context } =
+    useContext(DimensionsContext);
+
+  const queryDimensions = getDimensionsFromQuery(query);
+
+  const dimensions: Dimensions = {
+    ...contextDimensions,
+    ...queryDimensions,
+    // language: (query.language as string) || contextDimensions.language,
+  };
 
   return {
     ...context,
-    dimensions: {
-      ...dimensions,
-      language: (query.language as string) || dimensions.language,
-    },
+    dimensions,
   };
 };

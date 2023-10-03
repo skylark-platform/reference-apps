@@ -1,4 +1,5 @@
 import React from "react";
+import { DimensionKey } from "@skylark-reference-apps/lib";
 import { fireEvent, render, RenderOptions, screen } from "../../../test-utils";
 import { DimensionsContextProvider, useDimensions } from "./dimensions-context";
 
@@ -18,12 +19,12 @@ const Consumer: React.FC<{ customerType?: string; deviceType?: string }> = ({
   return (
     <div>
       <p>{`Language: ${dimensions.language}`}</p>
-      <p
-        onClick={() => setCustomerType(customerType || "")}
-      >{`Customer Type: ${dimensions.customerType}`}</p>
-      <p
-        onClick={() => setDeviceType(deviceType || "")}
-      >{`Device Type: ${dimensions.deviceType}`}</p>
+      <p onClick={() => setCustomerType(customerType || "")}>{`Customer Type: ${
+        dimensions[DimensionKey.CustomerType]
+      }`}</p>
+      <p onClick={() => setDeviceType(deviceType || "")}>{`Device Type: ${
+        dimensions[DimensionKey.DeviceType]
+      }`}</p>
     </div>
   );
 };

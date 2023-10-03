@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import dayjs from "dayjs";
 import { FiExternalLink } from "react-icons/fi";
 import {
+  DimensionKey,
   LOCAL_STORAGE,
   SAAS_API_ENDPOINT,
   SAAS_API_KEY,
@@ -50,12 +51,6 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
 
   const [modalOpen, setModalOpen] = useState(false);
 
-  const customerTypeOptions = [
-    { text: "Premium", value: "premium" },
-    { text: "Standard", value: "standard" },
-    { text: "Kids", value: "kids" },
-  ];
-
   return (
     <>
       <div
@@ -80,7 +75,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
             {...Object.entries(dimensions).reduce(
               (prev, [dimension, value]) => ({
                 ...prev,
-                [`data-dimension-${dimension.toLowerCase()}`]: value as string,
+                [`data-dimension-${dimension.toLowerCase()}`]: value,
               }),
               {} as Record<string, string>,
             )}
@@ -136,14 +131,18 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
               <div className="grid grid-cols-1 gap-8 pt-7 md:grid-cols-2 md:pt-10 lg:grid-cols-4">
                 <DimensionContent label="Customer Type">
                   <DimensionRadioButton
-                    active={dimensions.customerType}
-                    options={customerTypeOptions}
+                    active={dimensions[DimensionKey.CustomerType]}
+                    options={[
+                      { text: "Premium", value: "premium" },
+                      { text: "Standard", value: "standard" },
+                      { text: "Kids", value: "kids" },
+                    ]}
                     onChange={(value: string) => setCustomerType(value)}
                   />
                 </DimensionContent>
                 <DimensionContent label="Region">
                   <DimensionRadioButton
-                    active={dimensions.region}
+                    active={dimensions[DimensionKey.Region]}
                     options={[
                       { text: "Europe", value: "europe" },
                       { text: "North America", value: "north-america" },
@@ -156,9 +155,13 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                       setRegion(value);
                       if (
                         (value === "europe" &&
-                          !["en-gb", "pt-pt"].includes(dimensions.language)) ||
+                          !["en-gb", "pt-pt"].includes(
+                            dimensions[DimensionKey.Language],
+                          )) ||
                         (value === "mena" &&
-                          !["en-gb", "ar"].includes(dimensions.language))
+                          !["en-gb", "ar"].includes(
+                            dimensions[DimensionKey.Language],
+                          ))
                       ) {
                         setLanguage("en-gb");
                       }
@@ -167,7 +170,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                 </DimensionContent>
                 <DimensionContent label="Language">
                   <DimensionRadioButton
-                    active={dimensions.language}
+                    active={dimensions[DimensionKey.Language]}
                     options={
                       dimensions.region === "mena"
                         ? [
@@ -185,14 +188,15 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                 {timeTravelEnabled && (
                   <DimensionContent label="Time Travel">
                     <DimensionRadioButton
-                      active={dimensions.timeTravel}
+                      active={dimensions[DimensionKey.TimeTravel]}
                       labelClassName="chromatic-ignore"
                       options={[
                         { text: "Now", value: "" },
                         {
                           text: `Forward 7 days (${nextWeekReadable})`,
                           value: nextWeekIso,
-                          activeOverride: dimensions.timeTravel !== "",
+                          activeOverride:
+                            dimensions[DimensionKey.TimeTravel] !== "",
                         },
                       ]}
                       onChange={(value: string) => setTimeTravel(value)}

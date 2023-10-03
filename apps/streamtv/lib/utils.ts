@@ -1,4 +1,5 @@
 import {
+  DimensionKey,
   Dimensions,
   DimensionTypes,
   EntertainmentType,
@@ -171,9 +172,15 @@ export const getSynopsisByOrderForGraphQLObject = (
 
 export const createGraphQLQueryDimensions = (activeDimensions: Dimensions) => {
   const dimensions: { dimension: DimensionTypes; value: string }[] = [
-    { dimension: "device-types", value: activeDimensions.deviceType },
-    { dimension: "customer-types", value: activeDimensions.customerType },
-    { dimension: "regions", value: activeDimensions.region },
+    {
+      dimension: "device-types",
+      value: activeDimensions[DimensionKey.DeviceType],
+    },
+    {
+      dimension: "customer-types",
+      value: activeDimensions[DimensionKey.CustomerType],
+    },
+    { dimension: "regions", value: activeDimensions[DimensionKey.Region] },
   ];
 
   return {
