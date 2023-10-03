@@ -1,4 +1,5 @@
 import {
+  DimensionKey,
   Dimensions,
   getImageSrc,
   graphQLClient,
@@ -8,6 +9,7 @@ import {
   skylarkRequest,
   UnexpandedObjects,
 } from "@skylark-reference-apps/lib";
+import { NextParsedUrlQuery } from "next/dist/server/request-meta";
 
 /**
  * getImageSrcAndSizeByWindow - returns the image src with the size set to the window height or width, whichever is more
@@ -60,17 +62,26 @@ export const skylarkRequestWithDimensions = <T>(
 ) => {
   const headers: Record<string, string> = {};
 
-  if (dimensions.timeTravel) {
-    headers["x-time-travel"] = dimensions.timeTravel;
+  if (dimensions[DimensionKey.TimeTravel]) {
+    headers["x-time-travel"] = dimensions[DimensionKey.TimeTravel];
   }
 
   const variables = {
-    language: dimensions.language,
-    customerType: dimensions.customerType,
-    deviceType: dimensions.deviceType,
-    region: dimensions.region,
+    language: dimensions[DimensionKey.Language],
+    customerType: dimensions[DimensionKey.CustomerType],
+    deviceType: dimensions[DimensionKey.DeviceType],
+    region: dimensions[DimensionKey.Region],
     ...optVariables,
   };
 
   return skylarkRequestWithLocalStorage<T>(query, headers, variables);
 };
+
+const persistQueryValue = (query: NextParsedUrlQuery, key: string) =>
+  query[key] ? { [key]: query[key] } : {};
+
+export const persistQueryValues = (query: NextParsedUrlQuery, keys: string[]) =>
+  keys.reduce(
+    (prev, key) => ({ ...prev, ...persistQueryValue(query, key) }),
+    {} as NextParsedUrlQuery,
+  );

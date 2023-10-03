@@ -341,6 +341,36 @@ export type BrandSetInput = {
   unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
 };
 
+export type CacheConfig = {
+  __typename?: "CacheConfig";
+  rules?: Maybe<Array<Maybe<CacheRule>>>;
+};
+
+export type CacheConfigInput = {
+  max_age: Scalars["Int"];
+  stale_while_revalidate?: InputMaybe<Scalars["Int"]>;
+  types?: InputMaybe<Array<Scalars["String"]>>;
+};
+
+export type CachePurgeResponse = {
+  __typename?: "CachePurgeResponse";
+  all?: Maybe<Scalars["Boolean"]>;
+  type?: Maybe<ObjectTypes>;
+  uids?: Maybe<Array<Maybe<Scalars["String"]>>>;
+};
+
+export type CacheRule = {
+  __typename?: "CacheRule";
+  max_age?: Maybe<Scalars["Int"]>;
+  stale_while_revalidate?: Maybe<Scalars["Int"]>;
+  types?: Maybe<Array<Maybe<Scalars["String"]>>>;
+};
+
+export type CacheTypeInput = {
+  name: ObjectTypes;
+  uids?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+};
+
 export type CallToAction = Metadata &
   VisibleObject & {
     __typename?: "CallToAction";
@@ -1653,8 +1683,10 @@ export type Mutation = {
   editFieldConfiguration?: Maybe<ConfigurationResponse>;
   editRelationshipConfiguration?: Maybe<ConfigurationResponse>;
   editSearchableFields?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  purgeCache?: Maybe<CachePurgeResponse>;
   sendSearchInsight?: Maybe<Scalars["String"]>;
   setAccountConfiguration?: Maybe<AccountDetails>;
+  setCacheConfig?: Maybe<CacheConfig>;
   /** @deprecated Replaced with 'setObjectTypeConfiguration' */
   setObjectConfiguration?: Maybe<ObjectConfig>;
   setObjectTypeConfiguration?: Maybe<ObjectConfig>;
@@ -1825,25 +1857,19 @@ export type MutationDeleteAvailabilityArgs = {
 
 export type MutationDeleteBrandArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
   uid: Scalars["String"];
 };
 
 export type MutationDeleteCallToActionArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
   uid: Scalars["String"];
 };
 
 export type MutationDeleteCreditArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
   uid: Scalars["String"];
 };
 
@@ -1861,121 +1887,91 @@ export type MutationDeleteDimensionValueArgs = {
 
 export type MutationDeleteEpisodeArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
   uid: Scalars["String"];
 };
 
 export type MutationDeleteGenreArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
   uid: Scalars["String"];
 };
 
 export type MutationDeleteLiveStreamArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
   uid: Scalars["String"];
 };
 
 export type MutationDeleteMovieArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
   uid: Scalars["String"];
 };
 
 export type MutationDeleteObjectArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
 export type MutationDeleteParentalGuidanceArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
   uid: Scalars["String"];
 };
 
 export type MutationDeletePersonArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
   uid: Scalars["String"];
 };
 
 export type MutationDeleteRatingArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
   uid: Scalars["String"];
 };
 
 export type MutationDeleteRoleArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
   uid: Scalars["String"];
 };
 
 export type MutationDeleteSeasonArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
   uid: Scalars["String"];
 };
 
 export type MutationDeleteSkylarkAssetArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
 export type MutationDeleteSkylarkEpgProgramArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
   uid: Scalars["String"];
 };
 
 export type MutationDeleteSkylarkFavoriteListArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
 export type MutationDeleteSkylarkImageArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
   uid: Scalars["String"];
 };
 
 export type MutationDeleteSkylarkLiveAssetArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
   uid: Scalars["String"];
 };
 
@@ -1989,25 +1985,19 @@ export type MutationDeleteSkylarkSetArgs = {
 
 export type MutationDeleteSkylarkTagArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
   uid: Scalars["String"];
 };
 
 export type MutationDeleteStreamtvConfigArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
   uid: Scalars["String"];
 };
 
 export type MutationDeleteThemeArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
   language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
   uid: Scalars["String"];
 };
 
@@ -2031,6 +2021,11 @@ export type MutationEditSearchableFieldsArgs = {
   fields: Array<InputMaybe<Scalars["String"]>>;
 };
 
+export type MutationPurgeCacheArgs = {
+  all?: InputMaybe<Scalars["Boolean"]>;
+  type?: InputMaybe<CacheTypeInput>;
+};
+
 export type MutationSendSearchInsightArgs = {
   uid_clicked?: InputMaybe<Scalars["String"]>;
   user?: InputMaybe<Scalars["String"]>;
@@ -2038,6 +2033,10 @@ export type MutationSendSearchInsightArgs = {
 
 export type MutationSetAccountConfigurationArgs = {
   account_config?: InputMaybe<AccountConfigInput>;
+};
+
+export type MutationSetCacheConfigArgs = {
+  rules?: InputMaybe<Array<CacheConfigInput>>;
 };
 
 export type MutationSetObjectConfigurationArgs = {
@@ -2601,6 +2600,7 @@ export type Query = {
   getActivationStatus?: Maybe<ActivationStatus>;
   getAvailability?: Maybe<Availability>;
   getBrand?: Maybe<Brand>;
+  getCacheConfig?: Maybe<CacheConfig>;
   getCallToAction?: Maybe<CallToAction>;
   getConfigurationSchema?: Maybe<Scalars["AWSJSON"]>;
   getConfigurationVersion?: Maybe<SchemaConfiguration>;
@@ -2666,6 +2666,7 @@ export type QueryGetAvailabilityArgs = {
 
 export type QueryGetBrandArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2674,6 +2675,7 @@ export type QueryGetBrandArgs = {
 
 export type QueryGetCallToActionArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2691,6 +2693,7 @@ export type QueryGetConfigurationVersionArgs = {
 
 export type QueryGetCreditArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2708,6 +2711,7 @@ export type QueryGetDimensionCodeArgs = {
 
 export type QueryGetEpisodeArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2716,6 +2720,7 @@ export type QueryGetEpisodeArgs = {
 
 export type QueryGetGenreArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2724,6 +2729,7 @@ export type QueryGetGenreArgs = {
 
 export type QueryGetLiveStreamArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2732,6 +2738,7 @@ export type QueryGetLiveStreamArgs = {
 
 export type QueryGetMovieArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2740,6 +2747,7 @@ export type QueryGetMovieArgs = {
 
 export type QueryGetObjectArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2756,6 +2764,7 @@ export type QueryGetObjectTypeConfigurationArgs = {
 
 export type QueryGetParentalGuidanceArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2764,6 +2773,7 @@ export type QueryGetParentalGuidanceArgs = {
 
 export type QueryGetPersonArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2772,6 +2782,7 @@ export type QueryGetPersonArgs = {
 
 export type QueryGetRatingArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2780,6 +2791,7 @@ export type QueryGetRatingArgs = {
 
 export type QueryGetRoleArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2788,6 +2800,7 @@ export type QueryGetRoleArgs = {
 
 export type QueryGetSeasonArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2796,6 +2809,7 @@ export type QueryGetSeasonArgs = {
 
 export type QueryGetSkylarkAssetArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2808,6 +2822,7 @@ export type QueryGetSkylarkBackgroundTaskArgs = {
 
 export type QueryGetSkylarkEpgProgramArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2816,6 +2831,7 @@ export type QueryGetSkylarkEpgProgramArgs = {
 
 export type QueryGetSkylarkFavoriteListArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2824,6 +2840,7 @@ export type QueryGetSkylarkFavoriteListArgs = {
 
 export type QueryGetSkylarkImageArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2832,6 +2849,7 @@ export type QueryGetSkylarkImageArgs = {
 
 export type QueryGetSkylarkLiveAssetArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2840,6 +2858,7 @@ export type QueryGetSkylarkLiveAssetArgs = {
 
 export type QueryGetSkylarkSetArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2848,6 +2867,7 @@ export type QueryGetSkylarkSetArgs = {
 
 export type QueryGetSkylarkTagArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2856,6 +2876,7 @@ export type QueryGetSkylarkTagArgs = {
 
 export type QueryGetStreamtvConfigArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2864,6 +2885,7 @@ export type QueryGetStreamtvConfigArgs = {
 
 export type QueryGetThemeArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
@@ -2877,6 +2899,7 @@ export type QueryListAvailabilityArgs = {
 
 export type QueryListBrandArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
@@ -2885,6 +2908,7 @@ export type QueryListBrandArgs = {
 
 export type QueryListCallToActionArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
@@ -2893,6 +2917,7 @@ export type QueryListCallToActionArgs = {
 
 export type QueryListCreditArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
@@ -2906,6 +2931,7 @@ export type QueryListDimensionsArgs = {
 
 export type QueryListEpisodeArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
@@ -2914,6 +2940,7 @@ export type QueryListEpisodeArgs = {
 
 export type QueryListGenreArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
@@ -2922,6 +2949,7 @@ export type QueryListGenreArgs = {
 
 export type QueryListLiveStreamArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
@@ -2930,6 +2958,7 @@ export type QueryListLiveStreamArgs = {
 
 export type QueryListMovieArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
@@ -2938,6 +2967,7 @@ export type QueryListMovieArgs = {
 
 export type QueryListParentalGuidanceArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
@@ -2946,6 +2976,7 @@ export type QueryListParentalGuidanceArgs = {
 
 export type QueryListPersonArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
@@ -2954,6 +2985,7 @@ export type QueryListPersonArgs = {
 
 export type QueryListRatingArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
@@ -2962,6 +2994,7 @@ export type QueryListRatingArgs = {
 
 export type QueryListRoleArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
@@ -2970,6 +3003,7 @@ export type QueryListRoleArgs = {
 
 export type QueryListSeasonArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
@@ -2978,6 +3012,7 @@ export type QueryListSeasonArgs = {
 
 export type QueryListSkylarkAssetArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
@@ -2993,6 +3028,7 @@ export type QueryListSkylarkBackgroundTaskArgs = {
 
 export type QueryListSkylarkEpgProgramArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
@@ -3001,6 +3037,7 @@ export type QueryListSkylarkEpgProgramArgs = {
 
 export type QueryListSkylarkImageArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
@@ -3009,6 +3046,7 @@ export type QueryListSkylarkImageArgs = {
 
 export type QueryListSkylarkLiveAssetArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
@@ -3017,6 +3055,7 @@ export type QueryListSkylarkLiveAssetArgs = {
 
 export type QueryListSkylarkSetArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
@@ -3025,6 +3064,7 @@ export type QueryListSkylarkSetArgs = {
 
 export type QueryListSkylarkTagArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
@@ -3033,6 +3073,7 @@ export type QueryListSkylarkTagArgs = {
 
 export type QueryListStreamtvConfigArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
@@ -3041,6 +3082,7 @@ export type QueryListStreamtvConfigArgs = {
 
 export type QueryListThemeArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
@@ -4913,6 +4955,7 @@ export type StreamtvConfig = Metadata &
     availability?: Maybe<AvailabilityListing>;
     content_of?: Maybe<SetListing>;
     external_id?: Maybe<Scalars["String"]>;
+    featured_page_url?: Maybe<Scalars["AWSURL"]>;
     google_tag_manager_id?: Maybe<Scalars["String"]>;
     logo?: Maybe<SkylarkImageListing>;
     primary_color?: Maybe<Scalars["String"]>;
@@ -4949,6 +4992,7 @@ export type StreamtvConfigCreateInput = {
   app_name?: InputMaybe<Scalars["String"]>;
   availability?: InputMaybe<AssignAvailabilityInput>;
   external_id?: InputMaybe<Scalars["String"]>;
+  featured_page_url?: InputMaybe<Scalars["AWSURL"]>;
   google_tag_manager_id?: InputMaybe<Scalars["String"]>;
   primary_color?: InputMaybe<Scalars["String"]>;
   relationships?: InputMaybe<StreamtvConfigRelationships>;
@@ -4960,6 +5004,7 @@ export type StreamtvConfigInput = {
   app_name?: InputMaybe<Scalars["String"]>;
   availability?: InputMaybe<AssignAvailabilityInput>;
   external_id?: InputMaybe<Scalars["String"]>;
+  featured_page_url?: InputMaybe<Scalars["AWSURL"]>;
   google_tag_manager_id?: InputMaybe<Scalars["String"]>;
   primary_color?: InputMaybe<Scalars["String"]>;
   relationships?: InputMaybe<StreamtvConfigRelationships>;
@@ -5275,7 +5320,7 @@ export type _BrandMeta = {
   global_data?: Maybe<_BrandGlobal>;
   language_data?: Maybe<_BrandLanguage>;
   modified?: Maybe<_Audit>;
-  publish_stage?: Maybe<PublishStage>;
+  published?: Maybe<Scalars["Boolean"]>;
 };
 
 export type _CallToActionGlobal = _Global & {
@@ -5314,7 +5359,7 @@ export type _CallToActionMeta = {
   global_data?: Maybe<_CallToActionGlobal>;
   language_data?: Maybe<_CallToActionLanguage>;
   modified?: Maybe<_Audit>;
-  publish_stage?: Maybe<PublishStage>;
+  published?: Maybe<Scalars["Boolean"]>;
 };
 
 export type _CreditGlobal = _Global & {
@@ -5348,7 +5393,7 @@ export type _CreditMeta = {
   global_data?: Maybe<_CreditGlobal>;
   language_data?: Maybe<_CreditLanguage>;
   modified?: Maybe<_Audit>;
-  publish_stage?: Maybe<PublishStage>;
+  published?: Maybe<Scalars["Boolean"]>;
 };
 
 export type _DimensionMeta = {
@@ -5400,7 +5445,7 @@ export type _EpisodeMeta = {
   global_data?: Maybe<_EpisodeGlobal>;
   language_data?: Maybe<_EpisodeLanguage>;
   modified?: Maybe<_Audit>;
-  publish_stage?: Maybe<PublishStage>;
+  published?: Maybe<Scalars["Boolean"]>;
 };
 
 export type _FieldConfig = {
@@ -5440,7 +5485,7 @@ export type _GenreMeta = {
   global_data?: Maybe<_GenreGlobal>;
   language_data?: Maybe<_GenreLanguage>;
   modified?: Maybe<_Audit>;
-  publish_stage?: Maybe<PublishStage>;
+  published?: Maybe<Scalars["Boolean"]>;
 };
 
 export type _Global = {
@@ -5495,7 +5540,7 @@ export type _LiveStreamMeta = {
   global_data?: Maybe<_LiveStreamGlobal>;
   language_data?: Maybe<_LiveStreamLanguage>;
   modified?: Maybe<_Audit>;
-  publish_stage?: Maybe<PublishStage>;
+  published?: Maybe<Scalars["Boolean"]>;
 };
 
 export type _MovieGlobal = _Global & {
@@ -5535,7 +5580,7 @@ export type _MovieMeta = {
   global_data?: Maybe<_MovieGlobal>;
   language_data?: Maybe<_MovieLanguage>;
   modified?: Maybe<_Audit>;
-  publish_stage?: Maybe<PublishStage>;
+  published?: Maybe<Scalars["Boolean"]>;
 };
 
 export type _ParentalGuidanceGlobal = _Global & {
@@ -5569,7 +5614,7 @@ export type _ParentalGuidanceMeta = {
   global_data?: Maybe<_ParentalGuidanceGlobal>;
   language_data?: Maybe<_ParentalGuidanceLanguage>;
   modified?: Maybe<_Audit>;
-  publish_stage?: Maybe<PublishStage>;
+  published?: Maybe<Scalars["Boolean"]>;
 };
 
 export type _PersonGlobal = _Global & {
@@ -5610,7 +5655,7 @@ export type _PersonMeta = {
   global_data?: Maybe<_PersonGlobal>;
   language_data?: Maybe<_PersonLanguage>;
   modified?: Maybe<_Audit>;
-  publish_stage?: Maybe<PublishStage>;
+  published?: Maybe<Scalars["Boolean"]>;
 };
 
 export type _RatingGlobal = _Global & {
@@ -5646,7 +5691,7 @@ export type _RatingMeta = {
   global_data?: Maybe<_RatingGlobal>;
   language_data?: Maybe<_RatingLanguage>;
   modified?: Maybe<_Audit>;
-  publish_stage?: Maybe<PublishStage>;
+  published?: Maybe<Scalars["Boolean"]>;
 };
 
 export type _RoleGlobal = _Global & {
@@ -5680,7 +5725,7 @@ export type _RoleMeta = {
   global_data?: Maybe<_RoleGlobal>;
   language_data?: Maybe<_RoleLanguage>;
   modified?: Maybe<_Audit>;
-  publish_stage?: Maybe<PublishStage>;
+  published?: Maybe<Scalars["Boolean"]>;
 };
 
 export type _SeasonGlobal = _Global & {
@@ -5722,7 +5767,7 @@ export type _SeasonMeta = {
   global_data?: Maybe<_SeasonGlobal>;
   language_data?: Maybe<_SeasonLanguage>;
   modified?: Maybe<_Audit>;
-  publish_stage?: Maybe<PublishStage>;
+  published?: Maybe<Scalars["Boolean"]>;
 };
 
 export type _SkylarkAssetGlobal = _Global & {
@@ -5769,7 +5814,7 @@ export type _SkylarkAssetMeta = {
   global_data?: Maybe<_SkylarkAssetGlobal>;
   language_data?: Maybe<_SkylarkAssetLanguage>;
   modified?: Maybe<_Audit>;
-  publish_stage?: Maybe<PublishStage>;
+  published?: Maybe<Scalars["Boolean"]>;
 };
 
 export type _SkylarkEpgProgramGlobal = _Global & {
@@ -5804,7 +5849,7 @@ export type _SkylarkEpgProgramMeta = {
   global_data?: Maybe<_SkylarkEpgProgramGlobal>;
   language_data?: Maybe<_SkylarkEpgProgramLanguage>;
   modified?: Maybe<_Audit>;
-  publish_stage?: Maybe<PublishStage>;
+  published?: Maybe<Scalars["Boolean"]>;
 };
 
 export type _SkylarkFavoriteListGlobal = _Global & {
@@ -5835,7 +5880,7 @@ export type _SkylarkFavoriteListMeta = {
   global_data?: Maybe<_SkylarkFavoriteListGlobal>;
   language_data?: Maybe<_SkylarkFavoriteListLanguage>;
   modified?: Maybe<_Audit>;
-  publish_stage?: Maybe<PublishStage>;
+  published?: Maybe<Scalars["Boolean"]>;
 };
 
 export type _SkylarkImageGlobal = _Global & {
@@ -5875,7 +5920,7 @@ export type _SkylarkImageMeta = {
   global_data?: Maybe<_SkylarkImageGlobal>;
   language_data?: Maybe<_SkylarkImageLanguage>;
   modified?: Maybe<_Audit>;
-  publish_stage?: Maybe<PublishStage>;
+  published?: Maybe<Scalars["Boolean"]>;
 };
 
 export type _SkylarkLiveAssetGlobal = _Global & {
@@ -5925,7 +5970,7 @@ export type _SkylarkLiveAssetMeta = {
   global_data?: Maybe<_SkylarkLiveAssetGlobal>;
   language_data?: Maybe<_SkylarkLiveAssetLanguage>;
   modified?: Maybe<_Audit>;
-  publish_stage?: Maybe<PublishStage>;
+  published?: Maybe<Scalars["Boolean"]>;
 };
 
 export type _SkylarkSetGlobal = _Global & {
@@ -5965,7 +6010,7 @@ export type _SkylarkSetMeta = {
   global_data?: Maybe<_SkylarkSetGlobal>;
   language_data?: Maybe<_SkylarkSetLanguage>;
   modified?: Maybe<_Audit>;
-  publish_stage?: Maybe<PublishStage>;
+  published?: Maybe<Scalars["Boolean"]>;
 };
 
 export type _SkylarkTagGlobal = _Global & {
@@ -6007,6 +6052,7 @@ export type _StreamtvConfigGlobal = _Global & {
   accent_color?: Maybe<Scalars["String"]>;
   app_name?: Maybe<Scalars["String"]>;
   created?: Maybe<_Audit>;
+  featured_page_url?: Maybe<Scalars["AWSURL"]>;
   google_tag_manager_id?: Maybe<Scalars["String"]>;
   history?: Maybe<Array<Maybe<_StreamtvConfigGlobal>>>;
   modified?: Maybe<_Audit>;
@@ -6034,7 +6080,7 @@ export type _StreamtvConfigMeta = {
   global_data?: Maybe<_StreamtvConfigGlobal>;
   language_data?: Maybe<_StreamtvConfigLanguage>;
   modified?: Maybe<_Audit>;
-  publish_stage?: Maybe<PublishStage>;
+  published?: Maybe<Scalars["Boolean"]>;
 };
 
 export type _ThemeGlobal = _Global & {
@@ -6069,7 +6115,7 @@ export type _ThemeMeta = {
   global_data?: Maybe<_ThemeGlobal>;
   language_data?: Maybe<_ThemeLanguage>;
   modified?: Maybe<_Audit>;
-  publish_stage?: Maybe<PublishStage>;
+  published?: Maybe<Scalars["Boolean"]>;
 };
 
 export type ActivationStatus = {

@@ -99,6 +99,21 @@ const parseEpisodeNumberFromSynopsisField = (
   return null;
 };
 
+const internalTitle = (
+  legacyObject: LegacyObjectsWithSynopsis,
+  language?: string,
+): Record<string, string | null> => {
+  if (language?.toUpperCase() === "EN") {
+    // name -> internal_title
+    // BUT we're converting a translatable field to global so only take the English version
+    return {
+      internal_title: legacyObject.name || null,
+    };
+  }
+
+  return {};
+};
+
 const convertLegacyObject = (
   legacyObject: LegacyObjects[0] | ParsedSL8Credits,
   language?: string,
@@ -122,7 +137,7 @@ const convertLegacyObject = (
 
     return {
       ...commonFields,
-      internal_title: legacyObject.name,
+      ...internalTitle(legacyObject, language),
       title: legacyObject.title,
       synopsis,
     };
@@ -137,7 +152,7 @@ const convertLegacyObject = (
 
     return {
       ...commonFields,
-      internal_title: legacyObject.name,
+      ...internalTitle(legacyObject, language),
       title: legacyObject.title,
       synopsis,
       type: assetType,
@@ -151,7 +166,7 @@ const convertLegacyObject = (
     const { synopsis } = getSynopsisForMedia(legacyObject);
 
     const fields: Record<string, string | number | null> = {
-      internal_title: legacyObject.name,
+      ...internalTitle(legacyObject, language),
       title: legacyObject.title,
       synopsis,
       episode_number:
@@ -177,7 +192,7 @@ const convertLegacyObject = (
 
     return {
       ...commonFields,
-      internal_title: legacyObject.name,
+      ...internalTitle(legacyObject, language),
       title: legacyObject.title,
       synopsis,
       season_number: legacyObject.season_number,
@@ -190,7 +205,7 @@ const convertLegacyObject = (
 
     return {
       ...commonFields,
-      internal_title: legacyObject.name,
+      ...internalTitle(legacyObject, language),
       title: legacyObject.title,
       synopsis,
     };

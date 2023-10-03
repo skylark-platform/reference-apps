@@ -1,3 +1,5 @@
+import { DimensionKey } from "../interfaces";
+
 export const SKYLARK_API = (process.env.NEXT_PUBLIC_SKYLARK_API_URL ||
   process.env.SKYLARK_API_URL) as string;
 
@@ -11,3 +13,6 @@ export const LOCAL_STORAGE = {
 };
 export const CLOUDINARY_ENVIRONMENT = process.env
   .NEXT_PUBLIC_CLOUDINARY_ENVIRONMENT as string;
+
+export const ALL_DIMENSION_QUERY_KEYS: DimensionKey[] =
+  Object.values(DimensionKey);

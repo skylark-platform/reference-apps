@@ -23,8 +23,6 @@ const workSans = Work_Sans({ subsets: ["latin"] });
 export default function TestimonialPage({
   testimonial,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  console.log({ testimonial });
-
   return (
     <main
       className={clsx(

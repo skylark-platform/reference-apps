@@ -68,6 +68,16 @@ const createLegacyAxios = (language: string) => {
   return { legacyAxios };
 };
 
+const parseJSON = <T>(str: string) => {
+  // Wrapper to make debugging easier
+  try {
+    return JSON.parse(str) as T;
+  } catch (err) {
+    console.error(`[parseJSON]: Error parsing JSON`, err);
+    throw err;
+  }
+};
+
 const getAllObjectsOfType = async <T extends LegacyBaseObject>(
   type: LegacyObjectType,
   language: string,
@@ -158,9 +168,9 @@ const getAllObjectsOfType = async <T extends LegacyBaseObject>(
             `/api/${type}/?${query.join("&")}`,
           );
 
-          const data = JSON.parse(
+          const data = parseJSON<LegacyResponseListObjectsData<T>>(
             listObjectsResponse.data,
-          ) as LegacyResponseListObjectsData<T>;
+          );
 
           if (!hasProperty(data, "objects")) {
             throw new Error(

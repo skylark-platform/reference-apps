@@ -3,6 +3,7 @@ import {
   getSynopsisByOrder,
   graphQLClient,
   GraphQLObjectTypes,
+  DimensionKey,
 } from "@skylark-reference-apps/lib";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import { Entertainment } from "../types";
@@ -37,10 +38,10 @@ export const getSeoDataForObject = async (
           ...createGraphQLQueryDimensions({
             language,
             // TODO can we work out these before the client loads the page?
-            customerType: "premium",
-            deviceType: "pc",
-            timeTravel: "",
-            region: "europe",
+            [DimensionKey.CustomerType]: "premium",
+            [DimensionKey.DeviceType]: "pc",
+            [DimensionKey.TimeTravel]: "",
+            [DimensionKey.Region]: "europe",
           }),
         },
         uid: true,

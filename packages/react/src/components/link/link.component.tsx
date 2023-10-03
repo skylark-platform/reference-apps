@@ -1,6 +1,8 @@
 import React from "react";
 import NextLink, { LinkProps as NextLinkProps } from "next/link";
 import { useRouter } from "next/router";
+import { ALL_DIMENSION_QUERY_KEYS } from "@skylark-reference-apps/lib";
+import { persistQueryValues } from "../../lib/utils";
 
 interface LinkProps extends NextLinkProps {
   isExternal?: boolean;
@@ -39,10 +41,10 @@ export const Link = ({
       ? href.query
       : {};
 
-  const languageQuery = activeQuery.language
-    ? { language: activeQuery.language }
-    : {};
-  const dirQuery = activeQuery.dir ? { dir: activeQuery.dir } : {};
+  const persistedQuery = persistQueryValues(activeQuery, [
+    "dir",
+    ...ALL_DIMENSION_QUERY_KEYS,
+  ]);
 
   return (
     <NextLink
@@ -51,8 +53,7 @@ export const Link = ({
       href={{
         pathname,
         query: {
-          ...languageQuery,
-          ...dirQuery,
+          ...persistedQuery,
           ...propQuery,
         },
       }}

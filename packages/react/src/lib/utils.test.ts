@@ -1,6 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import "regenerator-runtime/runtime";
 import {
+  DimensionKey,
   Dimensions,
   graphQLClient,
   ImageUrls,
@@ -77,11 +78,11 @@ describe("utils", () => {
       (graphQLClient.request as jest.Mock).mockImplementation(() => {});
 
       const dimensions: Dimensions = {
-        timeTravel: "",
-        deviceType: "",
-        customerType: "",
-        language: "",
-        region: "",
+        [DimensionKey.TimeTravel]: "",
+        [DimensionKey.DeviceType]: "",
+        [DimensionKey.CustomerType]: "",
+        [DimensionKey.Language]: "",
+        [DimensionKey.Region]: "",
       };
 
       await skylarkRequestWithDimensions("query", dimensions);
@@ -103,11 +104,11 @@ describe("utils", () => {
       (graphQLClient.request as jest.Mock).mockImplementation(() => {});
 
       const dimensions: Dimensions = {
-        timeTravel: "next week",
-        deviceType: "",
-        customerType: "",
-        language: "",
-        region: "",
+        [DimensionKey.TimeTravel]: "next week",
+        [DimensionKey.DeviceType]: "",
+        [DimensionKey.CustomerType]: "",
+        [DimensionKey.Language]: "",
+        [DimensionKey.Region]: "",
       };
 
       await skylarkRequestWithDimensions("query", dimensions);
