@@ -145,14 +145,6 @@ export type AllEntertainment =
   | Brand
   | Set;
 
-// export interface Dimensions {
-//   language: string;
-//   customerType: string;
-//   deviceType: string;
-//   region: string;
-//   timeTravel: string;
-// }
-
 export enum DimensionKey {
   CustomerType = "customer-type",
   DeviceType = "device-type",

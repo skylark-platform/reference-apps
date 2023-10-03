@@ -157,7 +157,6 @@ export const useDimensions = (): DimensionsContextType => {
   const dimensions: Dimensions = {
     ...contextDimensions,
     ...queryDimensions,
-    // language: (query.language as string) || contextDimensions.language,
   };
 
   return {
