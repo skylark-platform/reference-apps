@@ -37,7 +37,7 @@
       "skipFiles": ["<node_internals>/**"],
       "type": "node",
       "env": {
-        "LEGACY_DATA_LAST_MONTH_ONLY": "true"
+        "LEGACY_DATA_LAST_MONTH_ONLY": "false"
       }
     },
     {
@@ -49,8 +49,8 @@
       "skipFiles": ["<node_internals>/**"],
       "type": "node",
       "env": {
-        "LEGACY_DATA_LAST_MONTH_ONLY": "true",
-        "CREATE_ONLY": "false"
+        "LEGACY_DATA_LAST_MONTH_ONLY": "false",
+        "CREATE_ONLY": "true"
       }
     },
     {
