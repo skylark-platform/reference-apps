@@ -18,6 +18,8 @@ import {
 } from "./types/legacySkylark";
 import { calculateTotalObjects } from "./utils";
 
+const objectMetaFileName = `_meta.json`;
+
 export const writeError = async (err: unknown) => {
   const errorFile = join(__dirname, "outputs", "ingest_errors.md");
 
@@ -98,15 +100,45 @@ export const writeLegacyObjectsToDisk = async (
     totalFound: number;
   },
 ) => {
+  const maxArrSize = 100000;
+
   try {
-    await writeFile(
-      join(dir, `${obj.type}.json`),
-      JSON.stringify(obj, null, 4),
-    );
+    const requiresMultipleFiles = obj.totalFound > maxArrSize;
+    if (requiresMultipleFiles) {
+      const { objects, ...meta } = obj;
+
+      const objectDir = join(dir, obj.type);
+      await ensureDir(objectDir);
+
+      console.log(
+        `    - ${obj.type} requires multiple files to write to (${objectDir})`,
+      );
+
+      const languages = Object.keys(objects);
+
+      // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-for-in-array
+      for (const language of languages) {
+        const languageObjects = objects[language];
+        const filepath = join(objectDir, `${language.toLowerCase()}.json`);
+
+        // eslint-disable-next-line no-await-in-loop
+        await writeFile(filepath, JSON.stringify(languageObjects, null, 4));
+      }
+
+      // After all languages are written, write the _meta.json containing other properties
+      const metaFile = join(objectDir, objectMetaFileName);
+      await writeFile(metaFile, JSON.stringify(meta, null, 4));
+    } else {
+      await writeFile(
+        join(dir, `${obj.type}.json`),
+        JSON.stringify(obj, null, 4),
+      );
+    }
   } catch (err) {
     console.error(
       `[writeLegacyObjectsToDisk] Failed to write ${obj.type} data`,
     );
+    console.error(err);
   }
 };
 
@@ -156,13 +188,29 @@ export const writeStatsForLegacyObjectsToDisk = async (
   }
 };
 
-export const readObjectsFromFile = async <T>(
+export const readObjectsFromDisk = async <T>(
   dir: string,
   type: LegacyObjectType,
-) => {
-  const file = join(dir, `${type}.json`);
+): Promise<{
+  type: LegacyObjectType;
+  objects: Record<string, T[]>;
+  totalFound: number;
+}> => {
+  const objectFile = join(dir, `${type}.json`);
 
-  if (!(await exists(file))) {
+  // When there are so many objects, the file is split into multiple by language
+  const objectDir = join(dir, type);
+
+  const fileExists = await exists(objectFile);
+  const dirExists = await exists(objectDir);
+
+  if (fileExists && dirExists) {
+    throw new Error(
+      `[readObjectsFromDisk] Both file and directory exists, this should be impossible! File: ${objectFile} / Dir: ${objectDir}`,
+    );
+  }
+
+  if (!fileExists && !dirExists) {
     return {
       type,
       objects: {},
@@ -170,7 +218,41 @@ export const readObjectsFromFile = async <T>(
     };
   }
 
-  const data = (await readJson(file)) as {
+  if (dirExists) {
+    const files = await readdir(objectDir);
+
+    const metaFileExists = files.includes(objectMetaFileName);
+
+    const metaFileContents = metaFileExists
+      ? ((await readJson(join(objectDir, objectMetaFileName))) as {
+          type: LegacyObjectType;
+          totalFound: number;
+        })
+      : { totalFound: 0 };
+
+    const objects: Record<string, T[]> = {};
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const file of files) {
+      if (file !== objectMetaFileName) {
+        const language = file.replace(".json", "").toUpperCase();
+        // eslint-disable-next-line no-await-in-loop
+        const fileContents = (await readJson(join(objectDir, file))) as T[];
+
+        objects[language] = fileContents;
+      }
+    }
+
+    const obj = {
+      ...metaFileContents,
+      type,
+      objects,
+    };
+
+    return obj;
+  }
+
+  const data = (await readJson(objectFile)) as {
     type: LegacyObjectType;
     objects: Record<string, T[]>;
     totalFound: number;
@@ -191,7 +273,7 @@ export const readLegacyObjectsFromFile = async <T>(
   // eslint-disable-next-line no-restricted-syntax
   for (const [key, legacyObjectType] of Object.entries(objectsToFetch)) {
     // eslint-disable-next-line no-await-in-loop
-    const objects = await readObjectsFromFile<LegacyBrand>(
+    const objects = await readObjectsFromDisk<LegacyBrand>(
       mostRecentDir,
       legacyObjectType,
     );

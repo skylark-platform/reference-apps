@@ -86,9 +86,13 @@ const main = async () => {
   // eslint-disable-next-line no-console
   console.log("Object configuration updated");
 
-  await configureCache();
-  // eslint-disable-next-line no-console
-  console.log("Cache configuration updated");
+  if (
+    SAAS_API_ENDPOINT === "https://api.showcase.skylarkplatform.com/graphql"
+  ) {
+    await configureCache();
+    // eslint-disable-next-line no-console
+    console.log("Cache configuration updated");
+  }
 
   await createDimensions(showcaseDimensionsConfig);
 

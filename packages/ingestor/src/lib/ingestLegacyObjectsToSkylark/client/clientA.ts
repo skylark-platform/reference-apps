@@ -145,7 +145,7 @@ const convertLegacyObject = (
 
   if (legacyObjectType === LegacyObjectType.Assets) {
     const assetType = legacyObject.asset_type_url?.name || null;
-    if (assetType && assetTypesToIgnore.includes(assetType)) {
+    if (assetType && assetTypesToIgnore.includes(assetType.toLowerCase())) {
       return null;
     }
     const { synopsis } = getSynopsisForMedia(legacyObject);
