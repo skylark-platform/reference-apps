@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { MdPlayArrow } from "react-icons/md";
 import { addCloudinaryOnTheFlyImageTransformation } from "@skylark-reference-apps/lib";
 import { List } from "../../list";
 import { Link } from "../../link";
+import { useImageLoaded } from "../../../hooks/useImageLoaded";
 
 export type ThumbnailContentLocation = "inside" | "below";
 
@@ -37,21 +38,13 @@ const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
   large,
   statusTag,
 }) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
-
   const backgroundImage = useMemo(
     () =>
       addCloudinaryOnTheFlyImageTransformation(uncachedImage, { width: 400 }),
     [uncachedImage],
   );
 
-  useEffect(() => {
-    const image = new Image();
-    image.addEventListener("load", () => {
-      setImageLoaded(true);
-    });
-    image.src = backgroundImage;
-  }, [backgroundImage]);
+  const imageLoaded = useImageLoaded(backgroundImage);
 
   return (
     <div

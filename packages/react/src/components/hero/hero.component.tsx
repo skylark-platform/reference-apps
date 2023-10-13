@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useImageLoaded } from "../../hooks/useImageLoaded";
 
 interface HeroProps {
   bgImage: string;
@@ -6,16 +7,7 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ bgImage, children }) => {
-  const [imageIsLoaded, setImageLoaded] = useState(false);
-
-  useEffect(() => {
-    // Load images before they are active
-    const image = new Image();
-    image.addEventListener("load", () => {
-      setImageLoaded(true);
-    });
-    image.src = bgImage;
-  }, [bgImage]);
+  const imageIsLoaded = useImageLoaded(bgImage);
 
   return (
     <div
