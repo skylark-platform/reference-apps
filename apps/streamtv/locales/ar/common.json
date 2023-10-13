@@ -14,16 +14,8 @@
       "brand": "علامة تجارية",
       "asset": "شىء ثمين",
       "count": {
-        "season": {
-          "0": "0 مواسم",
-          "one": "الموسم {{count}}",
-          "other": "مواسم {{count}}"
-        },
-        "movie": {
-          "0": "أفلام 0",
-          "one": "فيلم {{count}}",
-          "other": "أفلام {{count}}"
-        }
+        "season": "الموسم {{count}}",
+        "movie": "فيلم {{count}}"
       }
     }
   },

@@ -39,6 +39,7 @@ export const Header: React.FC<HeaderProps> = ({
   tags,
 }) => {
   const { t } = useTranslation("common");
+
   return (
     <div className="mb-5 w-full text-white sm:w-2/3 md:w-3/5 xl:w-1/2">
       <div className="left flex w-full flex-col gap-3">
