@@ -281,6 +281,36 @@ export enum BlockType {
   ImageRail = "IMAGE_RAIL",
 }
 
+export type CacheConfig = {
+  __typename?: "CacheConfig";
+  rules?: Maybe<Array<Maybe<CacheRule>>>;
+};
+
+export type CacheConfigInput = {
+  max_age: Scalars["Int"]["input"];
+  stale_while_revalidate?: InputMaybe<Scalars["Int"]["input"]>;
+  types?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
+export type CachePurgeResponse = {
+  __typename?: "CachePurgeResponse";
+  all?: Maybe<Scalars["Boolean"]["output"]>;
+  type?: Maybe<ObjectTypes>;
+  uids?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
+};
+
+export type CacheRule = {
+  __typename?: "CacheRule";
+  max_age?: Maybe<Scalars["Int"]["output"]>;
+  stale_while_revalidate?: Maybe<Scalars["Int"]["output"]>;
+  types?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
+};
+
+export type CacheTypeInput = {
+  name: ObjectTypes;
+  uids?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+};
+
 export type CallToAction = Metadata &
   VisibleObject & {
     __typename?: "CallToAction";
@@ -856,8 +886,10 @@ export type Mutation = {
   editFieldConfiguration?: Maybe<ConfigurationResponse>;
   editRelationshipConfiguration?: Maybe<ConfigurationResponse>;
   editSearchableFields?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
+  purgeCache?: Maybe<CachePurgeResponse>;
   sendSearchInsight?: Maybe<Scalars["String"]["output"]>;
   setAccountConfiguration?: Maybe<AccountDetails>;
+  setCacheConfig?: Maybe<CacheConfig>;
   /** @deprecated Replaced with 'setObjectTypeConfiguration' */
   setObjectConfiguration?: Maybe<ObjectConfig>;
   setObjectTypeConfiguration?: Maybe<ObjectConfig>;
@@ -1132,6 +1164,11 @@ export type MutationEditSearchableFieldsArgs = {
   fields: Array<InputMaybe<Scalars["String"]["input"]>>;
 };
 
+export type MutationPurgeCacheArgs = {
+  all?: InputMaybe<Scalars["Boolean"]["input"]>;
+  type?: InputMaybe<CacheTypeInput>;
+};
+
 export type MutationSendSearchInsightArgs = {
   uid_clicked?: InputMaybe<Scalars["String"]["input"]>;
   user?: InputMaybe<Scalars["String"]["input"]>;
@@ -1139,6 +1176,10 @@ export type MutationSendSearchInsightArgs = {
 
 export type MutationSetAccountConfigurationArgs = {
   account_config?: InputMaybe<AccountConfigInput>;
+};
+
+export type MutationSetCacheConfigArgs = {
+  rules?: InputMaybe<Array<CacheConfigInput>>;
 };
 
 export type MutationSetObjectConfigurationArgs = {
@@ -1599,6 +1640,7 @@ export type Query = {
   getActivationStatus?: Maybe<ActivationStatus>;
   getAvailability?: Maybe<Availability>;
   getBlock?: Maybe<Block>;
+  getCacheConfig?: Maybe<CacheConfig>;
   getCallToAction?: Maybe<CallToAction>;
   getConfigurationSchema?: Maybe<Scalars["AWSJSON"]["output"]>;
   getConfigurationVersion?: Maybe<SchemaConfiguration>;

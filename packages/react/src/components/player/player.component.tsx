@@ -7,6 +7,7 @@ interface PlayerProps {
   poster?: string;
   videoId: string;
   videoTitle: string;
+  autoPlay?: boolean;
 }
 
 export const Player: React.FC<PlayerProps> = ({
@@ -14,6 +15,7 @@ export const Player: React.FC<PlayerProps> = ({
   poster,
   videoId,
   videoTitle,
+  autoPlay,
 }) => {
   const isClient = typeof window !== "undefined";
   const absoluteSrc =
@@ -33,6 +35,7 @@ export const Player: React.FC<PlayerProps> = ({
           <iframe src={src} />
         ) : (
           <MuxVideo
+            autoPlay={autoPlay}
             className="h-full w-full bg-black object-cover object-center"
             controls
             data-testid="player"
@@ -48,8 +51,7 @@ export const Player: React.FC<PlayerProps> = ({
                 : undefined
             }
             ref={undefined}
-            // Convert relative URL into absolute
-            src={absoluteSrc}
+            src={absoluteSrc} // Convert relative URL into absolute
             streamType={"on-demand"}
           />
         )}

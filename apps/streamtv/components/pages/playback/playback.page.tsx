@@ -34,6 +34,7 @@ interface PlaybackPageProps {
     src: string;
     poster: string;
     duration?: number;
+    autoPlay?: boolean;
   };
   number?: string | number;
   releaseDate?: string;
@@ -111,6 +112,7 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
       <SkeletonPage show={!!loading}>
         <div className="flex h-full w-full justify-center pb-10 md:pb-16">
           <Player
+            autoPlay={player.autoPlay}
             poster={player.poster}
             src={player.src}
             videoId={player.assetId}
