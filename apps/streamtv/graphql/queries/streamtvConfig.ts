@@ -22,6 +22,7 @@ export const GET_STREAMTV_CONFIG = gql`
       ]
     ) {
       objects {
+        uid
         app_name
         primary_color
         accent_color

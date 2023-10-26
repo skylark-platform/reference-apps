@@ -22,6 +22,7 @@ export const GET_SET_THUMBNAIL = gql`
       ]
     ) {
       __typename
+      uid
       type
       title
       title_short
@@ -176,6 +177,7 @@ export const GET_COLLECTION_SET = gql`
       }
       ratings {
         objects {
+          uid
           value
         }
       }
@@ -218,8 +220,8 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
         objects {
           object {
             __typename
+            uid
             ... on Season {
-              uid
               title
               title_short
               ${
@@ -236,7 +238,6 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
               }
             }
             ... on SkylarkSet {
-              uid
               type
               title
               title_short
@@ -250,10 +251,9 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
               }
             }
             ... on CallToAction {
-              uid
+              __typename
             }
             ... on SkylarkTag {
-              uid
               brands(limit: 50) {
                 objects {
                   __typename
@@ -263,7 +263,6 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
               movies(limit: 50) {
                 objects {
                   __typename
-                  uid
                 }
               }
             }

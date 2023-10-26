@@ -7,6 +7,7 @@ export const GET_PAGE = gql`
 
   query GET_PAGE {
     getPage(external_id: "marketing-site-homepage") {
+      uid
       seo_description
       seo_title
       slug
@@ -14,6 +15,7 @@ export const GET_PAGE = gql`
         objects {
           object {
             __typename
+            uid
             ... on Block {
               external_id
               slug
@@ -21,7 +23,6 @@ export const GET_PAGE = gql`
               type
               copy
               appearance
-              uid
               images {
                 ...imageListingFragment
               }
@@ -37,17 +38,16 @@ export const GET_PAGE = gql`
               type
               internal_title
               embed_id
-              uid
             }
             ... on Section {
               slug
               internal_title
               title
               type
-              uid
               content(limit: 100) {
                 objects {
                   object {
+                    uid
                     ... on Block {
                       external_id
                       slug
@@ -55,15 +55,14 @@ export const GET_PAGE = gql`
                       internal_title
                       title
                       type
-                      uid
                       images {
                         ...imageListingFragment
                       }
                       content {
                         objects {
                           object {
+                            uid
                             ... on FrequentlyAskedQuestion {
-                              uid
                               external_id
                               slug
                               answer
@@ -75,7 +74,6 @@ export const GET_PAGE = gql`
                       }
                     }
                     ... on Testimonial {
-                      uid
                       external_id
                       slug
                       copy
