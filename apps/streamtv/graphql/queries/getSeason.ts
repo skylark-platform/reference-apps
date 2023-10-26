@@ -20,6 +20,7 @@ export const GET_SEASON_THUMBNAIL = gql`
       ]
     ) {
       __typename
+      uid
       title
       title_short
       synopsis
@@ -28,6 +29,7 @@ export const GET_SEASON_THUMBNAIL = gql`
       season_number
       images {
         objects {
+          uid
           title
           type
           url

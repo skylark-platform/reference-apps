@@ -3,6 +3,7 @@ import { gql } from "graphql-request";
 export const ImageListingFragment = gql`
   fragment imageListingFragment on SkylarkImageListing {
     objects {
+      uid
       title
       type
       url
@@ -13,6 +14,7 @@ export const ImageListingFragment = gql`
 export const CallToActionListingFragment = gql`
   fragment callToActionListingFragment on CallToActionListing {
     objects {
+      uid
       type
       text
       text_short
@@ -26,6 +28,7 @@ export const CallToActionListingFragment = gql`
 
 export const ObjectLanguageFragment = gql`
   fragment objectLanguageFragment on Metadata {
+    uid
     ... on Episode {
       _meta {
         language_data {

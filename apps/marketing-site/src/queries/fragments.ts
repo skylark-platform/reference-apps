@@ -13,12 +13,12 @@ export const ImageListingFragment = gql`
 
 export const CallToActionFragment = gql`
   fragment callToActionFragment on CallToAction {
+    uid
     external_id
     slug
     appearance
     copy
     type
-    uid
     url
     url_path
     button_text

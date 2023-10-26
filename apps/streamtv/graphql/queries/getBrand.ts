@@ -19,12 +19,14 @@ export const GET_BRAND_THUMBNAIL = gql`
       ]
     ) {
       __typename
+      uid
       title
       title_short
       synopsis
       synopsis_short
       images {
         objects {
+          uid
           title
           type
           url
@@ -32,6 +34,7 @@ export const GET_BRAND_THUMBNAIL = gql`
       }
       tags {
         objects {
+          uid
           name
           type
         }
@@ -59,12 +62,14 @@ export const GET_BRAND = (streamTVIngestorSchemaLoaded: boolean) => gql`
         { dimension: "regions", value: $region }
       ]
     ) {
+      uid
       title
       title_short
       synopsis
       synopsis_short
       images {
         objects {
+          uid
           title
           type
           url
@@ -91,11 +96,13 @@ export const GET_BRAND = (streamTVIngestorSchemaLoaded: boolean) => gql`
       }
       tags {
         objects {
+          uid
           name
         }
       }
       ratings {
         objects {
+          uid
           value
         }
       }

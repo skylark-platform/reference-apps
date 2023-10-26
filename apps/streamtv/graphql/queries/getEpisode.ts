@@ -18,6 +18,7 @@ export const GET_EPISODE_THUMBNAIL = gql`
       ]
     ) {
       __typename
+      uid
       title
       title_short
       synopsis
@@ -26,6 +27,7 @@ export const GET_EPISODE_THUMBNAIL = gql`
       release_date
       images {
         objects {
+          uid
           title
           type
           url
@@ -33,6 +35,7 @@ export const GET_EPISODE_THUMBNAIL = gql`
       }
       tags {
         objects {
+          uid
           name
           type
         }
@@ -60,6 +63,7 @@ export const GET_EPISODE = gql`
         { dimension: "regions", value: $region }
       ]
     ) {
+      uid
       title
       title_short
       synopsis
@@ -68,6 +72,7 @@ export const GET_EPISODE = gql`
       release_date
       images {
         objects {
+          uid
           title
           type
           url
@@ -97,14 +102,17 @@ export const GET_EPISODE = gql`
       }
       credits {
         objects {
+          uid
           character
           people {
             objects {
+              uid
               name
             }
           }
           roles {
             objects {
+              uid
               internal_title
               title
               title_sort
@@ -114,27 +122,32 @@ export const GET_EPISODE = gql`
       }
       genres {
         objects {
+          uid
           name
         }
       }
       themes {
         objects {
+          uid
           name
         }
       }
       ratings {
         objects {
+          uid
           value
         }
       }
       tags {
         objects {
+          uid
           name
           type
         }
       }
       availability(limit: 20) {
         objects {
+          uid
           end
         }
       }
