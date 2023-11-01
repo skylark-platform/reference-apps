@@ -1,7 +1,10 @@
-import type { GetServerSideProps, NextPage } from "next";
+import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
-import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
+import {
+  SeoObjectData,
+  convertObjectImagesToSeoImages,
+} from "../../lib/getPageSeoData";
 import {
   convertObjectToName,
   getFirstRatingValue,
@@ -17,21 +20,21 @@ import { useObject } from "../../hooks/useObject";
 import { GET_EPISODE } from "../../graphql/queries";
 import { PlaybackPage } from "../../components/pages/playback";
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const seo = await getSeoDataForObject(
-    "Episode",
-    context.query.slug as string,
-    context.locale || "",
-  );
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   const seo = await getSeoDataForObject(
+//     "Episode",
+//     context.query.slug as string,
+//     context.locale || "",
+//   );
 
-  return {
-    props: {
-      seo,
-    },
-  };
-};
+//   return {
+//     props: {
+//       seo,
+//     },
+//   };
+// };
 
-const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
+const EpisodePage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
   const {
     data: episode,
@@ -64,9 +67,15 @@ const EpisodePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   return (
     <>
       <NextSeo
-        description={seo.synopsis}
-        openGraph={{ images: seo.images }}
-        title={title || seo.title}
+        description={synopsis || seo?.synopsis || ""}
+        openGraph={{
+          images:
+            convertObjectImagesToSeoImages(episode?.images) ||
+            convertObjectImagesToSeoImages(asset?.images) ||
+            seo?.images ||
+            [],
+        }}
+        title={title || seo?.title || "Episode"}
       />
       <PlaybackPage
         availabilityEndDate={availabilityEndDate}

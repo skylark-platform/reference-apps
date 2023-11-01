@@ -1,7 +1,10 @@
-import type { GetServerSideProps, NextPage } from "next";
+import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
+import {
+  SeoObjectData,
+  convertObjectImagesToSeoImages,
+} from "../../lib/getPageSeoData";
 import {
   convertObjectToName,
   getFirstRatingValue,
@@ -16,21 +19,21 @@ import { useObject } from "../../hooks/useObject";
 import { GET_LIVE_STREAM } from "../../graphql/queries";
 import { PlaybackPage } from "../../components/pages/playback";
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const seo = await getSeoDataForObject(
-    "SkylarkLiveStream",
-    context.query.slug as string,
-    context.locale || "",
-  );
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   const seo = await getSeoDataForObject(
+//     "SkylarkLiveStream",
+//     context.query.slug as string,
+//     context.locale || "",
+//   );
 
-  return {
-    props: {
-      seo,
-    },
-  };
-};
+//   return {
+//     props: {
+//       seo,
+//     },
+//   };
+// };
 
-const LiveStreamPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
+const LiveStreamPage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
   const {
     data: liveStream,
@@ -61,12 +64,21 @@ const LiveStreamPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     liveStream?.availability?.objects as Availability[] | undefined,
   );
 
+  const title = liveStream?.title || liveStream?.title_short;
+
   return (
     <>
       <NextSeo
-        description={seo.synopsis}
-        openGraph={{ images: seo.images }}
-        title={liveStream?.title || liveStream?.title_short || seo.title}
+        description={synopsis || seo?.synopsis || ""}
+        openGraph={{
+          images:
+            convertObjectImagesToSeoImages(liveStream?.images) ||
+            convertObjectImagesToSeoImages(liveAsset?.images) ||
+            convertObjectImagesToSeoImages(asset?.images) ||
+            seo?.images ||
+            [],
+        }}
+        title={title || seo?.title || "Live Stream"}
       />
       <PlaybackPage
         availabilityEndDate={availabilityEndDate}
@@ -87,7 +99,7 @@ const LiveStreamPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         synopsis={synopsis}
         tags={convertObjectToName(liveStream?.tags)}
         themes={convertObjectToName(liveStream?.themes)}
-        title={liveStream?.title || liveStream?.title_short || "Live Stream"}
+        title={title || "Live Stream"}
       />
     </>
   );

@@ -1,4 +1,4 @@
-import type { GetServerSideProps, NextPage } from "next";
+import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
 import {
@@ -9,7 +9,10 @@ import {
 } from "@skylark-reference-apps/react";
 import useTranslation from "next-translate/useTranslation";
 import { Brand, ImageType, Season } from "../../types/gql";
-import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
+import {
+  SeoObjectData,
+  convertObjectImagesToSeoImages,
+} from "../../lib/getPageSeoData";
 import {
   getGraphQLImageSrc,
   getSynopsisByOrderForGraphQLObject,
@@ -25,21 +28,21 @@ import {
 } from "../../types";
 import { useSkylarkEnvironment } from "../../hooks/useSkylarkEnvironment";
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const seo = await getSeoDataForObject(
-    "Brand",
-    context.query.slug as string,
-    context.locale || "",
-  );
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   const seo = await getSeoDataForObject(
+//     "Brand",
+//     context.query.slug as string,
+//     context.locale || "",
+//   );
 
-  return {
-    props: {
-      seo,
-    },
-  };
-};
+//   return {
+//     props: {
+//       seo,
+//     },
+//   };
+// };
 
-const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
+const BrandPage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
   const { environment } = useSkylarkEnvironment();
 
@@ -74,9 +77,12 @@ const BrandPage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   return (
     <div className="mb-20 mt-48 flex min-h-screen w-full flex-col items-center bg-gray-900 font-body">
       <NextSeo
-        description={seo.synopsis}
-        openGraph={{ images: seo.images }}
-        title={title || seo.title}
+        description={synopsis || seo?.synopsis || ""}
+        openGraph={{
+          images:
+            convertObjectImagesToSeoImages(brand?.images) || seo?.images || [],
+        }}
+        title={title || seo?.title || "Brand"}
       />
       <SkeletonPage show={isLoading}>
         <div className="-mt-48 w-full">
