@@ -64,7 +64,7 @@ const LiveStreamPage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
     liveStream?.availability?.objects as Availability[] | undefined,
   );
 
-  const title = liveStream?.title || liveStream?.title_short || "Live Stream";
+  const title = liveStream?.title || liveStream?.title_short;
 
   return (
     <>
@@ -78,7 +78,7 @@ const LiveStreamPage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
             seo?.images ||
             [],
         }}
-        title={title || seo?.title}
+        title={title || seo?.title || "Live Stream"}
       />
       <PlaybackPage
         availabilityEndDate={availabilityEndDate}
@@ -99,7 +99,7 @@ const LiveStreamPage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
         synopsis={synopsis}
         tags={convertObjectToName(liveStream?.tags)}
         themes={convertObjectToName(liveStream?.themes)}
-        title={title}
+        title={title || "Live Stream"}
       />
     </>
   );

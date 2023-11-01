@@ -83,7 +83,7 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
             seo?.images ||
             [],
         }}
-        title={title || seo?.title}
+        title={title || seo?.title || "Movie"}
       />
       <PlaybackPage
         availabilityEndDate={availabilityEndDate}

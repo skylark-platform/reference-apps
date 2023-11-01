@@ -75,7 +75,7 @@ const EpisodePage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
             seo?.images ||
             [],
         }}
-        title={title || seo?.title}
+        title={title || seo?.title || "Episode"}
       />
       <PlaybackPage
         availabilityEndDate={availabilityEndDate}
