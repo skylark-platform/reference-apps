@@ -7,7 +7,10 @@ import { DisplayError } from "../../displayError";
 import { SeasonRail, SetRail, TagRail } from "../../rails";
 import { GET_PAGE_SET } from "../../../graphql/queries";
 import { useObject } from "../../../hooks/useObject";
-import { SeoObjectData } from "../../../lib/getPageSeoData";
+import {
+  SeoObjectData,
+  convertObjectImagesToSeoImages,
+} from "../../../lib/getPageSeoData";
 import {
   Brand,
   CallToAction,
@@ -29,7 +32,7 @@ import { CTA } from "../../cta";
 
 const Page: NextPage<{
   slug: string;
-  seo: SeoObjectData;
+  seo?: SeoObjectData;
   notFoundMessage?: string;
 }> = ({ slug, seo, notFoundMessage }) => {
   const { environment } = useSkylarkEnvironment();
@@ -75,7 +78,12 @@ const Page: NextPage<{
 
   return (
     <div className="mb-20 mt-48 flex min-h-screen flex-col items-center bg-gray-900 font-body">
-      <NextSeo openGraph={{ images: seo.images }} />
+      <NextSeo
+        openGraph={{
+          images:
+            convertObjectImagesToSeoImages(data?.images) || seo?.images || [],
+        }}
+      />
       <SkeletonPage show={isLoading && !data}>
         <div className="w-full">
           {content.map((item, index) => {

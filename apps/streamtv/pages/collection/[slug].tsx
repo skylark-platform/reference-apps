@@ -1,4 +1,4 @@
-import type { GetServerSideProps, NextPage } from "next";
+import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
 import { Header, Hero, SkeletonPage } from "@skylark-reference-apps/react";
@@ -11,7 +11,10 @@ import {
   SetContent,
   ObjectTypes,
 } from "../../types/gql";
-import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
+import {
+  SeoObjectData,
+  convertObjectImagesToSeoImages,
+} from "../../lib/getPageSeoData";
 import {
   getFirstRatingValue,
   getGraphQLImageSrc,
@@ -24,20 +27,20 @@ import { Thumbnail } from "../../components/thumbnail";
 import { useObject } from "../../hooks/useObject";
 import { GET_COLLECTION_SET } from "../../graphql/queries";
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const seo = await getSeoDataForObject(
-    "SkylarkSet",
-    context.query.slug as string,
-    context.locale || "",
-  );
-  return {
-    props: {
-      seo,
-    },
-  };
-};
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   const seo = await getSeoDataForObject(
+//     "SkylarkSet",
+//     context.query.slug as string,
+//     context.locale || "",
+//   );
+//   return {
+//     props: {
+//       seo,
+//     },
+//   };
+// };
 
-const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
+const Collection: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
   const { lang } = useTranslation("common");
 
@@ -62,9 +65,14 @@ const Collection: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   return (
     <div className="mb-20 mt-48 flex min-h-screen w-full flex-col items-center bg-gray-900 font-body">
       <NextSeo
-        description={seo.synopsis}
-        openGraph={{ images: seo.images }}
-        title={title || seo.title}
+        description={synopsis || seo?.synopsis || ""}
+        openGraph={{
+          images:
+            convertObjectImagesToSeoImages(collection?.images) ||
+            seo?.images ||
+            [],
+        }}
+        title={title || seo?.title || "Collection"}
       />
       <SkeletonPage show={isLoading}>
         <div className="-mt-48"></div>

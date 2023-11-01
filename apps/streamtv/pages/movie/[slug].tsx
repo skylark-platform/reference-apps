@@ -1,7 +1,10 @@
-import type { GetServerSideProps, NextPage } from "next";
+import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import { getSeoDataForObject, SeoObjectData } from "../../lib/getPageSeoData";
+import {
+  SeoObjectData,
+  convertObjectImagesToSeoImages,
+} from "../../lib/getPageSeoData";
 import {
   convertObjectToName,
   getFirstRatingValue,
@@ -17,19 +20,19 @@ import { useObject } from "../../hooks/useObject";
 import { GET_MOVIE } from "../../graphql/queries";
 import { PlaybackPage } from "../../components/pages/playback";
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const seo = await getSeoDataForObject(
-    "Movie",
-    context.query.slug as string,
-    context.locale || "",
-  );
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   const seo = await getSeoDataForObject(
+//     "Movie",
+//     context.query.slug as string,
+//     context.locale || "",
+//   );
 
-  return {
-    props: {
-      seo,
-    },
-  };
-};
+//   return {
+//     props: {
+//       seo,
+//     },
+//   };
+// };
 
 const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
@@ -72,9 +75,15 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   return (
     <>
       <NextSeo
-        description={seo.synopsis}
-        openGraph={{ images: seo.images }}
-        title={title || seo.title}
+        description={synopsis || seo?.synopsis || ""}
+        openGraph={{
+          images:
+            convertObjectImagesToSeoImages(movie?.images) ||
+            convertObjectImagesToSeoImages(asset?.images) ||
+            seo?.images ||
+            [],
+        }}
+        title={title || seo?.title}
       />
       <PlaybackPage
         availabilityEndDate={availabilityEndDate}

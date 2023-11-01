@@ -6,7 +6,7 @@ import {
   DimensionKey,
 } from "@skylark-reference-apps/lib";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
-import { Entertainment } from "../types";
+import { Entertainment, Maybe, SkylarkImageListing } from "../types";
 import { createGraphQLQueryDimensions } from "./utils";
 
 interface SeoObjectImage {
@@ -18,6 +18,11 @@ export interface SeoObjectData {
   synopsis?: string;
   images?: SeoObjectImage[];
 }
+
+export const convertObjectImagesToSeoImages = (
+  images?: Maybe<SkylarkImageListing>,
+) =>
+  images?.objects?.map((image): SeoObjectImage => ({ url: image?.url || "" }));
 
 export const getSeoDataForObject = async (
   type: GraphQLObjectTypes,
@@ -78,10 +83,7 @@ export const getSeoDataForObject = async (
       synopsis_short: data?.synopsis_short || "",
     });
 
-    const images =
-      data.images?.objects?.map(
-        (image): SeoObjectImage => ({ url: image?.url || "" }),
-      ) || [];
+    const images = convertObjectImagesToSeoImages(data.images) || [];
 
     return {
       title,
