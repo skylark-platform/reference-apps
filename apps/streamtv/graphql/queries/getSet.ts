@@ -251,6 +251,7 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
               }
             }
             ... on CallToAction {
+              text
             }
             ... on SkylarkTag {
               brands(limit: 50) {

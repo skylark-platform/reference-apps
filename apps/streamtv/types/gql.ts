@@ -727,6 +727,11 @@ export type CreditSetInput = {
   unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
 };
 
+export type DeleteInput = {
+  language?: InputMaybe<Scalars["String"]>;
+  uid: Scalars["String"];
+};
+
 export type Dimension = {
   __typename?: "Dimension";
   _meta?: Maybe<_DimensionMeta>;
@@ -1627,6 +1632,7 @@ export type MovieSetInput = {
 export type Mutation = {
   __typename?: "Mutation";
   activateConfigurationVersion?: Maybe<ConfigurationResponse>;
+  batchDeleteObjects?: Maybe<ObjectDeleteResponse>;
   createAvailability?: Maybe<Availability>;
   createBrand?: Maybe<Brand>;
   createCallToAction?: Maybe<CallToAction>;
@@ -1719,6 +1725,10 @@ export type Mutation = {
 
 export type MutationActivateConfigurationVersionArgs = {
   version?: InputMaybe<Scalars["Int"]>;
+};
+
+export type MutationBatchDeleteObjectsArgs = {
+  objects?: InputMaybe<Array<InputMaybe<DeleteInput>>>;
 };
 
 export type MutationCreateAvailabilityArgs = {
@@ -2307,6 +2317,7 @@ export type ObjectDeleteResponse = {
   language_version?: Maybe<Scalars["String"]>;
   message?: Maybe<Scalars["String"]>;
   removed_relationships?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  task_id?: Maybe<Scalars["String"]>;
   uid: Scalars["String"];
 };
 
@@ -6044,7 +6055,7 @@ export type _SkylarkTagMeta = {
   global_data?: Maybe<_SkylarkTagGlobal>;
   language_data?: Maybe<_SkylarkTagLanguage>;
   modified?: Maybe<_Audit>;
-  publish_stage?: Maybe<PublishStage>;
+  published?: Maybe<Scalars["Boolean"]>;
 };
 
 export type _StreamtvConfigGlobal = _Global & {
