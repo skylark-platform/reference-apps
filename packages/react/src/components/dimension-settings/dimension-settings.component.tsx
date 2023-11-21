@@ -66,7 +66,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
         {show && (
           <motion.div
             animate="animate"
-            className={`fixed bottom-14 left-0 right-0 z-50 block h-[75vh] bg-white font-skylark-branding md:bottom-0 md:h-auto`}
+            className={`fixed bottom-14 left-0 right-0 z-50 block h-[60vh] bg-white font-skylark-branding md:bottom-0 md:h-auto`}
             dir="ltr"
             exit="hidden"
             initial="hidden"
