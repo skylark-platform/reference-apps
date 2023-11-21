@@ -26,6 +26,7 @@ import { Search } from "./search";
 import { useStreamTVConfig } from "../hooks/useStreamTVConfig";
 import createDefaultSeo from "../next-seo.config";
 import { GoogleTagManagerScript } from "./googleTagManager";
+import { BackButton } from "./backButton";
 
 interface Props {
   skylarkApiUrl?: string;
@@ -106,7 +107,7 @@ export const StreamTVLayout: React.FC<Props> = ({
       )}
       <div className="relative w-full">
         {isMobileSearchOpen && (
-          <div className="fixed inset-0 z-20 bg-gray-800 md:hidden">
+          <div className="fixed inset-0 z-80 bg-gray-800 md:hidden">
             <Search onSearch={() => setMobileSearchOpen(false)} />
           </div>
         )}
@@ -135,6 +136,7 @@ export const StreamTVLayout: React.FC<Props> = ({
         <AppBackgroundGradient />
         <AppHeader activeHref={asPath} links={links}>
           <div className="flex h-full items-center justify-center text-3xl text-gray-100">
+            <BackButton />
             <div className="flex h-full items-center ltr:md:ml-8 rtl:md:mr-8 ltr:lg:ml-16 rtl:lg:mr-16 ltr:xl:ml-20 rtl:xl:mr-20">
               {config?.logo ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -150,7 +152,7 @@ export const StreamTVLayout: React.FC<Props> = ({
             <h2 className="mx-1 text-base md:mx-2 md:text-xl lg:text-2xl">
               <Link href="/">{appTitle}</Link>
             </h2>
-            <span className="absolute right-2 md:hidden">
+            <span className="absolute right-2 top-16 md:hidden">
               {isMobileSearchOpen && (
                 <Button
                   icon={
