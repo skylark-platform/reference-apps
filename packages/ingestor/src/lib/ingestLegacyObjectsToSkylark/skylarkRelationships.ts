@@ -323,9 +323,15 @@ export const createSetContent = async (
     };
   });
 
+  if (!process.env.CUSTOM_SET_OBJECT_TYPE) {
+    throw new Error(
+      `[createSetContent] process.env.CUSTOM_SET_OBJECT_TYPE cannot be empty`,
+    );
+  }
+
   // Change to actual Set
   await addContentToCreatedSets(
-    "CustomSetName" as GraphQLSetObjectTypes,
+    process.env.CUSTOM_SET_OBJECT_TYPE as GraphQLSetObjectTypes,
     createdSetsWithContent,
   );
 };

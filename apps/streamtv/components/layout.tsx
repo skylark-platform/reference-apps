@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { MdStream, MdSearch, MdClose } from "react-icons/md";
+import {
+  MdStream,
+  MdSearch,
+  MdClose,
+  MdHome,
+  MdMovie,
+  MdOutlineStar,
+} from "react-icons/md";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import {
@@ -11,6 +18,7 @@ import {
   ConnectToSkylarkModal,
   Link,
   useDimensions,
+  NavigationLink,
 } from "@skylark-reference-apps/react";
 import { hasProperty } from "@skylark-reference-apps/lib";
 import { DefaultSeo } from "next-seo";
@@ -58,9 +66,9 @@ export const StreamTVLayout: React.FC<Props> = ({
   const { t } = useTranslation("common");
   const [isMobileSearchOpen, setMobileSearchOpen] = useState(false);
 
-  const links = [
-    { text: t("discover"), href: "/" },
-    { text: t("movies"), href: "/movies" },
+  const links: NavigationLink[] = [
+    { text: t("discover"), href: "/", icon: <MdHome /> },
+    { text: t("movies"), href: "/movies", icon: <MdMovie /> },
     {
       text: t("featured"),
       href: convertUrlWithSameOriginToPath(
@@ -68,6 +76,13 @@ export const StreamTVLayout: React.FC<Props> = ({
           process.env.NEXT_PUBLIC_TV_SHOWS_HREF ||
           "/brand/reculg97iNzbkEZCK", // StreamTV Ingest External ID
       ),
+      icon: <MdOutlineStar />,
+    },
+    {
+      text: t("search"),
+      onClick: () => setMobileSearchOpen(!isMobileSearchOpen),
+      icon: <MdSearch />,
+      isMobileOnly: true,
     },
   ];
 
@@ -91,7 +106,7 @@ export const StreamTVLayout: React.FC<Props> = ({
       )}
       <div className="relative w-full">
         {isMobileSearchOpen && (
-          <div className="fixed inset-0 z-20 bg-gray-900/40 md:hidden">
+          <div className="fixed inset-0 z-20 bg-gray-800 md:hidden">
             <Search onSearch={() => setMobileSearchOpen(false)} />
           </div>
         )}
@@ -136,18 +151,20 @@ export const StreamTVLayout: React.FC<Props> = ({
               <Link href="/">{appTitle}</Link>
             </h2>
             <span className="absolute right-2 md:hidden">
-              <Button
-                icon={
-                  isMobileSearchOpen ? (
-                    <MdClose size={20} />
-                  ) : (
-                    <MdSearch size={20} />
-                  )
-                }
-                size="sm"
-                variant="tertiary"
-                onClick={() => setMobileSearchOpen(!isMobileSearchOpen)}
-              />
+              {isMobileSearchOpen && (
+                <Button
+                  icon={
+                    isMobileSearchOpen ? (
+                      <MdClose size={20} />
+                    ) : (
+                      <MdSearch size={20} />
+                    )
+                  }
+                  size="sm"
+                  variant="tertiary"
+                  onClick={() => setMobileSearchOpen(!isMobileSearchOpen)}
+                />
+              )}
             </span>
           </div>
           <div className="hidden md:block">
