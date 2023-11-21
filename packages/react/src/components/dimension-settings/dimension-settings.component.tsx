@@ -8,6 +8,7 @@ import {
   SAAS_API_ENDPOINT,
   SAAS_API_KEY,
 } from "@skylark-reference-apps/lib";
+import clsx from "clsx";
 import { DimensionContent } from "./dimension-content";
 import { DimensionToggle } from "./dimension-toggle";
 import { DimensionRadioButton } from "./dimension-radio-button";
@@ -54,9 +55,10 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
   return (
     <>
       <div
-        className={`fixed bottom-0 right-sm-gutter z-20 flex transition-opacity duration-500 md:right-md-gutter lg:right-lg-gutter xl:right-xl-gutter ${
-          show ? "opacity-0" : "opacity-100"
-        }`}
+        className={clsx(
+          `fixed bottom-14 right-sm-gutter z-20 flex transition-opacity duration-500 md:bottom-0 md:right-md-gutter lg:right-lg-gutter xl:right-xl-gutter`,
+          show ? "opacity-0" : "opacity-100",
+        )}
       >
         <DimensionToggle variant="open" onClick={() => setShow(true)} />
       </div>
@@ -64,7 +66,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
         {show && (
           <motion.div
             animate="animate"
-            className={`fixed bottom-0 left-0 right-0 z-50 block h-[75vh] bg-white font-skylark-branding md:h-auto`}
+            className={`fixed bottom-14 left-0 right-0 z-50 block h-[75vh] bg-white font-skylark-branding md:bottom-0 md:h-auto`}
             dir="ltr"
             exit="hidden"
             initial="hidden"
