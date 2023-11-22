@@ -1,11 +1,28 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { Navigation } from "./navigation.component";
+import { MdHome, MdMovie, MdOutlineStar, MdSearch } from "react-icons/md";
+import { Navigation, NavigationLink } from "./navigation.component";
 
 export default {
   title: "React/Navigation",
   component: Navigation,
 } as ComponentMeta<typeof Navigation>;
+
+const links: NavigationLink[] = [
+  { text: "Discover", href: "/", icon: <MdHome /> },
+  { text: "Movies", href: "/movies", icon: <MdMovie /> },
+  {
+    text: "Featured",
+    href: "/featured",
+    icon: <MdOutlineStar />,
+  },
+  {
+    text: "Search",
+    onClick: () => "",
+    icon: <MdSearch />,
+    isMobileOnly: true,
+  },
+];
 
 const Template: ComponentStory<typeof Navigation> = (args) => (
   <div className="h-screen w-screen bg-gray-500 md:h-48 md:w-full" dir="ltr">
@@ -15,23 +32,13 @@ const Template: ComponentStory<typeof Navigation> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-  links: [
-    { text: "Discover", href: "/" },
-    { text: "Movies", href: "/movies" },
-    { text: "TV Shows", href: "/tvshows" },
-  ],
-  defaultOpen: true,
+  links,
 };
 
 export const WithActive = Template.bind({});
 WithActive.args = {
-  links: [
-    { text: "Discover", href: "/" },
-    { text: "Movies", href: "/movies" },
-    { text: "TV Shows", href: "/tvshows" },
-  ],
+  links,
   activeHref: "/",
-  defaultOpen: true,
 };
 
 export const Mobile = Template.bind({});
