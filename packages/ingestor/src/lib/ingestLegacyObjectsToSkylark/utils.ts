@@ -107,7 +107,12 @@ export const convertLegacyObjectTypeToObjectType = (
     case LegacyObjectType.Games:
       return "Game";
     case LegacyObjectType.Sets:
-      return "CustomSetName" as GraphQLObjectTypes;
+      if (!process.env.CUSTOM_SET_OBJECT_TYPE) {
+        throw new Error(
+          `[convertLegacyObjectTypeToObjectType] process.env.CUSTOM_SET_OBJECT_TYPE cannot be empty`,
+        );
+      }
+      return process.env.CUSTOM_SET_OBJECT_TYPE as GraphQLObjectTypes;
     default:
       throw new Error("[convertLegacyObjectTypeToObjectType] Unknown type");
   }

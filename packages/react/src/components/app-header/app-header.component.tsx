@@ -6,7 +6,6 @@ export const AppHeader: React.FC<NavigationProps & { forceRtl?: boolean }> = ({
   children,
   links,
   activeHref,
-  defaultOpen,
   forceRtl,
 }) => {
   const { dir } = useHtmlDirection(forceRtl);
@@ -26,11 +25,7 @@ export const AppHeader: React.FC<NavigationProps & { forceRtl?: boolean }> = ({
         {children}
       </div>
       <div className="h-full md:w-2/5 lg:w-1/3">
-        <Navigation
-          activeHref={activeHref}
-          defaultOpen={defaultOpen}
-          links={links}
-        />
+        <Navigation activeHref={activeHref} links={links} />
       </div>
     </header>
   );

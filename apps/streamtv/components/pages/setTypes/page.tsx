@@ -103,7 +103,7 @@ const Page: NextPage<{
                 return (
                   // If the carousel is the first item, add negative margin to make it appear through the navigation
                   <div
-                    className={`h-[90vh] w-full md:h-[95vh] ${
+                    className={`h-[88vh] w-full md:h-[95vh] ${
                       index === 0 ? "-mt-48" : ""
                     }`}
                     key={item.uid}

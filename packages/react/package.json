@@ -34,6 +34,7 @@
     "@headlessui/react": "^1.7.12",
     "@mux/mux-video-react": "^0.7.15",
     "@skylark-reference-apps/lib": "*",
+    "clsx": "^2.0.0",
     "dayjs": "^1.11.3",
     "framer-motion": "10.16.4",
     "next": "13.4.19",

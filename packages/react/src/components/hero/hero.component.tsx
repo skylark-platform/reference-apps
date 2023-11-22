@@ -11,7 +11,7 @@ export const Hero: React.FC<HeroProps> = ({ bgImage, children }) => {
 
   return (
     <div
-      className={`h-[90vh] w-full bg-cover bg-top bg-no-repeat ${
+      className={`h-[88vh] w-full bg-cover bg-top bg-no-repeat ${
         !imageIsLoaded ? "animate-pulse bg-gray-800" : ""
       }`}
       style={{

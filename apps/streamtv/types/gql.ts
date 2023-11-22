@@ -29,11 +29,13 @@ export type AccountConfig = {
   __typename?: "AccountConfig";
   default_language?: Maybe<Scalars["String"]>;
   draft_update?: Maybe<Scalars["Boolean"]>;
+  raise_uid_exception?: Maybe<Scalars["Boolean"]>;
 };
 
 export type AccountConfigInput = {
   default_language?: InputMaybe<Scalars["String"]>;
   draft_update?: InputMaybe<Scalars["Boolean"]>;
+  raise_uid_exception?: InputMaybe<Scalars["Boolean"]>;
 };
 
 export type AccountDetails = {
@@ -5238,6 +5240,7 @@ export enum UiFieldTypes {
   Colourpicker = "COLOURPICKER",
   String = "STRING",
   Textarea = "TEXTAREA",
+  Timezone = "TIMEZONE",
   Wysiwyg = "WYSIWYG",
 }
 
