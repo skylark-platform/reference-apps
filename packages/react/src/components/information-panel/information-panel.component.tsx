@@ -1,6 +1,8 @@
 import useTranslation from "next-translate/useTranslation";
 import React, { useState } from "react";
 import { MdOutlineWatchLater } from "react-icons/md";
+import { sanitize } from "dompurify";
+
 import { List } from "../list";
 
 interface InformationPanelProps {
@@ -39,6 +41,38 @@ const getTranslationStringForAvailability = (
   }
 };
 
+const Description = ({ description }: { description: string }) => {
+  const [isExpanded, setExpand] = useState(false);
+  const [isTrunicated, setTrunicated] = useState(false);
+
+  const setTrunicatedWrapper = (el: HTMLParagraphElement) => {
+    const trunc = !!(el && el.clientHeight < el.scrollHeight);
+    setTrunicated(trunc);
+  };
+
+  const { t } = useTranslation("common");
+
+  const cleanHTML = sanitize(description);
+
+  return (
+    <div className="mb-5 pt-2 text-sm text-gray-400 md:text-base">
+      <p
+        className={`${isExpanded ? "line-clamp-none" : "line-clamp-4"}`}
+        dangerouslySetInnerHTML={{ __html: cleanHTML }}
+        ref={setTrunicatedWrapper}
+      />
+      {(isTrunicated || isExpanded) && (
+        <button
+          className="font-semibold underline"
+          onClick={() => setExpand(!isExpanded)}
+        >
+          {isExpanded ? t("show-less") : t("show-more")}
+        </button>
+      )}
+    </div>
+  );
+};
+
 export const InformationPanel: React.FC<InformationPanelProps> = ({
   brand,
   season,
@@ -50,14 +84,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
   genres,
   themes,
 }) => {
-  const [isExpanded, setExpand] = useState(false);
-  const [isTrunicated, setTrunicated] = useState(false);
   const { t } = useTranslation("common");
-
-  const setTrunicatedWrapper = (el: HTMLParagraphElement) => {
-    const trunc = !!(el && el.clientHeight < el.scrollHeight);
-    setTrunicated(trunc);
-  };
 
   return (
     <div className="h-full w-full bg-gray-900">
@@ -107,24 +134,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
             highlightFirst
             textSize={"sm"}
           />
-          {description && (
-            <div className="mb-5 pt-2 text-sm text-gray-400 md:text-base">
-              <p
-                className={`${isExpanded ? "line-clamp-none" : "line-clamp-4"}`}
-                ref={setTrunicatedWrapper}
-              >
-                {description}
-              </p>
-              {(isTrunicated || isExpanded) && (
-                <button
-                  className="font-semibold underline"
-                  onClick={() => setExpand(!isExpanded)}
-                >
-                  {isExpanded ? t("show-less") : t("show-more")}
-                </button>
-              )}
-            </div>
-          )}
+          {description && <Description description={description} />}
           {[
             { key: "genres", items: genres },
             { key: "themes", items: themes },
