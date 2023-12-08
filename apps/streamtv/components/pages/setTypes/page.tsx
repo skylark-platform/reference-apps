@@ -113,7 +113,10 @@ const Page: NextPage<{
                 );
               }
 
-              if (item.type === StreamTVSupportedSetType.Grid) {
+              if (
+                item.type === StreamTVSupportedSetType.Grid ||
+                item.type === StreamTVSupportedSetType.GridPortrait
+              ) {
                 const objects = (
                   item?.content?.objects as SetContent[] | undefined
                 )

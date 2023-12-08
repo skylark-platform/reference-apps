@@ -27,6 +27,7 @@ export enum StreamTVSupportedSetType {
   RailPortrait = "RAIL_PORTRAIT",
   RailWithSynopsis = "RAIL_WITH_SYNOPSIS",
   Grid = "GRID",
+  GridPortrait = "GRID_PORTRAIT",
 }
 
 export enum StreamTVSupportCallToActionType {

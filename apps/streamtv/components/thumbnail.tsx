@@ -61,7 +61,8 @@ export const getThumbnailVariantFromSetType = (
 
   if (
     setType === StreamTVSupportedSetType.RailPortrait ||
-    setType === StreamTVSupportedSetType.Collection
+    setType === StreamTVSupportedSetType.Collection ||
+    setType === StreamTVSupportedSetType.GridPortrait
   ) {
     return "portrait";
   }

@@ -29,6 +29,7 @@ export const ENUMS = {
     "RAIL_INSET",
     "RAIL_MOVIE",
     "GRID",
+    "GRID_PORTRAIT",
   ] as string[],
   IMAGE_TYPES: [
     "BACKGROUND",
