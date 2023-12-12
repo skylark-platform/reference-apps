@@ -2337,8 +2337,10 @@ export enum ObjectTypes {
   Role = "Role",
   Season = "Season",
   SkylarkAsset = "SkylarkAsset",
+  SkylarkEpgProgram = "SkylarkEPGProgram",
   SkylarkFavoriteList = "SkylarkFavoriteList",
   SkylarkImage = "SkylarkImage",
+  SkylarkLiveAsset = "SkylarkLiveAsset",
   SkylarkSet = "SkylarkSet",
   SkylarkTag = "SkylarkTag",
   StreamtvConfig = "StreamtvConfig",
@@ -2631,6 +2633,7 @@ export type Query = {
   getParentalGuidance?: Maybe<ParentalGuidance>;
   getPerson?: Maybe<Person>;
   getRating?: Maybe<Rating>;
+  getRelationshipConfiguration?: Maybe<RelationshipConfig>;
   getRole?: Maybe<Role>;
   getSearchableFields?: Maybe<Array<Maybe<Scalars["String"]>>>;
   getSeason?: Maybe<Season>;
@@ -2658,6 +2661,7 @@ export type Query = {
   listParentalGuidance?: Maybe<ParentalGuidanceListing>;
   listPerson?: Maybe<PersonListing>;
   listRating?: Maybe<RatingListing>;
+  listRelationshipConfiguration?: Maybe<Array<Maybe<RelationshipConfigList>>>;
   listRole?: Maybe<RoleListing>;
   listSeason?: Maybe<SeasonListing>;
   listSkylarkAsset?: Maybe<SkylarkAssetListing>;
@@ -2799,6 +2803,12 @@ export type QueryGetRatingArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  uid?: InputMaybe<Scalars["String"]>;
+};
+
+export type QueryGetRelationshipConfigurationArgs = {
+  object_type: ObjectTypes;
+  relationship_name: Scalars["String"];
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3003,6 +3013,10 @@ export type QueryListRatingArgs = {
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
   next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type QueryListRelationshipConfigurationArgs = {
+  object_type: ObjectTypes;
 };
 
 export type QueryListRoleArgs = {
@@ -3291,6 +3305,12 @@ export type RelationshipConfig = {
 
 export type RelationshipConfigInput = {
   default_sort_field?: InputMaybe<Scalars["String"]>;
+};
+
+export type RelationshipConfigList = {
+  __typename?: "RelationshipConfigList";
+  config?: Maybe<RelationshipConfig>;
+  relationship_name?: Maybe<Scalars["String"]>;
 };
 
 export type RelativeTimes = {
@@ -3765,6 +3785,7 @@ export type SetListing = {
 export enum SetType {
   Collection = "COLLECTION",
   Grid = "GRID",
+  GridPortrait = "GRID_PORTRAIT",
   Page = "PAGE",
   Rail = "RAIL",
   RailInset = "RAIL_INSET",
