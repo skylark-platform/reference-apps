@@ -3785,6 +3785,7 @@ export type SetListing = {
 export enum SetType {
   Collection = "COLLECTION",
   Grid = "GRID",
+  GridPortrait = "GRID_PORTRAIT",
   Page = "PAGE",
   Rail = "RAIL",
   RailInset = "RAIL_INSET",

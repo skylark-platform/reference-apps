@@ -38,11 +38,13 @@ export type AccountConfig = {
   __typename?: "AccountConfig";
   default_language?: Maybe<Scalars["String"]["output"]>;
   draft_update?: Maybe<Scalars["Boolean"]["output"]>;
+  raise_uid_exception?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type AccountConfigInput = {
   default_language?: InputMaybe<Scalars["String"]["input"]>;
   draft_update?: InputMaybe<Scalars["Boolean"]["input"]>;
+  raise_uid_exception?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type AccountDetails = {
@@ -474,6 +476,11 @@ export type CreateObjectTypeInput = {
   >;
 };
 
+export type DeleteInput = {
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  uid: Scalars["String"]["input"];
+};
+
 export type Dimension = {
   __typename?: "Dimension";
   _meta?: Maybe<_DimensionMeta>;
@@ -840,6 +847,7 @@ export type MetadataListing = Listing & {
 export type Mutation = {
   __typename?: "Mutation";
   activateConfigurationVersion?: Maybe<ConfigurationResponse>;
+  batchDeleteObjects?: Maybe<ObjectDeleteResponse>;
   createAvailability?: Maybe<Availability>;
   createBlock?: Maybe<Block>;
   createCallToAction?: Maybe<CallToAction>;
@@ -917,6 +925,10 @@ export type Mutation = {
 
 export type MutationActivateConfigurationVersionArgs = {
   version?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type MutationBatchDeleteObjectsArgs = {
+  objects?: InputMaybe<Array<InputMaybe<DeleteInput>>>;
 };
 
 export type MutationCreateAvailabilityArgs = {
@@ -1400,6 +1412,7 @@ export type ObjectDeleteResponse = {
   language_version?: Maybe<Scalars["String"]["output"]>;
   message?: Maybe<Scalars["String"]["output"]>;
   removed_relationships?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
+  task_id?: Maybe<Scalars["String"]["output"]>;
   uid: Scalars["String"]["output"];
 };
 
@@ -1412,8 +1425,10 @@ export enum ObjectTypes {
   Person = "Person",
   Section = "Section",
   SkylarkAsset = "SkylarkAsset",
+  SkylarkEpgProgram = "SkylarkEPGProgram",
   SkylarkFavoriteList = "SkylarkFavoriteList",
   SkylarkImage = "SkylarkImage",
+  SkylarkLiveAsset = "SkylarkLiveAsset",
   SkylarkSet = "SkylarkSet",
   SkylarkTag = "SkylarkTag",
   Testimonial = "Testimonial",
@@ -1654,6 +1669,7 @@ export type Query = {
   getObjectTypeConfiguration?: Maybe<ObjectConfig>;
   getPage?: Maybe<Page>;
   getPerson?: Maybe<Person>;
+  getRelationshipConfiguration?: Maybe<RelationshipConfig>;
   getSearchableFields?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   getSection?: Maybe<Section>;
   getSkylarkAsset?: Maybe<SkylarkAsset>;
@@ -1676,6 +1692,7 @@ export type Query = {
   listFrequentlyAskedQuestion?: Maybe<FrequentlyAskedQuestionListing>;
   listPage?: Maybe<PageListing>;
   listPerson?: Maybe<PersonListing>;
+  listRelationshipConfiguration?: Maybe<Array<Maybe<RelationshipConfigList>>>;
   listSection?: Maybe<SectionListing>;
   listSkylarkAsset?: Maybe<SkylarkAssetListing>;
   listSkylarkBackgroundTask?: Maybe<SkylarkBackgroundTaskListing>;
@@ -1780,6 +1797,12 @@ export type QueryGetPersonArgs = {
   external_id?: InputMaybe<Scalars["String"]["input"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
   language?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type QueryGetRelationshipConfigurationArgs = {
+  object_type: ObjectTypes;
+  relationship_name: Scalars["String"]["input"];
   uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -1941,6 +1964,10 @@ export type QueryListPersonArgs = {
   next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+export type QueryListRelationshipConfigurationArgs = {
+  object_type: ObjectTypes;
+};
+
 export type QueryListSectionArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
   draft?: InputMaybe<Scalars["Boolean"]["input"]>;
@@ -2051,6 +2078,12 @@ export type RelationshipConfig = {
 
 export type RelationshipConfigInput = {
   default_sort_field?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type RelationshipConfigList = {
+  __typename?: "RelationshipConfigList";
+  config?: Maybe<RelationshipConfig>;
+  relationship_name?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type RelativeTimes = {
@@ -3432,6 +3465,7 @@ export enum UiFieldTypes {
   Colourpicker = "COLOURPICKER",
   String = "STRING",
   Textarea = "TEXTAREA",
+  Timezone = "TIMEZONE",
   Wysiwyg = "WYSIWYG",
 }
 
@@ -4041,7 +4075,7 @@ export type _SkylarkTagMeta = {
   global_data?: Maybe<_SkylarkTagGlobal>;
   language_data?: Maybe<_SkylarkTagLanguage>;
   modified?: Maybe<_Audit>;
-  publish_stage?: Maybe<PublishStage>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type _TestimonialGlobal = _Global & {
