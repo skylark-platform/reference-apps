@@ -28,6 +28,7 @@ import {
 } from "./lib/skylark/saas/fs";
 import { updateObjectConfigurations } from "./lib/skylark/saas/objectConfiguration";
 import { configureCache } from "./lib/skylark/saas/cacheConfiguration";
+import { updateRelationshipConfigurations } from "./lib/skylark/saas/relationshipConfiguration";
 
 const main = async () => {
   await clearUnableToFindVersionNoneObjectsFile();
@@ -86,6 +87,10 @@ const main = async () => {
   // eslint-disable-next-line no-console
   console.log("Object configuration updated");
 
+  await updateRelationshipConfigurations();
+  // eslint-disable-next-line no-console
+  console.log("Relationship configuration updated");
+
   if (
     SAAS_API_ENDPOINT === "https://api.showcase.skylarkplatform.com/graphql"
   ) {
@@ -120,8 +125,15 @@ const main = async () => {
     const metadataAvailability: GraphQLMetadata["availability"] = {
       // We use the Airtable IDs (external_id within Skylark) for Availability
       all: airtable.availability.map(({ id }) => id),
-      default: UNLICENSED_BY_DEFAULT ? undefined : defaultSchedule?.id,
+      // default: UNLICENSED_BY_DEFAULT ? undefined : defaultSchedule?.id,
+      default: undefined,
     };
+
+    // Use when the relationship uses availability inheritance
+    const metadataAvailabilityWithoutDefault: GraphQLMetadata["availability"] =
+      {
+        all: airtable.availability.map(({ id }) => id),
+      };
 
     const metadata: GraphQLMetadata = {
       dimensions,
@@ -178,18 +190,18 @@ const main = async () => {
       await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
         "Person",
         airtable.people,
-        metadataAvailability,
+        metadataAvailabilityWithoutDefault,
       );
     metadata.roles =
       await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
         "Role",
         airtable.roles,
-        metadataAvailability,
+        metadataAvailabilityWithoutDefault,
       );
-    metadata.credits = await createOrUpdateGraphQLCredits(
-      airtable.credits,
-      metadata,
-    );
+    metadata.credits = await createOrUpdateGraphQLCredits(airtable.credits, {
+      ...metadata,
+      availability: metadataAvailabilityWithoutDefault,
+    });
 
     await createTranslationsForGraphQLObjects(
       metadata.call_to_actions,

@@ -4,7 +4,7 @@ on:
     inputs:
       skylark_url:
         type: string
-        default: https://api.saas-sl-develop-10.skylark-dev.skylarkplatform.io/graphql
+        default: https://api.sl-develop.development.skylarkplatform.com/graphql
         required: true
         description: Your Skylark's GraphQL URL, should end with /graphql. Default to sl-develop-10's URL.
       skylark_api_key:
