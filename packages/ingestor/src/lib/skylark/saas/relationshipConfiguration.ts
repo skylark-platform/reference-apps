@@ -48,7 +48,7 @@ export const updateRelationshipConfigurations = async () => {
     { objectType: "SkylarkSet", relationship: "tags" },
     { objectType: "SkylarkEPGProgram", relationship: "tags" },
     { objectType: "SkylarkImage", relationship: "tags" },
-    { objectType: "Credit", relationship: "roles" },
+    // { objectType: "Credit", relationship: "roles" },
     { objectType: "Credit", relationship: "people" },
     { objectType: "Person", relationship: "images" },
     { objectType: "Episode", relationship: "seasons" },
