@@ -5,7 +5,11 @@ import { gql } from "graphql-request";
 const CACHE_MUTATION = gql`
   mutation CONFIGURE_QUERY_CACHE {
     setCacheConfig(
-      rules: { max_age: 604800, stale_while_revalidate: 604800, types: ["Query"] }
+      rules: {
+        max_age: 604800
+        stale_while_revalidate: 604800
+        types: ["Query"]
+      }
     ) {
       rules {
         types
