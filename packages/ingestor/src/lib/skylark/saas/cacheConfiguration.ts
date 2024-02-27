@@ -1,11 +1,11 @@
 import { graphQLClient } from "@skylark-reference-apps/lib";
 import { gql } from "graphql-request";
 
-// Sets a 24 hour query cache for Showcase environment
+// Sets a week long cache for Showcase environment Queries
 const CACHE_MUTATION = gql`
-  mutation CONFIGURE_24HR_QUERY_CACHE {
+  mutation CONFIGURE_QUERY_CACHE {
     setCacheConfig(
-      rules: { max_age: 86400, stale_while_revalidate: 86400, types: ["Query"] }
+      rules: { max_age: 604800, stale_while_revalidate: 604800, types: ["Query"] }
     ) {
       rules {
         types
