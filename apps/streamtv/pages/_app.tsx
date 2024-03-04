@@ -48,6 +48,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     console.log("Visitor has entered email");
   };
 
+  console.log({ unreadMessagesCount });
+
   return (
     <PlausibleProvider domain={process.env.NEXT_PUBLIC_APP_DOMAIN as string}>
       <QueryClientProvider client={queryClient}>
