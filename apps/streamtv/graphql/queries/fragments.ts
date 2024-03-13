@@ -57,7 +57,7 @@ export const ObjectLanguageFragment = gql`
         }
       }
     }
-    ... on SkylarkSet {
+    ... on CountrylineSet {
       _meta {
         language_data {
           language

@@ -19,9 +19,11 @@ export const SEARCH = gql`
         _context {
           typename_highlight
         }
-        ... on SkylarkSet {
-          title
+        ... on CountrylineSet {
+          title_long
+          title_medium
           title_short
+          synopsis_long
           synopsis_medium
           synopsis_short
           type
