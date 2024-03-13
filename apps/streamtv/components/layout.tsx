@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  MdStream,
-  MdSearch,
-  MdClose,
-  MdHome,
-  MdOutlineStar,
-  MdMovie,
-} from "react-icons/md";
+import { MdStream, MdSearch, MdClose, MdHome, MdCamera } from "react-icons/md";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import {
@@ -37,24 +30,24 @@ interface Props {
   children?: React.ReactNode;
 }
 
-const convertUrlWithSameOriginToPath = (url: string): string => {
-  if (url.startsWith("/")) {
-    return url;
-  }
+// const convertUrlWithSameOriginToPath = (url: string): string => {
+//   if (url.startsWith("/")) {
+//     return url;
+//   }
 
-  try {
-    const parsedUrl = new URL(url);
-    if (
-      typeof window !== "undefined" &&
-      window.location.origin === parsedUrl.origin
-    ) {
-      return parsedUrl.pathname;
-    }
-    return url;
-  } catch {
-    return url;
-  }
-};
+//   try {
+//     const parsedUrl = new URL(url);
+//     if (
+//       typeof window !== "undefined" &&
+//       window.location.origin === parsedUrl.origin
+//     ) {
+//       return parsedUrl.pathname;
+//     }
+//     return url;
+//   } catch {
+//     return url;
+//   }
+// };
 
 export const StreamTVLayout: React.FC<Props> = ({
   skylarkApiUrl,
@@ -71,17 +64,17 @@ export const StreamTVLayout: React.FC<Props> = ({
   const [isMobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   const links: NavigationLink[] = [
-    { text: t("discover"), href: "/", icon: <MdHome /> },
-    { text: t("movies"), href: "/movies", icon: <MdMovie /> },
-    {
-      text: t("featured"),
-      href: convertUrlWithSameOriginToPath(
-        config?.featuredPageUrl ||
-          process.env.NEXT_PUBLIC_TV_SHOWS_HREF ||
-          "/brand/reculg97iNzbkEZCK", // StreamTV Ingest External ID
-      ),
-      icon: <MdOutlineStar />,
-    },
+    { text: t("home"), href: "/", icon: <MdHome /> },
+    { text: t("shows"), href: "/shows", icon: <MdCamera /> },
+    // {
+    //   text: t("featured"),
+    //   href: convertUrlWithSameOriginToPath(
+    //     config?.featuredPageUrl ||
+    //       process.env.NEXT_PUBLIC_TV_SHOWS_HREF ||
+    //       "/brand/reculg97iNzbkEZCK", // StreamTV Ingest External ID
+    //   ),
+    //   icon: <MdOutlineStar />,
+    // },
     {
       text: t("search"),
       onClick: () => setMobileSearchOpen(!isMobileSearchOpen),

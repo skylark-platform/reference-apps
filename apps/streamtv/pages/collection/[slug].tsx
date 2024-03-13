@@ -9,7 +9,7 @@ import {
   ImageType,
   SetContent,
   ObjectTypes,
-  SkylarkSet,
+  CountrylineSet,
 } from "../../types/gql";
 import {
   SeoObjectData,
@@ -48,7 +48,7 @@ const Collection: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
     data: collection,
     isError,
     isLoading,
-  } = useObject<SkylarkSet>(GET_COLLECTION_SET, query?.slug as string);
+  } = useObject<CountrylineSet>(GET_COLLECTION_SET, query?.slug as string);
 
   if (!isLoading && isError) {
     return (

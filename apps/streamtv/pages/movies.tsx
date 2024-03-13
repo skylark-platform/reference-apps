@@ -15,7 +15,7 @@ const Movies: NextPage = () => {
   } | null>(null);
 
   const unfilteredMovies = useListObjects<Movie>(LIST_MOVIES);
-  const filteredMoviesByGenre = useMovieListingFromGenre(
+  const filteredEpisodesByGenre = useMovieListingFromGenre(
     activeGenre?.uid || null,
   );
 
@@ -24,7 +24,7 @@ const Movies: NextPage = () => {
     isError: isMovieError,
     isLoading,
   } = activeGenre
-    ? filteredMoviesByGenre
+    ? filteredEpisodesByGenre
     : { ...unfilteredMovies, movies: unfilteredMovies.objects };
 
   if (!isLoading && isMovieError) {

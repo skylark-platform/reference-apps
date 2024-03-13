@@ -20,9 +20,12 @@ export type CreditTypes =
 
 export type DeviceTypes = "smartphone" | "pc";
 
-export type TitleTypes = "title" | "title_short";
+export type TitleTypes = "title_long" | "title_medium" | "title_short";
 
-export type SynopsisTypes = "synopsis" | "synopsis_short";
+export type SynopsisTypes =
+  | "synopsis_long"
+  | "synopsis_medium"
+  | "synopsis_short";
 
 export type DimensionTypes = "customer-types" | "device-types" | "regions";
 

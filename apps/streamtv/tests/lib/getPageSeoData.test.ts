@@ -19,9 +19,9 @@ describe("getPageSeoData.ts", () => {
     const episode: Episode = {
       uid: "uid",
       title_short: "short title",
-      title: "title",
+      title_medium: "title",
       synopsis_short: "short synopsis",
-      synopsis: "synopsis",
+      synopsis_medium: "synopsis",
       images: {
         objects: [{ uid: "image-1", url: "https://skylark.com/image.jpg" }],
       },

@@ -4,21 +4,11 @@ import { ImageListingFragment } from "./fragments";
 export const SEARCH = gql`
   ${ImageListingFragment}
 
-  query SEARCH(
-    $query: String!
-    $language: String!
-    $deviceType: String!
-    $customerType: String!
-    $region: String!
-  ) {
+  query SEARCH($query: String!, $language: String!, $customerType: String!) {
     search(
       query: $query
       language: $language
-      dimensions: [
-        { dimension: "device-types", value: $deviceType }
-        { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
-      ]
+      dimensions: [{ dimension: "customer-types", value: $customerType }]
       highlight_results: true
     ) {
       total_count
@@ -29,41 +19,49 @@ export const SEARCH = gql`
         _context {
           typename_highlight
         }
-        ... on SkylarkSet {
-          title
+        ... on CountrylineSet {
           title_short
-          synopsis
+          title_medium
+          title_long
           synopsis_short
+          synopsis_medium
+          synopsis_long
           type
           images {
             ...imageListingFragment
           }
         }
         ... on Brand {
-          title
           title_short
-          synopsis
+          title_medium
+          title_long
           synopsis_short
+          synopsis_medium
+          synopsis_long
           release_date
           images {
             ...imageListingFragment
           }
         }
         ... on Episode {
-          title
           title_short
-          synopsis
+          title_medium
+          title_long
           synopsis_short
+          synopsis_medium
+          synopsis_long
           release_date
           images {
             ...imageListingFragment
           }
         }
         ... on Movie {
-          title
           title_short
-          synopsis
+          title_medium
+          title_long
           synopsis_short
+          synopsis_medium
+          synopsis_long
           release_date
           images {
             ...imageListingFragment
@@ -71,15 +69,6 @@ export const SEARCH = gql`
         }
         ... on Person {
           name
-          images {
-            ...imageListingFragment
-          }
-        }
-        ... on LiveStream {
-          title
-          title_short
-          synopsis
-          synopsis_short
           images {
             ...imageListingFragment
           }

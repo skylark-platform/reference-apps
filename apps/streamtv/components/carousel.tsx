@@ -11,10 +11,10 @@ import {
   getGraphQLImageSrc,
 } from "../lib/utils";
 import {
+  CountrylineSet,
   Entertainment,
   ImageType,
   SetContent,
-  SkylarkSet,
   StreamTVSupportCallToActionType,
 } from "../types";
 
@@ -42,18 +42,22 @@ const getFirstCallToAction = (
 };
 
 export const Carousel = ({ uid }: CarouselProps) => {
-  const { data } = useObject<SkylarkSet>(GET_SET_FOR_CAROUSEL, uid);
+  const { data } = useObject<CountrylineSet>(GET_SET_FOR_CAROUSEL, uid);
 
   const items: CarouselItem[] = data?.content?.objects
     ? (data?.content?.objects as SetContent[]).map((item): CarouselItem => {
         const object = item.object as Entertainment;
         const parsedType =
-          object.__typename === "SkylarkSet"
+          object.__typename === "CountrylineSet"
             ? convertGraphQLSetType(object?.type || "")
             : convertTypenameToObjectType(object.__typename);
 
         return {
-          title: object.title_short || object.title || "",
+          title:
+            object.title_short ||
+            object.title_medium ||
+            object.title_long ||
+            "",
           href: `/${parsedType}/${object.uid}`,
           releaseDate:
             (object &&

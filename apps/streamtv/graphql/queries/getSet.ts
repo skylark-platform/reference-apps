@@ -8,25 +8,21 @@ export const GET_SET_THUMBNAIL = gql`
   query GET_SET_THUMBNAIL(
     $uid: String!
     $language: String!
-    $deviceType: String!
     $customerType: String!
-    $region: String!
   ) {
-    getObject: getSkylarkSet(
+    getObject: getCountrylineSet(
       uid: $uid
       language: $language
-      dimensions: [
-        { dimension: "device-types", value: $deviceType }
-        { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
-      ]
+      dimensions: [{ dimension: "customer-types", value: $customerType }]
     ) {
       __typename
       uid
       type
-      title
+      title_long
+      title_medium
       title_short
-      synopsis
+      synopsis_long
+      synopsis_medium
       synopsis_short
       images {
         ...imageListingFragment
@@ -42,18 +38,12 @@ export const GET_SET_FOR_CAROUSEL = gql`
   query GET_SET_FOR_CAROUSEL(
     $uid: String!
     $language: String!
-    $deviceType: String!
     $customerType: String!
-    $region: String!
   ) {
-    getObject: getSkylarkSet(
+    getObject: getCountrylineSet(
       uid: $uid
       language: $language
-      dimensions: [
-        { dimension: "device-types", value: $deviceType }
-        { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
-      ]
+      dimensions: [{ dimension: "customer-types", value: $customerType }]
     ) {
       uid
       content {
@@ -62,9 +52,11 @@ export const GET_SET_FOR_CAROUSEL = gql`
             uid
             __typename
             ... on Movie {
-              title
+              title_long
+              title_medium
               title_short
-              synopsis
+              synopsis_long
+              synopsis_medium
               synopsis_short
               release_date
               images {
@@ -75,9 +67,11 @@ export const GET_SET_FOR_CAROUSEL = gql`
               }
             }
             ... on Episode {
-              title
+              title_long
+              title_medium
               title_short
-              synopsis
+              synopsis_long
+              synopsis_medium
               synopsis_short
               release_date
               images {
@@ -88,9 +82,11 @@ export const GET_SET_FOR_CAROUSEL = gql`
               }
             }
             ... on Season {
-              title
+              title_long
+              title_medium
               title_short
-              synopsis
+              synopsis_long
+              synopsis_medium
               synopsis_short
               release_date
               images {
@@ -101,9 +97,11 @@ export const GET_SET_FOR_CAROUSEL = gql`
               }
             }
             ... on Brand {
-              title
+              title_long
+              title_medium
               title_short
-              synopsis
+              synopsis_long
+              synopsis_medium
               synopsis_short
               release_date
               images {
@@ -113,22 +111,12 @@ export const GET_SET_FOR_CAROUSEL = gql`
                 ...callToActionListingFragment
               }
             }
-            ... on LiveStream {
-              title
+            ... on CountrylineSet {
+              title_long
+              title_medium
               title_short
-              synopsis
-              synopsis_short
-              images {
-                ...imageListingFragment
-              }
-              call_to_actions(limit: 1) {
-                ...callToActionListingFragment
-              }
-            }
-            ... on SkylarkSet {
-              title
-              title_short
-              synopsis
+              synopsis_long
+              synopsis_medium
               synopsis_short
               images {
                 ...imageListingFragment
@@ -151,25 +139,21 @@ export const GET_COLLECTION_SET = gql`
     $uid: String
     $externalId: String
     $language: String!
-    $deviceType: String!
     $customerType: String!
-    $region: String!
   ) {
-    getObject: getSkylarkSet(
+    getObject: getCountrylineSet(
       uid: $uid
       external_id: $externalId
       language: $language
-      dimensions: [
-        { dimension: "device-types", value: $deviceType }
-        { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
-      ]
+      dimensions: [{ dimension: "customer-types", value: $customerType }]
     ) {
       uid
       type
-      title
+      title_long
+      title_medium
       title_short
-      synopsis
+      synopsis_long
+      synopsis_medium
       synopsis_short
       release_date
       images {
@@ -198,24 +182,21 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
     $uid: String
     $externalId: String
     $language: String!
-    $deviceType: String!
     $customerType: String!
-    $region: String!
   ) {
-    getObject: getSkylarkSet(
+    getObject: getCountrylineSet(
       uid: $uid
       external_id: $externalId
       language: $language
       dimensions: [
-        { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
       ]
     ) {
       __typename
       uid
-      title
       title_short
+      title_long
+      title_medium
       type
       content(limit: 100) {
         objects {
@@ -223,7 +204,8 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
             __typename
             uid
             ... on Season {
-              title
+              title_long
+              title_medium
               title_short
               ${
                 streamTVIngestorSchemaLoaded
@@ -234,14 +216,15 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
                 objects {
                   uid
                   episode_number
-                  title
+                  title_long
+                  title_medium
                   title_short
                 }
               }
             }
-            ... on SkylarkSet {
+            ... on CountrylineSet {
               type
-              title
+              title_medium
               title_short
               content(limit: 50) {
                 objects {

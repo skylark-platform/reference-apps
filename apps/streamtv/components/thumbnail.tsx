@@ -10,7 +10,6 @@ import { useInView } from "react-intersection-observer";
 import {
   GET_BRAND_THUMBNAIL,
   GET_EPISODE_THUMBNAIL,
-  GET_LIVE_STREAM_THUMBNAIL,
   GET_MOVIE_THUMBNAIL,
   GET_PERSON_THUMBNAIL,
   GET_SET_THUMBNAIL,
@@ -97,11 +96,7 @@ const getThumbnailQuery = (objectType: ObjectTypes) => {
     return GET_PERSON_THUMBNAIL;
   }
 
-  if (objectType === ObjectTypes.LiveStream) {
-    return GET_LIVE_STREAM_THUMBNAIL;
-  }
-
-  if (objectType === ObjectTypes.SkylarkSet) {
+  if (objectType === ObjectTypes.CountrylineSet) {
     return GET_SET_THUMBNAIL;
   }
 
@@ -133,7 +128,7 @@ export const Thumbnail = ({
   });
 
   const parsedType =
-    data?.__typename === "SkylarkSet"
+    data?.__typename === "CountrylineSet"
       ? convertGraphQLSetType(data?.type || "")
       : convertTypenameToObjectType(data?.__typename);
 
@@ -145,11 +140,13 @@ export const Thumbnail = ({
   );
 
   const title =
-    (dataIsPerson(data) ? data.name : data?.title_short || data?.title) || "";
+    (dataIsPerson(data)
+      ? data.name
+      : data?.title_short || data?.title_medium) || "";
   const description =
     (dataIsPerson(data)
       ? data.bio_short
-      : data?.synopsis_short || data?.synopsis) || "";
+      : data?.synopsis_short || data?.synopsis_medium) || "";
 
   return (
     <div ref={ref}>

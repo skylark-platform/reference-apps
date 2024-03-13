@@ -5,24 +5,20 @@ export const GET_BRAND_THUMBNAIL = gql`
   query GET_BRAND_THUMBNAIL(
     $uid: String!
     $language: String!
-    $deviceType: String!
     $customerType: String!
-    $region: String!
   ) {
     getObject: getBrand(
       uid: $uid
       language: $language
-      dimensions: [
-        { dimension: "device-types", value: $deviceType }
-        { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
-      ]
+      dimensions: [{ dimension: "customer-types", value: $customerType }]
     ) {
       __typename
       uid
-      title
+      title_long
+      title_medium
       title_short
-      synopsis
+      synopsis_long
+      synopsis_medium
       synopsis_short
       images {
         objects {
@@ -48,24 +44,22 @@ export const GET_BRAND = (streamTVIngestorSchemaLoaded: boolean) => gql`
     $uid: String
     $externalId: String
     $language: String!
-    $deviceType: String!
     $customerType: String!
-    $region: String!
   ) {
     getObject: getBrand(
       uid: $uid
       external_id: $externalId
       language: $language
       dimensions: [
-        { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
       ]
     ) {
       uid
-      title
+      title_long
+      title_medium
       title_short
-      synopsis
+      synopsis_long
+      synopsis_medium
       synopsis_short
       images {
         objects {
@@ -79,7 +73,8 @@ export const GET_BRAND = (streamTVIngestorSchemaLoaded: boolean) => gql`
         objects {
           uid
           season_number
-          title
+          title_long
+          title_medium
           title_short
           ${
             streamTVIngestorSchemaLoaded

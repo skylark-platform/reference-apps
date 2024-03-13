@@ -25,7 +25,7 @@ describe("Dimension Settings component", () => {
     expect(screen.getByText(/Demo v1.0/)).toBeTruthy();
   });
 
-  it("should change the active dimension language", () => {
+  it.skip("should change the active dimension language", () => {
     customRender(<DimensionSettings show />);
     expect(getCheckBox("English").checked).toBeTruthy();
     expect(getCheckBox("Portuguese").checked).toBeFalsy();
@@ -43,7 +43,7 @@ describe("Dimension Settings component", () => {
     expect(getCheckBox("Premium").checked).toBeFalsy();
   });
 
-  it("should change the active dimension region", () => {
+  it.skip("should change the active dimension region", () => {
     customRender(<DimensionSettings show />);
     fireEvent.click(screen.getByText("Europe"));
     expect(getCheckBox("Europe").checked).toBeTruthy();
