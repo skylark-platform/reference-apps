@@ -53,7 +53,8 @@ const EpisodePage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
 
   const title = getTitleByOrderForGraphQLObject(episode, [
     "title_short",
-    "title",
+    "title_medium",
+    "title_long",
   ]);
   const synopsis = getSynopsisByOrderForGraphQLObject(episode);
 

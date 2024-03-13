@@ -4,21 +4,11 @@ import { ImageListingFragment } from "./fragments";
 export const SEARCH = gql`
   ${ImageListingFragment}
 
-  query SEARCH(
-    $query: String!
-    $language: String!
-    $deviceType: String!
-    $customerType: String!
-    $region: String!
-  ) {
+  query SEARCH($query: String!, $language: String!, $customerType: String!) {
     search(
       query: $query
       language: $language
-      dimensions: [
-        { dimension: "device-types", value: $deviceType }
-        { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
-      ]
+      dimensions: [{ dimension: "customer-types", value: $customerType }]
       highlight_results: true
     ) {
       total_count
@@ -32,7 +22,7 @@ export const SEARCH = gql`
         ... on SkylarkSet {
           title
           title_short
-          synopsis
+          synopsis_medium
           synopsis_short
           type
           images {
@@ -42,7 +32,7 @@ export const SEARCH = gql`
         ... on Brand {
           title
           title_short
-          synopsis
+          synopsis_medium
           synopsis_short
           release_date
           images {
@@ -52,7 +42,7 @@ export const SEARCH = gql`
         ... on Episode {
           title
           title_short
-          synopsis
+          synopsis_medium
           synopsis_short
           release_date
           images {
@@ -62,7 +52,7 @@ export const SEARCH = gql`
         ... on Movie {
           title
           title_short
-          synopsis
+          synopsis_medium
           synopsis_short
           release_date
           images {

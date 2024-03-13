@@ -6,20 +6,11 @@ import { gql } from "graphql-request";
  * Also fetches only a single logo
  */
 export const GET_STREAMTV_CONFIG = gql`
-  query GET_STREAMTV_CONFIG(
-    $language: String!
-    $deviceType: String!
-    $customerType: String!
-    $region: String!
-  ) {
+  query GET_STREAMTV_CONFIG($language: String!, $customerType: String!) {
     listStreamtvConfig(
       limit: 1
       language: $language
-      dimensions: [
-        { dimension: "device-types", value: $deviceType }
-        { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
-      ]
+      dimensions: [{ dimension: "customer-types", value: $customerType }]
     ) {
       objects {
         uid

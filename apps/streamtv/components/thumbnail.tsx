@@ -10,7 +10,6 @@ import { useInView } from "react-intersection-observer";
 import {
   GET_BRAND_THUMBNAIL,
   GET_EPISODE_THUMBNAIL,
-  GET_LIVE_STREAM_THUMBNAIL,
   GET_MOVIE_THUMBNAIL,
   GET_SET_THUMBNAIL,
 } from "../graphql/queries";
@@ -87,12 +86,8 @@ const getThumbnailQuery = (objectType: ObjectTypes) => {
     return GET_SEASON_THUMBNAIL;
   }
 
-  if (objectType === ObjectTypes.SkylarkSet) {
+  if (objectType === ObjectTypes.CountrylineSet) {
     return GET_SET_THUMBNAIL;
-  }
-
-  if (objectType === ObjectTypes.LiveStream) {
-    return GET_LIVE_STREAM_THUMBNAIL;
   }
 
   return "";
@@ -123,7 +118,7 @@ export const Thumbnail = ({
   });
 
   const parsedType =
-    data?.__typename === "SkylarkSet"
+    data?.__typename === "CountrylineSet"
       ? convertGraphQLSetType(data?.type || "")
       : convertTypenameToObjectType(data?.__typename);
 
@@ -145,7 +140,7 @@ export const Thumbnail = ({
             <EpisodeThumbnail
               backgroundImage={backgroundImage}
               contentLocation="below"
-              description={data?.synopsis_short || data?.synopsis || ""}
+              description={data?.synopsis_short || data?.synopsis_medium || ""}
               href={href}
               key={uid}
               number={
@@ -154,7 +149,7 @@ export const Thumbnail = ({
                   : undefined
               }
               statusTag={getStatusTag(data.tags)}
-              title={data?.title_short || data?.title || ""}
+              title={data?.title_short || data?.title_medium || ""}
             />
           )}
 
@@ -170,7 +165,7 @@ export const Thumbnail = ({
                   : undefined
               }
               statusTag={getStatusTag(data.tags)}
-              title={data?.title_short || data?.title || ""}
+              title={data?.title_short || data?.title_medium || ""}
             />
           )}
 
@@ -186,7 +181,7 @@ export const Thumbnail = ({
                   : undefined
               }
               statusTag={getStatusTag(data.tags)}
-              title={data?.title_short || data?.title || ""}
+              title={data?.title_short || data?.title_medium || ""}
             />
           )}
 
@@ -196,7 +191,7 @@ export const Thumbnail = ({
               href={href}
               key={uid}
               statusTag={getStatusTag(data.tags)}
-              title={data?.title_short || data?.title || ""}
+              title={data?.title_short || data?.title_medium || ""}
             />
           )}
 
@@ -207,7 +202,7 @@ export const Thumbnail = ({
               href={href}
               key={uid}
               statusTag={getStatusTag(data.tags)}
-              title={data?.title_short || data?.title || ""}
+              title={data?.title_short || data?.title_medium || ""}
             />
           )}
         </>

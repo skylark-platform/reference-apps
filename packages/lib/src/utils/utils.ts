@@ -22,7 +22,11 @@ export const getTitleByOrder = (
 ): string => {
   if (!titles) return objectTitle || "";
 
-  const defaultPriority: TitleTypes[] = ["title", "title_short"];
+  const defaultPriority: TitleTypes[] = [
+    "title_long",
+    "title_medium",
+    "title_short",
+  ];
   const foundType = (priority || defaultPriority).find(
     (type) => titles[type] || null,
   );
@@ -43,7 +47,11 @@ export const getSynopsisByOrder = (
 ): string => {
   if (!synopsis) return "";
 
-  const defaultPriority: SynopsisTypes[] = ["synopsis", "synopsis_short"];
+  const defaultPriority: SynopsisTypes[] = [
+    "synopsis_long",
+    "synopsis_medium",
+    "synopsis_short",
+  ];
   const foundType = (priority || defaultPriority).find(
     (type) => synopsis[type] || null,
   );

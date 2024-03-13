@@ -1,12 +1,6 @@
-import { Brand, Episode, LiveStream, Movie, Season, SkylarkSet } from "./gql";
+import { Brand, CountrylineSet, Episode, Movie, Season } from "./gql";
 
-export type Entertainment =
-  | Episode
-  | Movie
-  | Brand
-  | Season
-  | SkylarkSet
-  | LiveStream;
+export type Entertainment = Episode | Movie | Brand | Season | CountrylineSet;
 
 export type GQLError = {
   response: {
@@ -19,6 +13,7 @@ export enum StreamTVSupportedSetType {
   // Built in
   Collection = "COLLECTION",
   Page = "PAGE",
+  HomePage = "HOMEPAGE",
   Rail = "RAIL",
   Slider = "SLIDER",
   // Additional, added by ingestor

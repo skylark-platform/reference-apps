@@ -14,6 +14,7 @@ import {
 import {
   Brand,
   CallToAction,
+  CountrylineSet,
   Episode,
   Metadata,
   Movie,
@@ -51,7 +52,17 @@ const Page: NextPage<{
     );
   }
 
-  if (data && data.type !== StreamTVSupportedSetType.Page) {
+  const type = typeof data?.type === "string" ? data.type : "";
+
+  if (
+    data &&
+    !(
+      [
+        StreamTVSupportedSetType.Page,
+        StreamTVSupportedSetType.HomePage,
+      ] as string[]
+    ).includes(type)
+  ) {
     return (
       <div className="flex h-screen flex-col items-center justify-center text-white">
         <p className="mb-4 text-lg font-medium">{`Invalid SkylarkSet type ${
@@ -71,6 +82,7 @@ const Page: NextPage<{
             | Brand
             | Season
             | SkylarkSet
+            | CountrylineSet
             | CallToAction
             | SkylarkTag,
       )
@@ -98,7 +110,7 @@ const Page: NextPage<{
               }
             )?.[StreamTVAdditionalFields.PreferredImageType];
 
-            if (item.__typename === "SkylarkSet") {
+            if (item.__typename === "CountrylineSet") {
               if (item.type === StreamTVSupportedSetType.Slider) {
                 return (
                   // If the carousel is the first item, add negative margin to make it appear through the navigation
@@ -125,7 +137,12 @@ const Page: NextPage<{
                 return (
                   <Grid
                     className="my-6"
-                    header={item.title || item.title_short || undefined}
+                    header={
+                      item.title_long ||
+                      item.title_medium ||
+                      item.title_short ||
+                      undefined
+                    }
                     key={item.uid}
                     objects={objects}
                     variant={getThumbnailVariantFromSetType(item.type)}

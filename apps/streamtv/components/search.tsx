@@ -273,7 +273,8 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
                       date={(obj.release_date as string) || ""}
                       description={findMatchOrReturnFirst([
                         obj.synopsis_short,
-                        obj.synopsis,
+                        obj.synopsis_medium,
+                        obj.synopsis_long,
                       ])}
                       href={href}
                       image={getGraphQLImageSrc(
@@ -283,7 +284,8 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
                       key={obj.uid}
                       title={findMatchOrReturnFirst([
                         obj.title_short,
-                        obj.title,
+                        obj.title_medium,
+                        obj.title_long,
                       ])}
                       typename={highlightedTypename}
                       onClick={onSearchWrapper}
