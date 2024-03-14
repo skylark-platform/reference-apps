@@ -7,6 +7,7 @@ export const ImageListingFragment = gql`
       title
       type
       url
+      external_url
     }
   }
 `;

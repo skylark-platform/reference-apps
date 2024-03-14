@@ -126,16 +126,31 @@ export const getGraphQLImageSrc = (
   }
 
   // Filter any Images with an empty URL
-  const imagesWithUrls = images.objects.filter((img) => !!img?.url);
-  if (imagesWithUrls.length === 0) {
+  const urlImages = images.objects.filter((img) => !!img?.url);
+  const externalUrlImages = images.objects.filter((img) => !!img?.external_url);
+
+  if (urlImages.length === 0 && externalUrlImages.length === 0) {
     return "";
   }
 
-  // Default to first image if no matching type is found
-  const image =
-    imagesWithUrls.find((img) => img?.type === type) || imagesWithUrls[0];
+  const urlImageWithMatchingType = urlImages.find((img) => img?.type === type);
+  const externalUrlImageWithMatchingType = externalUrlImages.find(
+    (img) => img?.type === type,
+  );
 
-  return image?.url || "";
+  // Prioritise images with a URL over External URL
+  if (urlImageWithMatchingType?.url) {
+    return urlImageWithMatchingType.url;
+  }
+
+  if (externalUrlImageWithMatchingType?.external_url) {
+    return externalUrlImageWithMatchingType.external_url;
+  }
+
+  // Default to first image if no matching type is found
+  const url = urlImages?.[0]?.url || externalUrlImages?.[0]?.external_url || "";
+
+  return url;
 };
 
 export const getTitleByOrderForGraphQLObject = (
