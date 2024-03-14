@@ -1,6 +1,8 @@
+import { addCloudinaryOnTheFlyImageTransformation } from "@skylark-reference-apps/lib";
 import React from "react";
 import MuxVideo from "@mux/mux-video-react";
-import { addCloudinaryOnTheFlyImageTransformation } from "@skylark-reference-apps/lib";
+
+import dynamic from "next/dynamic";
 
 interface PlayerProps {
   src: string;
@@ -10,12 +12,29 @@ interface PlayerProps {
   autoPlay?: boolean;
 }
 
+const getPlayerType = (src: string) => {
+  if (
+    src.startsWith("https://drive.google.com/file") &&
+    src.endsWith("/preview")
+  ) {
+    return "iframe";
+  }
+
+  if (src.includes("youtube")) {
+    return "react-player";
+  }
+
+  return "mux-player";
+};
+
+const ReactPlayer = dynamic(() => import("react-player/lazy"), { ssr: false });
+
 export const Player: React.FC<PlayerProps> = ({
   src,
   poster,
+  autoPlay,
   videoId,
   videoTitle,
-  autoPlay,
 }) => {
   const isClient = typeof window !== "undefined";
   const absoluteSrc =
@@ -26,14 +45,36 @@ export const Player: React.FC<PlayerProps> = ({
         ).toString()
       : undefined;
 
+  const type = getPlayerType(src);
+
   return (
     <div className="w-screen sm:w-11/12 lg:w-3/4">
       <div className="aspect-h-9 aspect-w-16 shadow shadow-black md:shadow-xl">
         {/* For Google Drive videos, use iframe embed because they don't work with MuxPlayer */}
-        {src.startsWith("https://drive.google.com/file") &&
-        src.endsWith("/preview") ? (
-          <iframe src={src} />
-        ) : (
+        {type === "iframe" && <iframe src={src} />}
+        {type === "react-player" && (
+          <ReactPlayer
+            config={{}}
+            controls={true}
+            height="100%"
+            light={
+              poster ? (
+                <img
+                  alt="Thumbnail"
+                  className="h-full w-full bg-black object-cover object-center"
+                  src={addCloudinaryOnTheFlyImageTransformation(poster, {
+                    width: 1000,
+                  })}
+                />
+              ) : undefined
+            }
+            playing={autoPlay}
+            style={{ height: "100%", width: "100%" }}
+            url={absoluteSrc}
+            width="100%"
+          />
+        )}
+        {type === "mux-player" && (
           <MuxVideo
             autoPlay={autoPlay}
             className="h-full w-full bg-black object-cover object-center"
