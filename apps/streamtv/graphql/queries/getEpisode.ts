@@ -102,7 +102,7 @@ export const GET_EPISODE = gql`
             objects {
               uid
               internal_title
-              title_medium
+              title
               title_sort
             }
           }
