@@ -20,42 +20,48 @@ export const SEARCH = gql`
           typename_highlight
         }
         ... on CountrylineSet {
-          title_long
-          title_medium
           title_short
-          synopsis_long
-          synopsis_medium
+          title_medium
+          title_long
           synopsis_short
+          synopsis_medium
+          synopsis_long
           type
           images {
             ...imageListingFragment
           }
         }
         ... on Brand {
-          title
           title_short
-          synopsis_medium
+          title_medium
+          title_long
           synopsis_short
+          synopsis_medium
+          synopsis_long
           release_date
           images {
             ...imageListingFragment
           }
         }
         ... on Episode {
-          title
           title_short
-          synopsis_medium
+          title_medium
+          title_long
           synopsis_short
+          synopsis_medium
+          synopsis_long
           release_date
           images {
             ...imageListingFragment
           }
         }
         ... on Movie {
-          title
           title_short
-          synopsis_medium
+          title_medium
+          title_long
           synopsis_short
+          synopsis_medium
+          synopsis_long
           release_date
           images {
             ...imageListingFragment

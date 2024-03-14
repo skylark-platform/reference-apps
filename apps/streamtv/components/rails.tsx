@@ -80,9 +80,7 @@ export const SetRail = ({
             uid={object.uid}
             variant={variant}
           />
-        ) : (
-          <></>
-        ),
+        ) : null,
       )}
     </Rail>
   );
