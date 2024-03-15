@@ -14,7 +14,6 @@ import {
 import {
   Brand,
   CallToAction,
-  CountrylineSet,
   Episode,
   Metadata,
   Movie,
@@ -82,7 +81,6 @@ const Page: NextPage<{
             | Brand
             | Season
             | SkylarkSet
-            | CountrylineSet
             | CallToAction
             | SkylarkTag,
       )
@@ -110,7 +108,7 @@ const Page: NextPage<{
               }
             )?.[StreamTVAdditionalFields.PreferredImageType];
 
-            if (item.__typename === "CountrylineSet") {
+            if (item.__typename === "SkylarkSet") {
               if (item.type === StreamTVSupportedSetType.Slider) {
                 return (
                   // If the carousel is the first item, add negative margin to make it appear through the navigation
@@ -137,12 +135,7 @@ const Page: NextPage<{
                 return (
                   <Grid
                     className="my-6"
-                    header={
-                      item.title_long ||
-                      item.title_medium ||
-                      item.title_short ||
-                      undefined
-                    }
+                    header={item.title || item.title_short || undefined}
                     key={item.uid}
                     objects={objects}
                     variant={getThumbnailVariantFromSetType(item.type)}

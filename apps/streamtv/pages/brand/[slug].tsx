@@ -102,8 +102,7 @@ const BrandPage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
                 <CallToAction
                   episodeNumber={firstEpisodeOfFirstSeason.episode_number || 1}
                   episodeTitle={
-                    firstEpisodeOfFirstSeason.title_long ||
-                    firstEpisodeOfFirstSeason.title_medium ||
+                    firstEpisodeOfFirstSeason.title ||
                     firstEpisodeOfFirstSeason.title_short ||
                     undefined
                   }

@@ -2,11 +2,11 @@ import { hasProperty } from "@skylark-reference-apps/lib";
 import { Rail } from "@skylark-reference-apps/react";
 import {
   Brand,
-  CountrylineSet,
   Movie,
   ObjectTypes,
   Season,
   SetContent,
+  SkylarkSet,
   SkylarkTag,
   StreamTVSupportedImageType,
 } from "../types";
@@ -30,13 +30,7 @@ export const SeasonRail = ({
   <Rail
     className={className}
     displayCount
-    header={
-      header ||
-      season.title_long ||
-      season.title_medium ||
-      season.title_short ||
-      undefined
-    }
+    header={header || season.title || season.title_short || undefined}
   >
     {season.episodes?.objects?.map((object) =>
       object ? (
@@ -58,7 +52,7 @@ export const SetRail = ({
   set,
   className,
 }: {
-  set: CountrylineSet;
+  set: SkylarkSet;
   className?: string;
 }) => {
   const variant: ThumbnailVariant = getThumbnailVariantFromSetType(set.type);
@@ -67,9 +61,7 @@ export const SetRail = ({
     <Rail
       className={className}
       displayCount
-      header={
-        set.title_long || set.title_medium || set.title_short || undefined
-      }
+      header={set.title || set.title_short || undefined}
     >
       {(set.content?.objects as SetContent[])?.map(({ object }) =>
         // Without __typename, the Thumbnail will not know what query to use

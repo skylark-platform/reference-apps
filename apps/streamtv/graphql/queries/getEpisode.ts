@@ -13,9 +13,9 @@ export const GET_EPISODE_THUMBNAIL = gql`
     ) {
       __typename
       uid
-      title_medium
+      title
       title_short
-      synopsis_medium
+      synopsis
       synopsis_short
       episode_number
       release_date
@@ -52,11 +52,9 @@ export const GET_EPISODE = gql`
       dimensions: [{ dimension: "customer-types", value: $customerType }]
     ) {
       uid
-      title_long
-      title_medium
+      title
       title_short
-      synopsis_long
-      synopsis_medium
+      synopsis
       synopsis_short
       episode_number
       release_date
@@ -79,12 +77,12 @@ export const GET_EPISODE = gql`
         objects {
           uid
           season_number
-          title_medium
+          title
           title_short
           brands {
             objects {
               uid
-              title_medium
+              title
               title_short
             }
           }

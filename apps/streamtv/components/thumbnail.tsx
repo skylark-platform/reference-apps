@@ -96,7 +96,7 @@ const getThumbnailQuery = (objectType: ObjectTypes) => {
     return GET_PERSON_THUMBNAIL;
   }
 
-  if (objectType === ObjectTypes.CountrylineSet) {
+  if (objectType === ObjectTypes.SkylarkSet) {
     return GET_SET_THUMBNAIL;
   }
 
@@ -128,7 +128,7 @@ export const Thumbnail = ({
   });
 
   const parsedType =
-    data?.__typename === "CountrylineSet"
+    data?.__typename === "SkylarkSet"
       ? convertGraphQLSetType(data?.type || "")
       : convertTypenameToObjectType(data?.__typename);
 
@@ -140,13 +140,11 @@ export const Thumbnail = ({
   );
 
   const title =
-    (dataIsPerson(data)
-      ? data.name
-      : data?.title_short || data?.title_medium) || "";
+    (dataIsPerson(data) ? data.name : data?.title_short || data?.title) || "";
   const description =
     (dataIsPerson(data)
       ? data.bio_short
-      : data?.synopsis_short || data?.synopsis_medium) || "";
+      : data?.synopsis_short || data?.synopsis) || "";
 
   return (
     <div ref={ref}>

@@ -9,7 +9,7 @@ import {
   ImageType,
   SetContent,
   ObjectTypes,
-  CountrylineSet,
+  SkylarkSet,
 } from "../../types/gql";
 import {
   SeoObjectData,
@@ -48,7 +48,7 @@ const Collection: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
     data: collection,
     isError,
     isLoading,
-  } = useObject<CountrylineSet>(GET_COLLECTION_SET, query?.slug as string);
+  } = useObject<SkylarkSet>(GET_COLLECTION_SET, query?.slug as string);
 
   if (!isLoading && isError) {
     return (
@@ -83,7 +83,7 @@ const Collection: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
             rating={getFirstRatingValue(collection?.ratings)}
             releaseDate={
               collection?.release_date
-                ? formatReleaseDate(collection.release_date as string, lang)
+                ? formatReleaseDate(collection.release_date, lang)
                 : undefined
             }
             title={title}

@@ -1,6 +1,6 @@
-import { Brand, CountrylineSet, Episode, Movie, Season } from "./gql";
+import { Brand, Episode, Movie, Season, SkylarkSet } from "./gql";
 
-export type Entertainment = Episode | Movie | Brand | Season | CountrylineSet;
+export type Entertainment = Episode | Movie | Brand | Season | SkylarkSet;
 
 export type GQLError = {
   response: {
