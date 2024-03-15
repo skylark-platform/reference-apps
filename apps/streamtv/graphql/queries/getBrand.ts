@@ -53,8 +53,10 @@ export const GET_BRAND = (streamTVIngestorSchemaLoaded: boolean) => gql`
       ]
     ) {
       uid
-      title
+      title_long
+      title_medium
       title_short
+      synopsis_long
       synopsis_medium
       synopsis_short
       images {
@@ -69,7 +71,8 @@ export const GET_BRAND = (streamTVIngestorSchemaLoaded: boolean) => gql`
         objects {
           uid
           season_number
-          title
+          title_long
+          title_medium
           title_short
           ${
             streamTVIngestorSchemaLoaded

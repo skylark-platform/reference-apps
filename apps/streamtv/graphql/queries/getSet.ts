@@ -18,8 +18,10 @@ export const GET_SET_THUMBNAIL = gql`
       __typename
       uid
       type
+      title_long
       title_medium
       title_short
+      synopsis_long
       synopsis_medium
       synopsis_short
       images {
@@ -50,8 +52,10 @@ export const GET_SET_FOR_CAROUSEL = gql`
             uid
             __typename
             ... on Movie {
+              title_long
               title_medium
               title_short
+              synopsis_long
               synopsis_medium
               synopsis_short
               release_date
@@ -63,8 +67,10 @@ export const GET_SET_FOR_CAROUSEL = gql`
               }
             }
             ... on Episode {
+              title_long
               title_medium
               title_short
+              synopsis_long
               synopsis_medium
               synopsis_short
               release_date
@@ -76,8 +82,10 @@ export const GET_SET_FOR_CAROUSEL = gql`
               }
             }
             ... on Season {
+              title_long
               title_medium
               title_short
+              synopsis_long
               synopsis_medium
               synopsis_short
               release_date
@@ -89,8 +97,10 @@ export const GET_SET_FOR_CAROUSEL = gql`
               }
             }
             ... on Brand {
+              title_long
               title_medium
               title_short
+              synopsis_long
               synopsis_medium
               synopsis_short
               release_date
@@ -102,8 +112,10 @@ export const GET_SET_FOR_CAROUSEL = gql`
               }
             }
             ... on LiveStream {
+              title_long
               title_medium
               title_short
+              synopsis_long
               synopsis_medium
               synopsis_short
               images {
@@ -114,8 +126,10 @@ export const GET_SET_FOR_CAROUSEL = gql`
               }
             }
             ... on CountrylineSet {
+              title_long
               title_medium
               title_short
+              synopsis_long
               synopsis_medium
               synopsis_short
               images {
@@ -149,8 +163,10 @@ export const GET_COLLECTION_SET = gql`
     ) {
       uid
       type
+      title_long
       title_medium
       title_short
+      synopsis_long
       synopsis_medium
       synopsis_short
       release_date
@@ -200,6 +216,7 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
             __typename
             uid
             ... on Season {
+              title_long
               title_medium
               title_short
               ${
@@ -211,7 +228,9 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
                 objects {
                   uid
                   episode_number
+                  title_long
                   title_medium
+                  title_short
                 }
               }
             }

@@ -83,6 +83,7 @@ export type AssetInterface = {
 export type AssetInterfaceAvailabilityArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type AssetInterfaceContent_OfArgs = {
@@ -118,9 +119,15 @@ export type Availability = VisibleObject & {
   _config?: Maybe<ObjectConfig>;
   _context?: Maybe<RequestContext>;
   _meta?: Maybe<_AvailabilityMeta>;
+  active?: Maybe<Scalars["Boolean"]["output"]>;
+  assigned_to?: Maybe<AvailabilityAssignmentListing>;
   dimensions?: Maybe<DimensionListing>;
   end?: Maybe<Scalars["AWSDateTime"]["output"]>;
   external_id?: Maybe<Scalars["String"]["output"]>;
+  inheritance_source?: Maybe<Scalars["Boolean"]["output"]>;
+  inherited?: Maybe<Scalars["Boolean"]["output"]>;
+  inherited_by?: Maybe<TypeListing>;
+  inherited_from?: Maybe<TypeListing>;
   slug?: Maybe<Scalars["String"]["output"]>;
   start?: Maybe<Scalars["AWSDateTime"]["output"]>;
   timezone?: Maybe<Scalars["String"]["output"]>;
@@ -128,9 +135,39 @@ export type Availability = VisibleObject & {
   uid: Scalars["String"]["output"];
 };
 
+export type AvailabilityAssigned_ToArgs = {
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+};
+
 export type AvailabilityDimensionsArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   next_token?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type AvailabilityInherited_ByArgs = {
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type AvailabilityInherited_FromArgs = {
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type AvailabilityAssignment = {
+  __typename?: "AvailabilityAssignment";
+  active?: Maybe<Scalars["Boolean"]["output"]>;
+  inheritance_source?: Maybe<Scalars["Boolean"]["output"]>;
+  inherited?: Maybe<Scalars["Boolean"]["output"]>;
+  object?: Maybe<Metadata>;
+};
+
+export type AvailabilityAssignmentListing = Listing & {
+  __typename?: "AvailabilityAssignmentListing";
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
+  objects?: Maybe<Array<Maybe<AvailabilityAssignment>>>;
 };
 
 export type AvailabilityInput = {
@@ -182,6 +219,7 @@ export type Block_MetaArgs = {
 export type BlockAvailabilityArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type BlockCall_To_ActionsArgs = {
@@ -346,6 +384,7 @@ export type CallToAction_MetaArgs = {
 export type CallToActionAvailabilityArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type CallToActionBlocksArgs = {
@@ -565,6 +604,16 @@ export type EditFixedObjectRelationshipInput = {
   to_class: ObjectTypes;
 };
 
+export type EditObjectTypeInput = {
+  fields?: InputMaybe<Array<InputMaybe<EditFieldInput>>>;
+  is_set?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name: Scalars["String"]["input"];
+  operation: ConfigurationOperations;
+  relationships?: InputMaybe<
+    Array<InputMaybe<EditFixedObjectRelationshipInput>>
+  >;
+};
+
 export type EditRelationshipInput = {
   from_class: ObjectTypes;
   operation: ConfigurationOperations;
@@ -599,6 +648,7 @@ export type Embed_MetaArgs = {
 export type EmbedAvailabilityArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type EmbedCall_To_ActionsArgs = {
@@ -724,6 +774,7 @@ export type FrequentlyAskedQuestion_MetaArgs = {
 export type FrequentlyAskedQuestionAvailabilityArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type FrequentlyAskedQuestionContent_OfArgs = {
@@ -855,8 +906,7 @@ export type Mutation = {
   createDimensionValue?: Maybe<DimensionValue>;
   createEmbed?: Maybe<Embed>;
   createFrequentlyAskedQuestion?: Maybe<FrequentlyAskedQuestion>;
-  /** @deprecated Replaced with 'createObjectType' */
-  createObjectConfiguration?: Maybe<ConfigurationResponse>;
+  /** @deprecated Replaced with 'editObjectTypeConfiguration' */
   createObjectType?: Maybe<ConfigurationResponse>;
   createPage?: Maybe<Page>;
   createPerson?: Maybe<Person>;
@@ -892,6 +942,7 @@ export type Mutation = {
   deleteTutorial?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
   editEnumConfiguration?: Maybe<ConfigurationResponse>;
   editFieldConfiguration?: Maybe<ConfigurationResponse>;
+  editObjectTypeConfiguration?: Maybe<ConfigurationResponse>;
   editRelationshipConfiguration?: Maybe<ConfigurationResponse>;
   editSearchableFields?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   purgeCache?: Maybe<CachePurgeResponse>;
@@ -963,11 +1014,6 @@ export type MutationCreateEmbedArgs = {
 export type MutationCreateFrequentlyAskedQuestionArgs = {
   frequently_asked_question?: InputMaybe<FrequentlyAskedQuestionCreateInput>;
   language?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type MutationCreateObjectConfigurationArgs = {
-  objects?: InputMaybe<Array<InputMaybe<CreateObjectTypeInput>>>;
-  version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type MutationCreateObjectTypeArgs = {
@@ -1164,6 +1210,11 @@ export type MutationEditEnumConfigurationArgs = {
 export type MutationEditFieldConfigurationArgs = {
   fields: Array<InputMaybe<EditFieldInput>>;
   object_class: ObjectTypes;
+  version?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type MutationEditObjectTypeConfigurationArgs = {
+  object_types?: InputMaybe<Array<InputMaybe<EditObjectTypeInput>>>;
   version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -1467,6 +1518,7 @@ export type Page_MetaArgs = {
 export type PageAvailabilityArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type PageContentArgs = {
@@ -1556,6 +1608,7 @@ export type Person_MetaArgs = {
 export type PersonAvailabilityArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type PersonContent_OfArgs = {
@@ -1923,6 +1976,12 @@ export type QueryListCallToActionArgs = {
   next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+export type QueryListConfigurationVersionsArgs = {
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  order?: InputMaybe<OrderDirections>;
+};
+
 export type QueryListDimensionsArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   next_token?: InputMaybe<Scalars["String"]["input"]>;
@@ -2074,10 +2133,12 @@ export type QuerySearchArgs = {
 export type RelationshipConfig = {
   __typename?: "RelationshipConfig";
   default_sort_field?: Maybe<Scalars["String"]["output"]>;
+  inherit_availability?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type RelationshipConfigInput = {
   default_sort_field?: InputMaybe<Scalars["String"]["input"]>;
+  inherit_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type RelationshipConfigList = {
@@ -2242,6 +2303,7 @@ export type Section_MetaArgs = {
 export type SectionAvailabilityArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SectionContentArgs = {
@@ -2408,6 +2470,7 @@ export type SkylarkAsset_MetaArgs = {
 export type SkylarkAssetAvailabilityArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkAssetContent_OfArgs = {
@@ -2573,6 +2636,7 @@ export type SkylarkEpgProgram_MetaArgs = {
 export type SkylarkEpgProgramAvailabilityArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkEpgProgramContent_OfArgs = {
@@ -2650,6 +2714,7 @@ export type SkylarkFavoriteList_MetaArgs = {
 export type SkylarkFavoriteListAvailabilityArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkFavoriteListContentArgs = {
@@ -2741,6 +2806,7 @@ export type SkylarkImageAssetsArgs = {
 export type SkylarkImageAvailabilityArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkImageBlocksArgs = {
@@ -2916,6 +2982,7 @@ export type SkylarkLiveAsset_MetaArgs = {
 export type SkylarkLiveAssetAvailabilityArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkLiveAssetContent_OfArgs = {
@@ -3042,6 +3109,7 @@ export type SkylarkSetAssetsArgs = {
 export type SkylarkSetAvailabilityArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkSetContentArgs = {
@@ -3159,6 +3227,7 @@ export type SkylarkTagAssetsArgs = {
 export type SkylarkTagAvailabilityArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkTagContent_OfArgs = {
@@ -3277,6 +3346,7 @@ export type Testimonial_MetaArgs = {
 export type TestimonialAvailabilityArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type TestimonialContent_OfArgs = {
@@ -3388,6 +3458,7 @@ export type TutorialAssetsArgs = {
 export type TutorialAvailabilityArgs = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type TutorialContent_OfArgs = {
@@ -3452,6 +3523,13 @@ export type TutorialSetInput = {
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
   unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+};
+
+export type TypeListing = Listing & {
+  __typename?: "TypeListing";
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
+  objects?: Maybe<Array<Maybe<Metadata>>>;
 };
 
 export enum TypoTolerance {
@@ -4150,7 +4228,7 @@ export type _TutorialMeta = {
 
 export type ActivationStatus = {
   __typename?: "activationStatus";
-  active_version?: Maybe<Scalars["String"]["output"]>;
+  active_version?: Maybe<Scalars["Int"]["output"]>;
   update_in_progress?: Maybe<Scalars["Boolean"]["output"]>;
   update_started_at?: Maybe<Scalars["String"]["output"]>;
 };

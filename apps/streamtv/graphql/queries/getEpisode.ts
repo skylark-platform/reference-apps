@@ -52,8 +52,10 @@ export const GET_EPISODE = gql`
       dimensions: [{ dimension: "customer-types", value: $customerType }]
     ) {
       uid
+      title_long
       title_medium
       title_short
+      synopsis_long
       synopsis_medium
       synopsis_short
       episode_number

@@ -15,8 +15,10 @@ export const GET_SEASON_THUMBNAIL = gql`
     ) {
       __typename
       uid
-      title
+      title_long
+      title_medium
       title_short
+      synopsis_long
       synopsis_medium
       synopsis_short
       release_date

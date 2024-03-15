@@ -51,8 +51,10 @@ export const GET_MOVIE = gql`
       dimensions: [{ dimension: "customer-types", value: $customerType }]
     ) {
       uid
-      title
+      title_long
+      title_medium
       title_short
+      synopsis_long
       synopsis_medium
       synopsis_short
       release_date
@@ -74,7 +76,8 @@ export const GET_MOVIE = gql`
       brands {
         objects {
           uid
-          title
+          title_long
+          title_medium
           title_short
         }
       }
