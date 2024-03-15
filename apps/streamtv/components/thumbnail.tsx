@@ -10,6 +10,7 @@ import { useInView } from "react-intersection-observer";
 import {
   GET_BRAND_THUMBNAIL,
   GET_EPISODE_THUMBNAIL,
+  GET_LIVE_STREAM_THUMBNAIL,
   GET_MOVIE_THUMBNAIL,
   GET_PERSON_THUMBNAIL,
   GET_SET_THUMBNAIL,
@@ -94,6 +95,10 @@ const getThumbnailQuery = (objectType: ObjectTypes) => {
 
   if (objectType === ObjectTypes.Person) {
     return GET_PERSON_THUMBNAIL;
+  }
+
+  if (objectType === ObjectTypes.LiveStream) {
+    return GET_LIVE_STREAM_THUMBNAIL;
   }
 
   if (objectType === ObjectTypes.SkylarkSet) {

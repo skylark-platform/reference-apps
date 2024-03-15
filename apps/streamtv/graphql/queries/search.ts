@@ -4,11 +4,21 @@ import { ImageListingFragment } from "./fragments";
 export const SEARCH = gql`
   ${ImageListingFragment}
 
-  query SEARCH($query: String!, $language: String!, $customerType: String!) {
+  query SEARCH(
+    $query: String!
+    $language: String!
+    $deviceType: String!
+    $customerType: String!
+    $region: String!
+  ) {
     search(
       query: $query
       language: $language
-      dimensions: [{ dimension: "customer-types", value: $customerType }]
+      dimensions: [
+        { dimension: "device-types", value: $deviceType }
+        { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
+      ]
       highlight_results: true
     ) {
       total_count
@@ -19,7 +29,7 @@ export const SEARCH = gql`
         _context {
           typename_highlight
         }
-        ... on CountrylineSet {
+        ... on SkylarkSet {
           title
           title_short
           synopsis

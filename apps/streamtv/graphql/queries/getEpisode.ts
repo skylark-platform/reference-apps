@@ -4,12 +4,18 @@ export const GET_EPISODE_THUMBNAIL = gql`
   query GET_EPISODE_THUMBNAIL(
     $uid: String!
     $language: String!
+    $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
     getObject: getEpisode(
       uid: $uid
       language: $language
-      dimensions: [{ dimension: "customer-types", value: $customerType }]
+      dimensions: [
+        { dimension: "device-types", value: $deviceType }
+        { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
+      ]
     ) {
       __typename
       uid
@@ -43,13 +49,19 @@ export const GET_EPISODE = gql`
     $uid: String
     $externalId: String
     $language: String!
+    $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
     getObject: getEpisode(
       uid: $uid
       external_id: $externalId
       language: $language
-      dimensions: [{ dimension: "customer-types", value: $customerType }]
+      dimensions: [
+        { dimension: "device-types", value: $deviceType }
+        { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
+      ]
     ) {
       uid
       title

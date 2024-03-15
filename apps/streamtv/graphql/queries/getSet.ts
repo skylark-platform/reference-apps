@@ -8,12 +8,18 @@ export const GET_SET_THUMBNAIL = gql`
   query GET_SET_THUMBNAIL(
     $uid: String!
     $language: String!
+    $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
-    getObject: getCountrylineSet(
+    getObject: getSkylarkSet(
       uid: $uid
       language: $language
-      dimensions: [{ dimension: "customer-types", value: $customerType }]
+      dimensions: [
+        { dimension: "device-types", value: $deviceType }
+        { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
+      ]
     ) {
       __typename
       uid
@@ -36,12 +42,18 @@ export const GET_SET_FOR_CAROUSEL = gql`
   query GET_SET_FOR_CAROUSEL(
     $uid: String!
     $language: String!
+    $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
-    getObject: getCountrylineSet(
+    getObject: getSkylarkSet(
       uid: $uid
       language: $language
-      dimensions: [{ dimension: "customer-types", value: $customerType }]
+      dimensions: [
+        { dimension: "device-types", value: $deviceType }
+        { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
+      ]
     ) {
       uid
       content {
@@ -101,7 +113,19 @@ export const GET_SET_FOR_CAROUSEL = gql`
                 ...callToActionListingFragment
               }
             }
-            ... on CountrylineSet {
+            ... on LiveStream {
+              title
+              title_short
+              synopsis
+              synopsis_short
+              images {
+                ...imageListingFragment
+              }
+              call_to_actions(limit: 1) {
+                ...callToActionListingFragment
+              }
+            }
+            ... on SkylarkSet {
               title
               title_short
               synopsis
@@ -127,13 +151,19 @@ export const GET_COLLECTION_SET = gql`
     $uid: String
     $externalId: String
     $language: String!
+    $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
-    getObject: getCountrylineSet(
+    getObject: getSkylarkSet(
       uid: $uid
       external_id: $externalId
       language: $language
-      dimensions: [{ dimension: "customer-types", value: $customerType }]
+      dimensions: [
+        { dimension: "device-types", value: $deviceType }
+        { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
+      ]
     ) {
       uid
       type
@@ -168,14 +198,18 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
     $uid: String
     $externalId: String
     $language: String!
+    $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
-    getObject: getCountrylineSet(
+    getObject: getSkylarkSet(
       uid: $uid
       external_id: $externalId
       language: $language
       dimensions: [
+        { dimension: "device-types", value: $deviceType }
         { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
       ]
     ) {
       __typename
@@ -205,7 +239,7 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
                 }
               }
             }
-            ... on CountrylineSet {
+            ... on SkylarkSet {
               type
               title
               title_short

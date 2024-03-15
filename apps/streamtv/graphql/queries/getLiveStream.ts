@@ -4,18 +4,24 @@ export const GET_LIVE_STREAM_THUMBNAIL = gql`
   query GET_LIVE_STREAM_THUMBNAIL(
     $uid: String!
     $language: String!
+    $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
     getObject: getLiveStream(
       uid: $uid
       language: $language
-      dimensions: [{ dimension: "customer-types", value: $customerType }]
+      dimensions: [
+        { dimension: "device-types", value: $deviceType }
+        { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
+      ]
     ) {
       __typename
       uid
       title
       title_short
-      synopsis_medium
+      synopsis
       synopsis_short
       images {
         objects {
@@ -41,18 +47,24 @@ export const GET_LIVE_STREAM = gql`
     $uid: String
     $externalId: String
     $language: String!
+    $deviceType: String!
     $customerType: String!
+    $region: String!
   ) {
     getObject: getLiveStream(
       uid: $uid
       external_id: $externalId
       language: $language
-      dimensions: [{ dimension: "customer-types", value: $customerType }]
+      dimensions: [
+        { dimension: "device-types", value: $deviceType }
+        { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
+      ]
     ) {
       uid
       title
       title_short
-      synopsis_medium
+      synopsis
       synopsis_short
       images {
         objects {
