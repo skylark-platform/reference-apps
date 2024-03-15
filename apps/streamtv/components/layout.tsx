@@ -4,8 +4,8 @@ import {
   MdSearch,
   MdClose,
   MdHome,
-  MdMovie,
   MdOutlineStar,
+  MdCamera,
 } from "react-icons/md";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
@@ -69,7 +69,7 @@ export const StreamTVLayout: React.FC<Props> = ({
 
   const links: NavigationLink[] = [
     { text: t("home"), href: "/", icon: <MdHome /> },
-    { text: t("movies"), href: "/movies", icon: <MdMovie /> },
+    { text: t("shows"), href: "/shows", icon: <MdCamera /> },
     {
       text: t("featured"),
       href: convertUrlWithSameOriginToPath(

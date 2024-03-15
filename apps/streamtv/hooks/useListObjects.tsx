@@ -38,7 +38,7 @@ export const useListObjects = <T extends Metadata>(
         fetcher(query, dimensions, nextToken),
       getNextPageParam: (lastPage): string | undefined =>
         lastPage.listObjects?.next_token || undefined,
-      enabled: !disabled,
+      enabled: Boolean(!disabled && query),
     });
 
   // This if statement ensures that all data is fetched

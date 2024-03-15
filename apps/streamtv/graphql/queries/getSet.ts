@@ -194,6 +194,7 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
     ) {
       __typename
       uid
+      title_long
       title_medium
       type
       content(limit: 100) {
