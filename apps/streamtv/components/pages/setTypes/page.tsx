@@ -51,7 +51,17 @@ const Page: NextPage<{
     );
   }
 
-  if (data && data.type !== StreamTVSupportedSetType.Page) {
+  const type = typeof data?.type === "string" ? data.type : "";
+
+  if (
+    data &&
+    !(
+      [
+        StreamTVSupportedSetType.Page,
+        StreamTVSupportedSetType.HomePage,
+      ] as string[]
+    ).includes(type)
+  ) {
     return (
       <div className="flex h-screen flex-col items-center justify-center text-white">
         <p className="mb-4 text-lg font-medium">{`Invalid SkylarkSet type ${

@@ -114,6 +114,7 @@ module.exports = {
   plugins: [
     forms,
     aspectRatio,
+    require("@tailwindcss/typography"),
     plugin(({ addUtilities }) => {
       addUtilities({
         ".hide-scrollbar": {

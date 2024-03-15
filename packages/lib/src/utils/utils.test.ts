@@ -9,63 +9,57 @@ describe("utils", () => {
   describe("getTitleByOrder", () => {
     it("returns the short title as its given as the type and all titles are valid", () => {
       const titles = {
-        short: "short",
-        medium: "medium",
-        long: "long",
+        title: "long",
+        title_short: "short",
       };
-      const title = getTitleByOrder(titles, ["short", "medium", "long"]);
+      const title = getTitleByOrder(titles, ["title_short", "title"]);
       expect(title).toEqual("short");
     });
 
-    it("returns the medium title as its given as the type and all titles are valid", () => {
+    it("returns the long title as its given as the type and all titles are valid", () => {
       const titles = {
-        short: "short",
-        medium: "medium",
-        long: "long",
+        title: "long",
+        title_short: "short",
       };
-      const title = getTitleByOrder(titles, ["medium", "short", "long"]);
-      expect(title).toEqual("medium");
+      const title = getTitleByOrder(titles, ["title", "title_short"]);
+      expect(title).toEqual("long");
     });
 
     it("returns the long title even though it is lowest priority as short and medium are both empty", () => {
       const titles = {
-        short: "",
-        medium: "",
-        long: "long",
+        title: "long",
+        title_short: "",
       };
-      const title = getTitleByOrder(titles, ["short", "medium", "long"]);
+      const title = getTitleByOrder(titles, ["title_short", "title"]);
       expect(title).toEqual("long");
     });
 
     it("returns an empty string when all TitleTypes are empty", () => {
       const titles = {
-        short: "",
-        medium: "",
-        long: "",
+        title: "",
+        title_short: "",
       };
-      const title = getTitleByOrder(titles, ["short", "medium", "long"]);
+      const title = getTitleByOrder(titles, ["title_short", "title"]);
       expect(title).toEqual("");
     });
 
     it("returns an empty string when a valid title exists but it is not in the priority array", () => {
       const titles = {
-        short: "",
-        medium: "",
-        long: "long",
+        title: "long",
+        title_short: "",
       };
-      const title = getTitleByOrder(titles, ["short", "medium"]);
+      const title = getTitleByOrder(titles, ["title_short"]);
       expect(title).toEqual("");
     });
 
     it("returns the objectTitle when no titles are valid and an objectTitle is given", () => {
       const titles = {
-        short: "",
-        medium: "",
-        long: "",
+        title: "",
+        title_short: "",
       };
       const title = getTitleByOrder(
         titles,
-        ["short", "medium", "long"],
+        ["title_short", "title"],
         "objectTitle",
       );
       expect(title).toEqual("objectTitle");
@@ -74,7 +68,7 @@ describe("utils", () => {
     it("returns the objectTitle when the titles are undefined", () => {
       const title = getTitleByOrder(
         undefined,
-        ["short", "medium", "long"],
+        ["title_short", "title"],
         "objectTitle",
       );
       expect(title).toEqual("objectTitle");

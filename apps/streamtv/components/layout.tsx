@@ -4,8 +4,8 @@ import {
   MdSearch,
   MdClose,
   MdHome,
-  MdMovie,
   MdOutlineStar,
+  MdMovie,
 } from "react-icons/md";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
@@ -20,7 +20,10 @@ import {
   useDimensions,
   NavigationLink,
 } from "@skylark-reference-apps/react";
-import { hasProperty } from "@skylark-reference-apps/lib";
+import {
+  addCloudinaryOnTheFlyImageTransformation,
+  hasProperty,
+} from "@skylark-reference-apps/lib";
 import { DefaultSeo } from "next-seo";
 import { Search } from "./search";
 import { useStreamTVConfig } from "../hooks/useStreamTVConfig";
@@ -143,7 +146,10 @@ export const StreamTVLayout: React.FC<Props> = ({
                 <img
                   alt={config.logo.alt}
                   className="block h-full py-2 md:py-4 lg:py-8"
-                  src={config.logo.src}
+                  src={addCloudinaryOnTheFlyImageTransformation(
+                    config.logo.src,
+                    { height: 100 },
+                  )}
                 />
               ) : (
                 <MdStream className="h-9 w-9 md:h-10 md:w-10 lg:h-12 lg:w-12" />

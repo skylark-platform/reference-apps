@@ -56,14 +56,14 @@ export const RailHeader = ({
     <></>
   );
 
-export const Rail: React.FC<RailProps> = ({
+export const RailComponent = ({
   initial,
   children,
   header,
   displayCount,
   className,
   forceRtl,
-}) => {
+}: RailProps) => {
   const { dir, isLtr } = useHtmlDirection(forceRtl);
 
   const numChildren = React.Children.toArray(children).length;
@@ -197,4 +197,16 @@ export const Rail: React.FC<RailProps> = ({
   );
 };
 
-export default Rail;
+export const Rail = ({
+  showIfEmpty,
+  children,
+  ...props
+}: RailProps & { showIfEmpty?: boolean }) => {
+  const numChildren = React.Children.toArray(children).length;
+
+  if (numChildren === 0 && !showIfEmpty) {
+    return null;
+  }
+
+  return <RailComponent {...props}>{children}</RailComponent>;
+};

@@ -1,6 +1,6 @@
 import type { GetStaticProps, NextPage } from "next";
 import Page from "../components/pages/setTypes/page";
-import { getSeoDataForObject, SeoObjectData } from "../lib/getPageSeoData";
+import { SeoObjectData, getSeoDataForObject } from "../lib/getPageSeoData";
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const seo = await getSeoDataForObject(

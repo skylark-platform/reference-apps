@@ -1,6 +1,10 @@
-import { formatReleaseDate, hasProperty } from "@skylark-reference-apps/lib";
+import {
+  addCloudinaryOnTheFlyImageTransformation,
+  formatReleaseDate,
+  hasProperty,
+} from "@skylark-reference-apps/lib";
 import clsx from "clsx";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { MdOutlineRotateRight, MdClear, MdSearch } from "react-icons/md";
 import { useDebounce } from "use-debounce";
 import { sanitize } from "dompurify";
@@ -79,6 +83,31 @@ const HighlightedSearchResultText = ({
   );
 };
 
+const SearchResultImage = ({
+  alt,
+  image: uncachedImage,
+}: {
+  image: string;
+  alt: string;
+}) => {
+  const image = useMemo(
+    () =>
+      addCloudinaryOnTheFlyImageTransformation(uncachedImage, { width: 400 }),
+    [uncachedImage],
+  );
+
+  return (
+    <div className="flex justify-center">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        alt={alt}
+        className="h-auto max-h-[4rem] w-auto max-w-full"
+        src={image}
+      />
+    </div>
+  );
+};
+
 const SearchResultItem = ({
   title,
   description,
@@ -124,16 +153,7 @@ const SearchResultItem = ({
         {date && <p>{formatReleaseDate(date)}</p>}
       </div>
     </div>
-    {image && (
-      <div className="flex justify-center">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          alt={title}
-          className="h-auto max-h-[4rem] w-auto max-w-full"
-          src={image}
-        />
-      </div>
-    )}
+    {image && <SearchResultImage alt={title} image={image} />}
   </Link>
 );
 
