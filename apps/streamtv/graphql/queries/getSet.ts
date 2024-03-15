@@ -111,20 +111,6 @@ export const GET_SET_FOR_CAROUSEL = gql`
                 ...callToActionListingFragment
               }
             }
-            ... on LiveStream {
-              title_long
-              title_medium
-              title_short
-              synopsis_long
-              synopsis_medium
-              synopsis_short
-              images {
-                ...imageListingFragment
-              }
-              call_to_actions(limit: 1) {
-                ...callToActionListingFragment
-              }
-            }
             ... on CountrylineSet {
               title_long
               title_medium

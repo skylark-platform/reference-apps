@@ -79,12 +79,5 @@ export const ObjectLanguageFragment = gql`
         }
       }
     }
-    ... on LiveStream {
-      _meta {
-        language_data {
-          language
-        }
-      }
-    }
   }
 `;
