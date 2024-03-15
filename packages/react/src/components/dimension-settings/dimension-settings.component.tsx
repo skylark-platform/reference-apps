@@ -43,7 +43,8 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
   skylarkApiUrl,
 }) => {
   const [show, setShow] = useState(propShow);
-  const { dimensions, setCustomerType, setTimeTravel } = useDimensions();
+  const { dimensions, setCustomerType, setTimeTravel, setLanguage, setRegion } =
+    useDimensions();
 
   const nextWeek = dayjs().add(7, "days");
   const nextWeekReadable = nextWeek.format("DD MMMM, h:mm A");
@@ -136,12 +137,12 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                     options={[
                       { text: "Premium", value: "premium" },
                       { text: "Standard", value: "standard" },
-                      { text: "Public", value: "public" },
+                      { text: "Kids", value: "kids" },
                     ]}
                     onChange={(value: string) => setCustomerType(value)}
                   />
                 </DimensionContent>
-                {/* <DimensionContent label="Region">
+                <DimensionContent label="Region">
                   <DimensionRadioButton
                     active={dimensions[DimensionKey.Region]}
                     options={[
@@ -168,8 +169,8 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                       }
                     }}
                   />
-                </DimensionContent> */}
-                {/* <DimensionContent label="Language">
+                </DimensionContent>
+                <DimensionContent label="Language">
                   <DimensionRadioButton
                     active={dimensions[DimensionKey.Language]}
                     options={
@@ -185,7 +186,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                     }
                     onChange={(value) => setLanguage(value)}
                   />
-                </DimensionContent> */}
+                </DimensionContent>
                 {timeTravelEnabled && (
                   <DimensionContent label="Time Travel">
                     <DimensionRadioButton
