@@ -32,7 +32,7 @@ const PersonPage: NextPage = () => {
   const image = getGraphQLImageSrc(person?.images, ImageType.Poster);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-start bg-gray-900 pb-20 font-body md:pt-64">
+    <div className="flex min-h-screen w-full flex-col items-center justify-start bg-gray-900 pb-20 pt-20 font-body md:pt-64">
       <NextSeo
         description={
           person?.bio_short || person?.bio_medium || person?.bio_long || ""
@@ -42,9 +42,9 @@ const PersonPage: NextPage = () => {
         }}
         title={person?.name || person?.abbreviation || "Person"}
       />
-      <div className="flex w-full max-w-5xl grid-cols-4 gap-20">
+      <div className="flex w-full grid-cols-4 flex-col gap-4 md:max-w-5xl md:flex-row md:gap-20">
         <div>
-          <div className="flex h-72 w-72 items-center justify-center overflow-hidden rounded-full bg-streamtv-primary">
+          <div className="mx-auto flex h-48 w-48 items-center justify-center overflow-hidden rounded-full bg-streamtv-primary md:m-0 md:h-72 md:w-72">
             {image ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -59,8 +59,10 @@ const PersonPage: NextPage = () => {
             )}
           </div>
         </div>
-        <div className="text-white">
-          <h1 className="mb-4 font-display text-4xl">{person?.name}</h1>
+        <div className="mx-4 text-white">
+          <h1 className="mb-4 text-center font-display text-4xl md:text-left">
+            {person?.name}
+          </h1>
           <ParseAndDisplayHTML
             fallbackMessage="No bio for this person"
             html={
