@@ -201,13 +201,13 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
     >
       <div
         className={clsx(
-          "flex items-center justify-center rounded-full border-0 border-gray-300 bg-streamtv-purple-500/80 p-3 px-4 transition-colors  focus-within:border-white focus-within:text-white  md:bg-button-tertiary",
-          searchQuery ? "text-white" : "text-gray-300",
+          "flex items-center justify-center rounded-full border-0 border-gray-300 bg-streamtv-purple-500/80 p-3 px-4 transition-colors  focus-within:border-white focus-within:text-white  md:bg-streamtv-accent",
+          searchQuery ? "text-white" : "text-white",
         )}
       >
         <input
           className={clsx(
-            "w-full border-none bg-transparent px-2 py-0 shadow-none outline-none ring-0 placeholder:text-gray-300 focus:border-none focus:shadow-none focus:outline-none focus:ring-0 focus:placeholder:text-white focus-visible:border-none focus-visible:outline-none md:w-44",
+            "w-full border-none bg-transparent px-2 py-0 shadow-none outline-none ring-0 placeholder:text-white focus:border-none focus:shadow-none focus:outline-none focus:ring-0 focus:placeholder:text-white focus-visible:border-none focus-visible:outline-none md:w-44",
           )}
           placeholder={t("search")}
           type="text"

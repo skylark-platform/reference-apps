@@ -68,7 +68,7 @@ export const StreamTVLayout: React.FC<Props> = ({
   const [isMobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   const links: NavigationLink[] = [
-    { text: t("discover"), href: "/", icon: <MdHome /> },
+    { text: t("home"), href: "/", icon: <MdHome /> },
     { text: t("movies"), href: "/movies", icon: <MdMovie /> },
     {
       text: t("featured"),

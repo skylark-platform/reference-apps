@@ -43,8 +43,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
   skylarkApiUrl,
 }) => {
   const [show, setShow] = useState(propShow);
-  const { dimensions, setLanguage, setCustomerType, setTimeTravel } =
-    useDimensions();
+  const { dimensions, setCustomerType, setTimeTravel } = useDimensions();
 
   const nextWeek = dayjs().add(7, "days");
   const nextWeekReadable = nextWeek.format("DD MMMM, h:mm A");
@@ -170,7 +169,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                     }}
                   />
                 </DimensionContent> */}
-                <DimensionContent label="Language">
+                {/* <DimensionContent label="Language">
                   <DimensionRadioButton
                     active={dimensions[DimensionKey.Language]}
                     options={
@@ -186,7 +185,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                     }
                     onChange={(value) => setLanguage(value)}
                   />
-                </DimensionContent>
+                </DimensionContent> */}
                 {timeTravelEnabled && (
                   <DimensionContent label="Time Travel">
                     <DimensionRadioButton

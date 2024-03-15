@@ -87,7 +87,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
     >
       {show && !animationComplete && (
         <motion.div
-          className="fixed inset-0 z-[999] flex flex-col items-center justify-center gap-y-1 bg-gray-900 font-display text-white sm:gap-y-2 lg:gap-y-4"
+          className="fixed inset-0 z-[999] flex flex-col items-center justify-center gap-y-1 bg-white font-display text-white sm:gap-y-2 lg:gap-y-4"
           exit="exit"
           initial="show"
           variants={container}
