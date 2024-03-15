@@ -25,6 +25,7 @@ import {
   Entertainment,
   ImageType,
   ObjectTypes,
+  Person,
   SkylarkSet,
   StreamTVSupportedImageType,
   StreamTVSupportedSetType,
@@ -43,6 +44,10 @@ interface ThumbnailProps {
   variant: ThumbnailVariant;
   preferredImageType?: StreamTVSupportedImageType;
 }
+
+const dataIsPerson = (
+  data: Entertainment | Person | undefined,
+): data is Person => data?.__typename === ObjectTypes.Person;
 
 export const getThumbnailVariantFromSetType = (
   setType: SkylarkSet["type"],
@@ -118,7 +123,7 @@ export const Thumbnail = ({
 
   const query = getThumbnailQuery(objectType);
 
-  const { data, isLoading } = useObject<Entertainment>(query, uid, {
+  const { data, isLoading } = useObject<Entertainment | Person>(query, uid, {
     disabled: !inView,
   });
 
@@ -134,6 +139,15 @@ export const Thumbnail = ({
     preferredImageType || ImageType.Thumbnail,
   );
 
+  const title =
+    (dataIsPerson(data)
+      ? data.name
+      : data?.title_short || data?.title_medium) || "";
+  const description =
+    (dataIsPerson(data)
+      ? data.bio_short
+      : data?.synopsis_short || data?.synopsis_medium) || "";
+
   return (
     <div ref={ref}>
       {isLoading && !data && (
@@ -145,7 +159,7 @@ export const Thumbnail = ({
             <EpisodeThumbnail
               backgroundImage={backgroundImage}
               contentLocation="below"
-              description={data?.synopsis_short || data?.synopsis_medium || ""}
+              description={description}
               href={href}
               key={uid}
               number={
@@ -154,7 +168,7 @@ export const Thumbnail = ({
                   : undefined
               }
               statusTag={getStatusTag(data.tags)}
-              title={data?.title_short || data?.title_medium || ""}
+              title={title}
             />
           )}
 
@@ -170,7 +184,7 @@ export const Thumbnail = ({
                   : undefined
               }
               statusTag={getStatusTag(data.tags)}
-              title={data?.title_short || data?.title_medium || ""}
+              title={title}
             />
           )}
 
@@ -186,7 +200,7 @@ export const Thumbnail = ({
                   : undefined
               }
               statusTag={getStatusTag(data.tags)}
-              title={data?.title_short || data?.title_medium || ""}
+              title={title}
             />
           )}
 
@@ -196,7 +210,7 @@ export const Thumbnail = ({
               href={href}
               key={uid}
               statusTag={getStatusTag(data.tags)}
-              title={data?.title_short || data?.title_medium || ""}
+              title={title}
             />
           )}
 
@@ -207,7 +221,7 @@ export const Thumbnail = ({
               href={href}
               key={uid}
               statusTag={getStatusTag(data.tags)}
-              title={data?.title_short || data?.title_medium || ""}
+              title={title}
             />
           )}
         </>
