@@ -11,6 +11,7 @@ import {
   GET_BRAND_THUMBNAIL,
   GET_EPISODE_THUMBNAIL,
   GET_MOVIE_THUMBNAIL,
+  GET_PERSON_THUMBNAIL,
   GET_SET_THUMBNAIL,
 } from "../graphql/queries";
 import { GET_SEASON_THUMBNAIL } from "../graphql/queries/getSeason";
@@ -84,6 +85,10 @@ const getThumbnailQuery = (objectType: ObjectTypes) => {
 
   if (objectType === ObjectTypes.Season) {
     return GET_SEASON_THUMBNAIL;
+  }
+
+  if (objectType === ObjectTypes.Person) {
+    return GET_PERSON_THUMBNAIL;
   }
 
   if (objectType === ObjectTypes.CountrylineSet) {

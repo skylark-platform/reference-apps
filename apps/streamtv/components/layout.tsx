@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  MdStream,
-  MdSearch,
-  MdClose,
-  MdHome,
-  MdOutlineStar,
-  MdCamera,
-} from "react-icons/md";
+import { MdStream, MdSearch, MdClose, MdHome, MdCamera } from "react-icons/md";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import {
@@ -20,7 +13,10 @@ import {
   useDimensions,
   NavigationLink,
 } from "@skylark-reference-apps/react";
-import { hasProperty } from "@skylark-reference-apps/lib";
+import {
+  addCloudinaryOnTheFlyImageTransformation,
+  hasProperty,
+} from "@skylark-reference-apps/lib";
 import { DefaultSeo } from "next-seo";
 import { Search } from "./search";
 import { useStreamTVConfig } from "../hooks/useStreamTVConfig";
@@ -34,24 +30,24 @@ interface Props {
   children?: React.ReactNode;
 }
 
-const convertUrlWithSameOriginToPath = (url: string): string => {
-  if (url.startsWith("/")) {
-    return url;
-  }
+// const convertUrlWithSameOriginToPath = (url: string): string => {
+//   if (url.startsWith("/")) {
+//     return url;
+//   }
 
-  try {
-    const parsedUrl = new URL(url);
-    if (
-      typeof window !== "undefined" &&
-      window.location.origin === parsedUrl.origin
-    ) {
-      return parsedUrl.pathname;
-    }
-    return url;
-  } catch {
-    return url;
-  }
-};
+//   try {
+//     const parsedUrl = new URL(url);
+//     if (
+//       typeof window !== "undefined" &&
+//       window.location.origin === parsedUrl.origin
+//     ) {
+//       return parsedUrl.pathname;
+//     }
+//     return url;
+//   } catch {
+//     return url;
+//   }
+// };
 
 export const StreamTVLayout: React.FC<Props> = ({
   skylarkApiUrl,
@@ -70,15 +66,15 @@ export const StreamTVLayout: React.FC<Props> = ({
   const links: NavigationLink[] = [
     { text: t("home"), href: "/", icon: <MdHome /> },
     { text: t("shows"), href: "/shows", icon: <MdCamera /> },
-    {
-      text: t("featured"),
-      href: convertUrlWithSameOriginToPath(
-        config?.featuredPageUrl ||
-          process.env.NEXT_PUBLIC_TV_SHOWS_HREF ||
-          "/brand/reculg97iNzbkEZCK", // StreamTV Ingest External ID
-      ),
-      icon: <MdOutlineStar />,
-    },
+    // {
+    //   text: t("featured"),
+    //   href: convertUrlWithSameOriginToPath(
+    //     config?.featuredPageUrl ||
+    //       process.env.NEXT_PUBLIC_TV_SHOWS_HREF ||
+    //       "/brand/reculg97iNzbkEZCK", // StreamTV Ingest External ID
+    //   ),
+    //   icon: <MdOutlineStar />,
+    // },
     {
       text: t("search"),
       onClick: () => setMobileSearchOpen(!isMobileSearchOpen),
@@ -143,7 +139,10 @@ export const StreamTVLayout: React.FC<Props> = ({
                 <img
                   alt={config.logo.alt}
                   className="block h-full py-2 md:py-4 lg:py-8"
-                  src={config.logo.src}
+                  src={addCloudinaryOnTheFlyImageTransformation(
+                    config.logo.src,
+                    { height: 100 },
+                  )}
                 />
               ) : (
                 <MdStream className="h-9 w-9 md:h-10 md:w-10 lg:h-12 lg:w-12" />

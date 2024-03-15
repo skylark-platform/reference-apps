@@ -14,8 +14,10 @@ export const GET_BRAND_THUMBNAIL = gql`
     ) {
       __typename
       uid
-      title
+      title_long
+      title_medium
       title_short
+      synopsis_long
       synopsis_medium
       synopsis_short
       images {

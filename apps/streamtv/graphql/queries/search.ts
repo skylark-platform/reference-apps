@@ -67,12 +67,12 @@ export const SEARCH = gql`
             ...imageListingFragment
           }
         }
-        #... on Person {
-        #  name
-        #  images {
-        #    ...imageListingFragment
-        #  }
-        #}
+        ... on Person {
+          name
+          images {
+            ...imageListingFragment
+          }
+        }
       }
     }
   }
