@@ -286,11 +286,16 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
                 if (
                   typename === "Brand" ||
                   typename === "Episode" ||
-                  typename === "Movie"
+                  typename === "Movie" ||
+                  typename === "LiveStream"
                 ) {
                   return (
                     <SearchResultItem
-                      date={(obj.release_date as string) || ""}
+                      date={
+                        hasProperty(obj, "release_date")
+                          ? (obj.release_date as string)
+                          : ""
+                      }
                       description={findMatchOrReturnFirst([
                         obj.synopsis_short,
                         obj.synopsis,

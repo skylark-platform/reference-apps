@@ -13,11 +13,12 @@ import {
   SearchResultListing,
   StreamTVSupportedSetType,
   GQLError,
+  LiveStream,
 } from "../types";
 import { SEARCH } from "../graphql/queries";
 
 interface SearchResult extends Omit<SearchResultListing, "objects"> {
-  objects: (SkylarkSet | Brand | Episode | Movie | Person)[];
+  objects: (SkylarkSet | Brand | Episode | Movie | Person | LiveStream)[];
 }
 
 const fetcher = (query: string, dimensions: Dimensions) =>
