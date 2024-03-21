@@ -75,6 +75,15 @@ export const SEARCH = gql`
             ...imageListingFragment
           }
         }
+        ... on LiveStream {
+          title
+          title_short
+          synopsis
+          synopsis_short
+          images {
+            ...imageListingFragment
+          }
+        }
       }
     }
   }
