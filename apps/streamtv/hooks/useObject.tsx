@@ -39,7 +39,7 @@ export const useObject = <T extends Metadata>(
     queryKey: ["Search", query, uid, dimensions],
     queryFn: () =>
       fetcher<T>(query, uid, dimensions, { ...opts, useExternalId }),
-    enabled: opts?.disabled,
+    enabled: Boolean(!opts?.disabled && query),
   });
 
   return {

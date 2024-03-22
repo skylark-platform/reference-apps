@@ -22,3 +22,4 @@ export * from "./list";
 export * from "./hero";
 export * from "./skeleton";
 export * from "./connect-to-skylark-modal";
+export * from "./parseAndDisplayHtml";

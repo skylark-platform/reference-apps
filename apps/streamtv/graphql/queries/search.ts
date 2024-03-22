@@ -69,12 +69,21 @@ export const SEARCH = gql`
             ...imageListingFragment
           }
         }
-        #... on Person {
-        #  name
-        #  images {
-        #    ...imageListingFragment
-        #  }
-        #}
+        ... on Person {
+          name
+          images {
+            ...imageListingFragment
+          }
+        }
+        ... on LiveStream {
+          title
+          title_short
+          synopsis
+          synopsis_short
+          images {
+            ...imageListingFragment
+          }
+        }
       }
     }
   }

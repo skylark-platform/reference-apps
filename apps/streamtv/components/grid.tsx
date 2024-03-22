@@ -1,12 +1,12 @@
 import { hasProperty } from "@skylark-reference-apps/lib";
 import { RailHeader } from "@skylark-reference-apps/react";
-import { Metadata, Movie, ObjectTypes } from "../types";
+import { Episode, Metadata, Movie, ObjectTypes } from "../types";
 import { Thumbnail, ThumbnailVariant } from "./thumbnail";
 
 interface GridProps {
   header?: string;
   displayCount?: boolean;
-  objects: (Metadata | Movie)[];
+  objects: Metadata[] | Movie[] | Episode[];
   variant: ThumbnailVariant;
   className?: string;
 }

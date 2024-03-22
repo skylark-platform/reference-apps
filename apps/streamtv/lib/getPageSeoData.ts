@@ -74,12 +74,12 @@ export const getSeoDataForObject = async (
     }>(query);
 
     const title = getTitleByOrder({
-      title: data?.title || "",
-      title_short: data?.title_short || "",
+      title: data.title || "",
+      title_short: data.title_short || "",
     });
 
     const synopsis = getSynopsisByOrder({
-      synopsis: data?.synopsis_short || "",
+      synopsis: data.synopsis || "",
       synopsis_short: data?.synopsis_short || "",
     });
 

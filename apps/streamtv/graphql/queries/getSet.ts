@@ -215,8 +215,9 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
       __typename
       uid
       title
+      title_short
       type
-      content {
+      content(limit: 100) {
         objects {
           object {
             __typename
@@ -234,6 +235,7 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
                   uid
                   episode_number
                   title
+                  title_short
                 }
               }
             }

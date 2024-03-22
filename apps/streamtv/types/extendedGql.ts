@@ -19,6 +19,7 @@ export enum StreamTVSupportedSetType {
   // Built in
   Collection = "COLLECTION",
   Page = "PAGE",
+  HomePage = "HOMEPAGE",
   Rail = "RAIL",
   Slider = "SLIDER",
   // Additional, added by ingestor

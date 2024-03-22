@@ -12,6 +12,7 @@ import {
   GET_EPISODE_THUMBNAIL,
   GET_LIVE_STREAM_THUMBNAIL,
   GET_MOVIE_THUMBNAIL,
+  GET_PERSON_THUMBNAIL,
   GET_SET_THUMBNAIL,
 } from "../graphql/queries";
 import { GET_SEASON_THUMBNAIL } from "../graphql/queries/getSeason";
@@ -25,6 +26,7 @@ import {
   Entertainment,
   ImageType,
   ObjectTypes,
+  Person,
   SkylarkSet,
   StreamTVSupportedImageType,
   StreamTVSupportedSetType,
@@ -43,6 +45,10 @@ interface ThumbnailProps {
   variant: ThumbnailVariant;
   preferredImageType?: StreamTVSupportedImageType;
 }
+
+const dataIsPerson = (
+  data: Entertainment | Person | undefined,
+): data is Person => data?.__typename === ObjectTypes.Person;
 
 export const getThumbnailVariantFromSetType = (
   setType: SkylarkSet["type"],
@@ -87,12 +93,16 @@ const getThumbnailQuery = (objectType: ObjectTypes) => {
     return GET_SEASON_THUMBNAIL;
   }
 
-  if (objectType === ObjectTypes.SkylarkSet) {
-    return GET_SET_THUMBNAIL;
+  if (objectType === ObjectTypes.Person) {
+    return GET_PERSON_THUMBNAIL;
   }
 
   if (objectType === ObjectTypes.LiveStream) {
     return GET_LIVE_STREAM_THUMBNAIL;
+  }
+
+  if (objectType === ObjectTypes.SkylarkSet) {
+    return GET_SET_THUMBNAIL;
   }
 
   return "";
@@ -118,7 +128,7 @@ export const Thumbnail = ({
 
   const query = getThumbnailQuery(objectType);
 
-  const { data, isLoading } = useObject<Entertainment>(query, uid, {
+  const { data, isLoading } = useObject<Entertainment | Person>(query, uid, {
     disabled: !inView,
   });
 
@@ -134,6 +144,13 @@ export const Thumbnail = ({
     preferredImageType || ImageType.Thumbnail,
   );
 
+  const title =
+    (dataIsPerson(data) ? data.name : data?.title_short || data?.title) || "";
+  const description =
+    (dataIsPerson(data)
+      ? data.bio_short
+      : data?.synopsis_short || data?.synopsis) || "";
+
   return (
     <div ref={ref}>
       {isLoading && !data && (
@@ -145,7 +162,7 @@ export const Thumbnail = ({
             <EpisodeThumbnail
               backgroundImage={backgroundImage}
               contentLocation="below"
-              description={data?.synopsis_short || data?.synopsis || ""}
+              description={description}
               href={href}
               key={uid}
               number={
@@ -154,7 +171,7 @@ export const Thumbnail = ({
                   : undefined
               }
               statusTag={getStatusTag(data.tags)}
-              title={data?.title_short || data?.title || ""}
+              title={title}
             />
           )}
 
@@ -170,7 +187,7 @@ export const Thumbnail = ({
                   : undefined
               }
               statusTag={getStatusTag(data.tags)}
-              title={data?.title_short || data?.title || ""}
+              title={title}
             />
           )}
 
@@ -186,7 +203,7 @@ export const Thumbnail = ({
                   : undefined
               }
               statusTag={getStatusTag(data.tags)}
-              title={data?.title_short || data?.title || ""}
+              title={title}
             />
           )}
 
@@ -196,7 +213,7 @@ export const Thumbnail = ({
               href={href}
               key={uid}
               statusTag={getStatusTag(data.tags)}
-              title={data?.title_short || data?.title || ""}
+              title={title}
             />
           )}
 
@@ -207,7 +224,7 @@ export const Thumbnail = ({
               href={href}
               key={uid}
               statusTag={getStatusTag(data.tags)}
-              title={data?.title_short || data?.title || ""}
+              title={title}
             />
           )}
         </>

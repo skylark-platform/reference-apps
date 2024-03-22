@@ -34,7 +34,7 @@ describe("getPageSeoData.ts", () => {
 
     expect(seo).toEqual({
       title: "title",
-      synopsis: "short synopsis",
+      synopsis: "synopsis",
       images: [
         {
           url: "https://skylark.com/image.jpg",

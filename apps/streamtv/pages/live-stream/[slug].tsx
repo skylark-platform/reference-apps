@@ -1,37 +1,38 @@
-import type { NextPage } from "next";
-import { useRouter } from "next/router";
+import type { GetServerSideProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
+import { useRouter } from "next/router";
 import {
   SeoObjectData,
   convertObjectImagesToSeoImages,
+  getSeoDataForObject,
 } from "../../lib/getPageSeoData";
-import {
-  convertObjectToName,
-  getFirstRatingValue,
-  getFurthestAvailabilityEndDate,
-  getGraphQLImageSrc,
-  getSynopsisByOrderForGraphQLObject,
-  splitAndFormatGraphQLCreditsByInternalTitle,
-} from "../../lib/utils";
-import { Availability, ImageType, LiveStream } from "../../types/gql";
 import { DisplayError } from "../../components/displayError";
-import { useObject } from "../../hooks/useObject";
-import { GET_LIVE_STREAM } from "../../graphql/queries";
 import { PlaybackPage } from "../../components/pages/playback";
+import { GET_LIVE_STREAM } from "../../graphql/queries";
+import { useObject } from "../../hooks/useObject";
+import {
+  getSynopsisByOrderForGraphQLObject,
+  getFurthestAvailabilityEndDate,
+  splitAndFormatGraphQLCreditsByInternalTitle,
+  convertObjectToName,
+  getGraphQLImageSrc,
+  getFirstRatingValue,
+} from "../../lib/utils";
+import { LiveStream, Availability, ImageType } from "../../types";
 
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   const seo = await getSeoDataForObject(
-//     "SkylarkLiveStream",
-//     context.query.slug as string,
-//     context.locale || "",
-//   );
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const seo = await getSeoDataForObject(
+    "SkylarkLiveStream",
+    context.query.slug as string,
+    context.locale || "",
+  );
 
-//   return {
-//     props: {
-//       seo,
-//     },
-//   };
-// };
+  return {
+    props: {
+      seo,
+    },
+  };
+};
 
 const LiveStreamPage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();

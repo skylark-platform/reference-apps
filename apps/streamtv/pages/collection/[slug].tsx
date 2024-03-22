@@ -7,9 +7,9 @@ import { formatReleaseDate } from "@skylark-reference-apps/lib";
 import useTranslation from "next-translate/useTranslation";
 import {
   ImageType,
-  SkylarkSet,
   SetContent,
   ObjectTypes,
+  SkylarkSet,
 } from "../../types/gql";
 import {
   SeoObjectData,
@@ -83,7 +83,7 @@ const Collection: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
             rating={getFirstRatingValue(collection?.ratings)}
             releaseDate={
               collection?.release_date
-                ? formatReleaseDate(collection?.release_date, lang)
+                ? formatReleaseDate(collection.release_date, lang)
                 : undefined
             }
             title={title}

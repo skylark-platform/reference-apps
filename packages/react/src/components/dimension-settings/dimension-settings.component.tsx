@@ -43,7 +43,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
   skylarkApiUrl,
 }) => {
   const [show, setShow] = useState(propShow);
-  const { dimensions, setLanguage, setCustomerType, setRegion, setTimeTravel } =
+  const { dimensions, setCustomerType, setTimeTravel, setLanguage, setRegion } =
     useDimensions();
 
   const nextWeek = dayjs().add(7, "days");
