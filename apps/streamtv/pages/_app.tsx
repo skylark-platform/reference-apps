@@ -11,6 +11,7 @@ import { LOCAL_STORAGE } from "@skylark-reference-apps/lib";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { DimensionsContextProvider } from "@skylark-reference-apps/react";
+import { IntercomProvider } from "react-use-intercom";
 import { StreamTVLayout } from "../components/layout";
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -35,14 +36,37 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   const queryClient = new QueryClient();
 
+  const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
+
+  const onHide = () => console.log("Intercom did hide the Messenger");
+  const onShow = () => console.log("Intercom did show the Messenger");
+  const onUnreadCountChange = (amount: number) => {
+    console.log("Intercom has a new unread message");
+    setUnreadMessagesCount(amount);
+  };
+  const onUserEmailSupplied = () => {
+    console.log("Visitor has entered email");
+  };
+
+  console.log({ unreadMessagesCount });
+
   return (
     <PlausibleProvider domain={process.env.NEXT_PUBLIC_APP_DOMAIN as string}>
       <QueryClientProvider client={queryClient}>
-        <DimensionsContextProvider>
-          <StreamTVLayout skylarkApiUrl={skylarkApiUrl} timeTravelEnabled>
-            <Component {...pageProps} />
-          </StreamTVLayout>
-        </DimensionsContextProvider>
+        <IntercomProvider
+          appId={"t104fsur"}
+          autoBoot
+          onHide={onHide}
+          onShow={onShow}
+          onUnreadCountChange={onUnreadCountChange}
+          onUserEmailSupplied={onUserEmailSupplied}
+        >
+          <DimensionsContextProvider>
+            <StreamTVLayout skylarkApiUrl={skylarkApiUrl} timeTravelEnabled>
+              <Component {...pageProps} />
+            </StreamTVLayout>
+          </DimensionsContextProvider>
+        </IntercomProvider>
       </QueryClientProvider>
     </PlausibleProvider>
   );
