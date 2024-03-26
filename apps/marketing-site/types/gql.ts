@@ -1704,6 +1704,7 @@ export enum PublishStage {
 
 export type Query = {
   __typename?: "Query";
+  AiAssistant?: Maybe<Scalars["AWSJSON"]["output"]>;
   getAccount?: Maybe<AccountDetails>;
   getActivationStatus?: Maybe<ActivationStatus>;
   getAvailability?: Maybe<Availability>;
@@ -1757,6 +1758,17 @@ export type Query = {
   listTestimonial?: Maybe<TestimonialListing>;
   listTutorial?: Maybe<TutorialListing>;
   search?: Maybe<SearchResultListing>;
+};
+
+export type QueryAiAssistantArgs = {
+  context?: InputMaybe<Scalars["String"]["input"]>;
+  fields_to_populate?: InputMaybe<
+    Array<InputMaybe<Scalars["String"]["input"]>>
+  >;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  object_type: ObjectTypes;
+  root_field_data: Scalars["AWSJSON"]["input"];
+  set_uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetAvailabilityArgs = {
