@@ -56,7 +56,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
     <>
       <div
         className={clsx(
-          `fixed bottom-14 right-sm-gutter z-20 flex transition-opacity duration-500 md:bottom-0 md:right-md-gutter lg:right-lg-gutter xl:right-xl-gutter`,
+          `fixed bottom-14 right-lg-gutter z-20 flex transition-opacity duration-500 md:bottom-0 xl:right-xl-gutter`,
           show ? "opacity-0" : "opacity-100",
         )}
       >
@@ -82,7 +82,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
               {} as Record<string, string>,
             )}
           >
-            <div className="absolute -top-9 right-sm-gutter flex md:right-md-gutter lg:right-lg-gutter xl:right-xl-gutter">
+            <div className="absolute -top-9 right-lg-gutter flex xl:right-xl-gutter">
               <DimensionToggle variant="close" onClick={() => setShow(false)} />
             </div>
             <div className="relative h-full overflow-y-auto px-sm-gutter py-4 md:px-md-gutter md:py-12  lg:px-lg-gutter xl:px-xl-gutter">

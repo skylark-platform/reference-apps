@@ -2667,6 +2667,7 @@ export enum PublishStage {
 
 export type Query = {
   __typename?: "Query";
+  AiAssistant?: Maybe<Scalars["AWSJSON"]>;
   getAccount?: Maybe<AccountDetails>;
   getActivationStatus?: Maybe<ActivationStatus>;
   getAvailability?: Maybe<Availability>;
@@ -2730,6 +2731,15 @@ export type Query = {
   listStreamtvConfig?: Maybe<StreamtvConfigListing>;
   listTheme?: Maybe<ThemeListing>;
   search?: Maybe<SearchResultListing>;
+};
+
+export type QueryAiAssistantArgs = {
+  context?: InputMaybe<Scalars["String"]>;
+  fields_to_populate?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  language?: InputMaybe<Scalars["String"]>;
+  object_type: ObjectTypes;
+  root_field_data: Scalars["AWSJSON"];
+  set_uid?: InputMaybe<Scalars["String"]>;
 };
 
 export type QueryGetAvailabilityArgs = {
