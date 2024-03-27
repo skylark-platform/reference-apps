@@ -38,7 +38,7 @@ const Page: NextPage<{
 }> = ({ slug, seo, notFoundMessage }) => {
   const { environment } = useSkylarkEnvironment();
 
-  const { data, isLoading, isError } = useObject<SkylarkSet>(
+  const { data, isLoading, isError } = useObject<CountrylineSet>(
     GET_PAGE_SET(environment.hasUpdatedSeason),
     slug,
   );
@@ -65,10 +65,10 @@ const Page: NextPage<{
   ) {
     return (
       <div className="flex h-screen flex-col items-center justify-center text-white">
-        <p className="mb-4 text-lg font-medium">{`Invalid SkylarkSet type ${
+        <p className="mb-4 text-lg font-medium">{`Invalid CountrylineSet type ${
           data.type ? `"${data.type}"` : ""
         } used`}</p>
-        <p className="max-w-md text-center text-sm">{`The requested SkylarkSet must be of type "${StreamTVSupportedSetType.Page}"`}</p>
+        <p className="max-w-md text-center text-sm">{`The requested CountrylineSet must be of type "${StreamTVSupportedSetType.Page}"`}</p>
       </div>
     );
   }

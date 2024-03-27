@@ -256,7 +256,7 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
                   );
                 }
 
-                if (typename === "SkylarkSet") {
+                if (typename === "CountrylineSet") {
                   const setHref = `${convertGraphQLSetType(obj?.type || "")}/${
                     obj.uid
                   }`;
@@ -265,7 +265,8 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
                       date={(obj.release_date as string) || ""}
                       description={findMatchOrReturnFirst([
                         obj.synopsis_short,
-                        obj.synopsis,
+                        obj.synopsis_medium,
+                        obj.synopsis_long,
                       ])}
                       href={setHref}
                       image={getGraphQLImageSrc(
@@ -275,7 +276,8 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
                       key={obj.uid}
                       title={findMatchOrReturnFirst([
                         obj.title_short,
-                        obj.title,
+                        obj.title_medium,
+                        obj.title_long,
                       ])}
                       typename={sentenceCase(obj.type || "")}
                       onClick={onSearchWrapper}

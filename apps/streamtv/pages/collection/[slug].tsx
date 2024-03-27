@@ -83,7 +83,10 @@ const Collection: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
             rating={getFirstRatingValue(collection?.ratings)}
             releaseDate={
               collection?.release_date
-                ? formatReleaseDate(collection.release_date, lang)
+                ? formatReleaseDate(
+                    (collection?.release_date as string | undefined) || "",
+                    lang,
+                  )
                 : undefined
             }
             title={title}

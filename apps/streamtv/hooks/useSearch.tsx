@@ -5,7 +5,6 @@ import {
   skylarkRequestWithDimensions,
 } from "@skylark-reference-apps/react";
 import {
-  SkylarkSet,
   Brand,
   Episode,
   Movie,
@@ -13,12 +12,12 @@ import {
   SearchResultListing,
   StreamTVSupportedSetType,
   GQLError,
-  LiveStream,
+  CountrylineSet,
 } from "../types";
 import { SEARCH } from "../graphql/queries";
 
 interface SearchResult extends Omit<SearchResultListing, "objects"> {
-  objects: (SkylarkSet | Brand | Episode | Movie | Person | LiveStream)[];
+  objects: (CountrylineSet | Brand | Episode | Movie | Person)[];
 }
 
 const fetcher = (query: string, dimensions: Dimensions) =>
@@ -39,7 +38,7 @@ export const useSearch = (query: string) => {
   // TODO remove after the type filtering has been added to search (SL-2665)
   const objects = data?.objects.filter(
     (obj) =>
-      obj.__typename !== "SkylarkSet" ||
+      obj.__typename !== "CountrylineSet" ||
       obj.type === StreamTVSupportedSetType.Collection,
   );
 
