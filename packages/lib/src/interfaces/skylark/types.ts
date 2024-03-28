@@ -60,4 +60,5 @@ export type GraphQLObjectTypes =
   | "SkylarkImage"
   | "CallToAction"
   | "SkylarkLiveStream"
-  | "Game";
+  | "Game"
+  | "Article";

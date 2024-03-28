@@ -8,6 +8,7 @@ import {
 } from "@skylark-reference-apps/react";
 import { useInView } from "react-intersection-observer";
 import {
+  GET_ARTICLE_THUMBNAIL,
   GET_BRAND_THUMBNAIL,
   GET_EPISODE_THUMBNAIL,
   GET_MOVIE_THUMBNAIL,
@@ -22,6 +23,7 @@ import {
   getGraphQLImageSrc,
 } from "../lib/utils";
 import {
+  Article,
   Entertainment,
   ImageType,
   ObjectTypes,
@@ -48,6 +50,41 @@ interface ThumbnailProps {
 const dataIsPerson = (
   data: Entertainment | Person | undefined,
 ): data is Person => data?.__typename === ObjectTypes.Person;
+
+const dataIsArticle = (
+  data: Entertainment | Person | Article | undefined,
+): data is Article => data?.__typename === ObjectTypes.Article;
+
+const getTitleAndDescription = (
+  data?: Entertainment | Person | Article,
+): { title: string; description: string } => {
+  if (!data) {
+    return {
+      title: "",
+      description: "",
+    };
+  }
+
+  if (dataIsArticle(data)) {
+    return {
+      title: data.title || "",
+      description: data.description || "",
+    };
+  }
+
+  if (dataIsPerson(data)) {
+    return {
+      title: data.name || "",
+      description: data.bio_short || "",
+    };
+  }
+
+  return {
+    title: data.title_short || data.title_medium || data.title_long || "",
+    description:
+      data.synopsis_short || data.synopsis_medium || data.title_long || "",
+  };
+};
 
 export const getThumbnailVariantFromSetType = (
   setType: SkylarkSet["type"],
@@ -96,6 +133,10 @@ const getThumbnailQuery = (objectType: ObjectTypes) => {
     return GET_PERSON_THUMBNAIL;
   }
 
+  if (objectType === ObjectTypes.Article) {
+    return GET_ARTICLE_THUMBNAIL;
+  }
+
   if (objectType === ObjectTypes.CountrylineSet) {
     return GET_SET_THUMBNAIL;
   }
@@ -123,9 +164,13 @@ export const Thumbnail = ({
 
   const query = getThumbnailQuery(objectType);
 
-  const { data, isLoading } = useObject<Entertainment | Person>(query, uid, {
-    disabled: !inView,
-  });
+  const { data, isLoading } = useObject<Entertainment | Person | Article>(
+    query,
+    uid,
+    {
+      disabled: !inView,
+    },
+  );
 
   const parsedType =
     data?.__typename === "CountrylineSet"
@@ -139,14 +184,7 @@ export const Thumbnail = ({
     preferredImageType || ImageType.Thumbnail,
   );
 
-  const title =
-    (dataIsPerson(data)
-      ? data.name
-      : data?.title_short || data?.title_medium) || "";
-  const description =
-    (dataIsPerson(data)
-      ? data.bio_short
-      : data?.synopsis_short || data?.synopsis_medium) || "";
+  const { title, description } = getTitleAndDescription(data);
 
   return (
     <div ref={ref}>

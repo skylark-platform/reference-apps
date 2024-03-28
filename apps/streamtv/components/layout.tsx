@@ -66,6 +66,7 @@ export const StreamTVLayout: React.FC<Props> = ({
   const links: NavigationLink[] = [
     { text: t("home"), href: "/", icon: <MdHome /> },
     { text: t("shows"), href: "/shows", icon: <MdCamera /> },
+    { text: t("articles"), href: "/articles", icon: <MdCamera /> },
     // {
     //   text: t("featured"),
     //   href: convertUrlWithSameOriginToPath(

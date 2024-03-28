@@ -1,77 +1,88 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import { addCloudinaryOnTheFlyImageTransformation } from "@skylark-reference-apps/lib";
-import { ParseAndDisplayHTML } from "@skylark-reference-apps/react";
-import { ImageType, Person } from "../../types/gql";
+import {
+  ParseAndDisplayHTML,
+  SkeletonPage,
+} from "@skylark-reference-apps/react";
+import { useEffect, useState } from "react";
+import dayjs from "dayjs";
+import { Article } from "../../types/gql";
 import { DisplayError } from "../../components/displayError";
 import { useObject } from "../../hooks/useObject";
-import { GET_PERSON } from "../../graphql/queries";
 import { convertObjectImagesToSeoImages } from "../../lib/getPageSeoData";
-import { getGraphQLImageSrc } from "../../lib/utils";
+import { GET_ARTICLE } from "../../graphql/queries/getArticle";
 
 const ArticlePage: NextPage = () => {
-  const { query } = useRouter();
+  const { query, push } = useRouter();
+
+  const uid =
+    query?.slug && Array.isArray(query.slug) && query.slug.length >= 1
+      ? query.slug[0]
+      : null;
+
+  const slug =
+    query?.slug && Array.isArray(query.slug) && query.slug.length >= 2
+      ? query.slug[1]
+      : null;
+
   const {
-    data: person,
+    data: article,
     isError,
     isLoading,
-  } = useObject<Person>(GET_PERSON, query?.slug as string);
+  } = useObject<Article>(GET_ARTICLE, uid || "");
 
-  if (!isLoading && isError) {
+  if (isError) {
     return (
       <DisplayError
         error={isError}
-        notFoundMessage={`Person "${query?.slug as string}" not found.`}
+        notFoundMessage={`Article "${uid as string}" not found.`}
       />
     );
   }
 
-  const image = getGraphQLImageSrc(person?.images, ImageType.Poster);
+  const [hasUpdatedPath, setHasUpdatedPath] = useState(false);
+
+  useEffect(() => {
+    if (!hasUpdatedPath && article && slug !== article?.slug) {
+      const basePath = `/article/${uid}`;
+      const pathWithSlug = article?.slug
+        ? `${basePath}/${article?.slug}`
+        : basePath;
+      void push(pathWithSlug, pathWithSlug, { shallow: true });
+      setHasUpdatedPath(true);
+    }
+  }, [slug, article]);
 
   return (
-    <div className="flex min-h-screen w-full flex-col items-center justify-start bg-gray-900 pb-20 pt-20 font-body md:pt-64">
+    <div className="flex min-h-screen w-full flex-col items-center justify-start bg-gray-900 pb-20 pt-4 font-body md:pt-48">
       <NextSeo
-        description={
-          person?.bio_short || person?.bio_medium || person?.bio_long || ""
-        }
+        description={article?.description || ""}
         openGraph={{
-          images: convertObjectImagesToSeoImages(person?.images) || [],
+          images: convertObjectImagesToSeoImages(article?.images) || [],
         }}
-        title={person?.name || person?.abbreviation || "Person"}
+        title={article?.title || "article"}
       />
-      <div className="flex w-full grid-cols-4 flex-col gap-4 md:max-w-5xl md:flex-row md:gap-20">
-        <div>
-          <div className="mx-auto flex h-48 w-48 items-center justify-center overflow-hidden rounded-full bg-streamtv-primary md:m-0 md:h-72 md:w-72">
-            {image ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                alt={person?.name || "the person"}
-                className="h-full w-full object-cover"
-                src={addCloudinaryOnTheFlyImageTransformation(image, {
-                  width: 600,
-                })}
-              />
-            ) : (
-              <p>{`No image`}</p>
-            )}
+      <SkeletonPage show={isLoading}>
+        <div className="mx-4 flex w-full flex-col items-center px-4 text-white md:max-w-5xl">
+          <h1 className="mb-4 bg-streamtv-accent p-4 text-center font-display text-xl md:p-10 md:text-left md:text-4xl">
+            {article?.title}
+          </h1>
+          {article?.publish_date && (
+            <p>
+              {dayjs(article.publish_date as string).format(
+                "dddd, D MMMM YYYY HH:mm",
+              )}
+            </p>
+          )}
+          <div className="mt-5 md:mt-10">
+            <ParseAndDisplayHTML
+              fallbackMessage="Article has no body"
+              html={article?.body || null}
+            />
           </div>
         </div>
-        <div className="mx-4 text-white">
-          <h1 className="mb-4 text-center font-display text-4xl md:text-left">
-            {person?.name}
-          </h1>
-          <ParseAndDisplayHTML
-            fallbackMessage="No body for this article"
-            html={
-              person?.bio_long ||
-              person?.bio_medium ||
-              person?.bio_short ||
-              null
-            }
-          />
-        </div>
-      </div>
+      </SkeletonPage>
     </div>
   );
 };
