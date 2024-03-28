@@ -27,7 +27,7 @@ const ArticlesPage: NextPage = () => {
   }
 
   return (
-    <div className="flex w-full flex-col justify-center bg-gray-900 py-20 font-body">
+    <div className="flex w-full flex-col items-center justify-center bg-gray-900 py-20 font-body">
       <NextSeo title={t("articles")} />
       <div className="px-gutter sm:px-sm-gutter md:pt-20 lg:px-lg-gutter xl:px-xl-gutter">
         <div className="my-10 text-white">
@@ -45,45 +45,65 @@ const ArticlesPage: NextPage = () => {
       )}
       <SkeletonPage show={isLoading && !articles}>
         {articles && (
-          <div className="flex flex-col items-center px-4">
+          <div className="grid max-w-5xl grid-cols-2 gap-10 px-4">
             {articles.map(
-              ({ uid, title, description, publish_date, images, slug }) => {
+              ({
+                uid,
+                title,
+                description,
+                publish_date,
+                images,
+                slug,
+                type,
+              }) => {
                 const image = getGraphQLImageSrc(images, ImageType.Thumbnail);
 
                 return (
                   <div
-                    className="flex max-w-4xl flex-col items-center justify-center rounded bg-streamtv-primary px-4 py-8 shadow md:px-20 md:py-10"
+                    className="flex max-w-4xl flex-col items-center justify-start rounded  px-4 py-4 shadow"
                     key={uid}
                   >
-                    <h3 className="mb-2 text-center font-display text-xl md:mb-4 md:text-3xl">
+                    <div className="relative mb-4 flex h-56 w-full justify-start rounded-sm bg-gray-400">
+                      {image && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          alt={title || "the article"}
+                          className="h-56 w-full overflow-hidden rounded-sm  object-cover"
+                          src={addCloudinaryOnTheFlyImageTransformation(image, {
+                            width: 600,
+                          })}
+                        />
+                      )}
+                      {type && (
+                        <div className="absolute right-2 top-2 rounded-sm bg-streamtv-accent px-2 py-1 uppercase text-white">
+                          {type}
+                        </div>
+                      )}
+                    </div>
+                    <h3 className="mb-2 w-full text-left font-display text-xl text-white md:mb-4 md:text-xl">
                       {title}
                     </h3>
                     {publish_date && (
-                      <p className="-mt-2 mb-4 text-center text-sm text-gray-600 md:-mt-4 md:mb-8">
+                      <p className="-mt-1 mb-2 w-full text-left text-sm text-streamtv-accent md:-mt-2 md:mb-4">
                         {dayjs(publish_date as string).format(
                           "dddd, D MMMM YYYY HH:mm",
                         )}
                       </p>
                     )}
-                    {image && (
-                      <div className="mb-4 flex justify-center">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          alt={title || "the article"}
-                          className="h-72 w-72 overflow-hidden object-cover"
-                          src={addCloudinaryOnTheFlyImageTransformation(image, {
-                            width: 600,
-                          })}
-                        />
-                      </div>
+
+                    {description && (
+                      <p className="mb-4 w-full text-left text-sm text-gray-300">
+                        {description}
+                      </p>
                     )}
-                    {description && <p className="mb-4">{description}</p>}
-                    <Button
-                      href={`/article/${uid}${slug ? `/${slug}` : ""}`}
-                      size="sm"
-                      text="Read Article"
-                      variant="secondary"
-                    />
+                    <div className="mt-2 w-full">
+                      <Button
+                        href={`/article/${uid}${slug ? `/${slug}` : ""}`}
+                        size="lg"
+                        text="Read Article"
+                        variant="secondary"
+                      />
+                    </div>
                   </div>
                 );
               },

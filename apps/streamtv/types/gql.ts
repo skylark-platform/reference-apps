@@ -163,6 +163,7 @@ export type ArticleSetInput = {
 
 export enum ArticleType {
   Biography = "BIOGRAPHY",
+  Blog = "BLOG",
   News = "NEWS",
   Promotional = "PROMOTIONAL",
   Review = "REVIEW",

@@ -12,6 +12,7 @@ export const GET_MOVIE_THUMBNAIL = gql`
       dimensions: [{ dimension: "customer-types", value: $customerType }]
     ) {
       uid
+      slug
       __typename
       title
       title_short
@@ -51,6 +52,7 @@ export const GET_MOVIE = gql`
       dimensions: [{ dimension: "customer-types", value: $customerType }]
     ) {
       uid
+      slug
       title_long
       title_medium
       title_short

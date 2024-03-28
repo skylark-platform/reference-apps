@@ -13,6 +13,7 @@ export const GET_LIVE_STREAM_THUMBNAIL = gql`
     ) {
       __typename
       uid
+      slug
       title
       title_short
       synopsis_medium
@@ -50,6 +51,7 @@ export const GET_LIVE_STREAM = gql`
       dimensions: [{ dimension: "customer-types", value: $customerType }]
     ) {
       uid
+      slug
       title
       title_short
       synopsis_medium

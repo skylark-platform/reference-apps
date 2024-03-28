@@ -13,6 +13,7 @@ export const GET_EPISODE_THUMBNAIL = gql`
     ) {
       __typename
       uid
+      slug
       title_medium
       title_short
       synopsis_medium
@@ -52,6 +53,7 @@ export const GET_EPISODE = gql`
       dimensions: [{ dimension: "customer-types", value: $customerType }]
     ) {
       uid
+      slug
       title_long
       title_medium
       title_short

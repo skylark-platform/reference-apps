@@ -29,15 +29,6 @@ export const ParseAndDisplayHTML = ({
       ) : (
         fallbackMessage
       )}
-      {/* Manually add Twitter Script as for some reason it doesn't work using TinyMCE */}
-      {cleanHTML?.includes('blockquote class="twitter-tweet"') && (
-        <script
-          async
-          // eslint-disable-next-line react/no-unknown-property
-          charSet="utf-8"
-          src="https://platform.twitter.com/widgets.js"
-        ></script>
-      )}
     </div>
   );
 };

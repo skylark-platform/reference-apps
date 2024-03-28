@@ -32,6 +32,7 @@ export const SEARCH = gql`
           }
         }
         ... on Brand {
+          slug
           title_short
           title_medium
           title_long
@@ -44,6 +45,7 @@ export const SEARCH = gql`
           }
         }
         ... on Episode {
+          slug
           title_short
           title_medium
           title_long
@@ -56,6 +58,7 @@ export const SEARCH = gql`
           }
         }
         ... on Movie {
+          slug
           title_short
           title_medium
           title_long

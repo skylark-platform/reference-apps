@@ -22,6 +22,7 @@ export const LIST_ARTICLES = gql`
         external_id
         slug
         title
+        type
         description
         body
         publish_date

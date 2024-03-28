@@ -14,6 +14,7 @@ export const GET_BRAND_THUMBNAIL = gql`
     ) {
       __typename
       uid
+      slug
       title_long
       title_medium
       title_short
@@ -55,6 +56,7 @@ export const GET_BRAND = (streamTVIngestorSchemaLoaded: boolean) => gql`
       ]
     ) {
       uid
+      slug
       title_long
       title_medium
       title_short
