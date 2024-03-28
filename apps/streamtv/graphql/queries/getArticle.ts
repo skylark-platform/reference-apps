@@ -17,6 +17,7 @@ export const GET_ARTICLE_THUMBNAIL = gql`
       external_id
       slug
       title
+      type
       description
       publish_date
       images {
@@ -51,6 +52,7 @@ export const GET_ARTICLE = gql`
       title
       description
       body
+      type
       publish_date
       images {
         ...imageListingFragment

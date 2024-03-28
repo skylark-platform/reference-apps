@@ -1,5 +1,6 @@
 import { formatYear, hasProperty } from "@skylark-reference-apps/lib";
 import {
+  ArticleThumbnail,
   CollectionThumbnail,
   EpisodeThumbnail,
   MovieThumbnail,
@@ -38,7 +39,8 @@ export type ThumbnailVariant =
   | "landscape-synopsis"
   | "landscape-movie"
   | "landscape-inside"
-  | "portrait";
+  | "portrait"
+  | "article";
 
 interface ThumbnailProps {
   uid: string;
@@ -259,6 +261,21 @@ export const Thumbnail = ({
               href={href}
               key={uid}
               statusTag={getStatusTag(data.tags)}
+              title={title}
+            />
+          )}
+
+          {variant === "article" && (
+            <ArticleThumbnail
+              backgroundImage={backgroundImage}
+              description={description}
+              href={href}
+              key={uid}
+              statusTag={
+                getStatusTag(data.tags) ||
+                (hasProperty(data, "type") && (data.type as string)) ||
+                undefined
+              }
               title={title}
             />
           )}

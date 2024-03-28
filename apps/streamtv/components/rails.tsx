@@ -15,6 +15,7 @@ import {
   ThumbnailVariant,
   getThumbnailVariantFromSetType,
 } from "./thumbnail";
+import { useListObjects } from "../hooks/useListObjects";
 
 export const SeasonRail = ({
   season,
@@ -110,6 +111,42 @@ export const TagRail = ({
             objectType={object.__typename as ObjectTypes}
             uid={object.uid}
             variant={"landscape-synopsis"}
+          />
+        ) : (
+          <></>
+        ),
+      )}
+    </Rail>
+  );
+};
+
+export const ListObjectsRail = ({
+  listObjectQuery,
+  thumbnailVariant,
+  uidToFilter,
+  className,
+}: {
+  listObjectQuery: string;
+  thumbnailVariant: ThumbnailVariant;
+  uidToFilter?: string | null;
+  className?: string;
+}) => {
+  const { objects } = useListObjects(listObjectQuery);
+
+  const filteredObjects = uidToFilter
+    ? objects?.filter((obj) => obj.uid !== uidToFilter)
+    : objects;
+
+  return (
+    <Rail className={className} displayCount>
+      {filteredObjects?.map((object) =>
+        // Without __typename, the Thumbnail will not know what query to use
+        object && hasProperty(object, "__typename") ? (
+          <Thumbnail
+            key={object.uid}
+            objectType={object.__typename as ObjectTypes}
+            uid={object.uid}
+            variant={thumbnailVariant}
           />
         ) : (
           <></>

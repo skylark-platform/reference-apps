@@ -19,6 +19,8 @@ import {
   useAddSlugToObjectUrl,
   useUidAndSlugFromObjectUrl,
 } from "../../hooks/useUidAndSlugFromObjectUrl";
+import { ListObjectsRail } from "../../components/rails";
+import { LIST_ARTICLES } from "../../graphql/queries";
 
 export function getStaticPaths() {
   return {
@@ -101,6 +103,12 @@ const ArticlePage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
             />
           </div>
         </div>
+        <h4 className="mt-10 text-left text-2xl text-white">{`Continue Reading...`}</h4>
+        <ListObjectsRail
+          listObjectQuery={LIST_ARTICLES}
+          thumbnailVariant="article"
+          uidToFilter={uid}
+        />
       </SkeletonPage>
     </div>
   );

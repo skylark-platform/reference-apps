@@ -31,7 +31,7 @@ export interface ThumbnailProps extends BaseThumbnailWithLinkProps {
   duration?: string;
 }
 
-const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
+export const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
   backgroundImage: uncachedImage,
   contentLocation = "inside",
   children,
@@ -73,7 +73,7 @@ const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
             `}
         >
           {statusTag && (
-            <div className="absolute right-0 top-2 rounded-l-sm bg-streamtv-primary px-2 py-0.5 text-xs">
+            <div className="absolute right-0 top-2 rounded-l-sm bg-streamtv-accent px-2 py-0.5 text-xs">
               {statusTag}
             </div>
           )}
