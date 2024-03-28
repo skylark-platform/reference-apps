@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
 import { useEffect, useState } from "react";
 
-const getUidAndSlugFromQuery = (query: ParsedUrlQuery, key = "slug") => {
+export const getUidAndSlugFromQuery = (query: ParsedUrlQuery, key = "slug") => {
   const querySlug = query?.[key];
 
   const uid =
