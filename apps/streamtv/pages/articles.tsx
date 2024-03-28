@@ -5,6 +5,7 @@ import { Button, H4, SkeletonPage } from "@skylark-reference-apps/react";
 import useTranslation from "next-translate/useTranslation";
 import dayjs from "dayjs";
 import { addCloudinaryOnTheFlyImageTransformation } from "@skylark-reference-apps/lib";
+import Link from "next/link";
 import { DisplayError } from "../components/displayError";
 import { useListObjects } from "../hooks/useListObjects";
 import { LIST_ARTICLES } from "../graphql/queries";
@@ -57,48 +58,54 @@ const ArticlesPage: NextPage = () => {
                 type,
               }) => {
                 const image = getGraphQLImageSrc(images, ImageType.Thumbnail);
+                const href = `/article/${uid}${slug ? `/${slug}` : ""}`;
 
                 return (
                   <div
-                    className="flex max-w-4xl flex-col items-center justify-start rounded  px-4 py-4 shadow"
+                    className="group flex max-w-4xl flex-col items-center  justify-between rounded px-4 py-4 shadow"
                     key={uid}
                   >
-                    <div className="relative mb-4 flex h-56 w-full justify-start rounded-sm bg-gray-400">
-                      {image && (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          alt={title || "the article"}
-                          className="h-56 w-full overflow-hidden rounded-sm  object-cover"
-                          src={addCloudinaryOnTheFlyImageTransformation(image, {
-                            width: 600,
-                          })}
-                        />
-                      )}
-                      {type && (
-                        <div className="absolute right-2 top-2 rounded-sm bg-streamtv-accent px-2 py-1 uppercase text-white">
-                          {type}
-                        </div>
-                      )}
-                    </div>
-                    <h3 className="mb-2 w-full text-left font-display text-xl text-white md:mb-4 md:text-xl">
-                      {title}
-                    </h3>
-                    {publish_date && (
-                      <p className="-mt-1 mb-2 w-full text-left text-sm text-streamtv-accent md:-mt-2 md:mb-4">
-                        {dayjs(publish_date as string).format(
-                          "dddd, D MMMM YYYY HH:mm",
+                    <Link className="block" href={href}>
+                      <div className="relative mb-4 flex h-56 w-full justify-start rounded-sm bg-gray-400 transition-all group-hover:scale-105">
+                        {image && (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            alt={title || "the article"}
+                            className="h-full w-full overflow-hidden rounded-sm  object-cover"
+                            src={addCloudinaryOnTheFlyImageTransformation(
+                              image,
+                              {
+                                width: 600,
+                              },
+                            )}
+                          />
                         )}
-                      </p>
-                    )}
+                        {type && (
+                          <div className="absolute right-2 top-2 rounded-sm bg-streamtv-accent px-2 py-1 uppercase text-white">
+                            {type}
+                          </div>
+                        )}
+                      </div>
+                      <h3 className="mb-2 w-full text-left font-display text-xl text-white md:mb-4 md:text-xl">
+                        {title}
+                      </h3>
+                      {publish_date && (
+                        <p className="-mt-1 mb-2 w-full text-left text-sm text-streamtv-accent md:-mt-2 md:mb-4">
+                          {dayjs(publish_date as string).format(
+                            "dddd, D MMMM YYYY HH:mm",
+                          )}
+                        </p>
+                      )}
 
-                    {description && (
-                      <p className="mb-4 line-clamp-5 w-full text-left text-sm text-gray-300">
-                        {description}
-                      </p>
-                    )}
+                      {description && (
+                        <p className="mb-4 line-clamp-4 w-full text-left text-sm text-gray-300 transition-colors group-hover:text-gray-100">
+                          {description}
+                        </p>
+                      )}
+                    </Link>
                     <div className="mt-2 w-full">
                       <Button
-                        href={`/article/${uid}${slug ? `/${slug}` : ""}`}
+                        href={href}
                         size="lg"
                         text="Read Article"
                         variant="secondary"
