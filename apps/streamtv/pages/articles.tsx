@@ -92,7 +92,7 @@ const ArticlesPage: NextPage = () => {
                     )}
 
                     {description && (
-                      <p className="mb-4 w-full text-left text-sm text-gray-300">
+                      <p className="mb-4 line-clamp-5 w-full text-left text-sm text-gray-300">
                         {description}
                       </p>
                     )}
