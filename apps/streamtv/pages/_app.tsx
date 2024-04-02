@@ -36,31 +36,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   const queryClient = new QueryClient();
 
-  const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
-
-  const onHide = () => console.log("Intercom did hide the Messenger");
-  const onShow = () => console.log("Intercom did show the Messenger");
-  const onUnreadCountChange = (amount: number) => {
-    console.log("Intercom has a new unread message");
-    setUnreadMessagesCount(amount);
-  };
-  const onUserEmailSupplied = () => {
-    console.log("Visitor has entered email");
-  };
-
-  console.log({ unreadMessagesCount });
-
   return (
     <PlausibleProvider domain={process.env.NEXT_PUBLIC_APP_DOMAIN as string}>
       <QueryClientProvider client={queryClient}>
-        <IntercomProvider
-          appId={"t104fsur"}
-          autoBoot
-          onHide={onHide}
-          onShow={onShow}
-          onUnreadCountChange={onUnreadCountChange}
-          onUserEmailSupplied={onUserEmailSupplied}
-        >
+        <IntercomProvider appId={"t104fsur"} autoBoot>
           <DimensionsContextProvider>
             <StreamTVLayout skylarkApiUrl={skylarkApiUrl} timeTravelEnabled>
               <Component {...pageProps} />

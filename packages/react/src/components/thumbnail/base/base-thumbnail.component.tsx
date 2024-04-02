@@ -31,7 +31,7 @@ export interface ThumbnailProps extends BaseThumbnailWithLinkProps {
   duration?: string;
 }
 
-const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
+export const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
   backgroundImage: uncachedImage,
   contentLocation = "inside",
   children,

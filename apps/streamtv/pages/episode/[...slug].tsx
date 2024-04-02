@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
-import { useRouter } from "next/router";
 import {
   SeoObjectData,
   convertObjectImagesToSeoImages,
@@ -19,6 +18,10 @@ import { DisplayError } from "../../components/displayError";
 import { useObject } from "../../hooks/useObject";
 import { GET_EPISODE } from "../../graphql/queries";
 import { PlaybackPage } from "../../components/pages/playback";
+import {
+  useAddSlugToObjectUrl,
+  useUidAndSlugFromObjectUrl,
+} from "../../hooks/useUidAndSlugFromObjectUrl";
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //   const seo = await getSeoDataForObject(
@@ -35,18 +38,21 @@ import { PlaybackPage } from "../../components/pages/playback";
 // };
 
 const EpisodePage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
-  const { query } = useRouter();
+  const { uid } = useUidAndSlugFromObjectUrl();
+
   const {
     data: episode,
     isError,
     isLoading,
-  } = useObject<Episode>(GET_EPISODE, query?.slug as string);
+  } = useObject<Episode>(GET_EPISODE, uid as string);
+
+  const canonical = useAddSlugToObjectUrl(episode);
 
   if (!isLoading && isError) {
     return (
       <DisplayError
         error={isError}
-        notFoundMessage={`Episode "${query?.slug as string}" not found.`}
+        notFoundMessage={`Episode "${uid as string}" not found.`}
       />
     );
   }
@@ -67,6 +73,7 @@ const EpisodePage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
   return (
     <>
       <NextSeo
+        canonical={canonical?.url}
         description={synopsis || seo?.synopsis || ""}
         openGraph={{
           images:

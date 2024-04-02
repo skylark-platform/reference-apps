@@ -11,8 +11,15 @@ export const ParseAndDisplayHTML = ({
   const cleanHTML =
     html &&
     sanitize(html, {
-      ADD_TAGS: ["iframe"],
-      ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "scrolling"],
+      ADD_TAGS: ["iframe", "script"],
+      ADD_ATTR: [
+        "allow",
+        "allowfullscreen",
+        "frameborder",
+        "scrolling",
+        "async",
+        "charset",
+      ],
     });
 
   return (
