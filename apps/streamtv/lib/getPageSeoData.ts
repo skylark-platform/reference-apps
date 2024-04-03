@@ -3,9 +3,11 @@ import {
   getSynopsisByOrder,
   graphQLClient,
   GraphQLObjectTypes,
+  DimensionKey,
 } from "@skylark-reference-apps/lib";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import { Article, Entertainment, Maybe, SkylarkImageListing } from "../types";
+import { createGraphQLQueryDimensions } from "./utils";
 
 interface SeoObjectImage {
   url: string;
@@ -95,22 +97,14 @@ export const getSeoDataForObject = async (
       [method]: {
         __args: {
           [lookupField]: lookupValue,
-          // ...createGraphQLQueryDimensions({
-          //   language,
-          //   // TODO can we work out these before the client loads the page?
-          //   [DimensionKey.CustomerType]: "premium",
-          //   // [DimensionKey.DeviceType]: "pc",
-          //   // [DimensionKey.TimeTravel]: "",
-          //   // [DimensionKey.Region]: "europe",
-          // }),
-          // language: language || null,
-          ...(language ? { language } : {}),
-          dimensions: [
-            {
-              dimension: "customer-types",
-              value: "premium",
-            },
-          ],
+          ...createGraphQLQueryDimensions({
+            language,
+            // TODO can we work out these before the client loads the page?
+            [DimensionKey.CustomerType]: "premium",
+            [DimensionKey.DeviceType]: "pc",
+            [DimensionKey.TimeTravel]: "",
+            [DimensionKey.Region]: "europe",
+          }),
         },
         ...getFields(type),
       },
