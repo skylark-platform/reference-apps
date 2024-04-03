@@ -433,7 +433,10 @@ export const createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection =
     objectType: GraphQLObjectTypes,
     airtableRecords: Records<FieldSet>,
     metadataAvailability: GraphQLMetadata["availability"],
-    isImage?: boolean,
+    opts?: {
+      isImage?: boolean;
+      relationships?: CreateOrUpdateRelationships;
+    },
   ) => {
     const objects = airtableRecords.map(({ id, fields }) => ({
       ...fields,
@@ -452,7 +455,7 @@ export const createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection =
         objectType,
         existingExternalIds,
         objects,
-        { metadataAvailability, isImage },
+        { metadataAvailability, ...opts },
       );
 
     return createdObjects;

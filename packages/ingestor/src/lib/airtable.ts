@@ -94,6 +94,8 @@ export const getAllTables = async (): Promise<Airtables> => {
     "languages",
     "call-to-actions",
     "call-to-actions - Translations",
+    "articles",
+    "articles - Translations",
   ];
 
   const responses: Record<FieldSet>[][] = [];
@@ -133,6 +135,8 @@ export const getAllTables = async (): Promise<Airtables> => {
     languages,
     callToActions,
     callToActionsTranslations,
+    articles,
+    articlesTranslations,
   ] = responses;
 
   return {
@@ -148,8 +152,10 @@ export const getAllTables = async (): Promise<Airtables> => {
       credits: creditsTranslations,
       genres: genresTranslations,
       themes: themesTranslations,
+      articles: articlesTranslations,
     },
     mediaObjects,
+    articles,
     roles,
     people,
     credits,

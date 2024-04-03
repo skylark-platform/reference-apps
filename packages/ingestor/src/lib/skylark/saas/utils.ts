@@ -1,8 +1,15 @@
 import { GraphQLObjectTypes } from "@skylark-reference-apps/lib";
-import { Attachment, Collaborator, FieldSet, Records } from "airtable";
+import {
+  Attachment,
+  Collaborator,
+  FieldSet,
+  Records,
+  Record as AirtableRecord,
+} from "airtable";
 import { EnumType } from "json-to-graphql-query";
 import { has, isArray, isString } from "lodash";
 import {
+  CreateOrUpdateRelationships,
   GraphQLBaseObject,
   GraphQLIntrospectionProperties,
   GraphQLMetadata,
@@ -141,6 +148,14 @@ export const gqlObjectMeta = (
         argName: "live_stream",
         relName: "live_streams",
       };
+    case "Article":
+      return {
+        createFunc: "createArticle",
+        updateFunc: "updateArticle",
+        objectType: "Article",
+        argName: "article",
+        relName: "articles",
+      };
     default:
       throw new Error(
         `[gqlObjectMeta] Object type "${type}" does not have GQL values`,
@@ -252,3 +267,57 @@ export const convertGraphQLObjectTypeToArgName = (
     .match(/[A-Z][a-z]+/g)
     ?.join("_")
     .toLowerCase() as string;
+
+export const guessObjectRelationshipsFromAirtableRows = (
+  validRelationships: string[],
+  objects: AirtableRecord<FieldSet>[],
+  metadata: GraphQLMetadata,
+): CreateOrUpdateRelationships => {
+  const potentialObjectRelationships: CreateOrUpdateRelationships =
+    objects.reduce((acc, object) => {
+      const potentialRelationships = Object.fromEntries(
+        Object.entries(object.fields)
+          .filter((tuple): tuple is [string, string[]] => {
+            const [relationshipName, value] = tuple;
+            if (!validRelationships.includes(relationshipName)) {
+              return false;
+            }
+
+            return Boolean(
+              value &&
+                Array.isArray(value) &&
+                value.length > 0 &&
+                typeof value[0] === "string",
+            );
+          })
+          .map(([relationshipName, externalIds]) => {
+            const createdObjects =
+              hasProperty(metadata, relationshipName) &&
+              (metadata[relationshipName] as GraphQLBaseObject[]);
+
+            if (!createdObjects) {
+              return [relationshipName, { link: [] }];
+            }
+
+            // In the future we won't need to use uid to link so we can just return the externalIds
+            const uids = externalIds
+              .map(
+                (externalId) =>
+                  createdObjects.find(
+                    ({ external_id }) => external_id === externalId,
+                  )?.uid,
+              )
+              .filter((str): str is string => Boolean(str));
+
+            return [relationshipName, { link: uids }];
+          }),
+      );
+
+      return {
+        ...acc,
+        [object.id]: potentialRelationships,
+      };
+    }, {});
+
+  return potentialObjectRelationships;
+};

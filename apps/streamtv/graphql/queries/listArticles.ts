@@ -5,12 +5,18 @@ export const LIST_ARTICLES = gql`
   ${ImageListingFragment}
   query LIST_ARTICLES(
     $language: String!
+    $deviceType: String!
     $customerType: String!
+    $region: String!
     $nextToken: String
   ) {
     listObjects: listArticle(
       language: $language
-      dimensions: [{ dimension: "customer-types", value: $customerType }]
+      dimensions: [
+        { dimension: "device-types", value: $deviceType }
+        { dimension: "customer-types", value: $customerType }
+        { dimension: "regions", value: $region }
+      ]
       next_token: $nextToken
       limit: 50
     ) {
