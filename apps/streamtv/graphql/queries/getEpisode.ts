@@ -19,6 +19,7 @@ export const GET_EPISODE_THUMBNAIL = gql`
     ) {
       __typename
       uid
+      slug
       title
       title_short
       synopsis
@@ -64,6 +65,7 @@ export const GET_EPISODE = gql`
       ]
     ) {
       uid
+      slug
       title
       title_short
       synopsis
@@ -91,11 +93,13 @@ export const GET_EPISODE = gql`
           season_number
           title
           title_short
+          slug
           brands {
             objects {
               uid
               title
               title_short
+              slug
             }
           }
         }

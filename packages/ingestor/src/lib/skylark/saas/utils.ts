@@ -321,3 +321,22 @@ export const guessObjectRelationshipsFromAirtableRows = (
 
   return potentialObjectRelationships;
 };
+
+export const convertUrlWithSameOriginToPath = (url: string): string => {
+  if (url.startsWith("/")) {
+    return url;
+  }
+
+  try {
+    const parsedUrl = new URL(url);
+    if (
+      typeof window !== "undefined" &&
+      window.location.origin === parsedUrl.origin
+    ) {
+      return parsedUrl.pathname;
+    }
+    return url;
+  } catch {
+    return url;
+  }
+};

@@ -1,4 +1,9 @@
-import { formatYear, hasProperty } from "@skylark-reference-apps/lib";
+import {
+  EntertainmentType,
+  SetTypes,
+  formatYear,
+  hasProperty,
+} from "@skylark-reference-apps/lib";
 import {
   ArticleThumbnail,
   CollectionThumbnail,
@@ -45,6 +50,7 @@ export type ThumbnailVariant =
 
 interface ThumbnailProps {
   uid: string;
+  slug?: string | null;
   objectType: ObjectTypes;
   variant: ThumbnailVariant;
   preferredImageType?: StreamTVSupportedImageType;
@@ -86,6 +92,25 @@ const getTitleAndDescription = (
     title: data.title_short || data.title || "",
     description: data.synopsis_short || data.synopsis || "",
   };
+};
+
+const generateHref = (
+  parsedType: SetTypes | EntertainmentType | "person",
+  uid: ThumbnailProps["uid"],
+  slug?: ThumbnailProps["slug"],
+) => {
+  if (parsedType === "page") {
+    return uid;
+  }
+
+  const base = `/${parsedType}/${uid}`;
+
+  console.log({ slug, parsedType });
+  if (parsedType === "episode" && slug) {
+    return `${base}/${slug}`;
+  }
+
+  return base;
 };
 
 export const getThumbnailVariantFromSetType = (
@@ -162,6 +187,7 @@ const getStatusTag = (tags: Entertainment["tags"]): string | undefined => {
 
 export const Thumbnail = ({
   uid,
+  slug,
   objectType,
   variant,
   preferredImageType,
@@ -183,7 +209,7 @@ export const Thumbnail = ({
       ? convertGraphQLSetType(data?.type || "")
       : convertTypenameToObjectType(data?.__typename);
 
-  const href = parsedType === "page" ? uid : `/${parsedType}/${uid}`;
+  const href = generateHref(parsedType, uid, slug);
 
   const backgroundImage = getGraphQLImageSrc(
     data?.images,

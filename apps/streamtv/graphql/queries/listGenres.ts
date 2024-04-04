@@ -20,6 +20,7 @@ export const LIST_GENRES = gql`
       next_token
       objects {
         uid
+        slug
         name
       }
     }

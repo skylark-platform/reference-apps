@@ -47,6 +47,7 @@ const EpisodePage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
   } = useObject<Episode>(GET_EPISODE, uid as string);
 
   const canonical = useAddSlugToObjectUrl(episode);
+  console.log(canonical);
 
   if (!isLoading && isError) {
     return (

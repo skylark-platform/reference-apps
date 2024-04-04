@@ -97,6 +97,7 @@ const Collection: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
               <Thumbnail
                 key={object.uid}
                 objectType={object.__typename as ObjectTypes}
+                slug={object.slug}
                 uid={object.uid}
                 variant="landscape-synopsis"
               />

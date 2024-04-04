@@ -19,6 +19,7 @@ export const GET_LIVE_STREAM_THUMBNAIL = gql`
     ) {
       __typename
       uid
+      slug
       title
       title_short
       synopsis
@@ -62,6 +63,7 @@ export const GET_LIVE_STREAM = gql`
       ]
     ) {
       uid
+      slug
       title
       title_short
       synopsis

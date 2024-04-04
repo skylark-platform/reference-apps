@@ -39,6 +39,7 @@ export const SeasonRail = ({
           key={object.uid}
           objectType={ObjectTypes.Episode}
           preferredImageType={preferredImageType}
+          slug={object.slug}
           uid={object.uid}
           variant="landscape-synopsis"
         />
@@ -70,6 +71,7 @@ export const SetRail = ({
           <Thumbnail
             key={object.uid}
             objectType={object.__typename as ObjectTypes}
+            slug={object.slug}
             uid={object.uid}
             variant={variant}
           />
@@ -101,6 +103,7 @@ export const TagRail = ({
           <Thumbnail
             key={object.uid}
             objectType={object.__typename as ObjectTypes}
+            slug={object.slug}
             uid={object.uid}
             variant={"landscape-synopsis"}
           />
@@ -137,6 +140,7 @@ export const ListObjectsRail = ({
           <Thumbnail
             key={object.uid}
             objectType={object.__typename as ObjectTypes}
+            slug={object.slug}
             uid={object.uid}
             variant={thumbnailVariant}
           />
