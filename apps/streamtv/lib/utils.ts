@@ -185,7 +185,9 @@ export const getSynopsisByOrderForGraphQLObject = (
   );
 };
 
-export const createGraphQLQueryDimensions = (activeDimensions: Dimensions) => {
+export const createGraphQLQueryDimensions = (
+  activeDimensions: Omit<Dimensions, "language"> & { language?: string | null },
+) => {
   const dimensions: { dimension: DimensionTypes; value: string }[] = [
     {
       dimension: "device-types",
@@ -199,7 +201,9 @@ export const createGraphQLQueryDimensions = (activeDimensions: Dimensions) => {
   ];
 
   return {
-    language: activeDimensions.language,
+    ...(activeDimensions.language
+      ? { language: activeDimensions.language }
+      : {}),
     dimensions,
   };
 };

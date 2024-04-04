@@ -37,25 +37,6 @@ interface Props {
   children?: React.ReactNode;
 }
 
-const convertUrlWithSameOriginToPath = (url: string): string => {
-  if (url.startsWith("/")) {
-    return url;
-  }
-
-  try {
-    const parsedUrl = new URL(url);
-    if (
-      typeof window !== "undefined" &&
-      window.location.origin === parsedUrl.origin
-    ) {
-      return parsedUrl.pathname;
-    }
-    return url;
-  } catch {
-    return url;
-  }
-};
-
 export const StreamTVLayout: React.FC<Props> = ({
   skylarkApiUrl,
   timeTravelEnabled,
@@ -74,12 +55,8 @@ export const StreamTVLayout: React.FC<Props> = ({
     { text: t("discover"), href: "/", icon: <MdHome /> },
     { text: t("movies"), href: "/movies", icon: <MdMovie /> },
     {
-      text: t("featured"),
-      href: convertUrlWithSameOriginToPath(
-        config?.featuredPageUrl ||
-          process.env.NEXT_PUBLIC_TV_SHOWS_HREF ||
-          "/brand/reculg97iNzbkEZCK", // StreamTV Ingest External ID
-      ),
+      text: t("articles"),
+      href: "/articles",
       icon: <MdOutlineStar />,
     },
     {

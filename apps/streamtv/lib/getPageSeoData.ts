@@ -6,7 +6,7 @@ import {
   DimensionKey,
 } from "@skylark-reference-apps/lib";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
-import { Entertainment, Maybe, SkylarkImageListing } from "../types";
+import { Article, Entertainment, Maybe, SkylarkImageListing } from "../types";
 import { createGraphQLQueryDimensions } from "./utils";
 
 interface SeoObjectImage {
@@ -19,6 +19,63 @@ export interface SeoObjectData {
   images?: SeoObjectImage[];
 }
 
+const getFields = (type: GraphQLObjectTypes) => {
+  const commonFields = {
+    __typename: true,
+    uid: true,
+    slug: true,
+    images: {
+      objects: {
+        title: true,
+        type: true,
+        url: true,
+      },
+    },
+  };
+
+  if (type === "Article") {
+    return {
+      ...commonFields,
+      title: true,
+      description: true,
+    };
+  }
+
+  return {
+    ...commonFields,
+    title: true,
+    title_short: true,
+    synopsis: true,
+    synopsis_short: true,
+  };
+};
+
+const getSeoTitleAndSynopsis = (data: Entertainment | Article) => {
+  if (data.__typename === "Article") {
+    return {
+      title: data.title || "",
+      synopsis: data.description || "",
+    };
+  }
+
+  const entertainment = data as Entertainment;
+
+  const title = getTitleByOrder({
+    title: entertainment.title || "",
+    title_short: entertainment.title_short || "",
+  });
+
+  const synopsis = getSynopsisByOrder({
+    synopsis: entertainment.synopsis || "",
+    synopsis_short: entertainment?.synopsis_short || "",
+  });
+
+  return {
+    title,
+    synopsis,
+  };
+};
+
 export const convertObjectImagesToSeoImages = (
   images?: Maybe<SkylarkImageListing>,
 ) =>
@@ -27,7 +84,7 @@ export const convertObjectImagesToSeoImages = (
 export const getSeoDataForObject = async (
   type: GraphQLObjectTypes,
   lookupValue: string,
-  language: string,
+  language?: string,
 ): Promise<SeoObjectData> => {
   // Helper to use the external_id when an airtable record ID is given
   const lookupField = lookupValue.startsWith("rec") ? "external_id" : "uid";
@@ -49,19 +106,7 @@ export const getSeoDataForObject = async (
             [DimensionKey.Region]: "europe",
           }),
         },
-        uid: true,
-        title: true,
-        slug: true,
-        title_short: true,
-        synopsis: true,
-        synopsis_short: true,
-        images: {
-          objects: {
-            title: true,
-            type: true,
-            url: true,
-          },
-        },
+        ...getFields(type),
       },
     },
   };
@@ -70,20 +115,12 @@ export const getSeoDataForObject = async (
 
   try {
     const { [method]: data } = await graphQLClient.request<{
-      [key: string]: Entertainment;
+      [key: string]: Entertainment | Article;
     }>(query);
 
-    const title = getTitleByOrder({
-      title: data.title || "",
-      title_short: data.title_short || "",
-    });
-
-    const synopsis = getSynopsisByOrder({
-      synopsis: data.synopsis || "",
-      synopsis_short: data?.synopsis_short || "",
-    });
-
     const images = convertObjectImagesToSeoImages(data.images) || [];
+
+    const { title, synopsis } = getSeoTitleAndSynopsis(data);
 
     return {
       title,

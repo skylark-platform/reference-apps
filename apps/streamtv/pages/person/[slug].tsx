@@ -18,8 +18,6 @@ const PersonPage: NextPage = () => {
     isLoading,
   } = useObject<Person>(GET_PERSON, query?.slug as string);
 
-  console.log({ person });
-
   if (!isLoading && isError) {
     return (
       <DisplayError

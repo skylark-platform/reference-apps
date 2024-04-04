@@ -1,15 +1,15 @@
 import { gql } from "graphql-request";
-import { StreamTVAdditionalFields } from "../../types";
+import { ImageListingFragment } from "./fragments";
 
-export const GET_BRAND_THUMBNAIL = gql`
-  query GET_BRAND_THUMBNAIL(
+export const GET_ARTICLE_THUMBNAIL = gql`
+  query GET_ARTICLE_THUMBNAIL(
     $uid: String!
     $language: String!
     $deviceType: String!
     $customerType: String!
     $region: String!
   ) {
-    getObject: getBrand(
+    getObject: getArticle(
       uid: $uid
       language: $language
       dimensions: [
@@ -18,13 +18,14 @@ export const GET_BRAND_THUMBNAIL = gql`
         { dimension: "regions", value: $region }
       ]
     ) {
-      __typename
       uid
+      __typename
+      external_id
       slug
       title
-      title_short
-      synopsis
-      synopsis_short
+      type
+      description
+      publish_date
       images {
         objects {
           uid
@@ -33,19 +34,13 @@ export const GET_BRAND_THUMBNAIL = gql`
           url
         }
       }
-      tags {
-        objects {
-          uid
-          name
-          type
-        }
-      }
     }
   }
 `;
 
-export const GET_BRAND = (streamTVIngestorSchemaLoaded: boolean) => gql`
-  query GET_BRAND(
+export const GET_ARTICLE = gql`
+  ${ImageListingFragment}
+  query GET_ARTICLE(
     $uid: String
     $externalId: String
     $language: String!
@@ -53,7 +48,7 @@ export const GET_BRAND = (streamTVIngestorSchemaLoaded: boolean) => gql`
     $customerType: String!
     $region: String!
   ) {
-    getObject: getBrand(
+    getObject: getArticle(
       uid: $uid
       external_id: $externalId
       language: $language
@@ -63,51 +58,34 @@ export const GET_BRAND = (streamTVIngestorSchemaLoaded: boolean) => gql`
         { dimension: "regions", value: $region }
       ]
     ) {
-      uid
+      external_id
       slug
       title
-      title_short
-      synopsis
-      synopsis_short
+      description
+      body
+      type
+      publish_date
       images {
-        objects {
-          uid
-          title
-          type
-          url
-        }
+        ...imageListingFragment
       }
-      seasons {
+      credits {
         objects {
           uid
-          slug
-          season_number
-          title
-          title_short
-          ${
-            streamTVIngestorSchemaLoaded
-              ? StreamTVAdditionalFields.PreferredImageType
-              : ""
-          }
-          episodes {
+          character
+          people {
             objects {
               uid
-              slug
-              episode_number
+              name
             }
           }
-        }
-      }
-      tags {
-        objects {
-          uid
-          name
-        }
-      }
-      ratings {
-        objects {
-          uid
-          value
+          roles {
+            objects {
+              uid
+              internal_title
+              title
+              title_sort
+            }
+          }
         }
       }
     }

@@ -22,6 +22,7 @@ export const LIST_MOVIES = gql`
       objects {
         __typename
         uid
+        slug
       }
     }
   }
@@ -50,6 +51,7 @@ export const LIST_MOVIES_BY_GENRE = gql`
         objects {
           __typename
           uid
+          slug
         }
       }
     }

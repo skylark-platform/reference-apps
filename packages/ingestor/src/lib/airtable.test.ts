@@ -57,6 +57,7 @@ describe("airtable", () => {
         imageTypes: [],
         tagTypes: [],
         callToActions: [],
+        articles: [],
         languages: [],
         translations: {
           mediaObjects: [],
@@ -65,6 +66,7 @@ describe("airtable", () => {
           genres: [],
           roles: [],
           credits: [],
+          articles: [],
         },
         dimensions: {
           customerTypes: [],
@@ -112,6 +114,7 @@ describe("airtable", () => {
         imageTypes: [],
         tagTypes: [],
         callToActions: [],
+        articles: [],
         languages: [],
         translations: {
           mediaObjects: [],
@@ -120,6 +123,7 @@ describe("airtable", () => {
           genres: [],
           roles: [],
           credits: [],
+          articles: [],
         },
         dimensions: {
           customerTypes: [],

@@ -29,6 +29,7 @@ import {
 import { updateObjectConfigurations } from "./lib/skylark/saas/objectConfiguration";
 import { configureCache } from "./lib/skylark/saas/cacheConfiguration";
 import { updateRelationshipConfigurations } from "./lib/skylark/saas/relationshipConfiguration";
+import { guessObjectRelationshipsFromAirtableRows } from "./lib/skylark/saas/utils";
 
 const main = async () => {
   await clearUnableToFindVersionNoneObjectsFile();
@@ -160,7 +161,7 @@ const main = async () => {
         "SkylarkImage",
         airtable.images,
         metadataAvailability,
-        true,
+        { isImage: true },
       );
     metadata.themes =
       await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
@@ -239,6 +240,26 @@ const main = async () => {
     const mediaObjects = await createGraphQLMediaObjects(
       airtable.mediaObjects,
       metadata,
+      airtable.languages,
+    );
+
+    const articles =
+      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+        "Article",
+        airtable.articles,
+        metadataAvailabilityWithoutDefault,
+        {
+          relationships: guessObjectRelationshipsFromAirtableRows(
+            ["images", "tags", "credits"],
+            airtable.articles,
+            metadata,
+          ),
+        },
+      );
+
+    await createTranslationsForGraphQLObjects(
+      articles,
+      airtable.translations.articles,
       airtable.languages,
     );
 

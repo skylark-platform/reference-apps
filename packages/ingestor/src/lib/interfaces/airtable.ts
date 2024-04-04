@@ -13,6 +13,7 @@ export interface TranslationAirtables {
   credits: Record<FieldSet>[];
   genres: Record<FieldSet>[];
   themes: Record<FieldSet>[];
+  articles: Record<FieldSet>[];
 }
 
 export interface Airtables {
@@ -34,6 +35,7 @@ export interface Airtables {
   imageTypes: Record<FieldSet>[];
   tagTypes: Record<FieldSet>[];
   callToActions: Record<FieldSet>[];
+  articles: Record<FieldSet>[];
 }
 
 export interface AvailabilityTableFields extends FieldSet {

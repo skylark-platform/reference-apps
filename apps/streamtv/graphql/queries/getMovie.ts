@@ -19,6 +19,7 @@ export const GET_MOVIE_THUMBNAIL = gql`
     ) {
       uid
       __typename
+      slug
       title
       title_short
       synopsis
@@ -63,6 +64,7 @@ export const GET_MOVIE = gql`
       ]
     ) {
       uid
+      slug
       title
       title_short
       synopsis

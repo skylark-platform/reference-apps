@@ -1,5 +1,11 @@
-import { formatYear, hasProperty } from "@skylark-reference-apps/lib";
 import {
+  EntertainmentType,
+  SetTypes,
+  formatYear,
+  hasProperty,
+} from "@skylark-reference-apps/lib";
+import {
+  ArticleThumbnail,
   CollectionThumbnail,
   EpisodeThumbnail,
   MovieThumbnail,
@@ -9,6 +15,7 @@ import {
 import { useInView } from "react-intersection-observer";
 import {
   GET_BRAND_THUMBNAIL,
+  GET_ARTICLE_THUMBNAIL,
   GET_EPISODE_THUMBNAIL,
   GET_LIVE_STREAM_THUMBNAIL,
   GET_MOVIE_THUMBNAIL,
@@ -23,6 +30,7 @@ import {
   getGraphQLImageSrc,
 } from "../lib/utils";
 import {
+  Article,
   Entertainment,
   ImageType,
   ObjectTypes,
@@ -37,10 +45,12 @@ export type ThumbnailVariant =
   | "landscape-synopsis"
   | "landscape-movie"
   | "landscape-inside"
-  | "portrait";
+  | "portrait"
+  | "article";
 
 interface ThumbnailProps {
   uid: string;
+  slug?: string | null;
   objectType: ObjectTypes;
   variant: ThumbnailVariant;
   preferredImageType?: StreamTVSupportedImageType;
@@ -49,6 +59,58 @@ interface ThumbnailProps {
 const dataIsPerson = (
   data: Entertainment | Person | undefined,
 ): data is Person => data?.__typename === ObjectTypes.Person;
+
+const dataIsArticle = (
+  data: Entertainment | Person | Article | undefined,
+): data is Article => data?.__typename === ObjectTypes.Article;
+
+const getTitleAndDescription = (
+  data?: Entertainment | Person | Article,
+): { title: string; description: string } => {
+  if (!data) {
+    return {
+      title: "",
+      description: "",
+    };
+  }
+
+  if (dataIsArticle(data)) {
+    return {
+      title: data.title || "",
+      description: data.description || "",
+    };
+  }
+
+  if (dataIsPerson(data)) {
+    return {
+      title: data.name || "",
+      description: data.bio_short || "",
+    };
+  }
+
+  return {
+    title: data.title_short || data.title || "",
+    description: data.synopsis_short || data.synopsis || "",
+  };
+};
+
+const generateHref = (
+  parsedType: SetTypes | EntertainmentType | "person",
+  uid: ThumbnailProps["uid"],
+  slug?: ThumbnailProps["slug"],
+) => {
+  if (parsedType === "page") {
+    return uid;
+  }
+
+  const base = `/${parsedType}/${uid}`;
+
+  if (parsedType === "episode" && slug) {
+    return `${base}/${slug}`;
+  }
+
+  return base;
+};
 
 export const getThumbnailVariantFromSetType = (
   setType: SkylarkSet["type"],
@@ -97,6 +159,10 @@ const getThumbnailQuery = (objectType: ObjectTypes) => {
     return GET_PERSON_THUMBNAIL;
   }
 
+  if (objectType === ObjectTypes.Article) {
+    return GET_ARTICLE_THUMBNAIL;
+  }
+
   if (objectType === ObjectTypes.LiveStream) {
     return GET_LIVE_STREAM_THUMBNAIL;
   }
@@ -120,6 +186,7 @@ const getStatusTag = (tags: Entertainment["tags"]): string | undefined => {
 
 export const Thumbnail = ({
   uid,
+  slug,
   objectType,
   variant,
   preferredImageType,
@@ -128,28 +195,27 @@ export const Thumbnail = ({
 
   const query = getThumbnailQuery(objectType);
 
-  const { data, isLoading } = useObject<Entertainment | Person>(query, uid, {
-    disabled: !inView,
-  });
+  const { data, isLoading } = useObject<Entertainment | Person | Article>(
+    query,
+    uid,
+    {
+      disabled: !inView,
+    },
+  );
 
   const parsedType =
     data?.__typename === "SkylarkSet"
       ? convertGraphQLSetType(data?.type || "")
       : convertTypenameToObjectType(data?.__typename);
 
-  const href = parsedType === "page" ? uid : `/${parsedType}/${uid}`;
+  const href = generateHref(parsedType, uid, slug);
 
   const backgroundImage = getGraphQLImageSrc(
     data?.images,
     preferredImageType || ImageType.Thumbnail,
   );
 
-  const title =
-    (dataIsPerson(data) ? data.name : data?.title_short || data?.title) || "";
-  const description =
-    (dataIsPerson(data)
-      ? data.bio_short
-      : data?.synopsis_short || data?.synopsis) || "";
+  const { title, description } = getTitleAndDescription(data);
 
   return (
     <div ref={ref}>
@@ -224,6 +290,21 @@ export const Thumbnail = ({
               href={href}
               key={uid}
               statusTag={getStatusTag(data.tags)}
+              title={title}
+            />
+          )}
+
+          {variant === "article" && (
+            <ArticleThumbnail
+              backgroundImage={backgroundImage}
+              description={description}
+              href={href}
+              key={uid}
+              statusTag={
+                getStatusTag(data.tags) ||
+                (hasProperty(data, "type") && (data.type as string)) ||
+                undefined
+              }
               title={title}
             />
           )}
