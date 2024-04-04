@@ -91,7 +91,9 @@ const ArticlePage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
           </h1>
           {article?.publish_date && (
             <p>
-              {dayjs(article.publish_date).format("dddd, D MMMM YYYY HH:mm")}
+              {dayjs(article.publish_date as string).format(
+                "dddd, D MMMM YYYY HH:mm",
+              )}
             </p>
           )}
           <div className="mt-5 md:mt-10">

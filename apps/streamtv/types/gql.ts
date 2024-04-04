@@ -58,7 +58,8 @@ export type Article = Metadata &
     description?: Maybe<Scalars["String"]>;
     external_id?: Maybe<Scalars["String"]>;
     images?: Maybe<SkylarkImageListing>;
-    publish_date?: Maybe<Scalars["String"]>;
+    internal_title?: Maybe<Scalars["String"]>;
+    publish_date?: Maybe<Scalars["AWSDateTime"]>;
     slug?: Maybe<Scalars["String"]>;
     tags?: Maybe<SkylarkTagListing>;
     title?: Maybe<Scalars["String"]>;
@@ -110,7 +111,8 @@ export type ArticleCreateInput = {
   body?: InputMaybe<Scalars["String"]>;
   description: Scalars["String"];
   external_id?: InputMaybe<Scalars["String"]>;
-  publish_date?: InputMaybe<Scalars["String"]>;
+  internal_title: Scalars["String"];
+  publish_date?: InputMaybe<Scalars["AWSDateTime"]>;
   relationships?: InputMaybe<ArticleRelationships>;
   slug?: InputMaybe<Scalars["String"]>;
   title: Scalars["String"];
@@ -122,7 +124,8 @@ export type ArticleInput = {
   body?: InputMaybe<Scalars["String"]>;
   description?: InputMaybe<Scalars["String"]>;
   external_id?: InputMaybe<Scalars["String"]>;
-  publish_date?: InputMaybe<Scalars["String"]>;
+  internal_title?: InputMaybe<Scalars["String"]>;
+  publish_date?: InputMaybe<Scalars["AWSDateTime"]>;
   relationships?: InputMaybe<ArticleRelationships>;
   slug?: InputMaybe<Scalars["String"]>;
   title?: InputMaybe<Scalars["String"]>;
@@ -5758,8 +5761,9 @@ export type _ArticleGlobal = _Global & {
   __typename?: "_ArticleGlobal";
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_ArticleGlobal>>>;
+  internal_title?: Maybe<Scalars["String"]>;
   modified?: Maybe<_Audit>;
-  publish_date?: Maybe<Scalars["String"]>;
+  publish_date?: Maybe<Scalars["AWSDateTime"]>;
   publish_stage?: Maybe<PublishStage>;
   type?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["Int"]>;

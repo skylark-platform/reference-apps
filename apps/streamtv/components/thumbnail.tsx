@@ -105,7 +105,6 @@ const generateHref = (
 
   const base = `/${parsedType}/${uid}`;
 
-  console.log({ slug, parsedType });
   if (parsedType === "episode" && slug) {
     return `${base}/${slug}`;
   }

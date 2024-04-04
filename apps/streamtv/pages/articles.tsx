@@ -91,7 +91,7 @@ const ArticlesPage: NextPage = () => {
                       </h3>
                       {publish_date && (
                         <p className="-mt-1 mb-2 w-full text-left text-sm text-streamtv-accent md:-mt-2 md:mb-4">
-                          {dayjs(publish_date).format(
+                          {dayjs(publish_date as string).format(
                             "dddd, D MMMM YYYY HH:mm",
                           )}
                         </p>
