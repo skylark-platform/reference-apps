@@ -21,6 +21,14 @@ const ArticlesPage: NextPage = () => {
 
   const { t } = useTranslation("common");
 
+  const sortedArticles = articles?.sort((a, b) =>
+    dayjs((a.publish_date || "") as string).isBefore(
+      (b.publish_date || "") as string,
+    )
+      ? 1
+      : -1,
+  );
+
   if (!isLoading && isError) {
     return (
       <DisplayError error={isError} notFoundMessage="No Articles found." />
@@ -45,9 +53,9 @@ const ArticlesPage: NextPage = () => {
         </div>
       )}
       <SkeletonPage show={isLoading && !articles}>
-        {articles && (
+        {sortedArticles && (
           <div className="grid max-w-5xl grid-cols-2 gap-10 px-4">
-            {articles.map(
+            {sortedArticles.map(
               ({
                 uid,
                 title,
