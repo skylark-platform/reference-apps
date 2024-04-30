@@ -62,6 +62,16 @@
       "skipFiles": ["<node_internals>/**"],
       "type": "node",
       "env": {}
+    },
+    {
+      "name": "[LEGACY - FROM DISK] Migrate Remote Images to Cloudinary",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/packages/ingestor",
+      "runtimeArgs": ["ingest:legacy-to-skylark:cloudinary-images"],
+      "runtimeExecutable": "yarn",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node",
+      "env": {}
     }
   ]
 }

@@ -18,7 +18,7 @@ import {
 } from "./utils";
 import { assignAvailabilitiesToObjects } from "../skylark/saas/availability";
 
-const getExistingObjectsForAllLanguages = async (
+export const getExistingObjectsForAllLanguages = async (
   objectType: GraphQLObjectTypes,
   languages: string[],
   objects: Record<string, LegacyObjects | ParsedSL8Credits[]>,

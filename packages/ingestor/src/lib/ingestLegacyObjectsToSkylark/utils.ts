@@ -14,7 +14,7 @@ import {
   activateConfigurationVersion,
 } from "../skylark/saas/schema";
 
-export const checkEnvVars = () => {
+export const checkEnvVars = (additionalEnvsToCheck?: string[]) => {
   const legacyApiUrl = process.env.LEGACY_API_URL;
   const legacyToken = process.env.LEGACY_SKYLARK_TOKEN;
 
@@ -62,7 +62,20 @@ export const checkEnvVars = () => {
   // eslint-disable-next-line no-console
   console.log(`--- Mode: ${isCreateOnly ? "Create Only" : "Create & Update"}`);
 
-  return { client, readFromDisk, isCreateOnly };
+  if (additionalEnvsToCheck && additionalEnvsToCheck.length > 0) {
+    for (let i = 0; i < additionalEnvsToCheck.length; i += 1) {
+      const name = additionalEnvsToCheck[i];
+
+      const val = process.env[name];
+      if (!val) {
+        throw new Error(
+          `Additional env var: process.env.${name} cannot be undefined`,
+        );
+      }
+    }
+  }
+
+  return { client, readFromDisk, isCreateOnly, legacyApiUrl };
 };
 
 export const calculateTotalObjects = (
