@@ -30,6 +30,7 @@ interface DimensionSettingsProps {
   skylarkApiUrl?: string;
   timeTravelEnabled?: boolean;
   children?: React.ReactNode;
+  onCachePurge?: () => void;
 }
 
 const variants = {
@@ -41,6 +42,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
   show: propShow = false,
   timeTravelEnabled,
   skylarkApiUrl,
+  onCachePurge,
 }) => {
   const [show, setShow] = useState(propShow);
   const { dimensions, setCustomerType, setTimeTravel, setLanguage, setRegion } =
@@ -89,14 +91,24 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
               <div className="mb-4 flex items-center justify-between">
                 <div className="group flex items-center">
                   <SkylarkBranding className="w-12 md:w-48" />
-                  <a
-                    className="invisible ml-2 text-skylark-blue opacity-0 transition-all group-hover:visible group-hover:opacity-100 group-hover:delay-1000"
-                    href={generateSkylarkAutoconnectUrl()}
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    <FiExternalLink />
-                  </a>
+                  <div className="invisible flex items-center justify-between space-x-4 opacity-0 transition-all group-hover:visible group-hover:opacity-100 group-hover:delay-1000">
+                    <a
+                      className="ml-4 text-gray-400 hover:text-blue-600"
+                      href={generateSkylarkAutoconnectUrl()}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      <FiExternalLink />
+                    </a>
+                    {onCachePurge && (
+                      <button
+                        className="rounded-full text-sm font-medium text-gray-400 hover:text-blue-600"
+                        onClick={onCachePurge}
+                      >
+                        {"Purge cache?"}
+                      </button>
+                    )}
+                  </div>
                 </div>
                 <div className="ml-2 flex flex-col items-start justify-end text-sm md:flex-row md:items-center">
                   <p className="text-gray-400">{`Demo v1.0 -`}</p>
@@ -130,7 +142,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                   {"Change"}
                 </button>
               </div>
-              <div className="grid grid-cols-1 gap-8 pt-7 md:grid-cols-2 md:pt-10 lg:grid-cols-4">
+              <div className="grid grid-cols-1 gap-8 pt-5 md:grid-cols-2 md:pt-8 lg:grid-cols-4">
                 <DimensionContent label="Customer Type">
                   <DimensionRadioButton
                     active={dimensions[DimensionKey.CustomerType]}

@@ -19,17 +19,20 @@ import {
   Link,
   useDimensions,
   NavigationLink,
+  skylarkRequestWithLocalStorage,
 } from "@skylark-reference-apps/react";
 import {
   addCloudinaryOnTheFlyImageTransformation,
   hasProperty,
 } from "@skylark-reference-apps/lib";
 import { DefaultSeo } from "next-seo";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Search } from "./search";
 import { useStreamTVConfig } from "../hooks/useStreamTVConfig";
 import createDefaultSeo from "../next-seo.config";
 import { GoogleTagManagerScript } from "./googleTagManager";
 import { BackButton } from "./backButton";
+import { PURGE_CACHE } from "../graphql/queries/purgeCache";
 
 interface Props {
   skylarkApiUrl?: string;
@@ -78,6 +81,20 @@ export const StreamTVLayout: React.FC<Props> = ({
       setRegion("mena");
     }
   }, [dimensions.language]);
+
+  const queryClient = useQueryClient();
+
+  const { mutate: purgeCache } = useMutation({
+    mutationKey: ["purgeCache"],
+    mutationFn: () => skylarkRequestWithLocalStorage(PURGE_CACHE, {}, {}),
+    onSuccess: () => {
+      queryClient.clear();
+      // eslint-disable-next-line no-console
+      console.log("Skylark cache cleared.");
+    },
+    // eslint-disable-next-line no-console
+    onError: console.error,
+  });
 
   return (
     <>
@@ -162,6 +179,7 @@ export const StreamTVLayout: React.FC<Props> = ({
         <DimensionSettings
           skylarkApiUrl={skylarkApiUrl}
           timeTravelEnabled={!!timeTravelEnabled}
+          onCachePurge={() => purgeCache({})}
         />
       </div>
       <ConnectToSkylarkModal
