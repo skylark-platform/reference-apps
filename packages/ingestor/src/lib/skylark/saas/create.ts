@@ -10,6 +10,7 @@ import { Variables } from "graphql-request";
 import {
   CREATE_OBJECT_CHUNK_SIZE,
   CONCURRENT_CREATE_REQUESTS_NUM,
+  CREATE_ONLY,
 } from "../../constants";
 
 import {
@@ -147,14 +148,14 @@ export const mutateMultipleObjects = async <T extends { external_id?: string }>(
               requestId.indexOf(airtableRecordPrefix) > 0;
             const externalIdFromRequestId =
               recordIdInRequestId &&
-              `rec${requestId.substring(
-                requestId.indexOf(airtableRecordPrefix) + 1,
-              )}`;
+              `rec${requestId.split(airtableRecordPrefix)[1]}`;
+
+            const externalId =
+              requestDataExternalId || externalIdFromRequestId || null;
 
             return {
               ...requestData,
-              external_id:
-                requestDataExternalId || externalIdFromRequestId || null,
+              external_id: externalId,
             };
           });
           return arr;
@@ -214,6 +215,10 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
       const validFields = getValidFields(fields, validProperties);
 
       const objectExists = existingObjects.has(id);
+
+      if (CREATE_ONLY && objectExists) {
+        return previousOperations;
+      }
 
       const availability = metadataAvailability
         ? getGraphQLObjectAvailability(
@@ -437,7 +442,7 @@ export const createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection =
       isImage?: boolean;
       relationships?: CreateOrUpdateRelationships;
     },
-  ) => {
+  ): Promise<GraphQLBaseObject[]> => {
     const objects = airtableRecords.map(({ id, fields }) => ({
       ...fields,
       _id: id,
@@ -445,7 +450,7 @@ export const createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection =
 
     const externalIds = objects.map(({ _id }) => ({ externalId: _id }));
 
-    const { existingExternalIds } = await getExistingObjects(
+    const { existingExternalIds, existingObjects } = await getExistingObjects(
       objectType,
       externalIds,
     );
@@ -458,6 +463,10 @@ export const createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection =
         { metadataAvailability, ...opts },
       );
 
+    if (CREATE_ONLY) {
+      return [...createdObjects, ...Object.values(existingObjects)];
+    }
+
     return createdObjects;
   };
 
@@ -468,13 +477,18 @@ export const createOrUpdateGraphQLCredits = async (
   const validProperties = await getValidPropertiesForObject("Credit");
 
   const externalIds = airtableRecords.map(({ id }) => ({ externalId: id }));
-  const { existingExternalIds } = await getExistingObjects(
+  const { existingExternalIds, existingObjects } = await getExistingObjects(
     "Credit",
     externalIds,
   );
 
   const operations = airtableRecords.reduce(
     (previousOperations, { id, fields }) => {
+      const creditExists = existingExternalIds.has(id);
+      if (CREATE_ONLY && creditExists) {
+        return previousOperations;
+      }
+
       const validFields = getValidFields(fields, validProperties);
 
       const { person: personField, role: roleField } = fields as {
@@ -486,8 +500,6 @@ export const createOrUpdateGraphQLCredits = async (
         metadata.availability,
         fields.availability as string[],
       );
-
-      const creditExists = existingExternalIds.has(id);
 
       const credit: Record<
         string,
@@ -549,6 +561,10 @@ export const createOrUpdateGraphQLCredits = async (
     "createOrUpdateCredits",
     operations,
   );
+
+  if (CREATE_ONLY) {
+    return [...data, ...Object.values(existingObjects)];
+  }
 
   return data;
 };
