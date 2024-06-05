@@ -642,6 +642,7 @@ export const createGraphQLMediaObjects = async (
 
   const externalIdsAndLanguage = airtableRecords.map(({ id, fields }) => ({
     externalId: id,
+    objectType: (fields.skylark_object_type as string) || null,
     language: getMediaObjectLanguage(fields, languagesTable),
   }));
 
@@ -657,7 +658,9 @@ export const createGraphQLMediaObjects = async (
     ].map((objectType) =>
       getExistingObjects(
         objectType as GraphQLMediaObjectTypes,
-        externalIdsAndLanguage,
+        externalIdsAndLanguage.filter(
+          (x) => objectType === x.objectType || objectType === null,
+        ),
       ),
     ),
   );

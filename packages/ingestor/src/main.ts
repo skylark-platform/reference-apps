@@ -271,17 +271,21 @@ const main = async () => {
       }`,
     );
 
+    // TODO after adding availability inheritance, remove the default
+
     const metadataAvailability: GraphQLMetadata["availability"] = {
       // We use the Airtable IDs (external_id within Skylark) for Availability
       all: airtable.availability.map(({ id }) => id),
       // default: UNLICENSED_BY_DEFAULT ? undefined : defaultSchedule?.id,
-      default: undefined,
+      // default: undefined,
+      default: defaultSchedule?.id,
     };
 
     // Use when the relationship uses availability inheritance
     const metadataAvailabilityWithoutDefault: GraphQLMetadata["availability"] =
       {
         all: airtable.availability.map(({ id }) => id),
+        default: defaultSchedule?.id,
       };
 
     const metadataWithoutRelationships =
