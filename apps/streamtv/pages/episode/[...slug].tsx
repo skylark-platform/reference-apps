@@ -86,11 +86,16 @@ const EpisodePage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
       />
       <PlaybackPage
         availabilityEndDate={availabilityEndDate}
-        brand={{
-          title: getTitleByOrderForGraphQLObject(
-            episode?.seasons?.objects?.[0]?.brands?.objects?.[0],
-          ),
-        }}
+        brand={
+          episode?.seasons?.objects?.[0]?.brands?.objects?.[0]
+            ? {
+                title: getTitleByOrderForGraphQLObject(
+                  episode?.seasons?.objects?.[0]?.brands?.objects?.[0],
+                ),
+                uid: episode?.seasons?.objects?.[0]?.brands?.objects?.[0].uid,
+              }
+            : undefined
+        }
         credits={splitAndFormatGraphQLCreditsByInternalTitle(
           episode?.credits?.objects,
         )}

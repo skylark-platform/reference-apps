@@ -87,9 +87,14 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
       />
       <PlaybackPage
         availabilityEndDate={availabilityEndDate}
-        brand={{
-          title: brandTitle,
-        }}
+        brand={
+          firstBrand
+            ? {
+                title: brandTitle,
+                uid: firstBrand.uid,
+              }
+            : undefined
+        }
         credits={splitAndFormatGraphQLCreditsByInternalTitle(
           movie?.credits?.objects,
         )}

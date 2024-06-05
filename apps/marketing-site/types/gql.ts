@@ -34,6 +34,29 @@ export type Scalars = {
   AWSURL: { input: any; output: any };
 };
 
+export type ApiKey = {
+  __typename?: "APIKey";
+  active?: Maybe<Scalars["Boolean"]["output"]>;
+  api_key?: Maybe<Scalars["String"]["output"]>;
+  created?: Maybe<Scalars["AWSDateTime"]["output"]>;
+  expires?: Maybe<Scalars["AWSDateTime"]["output"]>;
+  name?: Maybe<Scalars["String"]["output"]>;
+  permissions?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
+};
+
+export type ApiKeyInput = {
+  active?: InputMaybe<Scalars["Boolean"]["input"]>;
+  expires?: InputMaybe<Scalars["AWSDateTime"]["input"]>;
+  name: Scalars["String"]["input"];
+  permissions: Array<InputMaybe<SkylarkApiPermission>>;
+};
+
+export type ApiKeyInputUpdate = {
+  active?: InputMaybe<Scalars["Boolean"]["input"]>;
+  expires?: InputMaybe<Scalars["AWSDateTime"]["input"]>;
+  permissions?: InputMaybe<Array<InputMaybe<SkylarkApiPermission>>>;
+};
+
 export type AccountConfig = {
   __typename?: "AccountConfig";
   default_language?: Maybe<Scalars["String"]["output"]>;
@@ -69,6 +92,7 @@ export type AssetInterface = {
   hls_url?: Maybe<Scalars["String"]["output"]>;
   ingest_file?: Maybe<Scalars["String"]["output"]>;
   internal_title?: Maybe<Scalars["String"]["output"]>;
+  policy?: Maybe<Scalars["String"]["output"]>;
   provider?: Maybe<Scalars["String"]["output"]>;
   release_date?: Maybe<Scalars["String"]["output"]>;
   slug?: Maybe<Scalars["String"]["output"]>;
@@ -899,6 +923,7 @@ export type Mutation = {
   __typename?: "Mutation";
   activateConfigurationVersion?: Maybe<ConfigurationResponse>;
   batchDeleteObjects?: Maybe<ObjectDeleteResponse>;
+  createApiKey?: Maybe<ApiKey>;
   createAvailability?: Maybe<Availability>;
   createBlock?: Maybe<Block>;
   createCallToAction?: Maybe<CallToAction>;
@@ -920,6 +945,7 @@ export type Mutation = {
   createSkylarkTag?: Maybe<SkylarkTag>;
   createTestimonial?: Maybe<Testimonial>;
   createTutorial?: Maybe<Tutorial>;
+  deleteApiKey?: Maybe<Scalars["String"]["output"]>;
   deleteAvailability?: Maybe<Scalars["String"]["output"]>;
   deleteBlock?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
   deleteCallToAction?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
@@ -953,6 +979,7 @@ export type Mutation = {
   setObjectConfiguration?: Maybe<ObjectConfig>;
   setObjectTypeConfiguration?: Maybe<ObjectConfig>;
   setRelationshipConfiguration?: Maybe<RelationshipConfig>;
+  updateApiKey?: Maybe<ApiKey>;
   updateAvailability?: Maybe<Availability>;
   updateBlock?: Maybe<Block>;
   updateCallToAction?: Maybe<CallToAction>;
@@ -980,6 +1007,10 @@ export type MutationActivateConfigurationVersionArgs = {
 
 export type MutationBatchDeleteObjectsArgs = {
   objects?: InputMaybe<Array<InputMaybe<DeleteInput>>>;
+};
+
+export type MutationCreateApiKeyArgs = {
+  api_key: ApiKeyInput;
 };
 
 export type MutationCreateAvailabilityArgs = {
@@ -1079,6 +1110,10 @@ export type MutationCreateTestimonialArgs = {
 export type MutationCreateTutorialArgs = {
   language?: InputMaybe<Scalars["String"]["input"]>;
   tutorial?: InputMaybe<TutorialCreateInput>;
+};
+
+export type MutationDeleteApiKeyArgs = {
+  name: Scalars["String"]["input"];
 };
 
 export type MutationDeleteAvailabilityArgs = {
@@ -1261,10 +1296,16 @@ export type MutationSetRelationshipConfigurationArgs = {
   relationship_name: Scalars["String"]["input"];
 };
 
+export type MutationUpdateApiKeyArgs = {
+  api_key: ApiKeyInputUpdate;
+  name: Scalars["String"]["input"];
+};
+
 export type MutationUpdateAvailabilityArgs = {
   availability: AvailabilityInput;
   external_id?: InputMaybe<Scalars["String"]["input"]>;
   uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateBlockArgs = {
@@ -1275,6 +1316,7 @@ export type MutationUpdateBlockArgs = {
   language?: InputMaybe<Scalars["String"]["input"]>;
   language_version?: InputMaybe<Scalars["Int"]["input"]>;
   uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateCallToActionArgs = {
@@ -1285,6 +1327,7 @@ export type MutationUpdateCallToActionArgs = {
   language?: InputMaybe<Scalars["String"]["input"]>;
   language_version?: InputMaybe<Scalars["Int"]["input"]>;
   uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateDimensionArgs = {
@@ -1309,6 +1352,7 @@ export type MutationUpdateEmbedArgs = {
   language?: InputMaybe<Scalars["String"]["input"]>;
   language_version?: InputMaybe<Scalars["Int"]["input"]>;
   uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateFrequentlyAskedQuestionArgs = {
@@ -1319,6 +1363,7 @@ export type MutationUpdateFrequentlyAskedQuestionArgs = {
   language?: InputMaybe<Scalars["String"]["input"]>;
   language_version?: InputMaybe<Scalars["Int"]["input"]>;
   uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdatePageArgs = {
@@ -1329,6 +1374,7 @@ export type MutationUpdatePageArgs = {
   language_version?: InputMaybe<Scalars["Int"]["input"]>;
   page?: InputMaybe<PageInput>;
   uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdatePersonArgs = {
@@ -1339,6 +1385,7 @@ export type MutationUpdatePersonArgs = {
   language_version?: InputMaybe<Scalars["Int"]["input"]>;
   person?: InputMaybe<PersonInput>;
   uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateSectionArgs = {
@@ -1349,6 +1396,7 @@ export type MutationUpdateSectionArgs = {
   language_version?: InputMaybe<Scalars["Int"]["input"]>;
   section?: InputMaybe<SectionInput>;
   uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateSkylarkAssetArgs = {
@@ -1359,6 +1407,7 @@ export type MutationUpdateSkylarkAssetArgs = {
   language_version?: InputMaybe<Scalars["Int"]["input"]>;
   skylark_asset?: InputMaybe<SkylarkAssetInput>;
   uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateSkylarkEpgProgramArgs = {
@@ -1369,6 +1418,7 @@ export type MutationUpdateSkylarkEpgProgramArgs = {
   language_version?: InputMaybe<Scalars["Int"]["input"]>;
   skylark_epg_program?: InputMaybe<SkylarkEpgProgramInput>;
   uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateSkylarkFavoriteListArgs = {
@@ -1379,6 +1429,7 @@ export type MutationUpdateSkylarkFavoriteListArgs = {
   language_version?: InputMaybe<Scalars["Int"]["input"]>;
   skylark_favorite_list?: InputMaybe<SkylarkFavoriteListInput>;
   uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateSkylarkImageArgs = {
@@ -1389,6 +1440,7 @@ export type MutationUpdateSkylarkImageArgs = {
   language_version?: InputMaybe<Scalars["Int"]["input"]>;
   skylark_image?: InputMaybe<SkylarkImageInput>;
   uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateSkylarkLiveAssetArgs = {
@@ -1399,6 +1451,7 @@ export type MutationUpdateSkylarkLiveAssetArgs = {
   language_version?: InputMaybe<Scalars["Int"]["input"]>;
   skylark_live_asset?: InputMaybe<SkylarkLiveAssetInput>;
   uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateSkylarkSetArgs = {
@@ -1409,6 +1462,7 @@ export type MutationUpdateSkylarkSetArgs = {
   language_version?: InputMaybe<Scalars["Int"]["input"]>;
   skylark_set?: InputMaybe<SkylarkSetInput>;
   uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateSkylarkTagArgs = {
@@ -1419,6 +1473,7 @@ export type MutationUpdateSkylarkTagArgs = {
   language_version?: InputMaybe<Scalars["Int"]["input"]>;
   skylark_tag?: InputMaybe<SkylarkTagInput>;
   uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateTestimonialArgs = {
@@ -1429,6 +1484,7 @@ export type MutationUpdateTestimonialArgs = {
   language_version?: InputMaybe<Scalars["Int"]["input"]>;
   testimonial?: InputMaybe<TestimonialInput>;
   uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateTutorialArgs = {
@@ -1439,6 +1495,7 @@ export type MutationUpdateTutorialArgs = {
   language_version?: InputMaybe<Scalars["Int"]["input"]>;
   tutorial?: InputMaybe<TutorialInput>;
   uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type ObjectConfig = {
@@ -1690,6 +1747,11 @@ export enum PlaybackParentObjectTypes {
   SkylarkLiveAsset = "SkylarkLiveAsset",
 }
 
+export enum PlaybackPolicy {
+  Private = "PRIVATE",
+  Public = "PUBLIC",
+}
+
 export type PlaybackUrl = {
   __typename?: "PlaybackUrl";
   url?: Maybe<Scalars["String"]["output"]>;
@@ -1737,6 +1799,7 @@ export type Query = {
   getTestimonial?: Maybe<Testimonial>;
   getTutorial?: Maybe<Tutorial>;
   getUser?: Maybe<UserDetails>;
+  listApiKeys?: Maybe<Array<Maybe<ApiKey>>>;
   listAvailability?: Maybe<AvailabilityListing>;
   listBlock?: Maybe<BlockListing>;
   listCallToAction?: Maybe<CallToActionListing>;
@@ -2439,6 +2502,16 @@ export enum SetType {
   Slider = "SLIDER",
 }
 
+export enum SkylarkApiPermission {
+  AccountSetup = "ACCOUNT_SETUP",
+  IgnoreAvailability = "IGNORE_AVAILABILITY",
+  KeyManagement = "KEY_MANAGEMENT",
+  Read = "READ",
+  SelfConfig = "SELF_CONFIG",
+  TimeTravel = "TIME_TRAVEL",
+  Write = "WRITE",
+}
+
 export type SkylarkAsset = AssetInterface &
   Metadata &
   VisibleObject & {
@@ -2459,6 +2532,7 @@ export type SkylarkAsset = AssetInterface &
     images?: Maybe<SkylarkImageListing>;
     ingest_file?: Maybe<Scalars["String"]["output"]>;
     internal_title?: Maybe<Scalars["String"]["output"]>;
+    policy?: Maybe<Scalars["String"]["output"]>;
     provider?: Maybe<Scalars["String"]["output"]>;
     release_date?: Maybe<Scalars["String"]["output"]>;
     sets?: Maybe<SkylarkSetListing>;
@@ -2531,6 +2605,7 @@ export type SkylarkAssetCreateInput = {
   hls_url?: InputMaybe<Scalars["AWSURL"]["input"]>;
   ingest_file?: InputMaybe<Scalars["String"]["input"]>;
   internal_title?: InputMaybe<Scalars["String"]["input"]>;
+  policy?: InputMaybe<PlaybackPolicy>;
   provider?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<SkylarkAssetRelationships>;
   release_date?: InputMaybe<Scalars["AWSDate"]["input"]>;
@@ -2554,6 +2629,7 @@ export type SkylarkAssetInput = {
   hls_url?: InputMaybe<Scalars["AWSURL"]["input"]>;
   ingest_file?: InputMaybe<Scalars["String"]["input"]>;
   internal_title?: InputMaybe<Scalars["String"]["input"]>;
+  policy?: InputMaybe<PlaybackPolicy>;
   provider?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<SkylarkAssetRelationships>;
   release_date?: InputMaybe<Scalars["AWSDate"]["input"]>;
@@ -2630,11 +2706,13 @@ export type SkylarkEpgProgram = Metadata &
     _meta?: Maybe<_SkylarkEpgProgramMeta>;
     availability?: Maybe<AvailabilityListing>;
     content_of?: Maybe<SetListing>;
+    end_time?: Maybe<Scalars["AWSDateTime"]["output"]>;
     external_id?: Maybe<Scalars["String"]["output"]>;
     internal_title?: Maybe<Scalars["String"]["output"]>;
     name?: Maybe<Scalars["String"]["output"]>;
     name_sort?: Maybe<Scalars["String"]["output"]>;
     slug?: Maybe<Scalars["String"]["output"]>;
+    start_time?: Maybe<Scalars["AWSDateTime"]["output"]>;
     uid: Scalars["String"]["output"];
     url?: Maybe<Scalars["String"]["output"]>;
   };
@@ -2659,21 +2737,25 @@ export type SkylarkEpgProgramContent_OfArgs = {
 
 export type SkylarkEpgProgramCreateInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
+  end_time?: InputMaybe<Scalars["AWSDateTime"]["input"]>;
   external_id?: InputMaybe<Scalars["String"]["input"]>;
   internal_title?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   name_sort?: InputMaybe<Scalars["String"]["input"]>;
   slug?: InputMaybe<Scalars["String"]["input"]>;
+  start_time?: InputMaybe<Scalars["AWSDateTime"]["input"]>;
   url?: InputMaybe<Scalars["AWSURL"]["input"]>;
 };
 
 export type SkylarkEpgProgramInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
+  end_time?: InputMaybe<Scalars["AWSDateTime"]["input"]>;
   external_id?: InputMaybe<Scalars["String"]["input"]>;
   internal_title?: InputMaybe<Scalars["String"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   name_sort?: InputMaybe<Scalars["String"]["input"]>;
   slug?: InputMaybe<Scalars["String"]["input"]>;
+  start_time?: InputMaybe<Scalars["AWSDateTime"]["input"]>;
   url?: InputMaybe<Scalars["AWSURL"]["input"]>;
 };
 
@@ -2972,6 +3054,7 @@ export type SkylarkLiveAsset = AssetInterface &
     ingest_file?: Maybe<Scalars["String"]["output"]>;
     internal_title?: Maybe<Scalars["String"]["output"]>;
     live?: Maybe<Scalars["Boolean"]["output"]>;
+    policy?: Maybe<Scalars["String"]["output"]>;
     provider?: Maybe<Scalars["String"]["output"]>;
     release_date?: Maybe<Scalars["String"]["output"]>;
     slug?: Maybe<Scalars["String"]["output"]>;
@@ -3016,6 +3099,7 @@ export type SkylarkLiveAssetCreateInput = {
   ingest_file?: InputMaybe<Scalars["String"]["input"]>;
   internal_title?: InputMaybe<Scalars["String"]["input"]>;
   live?: InputMaybe<Scalars["Boolean"]["input"]>;
+  policy?: InputMaybe<PlaybackPolicy>;
   provider?: InputMaybe<Scalars["String"]["input"]>;
   release_date?: InputMaybe<Scalars["AWSDate"]["input"]>;
   slug?: InputMaybe<Scalars["String"]["input"]>;
@@ -3041,6 +3125,7 @@ export type SkylarkLiveAssetInput = {
   ingest_file?: InputMaybe<Scalars["String"]["input"]>;
   internal_title?: InputMaybe<Scalars["String"]["input"]>;
   live?: InputMaybe<Scalars["Boolean"]["input"]>;
+  policy?: InputMaybe<PlaybackPolicy>;
   provider?: InputMaybe<Scalars["String"]["input"]>;
   release_date?: InputMaybe<Scalars["AWSDate"]["input"]>;
   slug?: InputMaybe<Scalars["String"]["input"]>;
@@ -3904,6 +3989,7 @@ export type _SkylarkAssetGlobal = _Global & {
   ingest_file?: Maybe<Scalars["String"]["output"]>;
   internal_title?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
+  policy?: Maybe<Scalars["String"]["output"]>;
   provider?: Maybe<Scalars["String"]["output"]>;
   publish_stage?: Maybe<PublishStage>;
   release_date?: Maybe<Scalars["String"]["output"]>;
@@ -3941,11 +4027,13 @@ export type _SkylarkAssetMeta = {
 export type _SkylarkEpgProgramGlobal = _Global & {
   __typename?: "_SkylarkEPGProgramGlobal";
   created?: Maybe<_Audit>;
+  end_time?: Maybe<Scalars["AWSDateTime"]["output"]>;
   history?: Maybe<Array<Maybe<_SkylarkEpgProgramGlobal>>>;
   internal_title?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   name_sort?: Maybe<Scalars["String"]["output"]>;
   publish_stage?: Maybe<PublishStage>;
+  start_time?: Maybe<Scalars["AWSDateTime"]["output"]>;
   url?: Maybe<Scalars["String"]["output"]>;
   version?: Maybe<Scalars["Int"]["output"]>;
 };
@@ -4058,6 +4146,7 @@ export type _SkylarkLiveAssetGlobal = _Global & {
   internal_title?: Maybe<Scalars["String"]["output"]>;
   live?: Maybe<Scalars["Boolean"]["output"]>;
   modified?: Maybe<_Audit>;
+  policy?: Maybe<Scalars["String"]["output"]>;
   provider?: Maybe<Scalars["String"]["output"]>;
   publish_stage?: Maybe<PublishStage>;
   release_date?: Maybe<Scalars["String"]["output"]>;

@@ -14,6 +14,7 @@ const Template: ComponentStory<typeof PlaybackPage> = (args) => (
 export const Episode = Template.bind({});
 Episode.args = {
   brand: {
+    uid: "1",
     title: "Better Call Saul",
   },
   credits: {

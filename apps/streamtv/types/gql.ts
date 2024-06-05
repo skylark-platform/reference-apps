@@ -3108,6 +3108,7 @@ export type QueryGetArticleArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3122,6 +3123,7 @@ export type QueryGetBrandArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3131,6 +3133,7 @@ export type QueryGetCallToActionArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3149,6 +3152,7 @@ export type QueryGetCreditArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3167,6 +3171,7 @@ export type QueryGetEpisodeArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3176,6 +3181,7 @@ export type QueryGetGenreArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3185,6 +3191,7 @@ export type QueryGetLiveStreamArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3194,6 +3201,7 @@ export type QueryGetMovieArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3203,6 +3211,7 @@ export type QueryGetObjectArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3220,6 +3229,7 @@ export type QueryGetPageArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3229,6 +3239,7 @@ export type QueryGetParentalGuidanceArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3238,6 +3249,7 @@ export type QueryGetPersonArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3247,6 +3259,7 @@ export type QueryGetRatingArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3262,6 +3275,7 @@ export type QueryGetRoleArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3271,6 +3285,7 @@ export type QueryGetSeasonArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3280,6 +3295,7 @@ export type QueryGetSkylarkAssetArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3293,6 +3309,7 @@ export type QueryGetSkylarkEpgProgramArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3302,6 +3319,7 @@ export type QueryGetSkylarkFavoriteListArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3311,6 +3329,7 @@ export type QueryGetSkylarkImageArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3320,6 +3339,7 @@ export type QueryGetSkylarkLiveAssetArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3329,6 +3349,7 @@ export type QueryGetSkylarkSetArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3338,6 +3359,7 @@ export type QueryGetSkylarkTagArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3347,6 +3369,7 @@ export type QueryGetStreamtvConfigArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3356,6 +3379,7 @@ export type QueryGetThemeArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 

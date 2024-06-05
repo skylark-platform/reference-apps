@@ -5,6 +5,7 @@ import { useNumberOfThumbnailsByBreakpoint } from "../../hooks";
 import { useHtmlDirection } from "../../hooks/useHtmlDirection";
 
 interface RailProps {
+  id?: string;
   initial?: number;
   header?: string;
   displayCount?: boolean;
@@ -57,6 +58,7 @@ export const RailHeader = ({
   );
 
 export const RailComponent = ({
+  id,
   initial,
   children,
   header,
@@ -120,7 +122,7 @@ export const RailComponent = ({
   }, [dir]);
 
   return (
-    <div className={`w-full ${className || ""}`} dir={dir}>
+    <div className={`w-full ${className || ""}`} dir={dir} id={id}>
       <RailHeader
         count={numChildren}
         displayCount={displayCount}
