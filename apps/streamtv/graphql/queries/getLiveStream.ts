@@ -1,22 +1,8 @@
 import { gql } from "graphql-request";
 
 export const GET_LIVE_STREAM_THUMBNAIL = gql`
-  query GET_LIVE_STREAM_THUMBNAIL(
-    $uid: String!
-    $language: String!
-    $deviceType: String!
-    $customerType: String!
-    $region: String!
-  ) {
-    getObject: getLiveStream(
-      uid: $uid
-      language: $language
-      dimensions: [
-        { dimension: "device-types", value: $deviceType }
-        { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
-      ]
-    ) {
+  query GET_LIVE_STREAM_THUMBNAIL($uid: String!) {
+    getObject: getLiveStream(uid: $uid) {
       __typename
       uid
       slug
@@ -44,24 +30,8 @@ export const GET_LIVE_STREAM_THUMBNAIL = gql`
 `;
 
 export const GET_LIVE_STREAM = gql`
-  query GET_LIVE_STREAM(
-    $uid: String
-    $externalId: String
-    $language: String!
-    $deviceType: String!
-    $customerType: String!
-    $region: String!
-  ) {
-    getObject: getLiveStream(
-      uid: $uid
-      external_id: $externalId
-      language: $language
-      dimensions: [
-        { dimension: "device-types", value: $deviceType }
-        { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
-      ]
-    ) {
+  query GET_LIVE_STREAM($uid: String, $externalId: String) {
+    getObject: getLiveStream(uid: $uid, external_id: $externalId) {
       uid
       slug
       title

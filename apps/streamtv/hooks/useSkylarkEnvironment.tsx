@@ -36,6 +36,7 @@ export const useSkylarkEnvironment = () => {
         {},
         {},
       ),
+    refetchOnMount: false,
   });
 
   const environment: SkylarkEnvironment = useMemo(() => {

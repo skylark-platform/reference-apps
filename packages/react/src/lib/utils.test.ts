@@ -89,13 +89,13 @@ describe("utils", () => {
 
       expect(graphQLClient.request).toHaveBeenCalledWith(
         "query",
-        {
-          deviceType: "",
-          customerType: "",
-          language: "",
-          region: "",
-        },
         {},
+        {
+          "x-language": "",
+          "x-sl-dimension-customer-types": "",
+          "x-sl-dimension-device-types": "",
+          "x-sl-dimension-regions": "",
+        },
       );
     });
 
@@ -115,8 +115,14 @@ describe("utils", () => {
 
       expect(graphQLClient.request).toHaveBeenCalledWith(
         "query",
-        { deviceType: "", customerType: "", language: "", region: "" },
-        { "x-time-travel": "next week" },
+        {},
+        {
+          "x-time-travel": "next week",
+          "x-language": "",
+          "x-sl-dimension-customer-types": "",
+          "x-sl-dimension-device-types": "",
+          "x-sl-dimension-regions": "",
+        },
       );
     });
   });

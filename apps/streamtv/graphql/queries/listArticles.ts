@@ -3,23 +3,8 @@ import { ImageListingFragment } from "./fragments";
 
 export const LIST_ARTICLES = gql`
   ${ImageListingFragment}
-  query LIST_ARTICLES(
-    $language: String!
-    $deviceType: String!
-    $customerType: String!
-    $region: String!
-    $nextToken: String
-  ) {
-    listObjects: listArticle(
-      language: $language
-      dimensions: [
-        { dimension: "device-types", value: $deviceType }
-        { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
-      ]
-      next_token: $nextToken
-      limit: 50
-    ) {
+  query LIST_ARTICLES($nextToken: String) {
+    listObjects: listArticle(next_token: $nextToken, limit: 50) {
       next_token
       objects {
         __typename

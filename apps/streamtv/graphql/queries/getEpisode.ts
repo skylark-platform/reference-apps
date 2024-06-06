@@ -1,22 +1,8 @@
 import { gql } from "graphql-request";
 
 export const GET_EPISODE_THUMBNAIL = gql`
-  query GET_EPISODE_THUMBNAIL(
-    $uid: String!
-    $language: String!
-    $deviceType: String!
-    $customerType: String!
-    $region: String!
-  ) {
-    getObject: getEpisode(
-      uid: $uid
-      language: $language
-      dimensions: [
-        { dimension: "device-types", value: $deviceType }
-        { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
-      ]
-    ) {
+  query GET_EPISODE_THUMBNAIL($uid: String!) {
+    getObject: getEpisode(uid: $uid) {
       __typename
       uid
       slug
@@ -46,24 +32,8 @@ export const GET_EPISODE_THUMBNAIL = gql`
 `;
 
 export const GET_EPISODE = gql`
-  query GET_EPISODE(
-    $uid: String
-    $externalId: String
-    $language: String!
-    $deviceType: String!
-    $customerType: String!
-    $region: String!
-  ) {
-    getObject: getEpisode(
-      uid: $uid
-      external_id: $externalId
-      language: $language
-      dimensions: [
-        { dimension: "device-types", value: $deviceType }
-        { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
-      ]
-    ) {
+  query GET_EPISODE($uid: String, $externalId: String) {
+    getObject: getEpisode(uid: $uid, external_id: $externalId) {
       uid
       slug
       title
