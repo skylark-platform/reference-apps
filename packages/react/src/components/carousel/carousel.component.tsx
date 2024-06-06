@@ -131,8 +131,8 @@ export const Carousel: React.FC<CarouselProps> = ({
       `}
       dir={dir}
     >
-      <AnimatePresence custom={direction} initial={false}>
-        {showCarousel && (
+      {showCarousel && (
+        <AnimatePresence custom={direction} initial={false}>
           <motion.div
             animate="center"
             className={`
@@ -218,8 +218,8 @@ export const Carousel: React.FC<CarouselProps> = ({
               </div>
             </div>
           </motion.div>
-        )}
-      </AnimatePresence>
+        </AnimatePresence>
+      )}
       <div className="absolute bottom-5 z-50 flex items-start justify-center text-white md:bottom-20 ltr:md:right-lg-gutter rtl:md:left-lg-gutter">
         {items.length > 1 &&
           items.map(({ title: itemTitle, image: itemImage }, i) => (
