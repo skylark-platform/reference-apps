@@ -111,7 +111,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                   </div>
                 </div>
                 <div className="ml-2 flex flex-col items-start justify-end text-sm md:flex-row md:items-center">
-                  <p className="text-gray-400">{`Demo v1.0 -`}</p>
+                  <p className="hidden text-gray-400 md:block">{`Get in touch:`}</p>
                   <a
                     className="text-skylark-blue md:pl-1"
                     href={
