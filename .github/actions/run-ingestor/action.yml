@@ -50,6 +50,10 @@ inputs:
     description: Only make set up changes (Add object types, enum values, dimensions)
     required: false
     default: "false"
+  streamtv-create-only:
+    description: Only create objects (no updates)
+    required: false
+    default: "true"
 runs:
   using: composite
   steps:
@@ -79,6 +83,7 @@ runs:
         SAAS_API_ENDPOINT: ${{ inputs.skylark-api-url }}
         SAAS_API_KEY: ${{ inputs.saas-api-token }}
         STREAMTV_SETUP_ONLY: ${{ inputs.streamtv-setup-only }}
+        CREATE_ONLY: ${{ inputs.streamtv-create-only }}
       with:
         timeout_minutes: 30
         retry_wait_seconds: 10

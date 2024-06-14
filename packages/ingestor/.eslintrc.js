@@ -1,6 +1,6 @@
 module.exports = {
   extends: ["../../.eslintrc.js"],
-  ignorePatterns: ["dist"],
+  ignorePatterns: ["dist", "tools/airtableScripts"],
   overrides: [
     {
       files: ["**/*.ts"],
