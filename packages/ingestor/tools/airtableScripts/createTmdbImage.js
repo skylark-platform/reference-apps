@@ -31,9 +31,15 @@ if (record && existingImages.length === 0) {
       Authorization: inputs.tmdb_token,
     },
   });
-  const images = (await response.json()).stills;
 
-  if (images.length > 0) {
+  const json = await response.json();
+  console.log({ json });
+
+  const images = json?.stills || json?.posters;
+
+  console.log({ images });
+
+  if (images && images.length > 0) {
     const image = images[0];
 
     const baseImageUrl = "https://image.tmdb.org/t/p/original";

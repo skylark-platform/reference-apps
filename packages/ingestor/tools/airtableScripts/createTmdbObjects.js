@@ -1,24 +1,24 @@
-const getTmdbUrl = (record, id) => {
-  const base = "https://api.themoviedb.org/3";
+const baseTmdbUrl = "https://api.themoviedb.org/3";
 
+const getTmdbUrl = (record, id) => {
   const objectType = record.getCellValue("skylark_object_type").name;
 
   if (objectType.toUpperCase() === "MOVIE") {
-    return `${base}/movie/${id}`;
+    return `${baseTmdbUrl}/movie/${id}`;
   }
 
   if (objectType.toUpperCase() === "BRAND") {
-    return `${base}/tv/${id}`;
+    return `${baseTmdbUrl}/tv/${id}`;
   }
 
   const seasonNumber = record.getCellValue("season_number");
   if (objectType.toUpperCase() === "SEASON") {
-    return `${base}/tv/${id}/season/${seasonNumber}`;
+    return `${baseTmdbUrl}/tv/${id}/season/${seasonNumber}`;
   }
 
   const episodeNumber = record.getCellValue("episode_number");
   if (objectType.toUpperCase() === "EPISODE") {
-    return `${base}/tv/${id}/season/${seasonNumber}/episode/${episodeNumber}`;
+    return `${baseTmdbUrl}/tv/${id}/season/${seasonNumber}/episode/${episodeNumber}`;
   }
 
   return "";
@@ -69,8 +69,19 @@ if (record) {
 
   console.log(metadata);
 
-  const genres = metadata?.genres
-    ? metadata.genres
+  const tvBrandResponse = await fetch(
+    `${baseTmdbUrl}/tv/${inputs.tmdb_id}?language=${language}`,
+    {
+      headers: {
+        Authorization: tmdbToken,
+      },
+    },
+  );
+  const tvBrand = await tvBrandResponse.json();
+  const tmdbGenres = metadata?.genres || tvBrand?.genres;
+
+  const genres = tmdbGenres
+    ? tmdbGenres
         .map(({ name }) => ({
           id: genreRecords.find((rec) =>
             name.toLowerCase().includes(rec.name.toLowerCase()),
@@ -79,9 +90,9 @@ if (record) {
         .filter(
           ({ id }) =>
             Boolean(id) &&
-            !record
-              .getCellValue("genres")
-              .find((existingGenre) => existingGenre.id === id),
+            !(record.getCellValue("genres") || []).find(
+              (existingGenre) => existingGenre.id === id,
+            ),
         )
     : [];
 
@@ -99,7 +110,7 @@ if (record) {
     audience_rating: metadata.vote_average,
     genres:
       genres.length > 0
-        ? [...genres, ...record.getCellValue("genres")]
+        ? [...genres, ...(record.getCellValue("genres") || [])]
         : record.getCellValue("genres"),
     internal_title: record.getCellValue("internal_title") || title,
     title: record.getCellValue("title") || title,
