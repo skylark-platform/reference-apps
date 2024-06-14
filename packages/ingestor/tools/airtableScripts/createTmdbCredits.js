@@ -39,7 +39,7 @@ if (record) {
 
   const language = record.getCellValue("language_code") || "en-GB";
 
-  const url = `${inputs.tmdb_url}/credits`;
+  const url = `${inputs.tmdb_url}?language=${language}`;
   const response = await fetch(url, {
     headers: {
       Authorization: inputs.tmdb_token,
@@ -47,5 +47,5 @@ if (record) {
   });
 
   const json = await response.json();
-  console.log({ json });
+  console.log(json);
 }

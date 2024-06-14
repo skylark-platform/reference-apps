@@ -9,7 +9,6 @@ import {
   GraphQLBaseObject,
   GraphQLMetadata,
 } from "./lib/interfaces";
-import { orderedSetsToCreate } from "./additional-objects/sets";
 import { CREATE_ONLY, UNLICENSED_BY_DEFAULT } from "./lib/constants";
 import {
   createGraphQLMediaObjects,
@@ -24,7 +23,6 @@ import {
   createOrUpdateScheduleDimensionValues,
   showcaseDimensionsConfig,
 } from "./lib/skylark/saas/availability";
-import { slxDemoSetsToCreate } from "./additional-objects/slxDemosSets";
 import { updateSkylarkSchema } from "./lib/skylark/saas/schema";
 import {
   clearUnableToFindVersionNoneObjectsFile,
@@ -309,7 +307,9 @@ const main = async () => {
     console.log("Metadata objects created");
 
     const mediaObjects = await createGraphQLMediaObjects(
-      airtable.mediaObjects,
+      airtable.mediaObjects.filter(
+        ({ fields }) => fields.skylark_object_type !== "SkylarkSet",
+      ),
       metadata,
       airtable.languages,
     );
@@ -341,8 +341,25 @@ const main = async () => {
     if (shouldCreateAdditionalStreamTVObjects) {
       // eslint-disable-next-line no-console
       console.time(timers.sets);
-      for (let i = 0; i < orderedSetsToCreate.length; i += 1) {
-        const setConfig = orderedSetsToCreate[i];
+
+      const setMediaObjects = airtable.mediaObjects.filter(
+        ({ fields }) => fields.skylark_object_type === "SkylarkSet",
+      );
+      const mediaObjectTableSets = Object.fromEntries(
+        setMediaObjects.map(({ id, fields }) => [
+          id,
+          fields.skylarkset_external_id as string,
+        ]),
+      );
+
+      const sets = airtable.sets.sort((a, b) =>
+        ((a.fields.creation_order as number) || 0) >
+        ((b.fields.creation_order as number) || 0)
+          ? 1
+          : -1,
+      );
+      for (let i = 0; i < sets.length; i += 1) {
+        const setConfig = sets[i];
         // eslint-disable-next-line no-await-in-loop
         const set = await createOrUpdateGraphQLSet(
           setConfig,
@@ -350,6 +367,7 @@ const main = async () => {
           metadata,
           airtable.languages,
           airtable.setsMetadata,
+          mediaObjectTableSets,
         );
         if (set) createdSets.push(set);
       }
@@ -358,24 +376,6 @@ const main = async () => {
       console.log("Additional StreamTV objects created");
       // eslint-disable-next-line no-console
       console.timeEnd(timers.sets);
-    }
-
-    if (shouldCreateAdditionalSLXDemoObjects) {
-      for (let i = 0; i < slxDemoSetsToCreate.length; i += 1) {
-        const setConfig = slxDemoSetsToCreate[i];
-        // eslint-disable-next-line no-await-in-loop
-        const set = await createOrUpdateGraphQLSet(
-          setConfig,
-          [...mediaObjects, ...createdSets],
-          metadata,
-          airtable.languages,
-          airtable.setsMetadata,
-        );
-        if (set) createdSets.push(set);
-      }
-
-      // eslint-disable-next-line no-console
-      console.log("Additional SLX Demo objects created");
     }
 
     await createTranslationsForGraphQLObjects(
