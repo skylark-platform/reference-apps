@@ -2,22 +2,8 @@ import { gql } from "graphql-request";
 import { ImageListingFragment } from "./fragments";
 
 export const GET_PERSON_THUMBNAIL = gql`
-  query GET_PERSON_THUMBNAIL(
-    $uid: String!
-    $language: String!
-    $deviceType: String!
-    $customerType: String!
-    $region: String!
-  ) {
-    getObject: getPerson(
-      uid: $uid
-      language: $language
-      dimensions: [
-        { dimension: "device-types", value: $deviceType }
-        { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
-      ]
-    ) {
+  query GET_PERSON_THUMBNAIL($uid: String!) {
+    getObject: getPerson(uid: $uid) {
       uid
       __typename
       name
@@ -39,24 +25,8 @@ export const GET_PERSON_THUMBNAIL = gql`
 export const GET_PERSON = gql`
   ${ImageListingFragment}
 
-  query GET_PERSON(
-    $uid: String
-    $externalId: String
-    $language: String!
-    $deviceType: String!
-    $customerType: String!
-    $region: String!
-  ) {
-    getObject: getPerson(
-      uid: $uid
-      external_id: $externalId
-      language: $language
-      dimensions: [
-        { dimension: "device-types", value: $deviceType }
-        { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
-      ]
-    ) {
+  query GET_PERSON($uid: String, $externalId: String) {
+    getObject: getPerson(uid: $uid, external_id: $externalId) {
       external_id
       slug
       abbreviation

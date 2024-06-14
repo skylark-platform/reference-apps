@@ -1,24 +1,8 @@
 import { gql } from "graphql-request";
 
 export const GET_CTA = gql`
-  query GET_CTA(
-    $uid: String
-    $externalId: String
-    $language: String!
-    $deviceType: String!
-    $customerType: String!
-    $region: String!
-  ) {
-    getObject: getCallToAction(
-      uid: $uid
-      external_id: $externalId
-      language: $language
-      dimensions: [
-        { dimension: "device-types", value: $deviceType }
-        { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
-      ]
-    ) {
+  query GET_CTA($uid: String, $externalId: String) {
+    getObject: getCallToAction(uid: $uid, external_id: $externalId) {
       uid
       text
       text_short

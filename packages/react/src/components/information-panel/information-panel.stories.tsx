@@ -13,7 +13,7 @@ const Template: ComponentStory<typeof InformationPanel> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-  brand: { title: "Game of Thrones" },
+  brand: { title: "Game of Thrones", uid: "1" },
   season: { number: 1, title: "" },
   title: "Winter is Coming",
   duration: 57,

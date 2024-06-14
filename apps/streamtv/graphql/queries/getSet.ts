@@ -5,22 +5,8 @@ import { StreamTVAdditionalFields } from "../../types";
 export const GET_SET_THUMBNAIL = gql`
   ${ImageListingFragment}
 
-  query GET_SET_THUMBNAIL(
-    $uid: String!
-    $language: String!
-    $deviceType: String!
-    $customerType: String!
-    $region: String!
-  ) {
-    getObject: getSkylarkSet(
-      uid: $uid
-      language: $language
-      dimensions: [
-        { dimension: "device-types", value: $deviceType }
-        { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
-      ]
-    ) {
+  query GET_SET_THUMBNAIL($uid: String!) {
+    getObject: getSkylarkSet(uid: $uid) {
       __typename
       uid
       type
@@ -39,22 +25,8 @@ export const GET_SET_FOR_CAROUSEL = gql`
   ${ImageListingFragment}
   ${CallToActionListingFragment}
 
-  query GET_SET_FOR_CAROUSEL(
-    $uid: String!
-    $language: String!
-    $deviceType: String!
-    $customerType: String!
-    $region: String!
-  ) {
-    getObject: getSkylarkSet(
-      uid: $uid
-      language: $language
-      dimensions: [
-        { dimension: "device-types", value: $deviceType }
-        { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
-      ]
-    ) {
+  query GET_SET_FOR_CAROUSEL($uid: String!) {
+    getObject: getSkylarkSet(uid: $uid) {
       uid
       content {
         objects {
@@ -147,24 +119,8 @@ export const GET_SET_FOR_CAROUSEL = gql`
 export const GET_COLLECTION_SET = gql`
   ${ImageListingFragment}
 
-  query GET_COLLECTION_SET(
-    $uid: String
-    $externalId: String
-    $language: String!
-    $deviceType: String!
-    $customerType: String!
-    $region: String!
-  ) {
-    getObject: getSkylarkSet(
-      uid: $uid
-      external_id: $externalId
-      language: $language
-      dimensions: [
-        { dimension: "device-types", value: $deviceType }
-        { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
-      ]
-    ) {
+  query GET_COLLECTION_SET($uid: String, $externalId: String) {
+    getObject: getSkylarkSet(uid: $uid, external_id: $externalId) {
       uid
       type
       title
@@ -197,20 +153,10 @@ export const GET_PAGE_SET = (streamTVIngestorSchemaLoaded: boolean) => gql`
   query GET_PAGE_SET(
     $uid: String
     $externalId: String
-    $language: String!
-    $deviceType: String!
-    $customerType: String!
-    $region: String!
   ) {
     getObject: getSkylarkSet(
       uid: $uid
       external_id: $externalId
-      language: $language
-      dimensions: [
-        { dimension: "device-types", value: $deviceType }
-        { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
-      ]
     ) {
       __typename
       uid

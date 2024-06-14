@@ -17,12 +17,12 @@ const getCheckBox = (label: string): HTMLInputElement =>
 describe("Dimension Settings component", () => {
   it("the dimension settings component renders correctly when closed", () => {
     customRender(<DimensionSettings />);
-    expect(screen.queryByText(/Demo v1.0/)).toBeFalsy();
+    expect(screen.queryByText(/hello@skylarkplatform.com/)).toBeFalsy();
   });
 
   it("the dimension settings component renders correctly when open", () => {
     customRender(<DimensionSettings show />);
-    expect(screen.getByText(/Demo v1.0/)).toBeTruthy();
+    expect(screen.getByText(/hello@skylarkplatform.com/)).toBeTruthy();
   });
 
   it("should change the active dimension language", () => {

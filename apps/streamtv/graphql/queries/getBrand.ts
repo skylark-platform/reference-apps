@@ -2,22 +2,8 @@ import { gql } from "graphql-request";
 import { StreamTVAdditionalFields } from "../../types";
 
 export const GET_BRAND_THUMBNAIL = gql`
-  query GET_BRAND_THUMBNAIL(
-    $uid: String!
-    $language: String!
-    $deviceType: String!
-    $customerType: String!
-    $region: String!
-  ) {
-    getObject: getBrand(
-      uid: $uid
-      language: $language
-      dimensions: [
-        { dimension: "device-types", value: $deviceType }
-        { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
-      ]
-    ) {
+  query GET_BRAND_THUMBNAIL($uid: String!) {
+    getObject: getBrand(uid: $uid) {
       __typename
       uid
       slug
@@ -48,20 +34,10 @@ export const GET_BRAND = (streamTVIngestorSchemaLoaded: boolean) => gql`
   query GET_BRAND(
     $uid: String
     $externalId: String
-    $language: String!
-    $deviceType: String!
-    $customerType: String!
-    $region: String!
   ) {
     getObject: getBrand(
       uid: $uid
       external_id: $externalId
-      language: $language
-      dimensions: [
-        { dimension: "device-types", value: $deviceType }
-        { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
-      ]
     ) {
       uid
       slug

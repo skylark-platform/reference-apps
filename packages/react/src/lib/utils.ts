@@ -60,17 +60,18 @@ export const skylarkRequestWithDimensions = <T>(
   dimensions: Dimensions,
   optVariables?: Record<string, unknown>,
 ) => {
-  const headers: Record<string, string> = {};
+  const headers: Record<string, string> = {
+    "x-sl-dimension-customer-types": dimensions[DimensionKey.CustomerType],
+    "x-sl-dimension-device-types": dimensions[DimensionKey.DeviceType],
+    "x-sl-dimension-regions": dimensions[DimensionKey.Region],
+    "x-language": dimensions[DimensionKey.Language],
+  };
 
   if (dimensions[DimensionKey.TimeTravel]) {
     headers["x-time-travel"] = dimensions[DimensionKey.TimeTravel];
   }
 
   const variables = {
-    language: dimensions[DimensionKey.Language],
-    customerType: dimensions[DimensionKey.CustomerType],
-    deviceType: dimensions[DimensionKey.DeviceType],
-    region: dimensions[DimensionKey.Region],
     ...optVariables,
   };
 

@@ -17,6 +17,31 @@ const introspectionQuery = `{
   }
 }`;
 
+const readAutoconnectPath = (
+  path: string,
+): { uri: string; token: string } | null => {
+  const isPath = path.includes("/connect") || path.includes("/beta/connect");
+  if (!isPath) {
+    return null;
+  }
+  const splitArr = path.split("?")?.[1]?.split("&");
+  if (!splitArr || splitArr.length < 2) {
+    return null;
+  }
+  const uri = splitArr
+    .find((val) => val.startsWith("uri="))
+    ?.replace("uri=", "");
+  const token = splitArr
+    .find((val) => val.startsWith("apikey="))
+    ?.replace("apikey=", "");
+
+  if (uri && token) {
+    return { uri, token };
+  }
+
+  return null;
+};
+
 export const ConnectToSkylarkModal = ({
   isOpen,
   closeModal,
@@ -138,7 +163,16 @@ export const ConnectToSkylarkModal = ({
                           name="skylark-url"
                           placeholder="https://api.skylarkplatform.com/graphql"
                           type="text"
-                          onChange={(e) => setSkylarkUrl(e.target.value)}
+                          onChange={(e) => {
+                            const { value } = e.target;
+                            const autoconnectCreds = readAutoconnectPath(value);
+                            if (autoconnectCreds) {
+                              setSkylarkUrl(autoconnectCreds.uri);
+                              setSkylarkApiKey(autoconnectCreds.token);
+                              return;
+                            }
+                            setSkylarkUrl(value);
+                          }}
                         />
                       </div>
                       <div className="col-span-5 sm:col-span-4">

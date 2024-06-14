@@ -1,22 +1,8 @@
 import { gql } from "graphql-request";
 
 export const GET_MOVIE_THUMBNAIL = gql`
-  query GET_MOVIE_THUMBNAIL(
-    $uid: String!
-    $language: String!
-    $deviceType: String!
-    $customerType: String!
-    $region: String!
-  ) {
-    getObject: getMovie(
-      uid: $uid
-      language: $language
-      dimensions: [
-        { dimension: "device-types", value: $deviceType }
-        { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
-      ]
-    ) {
+  query GET_MOVIE_THUMBNAIL($uid: String!) {
+    getObject: getMovie(uid: $uid) {
       uid
       __typename
       slug
@@ -45,24 +31,8 @@ export const GET_MOVIE_THUMBNAIL = gql`
 `;
 
 export const GET_MOVIE = gql`
-  query GET_MOVIE(
-    $uid: String
-    $externalId: String
-    $language: String!
-    $deviceType: String!
-    $customerType: String!
-    $region: String!
-  ) {
-    getObject: getMovie(
-      uid: $uid
-      external_id: $externalId
-      language: $language
-      dimensions: [
-        { dimension: "device-types", value: $deviceType }
-        { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
-      ]
-    ) {
+  query GET_MOVIE($uid: String, $externalId: String) {
+    getObject: getMovie(uid: $uid, external_id: $externalId) {
       uid
       slug
       title

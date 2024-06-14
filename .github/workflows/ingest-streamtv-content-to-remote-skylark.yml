@@ -16,6 +16,11 @@ on:
         required: false
         default: false
         description: Only setup StreamTV - Add object types, enum values, dimensions etc
+      streamtv_create_only:
+        type: boolean
+        required: false
+        default: false
+        description: Only create objects (no updates)
 concurrency:
   group: ingest-streamtv-content-${{ github.event.inputs.skylark_url }}
   cancel-in-progress: true
@@ -41,3 +46,4 @@ jobs:
           saas-api-token: ${{ env.SKYLARK_API_KEY }}
           content-type: "streamtv"
           streamtv-setup-only: ${{ github.event.inputs.streamtv_setup_only }}
+          streamtv-create-only: ${{ github.streamtv_create_only }}

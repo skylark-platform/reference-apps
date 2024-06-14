@@ -3,11 +3,13 @@ import React, { useState } from "react";
 import { MdOutlineWatchLater } from "react-icons/md";
 import { sanitize } from "dompurify";
 
+import Link from "next/link";
 import { List } from "../list";
 
 interface InformationPanelProps {
   brand?: {
     title: string;
+    uid: string;
   };
   season?: {
     title?: string;
@@ -91,7 +93,12 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
       <div className="p-2 text-white">
         <div className="left flex w-full flex-col gap-3">
           {brand && (
-            <div className="hidden md:flex">
+            <Link
+              className="hidden opacity-90 transition-opacity hover:opacity-100 md:flex"
+              href={`/brand/${brand.uid}${
+                season ? `#season-${season.number}` : ""
+              }`}
+            >
               <List
                 contents={
                   [
@@ -106,7 +113,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
                 highlightAll
                 textSize={"lg"}
               />
-            </div>
+            </Link>
           )}
           <h1 className="pt-2 text-2xl md:text-3xl">{title}</h1>
           <span className="mb-2 mt-4 hidden w-36 border-b border-gray-800 md:flex" />

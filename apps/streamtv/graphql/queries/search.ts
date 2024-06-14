@@ -4,23 +4,8 @@ import { ImageListingFragment } from "./fragments";
 export const SEARCH = gql`
   ${ImageListingFragment}
 
-  query SEARCH(
-    $query: String!
-    $language: String!
-    $deviceType: String!
-    $customerType: String!
-    $region: String!
-  ) {
-    search(
-      query: $query
-      language: $language
-      dimensions: [
-        { dimension: "device-types", value: $deviceType }
-        { dimension: "customer-types", value: $customerType }
-        { dimension: "regions", value: $region }
-      ]
-      highlight_results: true
-    ) {
+  query SEARCH($query: String!) {
+    search(query: $query, highlight_results: true) {
       total_count
       objects {
         __typename

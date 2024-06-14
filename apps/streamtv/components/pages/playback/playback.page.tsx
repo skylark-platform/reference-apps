@@ -40,6 +40,7 @@ interface PlaybackPageProps {
   releaseDate?: string;
   brand?: {
     title: string;
+    uid: string;
   };
   season?: {
     title?: string;

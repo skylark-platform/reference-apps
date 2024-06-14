@@ -32,6 +32,7 @@ export const SeasonRail = ({
     className={className}
     displayCount
     header={header || season.title || season.title_short || undefined}
+    id={season.season_number ? `season-${season.season_number}` : undefined}
   >
     {season.episodes?.objects?.map((object) =>
       object ? (
