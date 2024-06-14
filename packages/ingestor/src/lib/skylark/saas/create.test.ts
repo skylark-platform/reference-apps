@@ -273,7 +273,7 @@ describe("saas/create.ts", () => {
           title: "episode-1",
           slug: "episode-1",
           title_short: "short title",
-          skylark_object_type: "episodes",
+          skylark_object_type: "Episode",
         },
       },
       {
@@ -283,7 +283,7 @@ describe("saas/create.ts", () => {
           title: "episode-2",
           slug: "episode-2",
           synopsis_short: "short synopsis",
-          skylark_object_type: "episodes",
+          skylark_object_type: "Episode",
         },
       },
     ];
@@ -459,7 +459,7 @@ describe("saas/create.ts", () => {
           fields: {
             title: "episode with relationships",
             slug: "episode-relationships",
-            skylark_object_type: "episodes",
+            skylark_object_type: "Episode",
             themes: [metadata.themes[0].external_id],
             genres: [metadata.genres[0].external_id],
             ratings: [metadata.ratings[0].external_id],
@@ -511,9 +511,9 @@ describe("saas/create.ts", () => {
       );
 
       // Assert.
-      expect(graphQlRequest).toHaveBeenCalledTimes(15);
+      expect(graphQlRequest).toHaveBeenCalledTimes(9);
       expect(graphQlRequest).toHaveBeenNthCalledWith(
-        15,
+        9,
         'mutation createMediaObjects { updateEpisode_airtable-episode-1: updateEpisode (external_id: "airtable-episode-1", episode: {title: "episode with relationships", relationships: {themes: {link: ["theme_1"]}, genres: {link: ["genre_1"]}, ratings: {link: ["rating_1"]}, tags: {link: ["tag_1"]}, credits: {link: ["credit_1"]}}, availability: {link: []}}) { __typename uid slug external_id } }',
         {},
       );
@@ -531,7 +531,7 @@ describe("saas/create.ts", () => {
             slug: "episode-3",
             synopsis_short: "short synopsis",
             parent: ["airtable-episode-1"],
-            skylark_object_type: "episodes",
+            skylark_object_type: "Episode",
           },
         },
       ];

@@ -646,6 +646,8 @@ export const createGraphQLMediaObjects = async (
     language: getMediaObjectLanguage(fields, languagesTable),
   }));
 
+  console.log(externalIdsAndLanguage);
+
   const existingObjectSets = await Promise.all(
     [
       "Brand",
@@ -664,6 +666,8 @@ export const createGraphQLMediaObjects = async (
       ),
     ),
   );
+
+  console.log(existingObjectSets);
 
   const existingObjects = existingObjectSets.reduce(
     (previous, { existingExternalIds: set }) =>

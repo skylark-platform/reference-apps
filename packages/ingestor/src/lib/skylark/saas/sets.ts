@@ -33,17 +33,25 @@ const createSetContent = (
   contents: SetConfig["contents"],
   mediaObjects: GraphQLBaseObject[],
 ): SetRelationshipsLink => {
-  const setItems = contents.map((content, index): SetItem => {
-    const { slug } = content as { slug: string };
-    const item = mediaObjects.find((object) => object.slug === slug);
+  const setItems = contents
+    .map((content, index): SetItem | null => {
+      const { slug } = content as { slug: string };
+      const item = mediaObjects.find((object) => object.slug === slug);
 
-    return {
-      uid: item?.uid as string,
-      position: index + 1,
-      // eslint-disable-next-line no-underscore-dangle
-      graphqlObjectType: item?.__typename as GraphQLObjectTypes,
-    };
-  });
+      if (!item) {
+        // eslint-disable-next-line no-console
+        console.log(`[createSetContent] missing item:`, item);
+        return null;
+      }
+
+      return {
+        uid: item.uid,
+        position: index + 1,
+        // eslint-disable-next-line no-underscore-dangle
+        graphqlObjectType: item.__typename as GraphQLObjectTypes,
+      };
+    })
+    .filter((item): item is SetItem => !!item);
 
   const content: SetRelationshipsLink = {
     Episode: { link: [] },
