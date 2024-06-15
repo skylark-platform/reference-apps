@@ -30,6 +30,7 @@ export interface Airtables {
   tags: Record<FieldSet>[];
   images: Record<FieldSet>[];
   availability: Record<FieldSet>[];
+  sets: Record<FieldSet>[];
   setsMetadata: Record<FieldSet>[];
   assetTypes: Record<FieldSet>[];
   imageTypes: Record<FieldSet>[];

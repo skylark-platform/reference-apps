@@ -4,9 +4,12 @@ import { SAAS_API_ENDPOINT, hasProperty } from "@skylark-reference-apps/lib";
 import axios from "axios";
 import { has } from "lodash";
 import { getAllTables } from "./lib/airtable";
-import { GraphQLBaseObject, GraphQLMetadata } from "./lib/interfaces";
-import { orderedSetsToCreate } from "./additional-objects/sets";
-import { UNLICENSED_BY_DEFAULT } from "./lib/constants";
+import {
+  Airtables,
+  GraphQLBaseObject,
+  GraphQLMetadata,
+} from "./lib/interfaces";
+import { CREATE_ONLY, UNLICENSED_BY_DEFAULT } from "./lib/constants";
 import {
   createGraphQLMediaObjects,
   createOrUpdateGraphQLCredits,
@@ -20,7 +23,6 @@ import {
   createOrUpdateScheduleDimensionValues,
   showcaseDimensionsConfig,
 } from "./lib/skylark/saas/availability";
-import { slxDemoSetsToCreate } from "./additional-objects/slxDemosSets";
 import { updateSkylarkSchema } from "./lib/skylark/saas/schema";
 import {
   clearUnableToFindVersionNoneObjectsFile,
@@ -31,11 +33,141 @@ import { configureCache } from "./lib/skylark/saas/cacheConfiguration";
 import { updateRelationshipConfigurations } from "./lib/skylark/saas/relationshipConfiguration";
 import { guessObjectRelationshipsFromAirtableRows } from "./lib/skylark/saas/utils";
 
+const timers = {
+  full: "Completed in:",
+  objects: "Objects created in:",
+  sets: "Sets created in:",
+  configuration: "Schema & configuration updated in:",
+};
+
+const createMetadataObjectsWithoutRelationships = async (
+  airtable: Airtables,
+  metadataAvailability: GraphQLMetadata["availability"],
+  metadataAvailabilityWithoutDefault: GraphQLMetadata["availability"],
+): Promise<
+  Omit<GraphQLMetadata, "dimensions" | "credits" | "availability">
+> => {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const call_to_actions =
+    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+      "CallToAction",
+      airtable.callToActions,
+      metadataAvailability,
+    );
+  const images =
+    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+      "SkylarkImage",
+      airtable.images,
+      metadataAvailability,
+      { isImage: true },
+    );
+  const themes =
+    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+      "Theme",
+      airtable.themes,
+      metadataAvailability,
+    );
+  const genres =
+    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+      "Genre",
+      airtable.genres,
+      metadataAvailability,
+    );
+  const ratings =
+    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+      "Rating",
+      airtable.ratings,
+      metadataAvailability,
+    );
+  const tags = await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+    "SkylarkTag",
+    airtable.tags,
+    metadataAvailability,
+  );
+  const people =
+    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+      "Person",
+      airtable.people,
+      metadataAvailabilityWithoutDefault,
+    );
+  const roles =
+    await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
+      "Role",
+      airtable.roles,
+      metadataAvailabilityWithoutDefault,
+    );
+
+  const metadataObjects = await Promise.all([
+    call_to_actions,
+    images,
+    themes,
+    genres,
+    ratings,
+    tags,
+    people,
+    roles,
+  ]);
+
+  return {
+    call_to_actions: metadataObjects[0],
+    images: metadataObjects[1],
+    themes: metadataObjects[2],
+    genres: metadataObjects[3],
+    ratings: metadataObjects[4],
+    tags: metadataObjects[5],
+    people: metadataObjects[6],
+    roles: metadataObjects[7],
+  };
+};
+
+const createTranslationsForMetadataObjects = (
+  airtable: Airtables,
+  metadata: GraphQLMetadata,
+) => {
+  const callToActionTranslations = createTranslationsForGraphQLObjects(
+    metadata.call_to_actions,
+    airtable.translations.callToActions,
+    airtable.languages,
+  );
+
+  const themeTranslations = createTranslationsForGraphQLObjects(
+    metadata.themes,
+    airtable.translations.themes,
+    airtable.languages,
+  );
+
+  const genreTranslations = createTranslationsForGraphQLObjects(
+    metadata.genres,
+    airtable.translations.genres,
+    airtable.languages,
+  );
+
+  const creditTranslations = createTranslationsForGraphQLObjects(
+    metadata.credits,
+    airtable.translations.credits,
+    airtable.languages,
+  );
+
+  const roleTranslations = createTranslationsForGraphQLObjects(
+    metadata.roles,
+    airtable.translations.roles,
+    airtable.languages,
+  );
+
+  return Promise.all([
+    callToActionTranslations,
+    themeTranslations,
+    genreTranslations,
+    creditTranslations,
+    roleTranslations,
+  ]);
+};
+
 const main = async () => {
   await clearUnableToFindVersionNoneObjectsFile();
 
   // eslint-disable-next-line no-console
-  console.time("Completed in:");
+  console.time(timers.full);
 
   const streamtvSetupOnly = process.env.STREAMTV_SETUP_ONLY === "true";
   const shouldCreateAdditionalStreamTVObjects =
@@ -59,12 +191,20 @@ const main = async () => {
       shouldCreateAdditionalSLXDemoObjects ? "enabled" : "disabled"
     }`,
   );
+  if (CREATE_ONLY) {
+    // eslint-disable-next-line no-console
+    console.log(
+      "CREATE_ONLY mode enabled, minimal object updates only (partially supported)",
+    );
+  }
 
   // eslint-disable-next-line no-console
   const airtable = await getAllTables();
 
   // eslint-disable-next-line no-console
   console.log(`Starting ingest to Skylark X: ${SAAS_API_ENDPOINT}`);
+  // eslint-disable-next-line no-console
+  console.time(timers.configuration);
 
   const assetTypes = airtable.assetTypes
     .map(({ fields }) => hasProperty(fields, "enum") && fields.enum)
@@ -99,6 +239,12 @@ const main = async () => {
     // eslint-disable-next-line no-console
     console.log("Cache configuration updated");
   }
+
+  // eslint-disable-next-line no-console
+  console.timeEnd(timers.configuration);
+
+  // eslint-disable-next-line no-console
+  console.time(timers.objects);
 
   await createDimensions(showcaseDimensionsConfig);
 
@@ -136,109 +282,34 @@ const main = async () => {
         all: airtable.availability.map(({ id }) => id),
       };
 
+    const metadataWithoutRelationships =
+      await createMetadataObjectsWithoutRelationships(
+        airtable,
+        metadataAvailability,
+        metadataAvailabilityWithoutDefault,
+      );
+
     const metadata: GraphQLMetadata = {
       dimensions,
       availability: metadataAvailability,
-      people: [],
-      roles: [],
-      genres: [],
-      themes: [],
-      ratings: [],
-      tags: [],
       credits: [],
-      images: [],
-      call_to_actions: [],
+      ...metadataWithoutRelationships,
     };
 
-    metadata.call_to_actions =
-      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
-        "CallToAction",
-        airtable.callToActions,
-        metadataAvailability,
-      );
-    metadata.images =
-      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
-        "SkylarkImage",
-        airtable.images,
-        metadataAvailability,
-        { isImage: true },
-      );
-    metadata.themes =
-      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
-        "Theme",
-        airtable.themes,
-        metadataAvailability,
-      );
-    metadata.genres =
-      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
-        "Genre",
-        airtable.genres,
-        metadataAvailability,
-      );
-    metadata.ratings =
-      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
-        "Rating",
-        airtable.ratings,
-        metadataAvailability,
-      );
-    metadata.tags =
-      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
-        "SkylarkTag",
-        airtable.tags,
-        metadataAvailability,
-      );
-    metadata.people =
-      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
-        "Person",
-        airtable.people,
-        metadataAvailabilityWithoutDefault,
-      );
-    metadata.roles =
-      await createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection(
-        "Role",
-        airtable.roles,
-        metadataAvailabilityWithoutDefault,
-      );
     metadata.credits = await createOrUpdateGraphQLCredits(airtable.credits, {
       ...metadata,
       availability: metadataAvailabilityWithoutDefault,
     });
 
-    await createTranslationsForGraphQLObjects(
-      metadata.call_to_actions,
-      airtable.translations.callToActions,
-      airtable.languages,
-    );
-
-    await createTranslationsForGraphQLObjects(
-      metadata.themes,
-      airtable.translations.themes,
-      airtable.languages,
-    );
-
-    await createTranslationsForGraphQLObjects(
-      metadata.genres,
-      airtable.translations.genres,
-      airtable.languages,
-    );
-
-    await createTranslationsForGraphQLObjects(
-      metadata.credits,
-      airtable.translations.credits,
-      airtable.languages,
-    );
-
-    await createTranslationsForGraphQLObjects(
-      metadata.roles,
-      airtable.translations.roles,
-      airtable.languages,
-    );
+    await createTranslationsForMetadataObjects(airtable, metadata);
 
     // eslint-disable-next-line no-console
     console.log("Metadata objects created");
 
     const mediaObjects = await createGraphQLMediaObjects(
-      airtable.mediaObjects,
+      airtable.mediaObjects.filter(
+        ({ fields }) => fields.skylark_object_type !== "SkylarkSet",
+      ),
       metadata,
       airtable.languages,
     );
@@ -268,8 +339,27 @@ const main = async () => {
 
     const createdSets: GraphQLBaseObject[] = [];
     if (shouldCreateAdditionalStreamTVObjects) {
-      for (let i = 0; i < orderedSetsToCreate.length; i += 1) {
-        const setConfig = orderedSetsToCreate[i];
+      // eslint-disable-next-line no-console
+      console.time(timers.sets);
+
+      const setMediaObjects = airtable.mediaObjects.filter(
+        ({ fields }) => fields.skylark_object_type === "SkylarkSet",
+      );
+      const mediaObjectTableSets = Object.fromEntries(
+        setMediaObjects.map(({ id, fields }) => [
+          id,
+          fields.skylarkset_external_id as string,
+        ]),
+      );
+
+      const sets = airtable.sets.sort((a, b) =>
+        ((a.fields.creation_order as number) || 0) >
+        ((b.fields.creation_order as number) || 0)
+          ? 1
+          : -1,
+      );
+      for (let i = 0; i < sets.length; i += 1) {
+        const setConfig = sets[i];
         // eslint-disable-next-line no-await-in-loop
         const set = await createOrUpdateGraphQLSet(
           setConfig,
@@ -277,30 +367,15 @@ const main = async () => {
           metadata,
           airtable.languages,
           airtable.setsMetadata,
+          mediaObjectTableSets,
         );
         if (set) createdSets.push(set);
       }
 
       // eslint-disable-next-line no-console
       console.log("Additional StreamTV objects created");
-    }
-
-    if (shouldCreateAdditionalSLXDemoObjects) {
-      for (let i = 0; i < slxDemoSetsToCreate.length; i += 1) {
-        const setConfig = slxDemoSetsToCreate[i];
-        // eslint-disable-next-line no-await-in-loop
-        const set = await createOrUpdateGraphQLSet(
-          setConfig,
-          [...mediaObjects, ...createdSets],
-          metadata,
-          airtable.languages,
-          airtable.setsMetadata,
-        );
-        if (set) createdSets.push(set);
-      }
-
       // eslint-disable-next-line no-console
-      console.log("Additional SLX Demo objects created");
+      console.timeEnd(timers.sets);
     }
 
     await createTranslationsForGraphQLObjects(
@@ -311,6 +386,9 @@ const main = async () => {
 
     // eslint-disable-next-line no-console
     console.log("Media object translations created");
+
+    // eslint-disable-next-line no-console
+    console.timeEnd(timers.objects);
 
     const dateStamp = new Date().toISOString();
     const output = {
@@ -328,7 +406,7 @@ const main = async () => {
   }
 
   // eslint-disable-next-line no-console
-  console.timeEnd("Completed in:");
+  console.timeEnd(timers.full);
   // eslint-disable-next-line no-console
   console.log("great success");
 };

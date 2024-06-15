@@ -193,7 +193,7 @@ export const createOrUpdateDimensionValues = async (
     | ReadonlyArray<Attachment>
   > & { _id: string })[],
   dimensions: GraphQLDimension[],
-) => {
+): Promise<GraphQLBaseObject[]> => {
   const dimension = dimensions.find(({ slug }) => slug === type);
   if (!dimension) {
     throw new Error(`Dimension: ${type} does not exist in Skylark`);

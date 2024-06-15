@@ -129,14 +129,15 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
                 </span>
               ) : undefined,
               rating,
-              availableUntil &&
-                t(
-                  getTranslationStringForAvailability(
-                    availableUntil.unit,
-                    availableUntil.number,
-                  ),
-                  { number: availableUntil?.number },
-                ),
+              availableUntil
+                ? t(
+                    getTranslationStringForAvailability(
+                      availableUntil.unit,
+                      availableUntil.number,
+                    ),
+                    { number: availableUntil?.number },
+                  )
+                : getTranslationStringForAvailability("never", -1),
             ]}
             highlightFirst
             textSize={"sm"}

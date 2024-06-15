@@ -255,7 +255,7 @@ export const getFurthestAvailabilityEndDate = (
     .sort(({ end: endA }, { end: endB }) =>
       dayjs(endA as string).isBefore(endB as string) ? 1 : -1,
     );
-  return dayjs(orderedDates[0].end as string);
+  return orderedDates[0] ? dayjs(orderedDates[0].end as string) : null;
 };
 
 export const is2038Problem = (date: Dayjs) =>
