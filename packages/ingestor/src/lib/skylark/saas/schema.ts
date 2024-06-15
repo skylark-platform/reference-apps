@@ -168,7 +168,7 @@ const runFieldUpdateQuery = async (query: string, version?: number) => {
   }
 };
 
-const addCustomEpisodeFields = (version?: number) => {
+const addCustomEpisodeFields = (version: number) => {
   const UPDATE_FIELDS = gql`
     mutation UPDATE_FIELDS($version: Int!) {
       editFieldConfiguration(
@@ -190,7 +190,7 @@ const addCustomEpisodeFields = (version?: number) => {
   return runFieldUpdateQuery(UPDATE_FIELDS, version);
 };
 
-const addCustomSeasonFields = (version?: number) => {
+const addCustomSeasonFields = (version: number) => {
   const UPDATE_FIELDS = gql`
     mutation UPDATE_FIELDS($version: Int!) {
       editFieldConfiguration(
@@ -221,7 +221,7 @@ const addCustomSeasonFields = (version?: number) => {
   return runFieldUpdateQuery(UPDATE_FIELDS, version);
 };
 
-const addCustomBrandFields = (version?: number) => {
+const addCustomBrandFields = (version: number) => {
   const UPDATE_FIELDS = gql`
     mutation UPDATE_FIELDS($version: Int!) {
       editFieldConfiguration(
@@ -243,14 +243,14 @@ const addCustomBrandFields = (version?: number) => {
   return runFieldUpdateQuery(UPDATE_FIELDS, version);
 };
 
-const addCustomMovieFields = (version?: number) => {
+const addCustomMovieFields = (version: number) => {
   const UPDATE_FIELDS = gql`
     mutation UPDATE_FIELDS($version: Int!) {
       editFieldConfiguration(
         version: $version
         fields: [
           {
-            name: "budget_new"
+            name: "budget"
             operation: CREATE
             type: STRING
             is_translatable: false
