@@ -3,11 +3,17 @@ const inputs = input.config();
 let table = base.getTable("Media Content");
 let queryResult = await table.selectRecordsAsync({
   recordIds: [inputs.record_id],
-  fields: ["skylark_object_type", "credits", "language_code", "slug"],
+  fields: [
+    "skylark_object_type",
+    "credits",
+    "language_code",
+    "slug",
+    "credits",
+  ],
 });
 let record = queryResult.records[0];
 
-const existingCredits = record.getCellValue("credits") || [];
+const existingCredits = record?.getCellValue("credits") || [];
 
 console.log({ existingCredits });
 
@@ -39,7 +45,7 @@ if (record) {
 
   const language = record.getCellValue("language_code") || "en-GB";
 
-  const url = `${inputs.tmdb_url}/credits`;
+  const url = `${inputs.tmdb_url}?language=${language}`;
   const response = await fetch(url, {
     headers: {
       Authorization: inputs.tmdb_token,
@@ -47,5 +53,5 @@ if (record) {
   });
 
   const json = await response.json();
-  console.log({ json });
+  console.log(json);
 }

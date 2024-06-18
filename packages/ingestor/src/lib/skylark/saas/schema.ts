@@ -142,30 +142,11 @@ export const updateEnumTypes = async (
   };
 };
 
-const addPreferredImageTypeToSeason = async (version?: number) => {
-  const UPDATE_SEASON_FIELDS = gql`
-    mutation UPDATE_SEASON_FIELDS($version: Int!) {
-      editFieldConfiguration(
-        version: $version
-        fields: {
-          name: "preferred_image_type"
-          operation: CREATE
-          type: ENUM
-          enum_name: "ImageType"
-          is_translatable: false
-        }
-        object_class: Season
-      ) {
-        messages
-        version
-      }
-    }
-  `;
-
+const runFieldUpdateQuery = async (query: string, version?: number) => {
   try {
     const { editFieldConfiguration } = await graphQLClient.uncachedRequest<{
       editFieldConfiguration: { version: number; messages: string };
-    }>(UPDATE_SEASON_FIELDS, { version });
+    }>(query, { version });
     return {
       version: editFieldConfiguration.version,
     };
@@ -175,8 +156,9 @@ const addPreferredImageTypeToSeason = async (version?: number) => {
     if (
       err?.response?.errors &&
       err.response.errors.length === 1 &&
-      err.response.errors[0].message ===
-        "Some fields already exist on type Season: ['preferred_image_type']"
+      err.response.errors[0].message.startsWith(
+        "Some fields already exist on type",
+      )
     ) {
       return {
         version,
@@ -184,6 +166,111 @@ const addPreferredImageTypeToSeason = async (version?: number) => {
     }
     throw e;
   }
+};
+
+const addCustomEpisodeFields = (version: number) => {
+  const UPDATE_FIELDS = gql`
+    mutation UPDATE_FIELDS($version: Int!) {
+      editFieldConfiguration(
+        version: $version
+        fields: {
+          name: "audience_rating"
+          operation: CREATE
+          type: STRING
+          is_translatable: false
+        }
+        object_class: Episode
+      ) {
+        messages
+        version
+      }
+    }
+  `;
+
+  return runFieldUpdateQuery(UPDATE_FIELDS, version);
+};
+
+const addCustomSeasonFields = (version: number) => {
+  const UPDATE_FIELDS = gql`
+    mutation UPDATE_FIELDS($version: Int!) {
+      editFieldConfiguration(
+        version: $version
+        fields: [
+          {
+            name: "preferred_image_type"
+            operation: CREATE
+            type: ENUM
+            enum_name: "ImageType"
+            is_translatable: false
+          }
+          {
+            name: "audience_rating"
+            operation: CREATE
+            type: STRING
+            is_translatable: false
+          }
+        ]
+        object_class: Season
+      ) {
+        messages
+        version
+      }
+    }
+  `;
+
+  return runFieldUpdateQuery(UPDATE_FIELDS, version);
+};
+
+const addCustomBrandFields = (version: number) => {
+  const UPDATE_FIELDS = gql`
+    mutation UPDATE_FIELDS($version: Int!) {
+      editFieldConfiguration(
+        version: $version
+        fields: {
+          name: "audience_rating"
+          operation: CREATE
+          type: STRING
+          is_translatable: false
+        }
+        object_class: Brand
+      ) {
+        messages
+        version
+      }
+    }
+  `;
+
+  return runFieldUpdateQuery(UPDATE_FIELDS, version);
+};
+
+const addCustomMovieFields = (version: number) => {
+  const UPDATE_FIELDS = gql`
+    mutation UPDATE_FIELDS($version: Int!) {
+      editFieldConfiguration(
+        version: $version
+        fields: [
+          {
+            name: "budget"
+            operation: CREATE
+            type: STRING
+            is_translatable: false
+          }
+          {
+            name: "audience_rating"
+            operation: CREATE
+            type: STRING
+            is_translatable: false
+          }
+        ]
+        object_class: Movie
+      ) {
+        messages
+        version
+      }
+    }
+  `;
+
+  return runFieldUpdateQuery(UPDATE_FIELDS, version);
 };
 
 const addStreamTVConfigObjectType = async (version?: number) => {
@@ -304,9 +391,21 @@ export const updateSkylarkSchema = async ({
     if (tagTypeVersion) updatedVersion = tagTypeVersion;
   }
 
+  const { version: episodeUpdateVersion } =
+    await addCustomEpisodeFields(updatedVersion);
+  if (episodeUpdateVersion) updatedVersion = episodeUpdateVersion;
+
   const { version: seasonUpdateVersion } =
-    await addPreferredImageTypeToSeason(updatedVersion);
+    await addCustomSeasonFields(updatedVersion);
   if (seasonUpdateVersion) updatedVersion = seasonUpdateVersion;
+
+  const { version: brandUpdateVersion } =
+    await addCustomBrandFields(updatedVersion);
+  if (brandUpdateVersion) updatedVersion = brandUpdateVersion;
+
+  const { version: movieUpdateVersion } =
+    await addCustomMovieFields(updatedVersion);
+  if (movieUpdateVersion) updatedVersion = movieUpdateVersion;
 
   const { version: streamtvConfigVersion } =
     await addStreamTVConfigObjectType(updatedVersion);

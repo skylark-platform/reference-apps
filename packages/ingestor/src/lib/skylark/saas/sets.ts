@@ -30,20 +30,35 @@ interface SetItem {
 }
 
 const createSetContent = (
-  contents: SetConfig["contents"],
+  airtableSet: Records<FieldSet>[0],
   mediaObjects: GraphQLBaseObject[],
+  airtableMediaObjectToExternalIDMapping: Record<string, string>,
 ): SetRelationshipsLink => {
-  const setItems = contents.map((content, index): SetItem => {
-    const { slug } = content as { slug: string };
-    const item = mediaObjects.find((object) => object.slug === slug);
+  const contents = airtableSet.fields.content as string[];
+  const setItems = contents
+    .map((contentAirtableId, index): SetItem | null => {
+      const setExternalId =
+        airtableMediaObjectToExternalIDMapping?.[contentAirtableId];
+      const item = mediaObjects.find(
+        (object) =>
+          object.external_id === contentAirtableId ||
+          object.external_id === setExternalId,
+      );
 
-    return {
-      uid: item?.uid as string,
-      position: index + 1,
-      // eslint-disable-next-line no-underscore-dangle
-      graphqlObjectType: item?.__typename as GraphQLObjectTypes,
-    };
-  });
+      if (!item) {
+        // eslint-disable-next-line no-console
+        console.log(`[createSetContent] missing item:`, contentAirtableId);
+        return null;
+      }
+
+      return {
+        uid: item.uid,
+        position: index + 1,
+        // eslint-disable-next-line no-underscore-dangle
+        graphqlObjectType: item.__typename as GraphQLObjectTypes,
+      };
+    })
+    .filter((item): item is SetItem => !!item);
 
   const content: SetRelationshipsLink = {
     Episode: { link: [] },
@@ -90,7 +105,6 @@ const createBasicSetArgs = (
 
   const validFields = getValidFields(
     {
-      slug: set.slug,
       type: set.graphQlSetType,
     },
     validProperties,
@@ -142,7 +156,6 @@ const createSetArgsWithTranslations = (
   const validFields = getValidFields(
     {
       ...fields,
-      slug: set.slug,
       type: set.graphQlSetType,
     },
     validProperties,
@@ -207,18 +220,27 @@ const createOrUpdateSet = async (
 };
 
 export const createOrUpdateGraphQLSet = async (
-  set: SetConfig,
+  airtableSet: Records<FieldSet>[0],
   mediaObjects: GraphQLBaseObject[],
   metadata: GraphQLMetadata,
   languagesTable: Records<FieldSet>,
   airtableSetsMetadata: Records<FieldSet>,
+  airtableMediaObjectToExternalIDMapping: Record<string, string>,
 ): Promise<GraphQLBaseObject | undefined> => {
+  const setExternalId = airtableSet.fields.external_id as string;
+  const setConfig: SetConfig = {
+    externalId: setExternalId,
+    graphQlSetType: airtableSet.fields.set_type as string,
+    slug: "",
+    contents: [],
+  };
+
   const validProperties = await getValidPropertiesForObject("SkylarkSet");
 
   const languageCodes = getLanguageCodesFromAirtable(languagesTable);
 
   const airtableTranslationsForThisSet = airtableSetsMetadata?.filter(
-    ({ fields }) => fields.slug === set.slug,
+    ({ fields }) => (fields.set as string[]).includes(airtableSet.id),
   );
   const airtableTranslationLanguages = airtableTranslationsForThisSet
     .map(
@@ -230,10 +252,10 @@ export const createOrUpdateGraphQLSet = async (
   const existingSets = new Set<string>();
 
   const existingSetsArr = await Promise.all([
-    getExistingObjects("SkylarkSet", [{ externalId: set.externalId }]),
+    getExistingObjects("SkylarkSet", [{ externalId: setExternalId }]),
     ...airtableTranslationLanguages.map((language) =>
       getExistingObjects("SkylarkSet", [
-        { externalId: set.externalId, language },
+        { externalId: setExternalId, language },
       ]),
     ),
   ]);
@@ -242,11 +264,15 @@ export const createOrUpdateGraphQLSet = async (
     existingExternalIds.forEach((obj) => existingSets.add(obj)),
   );
 
-  const setExists = existingSets.has(set.externalId);
+  const setExists = existingSets.has(setExternalId);
 
   const operationName = setExists ? `updateSkylarkSet` : `createSkylarkSet`;
 
-  const content = createSetContent(set.contents, mediaObjects);
+  const content = createSetContent(
+    airtableSet,
+    mediaObjects,
+    airtableMediaObjectToExternalIDMapping,
+  );
 
   if (
     airtableTranslationsForThisSet &&
@@ -267,7 +293,7 @@ export const createOrUpdateGraphQLSet = async (
       const firstRequest = i === 0;
 
       const args = createSetArgsWithTranslations(
-        set,
+        setConfig,
         metadataTranslation.fields,
         validProperties,
         content,
@@ -280,9 +306,10 @@ export const createOrUpdateGraphQLSet = async (
       // Always updateSkylarkSet after firstRequest to add more langauges
       const method = firstRequest ? operationName : "updateSkylarkSet";
 
-      const mutationKey = `${method}_${language.replace("-", "_")}_${
-        set.externalId
-      }`;
+      const mutationKey = `${method}_${language.replace(
+        "-",
+        "_",
+      )}_${setExternalId}`;
 
       // eslint-disable-next-line no-await-in-loop
       const data = await createOrUpdateSet(method, args, mutationKey);
@@ -294,13 +321,13 @@ export const createOrUpdateGraphQLSet = async (
   }
 
   const args = createBasicSetArgs(
-    set,
+    setConfig,
     validProperties,
     content,
     metadata,
     setExists,
   );
-  const mutationKey = `${operationName}_${set.externalId}`;
+  const mutationKey = `${operationName}_${setExternalId}`;
 
   const data = await createOrUpdateSet(operationName, args, mutationKey);
 

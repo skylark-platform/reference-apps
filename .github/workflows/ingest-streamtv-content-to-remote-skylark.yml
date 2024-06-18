@@ -46,4 +46,4 @@ jobs:
           saas-api-token: ${{ env.SKYLARK_API_KEY }}
           content-type: "streamtv"
           streamtv-setup-only: ${{ github.event.inputs.streamtv_setup_only }}
-          streamtv-create-only: ${{ github.streamtv_create_only }}
+          streamtv-create-only: ${{ github.event.inputs.streamtv_create_only }}

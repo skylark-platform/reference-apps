@@ -96,14 +96,22 @@ if (record) {
         )
     : [];
 
-  const title = metadata.original_title || metadata.name || metadata.title;
+  const title = metadata.title || metadata.name || metadata.original_title;
+
+  const titleAsSlug = (title || "")
+    .toLocaleLowerCase()
+    .replaceAll(":", "")
+    .replaceAll("/", "")
+    .replaceAll("& ", "")
+    .replaceAll(" ", "-");
+
+  const seasonNumber = record.getCellValueAsString("season_number");
+  const episodeNumber = record.getCellValueAsString("episode_number");
   const slug =
     record.getCellValue("slug") ||
-    (title || "")
-      .toLocaleLowerCase()
-      .replaceAll(":", "")
-      .replaceAll("& ", "")
-      .replaceAll(" ", "-");
+    `${seasonNumber ? `s${seasonNumber}-` : ""}${
+      episodeNumber ? `ep${episodeNumber}-` : ""
+    }${titleAsSlug}`;
   console.log({ genres, slug });
 
   await table.updateRecordAsync(record, {

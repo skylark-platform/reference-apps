@@ -10,6 +10,7 @@ export interface TranslationAirtables {
   mediaObjects: Record<FieldSet>[];
   callToActions: Record<FieldSet>[];
   roles: Record<FieldSet>[];
+  people: Record<FieldSet>[];
   credits: Record<FieldSet>[];
   genres: Record<FieldSet>[];
   themes: Record<FieldSet>[];
@@ -30,6 +31,7 @@ export interface Airtables {
   tags: Record<FieldSet>[];
   images: Record<FieldSet>[];
   availability: Record<FieldSet>[];
+  sets: Record<FieldSet>[];
   setsMetadata: Record<FieldSet>[];
   assetTypes: Record<FieldSet>[];
   imageTypes: Record<FieldSet>[];

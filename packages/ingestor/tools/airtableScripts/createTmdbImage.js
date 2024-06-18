@@ -33,14 +33,26 @@ if (record && existingImages.length === 0) {
   });
 
   const json = await response.json();
-  console.log({ json });
+  console.log(json);
 
-  const images = json?.stills || json?.posters;
+  const images = [
+    ...(json?.stills || []),
+    ...(json?.posters || []),
+    ...(json?.backdrops || []),
+    ...(json?.logos || []),
+  ];
 
   console.log({ images });
 
   if (images && images.length > 0) {
-    const image = images[0];
+    const image =
+      images.find(
+        (image) => image.aspect_ratio > 1.5 && image.aspect_ratio < 2,
+      ) ||
+      images.find(
+        (image) => image.aspect_ratio > 1 && image.aspect_ratio < 2.5,
+      ) ||
+      images?.[0];
 
     const baseImageUrl = "https://image.tmdb.org/t/p/original";
     const imageUrl = `${baseImageUrl}/${image.file_path}`;

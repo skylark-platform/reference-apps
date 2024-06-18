@@ -237,7 +237,7 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
       };
 
       if (isImage) {
-        const imageAttachments = fields.image as Attachment[];
+        const imageAttachments = (fields.image || []) as Attachment[];
         if (imageAttachments.length > 0) {
           const image = imageAttachments[0];
           // https://docs.skylarkplatform.com/docs/creating-an-image#upload-an-image-from-an-external-url
@@ -275,10 +275,10 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
 
       const argName = convertGraphQLObjectTypeToArgName(objectType);
 
+      // Always use update with upsert on
       const args: Record<string, string | number | boolean | object> = {
-        [argName]: objectExists
-          ? objectFields
-          : { ...objectFields, external_id: id },
+        [argName]: objectFields,
+        upsert: true,
       };
 
       if (language) {
@@ -287,7 +287,7 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
 
       const { operation, method } = createGraphQLOperation(
         objectType,
-        objectExists,
+        true,
         args,
         { external_id: id },
       );
@@ -914,7 +914,8 @@ export const createTranslationsForGraphQLObjects = async (
   );
 
   const arr = await mutateMultipleObjects<GraphQLBaseObject>(
-    "createMediaObjectTranslations",
+    // eslint-disable-next-line no-underscore-dangle
+    `create${originalObjects[0].__typename}Translations`,
     translationOperations,
   );
 
