@@ -3,11 +3,17 @@ const inputs = input.config();
 let table = base.getTable("Media Content");
 let queryResult = await table.selectRecordsAsync({
   recordIds: [inputs.record_id],
-  fields: ["skylark_object_type", "credits", "language_code", "slug"],
+  fields: [
+    "skylark_object_type",
+    "credits",
+    "language_code",
+    "slug",
+    "credits",
+  ],
 });
 let record = queryResult.records[0];
 
-const existingCredits = record.getCellValue("credits") || [];
+const existingCredits = record?.getCellValue("credits") || [];
 
 console.log({ existingCredits });
 

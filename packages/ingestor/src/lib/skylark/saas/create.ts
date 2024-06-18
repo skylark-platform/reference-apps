@@ -275,10 +275,10 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
 
       const argName = convertGraphQLObjectTypeToArgName(objectType);
 
+      // Always use update with upsert on
       const args: Record<string, string | number | boolean | object> = {
-        [argName]: objectExists
-          ? objectFields
-          : { ...objectFields, external_id: id },
+        [argName]: objectFields,
+        upsert: true,
       };
 
       if (language) {
@@ -287,7 +287,7 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
 
       const { operation, method } = createGraphQLOperation(
         objectType,
-        objectExists,
+        true,
         args,
         { external_id: id },
       );

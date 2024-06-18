@@ -85,6 +85,7 @@ if (brandRecord && brandTmdbId) {
             number_of_episodes: episode_count,
             parent: [{ id: brandRecord.id }],
             language: brandLanguageField,
+            autofill_tv_seasons_episodes: true,
           });
         } else {
           seasonRecordId = await table.createRecordAsync({
@@ -94,6 +95,7 @@ if (brandRecord && brandTmdbId) {
             number_of_episodes: episode_count,
             parent: [{ id: brandRecord.id }],
             language: brandLanguageField,
+            autofill_tv_seasons_episodes: true,
           });
         }
 

@@ -86,7 +86,7 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.uncachedRequest).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateBrands { createBrand_brand_1: createBrand (brand: {title: "Brand 1", availability: {link: []}, external_id: "brand_1"}) { __typename uid slug external_id } }',
+        'mutation createOrUpdateBrands { updateBrand_brand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: []}}, upsert: true) { __typename uid slug external_id } }',
         {},
       );
     });
@@ -101,7 +101,7 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.uncachedRequest).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateBrands { updateBrand_brand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: []}}) { __typename uid slug external_id } }',
+        'mutation createOrUpdateBrands { updateBrand_brand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: []}}, upsert: true) { __typename uid slug external_id } }',
         {},
       );
     });
@@ -160,7 +160,7 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.uncachedRequest).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateBrands { updateBrand_brand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: ["default-external-id-1"]}}) { __typename uid slug external_id } }',
+        'mutation createOrUpdateBrands { updateBrand_brand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: ["default-external-id-1"]}}, upsert: true) { __typename uid slug external_id } }',
         {},
       );
     });

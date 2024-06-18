@@ -105,7 +105,6 @@ const createBasicSetArgs = (
 
   const validFields = getValidFields(
     {
-      slug: set.slug,
       type: set.graphQlSetType,
     },
     validProperties,
@@ -157,7 +156,6 @@ const createSetArgsWithTranslations = (
   const validFields = getValidFields(
     {
       ...fields,
-      slug: set.slug,
       type: set.graphQlSetType,
     },
     validProperties,
