@@ -156,6 +156,14 @@ export const gqlObjectMeta = (
         argName: "article",
         relName: "articles",
       };
+    case "Person":
+      return {
+        createFunc: "createPerson",
+        updateFunc: "updatePerson",
+        objectType: "Person",
+        argName: "person",
+        relName: "people",
+      };
     default:
       throw new Error(
         `[gqlObjectMeta] Object type "${type}" does not have GQL values`,

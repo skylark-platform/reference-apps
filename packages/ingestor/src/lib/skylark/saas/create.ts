@@ -237,7 +237,7 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
       };
 
       if (isImage) {
-        const imageAttachments = fields.image as Attachment[];
+        const imageAttachments = (fields.image || []) as Attachment[];
         if (imageAttachments.length > 0) {
           const image = imageAttachments[0];
           // https://docs.skylarkplatform.com/docs/creating-an-image#upload-an-image-from-an-external-url
@@ -914,7 +914,8 @@ export const createTranslationsForGraphQLObjects = async (
   );
 
   const arr = await mutateMultipleObjects<GraphQLBaseObject>(
-    "createMediaObjectTranslations",
+    // eslint-disable-next-line no-underscore-dangle
+    `create${originalObjects[0].__typename}Translations`,
     translationOperations,
   );
 
