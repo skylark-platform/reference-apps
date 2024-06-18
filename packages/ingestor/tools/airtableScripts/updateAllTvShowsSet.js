@@ -1,6 +1,6 @@
 const inputs = input.config();
 
-const allTVShowsSetExternalId = "streamtv_all_tv_shows";
+const allTVShowsSetExternalId = "skylarktv_all_tv_shows";
 
 let table = base.getTable("Media Content");
 let episodeQueryResult = await table.selectRecordsAsync({

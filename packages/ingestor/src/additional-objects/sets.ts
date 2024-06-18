@@ -4,10 +4,10 @@
  */
 import { SetConfig } from "../lib/interfaces";
 
-const createStreamTVExternalId = (id: string) => `streamtv_${id}`;
+const createSkylarkTVExternalId = (id: string) => `skylarktv_${id}`;
 
 const newTVReleases: SetConfig = {
-  externalId: createStreamTVExternalId("new_tv_releases"),
+  externalId: createSkylarkTVExternalId("new_tv_releases"),
   slug: "new-tv-releases",
   graphQlSetType: "RAIL",
   contents: [
@@ -18,7 +18,7 @@ const newTVReleases: SetConfig = {
 };
 
 const spotlightMovies: SetConfig = {
-  externalId: createStreamTVExternalId("spotlight_movies"),
+  externalId: createSkylarkTVExternalId("spotlight_movies"),
   slug: "spotlight-movies",
   graphQlSetType: "RAIL_MOVIE",
   contents: [
@@ -38,7 +38,7 @@ const spotlightMovies: SetConfig = {
 };
 
 const bestPictureMovies2020: SetConfig = {
-  externalId: createStreamTVExternalId("best_picture_nominees_2020"),
+  externalId: createSkylarkTVExternalId("best_picture_nominees_2020"),
   slug: "best-picture-nominees-2020",
   graphQlSetType: "RAIL_WITH_SYNOPSIS",
   contents: [
@@ -53,7 +53,7 @@ const bestPictureMovies2020: SetConfig = {
 };
 
 const bestPictureMovies2021: SetConfig = {
-  externalId: createStreamTVExternalId("best_picture_nominees_2021"),
+  externalId: createSkylarkTVExternalId("best_picture_nominees_2021"),
   slug: "best-picture-nominees-2021",
   graphQlSetType: "RAIL_WITH_SYNOPSIS",
   contents: [
@@ -68,7 +68,7 @@ const bestPictureMovies2021: SetConfig = {
 };
 
 const classicKidsShows: SetConfig = {
-  externalId: createStreamTVExternalId("classic_kids_shows"),
+  externalId: createSkylarkTVExternalId("classic_kids_shows"),
   slug: "classic-kids-shows",
   graphQlSetType: "RAIL",
   contents: [
@@ -80,7 +80,7 @@ const classicKidsShows: SetConfig = {
 };
 
 const homePageSlider: SetConfig = {
-  externalId: createStreamTVExternalId("home_page_slider"),
+  externalId: createSkylarkTVExternalId("home_page_slider"),
   slug: "media-reference-home-page-hero",
   graphQlSetType: "SLIDER",
   contents: [
@@ -94,7 +94,7 @@ const homePageSlider: SetConfig = {
 };
 
 const kidsHomePageSlider: SetConfig = {
-  externalId: createStreamTVExternalId("home_page_slider_kids"),
+  externalId: createSkylarkTVExternalId("home_page_slider_kids"),
   slug: "media-reference-home-page-hero-kids",
   graphQlSetType: "SLIDER",
   contents: [
@@ -107,7 +107,7 @@ const kidsHomePageSlider: SetConfig = {
 
 // Skylark X does not support dynamic objects yet
 const tarantinoMoviesCollection: SetConfig = {
-  externalId: createStreamTVExternalId("tarantino_movies"),
+  externalId: createSkylarkTVExternalId("tarantino_movies"),
   slug: "tarantino-movies-collection",
   graphQlSetType: "COLLECTION",
   contents: [
@@ -129,7 +129,7 @@ const tarantinoMoviesCollection: SetConfig = {
 };
 
 const wesAndersonMoviesCollection: SetConfig = {
-  externalId: createStreamTVExternalId("wes_anderson_movies"),
+  externalId: createSkylarkTVExternalId("wes_anderson_movies"),
   slug: "wes-anderson-movies-collection",
   graphQlSetType: "COLLECTION",
   contents: [
@@ -142,7 +142,7 @@ const wesAndersonMoviesCollection: SetConfig = {
 };
 
 const fastAndFuriousMoviesCollection: SetConfig = {
-  externalId: createStreamTVExternalId("fast_and_furious_movies"),
+  externalId: createSkylarkTVExternalId("fast_and_furious_movies"),
   slug: "fast-and-furious-movies-collection",
   graphQlSetType: "COLLECTION",
   contents: [
@@ -161,7 +161,7 @@ const fastAndFuriousMoviesCollection: SetConfig = {
 };
 
 const starWarsMoviesCollection: SetConfig = {
-  externalId: createStreamTVExternalId("star_wars_skywalker_saga"),
+  externalId: createSkylarkTVExternalId("star_wars_skywalker_saga"),
   slug: "star-wars-the-skywalker-saga",
   graphQlSetType: "COLLECTION",
   contents: [
@@ -178,7 +178,7 @@ const starWarsMoviesCollection: SetConfig = {
 };
 
 const gameOfThronesUniverseSlider: SetConfig = {
-  externalId: createStreamTVExternalId("game_of_thrones_universe_slider"),
+  externalId: createSkylarkTVExternalId("game_of_thrones_universe_slider"),
   slug: "game-of-thrones-universe-slider",
   graphQlSetType: "SLIDER",
   contents: [
@@ -188,7 +188,7 @@ const gameOfThronesUniverseSlider: SetConfig = {
 };
 
 const gotHighestRatedEpisodes: SetConfig = {
-  externalId: createStreamTVExternalId("got_highest_rated_episodes"),
+  externalId: createSkylarkTVExternalId("got_highest_rated_episodes"),
   slug: "got-highest-rated-episodes",
   graphQlSetType: "GRID",
   contents: [
@@ -202,7 +202,7 @@ const gotHighestRatedEpisodes: SetConfig = {
 };
 
 const gameOfThronesUniversePage: SetConfig = {
-  externalId: createStreamTVExternalId("game_of_thrones_universe"),
+  externalId: createSkylarkTVExternalId("game_of_thrones_universe"),
   slug: "game-of-thrones-universe",
   graphQlSetType: "PAGE",
   contents: [
@@ -218,7 +218,7 @@ const gameOfThronesUniversePage: SetConfig = {
 };
 
 const liveNowRail: SetConfig = {
-  externalId: createStreamTVExternalId("live_now"),
+  externalId: createSkylarkTVExternalId("live_now"),
   slug: "live-now",
   graphQlSetType: "RAIL",
   contents: [
@@ -228,7 +228,7 @@ const liveNowRail: SetConfig = {
 };
 
 const setInEuropeRail: SetConfig = {
-  externalId: createStreamTVExternalId("set_in_europe"),
+  externalId: createSkylarkTVExternalId("set_in_europe"),
   slug: "set-in-europe",
   graphQlSetType: "RAIL",
   contents: [
@@ -243,7 +243,7 @@ const setInEuropeRail: SetConfig = {
 };
 
 const setInAmericaRail: SetConfig = {
-  externalId: createStreamTVExternalId("set_in_america"),
+  externalId: createSkylarkTVExternalId("set_in_america"),
   slug: "set-in-america",
   graphQlSetType: "RAIL",
   contents: [
@@ -263,7 +263,7 @@ const setInAmericaRail: SetConfig = {
 };
 
 const topArabicMovies: SetConfig = {
-  externalId: createStreamTVExternalId("top_arabic_movies"),
+  externalId: createSkylarkTVExternalId("top_arabic_movies"),
   slug: "top-arabic-movies",
   graphQlSetType: "RAIL_WITH_SYNOPSIS",
   contents: [
@@ -283,7 +283,7 @@ const topArabicMovies: SetConfig = {
 };
 
 const discoverCollectionRail: SetConfig = {
-  externalId: createStreamTVExternalId("discover_collection"),
+  externalId: createSkylarkTVExternalId("discover_collection"),
   slug: "discover-collection",
   graphQlSetType: "RAIL_PORTRAIT",
   contents: [
@@ -311,7 +311,7 @@ const discoverCollectionRail: SetConfig = {
 };
 
 const mediaReferenceHomepage: SetConfig = {
-  externalId: createStreamTVExternalId("homepage"),
+  externalId: createSkylarkTVExternalId("homepage"),
   slug: "media-reference-homepage",
   graphQlSetType: "PAGE",
   contents: [

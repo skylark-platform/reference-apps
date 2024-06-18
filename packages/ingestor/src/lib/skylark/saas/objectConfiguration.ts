@@ -16,7 +16,7 @@ const OBJECT_CONFIG: Record<
   }
 > = {
   // Object created in schema section of ingestor
-  StreamtvConfig: {
+  SkylarktvConfig: {
     colour: "5B45CE",
     primaryField: "app_name",
     fieldConfig: [

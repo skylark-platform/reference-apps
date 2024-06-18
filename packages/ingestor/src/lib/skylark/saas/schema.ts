@@ -273,26 +273,26 @@ const addCustomMovieFields = (version: number) => {
   return runFieldUpdateQuery(UPDATE_FIELDS, version);
 };
 
-const addStreamTVConfigObjectType = async (version?: number) => {
+const addSkylarkTVConfigObjectType = async (version?: number) => {
   const objectTypes = await getObjectTypes();
 
-  if (objectTypes.includes("StreamtvConfig")) {
+  if (objectTypes.includes("SkylarktvConfig")) {
     // eslint-disable-next-line no-console
     return { version };
   }
 
-  const CREATE_STREAMTV_CONFIG_OBJECT_TYPE = gql`
-    mutation CREATE_STREAMTV_CONFIG_OBJECT_TYPE($version: Int!) {
+  const CREATE_SKYLARKTV_CONFIG_OBJECT_TYPE = gql`
+    mutation CREATE_SKYLARKTV_CONFIG_OBJECT_TYPE($version: Int!) {
       createObjectType(
         version: $version
         object_types: {
-          name: "streamtv_config"
+          name: "skylarktv_config"
           relationships: [
             {
               operation: CREATE
               to_class: SkylarkImage
               relationship_name: "logo"
-              reverse_relationship_name: "streamtv_config"
+              reverse_relationship_name: "skylarktv_config"
             }
           ]
           fields: [
@@ -312,7 +312,7 @@ const addStreamTVConfigObjectType = async (version?: number) => {
 
   const { createObjectType } = await graphQLClient.uncachedRequest<{
     createObjectType: { version: number; messages: string };
-  }>(CREATE_STREAMTV_CONFIG_OBJECT_TYPE, { version });
+  }>(CREATE_SKYLARKTV_CONFIG_OBJECT_TYPE, { version });
 
   return {
     version: createObjectType.version,
@@ -407,9 +407,9 @@ export const updateSkylarkSchema = async ({
     await addCustomMovieFields(updatedVersion);
   if (movieUpdateVersion) updatedVersion = movieUpdateVersion;
 
-  const { version: streamtvConfigVersion } =
-    await addStreamTVConfigObjectType(updatedVersion);
-  if (streamtvConfigVersion) updatedVersion = streamtvConfigVersion;
+  const { version: skylarktvConfigVersion } =
+    await addSkylarkTVConfigObjectType(updatedVersion);
+  if (skylarktvConfigVersion) updatedVersion = skylarktvConfigVersion;
 
   if (updatedVersion !== initialVersion) {
     await activateConfigurationVersion(updatedVersion);

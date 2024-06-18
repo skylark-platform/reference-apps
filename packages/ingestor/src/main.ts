@@ -169,20 +169,20 @@ const main = async () => {
   // eslint-disable-next-line no-console
   console.time(timers.full);
 
-  const streamtvSetupOnly = process.env.STREAMTV_SETUP_ONLY === "true";
-  const shouldCreateAdditionalStreamTVObjects =
-    !streamtvSetupOnly && process.env.CREATE_SETS === "true";
+  const skylarktvSetupOnly = process.env.SKYLARKTV_SETUP_ONLY === "true";
+  const shouldCreateAdditionalSkylarkTVObjects =
+    !skylarktvSetupOnly && process.env.CREATE_SETS === "true";
   const shouldCreateAdditionalSLXDemoObjects =
-    !streamtvSetupOnly && process.env.CREATE_SLX_DEMO_SETS === "true";
-  if (streamtvSetupOnly)
+    !skylarktvSetupOnly && process.env.CREATE_SLX_DEMO_SETS === "true";
+  if (skylarktvSetupOnly)
     // eslint-disable-next-line no-console
     console.log(
-      `StreamTV setup only mode\n- Schema updates, object configuration updates, dimensions, dimension values & availabilities`,
+      `SkylarkTV setup only mode\n- Schema updates, object configuration updates, dimensions, dimension values & availabilities`,
     );
   // eslint-disable-next-line no-console
   console.log(
-    `Additional StreamTV sets / dynamic objects creation ${
-      shouldCreateAdditionalStreamTVObjects ? "enabled" : "disabled"
+    `Additional SkylarkTV sets / dynamic objects creation ${
+      shouldCreateAdditionalSkylarkTVObjects ? "enabled" : "disabled"
     }`,
   );
   // eslint-disable-next-line no-console
@@ -254,7 +254,7 @@ const main = async () => {
 
   await createOrUpdateAvailability(airtable.availability, dimensions);
 
-  if (!streamtvSetupOnly) {
+  if (!skylarktvSetupOnly) {
     const defaultSchedule = airtable.availability.find(
       ({ fields }) =>
         has(fields, "default") && fields.default && has(fields, "slug"),
@@ -338,7 +338,7 @@ const main = async () => {
     console.log("Media objects created");
 
     const createdSets: GraphQLBaseObject[] = [];
-    if (shouldCreateAdditionalStreamTVObjects) {
+    if (shouldCreateAdditionalSkylarkTVObjects) {
       // eslint-disable-next-line no-console
       console.time(timers.sets);
 
@@ -373,7 +373,7 @@ const main = async () => {
       }
 
       // eslint-disable-next-line no-console
-      console.log("Additional StreamTV objects created");
+      console.log("Additional SkylarkTV objects created");
       // eslint-disable-next-line no-console
       console.timeEnd(timers.sets);
     }

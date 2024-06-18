@@ -1,11 +1,11 @@
 ![image](https://user-images.githubusercontent.com/17385115/196493113-4205645c-9e08-4492-888f-630dd4591723.png)
 
-# StreamTV OTT Reference App
+# SkylarkTV OTT Reference App
 
 [![Vercel Deploy](https://github.com/skylark-platform/reference-apps/actions/workflows/deploy-vercel.yml/badge.svg)](https://github.com/skylark-platform/reference-apps/actions/workflows/deploy-vercel.yml)
 [![Pull Request Checks](https://github.com/skylark-platform/reference-apps/actions/workflows/pr-checks.yml/badge.svg)](https://github.com/skylark-platform/reference-apps/actions/workflows/pr-checks.yml)
 
-Home to StreamTV, a web app designed to demonstrate the features of [Skylark][skylark], a headless CMS designed to enable customers to build and scale world-class streaming products.
+Home to SkylarkTV, a web app designed to demonstrate the features of [Skylark][skylark], a headless CMS designed to enable customers to build and scale world-class streaming products.
 
 ## Overview
 
@@ -13,12 +13,12 @@ We use Lerna and Yarn Workspaces to re-use local packages in multiple projects.
 
 ### Apps (`app/`)
 
-- StreamTV - Demo application for Skylark
+- SkylarkTV - Demo application for Skylark
 - Storybook - [React component library][storybook]
 
 #### Running
 
-Create a `.env.local` in the `apps/streamtv` directory containing the corresponding environment variables found in the [Environment Variables document][environment-variables].
+Create a `.env.local` in the `apps/skylarktv` directory containing the corresponding environment variables found in the [Environment Variables document][environment-variables].
 
 Then run:
 
