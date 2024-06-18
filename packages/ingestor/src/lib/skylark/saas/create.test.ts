@@ -651,7 +651,7 @@ describe("saas/create.ts", () => {
 
       expect(graphQlRequest).toHaveBeenNthCalledWith(
         3,
-        'mutation createMediaObjectTranslations { translation_es_ES_translation-1: updateEpisode (uid: "episode-1-uid", language: "es-ES", episode: {title: "Title in spanish"}) { __typename uid slug external_id } }',
+        'mutation createEpisodeTranslations { translation_es_ES_translation-1: updateEpisode (uid: "episode-1-uid", language: "es-ES", episode: {title: "Title in spanish"}) { __typename uid slug external_id } }',
         {},
       );
     });

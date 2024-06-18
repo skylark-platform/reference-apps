@@ -8,7 +8,7 @@ import { gql } from "graphql-request";
 
 export const GET_APP_CONFIG = gql`
   query GET_APP_CONFIG {
-    listAppConfig(limit: 1) {
+    listAppConfig: listAppConfig(limit: 1) {
       objects {
         uid
         app_name
@@ -32,7 +32,7 @@ export const GET_APP_CONFIG = gql`
 // Legacy fallback query
 export const GET_STREAMTV_CONFIG = gql`
   query GET_SKYLARKTV_CONFIG {
-    listStreamtvConfig(limit: 1) {
+    listAppConfig: listStreamtvConfig(limit: 1) {
       objects {
         uid
         app_name

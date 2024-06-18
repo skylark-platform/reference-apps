@@ -16,7 +16,7 @@ import {
 import { useSkylarkEnvironment } from "./useSkylarkEnvironment";
 
 interface SkylarkTVConfigResponse {
-  listSkylarktvConfig?: {
+  listAppConfig?: {
     objects?: {
       app_name: string;
       primary_color: string;
@@ -59,13 +59,13 @@ export const useSkylarkTVConfig = () => {
 
   const config = useMemo((): SkylarkTVConfig | undefined => {
     if (
-      !data?.listSkylarktvConfig?.objects ||
-      data.listSkylarktvConfig.objects.length === 0
+      !data?.listAppConfig?.objects ||
+      data.listAppConfig.objects.length === 0
     ) {
       return undefined;
     }
 
-    const gqlConfig = data.listSkylarktvConfig.objects[0];
+    const gqlConfig = data.listAppConfig.objects[0];
 
     const logo =
       gqlConfig.logo.objects &&
