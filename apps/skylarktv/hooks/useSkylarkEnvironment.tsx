@@ -23,7 +23,8 @@ interface SkylarkEnvironmentResponse {
 
 interface SkylarkEnvironment {
   hasUpdatedSeason: boolean;
-  hasSkylarkTVConfig: boolean;
+  hasAppConfig: boolean;
+  hasStreamTVConfig: boolean;
   objectTypes: string[];
 }
 
@@ -52,11 +53,13 @@ export const useSkylarkEnvironment = () => {
     const objectTypes =
       data?.objectTypes?.possibleTypes.map(({ name }) => name) || [];
 
-    const hasSkylarkTVConfig = objectTypes.includes("SkylarktvConfig");
+    const hasStreamTVConfig = objectTypes.includes("StreamtvConfig");
+    const hasAppConfig = objectTypes.includes("AppConfig");
 
     return {
       hasUpdatedSeason,
-      hasSkylarkTVConfig,
+      hasStreamTVConfig,
+      hasAppConfig,
       objectTypes,
     };
   }, [data]);

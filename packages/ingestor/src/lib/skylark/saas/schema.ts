@@ -273,26 +273,29 @@ const addCustomMovieFields = (version: number) => {
   return runFieldUpdateQuery(UPDATE_FIELDS, version);
 };
 
-const addSkylarkTVConfigObjectType = async (version?: number) => {
+const addAppConfigObjectType = async (version?: number) => {
   const objectTypes = await getObjectTypes();
 
-  if (objectTypes.includes("SkylarktvConfig")) {
+  if (
+    objectTypes.includes("AppConfig") ||
+    objectTypes.includes("StreamtvConfig")
+  ) {
     // eslint-disable-next-line no-console
     return { version };
   }
 
-  const CREATE_SKYLARKTV_CONFIG_OBJECT_TYPE = gql`
-    mutation CREATE_SKYLARKTV_CONFIG_OBJECT_TYPE($version: Int!) {
+  const CREATE_APP_CONFIG_OBJECT_TYPE = gql`
+    mutation CREATE_APP_CONFIG_OBJECT_TYPE($version: Int!) {
       createObjectType(
         version: $version
         object_types: {
-          name: "skylarktv_config"
+          name: "app_config"
           relationships: [
             {
               operation: CREATE
               to_class: SkylarkImage
               relationship_name: "logo"
-              reverse_relationship_name: "skylarktv_config"
+              reverse_relationship_name: "app_config"
             }
           ]
           fields: [
@@ -312,7 +315,7 @@ const addSkylarkTVConfigObjectType = async (version?: number) => {
 
   const { createObjectType } = await graphQLClient.uncachedRequest<{
     createObjectType: { version: number; messages: string };
-  }>(CREATE_SKYLARKTV_CONFIG_OBJECT_TYPE, { version });
+  }>(CREATE_APP_CONFIG_OBJECT_TYPE, { version });
 
   return {
     version: createObjectType.version,
@@ -408,7 +411,7 @@ export const updateSkylarkSchema = async ({
   if (movieUpdateVersion) updatedVersion = movieUpdateVersion;
 
   const { version: skylarktvConfigVersion } =
-    await addSkylarkTVConfigObjectType(updatedVersion);
+    await addAppConfigObjectType(updatedVersion);
   if (skylarktvConfigVersion) updatedVersion = skylarktvConfigVersion;
 
   if (updatedVersion !== initialVersion) {

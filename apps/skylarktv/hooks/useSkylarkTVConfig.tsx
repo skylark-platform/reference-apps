@@ -5,7 +5,10 @@ import {
 } from "@skylark-reference-apps/react";
 import { useEffect, useMemo } from "react";
 import { GQLError, SkylarkImageListing } from "../types";
-import { GET_SKYLARKTV_CONFIG } from "../graphql/queries/skylarktvConfig";
+import {
+  GET_APP_CONFIG,
+  GET_STREAMTV_CONFIG,
+} from "../graphql/queries/skylarktvConfig";
 import {
   addGoogleTagManagerNoScriptToBody,
   removeGoogleTagManagerNoScriptFromBody,
@@ -46,12 +49,12 @@ export const useSkylarkTVConfig = () => {
     queryKey: ["SkylarkTVConfig", dimensions],
     queryFn: () =>
       skylarkRequestWithDimensions<SkylarkTVConfigResponse>(
-        GET_SKYLARKTV_CONFIG,
+        environment.hasAppConfig ? GET_APP_CONFIG : GET_STREAMTV_CONFIG,
         dimensions,
         {},
       ),
     cacheTime: Infinity,
-    enabled: environment.hasSkylarkTVConfig,
+    enabled: environment.hasAppConfig || environment.hasStreamTVConfig,
   });
 
   const config = useMemo((): SkylarkTVConfig | undefined => {
