@@ -10,6 +10,7 @@ export interface TranslationAirtables {
   mediaObjects: Record<FieldSet>[];
   callToActions: Record<FieldSet>[];
   roles: Record<FieldSet>[];
+  people: Record<FieldSet>[];
   credits: Record<FieldSet>[];
   genres: Record<FieldSet>[];
   themes: Record<FieldSet>[];

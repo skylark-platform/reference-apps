@@ -142,15 +142,21 @@ const createTranslationsForMetadataObjects = (
     airtable.languages,
   );
 
-  const creditTranslations = createTranslationsForGraphQLObjects(
-    metadata.credits,
-    airtable.translations.credits,
-    airtable.languages,
-  );
-
   const roleTranslations = createTranslationsForGraphQLObjects(
     metadata.roles,
     airtable.translations.roles,
+    airtable.languages,
+  );
+
+  const peopleTranslations = createTranslationsForGraphQLObjects(
+    metadata.people,
+    airtable.translations.people,
+    airtable.languages,
+  );
+
+  const creditTranslations = createTranslationsForGraphQLObjects(
+    metadata.credits,
+    airtable.translations.credits,
     airtable.languages,
   );
 
@@ -158,8 +164,9 @@ const createTranslationsForMetadataObjects = (
     callToActionTranslations,
     themeTranslations,
     genreTranslations,
-    creditTranslations,
     roleTranslations,
+    peopleTranslations,
+    creditTranslations,
   ]);
 };
 
