@@ -14,7 +14,7 @@ const Template: ComponentStory<typeof TitleScreen> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-  title: "StreamTV",
+  title: "SkylarkTV",
 };
 Default.parameters = {
   chromatic: { disableSnapshot: true },
@@ -24,7 +24,7 @@ export const WithLogo = Template.bind({});
 WithLogo.args = {
   ...Default.args,
   logo: (
-    <MdStream className="h-12 w-12 rounded-md bg-streamtv-primary sm:h-14 sm:w-14 lg:h-16 lg:w-16" />
+    <MdStream className="h-12 w-12 rounded-md bg-skylarktv-primary sm:h-14 sm:w-14 lg:h-16 lg:w-16" />
   ),
 };
 WithLogo.parameters = {

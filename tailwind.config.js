@@ -30,9 +30,9 @@ module.exports = {
           black: "#0E1825",
           orange: "#ff6c51",
         },
-        streamtv: {
-          primary: "var(--streamtv-primary-color)",
-          accent: "var(--streamtv-accent-color)",
+        skylarktv: {
+          primary: "var(--skylarktv-primary-color)",
+          accent: "var(--skylarktv-accent-color)",
           purple: {
             50: "#EDE8F9",
             100: "#D0C7F0",

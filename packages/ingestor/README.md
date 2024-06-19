@@ -2,7 +2,7 @@
 
 Ingests content and metadata into a Skylark instance using the Media Data Model.
 
-Its purpose is to import content required for the StreamTV demo application.
+Its purpose is to import content required for the SkylarkTV demo application.
 
 ## Supported services
 

@@ -32,7 +32,7 @@ inputs:
     description: The Cognito Password
     required: true
   create-additional-objects:
-    description: Whether to create additional objects (sets and dynamic objects) which StreamTV requires to run
+    description: Whether to create additional objects (sets and dynamic objects) which SkylarkTV requires to run
     required: true
   saas-ingest:
     description: Whether to target Skylark X or not
@@ -42,15 +42,15 @@ inputs:
     description: Access token to use in API Requests, SLX only
     required: false
   content-type:
-    description: The content type to ingest (CONTENT_TYPE) (all, streamtv or slxdemos)
+    description: The content type to ingest (CONTENT_TYPE) (all, skylarktv or slxdemos)
     deprecationMessage: SLX Demos have been moved to a standalone Airtable base. All content in a base is now ingested
     required: false
     default: "all"
-  streamtv-setup-only:
+  skylarktv-setup-only:
     description: Only make set up changes (Add object types, enum values, dimensions)
     required: false
     default: "false"
-  streamtv-create-only:
+  skylarktv-create-only:
     description: Only create objects (no updates)
     required: false
     default: "true"
@@ -82,8 +82,8 @@ runs:
         CREATE_SETS: ${{ inputs.create-additional-objects }}
         SAAS_API_ENDPOINT: ${{ inputs.skylark-api-url }}
         SAAS_API_KEY: ${{ inputs.saas-api-token }}
-        STREAMTV_SETUP_ONLY: ${{ inputs.streamtv-setup-only }}
-        CREATE_ONLY: ${{ inputs.streamtv-create-only }}
+        SKYLARKTV_SETUP_ONLY: ${{ inputs.skylarktv-setup-only }}
+        CREATE_ONLY: ${{ inputs.skylarktv-create-only }}
       with:
         timeout_minutes: 30
         retry_wait_seconds: 10

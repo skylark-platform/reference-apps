@@ -1,7 +1,7 @@
 flags:
-  streamTV:
+  skylarkTV:
     paths:
-      - apps/streamtv/
+      - apps/skylarktv/
   ingestor:
     paths:
       - packages/ingestor/
@@ -23,7 +23,7 @@ coverage:
         threshold: 1%
       apps:
         flags:
-          - streamTV
+          - skylarkTV
         target: 80%
       ingestor:
         flags:

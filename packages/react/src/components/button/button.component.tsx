@@ -13,7 +13,7 @@ interface ButtonProps {
   disabled?: boolean;
 }
 
-const primaryClassName = "bg-streamtv-primary";
+const primaryClassName = "bg-skylarktv-primary";
 const secondaryClassName = "bg-button-secondary";
 const tertiaryClassName = "bg-button-tertiary";
 const outlineClassName = "text-gray-600 hover:text-gray-100 font-medium";
@@ -46,7 +46,7 @@ export const Button: React.FC<ButtonProps> = ({
       : "text-white disabled:text-gray-300"
   }
 flex justify-center items-center h-full
-hover:bg-streamtv-accent disabled:bg-gray-100 transition-colors
+hover:bg-skylarktv-accent disabled:bg-gray-100 transition-colors
 font-body cursor-pointer
 `;
 
