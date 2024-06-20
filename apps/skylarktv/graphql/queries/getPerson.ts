@@ -50,6 +50,47 @@ export const GET_PERSON = gql`
               uid
             }
           }
+          episodes {
+            objects {
+              uid
+            }
+          }
+          roles {
+            objects {
+              uid
+              internal_title
+              title
+              title_sort
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_PERSON_FOR_RELATED_CREDITS = gql`
+  query GET_PERSON_FOR_RELATED_CREDITS($uid: String, $externalId: String) {
+    getObject: getPerson(uid: $uid, external_id: $externalId) {
+      external_id
+      slug
+      name
+      name_sort
+      credits {
+        objects {
+          uid
+          movies {
+            objects {
+              __typename
+              uid
+            }
+          }
+          episodes {
+            objects {
+              __typename
+              uid
+            }
+          }
           roles {
             objects {
               uid

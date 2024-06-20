@@ -41,6 +41,7 @@
   "search": "يبحث",
   "loading": "تحميل",
   "nothing-found": "لم يتم العثور على شيء",
+  "more-from": "{{name}} المزيد من",
   "errors": {
     "error-fetching-page": "حدث خطأ أثناء جلب الصفحة",
     "object-not-found": "المفعول به غير موجود",

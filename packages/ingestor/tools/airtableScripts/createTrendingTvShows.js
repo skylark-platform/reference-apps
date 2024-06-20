@@ -86,7 +86,7 @@ let sets = (
 ).records;
 
 const newTVReleasesSet = sets.find(
-  (rec) => rec.getCellValue("external_id") === "skylarktv_new_tv_releases",
+  (rec) => rec.getCellValue("external_id") === "streamtv_new_tv_releases",
 );
 
 console.log(newTVReleasesSet);

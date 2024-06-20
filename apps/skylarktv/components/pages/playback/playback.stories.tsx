@@ -26,15 +26,20 @@ Episode.args = {
         "Patrick Fabian",
         "Tony Dalton",
         "Michael Mando",
-      ],
+      ].map((name, index) => ({ name, personUid: `person-${index}` })),
       translatedRole: "Actors",
     },
     Writers: {
-      formattedCredits: ["Vince Gilligan", "Peter Gould"],
+      formattedCredits: ["Vince Gilligan", "Peter Gould"].map(
+        (name, index) => ({ name, personUid: `person-${index}` }),
+      ),
       translatedRole: "Writers",
     },
     Directors: {
-      formattedCredits: ["Michael Morris"],
+      formattedCredits: ["Michael Morris"].map((name, index) => ({
+        name,
+        personUid: `person-${index}`,
+      })),
       translatedRole: "Directors",
     },
   },
@@ -67,15 +72,21 @@ Movie.args = {
         "Josh Brolin",
         "Morena Baccarin",
         "Zazie Beetz",
-      ],
+      ].map((name, index) => ({ name, personUid: `person-${index}` })),
       translatedRole: "Actors",
     },
     Writers: {
-      formattedCredits: ["Rhett Reese", "Paul Wernick"],
+      formattedCredits: ["Rhett Reese", "Paul Wernick"].map((name, index) => ({
+        name,
+        personUid: `person-${index}`,
+      })),
       translatedRole: "Writers",
     },
     Directors: {
-      formattedCredits: ["Tim Miller"],
+      formattedCredits: ["Tim Miller"].map((name, index) => ({
+        name,
+        personUid: `person-${index}`,
+      })),
       translatedRole: "Directors",
     },
   },

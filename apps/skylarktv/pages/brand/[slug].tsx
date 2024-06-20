@@ -135,9 +135,10 @@ const BrandPage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
           return (
             <SeasonRail
               className="my-6"
-              header={`${t("skylark.object.season")} ${
-                season.season_number || "-"
-              }`}
+              header={
+                season.title_short ||
+                `${t("skylark.object.season")} ${season.season_number || "-"}`
+              }
               key={season.uid}
               preferredImageType={preferredImageType}
               season={season}

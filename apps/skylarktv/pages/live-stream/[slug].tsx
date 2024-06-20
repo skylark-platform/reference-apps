@@ -101,6 +101,7 @@ const LiveStreamPage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
         tags={convertObjectToName(liveStream?.tags)}
         themes={convertObjectToName(liveStream?.themes)}
         title={title || "Live Stream"}
+        uid={liveStream?.uid || ""}
       />
     </>
   );

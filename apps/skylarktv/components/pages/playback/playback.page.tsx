@@ -20,8 +20,10 @@ import {
 import { Dayjs } from "dayjs";
 import { NextPage } from "next";
 import { getTimeFromNow } from "../../../lib/utils";
+import { ListPersonOtherCreditsRail } from "../../rails";
 
 interface PlaybackPageProps {
+  uid: string;
   loading?: boolean;
   title: string;
   synopsis?: string;
@@ -48,7 +50,10 @@ interface PlaybackPageProps {
   };
   credits?: Record<
     string,
-    { formattedCredits: string[]; translatedRole: string }
+    {
+      formattedCredits: { personUid: string; name: string }[];
+      translatedRole: string;
+    }
   >;
   availabilityEndDate: Dayjs | null;
 }
@@ -74,7 +79,10 @@ const getIconForCreditRole = (role: string) => {
 const convertCreditsToMetadataContent = (
   credits?: Record<
     string,
-    { formattedCredits: string[]; translatedRole: string }
+    {
+      formattedCredits: { personUid: string; name: string }[];
+      translatedRole: string;
+    }
   >,
 ) => {
   if (!credits || Object.keys(credits).length === 0) {
@@ -84,13 +92,22 @@ const convertCreditsToMetadataContent = (
   return Object.entries(credits).map(
     ([role, { formattedCredits, translatedRole }]) => ({
       header: translatedRole,
-      body: formattedCredits,
+      body:
+        // <>
+        //   {formattedCredits.map(({ name, personUid }) => (
+        //     <Link href={`/person/${personUid}`} key={personUid}>
+        //       {name}
+        //     </Link>
+        //   ))}
+        // </>
+        formattedCredits.map(({ name }) => name),
       icon: getIconForCreditRole(role),
     }),
   );
 };
 
 export const PlaybackPage: NextPage<PlaybackPageProps> = ({
+  uid,
   loading,
   title,
   synopsis,
@@ -107,6 +124,17 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
   availabilityEndDate,
 }) => {
   const { t, lang } = useTranslation("common");
+
+  const allCredits = credits
+    ? Object.values(credits)
+        .map(({ formattedCredits }) => formattedCredits)
+        .flatMap((arr) => arr)
+        .filter(
+          (obj, index, arr) =>
+            arr.findIndex(({ personUid }) => personUid === obj.personUid) ===
+            index,
+        )
+    : null;
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-start bg-gray-900 pb-20 font-body md:pt-64">
@@ -156,10 +184,25 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
                   header: t("tags"),
                   body: tags,
                 },
-              ].filter(({ body }) => body.length > 0)}
+              ].filter(({ body }) =>
+                Array.isArray(body)
+                  ? body.length > 0
+                  : React.isValidElement(body),
+              )}
             />
           </div>
         </div>
+        {allCredits && (
+          <div className="my-4">
+            {allCredits.map(({ personUid }) => (
+              <ListPersonOtherCreditsRail
+                key={personUid}
+                originalObjectUid={uid}
+                uid={personUid}
+              />
+            ))}
+          </div>
+        )}
       </SkeletonPage>
     </div>
   );

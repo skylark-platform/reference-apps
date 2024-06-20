@@ -111,6 +111,7 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         tags={convertObjectToName(movie?.tags)}
         themes={convertObjectToName(movie?.themes)}
         title={title}
+        uid={movie?.uid || ""}
       />
     </>
   );

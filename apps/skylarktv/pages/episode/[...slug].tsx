@@ -118,6 +118,7 @@ const EpisodePage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
         tags={convertObjectToName(episode?.tags)}
         themes={convertObjectToName(episode?.themes)}
         title={title}
+        uid={episode?.uid || ""}
       />
     </>
   );

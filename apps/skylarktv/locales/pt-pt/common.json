@@ -50,6 +50,7 @@
   "search": "Procurar",
   "loading": "Carregando...",
   "nothing-found": "Nada encontrado",
+  "more-from": "Mais de {{name}}",
   "errors": {
     "error-fetching-page": "Ocorreu um erro ao buscar a página",
     "object-not-found": "Objeto não encontrado",

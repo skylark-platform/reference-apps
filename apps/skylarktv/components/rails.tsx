@@ -1,9 +1,11 @@
 import { hasProperty } from "@skylark-reference-apps/lib";
 import { Rail } from "@skylark-reference-apps/react";
+import useTranslation from "next-translate/useTranslation";
 import {
   Brand,
   Movie,
   ObjectTypes,
+  Person,
   Season,
   SetContent,
   SkylarkSet,
@@ -16,6 +18,8 @@ import {
   getThumbnailVariantFromSetType,
 } from "./thumbnail";
 import { useListObjects } from "../hooks/useListObjects";
+import { useObject } from "../hooks/useObject";
+import { GET_PERSON_FOR_RELATED_CREDITS } from "../graphql/queries";
 
 export const SeasonRail = ({
   season,
@@ -150,5 +154,56 @@ export const ListObjectsRail = ({
         ),
       )}
     </Rail>
+  );
+};
+
+export const ListPersonOtherCreditsRail = ({
+  uid,
+  originalObjectUid,
+}: {
+  uid: string;
+  originalObjectUid: string;
+}) => {
+  const { t } = useTranslation("common");
+
+  const {
+    data: person,
+    isError,
+    isLoading,
+  } = useObject<Person>(GET_PERSON_FOR_RELATED_CREDITS, uid);
+
+  const otherCredits = person?.credits?.objects
+    ?.map((credit) => [
+      ...(credit?.movies?.objects || []),
+      ...(credit?.episodes?.objects || []),
+    ])
+    .flatMap((arr) => arr)
+    .filter(
+      (obj, index, arr) =>
+        obj &&
+        obj.uid !== originalObjectUid &&
+        arr.findIndex((o) => o?.uid === obj.uid) === index,
+    );
+
+  return (
+    <>
+      {!isLoading && !isError && person && person.name && (
+        <Rail header={t("more-from", { name: person.name })}>
+          {otherCredits?.map((object) =>
+            object && hasProperty(object, "__typename") ? (
+              <Thumbnail
+                key={object.uid}
+                objectType={object.__typename as ObjectTypes}
+                slug={object.slug}
+                uid={object.uid}
+                variant="landscape-synopsis"
+              />
+            ) : (
+              <></>
+            ),
+          )}
+        </Rail>
+      )}
+    </>
   );
 };

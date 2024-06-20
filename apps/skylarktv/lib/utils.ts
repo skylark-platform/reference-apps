@@ -31,20 +31,42 @@ import {
 dayjs.extend(relativeTime);
 
 export const formatGraphQLCredits = (credits: Credit[]) => {
-  const showCharacterName = credits.length <= 4;
-  return credits.map((credit) => {
-    const name = credit?.people?.objects?.[0]?.name || "";
-    return showCharacterName &&
-      credit?.character &&
-      credit?.people?.objects?.[0]?.name
-      ? `${name} - ${credit?.character}`
-      : name;
-  });
+  const creditsWithName = credits.filter((credit) =>
+    Boolean(credit?.people?.objects?.[0]?.name),
+  );
+  const showCharacterName = creditsWithName.length <= 8;
+
+  return creditsWithName
+    .map((credit) => {
+      const person = credit?.people?.objects?.[0];
+      if (!person) {
+        return null;
+      }
+
+      const name =
+        showCharacterName && credit?.character && person.name
+          ? `${person.name} - ${credit?.character}`
+          : person.name;
+
+      return {
+        personUid: person.uid,
+        name,
+      };
+    })
+    .filter((credit): credit is { personUid: string; name: string } =>
+      Boolean(credit),
+    );
 };
 
 export const splitAndFormatGraphQLCreditsByInternalTitle = (
   gqlCredits: Maybe<Maybe<Credit>[]> | null | undefined,
-): Record<string, { formattedCredits: string[]; translatedRole: string }> => {
+): Record<
+  string,
+  {
+    formattedCredits: { personUid: string; name: string }[];
+    translatedRole: string;
+  }
+> => {
   if (!gqlCredits) {
     return {};
   }

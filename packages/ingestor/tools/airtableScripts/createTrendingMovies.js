@@ -74,7 +74,7 @@ let sets = (
 ).records;
 
 const trendingMovieSet = sets.find(
-  (rec) => rec.getCellValue("external_id") === "skylarktv_trending_movies",
+  (rec) => rec.getCellValue("external_id") === "streamtv_trending_movies",
 );
 
 console.log(trendingMovieSet);

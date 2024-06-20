@@ -78,6 +78,7 @@ if (record) {
     },
   );
   const tvBrand = await tvBrandResponse.json();
+  console.log("TV Brand: ", tvBrand);
   const tmdbGenres = metadata?.genres || tvBrand?.genres;
 
   const genres = tmdbGenres
@@ -96,9 +97,21 @@ if (record) {
         )
     : [];
 
-  const title = metadata.title || metadata.name || metadata.original_title;
+  const titleShort =
+    metadata.title ||
+    metadata.name ||
+    metadata.original_title ||
+    metadata.original_name;
+  let title = titleShort;
 
-  const titleAsSlug = (title || "")
+  const objectType = record.getCellValue("skylark_object_type").name;
+
+  if (objectType === "Season") {
+    const tvBrandTitle = tvBrand.name || tvBrand.original_name;
+    title = `${tvBrandTitle} - ${titleShort}`;
+  }
+
+  const titleAsSlug = (titleShort || "")
     .toLocaleLowerCase()
     .replaceAll(":", "")
     .replaceAll("/", "")
@@ -122,7 +135,7 @@ if (record) {
         : record.getCellValue("genres"),
     internal_title: record.getCellValue("internal_title") || title,
     title: record.getCellValue("title") || title,
-    title_short: record.getCellValue("title_short") || title,
+    title_short: record.getCellValue("title_short") || titleShort,
     synopsis: record.getCellValue("synopsis") || metadata.overview,
     release_date:
       record.getCellValue("release_date") ||
@@ -134,8 +147,12 @@ if (record) {
     slug: slug,
   });
 
-  output.set("record_id", inputs.record_id);
-  output.set("tmdb_id", inputs.tmdb_id);
   output.set("tmdb_url", url);
   output.set("tmdb_token", tmdbToken);
+} else {
+  output.set("tmdb_url", "");
+  output.set("tmdb_token", "");
 }
+
+output.set("record_id", inputs.record_id);
+output.set("tmdb_id", inputs.tmdb_id);
