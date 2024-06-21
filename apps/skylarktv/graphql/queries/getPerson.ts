@@ -76,16 +76,16 @@ export const GET_PERSON_FOR_RELATED_CREDITS = gql`
       slug
       name
       name_sort
-      credits {
+      credits(limit: 50) {
         objects {
           uid
-          movies {
+          movies(limit: 20) {
             objects {
               __typename
               uid
             }
           }
-          episodes {
+          episodes(limit: 20) {
             objects {
               __typename
               uid

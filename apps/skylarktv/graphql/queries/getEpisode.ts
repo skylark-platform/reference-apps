@@ -74,7 +74,7 @@ export const GET_EPISODE = gql`
           }
         }
       }
-      credits {
+      credits(limit: 50) {
         objects {
           uid
           character

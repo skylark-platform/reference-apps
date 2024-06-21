@@ -193,7 +193,7 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
           </div>
         </div>
         {allCredits && (
-          <div className="my-4">
+          <div className="my-4 w-full">
             {allCredits.map(({ personUid }) => (
               <ListPersonOtherCreditsRail
                 key={personUid}
