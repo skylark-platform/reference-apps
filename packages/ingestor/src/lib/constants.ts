@@ -16,7 +16,7 @@ export const CREATE_ONLY = process.env.CREATE_ONLY === "true";
 export const CHECK_MISSING = (process.env.CHECK_MISSING as string) === "true";
 
 export const CREATE_OBJECT_CHUNK_SIZE = 1;
-export const CONCURRENT_CREATE_REQUESTS_NUM = 50;
+export const CONCURRENT_CREATE_REQUESTS_NUM = 30;
 
 export const ENUMS = {
   SET_TYPES: [
