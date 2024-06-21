@@ -31,13 +31,13 @@ const createMutation = (
 
 export const updateRelationshipConfigurations = async () => {
   const mutation = createMutation([
-    { objectType: "Episode", relationship: "credits" },
-    { objectType: "Season", relationship: "credits" },
-    { objectType: "Brand", relationship: "credits" },
-    { objectType: "Movie", relationship: "credits" },
-    { objectType: "SkylarkAsset", relationship: "credits" },
-    { objectType: "LiveStream", relationship: "credits" },
-    { objectType: "SkylarkSet", relationship: "credits" },
+    // { objectType: "Episode", relationship: "credits" },
+    // { objectType: "Season", relationship: "credits" },
+    // { objectType: "Brand", relationship: "credits" },
+    // { objectType: "Movie", relationship: "credits" },
+    // { objectType: "SkylarkAsset", relationship: "credits" },
+    // { objectType: "LiveStream", relationship: "credits" },
+    // { objectType: "SkylarkSet", relationship: "credits" },
     // { objectType: "Episode", relationship: "tags" },
     // { objectType: "Season", relationship: "tags" },
     // { objectType: "Brand", relationship: "tags" },
@@ -48,10 +48,13 @@ export const updateRelationshipConfigurations = async () => {
     // { objectType: "SkylarkSet", relationship: "tags" },
     // { objectType: "SkylarkEPGProgram", relationship: "tags" },
     // { objectType: "SkylarkImage", relationship: "tags" },
-    { objectType: "Credit", relationship: "people" },
-    { objectType: "Person", relationship: "images" },
+    // { objectType: "Credit", relationship: "people" },
+    // { objectType: "Person", relationship: "images" },
+    { objectType: "SkylarkAsset", relationship: "movies" },
+    { objectType: "SkylarkAsset", relationship: "episodes" },
     { objectType: "Episode", relationship: "seasons" },
     { objectType: "Season", relationship: "brands" },
+    { objectType: "Movie", relationship: "brands" },
   ]);
 
   await graphQLClient.uncachedRequest(mutation);

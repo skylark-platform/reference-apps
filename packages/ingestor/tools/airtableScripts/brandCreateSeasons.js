@@ -108,55 +108,6 @@ if (brandRecord && brandTmdbId) {
         });
         const season = await response.json();
         console.log(season);
-
-        if (season && season.episodes && season.episodes.length > 0) {
-          const episodeChoice = skylarkObjectTypes.choices.find(
-            ({ name }) => name === "Episode",
-          );
-
-          await Promise.all(
-            season.episodes.map(async ({ episode_number, air_date }) => {
-              const todaysDate = new Date();
-              const airDate = new Date(air_date);
-
-              if (airDate <= todaysDate) {
-                const existingEpisode = allRelatedRecords.find(
-                  (rec) =>
-                    rec.skylark_object_type.name === "Episode" &&
-                    rec.season_number === season_number &&
-                    rec.episode_number === episode_number,
-                );
-                const availabilityId = "recXNjJNyc6nKQIYa";
-                if (existingEpisode) {
-                  // Reset tmdb_id to trigger update
-                  await table.updateRecordAsync(existingEpisode.id, {
-                    tmdb_id: undefined,
-                  });
-
-                  await table.updateRecordAsync(existingEpisode.id, {
-                    skylark_object_type: episodeChoice,
-                    tmdb_id: brandTmdbId,
-                    season_number: season_number,
-                    episode_number: episode_number,
-                    parent: [{ id: seasonRecordId }],
-                    language: brandLanguageField,
-                    availability: [{ id: availabilityId }],
-                  });
-                } else {
-                  await table.createRecordAsync({
-                    skylark_object_type: episodeChoice,
-                    tmdb_id: brandTmdbId,
-                    season_number: season_number,
-                    episode_number: episode_number,
-                    parent: [{ id: seasonRecordId }],
-                    language: brandLanguageField,
-                    availability: [{ id: availabilityId }],
-                  });
-                }
-              }
-            }),
-          );
-        }
       }),
     );
   }

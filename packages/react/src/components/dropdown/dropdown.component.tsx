@@ -73,7 +73,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                   text-xs
                   font-semibold
                   hover:bg-gray-100
-                  hover:text-streamtv-primary
+                  hover:text-skylarktv-primary
                   md:text-sm
                   "
                 type="button"

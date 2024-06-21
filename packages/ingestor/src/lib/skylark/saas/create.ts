@@ -811,6 +811,10 @@ export const createTranslationsForGraphQLObjects = async (
   translationsTable: Records<FieldSet>,
   languagesTable: Records<FieldSet>,
 ) => {
+  if (originalObjects.length === 0) {
+    return [];
+  }
+
   const languageCodes = getLanguageCodesFromAirtable(languagesTable);
 
   const objectTypesAndValidProperties = await Promise.all(

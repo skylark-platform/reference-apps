@@ -22,7 +22,7 @@ Default.parameters = {
 export const WithTitle = Template.bind({});
 WithTitle.args = {
   ...Default.args,
-  title: "StreamTV",
+  title: "SkylarkTV",
 };
 WithTitle.parameters = {
   chromatic: { delay: 5000 }, // To let animation finish

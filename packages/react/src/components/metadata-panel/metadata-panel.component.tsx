@@ -1,10 +1,10 @@
-import React from "react";
+import React, { ReactNode } from "react";
 
 interface MetadataPanelProps {
   content: {
     icon: JSX.Element;
     header: string;
-    body: string | string[];
+    body: string | string[] | ReactNode;
   }[];
 }
 

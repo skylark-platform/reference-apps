@@ -31,7 +31,7 @@ const character = {
 
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({
   show = true,
-  title = "StreamTV",
+  title = "SkylarkTV",
   onExitComplete,
   onAnimationComplete,
 }) => {
@@ -98,7 +98,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
               className="mr-2 inline-block md:mr-4"
               variants={character}
             >
-              <MdStream className="h-12 w-12 rounded-md bg-streamtv-primary sm:h-14 sm:w-14 lg:h-16 lg:w-16" />
+              <MdStream className="h-12 w-12 rounded-md bg-skylarktv-primary sm:h-14 sm:w-14 lg:h-16 lg:w-16" />
             </motion.span>
             {title.split("").map((item, i) => (
               <motion.span

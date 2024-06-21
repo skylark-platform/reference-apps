@@ -27,7 +27,7 @@ Default.args = {
       <div className="flex items-center justify-center text-3xl text-gray-100">
         <MdStream className="h-9 w-9 md:mx-8 md:h-10 md:w-10 lg:mx-16 lg:h-12 lg:w-12 xl:mx-20" />
         <h2 className="mx-1 text-base md:mx-2 md:text-xl lg:text-2xl">
-          <a>{`StreamTV`}</a>
+          <a>{`SkylarkTV`}</a>
         </h2>
         <span className="absolute right-2 md:hidden">
           <Button

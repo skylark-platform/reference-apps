@@ -115,7 +115,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                   <a
                     className="text-skylark-blue md:pl-1"
                     href={
-                      "mailto:hello@skylarkplatform.com?subject=Enquiry from StreamTV"
+                      "mailto:hello@skylarkplatform.com?subject=Enquiry from SkylarkTV"
                     }
                     rel="noreferrer"
                     target="_blank"
