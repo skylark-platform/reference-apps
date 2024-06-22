@@ -410,9 +410,9 @@ export const updateSkylarkSchema = async ({
     await addCustomMovieFields(updatedVersion);
   if (movieUpdateVersion) updatedVersion = movieUpdateVersion;
 
-  const { version: skylarktvConfigVersion } =
+  const { version: appConfigVersion } =
     await addAppConfigObjectType(updatedVersion);
-  if (skylarktvConfigVersion) updatedVersion = skylarktvConfigVersion;
+  if (appConfigVersion) updatedVersion = appConfigVersion;
 
   if (updatedVersion !== initialVersion) {
     await activateConfigurationVersion(updatedVersion);

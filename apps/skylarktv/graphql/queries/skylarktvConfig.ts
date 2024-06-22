@@ -31,7 +31,7 @@ export const GET_APP_CONFIG = gql`
 
 // Legacy fallback query
 export const GET_STREAMTV_CONFIG = gql`
-  query GET_SKYLARKTV_CONFIG {
+  query GET_STREAMTV_CONFIG {
     listAppConfig: listStreamtvConfig(limit: 1) {
       objects {
         uid
