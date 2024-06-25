@@ -67,7 +67,7 @@ export const activateConfigurationVersion = async (version: number) => {
   return res.activateConfigurationVersion;
 };
 
-const getObjectTypes = async () => {
+export const getObjectTypes = async () => {
   const data = await graphQLClient.uncachedRequest<{
     objectTypes?: {
       possibleTypes: {
