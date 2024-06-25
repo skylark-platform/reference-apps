@@ -59,20 +59,17 @@ const createMutation = (objectTypes: string[]): string[] => {
 
   const mutations = chunks.map((objectConfigurations) => {
     const mutation = objectConfigurations.reduce(
-      (prev, ot) => {
-        let objectType = ot;
-
-        // Workaround for older envs that have StreamtvConfig
-        if (useStreamTVConfig && objectType === "AppConfig") {
-          objectType = "StreamtvConfig";
-        }
-
+      (prev, objectType) => {
         const updatedOperations = {
           ...prev,
           [objectType]: {
             __aliasFor: "setObjectConfiguration",
             __args: {
-              object: new EnumType(objectType),
+              object: new EnumType(
+                useStreamTVConfig && objectType === "AppConfig"
+                  ? "StreamtvConfig"
+                  : objectType,
+              ),
               object_config: {
                 colour: `#${OBJECT_CONFIG[objectType].colour.toLowerCase()}`,
                 primary_field: OBJECT_CONFIG[objectType].primaryField,
