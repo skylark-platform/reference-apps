@@ -83,12 +83,55 @@ export const GET_PERSON_FOR_RELATED_CREDITS = gql`
             objects {
               __typename
               uid
+              slug
+              title
+              title_short
+              synopsis
+              synopsis_short
+              release_date
+              images {
+                objects {
+                  uid
+                  title
+                  type
+                  url
+                }
+              }
+              tags {
+                objects {
+                  uid
+                  name
+                  type
+                }
+              }
             }
           }
           episodes(limit: 20) {
             objects {
               __typename
               uid
+              slug
+              title
+              title_short
+              synopsis
+              synopsis_short
+              episode_number
+              release_date
+              images {
+                objects {
+                  uid
+                  title
+                  type
+                  url
+                }
+              }
+              tags {
+                objects {
+                  uid
+                  name
+                  type
+                }
+              }
             }
           }
           roles {
