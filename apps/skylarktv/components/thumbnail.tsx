@@ -13,6 +13,7 @@ import {
   StandardThumbnail,
 } from "@skylark-reference-apps/react";
 import { useInView } from "react-intersection-observer";
+import { ForwardedRef, forwardRef } from "react";
 import {
   GET_BRAND_THUMBNAIL,
   GET_ARTICLE_THUMBNAIL,
@@ -23,7 +24,6 @@ import {
   GET_SET_THUMBNAIL,
 } from "../graphql/queries";
 import { GET_SEASON_THUMBNAIL } from "../graphql/queries/getSeason";
-import { useObject } from "../hooks/useObject";
 import {
   convertGraphQLSetType,
   convertTypenameToObjectType,
@@ -39,6 +39,7 @@ import {
   SkylarkTVSupportedImageType,
   SkylarkTVSupportedSetType,
 } from "../types";
+import { useObject } from "../hooks/useObject";
 
 export type ThumbnailVariant =
   | "landscape"
@@ -51,10 +52,18 @@ export type ThumbnailVariant =
 interface ThumbnailProps {
   uid: string;
   slug?: string | null;
-  objectType: ObjectTypes;
   variant: ThumbnailVariant;
   preferredImageType?: SkylarkTVSupportedImageType;
+  data?: Entertainment | Person | Article;
+  isLoading?: boolean;
 }
+
+type ThumbnailWithSelfFetchProps = Omit<
+  ThumbnailProps,
+  "data" | "isLoading"
+> & {
+  objectType: ObjectTypes;
+};
 
 const dataIsPerson = (
   data: Entertainment | Person | undefined,
@@ -184,25 +193,10 @@ const getStatusTag = (tags: Entertainment["tags"]): string | undefined => {
   return typeof name === "string" ? name : undefined;
 };
 
-export const Thumbnail = ({
-  uid,
-  slug,
-  objectType,
-  variant,
-  preferredImageType,
-}: ThumbnailProps) => {
-  const { ref, inView } = useInView();
-
-  const query = getThumbnailQuery(objectType);
-
-  const { data, isLoading } = useObject<Entertainment | Person | Article>(
-    query,
-    uid,
-    {
-      disabled: !inView,
-    },
-  );
-
+const ThumbnailComponent = (
+  { uid, slug, variant, preferredImageType, data, isLoading }: ThumbnailProps,
+  ref: ForwardedRef<HTMLDivElement>,
+) => {
   const parsedType =
     data?.__typename === "SkylarkSet"
       ? convertGraphQLSetType(data?.type || "")
@@ -219,10 +213,8 @@ export const Thumbnail = ({
 
   return (
     <div ref={ref}>
-      {isLoading && !data && (
-        <Skeleton isPortrait={variant === "portrait"} show />
-      )}
-      {data && (
+      {isLoading && <Skeleton isPortrait={variant === "portrait"} show />}
+      {!isLoading && data && (
         <>
           {variant === "landscape-synopsis" && (
             <EpisodeThumbnail
@@ -311,5 +303,35 @@ export const Thumbnail = ({
         </>
       )}
     </div>
+  );
+};
+
+export const Thumbnail = forwardRef(ThumbnailComponent);
+
+export const ThumbnailWithSelfFetch = ({
+  objectType,
+  uid,
+  ...props
+}: ThumbnailWithSelfFetchProps) => {
+  const { ref, inView } = useInView();
+
+  const query = getThumbnailQuery(objectType);
+
+  const { data, isLoading } = useObject<Entertainment | Person | Article>(
+    query,
+    uid,
+    {
+      disabled: !inView,
+    },
+  );
+
+  return (
+    <Thumbnail
+      data={data}
+      isLoading={isLoading}
+      ref={ref}
+      uid={uid}
+      {...props}
+    />
   );
 };

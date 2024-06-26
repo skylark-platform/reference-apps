@@ -116,6 +116,82 @@ export const GET_SET_FOR_CAROUSEL = gql`
   }
 `;
 
+export const GET_SET_FOR_RAIL = gql`
+  ${ImageListingFragment}
+
+  query GET_SET_FOR_RAIL($uid: String!) {
+    getObject: getSkylarkSet(uid: $uid) {
+      uid
+      content(limit: 50) {
+        objects {
+          object {
+            uid
+            __typename
+            ... on Movie {
+              title
+              title_short
+              synopsis
+              synopsis_short
+              release_date
+              images {
+                ...imageListingFragment
+              }
+            }
+            ... on Episode {
+              title
+              title_short
+              synopsis
+              synopsis_short
+              release_date
+              images {
+                ...imageListingFragment
+              }
+            }
+            ... on Season {
+              title
+              title_short
+              synopsis
+              synopsis_short
+              release_date
+              images {
+                ...imageListingFragment
+              }
+            }
+            ... on Brand {
+              title
+              title_short
+              synopsis
+              synopsis_short
+              release_date
+              images {
+                ...imageListingFragment
+              }
+            }
+            ... on LiveStream {
+              title
+              title_short
+              synopsis
+              synopsis_short
+              images {
+                ...imageListingFragment
+              }
+            }
+            ... on SkylarkSet {
+              title
+              title_short
+              synopsis
+              synopsis_short
+              images {
+                ...imageListingFragment
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const GET_COLLECTION_SET = gql`
   ${ImageListingFragment}
 

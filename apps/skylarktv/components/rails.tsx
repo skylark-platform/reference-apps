@@ -15,11 +15,16 @@ import {
 import {
   Thumbnail,
   ThumbnailVariant,
+  ThumbnailWithSelfFetch,
   getThumbnailVariantFromSetType,
 } from "./thumbnail";
 import { useListObjects } from "../hooks/useListObjects";
 import { useObject } from "../hooks/useObject";
-import { GET_PERSON_FOR_RELATED_CREDITS } from "../graphql/queries";
+import {
+  GET_PERSON_FOR_RELATED_CREDITS,
+  GET_SET_FOR_RAIL,
+} from "../graphql/queries";
+import { GET_SEASON_AND_EPISODES } from "../graphql/queries/getSeason";
 
 export const SeasonRail = ({
   season,
@@ -31,29 +36,38 @@ export const SeasonRail = ({
   header?: string;
   className?: string;
   preferredImageType?: SkylarkTVSupportedImageType;
-}) => (
-  <Rail
-    className={className}
-    displayCount
-    header={header || season.title || season.title_short || undefined}
-    id={season.season_number ? `season-${season.season_number}` : undefined}
-  >
-    {season.episodes?.objects?.map((object) =>
-      object ? (
-        <Thumbnail
-          key={object.uid}
-          objectType={ObjectTypes.Episode}
-          preferredImageType={preferredImageType}
-          slug={object.slug}
-          uid={object.uid}
-          variant="landscape-synopsis"
-        />
-      ) : (
-        <></>
-      ),
-    )}
-  </Rail>
-);
+}) => {
+  const { data, isLoading } = useObject<Season>(
+    GET_SEASON_AND_EPISODES,
+    season.uid,
+  );
+  const episodes = data?.episodes?.objects || season.episodes?.objects || [];
+
+  return (
+    <Rail
+      className={className}
+      displayCount
+      header={header || season.title || season.title_short || undefined}
+      id={season.season_number ? `season-${season.season_number}` : undefined}
+    >
+      {episodes.map((object) =>
+        object ? (
+          <Thumbnail
+            data={object}
+            isLoading={isLoading}
+            key={object.uid}
+            preferredImageType={preferredImageType}
+            slug={object.slug}
+            uid={object.uid}
+            variant="landscape-synopsis"
+          />
+        ) : (
+          <></>
+        ),
+      )}
+    </Rail>
+  );
+};
 
 export const SetRail = ({
   set,
@@ -64,18 +78,23 @@ export const SetRail = ({
 }) => {
   const variant: ThumbnailVariant = getThumbnailVariantFromSetType(set.type);
 
+  const { data, isLoading } = useObject<SkylarkSet>(GET_SET_FOR_RAIL, set.uid);
+
+  const setContent = (data?.content?.objects ||
+    set.content?.objects) as SetContent[];
+
   return (
     <Rail
       className={className}
       displayCount
       header={set.title || set.title_short || undefined}
     >
-      {(set.content?.objects as SetContent[])?.map(({ object }) =>
-        // Without __typename, the Thumbnail will not know what query to use
-        object && hasProperty(object, "__typename") ? (
+      {setContent?.map(({ object }) =>
+        object ? (
           <Thumbnail
+            data={object}
+            isLoading={isLoading}
             key={object.uid}
-            objectType={object.__typename as ObjectTypes}
             slug={object.slug}
             uid={object.uid}
             variant={variant}
@@ -105,7 +124,7 @@ export const TagRail = ({
       {objects?.map((object) =>
         // Without __typename, the Thumbnail will not know what query to use
         object && hasProperty(object, "__typename") ? (
-          <Thumbnail
+          <ThumbnailWithSelfFetch
             key={object.uid}
             objectType={object.__typename as ObjectTypes}
             slug={object.slug}
@@ -142,7 +161,7 @@ export const ListObjectsRail = ({
       {filteredObjects?.map((object) =>
         // Without __typename, the Thumbnail will not know what query to use
         object && hasProperty(object, "__typename") ? (
-          <Thumbnail
+          <ThumbnailWithSelfFetch
             key={object.uid}
             objectType={object.__typename as ObjectTypes}
             slug={object.slug}
@@ -192,8 +211,9 @@ export const ListPersonOtherCreditsRail = ({
           {otherCredits?.map((object) =>
             object && hasProperty(object, "__typename") ? (
               <Thumbnail
+                data={object}
+                isLoading={isLoading}
                 key={object.uid}
-                objectType={object.__typename as ObjectTypes}
                 slug={object.slug}
                 uid={object.uid}
                 variant="landscape-synopsis"

@@ -15,7 +15,6 @@ import {
   Brand,
   CallToAction,
   Episode,
-  Metadata,
   Movie,
   Season,
   SetContent,
@@ -25,7 +24,7 @@ import {
   SkylarkTVSupportedImageType,
   SkylarkTVSupportedSetType,
 } from "../../../types";
-import { Grid } from "../../grid";
+import { SkylarkSetGrid } from "../../grid";
 import { getThumbnailVariantFromSetType } from "../../thumbnail";
 import { useSkylarkEnvironment } from "../../../hooks/useSkylarkEnvironment";
 import { CTA } from "../../cta";
@@ -129,17 +128,12 @@ const Page: NextPage<{
                 item.type === SkylarkTVSupportedSetType.Grid ||
                 item.type === SkylarkTVSupportedSetType.GridPortrait
               ) {
-                const objects = (
-                  item?.content?.objects as SetContent[] | undefined
-                )
-                  ?.map(({ object }) => object)
-                  .filter((object) => !!object) as Metadata[];
                 return (
-                  <Grid
+                  <SkylarkSetGrid
                     className="my-6"
                     header={item.title || item.title_short || undefined}
                     key={item.uid}
-                    objects={objects}
+                    set={item}
                     variant={getThumbnailVariantFromSetType(item.type)}
                   />
                 );

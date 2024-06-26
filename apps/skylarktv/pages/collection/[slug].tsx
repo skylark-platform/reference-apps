@@ -23,7 +23,7 @@ import {
 } from "../../lib/utils";
 import { DisplayError } from "../../components/displayError";
 import { Entertainment } from "../../types";
-import { Thumbnail } from "../../components/thumbnail";
+import { ThumbnailWithSelfFetch } from "../../components/thumbnail";
 import { useObject } from "../../hooks/useObject";
 import { GET_COLLECTION_SET } from "../../graphql/queries";
 
@@ -94,7 +94,7 @@ const Collection: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
           {(collection?.content?.objects as SetContent[])?.map((content) => {
             const object = content.object as Entertainment;
             return (
-              <Thumbnail
+              <ThumbnailWithSelfFetch
                 key={object.uid}
                 objectType={object.__typename as ObjectTypes}
                 slug={object.slug}
