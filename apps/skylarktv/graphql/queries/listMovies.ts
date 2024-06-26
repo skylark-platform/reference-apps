@@ -4,6 +4,7 @@ const movieListingFragment = gql`
   fragment movieListingFragment on MovieListing {
     next_token
     objects {
+      __typename
       uid
       slug
       title
