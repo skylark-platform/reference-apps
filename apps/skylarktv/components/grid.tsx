@@ -59,6 +59,35 @@ export const Grid = ({
     header={header}
   >
     {objects?.map((object) =>
+      object ? (
+        <Thumbnail
+          data={object}
+          key={object.uid}
+          slug={object.slug}
+          uid={object.uid}
+          variant={variant}
+        />
+      ) : (
+        <></>
+      ),
+    )}
+  </GridContainer>
+);
+
+export const GridWithSelfFetch = ({
+  header,
+  displayCount,
+  objects,
+  variant,
+  className,
+}: GridProps) => (
+  <GridContainer
+    className={className}
+    count={objects.length}
+    displayCount={displayCount}
+    header={header}
+  >
+    {objects?.map((object) =>
       object && hasProperty(object, "__typename") ? (
         <ThumbnailWithSelfFetch
           key={object.uid}

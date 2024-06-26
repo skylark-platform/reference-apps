@@ -1,29 +1,52 @@
 import { gql } from "graphql-request";
 
-export const LIST_MOVIES = gql`
-  query LIST_MOVIES($nextToken: String) {
-    listObjects: listMovie(next_token: $nextToken, limit: 20) {
-      next_token
-      objects {
-        __typename
-        uid
-        slug
+const movieListingFragment = gql`
+  fragment movieListingFragment on MovieListing {
+    next_token
+    objects {
+      uid
+      slug
+      title
+      title_short
+      synopsis
+      synopsis_short
+      release_date
+      images {
+        objects {
+          uid
+          title
+          type
+          url
+        }
+      }
+      tags {
+        objects {
+          uid
+          name
+          type
+        }
       }
     }
   }
 `;
 
-// No Portuguese Genres have been added to the ingestor yet, so only set language on the movies relationship
+export const LIST_MOVIES = gql`
+  ${movieListingFragment}
+
+  query LIST_MOVIES($nextToken: String) {
+    listObjects: listMovie(next_token: $nextToken, limit: 20) {
+      ...movieListingFragment
+    }
+  }
+`;
+
 export const LIST_MOVIES_BY_GENRE = gql`
+  ${movieListingFragment}
+
   query LIST_MOVIES_BY_GENRE($uid: String!, $nextToken: String) {
     getObject: getGenre(uid: $uid) {
-      movies(next_token: $nextToken) {
-        next_token
-        objects {
-          __typename
-          uid
-          slug
-        }
+      movies(next_token: $nextToken, limit: 20) {
+        ...movieListingFragment
       }
     }
   }
