@@ -38,6 +38,7 @@ export const GET_SEASON_AND_EPISODES = gql`
       season_number
       episodes(limit: 20) {
         objects {
+          __typename
           uid
           slug
           title
