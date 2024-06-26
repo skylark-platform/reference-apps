@@ -23,7 +23,7 @@ const objectListingFromGenreFetcher = (
   });
 
 export const useMovieListingFromGenre = (genreUid: string | null) => {
-  const { dimensions } = useDimensions();
+  const { dimensions, isLoadingDimensions } = useDimensions();
 
   const { data, isLoading, error, hasNextPage, fetchNextPage } =
     useInfiniteQuery<{ getObject: Genre }, GQLError>({
@@ -37,7 +37,7 @@ export const useMovieListingFromGenre = (genreUid: string | null) => {
         ),
       getNextPageParam: (lastPage): string | undefined =>
         lastPage.getObject.movies?.next_token || undefined,
-      enabled: !!genreUid,
+      enabled: Boolean(genreUid && !isLoadingDimensions),
     });
 
   // This if statement ensures that all data is fetched
@@ -60,7 +60,7 @@ export const useMovieListingFromGenre = (genreUid: string | null) => {
 };
 
 export const useEpisodeListingFromGenre = (genreUid: string | null) => {
-  const { dimensions } = useDimensions();
+  const { dimensions, isLoadingDimensions } = useDimensions();
 
   const { data, isLoading, error, hasNextPage, fetchNextPage } =
     useInfiniteQuery<{ getObject: Genre }, GQLError>({
@@ -74,7 +74,7 @@ export const useEpisodeListingFromGenre = (genreUid: string | null) => {
         ),
       getNextPageParam: (lastPage): string | undefined =>
         lastPage.getObject.movies?.next_token || undefined,
-      enabled: !!genreUid,
+      enabled: Boolean(genreUid && !isLoadingDimensions),
     });
 
   // This if statement ensures that all data is fetched

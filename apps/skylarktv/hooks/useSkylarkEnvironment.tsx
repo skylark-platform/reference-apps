@@ -29,7 +29,7 @@ interface SkylarkEnvironment {
 }
 
 export const useSkylarkEnvironment = () => {
-  const { data, error } = useQuery({
+  const { data, error, isLoading } = useQuery({
     queryKey: ["SkylarkEnvironment"],
     queryFn: () =>
       skylarkRequestWithLocalStorage<SkylarkEnvironmentResponse>(
@@ -66,6 +66,7 @@ export const useSkylarkEnvironment = () => {
 
   return {
     environment,
+    isLoading,
     error: error as GQLError,
   };
 };

@@ -44,7 +44,8 @@ import { useSkylarkEnvironment } from "../../hooks/useSkylarkEnvironment";
 
 const BrandPage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
-  const { environment } = useSkylarkEnvironment();
+  const { environment, isLoading: isLoadingEnvironment } =
+    useSkylarkEnvironment();
 
   const {
     data: brand,
@@ -53,6 +54,7 @@ const BrandPage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
   } = useObject<Brand>(
     GET_BRAND(environment.hasUpdatedSeason),
     query?.slug as string,
+    { disabled: isLoadingEnvironment },
   );
 
   const { t } = useTranslation("common");

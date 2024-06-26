@@ -27,12 +27,12 @@ const fetcher = (query: string, dimensions: Dimensions) =>
   }).then(({ search: data }): SearchResult => data);
 
 export const useSearch = (query: string) => {
-  const { dimensions } = useDimensions();
+  const { dimensions, isLoadingDimensions } = useDimensions();
 
   const { data, error, isLoading } = useQuery({
     queryKey: ["Search", query, dimensions],
     queryFn: () => fetcher(query, dimensions),
-    enabled: !!query,
+    enabled: Boolean(query && !isLoadingDimensions),
   });
 
   // Filter SkylarkSet results to only collections (as SkylarkTV only has pages for collections)

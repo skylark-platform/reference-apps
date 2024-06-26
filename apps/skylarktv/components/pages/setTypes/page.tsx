@@ -35,11 +35,13 @@ const Page: NextPage<{
   seo?: SeoObjectData;
   notFoundMessage?: string;
 }> = ({ slug, seo, notFoundMessage }) => {
-  const { environment } = useSkylarkEnvironment();
+  const { environment, isLoading: isLoadingEnvironment } =
+    useSkylarkEnvironment();
 
   const { data, isLoading, isError } = useObject<SkylarkSet>(
     GET_PAGE_SET(environment.hasUpdatedSeason),
     slug,
+    { disabled: isLoadingEnvironment },
   );
 
   if (!isLoading && isError) {

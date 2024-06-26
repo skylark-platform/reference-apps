@@ -6,9 +6,13 @@ import { useTailwindBreakpoint } from "./useTailwindBreakpoint";
  * Originally designed for simply showing different images on mobile vs desktop
  * @returns {DeviceTypes}
  */
-export const useDeviceType = (): DeviceTypes => {
-  const [breakpoint] = useTailwindBreakpoint("");
+export const useDeviceType = (): {
+  deviceType?: DeviceTypes;
+  isLoading: boolean;
+} => {
+  const [breakpoint] = useTailwindBreakpoint();
   const isSmartphone = ["", "sm"].includes(breakpoint as string);
-  const device: DeviceTypes = isSmartphone ? "smartphone" : "pc";
-  return device;
+  const isLoading = breakpoint === undefined;
+  const deviceType: DeviceTypes = isSmartphone ? "smartphone" : "pc";
+  return { isLoading, deviceType: isLoading ? undefined : deviceType };
 };

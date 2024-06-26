@@ -54,7 +54,7 @@ export const useSkylarkTVConfig = () => {
         {},
       ),
     cacheTime: Infinity,
-    enabled: environment.hasAppConfig || environment.hasStreamTVConfig,
+    enabled: Boolean(environment.hasAppConfig || environment.hasStreamTVConfig),
   });
 
   const config = useMemo((): SkylarkTVConfig | undefined => {

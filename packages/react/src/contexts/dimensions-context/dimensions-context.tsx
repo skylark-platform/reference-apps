@@ -18,6 +18,7 @@ interface ReducerAction {
 
 export type DimensionsContextType = {
   dimensions: Dimensions;
+  isLoadingDimensions: boolean;
   setLanguage: (language: string) => void;
   setCustomerType: (customerType: string) => void;
   setDeviceType: (deviceType: string) => void;
@@ -68,6 +69,7 @@ const DimensionsContext = createContext<DimensionsContextType>({
     [DimensionKey.Region]: "",
     [DimensionKey.TimeTravel]: "",
   },
+  isLoadingDimensions: true,
   setLanguage: () => {},
   setCustomerType: () => {},
   setDeviceType: () => {},
@@ -80,7 +82,7 @@ export const DimensionsContextProvider = ({
 }: {
   children?: React.ReactNode;
 }) => {
-  const deviceType = useDeviceType();
+  const { deviceType, isLoading: isLoadingDimensions } = useDeviceType();
   const { lang } = useTranslation();
 
   const [dimensions, dispatch] = useReducer(dimensionsReducer, {
@@ -93,7 +95,8 @@ export const DimensionsContextProvider = ({
 
   // Automatically updates device type dimension depending on screen size
   useEffect(() => {
-    dispatch({ type: DimensionKey.DeviceType, value: deviceType });
+    if (deviceType !== undefined)
+      dispatch({ type: DimensionKey.DeviceType, value: deviceType });
   }, [deviceType]);
 
   useEffect(() => {
@@ -103,6 +106,7 @@ export const DimensionsContextProvider = ({
   return (
     <DimensionsContext.Provider
       value={{
+        isLoadingDimensions,
         dimensions,
         setCustomerType: (value: string) =>
           dispatch({ type: DimensionKey.CustomerType, value }),

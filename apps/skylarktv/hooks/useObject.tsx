@@ -28,7 +28,7 @@ export const useObject = <T extends Metadata>(
   uid: string,
   opts?: UseObjectOpts,
 ) => {
-  const { dimensions } = useDimensions();
+  const { dimensions, isLoadingDimensions } = useDimensions();
 
   const useExternalId =
     opts && hasProperty(opts, "useExternalId")
@@ -39,7 +39,7 @@ export const useObject = <T extends Metadata>(
     queryKey: ["Search", query, uid, dimensions],
     queryFn: () =>
       fetcher<T>(query, uid, dimensions, { ...opts, useExternalId }),
-    enabled: Boolean(!opts?.disabled && query),
+    enabled: Boolean(!opts?.disabled && !isLoadingDimensions && query),
   });
 
   return {

@@ -74,13 +74,16 @@ export const SkylarkTVLayout: React.FC<Props> = ({
 
   const skipTitleScreen = hasProperty(query, "skipTitleScreen");
 
-  const { dimensions, setRegion } = useDimensions();
+  const {
+    dimensions: { language },
+    setRegion,
+  } = useDimensions();
 
   useEffect(() => {
-    if (dimensions.language === "ar") {
+    if (language === "ar") {
       setRegion("mena");
     }
-  }, [dimensions.language]);
+  }, [language]);
 
   const queryClient = useQueryClient();
 
