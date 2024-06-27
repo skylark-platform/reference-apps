@@ -94,13 +94,20 @@ const convertCreditsToMetadataContent = (
     ([role, { formattedCredits, translatedRole }]) => ({
       header: translatedRole,
       body: (
-        <>
-          {formattedCredits.map(({ name, personUid }) => (
-            <Link href={`/person/${personUid}`} key={personUid}>
-              {name}
-            </Link>
+        <div>
+          {formattedCredits.map(({ name, personUid }, i) => (
+            <>
+              <Link
+                className="hover:text-skylarktv-accent"
+                href={`/person/${personUid}`}
+                key={personUid}
+              >
+                {name}
+              </Link>
+              {i < formattedCredits.length - 1 && <span>{`, `}</span>}
+            </>
           ))}
-        </>
+        </div>
       ),
       icon: getIconForCreditRole(role),
     }),
