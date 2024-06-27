@@ -98,6 +98,7 @@ export const GET_SET_FOR_CAROUSEL = gql`
               }
             }
             ... on SkylarkSet {
+              type
               title
               title_short
               synopsis
@@ -177,6 +178,7 @@ export const GET_SET_FOR_RAIL = gql`
               }
             }
             ... on SkylarkSet {
+              type
               title
               title_short
               synopsis

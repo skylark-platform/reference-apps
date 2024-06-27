@@ -47,7 +47,9 @@ const PersonPage: NextPage = () => {
       ...(credit?.episodes?.objects || []),
     ])
     .flatMap((arr) => arr)
-    .filter((obj): obj is Movie | Episode => !!obj);
+    .filter((obj, index, arr): obj is Movie | Episode =>
+      Boolean(obj && arr.findIndex((o) => o?.uid === obj.uid) === index),
+    );
 
   if (!isLoading && isError) {
     return (
