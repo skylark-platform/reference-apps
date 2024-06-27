@@ -13,6 +13,7 @@ import {
 } from "react-icons/md";
 import {
   InformationPanel,
+  Link,
   MetadataPanel,
   Player,
   SkeletonPage,
@@ -92,15 +93,15 @@ const convertCreditsToMetadataContent = (
   return Object.entries(credits).map(
     ([role, { formattedCredits, translatedRole }]) => ({
       header: translatedRole,
-      body:
-        // <>
-        //   {formattedCredits.map(({ name, personUid }) => (
-        //     <Link href={`/person/${personUid}`} key={personUid}>
-        //       {name}
-        //     </Link>
-        //   ))}
-        // </>
-        formattedCredits.map(({ name }) => name),
+      body: (
+        <>
+          {formattedCredits.map(({ name, personUid }) => (
+            <Link href={`/person/${personUid}`} key={personUid}>
+              {name}
+            </Link>
+          ))}
+        </>
+      ),
       icon: getIconForCreditRole(role),
     }),
   );

@@ -16,6 +16,12 @@ import { convertObjectImagesToSeoImages } from "../../lib/getPageSeoData";
 import { getGraphQLImageSrc } from "../../lib/utils";
 import { GridWithSelfFetch } from "../../components/grid";
 
+const formatDateOfBirth = (date: string) => {
+  const withTimezone = dayjs(date, "YYYY-MM-DDZ");
+  const d = withTimezone.isValid() ? withTimezone : dayjs(date, "YYYY-MM-DD");
+  return d.format("DD MMMM YYYY");
+};
+
 const PersonPage: NextPage = () => {
   const { query } = useRouter();
 
@@ -84,12 +90,10 @@ const PersonPage: NextPage = () => {
             {person?.name}
           </h1>
           <p className="text-sm text-gray-400">
-            {person &&
-              `Born ${
+            {(person?.date_of_birth || person?.place_of_birth) &&
+              `Born${
                 person.date_of_birth &&
-                dayjs(person.date_of_birth as string, "YYYY-MM-DDZ").format(
-                  "DD MMMM YYYY",
-                )
+                ` ${formatDateOfBirth(person.date_of_birth as string)}`
               }${person?.place_of_birth && ` in ${person.place_of_birth}`}.`}
           </p>
           <ParseAndDisplayHTML
