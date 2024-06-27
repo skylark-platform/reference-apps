@@ -210,13 +210,14 @@ export const ListPersonOtherCreditsRail = ({
         <Rail header={t("more-from", { name: person.name })}>
           {otherCredits?.map((object) =>
             object && hasProperty(object, "__typename") ? (
-              <Thumbnail
-                data={object}
-                isLoading={isLoading}
+              <ThumbnailWithSelfFetch
+                fetchAdditionalRelationships
+                initialData={object}
                 key={object.uid}
+                objectType={object.__typename as ObjectTypes}
                 slug={object.slug}
                 uid={object.uid}
-                variant="landscape-synopsis"
+                variant="credit"
               />
             ) : (
               <></>

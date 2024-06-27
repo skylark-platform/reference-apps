@@ -20,9 +20,10 @@ import { GET_SET_FOR_RAIL } from "../graphql/queries";
 interface GridProps {
   header?: string;
   displayCount?: boolean;
-  objects: Metadata[] | Movie[] | Episode[];
+  objects: (Metadata | Movie | Episode)[];
   variant: ThumbnailVariant;
   className?: string;
+  fetchAdditionalRelationships?: boolean;
 }
 
 type SkylarkSetGridProps = Omit<GridProps, "objects"> & { set: SkylarkSet };
@@ -80,6 +81,7 @@ export const GridWithSelfFetch = ({
   objects,
   variant,
   className,
+  fetchAdditionalRelationships,
 }: GridProps) => (
   <GridContainer
     className={className}
@@ -90,6 +92,7 @@ export const GridWithSelfFetch = ({
     {objects?.map((object) =>
       object && hasProperty(object, "__typename") ? (
         <ThumbnailWithSelfFetch
+          fetchAdditionalRelationships={fetchAdditionalRelationships}
           key={object.uid}
           objectType={object.__typename as ObjectTypes}
           slug={object.slug}

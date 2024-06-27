@@ -31,6 +31,54 @@ export const GET_EPISODE_THUMBNAIL = gql`
   }
 `;
 
+export const GET_EPISODE_THUMBNAIL_WITH_ADDITIONAL_RELATIONSHIPS = gql`
+  query GET_EPISODE_THUMBNAIL($uid: String!) {
+    getObject: getEpisode(uid: $uid) {
+      __typename
+      uid
+      slug
+      title
+      title_short
+      synopsis
+      synopsis_short
+      episode_number
+      release_date
+      images {
+        objects {
+          uid
+          title
+          type
+          url
+        }
+      }
+      tags {
+        objects {
+          uid
+          name
+          type
+        }
+      }
+      seasons {
+        objects {
+          uid
+          season_number
+          title
+          title_short
+          slug
+          brands {
+            objects {
+              uid
+              title
+              title_short
+              slug
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const GET_EPISODE = gql`
   query GET_EPISODE($uid: String, $externalId: String) {
     getObject: getEpisode(uid: $uid, external_id: $externalId) {

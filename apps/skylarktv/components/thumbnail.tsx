@@ -2,6 +2,7 @@ import {
   EntertainmentType,
   SetTypes,
   formatYear,
+  getTitleByOrder,
   hasProperty,
 } from "@skylark-reference-apps/lib";
 import {
@@ -22,6 +23,7 @@ import {
   GET_MOVIE_THUMBNAIL,
   GET_PERSON_THUMBNAIL,
   GET_SET_THUMBNAIL,
+  GET_EPISODE_THUMBNAIL_WITH_ADDITIONAL_RELATIONSHIPS,
 } from "../graphql/queries";
 import { GET_SEASON_THUMBNAIL } from "../graphql/queries/getSeason";
 import {
@@ -31,10 +33,12 @@ import {
 } from "../lib/utils";
 import {
   Article,
+  BrandListing,
   Entertainment,
   ImageType,
   ObjectTypes,
   Person,
+  SeasonListing,
   SkylarkSet,
   SkylarkTVSupportedImageType,
   SkylarkTVSupportedSetType,
@@ -47,7 +51,8 @@ export type ThumbnailVariant =
   | "landscape-movie"
   | "landscape-inside"
   | "portrait"
-  | "article";
+  | "article"
+  | "credit";
 
 interface ThumbnailProps {
   uid: string;
@@ -62,6 +67,8 @@ type ThumbnailWithSelfFetchProps = Omit<
   ThumbnailProps,
   "data" | "isLoading"
 > & {
+  initialData?: ThumbnailProps["data"];
+  fetchAdditionalRelationships?: boolean;
   objectType: ObjectTypes;
 };
 
@@ -147,8 +154,14 @@ export const getThumbnailVariantFromSetType = (
   return "landscape";
 };
 
-const getThumbnailQuery = (objectType: ObjectTypes) => {
+const getThumbnailQuery = (
+  objectType: ObjectTypes,
+  withAdditionalRelationships: boolean,
+) => {
   if (objectType === ObjectTypes.Episode) {
+    if (withAdditionalRelationships) {
+      return GET_EPISODE_THUMBNAIL_WITH_ADDITIONAL_RELATIONSHIPS;
+    }
     return GET_EPISODE_THUMBNAIL;
   }
 
@@ -193,6 +206,44 @@ const getStatusTag = (tags: Entertainment["tags"]): string | undefined => {
   return typeof name === "string" ? name : undefined;
 };
 
+const getBrandAndSeasonFromObject = (
+  object: Entertainment | Person | Article | undefined,
+) => {
+  const season =
+    (object &&
+      hasProperty<Entertainment | Person | Article, "seasons", SeasonListing>(
+        object,
+        "seasons",
+      ) &&
+      object.seasons.objects?.[0]) ||
+    null;
+
+  const brandsFromSeason =
+    (season &&
+      hasProperty<Entertainment | Person | Article, "brands", BrandListing>(
+        season,
+        "brands",
+      ) &&
+      season.brands.objects) ||
+    [];
+
+  const brandsFromObject =
+    (object &&
+      hasProperty<Entertainment | Person | Article, "brands", BrandListing>(
+        object,
+        "brands",
+      ) &&
+      object.brands.objects) ||
+    [];
+
+  const brand = brandsFromObject?.[0] || brandsFromSeason?.[0] || null;
+
+  return {
+    season,
+    brand,
+  };
+};
+
 const ThumbnailComponent = (
   { uid, slug, variant, preferredImageType, data, isLoading }: ThumbnailProps,
   ref: ForwardedRef<HTMLDivElement>,
@@ -210,6 +261,8 @@ const ThumbnailComponent = (
   );
 
   const { title, description } = getTitleAndDescription(data);
+
+  const { brand, season } = getBrandAndSeasonFromObject(data);
 
   return (
     <div ref={ref}>
@@ -300,6 +353,24 @@ const ThumbnailComponent = (
               title={title}
             />
           )}
+
+          {variant === "credit" && (
+            <EpisodeThumbnail
+              backgroundImage={backgroundImage}
+              brand={brand ? getTitleByOrder(brand) : undefined}
+              contentLocation="below"
+              description={description}
+              href={href}
+              key={uid}
+              number={
+                data && hasProperty(data, "episode_number") && season
+                  ? `S${season.season_number}E${data.episode_number as number}`
+                  : undefined
+              }
+              statusTag={getStatusTag(data.tags)}
+              title={title}
+            />
+          )}
         </>
       )}
     </div>
@@ -311,17 +382,23 @@ export const Thumbnail = forwardRef(ThumbnailComponent);
 export const ThumbnailWithSelfFetch = ({
   objectType,
   uid,
+  initialData,
+  fetchAdditionalRelationships,
   ...props
 }: ThumbnailWithSelfFetchProps) => {
   const { ref, inView } = useInView();
 
-  const query = getThumbnailQuery(objectType);
+  const query = getThumbnailQuery(
+    objectType,
+    fetchAdditionalRelationships || false,
+  );
 
   const { data, isLoading } = useObject<Entertainment | Person | Article>(
     query,
     uid,
     {
       disabled: !inView,
+      initialData,
     },
   );
 

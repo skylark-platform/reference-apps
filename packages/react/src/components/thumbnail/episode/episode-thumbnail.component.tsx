@@ -1,4 +1,5 @@
 import React from "react";
+import clsx from "clsx";
 import { List } from "../../list";
 import {
   MediaThumbnail,
@@ -7,12 +8,20 @@ import {
 
 export interface EpisodeThumbnailProps extends ThumbnailProps {
   description: string;
-  number?: number;
+  number?: number | string;
+  brand?: string;
 }
 
 export const EpisodeThumbnail: React.FC<EpisodeThumbnailProps> = (props) => {
-  const { title, number, description, duration, releaseDate, callToAction } =
-    props;
+  const {
+    title,
+    number,
+    description,
+    duration,
+    releaseDate,
+    callToAction,
+    brand,
+  } = props;
   return (
     <MediaThumbnail
       {...props}
@@ -23,11 +32,27 @@ export const EpisodeThumbnail: React.FC<EpisodeThumbnailProps> = (props) => {
       }}
       contentLocation="below"
     >
-      <p className="font-lighter mb-1 mt-2 line-clamp-1 text-xs text-white sm:text-sm md:line-clamp-1 md:text-base">
-        {number && <span className="mr-0.5">{`${number}.`}</span>}
+      {brand && (
+        <p className="font-lighter mt-2 line-clamp-1 text-xs text-gray-400 md:line-clamp-1 md:text-sm">
+          {brand}
+          {number && ` - ${number}`}
+        </p>
+      )}
+      <p
+        className={clsx(
+          "font-lighter mb-1 line-clamp-1 text-xs text-white sm:text-sm md:line-clamp-1 md:text-base",
+          !brand && "mt-2",
+        )}
+      >
+        {number && !brand && <span className="mr-0.5">{`${number}.`}</span>}
         {title}
       </p>
-      <p className="mb-3 mt-0.5 line-clamp-4 text-xs text-gray-400 md:text-sm">
+      <p
+        className={clsx(
+          "mb-3 mt-0.5 text-xs text-gray-400 md:text-sm",
+          brand ? "line-clamp-4" : "line-clamp-5",
+        )}
+      >
         {description}
       </p>
       <List contents={[releaseDate]} highlightFirst />

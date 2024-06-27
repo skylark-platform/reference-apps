@@ -16,18 +16,18 @@ dayjs.extend(customParseFormat);
  * @returns {string}
  */
 export const getTitleByOrder = (
-  titles: { [k in TitleTypes]: string } | undefined,
+  titles: { [k in TitleTypes]?: string | null } | undefined,
   priority?: TitleTypes[],
   objectTitle?: string,
 ): string => {
   if (!titles) return objectTitle || "";
 
   const defaultPriority: TitleTypes[] = ["title", "title_short"];
-  const foundType = (priority || defaultPriority).find(
-    (type) => titles[type] || null,
+  const foundType = (priority || defaultPriority).find((type) =>
+    titles[type] && typeof titles[type] === "string" ? titles[type] : null,
   );
 
-  return foundType ? titles[foundType] : objectTitle || "";
+  return foundType ? (titles[foundType] as string) : objectTitle || "";
 };
 
 /**

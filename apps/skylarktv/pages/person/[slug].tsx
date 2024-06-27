@@ -3,20 +3,42 @@ import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
 import { addCloudinaryOnTheFlyImageTransformation } from "@skylark-reference-apps/lib";
 import { ParseAndDisplayHTML } from "@skylark-reference-apps/react";
-import { ImageType, Person } from "../../types/gql";
+import dayjs from "dayjs";
+import useTranslation from "next-translate/useTranslation";
+import { Episode, ImageType, Movie, Person } from "../../types/gql";
 import { DisplayError } from "../../components/displayError";
 import { useObject } from "../../hooks/useObject";
-import { GET_PERSON } from "../../graphql/queries";
+import {
+  GET_PERSON,
+  GET_PERSON_FOR_RELATED_CREDITS,
+} from "../../graphql/queries";
 import { convertObjectImagesToSeoImages } from "../../lib/getPageSeoData";
 import { getGraphQLImageSrc } from "../../lib/utils";
+import { GridWithSelfFetch } from "../../components/grid";
 
 const PersonPage: NextPage = () => {
   const { query } = useRouter();
+
+  const { t } = useTranslation("common");
+
   const {
     data: person,
     isError,
     isLoading,
   } = useObject<Person>(GET_PERSON, query?.slug as string);
+
+  const { data: personCreditData } = useObject<Person>(
+    GET_PERSON_FOR_RELATED_CREDITS,
+    person?.uid || (query?.slug as string),
+  );
+
+  const otherCredits = personCreditData?.credits?.objects
+    ?.map((credit) => [
+      ...(credit?.movies?.objects || []),
+      ...(credit?.episodes?.objects || []),
+    ])
+    .flatMap((arr) => arr)
+    .filter((obj): obj is Movie | Episode => !!obj);
 
   if (!isLoading && isError) {
     return (
@@ -40,7 +62,7 @@ const PersonPage: NextPage = () => {
         }}
         title={person?.name || person?.abbreviation || "Person"}
       />
-      <div className="flex w-full grid-cols-4 flex-col gap-4 md:max-w-5xl md:flex-row md:gap-20">
+      <div className="mb-20 flex w-full grid-cols-4 flex-col gap-4 md:max-w-5xl md:flex-row md:gap-20">
         <div>
           <div className="mx-auto flex h-48 w-48 items-center justify-center overflow-hidden rounded-full bg-skylarktv-primary md:m-0 md:h-72 md:w-72">
             {image ? (
@@ -58,9 +80,18 @@ const PersonPage: NextPage = () => {
           </div>
         </div>
         <div className="mx-4 text-white">
-          <h1 className="mb-4 text-center font-display text-4xl md:text-left">
+          <h1 className="mb-2 text-center font-display text-4xl md:text-left">
             {person?.name}
           </h1>
+          <p className="text-sm text-gray-400">
+            {person &&
+              `Born ${
+                person.date_of_birth &&
+                dayjs(person.date_of_birth as string, "YYYY-MM-DDZ").format(
+                  "DD MMMM YYYY",
+                )
+              }${person?.place_of_birth && ` in ${person.place_of_birth}`}.`}
+          </p>
           <ParseAndDisplayHTML
             fallbackMessage="No bio for this person"
             html={
@@ -72,6 +103,14 @@ const PersonPage: NextPage = () => {
           />
         </div>
       </div>
+      {person && otherCredits && (
+        <GridWithSelfFetch
+          fetchAdditionalRelationships
+          header={t("more-from", { name: person.name })}
+          objects={otherCredits}
+          variant="credit"
+        />
+      )}
     </div>
   );
 };

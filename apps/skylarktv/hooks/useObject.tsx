@@ -8,16 +8,17 @@ import { Metadata } from "../types/gql";
 import { GQLError } from "../types";
 import { isSkylarkUid } from "../lib/utils";
 
-interface UseObjectOpts {
+interface UseObjectOpts<T extends Metadata> {
   disabled?: boolean;
   useExternalId?: boolean;
+  initialData?: T;
 }
 
 const fetcher = <T extends Metadata>(
   query: string,
   uid: string,
   dimensions: Dimensions,
-  opts: UseObjectOpts,
+  opts: UseObjectOpts<T>,
 ) =>
   skylarkRequestWithDimensions<{ getObject: T }>(query, dimensions, {
     [opts.useExternalId ? "externalId" : "uid"]: uid,
@@ -26,7 +27,7 @@ const fetcher = <T extends Metadata>(
 export const useObject = <T extends Metadata>(
   query: string,
   uid: string,
-  opts?: UseObjectOpts,
+  opts?: UseObjectOpts<T>,
 ) => {
   const { dimensions, isLoadingDimensions } = useDimensions();
 
@@ -40,6 +41,7 @@ export const useObject = <T extends Metadata>(
     queryFn: () =>
       fetcher<T>(query, uid, dimensions, { ...opts, useExternalId }),
     enabled: Boolean(!opts?.disabled && !isLoadingDimensions && query),
+    initialData: opts?.initialData,
   });
 
   return {

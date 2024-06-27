@@ -27,6 +27,7 @@ export const GET_PERSON = gql`
 
   query GET_PERSON($uid: String, $externalId: String) {
     getObject: getPerson(uid: $uid, external_id: $externalId) {
+      uid
       external_id
       slug
       abbreviation

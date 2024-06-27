@@ -29,6 +29,15 @@ const getPlayerType = (src: string) => {
 
 const ReactPlayer = dynamic(() => import("react-player/lazy"), { ssr: false });
 
+const ThumbnailImage = ({ src }: { src?: string }) =>
+  src ? (
+    <img
+      alt="Thumbnail"
+      className="h-full w-full bg-black object-cover object-center"
+      src={src}
+    />
+  ) : undefined;
+
 export const Player: React.FC<PlayerProps> = ({
   src,
   poster,
@@ -47,9 +56,15 @@ export const Player: React.FC<PlayerProps> = ({
 
   const type = getPlayerType(src);
 
+  const posterSrc = poster
+    ? addCloudinaryOnTheFlyImageTransformation(poster, {
+        width: 1000,
+      })
+    : undefined;
+
   return (
     <div className="w-screen sm:w-11/12 lg:w-3/4">
-      <div className="aspect-h-9 aspect-w-16 shadow shadow-black md:shadow-xl">
+      <div className="aspect-h-9 aspect-w-16 relative shadow shadow-black md:shadow-xl">
         {/* For Google Drive videos, use iframe embed because they don't work with MuxPlayer */}
         {type === "iframe" && <iframe src={src} />}
         {type === "react-player" && (
@@ -57,17 +72,7 @@ export const Player: React.FC<PlayerProps> = ({
             config={{}}
             controls={true}
             height="100%"
-            light={
-              poster ? (
-                <img
-                  alt="Thumbnail"
-                  className="h-full w-full bg-black object-cover object-center"
-                  src={addCloudinaryOnTheFlyImageTransformation(poster, {
-                    width: 1000,
-                  })}
-                />
-              ) : undefined
-            }
+            light={<ThumbnailImage src={posterSrc} />}
             playing={autoPlay}
             style={{ height: "100%", width: "100%" }}
             url={absoluteSrc}
@@ -84,13 +89,7 @@ export const Player: React.FC<PlayerProps> = ({
               video_id: videoId,
               video_title: videoTitle,
             }}
-            poster={
-              poster
-                ? addCloudinaryOnTheFlyImageTransformation(poster, {
-                    width: 1000,
-                  })
-                : undefined
-            }
+            poster={posterSrc}
             ref={undefined}
             src={absoluteSrc} // Convert relative URL into absolute
             streamType={"on-demand"}

@@ -257,7 +257,7 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
                 }
 
                 if (typename === "SkylarkSet") {
-                  const setHref = `${convertGraphQLSetType(obj?.type || "")}/${
+                  const setHref = `/${convertGraphQLSetType(obj?.type || "")}/${
                     obj.uid
                   }`;
                   return (
