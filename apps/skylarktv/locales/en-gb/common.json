@@ -51,6 +51,8 @@
   "loading": "Loading...",
   "nothing-found": "Nothing found",
   "more-from": "More from {{name}}",
+  "budget": "Budget",
+  "audience-rating": "Rating",
   "errors": {
     "error-fetching-page": "Error occured fetching page",
     "object-not-found": "Object Not Found",

@@ -42,6 +42,8 @@
   "loading": "تحميل",
   "nothing-found": "لم يتم العثور على شيء",
   "more-from": "{{name}} المزيد من",
+  "budget": "ميزانية",
+  "audience-rating": "تقييم",
   "errors": {
     "error-fetching-page": "حدث خطأ أثناء جلب الصفحة",
     "object-not-found": "المفعول به غير موجود",

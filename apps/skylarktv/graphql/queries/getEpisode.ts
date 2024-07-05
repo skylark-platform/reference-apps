@@ -1,4 +1,5 @@
 import { gql } from "graphql-request";
+import { SkylarkTVAdditionalFields } from "../../types";
 
 export const GET_EPISODE_THUMBNAIL = gql`
   query GET_EPISODE_THUMBNAIL($uid: String!) {
@@ -79,7 +80,7 @@ export const GET_EPISODE_THUMBNAIL_WITH_ADDITIONAL_RELATIONSHIPS = gql`
   }
 `;
 
-export const GET_EPISODE = gql`
+export const GET_EPISODE = (skylarkTVIngestorSchemaLoaded: boolean) => gql`
   query GET_EPISODE($uid: String, $externalId: String) {
     getObject: getEpisode(uid: $uid, external_id: $externalId) {
       uid
@@ -90,6 +91,11 @@ export const GET_EPISODE = gql`
       synopsis_short
       episode_number
       release_date
+      ${
+        skylarkTVIngestorSchemaLoaded
+          ? SkylarkTVAdditionalFields.AudienceRating
+          : ""
+      }
       images {
         objects {
           uid

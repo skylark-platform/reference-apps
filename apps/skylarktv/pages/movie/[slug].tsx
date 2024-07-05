@@ -19,6 +19,7 @@ import { DisplayError } from "../../components/displayError";
 import { useObject } from "../../hooks/useObject";
 import { GET_MOVIE } from "../../graphql/queries";
 import { PlaybackPage } from "../../components/pages/playback";
+import { useSkylarkEnvironment } from "../../hooks/useSkylarkEnvironment";
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //   const seo = await getSeoDataForObject(
@@ -36,11 +37,19 @@ import { PlaybackPage } from "../../components/pages/playback";
 
 const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const { query } = useRouter();
+
+  const { environment, isLoading: isLoadingEnvironment } =
+    useSkylarkEnvironment();
+
   const {
     data: movie,
     isError,
     isLoading,
-  } = useObject<Movie>(GET_MOVIE, query?.slug as string);
+  } = useObject<Movie>(
+    GET_MOVIE(environment.hasUpdatedSeason),
+    query?.slug as string,
+    { disabled: isLoadingEnvironment },
+  );
 
   if (!isLoading && isError) {
     return (
@@ -86,6 +95,7 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         title={title || seo?.title || "Movie"}
       />
       <PlaybackPage
+        audienceRating={movie?.audience_rating as string | undefined}
         availabilityEndDate={availabilityEndDate}
         brand={
           firstBrand
@@ -95,6 +105,7 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
               }
             : undefined
         }
+        budget={movie?.budget as string | undefined}
         credits={splitAndFormatGraphQLCreditsByInternalTitle(
           movie?.credits?.objects,
         )}

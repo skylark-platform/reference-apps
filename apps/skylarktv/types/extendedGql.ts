@@ -59,4 +59,6 @@ export enum SkylarkTVSupportedImageType {
 // Additional fields added by ingestor
 export enum SkylarkTVAdditionalFields {
   PreferredImageType = "preferred_image_type",
+  AudienceRating = "audience_rating",
+  Budget = "budget",
 }

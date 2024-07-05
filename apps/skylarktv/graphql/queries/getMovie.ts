@@ -1,4 +1,5 @@
 import { gql } from "graphql-request";
+import { SkylarkTVAdditionalFields } from "../../types";
 
 export const GET_MOVIE_THUMBNAIL = gql`
   query GET_MOVIE_THUMBNAIL($uid: String!) {
@@ -30,7 +31,7 @@ export const GET_MOVIE_THUMBNAIL = gql`
   }
 `;
 
-export const GET_MOVIE = gql`
+export const GET_MOVIE = (skylarkTVIngestorSchemaLoaded: boolean) => gql`
   query GET_MOVIE($uid: String, $externalId: String) {
     getObject: getMovie(uid: $uid, external_id: $externalId) {
       uid
@@ -40,6 +41,12 @@ export const GET_MOVIE = gql`
       synopsis
       synopsis_short
       release_date
+      ${
+        skylarkTVIngestorSchemaLoaded
+          ? SkylarkTVAdditionalFields.AudienceRating
+          : ""
+      }
+      ${skylarkTVIngestorSchemaLoaded ? SkylarkTVAdditionalFields.Budget : ""}
       images {
         objects {
           uid

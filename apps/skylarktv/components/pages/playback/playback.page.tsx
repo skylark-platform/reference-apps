@@ -2,13 +2,16 @@ import React from "react";
 import { formatReleaseDate } from "@skylark-reference-apps/lib";
 import useTranslation from "next-translate/useTranslation";
 import {
+  MdBook,
   MdCalendarToday,
-  MdGrade,
   MdMode,
+  MdMoney,
   MdMovie,
+  MdPeople,
   MdPhotoCameraFront,
   MdRecentActors,
   MdSettings,
+  MdStar,
   MdTag,
 } from "react-icons/md";
 import {
@@ -41,6 +44,8 @@ interface PlaybackPageProps {
   };
   number?: string | number;
   releaseDate?: string;
+  budget?: string | number;
+  audienceRating?: string;
   brand?: {
     title: string;
     uid: string;
@@ -67,13 +72,14 @@ const getIconForCreditRole = (role: string) => {
       return <MdMovie />;
     case "Writer":
       return <MdMode />;
+    case "Author":
+      return <MdBook />;
     case "Presenter":
       return <MdPhotoCameraFront />;
     case "Engineer":
       return <MdSettings />;
-
     default:
-      return <MdGrade />;
+      return <MdPeople />;
   }
 };
 
@@ -126,6 +132,8 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
   player,
   number,
   releaseDate,
+  audienceRating,
+  budget,
   brand,
   season,
   credits,
@@ -143,6 +151,35 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
             index,
         )
     : null;
+
+  const metadataPanelContent = [
+    ...convertCreditsToMetadataContent(credits),
+    {
+      icon: <MdCalendarToday />,
+      header: t("released"),
+      body: formatReleaseDate(releaseDate, lang),
+    },
+    {
+      icon: <MdStar />,
+      header: t("audience-rating"),
+      body: audienceRating || undefined,
+    },
+    {
+      icon: <MdTag />,
+      header: t("tags"),
+      body: tags,
+    },
+    {
+      icon: <MdMoney />,
+      header: t("budget"),
+      body: budget
+        ? `$${(typeof budget === "string" ? budget : budget.toString()).replace(
+            /\B(?=(\d{3})+(?!\d))/g,
+            ",",
+          )}`
+        : undefined,
+    },
+  ];
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-start bg-gray-900 pb-20 font-body md:pt-64">
@@ -180,22 +217,10 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
               <span className="mb-4 w-4/5 border-b border-gray-800 md:hidden" />
             </div>
             <MetadataPanel
-              content={[
-                ...convertCreditsToMetadataContent(credits),
-                {
-                  icon: <MdCalendarToday />,
-                  header: t("released"),
-                  body: formatReleaseDate(releaseDate, lang),
-                },
-                {
-                  icon: <MdTag />,
-                  header: t("tags"),
-                  body: tags,
-                },
-              ].filter(({ body }) =>
+              content={metadataPanelContent.filter(({ body }) =>
                 Array.isArray(body)
                   ? body.length > 0
-                  : React.isValidElement(body),
+                  : React.isValidElement(body) || typeof body === "string",
               )}
             />
           </div>

@@ -61,12 +61,15 @@ export const formatReleaseDate = (
   date?: string,
   locale = "en-gb",
   format = "MMMM D, YYYY",
-): string =>
-  date
+): string => {
+  const formattedDate = date
     ? dayjs(date, ["YYYY-MM-DD", "YYYY-MM-DDZ", "X", "x"])
         .locale(locale)
         .format(format)
     : "";
+
+  return formattedDate;
+};
 
 /**
  * formatYear - takes a date, returns the year

@@ -22,6 +22,7 @@ import {
   useAddSlugToObjectUrl,
   useUidAndSlugFromObjectUrl,
 } from "../../hooks/useUidAndSlugFromObjectUrl";
+import { useSkylarkEnvironment } from "../../hooks/useSkylarkEnvironment";
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //   const seo = await getSeoDataForObject(
@@ -40,11 +41,18 @@ import {
 const EpisodePage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
   const { uid } = useUidAndSlugFromObjectUrl();
 
+  const { environment, isLoading: isLoadingEnvironment } =
+    useSkylarkEnvironment();
+
   const {
     data: episode,
     isError,
     isLoading,
-  } = useObject<Episode>(GET_EPISODE, uid as string);
+  } = useObject<Episode>(
+    GET_EPISODE(environment.hasUpdatedSeason),
+    uid as string,
+    { disabled: isLoadingEnvironment },
+  );
 
   const canonical = useAddSlugToObjectUrl(episode);
 
@@ -85,6 +93,7 @@ const EpisodePage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
         title={title || seo?.title || "Episode"}
       />
       <PlaybackPage
+        audienceRating={episode?.audience_rating as string | undefined}
         availabilityEndDate={availabilityEndDate}
         brand={
           episode?.seasons?.objects?.[0]?.brands?.objects?.[0]
