@@ -103,7 +103,7 @@ export const hasProperty = <T, K extends PropertyKey, V = unknown>(
   object: T,
   property: K,
 ): object is T & Record<K, V> =>
-  Object.prototype.hasOwnProperty.call(object, property);
+  object && Object.prototype.hasOwnProperty.call(object, property);
 
 export const addCloudinaryOnTheFlyImageTransformation = (
   imageUrl: string,
