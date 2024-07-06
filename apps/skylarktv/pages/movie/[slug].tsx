@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
+import { hasProperty } from "@skylark-reference-apps/lib";
 import {
   SeoObjectData,
   convertObjectImagesToSeoImages,
@@ -95,7 +96,11 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         title={title || seo?.title || "Movie"}
       />
       <PlaybackPage
-        audienceRating={movie?.audience_rating as string | undefined}
+        audienceRating={
+          hasProperty(movie, "audience_rating")
+            ? (movie?.audience_rating as string)
+            : undefined
+        }
         availabilityEndDate={availabilityEndDate}
         brand={
           firstBrand
@@ -105,7 +110,9 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
               }
             : undefined
         }
-        budget={movie?.budget as string | undefined}
+        budget={
+          hasProperty(movie, "budget") ? (movie?.budget as string) : undefined
+        }
         credits={splitAndFormatGraphQLCreditsByInternalTitle(
           movie?.credits?.objects,
         )}

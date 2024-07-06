@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
+import { hasProperty } from "@skylark-reference-apps/lib";
 import {
   SeoObjectData,
   convertObjectImagesToSeoImages,
@@ -93,7 +94,11 @@ const EpisodePage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
         title={title || seo?.title || "Episode"}
       />
       <PlaybackPage
-        audienceRating={episode?.audience_rating as string | undefined}
+        audienceRating={
+          hasProperty(episode, "audience_rating")
+            ? (episode?.audience_rating as string)
+            : undefined
+        }
         availabilityEndDate={availabilityEndDate}
         brand={
           episode?.seasons?.objects?.[0]?.brands?.objects?.[0]
