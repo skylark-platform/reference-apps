@@ -12,6 +12,8 @@ import {
   MdRecentActors,
   MdSettings,
   MdStar,
+  MdStarHalf,
+  MdStarOutline,
   MdTag,
 } from "react-icons/md";
 import {
@@ -106,7 +108,7 @@ const convertCreditsToMetadataContent = (
               <Link
                 className="hover:text-skylarktv-accent"
                 href={`/person/${personUid}`}
-                key={personUid}
+                key={`${role}-${personUid}`}
               >
                 {name}
               </Link>
@@ -117,6 +119,35 @@ const convertCreditsToMetadataContent = (
       ),
       icon: getIconForCreditRole(role),
     }),
+  );
+};
+
+const convertAudienceRatingToStars = (rating?: string | number) => {
+  const parsedRating = typeof rating === "string" ? parseFloat(rating) : rating;
+
+  if (!parsedRating || Number.isNaN(parsedRating)) {
+    return null;
+  }
+
+  const outOf5 = parsedRating / 2;
+
+  const numberFullStars = Math.floor(outOf5);
+  const showHalfStar = parsedRating % 2 > 1;
+
+  return (
+    <div className="flex h-full items-center text-xl">
+      {Array.from({ length: 5 }, (_, index) => {
+        if (index < numberFullStars) {
+          return <MdStar key={`full-star-${index}`} />;
+        }
+
+        if (index <= numberFullStars && showHalfStar) {
+          return <MdStarHalf key={`half-star-${index}`} />;
+        }
+
+        return <MdStarOutline key={`empty-star-${index}`} />;
+      })}
+    </div>
   );
 };
 
@@ -152,17 +183,21 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
         )
     : null;
 
+  const strBudget = (
+    typeof budget === "string" ? budget : budget?.toString()
+  )?.trim();
+
   const metadataPanelContent = [
     ...convertCreditsToMetadataContent(credits),
+    {
+      icon: <MdStar />,
+      header: t("audience-rating"),
+      body: convertAudienceRatingToStars(audienceRating),
+    },
     {
       icon: <MdCalendarToday />,
       header: t("released"),
       body: formatReleaseDate(releaseDate, lang),
-    },
-    {
-      icon: <MdStar />,
-      header: t("audience-rating"),
-      body: audienceRating || undefined,
     },
     {
       icon: <MdTag />,
@@ -172,12 +207,10 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
     {
       icon: <MdMoney />,
       header: t("budget"),
-      body: budget
-        ? `$${(typeof budget === "string" ? budget : budget.toString()).replace(
-            /\B(?=(\d{3})+(?!\d))/g,
-            ",",
-          )}`
-        : undefined,
+      body:
+        strBudget && strBudget !== "0"
+          ? `$${strBudget.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
+          : undefined,
     },
   ];
 
