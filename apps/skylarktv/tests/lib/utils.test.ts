@@ -43,24 +43,17 @@ describe("utils.ts", () => {
   describe("formatGraphQLCredits", () => {
     it("returns credits with the character name when credits has a length of 2", () => {
       const got = utils.formatGraphQLCredits([credits[0], credits[1]]);
-      expect(got).toEqual(
-        ["Donald Glover - Childish Gambino", "Brad Pitt"].map(
-          (name, index) => ({ name, personUid: `person-${index + 1}` }),
-        ),
-      );
-    });
-
-    it("returns credits without the character name when credits has a length of 5", () => {
-      const got = utils.formatGraphQLCredits(credits);
-      expect(got).toEqual(
-        [
-          "Donald Glover - Childish Gambino",
-          "Brad Pitt",
-          "Famous writer",
-          "Angelina Jolie",
-          "George Clooney",
-        ].map((name, index) => ({ name, personUid: `person-${index + 1}` })),
-      );
+      expect(got).toEqual([
+        {
+          personUid: "person-1",
+          name: "Donald Glover",
+          character: "Childish Gambino",
+        },
+        {
+          personUid: "person-2",
+          name: "Brad Pitt",
+        },
+      ]);
     });
   });
 

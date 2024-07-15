@@ -4,6 +4,7 @@ import { MdOutlineWatchLater } from "react-icons/md";
 import { sanitize } from "dompurify";
 
 import Link from "next/link";
+import clsx from "clsx";
 import { List } from "../list";
 
 interface InformationPanelProps {
@@ -22,6 +23,11 @@ interface InformationPanelProps {
   description?: string;
   genres?: string[];
   themes?: string[];
+  actors?: {
+    personUid: string;
+    name: string;
+    character?: string;
+  }[];
 }
 
 const getTranslationStringForAvailability = (
@@ -57,7 +63,7 @@ const Description = ({ description }: { description: string }) => {
   const cleanHTML = sanitize(description);
 
   return (
-    <div className="mb-5 pt-2 text-sm text-gray-400 md:text-base">
+    <div className="mb-5 pt-2 text-sm text-gray-200 md:text-base">
       <p
         className={`${isExpanded ? "line-clamp-none" : "line-clamp-4"}`}
         dangerouslySetInnerHTML={{ __html: cleanHTML }}
@@ -85,6 +91,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
   description,
   genres,
   themes,
+  actors,
 }) => {
   const { t } = useTranslation("common");
 
@@ -143,6 +150,24 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
             textSize={"sm"}
           />
           {description && <Description description={description} />}
+          {actors && (
+            <p
+              className={clsx(
+                "mb-2 text-xs text-gray-400 md:text-sm",
+                description && "-mt-4",
+              )}
+            >
+              {`Starring `}
+              {actors.map(({ name, character }, i) => (
+                <>
+                  {`${character ? `${name} as ${character}` : name}`}
+                  {i < actors.length - 1
+                    ? `${i < actors.length - 2 ? `, ` : ` & `}`
+                    : "."}
+                </>
+              ))}
+            </p>
+          )}
           {[
             { key: "genres", items: genres },
             { key: "themes", items: themes },

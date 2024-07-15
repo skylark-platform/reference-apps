@@ -80,6 +80,7 @@ export const GET_PERSON_FOR_RELATED_CREDITS = gql`
       credits(limit: 50) {
         objects {
           uid
+          character
           movies(limit: 20) {
             objects {
               __typename

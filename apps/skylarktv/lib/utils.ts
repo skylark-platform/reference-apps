@@ -30,11 +30,12 @@ import {
 
 dayjs.extend(relativeTime);
 
-export const formatGraphQLCredits = (credits: Credit[]) => {
+export const formatGraphQLCredits = (
+  credits: Credit[],
+): { personUid: string; name: string; character?: string }[] => {
   const creditsWithName = credits.filter((credit) =>
     Boolean(credit?.people?.objects?.[0]?.name),
   );
-  const showCharacterName = creditsWithName.length <= 8;
 
   return creditsWithName
     .map((credit) => {
@@ -43,18 +44,22 @@ export const formatGraphQLCredits = (credits: Credit[]) => {
         return null;
       }
 
-      const name =
-        showCharacterName && credit?.character && person.name
-          ? `${person.name} - ${credit?.character}`
-          : person.name;
+      // const name =
+      //   showCharacterName && credit?.character && person.name
+      //     ? `${person.name} - ${credit?.character}`
+      //     : person.name;
 
       return {
         personUid: person.uid,
-        name,
+        name: person.name || "",
+        character: credit?.character,
       };
     })
-    .filter((credit): credit is { personUid: string; name: string } =>
-      Boolean(credit),
+    .filter(
+      (
+        credit,
+      ): credit is { personUid: string; name: string; character: string } =>
+        Boolean(credit),
     );
 };
 
