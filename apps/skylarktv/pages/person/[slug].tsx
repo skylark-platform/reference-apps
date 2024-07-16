@@ -8,6 +8,7 @@ import {
 } from "@skylark-reference-apps/react";
 import dayjs from "dayjs";
 import useTranslation from "next-translate/useTranslation";
+import clsx from "clsx";
 import { Episode, ImageType, Movie, Person } from "../../types/gql";
 import { DisplayError } from "../../components/displayError";
 import { useObject } from "../../hooks/useObject";
@@ -62,6 +63,8 @@ const PersonPage: NextPage = () => {
 
   const image = getGraphQLImageSrc(person?.images, ImageType.Poster);
 
+  const useRandomImage = !image;
+
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-start bg-gray-900 pb-20 pt-20 font-body md:pt-64">
       <SkeletonPage show={isLoading}>
@@ -77,18 +80,23 @@ const PersonPage: NextPage = () => {
         <div className="mb-20 flex w-full grid-cols-4 flex-col gap-4 md:max-w-5xl md:flex-row md:gap-20">
           <div>
             <div className="mx-auto flex h-48 w-48 items-center justify-center overflow-hidden rounded-full bg-skylarktv-primary md:m-0 md:h-72 md:w-72">
-              {image ? (
+              {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   alt={person?.name || "the person"}
-                  className="h-full w-full object-cover"
-                  src={addCloudinaryOnTheFlyImageTransformation(image, {
-                    width: 600,
-                  })}
+                  className={clsx(
+                    "h-full w-full object-cover",
+                    useRandomImage && "grayscale",
+                  )}
+                  src={
+                    image
+                      ? addCloudinaryOnTheFlyImageTransformation(image, {
+                          width: 600,
+                        })
+                      : "https://xsgames.co/randomusers/avatar.php?g=female"
+                  }
                 />
-              ) : (
-                <p>{`No image`}</p>
-              )}
+              }
             </div>
           </div>
           <div className="mx-4 text-white">
