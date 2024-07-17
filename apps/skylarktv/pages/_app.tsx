@@ -41,7 +41,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <QueryClientProvider client={queryClient}>
         <IntercomProvider appId={"t104fsur"} autoBoot>
           <DimensionsContextProvider>
-            <SkylarkTVLayout skylarkApiUrl={skylarkApiUrl} timeTravelEnabled>
+            <SkylarkTVLayout skylarkApiUrl={skylarkApiUrl}>
               <Component {...pageProps} />
             </SkylarkTVLayout>
           </DimensionsContextProvider>

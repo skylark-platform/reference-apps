@@ -10,3 +10,4 @@ export * from "./search";
 export * from "./getLiveStream";
 export * from "./getArticle";
 export * from "./listArticles";
+export * from "./getUserAccount";

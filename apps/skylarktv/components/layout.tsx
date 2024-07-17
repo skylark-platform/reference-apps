@@ -33,16 +33,16 @@ import createDefaultSeo from "../next-seo.config";
 import { GoogleTagManagerScript } from "./googleTagManager";
 import { BackButton } from "./backButton";
 import { PURGE_CACHE } from "../graphql/queries/purgeCache";
+import { useUser } from "../hooks/useUserAccount";
+import { SkylarkApiPermission } from "../types";
 
 interface Props {
   skylarkApiUrl?: string;
-  timeTravelEnabled?: boolean;
   children?: React.ReactNode;
 }
 
 export const SkylarkTVLayout: React.FC<Props> = ({
   skylarkApiUrl,
-  timeTravelEnabled,
   children,
 }) => {
   const { config } = useSkylarkTVConfig();
@@ -98,6 +98,10 @@ export const SkylarkTVLayout: React.FC<Props> = ({
     // eslint-disable-next-line no-console
     onError: console.error,
   });
+
+  const { permissions } = useUser();
+
+  const includeDimensionSettings = !permissions || permissions.length > 1;
 
   return (
     <>
@@ -179,11 +183,16 @@ export const SkylarkTVLayout: React.FC<Props> = ({
         <div className="relative z-10 h-full w-full pt-mobile-header md:pt-0">
           {children}
         </div>
-        <DimensionSettings
-          skylarkApiUrl={skylarkApiUrl}
-          timeTravelEnabled={!!timeTravelEnabled}
-          onCachePurge={() => purgeCache({})}
-        />
+        {includeDimensionSettings && (
+          <DimensionSettings
+            skylarkApiUrl={skylarkApiUrl}
+            timeTravelEnabled={
+              !permissions ||
+              permissions.includes(SkylarkApiPermission.TimeTravel)
+            }
+            onCachePurge={() => purgeCache({})}
+          />
+        )}
       </div>
       <ConnectToSkylarkModal
         closeModal={() => setModalOpen(false)}

@@ -62,10 +62,8 @@ export const ConnectToSkylarkModal = ({
     debouncedSkylarkApiKey !== skylarkApiKey;
 
   useEffect(() => {
-    if (
-      localStorage.getItem(LOCAL_STORAGE.uri) &&
-      localStorage.getItem(LOCAL_STORAGE.apikey)
-    ) {
+    const uri = localStorage.getItem(LOCAL_STORAGE.uri);
+    if (uri && localStorage.getItem(LOCAL_STORAGE.apikey)) {
       setUsingCustomSkylark(true);
     }
   }, []);
