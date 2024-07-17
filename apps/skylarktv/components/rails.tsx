@@ -54,6 +54,7 @@ export const SeasonRail = ({
         object ? (
           <Thumbnail
             data={object}
+            externalId={object.external_id}
             isLoading={isLoading}
             key={object.uid}
             preferredImageType={preferredImageType}
@@ -93,6 +94,7 @@ export const SetRail = ({
         object ? (
           <Thumbnail
             data={object}
+            externalId={object.external_id}
             isLoading={isLoading}
             key={object.uid}
             slug={object.slug}
@@ -125,6 +127,7 @@ export const TagRail = ({
         // Without __typename, the Thumbnail will not know what query to use
         object && hasProperty(object, "__typename") ? (
           <ThumbnailWithSelfFetch
+            externalId={object.external_id}
             key={object.uid}
             objectType={object.__typename as ObjectTypes}
             slug={object.slug}
@@ -162,6 +165,7 @@ export const ListObjectsRail = ({
         // Without __typename, the Thumbnail will not know what query to use
         object && hasProperty(object, "__typename") ? (
           <ThumbnailWithSelfFetch
+            externalId={object.external_id}
             key={object.uid}
             objectType={object.__typename as ObjectTypes}
             slug={object.slug}
@@ -211,6 +215,7 @@ export const ListPersonOtherCreditsRail = ({
           {otherCredits?.map((object) =>
             object && hasProperty(object, "__typename") ? (
               <ThumbnailWithSelfFetch
+                externalId={object.external_id}
                 fetchAdditionalRelationships
                 initialData={object}
                 key={object.uid}

@@ -9,6 +9,7 @@ export const GET_SET_THUMBNAIL = gql`
     getObject: getSkylarkSet(uid: $uid) {
       __typename
       uid
+      external_id
       type
       title
       title_short
@@ -28,6 +29,7 @@ export const GET_SET_FOR_CAROUSEL = gql`
   query GET_SET_FOR_CAROUSEL($uid: String!) {
     getObject: getSkylarkSet(uid: $uid) {
       uid
+      external_id
       content {
         objects {
           object {
@@ -127,6 +129,7 @@ export const GET_SET_FOR_RAIL = gql`
         objects {
           object {
             uid
+            external_id
             __typename
             ... on Movie {
               title
@@ -246,6 +249,7 @@ export const GET_PAGE_SET = (skylarkTVIngestorSchemaLoaded: boolean) => gql`
           object {
             __typename
             uid
+            external_id
             ... on Season {
               title
               title_short

@@ -265,6 +265,8 @@ export const convertGraphQLSetType = (setType?: string): SetTypes => {
       return "slider";
     case "RAIL":
       return "rail";
+    case "GRID":
+      return "grid";
     default:
       return "page";
   }

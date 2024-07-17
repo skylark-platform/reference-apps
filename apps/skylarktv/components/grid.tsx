@@ -63,6 +63,7 @@ export const Grid = ({
       object ? (
         <Thumbnail
           data={object}
+          externalId={object.external_id}
           key={object.uid}
           slug={object.slug}
           uid={object.uid}
@@ -92,6 +93,7 @@ export const GridWithSelfFetch = ({
     {objects?.map((object) =>
       object && hasProperty(object, "__typename") ? (
         <ThumbnailWithSelfFetch
+          externalId={object.external_id}
           fetchAdditionalRelationships={fetchAdditionalRelationships}
           key={object.uid}
           objectType={object.__typename as ObjectTypes}
@@ -127,6 +129,7 @@ export const SkylarkSetGrid = ({
         object ? (
           <Thumbnail
             data={object}
+            externalId={object.external_id}
             isLoading={isLoading}
             key={object.uid}
             slug={object.slug}

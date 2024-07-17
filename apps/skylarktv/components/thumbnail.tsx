@@ -56,6 +56,7 @@ export type ThumbnailVariant =
 
 interface ThumbnailProps {
   uid: string;
+  externalId?: string | null;
   slug?: string | null;
   variant: ThumbnailVariant;
   preferredImageType?: SkylarkTVSupportedImageType;
@@ -245,7 +246,15 @@ const getBrandAndSeasonFromObject = (
 };
 
 const ThumbnailComponent = (
-  { uid, slug, variant, preferredImageType, data, isLoading }: ThumbnailProps,
+  {
+    uid,
+    externalId,
+    slug,
+    variant,
+    preferredImageType,
+    data,
+    isLoading,
+  }: ThumbnailProps,
   ref: ForwardedRef<HTMLDivElement>,
 ) => {
   const parsedType =
@@ -253,7 +262,11 @@ const ThumbnailComponent = (
       ? convertGraphQLSetType(data?.type || "")
       : convertTypenameToObjectType(data?.__typename);
 
-  const href = generateHref(parsedType, uid, slug);
+  const href = generateHref(
+    parsedType,
+    parsedType === "page" ? externalId || uid : uid,
+    slug,
+  );
 
   const backgroundImage = getGraphQLImageSrc(
     data?.images,
