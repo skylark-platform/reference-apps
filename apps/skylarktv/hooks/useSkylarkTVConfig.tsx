@@ -28,13 +28,17 @@ interface SkylarkTVConfigResponse {
   };
 }
 
-interface SkylarkTVConfig {
+export interface SkylarkTVConfig {
   appName: string;
   primaryColor: string;
   accentColor: string;
   googleTagManagerId: string;
   featuredPageUrl: string;
   logo?: {
+    alt: string;
+    src: string;
+  };
+  loadingLogo?: {
     alt: string;
     src: string;
   };
@@ -70,7 +74,17 @@ export const useSkylarkTVConfig = () => {
     const logo =
       gqlConfig.logo.objects &&
       gqlConfig.logo.objects.length > 0 &&
-      gqlConfig.logo.objects[0];
+      (gqlConfig.logo.objects.find(
+        (img) => img?.type && ["MAIN", "THUMBNAIL"].includes(img.type),
+      ) ||
+        gqlConfig.logo.objects[0]);
+
+    // Only use loadingLogo when logo is populated
+    const loadingLogo =
+      logo &&
+      gqlConfig.logo.objects &&
+      gqlConfig.logo.objects.length > 1 &&
+      gqlConfig.logo.objects.find((img) => img?.type === "PRE_LIVE");
 
     return {
       appName: gqlConfig.app_name,
@@ -83,6 +97,13 @@ export const useSkylarkTVConfig = () => {
           ? {
               alt: logo.title || logo.slug || logo.url,
               src: logo.url,
+            }
+          : undefined,
+      loadingLogo:
+        loadingLogo && loadingLogo.url
+          ? {
+              alt: loadingLogo.title || loadingLogo.slug || loadingLogo.url,
+              src: loadingLogo.url,
             }
           : undefined,
     };

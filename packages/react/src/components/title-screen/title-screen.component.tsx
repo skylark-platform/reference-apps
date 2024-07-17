@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
 
@@ -16,11 +17,13 @@ const character = {
 };
 
 export const TitleScreen: React.FC<TitleScreenProps> = ({
-  title,
+  title: propTitle,
   logo,
   exitBackgroundColor,
   children,
 }) => {
+  const title = propTitle.trim();
+
   const staggerCharacter = 0.7 / title.length;
 
   const container = {
@@ -82,7 +85,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
 
   return (
     <AnimatePresence
-      key={title} // Makes this reset when the title changes so the name is always right on load
+      key={title || logo?.key} // Makes this reset when the title changes so the name is always right on load
       onExitComplete={() => setShown(true)}
     >
       {show && !animationComplete && (
@@ -102,21 +105,22 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           >
             {logo && (
               <motion.span
-                className="mr-2 inline-block md:mr-4"
+                className={clsx("inline-block", title && "mr-2 md:mr-4")}
                 variants={character}
               >
                 {logo}
               </motion.span>
             )}
-            {title.split("").map((item, i) => (
-              <motion.span
-                className="inline-block"
-                key={i}
-                variants={character}
-              >
-                {item === " " ? <>&nbsp;</> : item}
-              </motion.span>
-            ))}
+            {title &&
+              title.split("").map((item, i) => (
+                <motion.span
+                  className="inline-block"
+                  key={i}
+                  variants={character}
+                >
+                  {item === " " ? <>&nbsp;</> : item}
+                </motion.span>
+              ))}
           </motion.p>
           <motion.div
             animate="show"

@@ -28,7 +28,10 @@ import {
 import { DefaultSeo } from "next-seo";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Search } from "./search";
-import { useSkylarkTVConfig } from "../hooks/useSkylarkTVConfig";
+import {
+  SkylarkTVConfig,
+  useSkylarkTVConfig,
+} from "../hooks/useSkylarkTVConfig";
 import createDefaultSeo from "../next-seo.config";
 import { GoogleTagManagerScript } from "./googleTagManager";
 import { BackButton } from "./backButton";
@@ -40,6 +43,28 @@ interface Props {
   skylarkApiUrl?: string;
   children?: React.ReactNode;
 }
+
+const Logo = ({ config }: { config?: SkylarkTVConfig }) => {
+  const configLogo = config?.loadingLogo || config?.logo;
+  if (configLogo) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        alt={configLogo.alt}
+        className="block max-h-20"
+        key={configLogo.src}
+        src={configLogo.src}
+      />
+    );
+  }
+
+  return (
+    <MdStream
+      className="h-12 w-12 rounded-md bg-skylarktv-primary sm:h-14 sm:w-14 lg:h-16 lg:w-16"
+      key="default"
+    />
+  );
+};
 
 export const SkylarkTVLayout: React.FC<Props> = ({
   skylarkApiUrl,
@@ -119,18 +144,12 @@ export const SkylarkTVLayout: React.FC<Props> = ({
           <TitleScreen
             exitBackgroundColor="#5B45CE"
             logo={
-              config?.logo ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  alt={config.logo.alt}
-                  className="block max-h-20"
-                  src={config.logo.src}
-                />
-              ) : (
-                <MdStream className="h-12 w-12 rounded-md bg-skylarktv-primary sm:h-14 sm:w-14 lg:h-16 lg:w-16" />
-              )
+              <Logo
+                config={config}
+                key={config?.loadingLogo?.src || config?.logo?.src || "logo"}
+              />
             }
-            title={appTitle}
+            title={!config?.loadingLogo ? appTitle : ""}
           >
             <p className="text-xs text-gray-500 sm:text-sm lg:text-lg">
               {t("by-skylark")}

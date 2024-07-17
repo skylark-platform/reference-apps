@@ -16,12 +16,13 @@ export const GET_APP_CONFIG = gql`
         accent_color
         featured_page_url
         google_tag_manager_id
-        logo(limit: 1) {
+        logo(limit: 5) {
           objects {
             uid
             url
             title
             slug
+            type
           }
         }
       }
@@ -40,12 +41,13 @@ export const GET_STREAMTV_CONFIG = gql`
         accent_color
         featured_page_url
         google_tag_manager_id
-        logo(limit: 1) {
+        logo(limit: 5) {
           objects {
             uid
             url
             title
             slug
+            type
           }
         }
       }
