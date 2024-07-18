@@ -45,6 +45,6 @@
     "ingest:legacy-to-skylark:availability": "ts-node src/lib/ingestLegacyObjectsToSkylark/scripts/assignAlwaysAvailabilityToAllObjects.ts"
   },
   "resolutions": {
-    "axios": "1.4.0"
+    "axios": "1.6.0"
   }
 }
