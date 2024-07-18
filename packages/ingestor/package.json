@@ -5,33 +5,33 @@
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
-    "@tsconfig/node18": "^18.2.2",
-    "@types/fs-extra": "^11.0.1",
-    "@types/jest": "^29.5.0",
-    "@types/node": "^17.0.43",
-    "cross-env": "^7.0.3",
-    "jest": "^29.6.1",
-    "jest-environment-jsdom": "^29.6.1",
-    "ts-node": "^10.8.1",
-    "typescript": "^5.2.2"
+    "@tsconfig/node18": "18.2.2",
+    "@types/fs-extra": "11.0.1",
+    "@types/jest": "29.5.3",
+    "@types/node": "17.0.45",
+    "cross-env": "7.0.3",
+    "jest": "29.6.1",
+    "jest-environment-jsdom": "29.6.1",
+    "ts-node": "10.9.1",
+    "typescript": "5.2.2"
   },
   "dependencies": {
-    "@aws-amplify/auth": "^4.6.1",
-    "@aws-amplify/core": "^4.6.1",
-    "@aws-sdk/client-s3": "^3.145.0",
-    "@aws-sdk/util-credentials": "^3.56.0",
+    "@aws-amplify/auth": "4.6.17",
+    "@aws-amplify/core": "4.7.15",
+    "@aws-sdk/client-s3": "3.370.0",
+    "@aws-sdk/util-credentials": "3.56.0",
     "@skylark-reference-apps/lib": "*",
-    "@types/lodash": "^4.14.182",
-    "airtable": "^0.11.4",
-    "axios": "^1.4.0",
-    "axios-retry": "^3.5.1",
-    "dayjs": "^1.11.3",
-    "dotenv": "^16.0.1",
-    "fs-extra": "^11.1.1",
-    "graphql": "^16.8.0",
-    "graphql-request": "^6.1.0",
-    "json-to-graphql-query": "^2.2.4",
-    "lodash": "^4.17.21"
+    "@types/lodash": "4.14.195",
+    "airtable": "0.11.6",
+    "axios": "1.7.2",
+    "axios-retry": "3.5.1",
+    "dayjs": "1.11.9",
+    "dotenv": "16.3.1",
+    "fs-extra": "11.1.1",
+    "graphql": "16.9.0",
+    "graphql-request": "6.1.0",
+    "json-to-graphql-query": "2.2.5",
+    "lodash": "4.17.21"
   },
   "scripts": {
     "tsc": "tsc",
@@ -45,6 +45,6 @@
     "ingest:legacy-to-skylark:availability": "ts-node src/lib/ingestLegacyObjectsToSkylark/scripts/assignAlwaysAvailabilityToAllObjects.ts"
   },
   "resolutions": {
-    "axios": "1.6.0"
+    "axios": "1.7.2"
   }
 }
