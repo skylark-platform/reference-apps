@@ -1,6 +1,15 @@
 import { graphQLClient } from "@skylark-reference-apps/lib";
 import { gql } from "graphql-request";
 
+const PURGE_CACHE = gql`
+  mutation PURGE_CACHE {
+    purgeCache(all: true) {
+      type
+      uids
+    }
+  }
+`;
+
 // Sets a week long cache for Showcase environment Queries
 const CACHE_MUTATION = gql`
   mutation CONFIGURE_QUERY_CACHE {
@@ -26,4 +35,8 @@ export const configureCache = async () => {
       rules: { type: string; stale_while_revalidate: number; max_age: number };
     };
   }>(CACHE_MUTATION);
+};
+
+export const purgeCache = async () => {
+  await graphQLClient.uncachedRequest(PURGE_CACHE);
 };

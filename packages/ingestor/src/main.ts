@@ -29,7 +29,7 @@ import {
   writeAirtableOutputFile,
 } from "./lib/skylark/saas/fs";
 import { updateObjectConfigurations } from "./lib/skylark/saas/objectConfiguration";
-import { configureCache } from "./lib/skylark/saas/cacheConfiguration";
+import { configureCache, purgeCache } from "./lib/skylark/saas/cache";
 import { updateRelationshipConfigurations } from "./lib/skylark/saas/relationshipConfiguration";
 import { guessObjectRelationshipsFromAirtableRows } from "./lib/skylark/saas/utils";
 
@@ -253,6 +253,8 @@ const main = async () => {
   // eslint-disable-next-line no-console
   console.time(timers.objects);
 
+  await purgeCache();
+
   await createDimensions(showcaseDimensionsConfig);
 
   const dimensions = await createOrUpdateScheduleDimensionValues(
@@ -410,6 +412,8 @@ const main = async () => {
     };
 
     await writeAirtableOutputFile(dateStamp, output);
+
+    await purgeCache();
   }
 
   // eslint-disable-next-line no-console
