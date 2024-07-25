@@ -67,7 +67,7 @@ runs:
       run: yarn
     # Uses a retry action in case of a random Skylark error
     - name: Run ingestor
-      uses: nick-fields/retry@v2
+      uses: nick-fields/retry@v3
       env:
         AIRTABLE_API_KEY: ${{ inputs.airtable-api-key }}
         AIRTABLE_BASE_ID: ${{ inputs.airtable-base-id }}
