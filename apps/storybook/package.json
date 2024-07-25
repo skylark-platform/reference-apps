@@ -12,7 +12,7 @@
   "dependencies": {
     "@fontsource/inter": "4.5.15",
     "@fontsource/outfit": "4.5.11",
-    "next": "13.4.19",
+    "next": "14.1.1",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
