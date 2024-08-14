@@ -5712,15 +5712,12 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-20.4.2.tgz#129cc9ae69f93824f92fac653eebfb4812ab4af9"
   integrity sha512-Dd0BYtWgnWJKwO1jkmTrzofjK2QXXcai0dmtzvIBhcA+RsG5h8R3xlyta0kGOZRNfL9GuRtb1knmPEhQrePCEw==
 
-"@types/node@17.0.4":
-  version "17.0.4"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.4.tgz#fec0ce0526abb6062fd206d72a642811b887a111"
-  integrity sha512-6xwbrW4JJiJLgF+zNypN5wr2ykM9/jHcL7rQ8fZe2vuftggjzZeRSM4OwRc6Xk8qWjwJ99qVHo/JgOGmomWRog==
-
-"@types/node@17.0.45":
-  version "17.0.45"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.45.tgz#2c0fafd78705e7a18b7906b5201a522719dc5190"
-  integrity sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==
+"@types/node@20.14.15":
+  version "20.14.15"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.14.15.tgz#e59477ab7bc7db1f80c85540bfd192a0becc588b"
+  integrity sha512-Fz1xDMCF/B00/tYSVMlmK7hVeLh7jE5f3B7X1/hmV0MJBwE27KlS7EvD/Yp+z1lm8mVhwV5w+n8jOZG8AfTlKw==
+  dependencies:
+    undici-types "~5.26.4"
 
 "@types/node@>=8.0.0 <15":
   version "14.18.53"
@@ -6754,10 +6751,10 @@ axios-retry@3.5.1:
     "@babel/runtime" "^7.15.4"
     is-retry-allowed "^2.2.0"
 
-axios@1.7.2:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.7.2.tgz#b625db8a7051fbea61c35a3cbb3a1daa7b9c7621"
-  integrity sha512-2A8QhOMrbomlDuiLeK9XibIBzuHeRcqqNOHp0Cyp5EoJ1IFDh+XZH3A6BkXtv0K4gFGCI0Y4BM7B1wOEi0Rmgw==
+axios@1.7.4:
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.7.4.tgz#4c8ded1b43683c8dd362973c393f3ede24052aa2"
+  integrity sha512-DukmaFRnY6AzAALSH4J2M3k6PkaC+MfaAGdEERRWcC9q3/TWQwLpHR8ZRLKTdQ3aBDL64EdluRDjJqKw+BPZEw==
   dependencies:
     follow-redirects "^1.15.6"
     form-data "^4.0.0"
@@ -15019,6 +15016,11 @@ unc-path-regex@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/unc-path-regex/-/unc-path-regex-0.1.2.tgz#e73dd3d7b0d7c5ed86fbac6b0ae7d8c6a69d50fa"
   integrity sha512-eXL4nmJT7oCpkZsHZUOJo8hcX3GbsiDOa0Qu9F646fi8dT3XuSVopVqAcEiVzSKKH7UoDti23wNX3qGFxcW5Qg==
+
+undici-types@~5.26.4:
+  version "5.26.5"
+  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-5.26.5.tgz#bcd539893d00b56e964fd2657a4866b221a65617"
+  integrity sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==
 
 undici@^5.8.0:
   version "5.22.1"

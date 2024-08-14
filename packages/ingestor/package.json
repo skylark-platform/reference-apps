@@ -8,7 +8,7 @@
     "@tsconfig/node18": "18.2.2",
     "@types/fs-extra": "11.0.1",
     "@types/jest": "29.5.3",
-    "@types/node": "17.0.45",
+    "@types/node": "20.14.15",
     "cross-env": "7.0.3",
     "jest": "29.6.1",
     "jest-environment-jsdom": "29.6.1",
@@ -23,7 +23,7 @@
     "@skylark-reference-apps/lib": "*",
     "@types/lodash": "4.14.195",
     "airtable": "0.11.6",
-    "axios": "1.7.2",
+    "axios": "1.7.4",
     "axios-retry": "3.5.1",
     "dayjs": "1.11.9",
     "dotenv": "16.3.1",
@@ -45,6 +45,6 @@
     "ingest:legacy-to-skylark:availability": "ts-node src/lib/ingestLegacyObjectsToSkylark/scripts/assignAlwaysAvailabilityToAllObjects.ts"
   },
   "resolutions": {
-    "axios": "1.7.2"
+    "axios": "1.7.4"
   }
 }
