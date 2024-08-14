@@ -23,7 +23,7 @@
     "@skylark-reference-apps/lib": "*",
     "@types/lodash": "4.14.195",
     "airtable": "0.11.6",
-    "axios": "1.7.2",
+    "axios": "1.7.4",
     "axios-retry": "3.5.1",
     "dayjs": "1.11.9",
     "dotenv": "16.3.1",
@@ -45,6 +45,6 @@
     "ingest:legacy-to-skylark:availability": "ts-node src/lib/ingestLegacyObjectsToSkylark/scripts/assignAlwaysAvailabilityToAllObjects.ts"
   },
   "resolutions": {
-    "axios": "1.7.2"
+    "axios": "1.7.4"
   }
 }
