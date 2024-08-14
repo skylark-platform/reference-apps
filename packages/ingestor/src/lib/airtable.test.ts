@@ -71,8 +71,7 @@ describe("airtable", () => {
           articles: [],
         },
         dimensions: {
-          customerTypes: [],
-          deviceTypes: [],
+          properties: [],
           regions: [],
         },
       };
@@ -130,8 +129,7 @@ describe("airtable", () => {
           articles: [],
         },
         dimensions: {
-          customerTypes: [],
-          deviceTypes: [],
+          properties: [],
           regions: [],
         },
       };

@@ -217,12 +217,8 @@ export const createGraphQLQueryDimensions = (
 ) => {
   const dimensions: { dimension: DimensionTypes; value: string }[] = [
     {
-      dimension: "device-types",
-      value: activeDimensions[DimensionKey.DeviceType],
-    },
-    {
-      dimension: "customer-types",
-      value: activeDimensions[DimensionKey.CustomerType],
+      dimension: "properties",
+      value: activeDimensions[DimensionKey.Property],
     },
     { dimension: "regions", value: activeDimensions[DimensionKey.Region] },
   ];

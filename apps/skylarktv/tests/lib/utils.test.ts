@@ -138,8 +138,7 @@ describe("utils.ts", () => {
     it("translates the active dimensions into the expected GraphQL format", () => {
       const dimensions: Dimensions = {
         [DimensionKey.Language]: "en-GB",
-        [DimensionKey.DeviceType]: "smartphone",
-        [DimensionKey.CustomerType]: "premium",
+        [DimensionKey.Property]: "",
         [DimensionKey.Region]: "europe",
         [DimensionKey.TimeTravel]: "",
       };

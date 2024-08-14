@@ -20,8 +20,7 @@ export type DimensionsContextType = {
   dimensions: Dimensions;
   isLoadingDimensions: boolean;
   setLanguage: (language: string) => void;
-  setCustomerType: (customerType: string) => void;
-  setDeviceType: (deviceType: string) => void;
+  setProperty: (customerType: string) => void;
   setRegion: (region: string) => void;
   setTimeTravel: (timeTravel: string) => void;
 };
@@ -36,15 +35,10 @@ const dimensionsReducer = (
         ...state,
         [DimensionKey.Language]: action.value,
       };
-    case DimensionKey.CustomerType:
+    case DimensionKey.Property:
       return {
         ...state,
-        [DimensionKey.CustomerType]: action.value,
-      };
-    case DimensionKey.DeviceType:
-      return {
-        ...state,
-        [DimensionKey.DeviceType]: action.value,
+        [DimensionKey.Property]: action.value,
       };
     case DimensionKey.Region:
       return {
@@ -64,15 +58,13 @@ const dimensionsReducer = (
 const DimensionsContext = createContext<DimensionsContextType>({
   dimensions: {
     [DimensionKey.Language]: "en-gb",
-    [DimensionKey.CustomerType]: "standard",
-    [DimensionKey.DeviceType]: "",
+    [DimensionKey.Property]: "",
     [DimensionKey.Region]: "",
     [DimensionKey.TimeTravel]: "",
   },
   isLoadingDimensions: true,
   setLanguage: () => {},
-  setCustomerType: () => {},
-  setDeviceType: () => {},
+  setProperty: () => {},
   setRegion: () => {},
   setTimeTravel: () => {},
 });
@@ -87,8 +79,7 @@ export const DimensionsContextProvider = ({
 
   const [dimensions, dispatch] = useReducer(dimensionsReducer, {
     [DimensionKey.Language]: lang,
-    [DimensionKey.CustomerType]: "premium",
-    [DimensionKey.DeviceType]: "",
+    [DimensionKey.Property]: "",
     [DimensionKey.Region]: "europe",
     [DimensionKey.TimeTravel]: "",
   });
@@ -96,7 +87,7 @@ export const DimensionsContextProvider = ({
   // Automatically updates device type dimension depending on screen size
   useEffect(() => {
     if (deviceType !== undefined)
-      dispatch({ type: DimensionKey.DeviceType, value: deviceType });
+      dispatch({ type: DimensionKey.Property, value: deviceType });
   }, [deviceType]);
 
   useEffect(() => {
@@ -108,14 +99,12 @@ export const DimensionsContextProvider = ({
       value={{
         isLoadingDimensions,
         dimensions,
-        setCustomerType: (value: string) =>
-          dispatch({ type: DimensionKey.CustomerType, value }),
+        setProperty: (value: string) =>
+          dispatch({ type: DimensionKey.Property, value }),
         setLanguage: (value: string) => {
           void setLanguage(value);
           dispatch({ type: DimensionKey.Language, value });
         },
-        setDeviceType: (value: string) =>
-          dispatch({ type: DimensionKey.DeviceType, value }),
         setRegion: (value: string) =>
           dispatch({ type: DimensionKey.Region, value }),
         setTimeTravel: (value: string) =>

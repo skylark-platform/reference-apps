@@ -304,6 +304,7 @@ export const ingestClientC = async ({
 
   const dimensions: GraphQLDimension[] = await getExistingDimensions();
   const validProperties = await getValidPropertiesForObject("DimensionValue");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
   const createdDimensions = await createOrUpdateDimensionValues(
     dimensionsToCreate[0].slug,
     validProperties,
@@ -324,8 +325,7 @@ export const ingestClientC = async ({
   const availabilities = await createOrUpdateAvailability(
     sl8SchedulesInAirtableFormat,
     {
-      customerTypes: createdDimensions,
-      deviceTypes: [],
+      properties: [],
       regions: [],
     },
   );
