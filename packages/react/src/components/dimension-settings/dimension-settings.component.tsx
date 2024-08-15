@@ -146,11 +146,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                 <DimensionContent label="Customer Type">
                   <DimensionRadioButton
                     active={dimensions[DimensionKey.Property]}
-                    options={[
-                      { text: "Premium", value: "premium" },
-                      { text: "Standard", value: "standard" },
-                      { text: "Kids", value: "kids" },
-                    ]}
+                    options={[{ text: "Fremantle", value: "fremantle" }]}
                     onChange={(value: string) => setProperty(value)}
                   />
                 </DimensionContent>
@@ -159,11 +155,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                     active={dimensions[DimensionKey.Region]}
                     options={[
                       { text: "Europe", value: "europe" },
-                      { text: "North America", value: "north-america" },
-                      {
-                        text: "Middle East",
-                        value: "mena",
-                      },
+                      { text: "Canada", value: "canada" },
                     ]}
                     onChange={(value: string) => {
                       setRegion(value);

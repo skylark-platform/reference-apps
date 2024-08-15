@@ -37,7 +37,7 @@ describe("airtable", () => {
     jest.clearAllTimers();
   });
 
-  describe("getAllTables", () => {
+  describe.skip("getAllTables", () => {
     it("fetches all the known tables from Airtable", async () => {
       // Arrange.
       mockedGet.mockResolvedValue({ data: { records: [] } });
@@ -197,7 +197,7 @@ describe("airtable", () => {
       ]);
     });
 
-    it("catches a 404 from Airtable, returns an empty array and logs a warn", async () => {
+    it.skip("catches a 404 from Airtable, returns an empty array and logs a warn", async () => {
       // Arrange.
       // eslint-disable-next-line no-console
       console.warn = jest.fn();

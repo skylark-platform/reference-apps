@@ -79,8 +79,7 @@ describe("utils", () => {
 
       const dimensions: Dimensions = {
         [DimensionKey.TimeTravel]: "",
-        [DimensionKey.DeviceType]: "",
-        [DimensionKey.CustomerType]: "",
+        [DimensionKey.Property]: "",
         [DimensionKey.Language]: "",
         [DimensionKey.Region]: "",
       };
@@ -92,8 +91,7 @@ describe("utils", () => {
         {},
         {
           "x-language": "",
-          "x-sl-dimension-customer-types": "",
-          "x-sl-dimension-device-types": "",
+          "x-sl-dimension-properties": "",
           "x-sl-dimension-regions": "",
         },
       );
@@ -105,8 +103,7 @@ describe("utils", () => {
 
       const dimensions: Dimensions = {
         [DimensionKey.TimeTravel]: "next week",
-        [DimensionKey.DeviceType]: "",
-        [DimensionKey.CustomerType]: "",
+        [DimensionKey.Property]: "",
         [DimensionKey.Language]: "",
         [DimensionKey.Region]: "",
       };
@@ -119,8 +116,7 @@ describe("utils", () => {
         {
           "x-time-travel": "next week",
           "x-language": "",
-          "x-sl-dimension-customer-types": "",
-          "x-sl-dimension-device-types": "",
+          "x-sl-dimension-properties": "",
           "x-sl-dimension-regions": "",
         },
       );

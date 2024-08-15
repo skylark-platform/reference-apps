@@ -138,7 +138,7 @@ describe("utils.ts", () => {
     it("translates the active dimensions into the expected GraphQL format", () => {
       const dimensions: Dimensions = {
         [DimensionKey.Language]: "en-GB",
-        [DimensionKey.Property]: "",
+        [DimensionKey.Property]: "fremantle",
         [DimensionKey.Region]: "europe",
         [DimensionKey.TimeTravel]: "",
       };
@@ -147,8 +147,7 @@ describe("utils.ts", () => {
 
       expect(got).toEqual({
         dimensions: [
-          { dimension: "device-types", value: "smartphone" },
-          { dimension: "customer-types", value: "premium" },
+          { dimension: "properties", value: "fremantle" },
           { dimension: "regions", value: "europe" },
         ],
         language: dimensions.language,

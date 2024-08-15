@@ -79,7 +79,7 @@ export const DimensionsContextProvider = ({
 
   const [dimensions, dispatch] = useReducer(dimensionsReducer, {
     [DimensionKey.Language]: lang,
-    [DimensionKey.Property]: "",
+    [DimensionKey.Property]: "fremantle",
     [DimensionKey.Region]: "europe",
     [DimensionKey.TimeTravel]: "",
   });
