@@ -21,6 +21,8 @@ import {
   Link,
   MetadataPanel,
   Player,
+  CuePoint,
+  Chapter,
   SkeletonPage,
 } from "@skylark-reference-apps/react";
 import { Dayjs } from "dayjs";
@@ -43,6 +45,8 @@ interface PlaybackPageProps {
     poster: string;
     duration?: number;
     autoPlay?: boolean;
+    chapters?: Chapter[];
+    cuePoints?: CuePoint[];
   };
   number?: string | number;
   releaseDate?: string;

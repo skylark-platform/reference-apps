@@ -4,12 +4,28 @@ import MuxVideo from "@mux/mux-video-react";
 
 import dynamic from "next/dynamic";
 
+export interface CuePoint {
+  title?: string;
+  startTime: number;
+  endTime?: number;
+  payload: unknown;
+}
+
+export interface Chapter {
+  title?: string;
+  startTime: number;
+  endTime?: number;
+  cuePoints?: CuePoint[];
+}
+
 interface PlayerProps {
   src: string;
   poster?: string;
   videoId: string;
   videoTitle: string;
   autoPlay?: boolean;
+  chapters?: Chapter[];
+  cuePoints?: CuePoint[];
 }
 
 const getPlayerType = (src: string) => {
