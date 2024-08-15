@@ -120,7 +120,7 @@ const EpisodePage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
           poster: getGraphQLImageSrc(episode?.images, ImageType.Poster),
           src: playbackUrl,
           provider: asset?.provider || undefined,
-          srcId: asset?.hls_id || asset?.dash_id || undefined,
+          playbackId: asset?.hls_id || asset?.dash_id || undefined,
         }}
         rating={getFirstRatingValue(episode?.ratings)}
         releaseDate={(episode?.release_date as string | undefined) || ""}

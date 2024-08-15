@@ -20,7 +20,8 @@ export interface PlayerChapter {
 
 interface PlayerProps {
   src: string;
-  srcId?: string;
+  playbackId?: string;
+  playbackToken?: string;
   poster?: string;
   videoId: string;
   videoTitle: string;
@@ -66,7 +67,8 @@ const ThumbnailImage = ({ src }: { src?: string }) =>
 
 export const Player: React.FC<PlayerProps> = ({
   src,
-  srcId,
+  playbackId,
+  playbackToken,
   poster,
   autoPlay,
   videoId,
@@ -82,13 +84,15 @@ export const Player: React.FC<PlayerProps> = ({
         ).toString()
       : undefined;
 
-  const type = getPlayerType(src, provider, srcId);
+  const type = getPlayerType(src, provider, playbackId);
 
   const posterSrc = poster
     ? addCloudinaryOnTheFlyImageTransformation(poster, {
         width: 1000,
       })
     : undefined;
+
+  console.log({ playbackToken, playbackId });
 
   return (
     <div className="w-screen sm:w-11/12 lg:w-3/4">
@@ -112,14 +116,22 @@ export const Player: React.FC<PlayerProps> = ({
             autoPlay={autoPlay}
             className="h-full w-full bg-black object-cover object-center"
             data-testid="player"
+            key={`${playbackId}-${playbackToken}`}
             metadata={{
               video_id: videoId,
               video_title: videoTitle,
             }}
-            playbackId={srcId || src}
+            playbackId={playbackId}
             poster={posterSrc}
             ref={undefined}
             streamType={"on-demand"}
+            tokens={
+              playbackToken
+                ? {
+                    playback: playbackToken,
+                  }
+                : undefined
+            }
           />
         )}
         {type === "mux-video" && (

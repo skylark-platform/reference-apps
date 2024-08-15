@@ -37,6 +37,7 @@ import {
   SkylarkAsset,
   TimecodeEventListing,
 } from "../../../types";
+import { useMuxPlaybackToken } from "../../../hooks/useMuxPlaybackToken";
 
 interface PlaybackPageProps {
   uid: string;
@@ -50,7 +51,7 @@ interface PlaybackPageProps {
   player: {
     assetId: string;
     src: string;
-    srcId?: string;
+    playbackId?: string;
     poster: string;
     duration?: number;
     autoPlay?: boolean;
@@ -221,6 +222,8 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
 
   const { data: asset } = useObject<SkylarkAsset>(GET_ASSET, player.assetId);
 
+  const { token } = useMuxPlaybackToken(player.provider, player.playbackId);
+
   const { cuePoints, chapters } = useMemo(
     () => ({
       cuePoints: convertTimecodeEventsToPlayerCuePoints(asset?.timecode_events),
@@ -281,10 +284,11 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
             autoPlay={player.autoPlay}
             chapters={chapters}
             cuePoints={cuePoints}
+            playbackId={player.playbackId}
+            playbackToken={token}
             poster={player.poster}
             provider={player.provider}
             src={player.src}
-            srcId={player.srcId}
             videoId={player.assetId}
             videoTitle={title}
           />

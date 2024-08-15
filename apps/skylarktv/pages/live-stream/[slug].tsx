@@ -96,7 +96,7 @@ const LiveStreamPage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
           src: playbackUrl,
           autoPlay: true,
           provider: asset?.provider || undefined,
-          srcId: asset?.hls_id || asset?.dash_id || undefined,
+          playbackId: asset?.hls_id || asset?.dash_id || undefined,
         }}
         rating={getFirstRatingValue(liveStream?.ratings)}
         synopsis={synopsis}
