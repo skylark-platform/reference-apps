@@ -50,9 +50,11 @@ interface PlaybackPageProps {
   player: {
     assetId: string;
     src: string;
+    srcId?: string;
     poster: string;
     duration?: number;
     autoPlay?: boolean;
+    provider?: string;
   };
   number?: string | number;
   releaseDate?: string;
@@ -280,7 +282,9 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
             chapters={chapters}
             cuePoints={cuePoints}
             poster={player.poster}
+            provider={player.provider}
             src={player.src}
+            srcId={player.srcId}
             videoId={player.assetId}
             videoTitle={title}
           />

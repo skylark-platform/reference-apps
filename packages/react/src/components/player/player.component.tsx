@@ -20,15 +20,17 @@ export interface PlayerChapter {
 
 interface PlayerProps {
   src: string;
+  srcId?: string;
   poster?: string;
   videoId: string;
   videoTitle: string;
   autoPlay?: boolean;
+  provider?: string;
   chapters?: PlayerChapter[];
   cuePoints?: PlayerCuePoint[];
 }
 
-const getPlayerType = (src: string) => {
+const getPlayerType = (src: string, provider?: string, srcId?: string) => {
   if (
     src.startsWith("https://drive.google.com/file") &&
     src.endsWith("/preview")
@@ -40,10 +42,18 @@ const getPlayerType = (src: string) => {
     return "react-player";
   }
 
-  return "mux-player";
+  if (provider && srcId && provider.toLocaleLowerCase() === "mux") {
+    return "mux-player";
+  }
+
+  return "mux-video";
 };
 
 const ReactPlayer = dynamic(() => import("react-player/lazy"), { ssr: false });
+
+const MuxPlayer = dynamic(() => import("@mux/mux-player-react/lazy"), {
+  ssr: false,
+});
 
 const ThumbnailImage = ({ src }: { src?: string }) =>
   src ? (
@@ -56,10 +66,12 @@ const ThumbnailImage = ({ src }: { src?: string }) =>
 
 export const Player: React.FC<PlayerProps> = ({
   src,
+  srcId,
   poster,
   autoPlay,
   videoId,
   videoTitle,
+  provider,
 }) => {
   const isClient = typeof window !== "undefined";
   const absoluteSrc =
@@ -70,7 +82,7 @@ export const Player: React.FC<PlayerProps> = ({
         ).toString()
       : undefined;
 
-  const type = getPlayerType(src);
+  const type = getPlayerType(src, provider, srcId);
 
   const posterSrc = poster
     ? addCloudinaryOnTheFlyImageTransformation(poster, {
@@ -96,6 +108,21 @@ export const Player: React.FC<PlayerProps> = ({
           />
         )}
         {type === "mux-player" && (
+          <MuxPlayer
+            autoPlay={autoPlay}
+            className="h-full w-full bg-black object-cover object-center"
+            data-testid="player"
+            metadata={{
+              video_id: videoId,
+              video_title: videoTitle,
+            }}
+            playbackId={srcId || src}
+            poster={posterSrc}
+            ref={undefined}
+            streamType={"on-demand"}
+          />
+        )}
+        {type === "mux-video" && (
           <MuxVideo
             autoPlay={autoPlay}
             className="h-full w-full bg-black object-cover object-center"

@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@headlessui/react": "1.7.15",
+    "@mux/mux-player-react": "2.9.1",
     "@mux/mux-video-react": "0.11.0",
     "@skylark-reference-apps/lib": "*",
     "clsx": "2.0.0",

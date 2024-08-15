@@ -95,6 +95,8 @@ const LiveStreamPage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
           poster: getGraphQLImageSrc(liveStream?.images, ImageType.Poster),
           src: playbackUrl,
           autoPlay: true,
+          provider: asset?.provider || undefined,
+          srcId: asset?.hls_id || asset?.dash_id || undefined,
         }}
         rating={getFirstRatingValue(liveStream?.ratings)}
         synopsis={synopsis}

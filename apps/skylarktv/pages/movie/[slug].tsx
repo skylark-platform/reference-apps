@@ -122,6 +122,8 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
           assetId: asset?.external_id || asset?.uid || "1",
           poster: getGraphQLImageSrc(movie?.images, ImageType.Poster),
           src: playbackUrl,
+          provider: asset?.provider || undefined,
+          srcId: asset?.hls_id || asset?.dash_id || undefined,
         }}
         rating={getFirstRatingValue(movie?.ratings)}
         releaseDate={(movie?.release_date as string | undefined) || ""}
