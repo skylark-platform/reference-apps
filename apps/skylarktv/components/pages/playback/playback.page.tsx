@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { formatReleaseDate } from "@skylark-reference-apps/lib";
 import useTranslation from "next-translate/useTranslation";
 import {
@@ -21,14 +21,22 @@ import {
   Link,
   MetadataPanel,
   Player,
-  CuePoint,
-  Chapter,
+  PlayerChapter,
+  PlayerCuePoint,
   SkeletonPage,
 } from "@skylark-reference-apps/react";
 import { Dayjs } from "dayjs";
 import { NextPage } from "next";
 import { getTimeFromNow } from "../../../lib/utils";
 import { ListPersonOtherCreditsRail } from "../../rails";
+import { useObject } from "../../../hooks/useObject";
+import { GET_ASSET } from "../../../graphql/queries";
+import {
+  ChapterListing,
+  Maybe,
+  SkylarkAsset,
+  TimecodeEventListing,
+} from "../../../types";
 
 interface PlaybackPageProps {
   uid: string;
@@ -45,8 +53,6 @@ interface PlaybackPageProps {
     poster: string;
     duration?: number;
     autoPlay?: boolean;
-    chapters?: Chapter[];
-    cuePoints?: CuePoint[];
   };
   number?: string | number;
   releaseDate?: string;
@@ -159,6 +165,37 @@ const convertAudienceRatingToStars = (rating?: string | number) => {
   );
 };
 
+const convertTimecodeEventsToPlayerCuePoints = (
+  timecodeEventListing: Maybe<TimecodeEventListing> | undefined,
+) =>
+  timecodeEventListing?.objects
+    ?.map(
+      (evt) =>
+        evt &&
+        typeof evt.timecode === "number" && {
+          startTime: evt.timecode,
+          payload: evt as object,
+        },
+    )
+    .filter((evt): evt is PlayerCuePoint => !!evt) || undefined;
+
+const convertChaptersToPlayerChapters = (
+  chapterListing: Maybe<ChapterListing> | undefined,
+) =>
+  chapterListing?.objects
+    ?.map((chapter): PlayerChapter | null =>
+      chapter && typeof chapter.start_time === "number"
+        ? {
+            title: chapter.title ? chapter.title : undefined,
+            startTime: chapter.start_time,
+            cuePoints: convertTimecodeEventsToPlayerCuePoints(
+              chapter.timecode_events,
+            ),
+          }
+        : null,
+    )
+    .filter((chapter): chapter is PlayerChapter => !!chapter) || undefined;
+
 export const PlaybackPage: NextPage<PlaybackPageProps> = ({
   uid,
   loading,
@@ -179,6 +216,18 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
   availabilityEndDate,
 }) => {
   const { t, lang } = useTranslation("common");
+
+  const { data: asset } = useObject<SkylarkAsset>(GET_ASSET, player.assetId);
+
+  const { cuePoints, chapters } = useMemo(
+    () => ({
+      cuePoints: convertTimecodeEventsToPlayerCuePoints(asset?.timecode_events),
+      chapters: convertChaptersToPlayerChapters(asset?.chapters),
+    }),
+    [asset],
+  );
+
+  console.log({ cuePoints, chapters });
 
   const allCredits = credits
     ? Object.values(credits)
@@ -228,6 +277,8 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
         <div className="flex h-full w-full justify-center pb-10 md:pb-16">
           <Player
             autoPlay={player.autoPlay}
+            chapters={chapters}
+            cuePoints={cuePoints}
             poster={player.poster}
             src={player.src}
             videoId={player.assetId}

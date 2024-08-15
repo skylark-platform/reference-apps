@@ -425,6 +425,7 @@ export type AvailabilityListing = {
   count?: Maybe<Scalars["Int"]>;
   next_token?: Maybe<Scalars["String"]>;
   objects?: Maybe<Array<Maybe<Availability>>>;
+  time_window_status?: Maybe<TimeWindowStatus>;
 };
 
 export type Brand = Metadata &
@@ -831,6 +832,116 @@ export enum CallToActionType {
   SignUp = "SIGN_UP",
 }
 
+export type Chapter = Metadata &
+  VisibleObject & {
+    __typename?: "Chapter";
+    _config?: Maybe<ObjectConfig>;
+    _context?: Maybe<RequestContext>;
+    _meta?: Maybe<_ChapterMeta>;
+    assets?: Maybe<SkylarkAssetListing>;
+    availability?: Maybe<AvailabilityListing>;
+    chapter_type?: Maybe<Scalars["String"]>;
+    content_of?: Maybe<SetListing>;
+    external_id?: Maybe<Scalars["String"]>;
+    internal_title?: Maybe<Scalars["String"]>;
+    slug?: Maybe<Scalars["String"]>;
+    start_time?: Maybe<Scalars["Int"]>;
+    timecode_events?: Maybe<TimecodeEventListing>;
+    title?: Maybe<Scalars["String"]>;
+    uid: Scalars["String"];
+  };
+
+export type Chapter_MetaArgs = {
+  global_version?: InputMaybe<Scalars["Int"]>;
+  language?: InputMaybe<Scalars["String"]>;
+  language_version?: InputMaybe<Scalars["Int"]>;
+};
+
+export type ChapterAssetsArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+  order_direction?: InputMaybe<OrderDirections>;
+};
+
+export type ChapterAvailabilityArgs = {
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+  uid?: InputMaybe<Scalars["String"]>;
+};
+
+export type ChapterContent_OfArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type ChapterTimecode_EventsArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+  order_direction?: InputMaybe<OrderDirections>;
+};
+
+export type ChapterCreateInput = {
+  availability?: InputMaybe<AssignAvailabilityInput>;
+  chapter_type?: InputMaybe<ChapterType>;
+  external_id?: InputMaybe<Scalars["String"]>;
+  internal_title?: InputMaybe<Scalars["String"]>;
+  relationships?: InputMaybe<ChapterRelationships>;
+  slug?: InputMaybe<Scalars["String"]>;
+  start_time: Scalars["Int"];
+  title?: InputMaybe<Scalars["String"]>;
+};
+
+export type ChapterInput = {
+  availability?: InputMaybe<AssignAvailabilityInput>;
+  chapter_type?: InputMaybe<ChapterType>;
+  external_id?: InputMaybe<Scalars["String"]>;
+  internal_title?: InputMaybe<Scalars["String"]>;
+  relationships?: InputMaybe<ChapterRelationships>;
+  slug?: InputMaybe<Scalars["String"]>;
+  start_time?: InputMaybe<Scalars["Int"]>;
+  title?: InputMaybe<Scalars["String"]>;
+};
+
+export type ChapterListing = Listing & {
+  __typename?: "ChapterListing";
+  count?: Maybe<Scalars["Int"]>;
+  next_token?: Maybe<Scalars["String"]>;
+  objects?: Maybe<Array<Maybe<Chapter>>>;
+};
+
+export type ChapterRelationshipInput = {
+  config?: InputMaybe<RelationshipConfigInput>;
+  create?: InputMaybe<Array<InputMaybe<ChapterCreateInput>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+};
+
+export type ChapterRelationships = {
+  assets?: InputMaybe<SkylarkAssetRelationshipInput>;
+  timecode_events?: InputMaybe<TimecodeEventRelationshipInput>;
+};
+
+export type ChapterSetCreate = {
+  object?: InputMaybe<ChapterInput>;
+  position: Scalars["Int"];
+};
+
+export type ChapterSetInput = {
+  create?: InputMaybe<Array<InputMaybe<ChapterSetCreate>>>;
+  link?: InputMaybe<Array<InputMaybe<SetLink>>>;
+  reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+};
+
+export enum ChapterType {
+  Intro = "INTRO",
+  Outro = "OUTRO",
+  Scene = "SCENE",
+}
+
 export enum ConfigurationOperations {
   Create = "CREATE",
   Delete = "DELETE",
@@ -1032,6 +1143,7 @@ export type CreditSetInput = {
 
 export type DeleteInput = {
   language?: InputMaybe<Scalars["String"]>;
+  object_type?: InputMaybe<VisibleObjectTypes>;
   uid: Scalars["String"];
 };
 
@@ -1983,6 +2095,7 @@ export type Mutation = {
   createAvailability?: Maybe<Availability>;
   createBrand?: Maybe<Brand>;
   createCallToAction?: Maybe<CallToAction>;
+  createChapter?: Maybe<Chapter>;
   createCredit?: Maybe<Credit>;
   createDimension?: Maybe<Dimension>;
   createDimensionValue?: Maybe<DimensionValue>;
@@ -2006,12 +2119,14 @@ export type Mutation = {
   createSkylarkSet?: Maybe<SkylarkSet>;
   createSkylarkTag?: Maybe<SkylarkTag>;
   createTheme?: Maybe<Theme>;
+  createTimecodeEvent?: Maybe<TimecodeEvent>;
   deleteApiKey?: Maybe<Scalars["String"]>;
   deleteAppConfig?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
   deleteArticle?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
   deleteAvailability?: Maybe<Scalars["String"]>;
   deleteBrand?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
   deleteCallToAction?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
+  deleteChapter?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
   deleteCredit?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
   deleteDimension?: Maybe<Scalars["String"]>;
   deleteDimensionValue?: Maybe<Scalars["String"]>;
@@ -2034,6 +2149,7 @@ export type Mutation = {
   deleteSkylarkSet?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
   deleteSkylarkTag?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
   deleteTheme?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
+  deleteTimecodeEvent?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
   editEnumConfiguration?: Maybe<ConfigurationResponse>;
   editFieldConfiguration?: Maybe<ConfigurationResponse>;
   editObjectTypeConfiguration?: Maybe<ConfigurationResponse>;
@@ -2053,6 +2169,7 @@ export type Mutation = {
   updateAvailability?: Maybe<Availability>;
   updateBrand?: Maybe<Brand>;
   updateCallToAction?: Maybe<CallToAction>;
+  updateChapter?: Maybe<Chapter>;
   updateCredit?: Maybe<Credit>;
   updateDimension?: Maybe<Dimension>;
   updateDimensionValue?: Maybe<DimensionValue>;
@@ -2074,6 +2191,7 @@ export type Mutation = {
   updateSkylarkSet?: Maybe<SkylarkSet>;
   updateSkylarkTag?: Maybe<SkylarkTag>;
   updateTheme?: Maybe<Theme>;
+  updateTimecodeEvent?: Maybe<TimecodeEvent>;
 };
 
 export type MutationActivateConfigurationVersionArgs = {
@@ -2109,6 +2227,11 @@ export type MutationCreateBrandArgs = {
 
 export type MutationCreateCallToActionArgs = {
   call_to_action?: InputMaybe<CallToActionCreateInput>;
+  language?: InputMaybe<Scalars["String"]>;
+};
+
+export type MutationCreateChapterArgs = {
+  chapter?: InputMaybe<ChapterCreateInput>;
   language?: InputMaybe<Scalars["String"]>;
 };
 
@@ -2222,6 +2345,11 @@ export type MutationCreateThemeArgs = {
   theme?: InputMaybe<ThemeCreateInput>;
 };
 
+export type MutationCreateTimecodeEventArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  timecode_event?: InputMaybe<TimecodeEventCreateInput>;
+};
+
 export type MutationDeleteApiKeyArgs = {
   name: Scalars["String"];
 };
@@ -2250,6 +2378,12 @@ export type MutationDeleteBrandArgs = {
 };
 
 export type MutationDeleteCallToActionArgs = {
+  external_id?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]>;
+  uid: Scalars["String"];
+};
+
+export type MutationDeleteChapterArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   language?: InputMaybe<Scalars["String"]>;
   uid: Scalars["String"];
@@ -2389,6 +2523,12 @@ export type MutationDeleteThemeArgs = {
   uid: Scalars["String"];
 };
 
+export type MutationDeleteTimecodeEventArgs = {
+  external_id?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]>;
+  uid: Scalars["String"];
+};
+
 export type MutationEditEnumConfigurationArgs = {
   enums?: InputMaybe<Array<InputMaybe<EditEnumInput>>>;
   version?: InputMaybe<Scalars["Int"]>;
@@ -2495,6 +2635,17 @@ export type MutationUpdateBrandArgs = {
 
 export type MutationUpdateCallToActionArgs = {
   call_to_action?: InputMaybe<CallToActionInput>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
+  external_id?: InputMaybe<Scalars["String"]>;
+  global_version?: InputMaybe<Scalars["Int"]>;
+  language?: InputMaybe<Scalars["String"]>;
+  language_version?: InputMaybe<Scalars["Int"]>;
+  uid?: InputMaybe<Scalars["String"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]>;
+};
+
+export type MutationUpdateChapterArgs = {
+  chapter?: InputMaybe<ChapterInput>;
   draft?: InputMaybe<Scalars["Boolean"]>;
   external_id?: InputMaybe<Scalars["String"]>;
   global_version?: InputMaybe<Scalars["Int"]>;
@@ -2727,6 +2878,17 @@ export type MutationUpdateThemeArgs = {
   upsert?: InputMaybe<Scalars["Boolean"]>;
 };
 
+export type MutationUpdateTimecodeEventArgs = {
+  draft?: InputMaybe<Scalars["Boolean"]>;
+  external_id?: InputMaybe<Scalars["String"]>;
+  global_version?: InputMaybe<Scalars["Int"]>;
+  language?: InputMaybe<Scalars["String"]>;
+  language_version?: InputMaybe<Scalars["Int"]>;
+  timecode_event?: InputMaybe<TimecodeEventInput>;
+  uid?: InputMaybe<Scalars["String"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]>;
+};
+
 export type ObjectConfig = {
   __typename?: "ObjectConfig";
   colour?: Maybe<Scalars["String"]>;
@@ -2758,6 +2920,7 @@ export enum ObjectTypes {
   Article = "Article",
   Brand = "Brand",
   CallToAction = "CallToAction",
+  Chapter = "Chapter",
   Credit = "Credit",
   Episode = "Episode",
   Genre = "Genre",
@@ -2777,6 +2940,7 @@ export enum ObjectTypes {
   SkylarkSet = "SkylarkSet",
   SkylarkTag = "SkylarkTag",
   Theme = "Theme",
+  TimecodeEvent = "TimecodeEvent",
 }
 
 export enum OrderDirections {
@@ -3159,6 +3323,7 @@ export type Query = {
   getBrand?: Maybe<Brand>;
   getCacheConfig?: Maybe<CacheConfig>;
   getCallToAction?: Maybe<CallToAction>;
+  getChapter?: Maybe<Chapter>;
   getConfigurationSchema?: Maybe<Scalars["AWSJSON"]>;
   getConfigurationVersion?: Maybe<SchemaConfiguration>;
   getCredit?: Maybe<Credit>;
@@ -3189,6 +3354,7 @@ export type Query = {
   getSkylarkSet?: Maybe<SkylarkSet>;
   getSkylarkTag?: Maybe<SkylarkTag>;
   getTheme?: Maybe<Theme>;
+  getTimecodeEvent?: Maybe<TimecodeEvent>;
   getUser?: Maybe<UserDetails>;
   listApiKeys?: Maybe<Array<Maybe<ApiKey>>>;
   listAppConfig?: Maybe<AppConfigListing>;
@@ -3196,6 +3362,7 @@ export type Query = {
   listAvailability?: Maybe<AvailabilityListing>;
   listBrand?: Maybe<BrandListing>;
   listCallToAction?: Maybe<CallToActionListing>;
+  listChapter?: Maybe<ChapterListing>;
   listConfigurationVersions?: Maybe<SchemaConfigurationListing>;
   listCredit?: Maybe<CreditListing>;
   listDimensions?: Maybe<DimensionListing>;
@@ -3218,6 +3385,7 @@ export type Query = {
   listSkylarkSet?: Maybe<SkylarkSetListing>;
   listSkylarkTag?: Maybe<SkylarkTagListing>;
   listTheme?: Maybe<ThemeListing>;
+  listTimecodeEvent?: Maybe<TimecodeEventListing>;
   search?: Maybe<SearchResultListing>;
 };
 
@@ -3236,6 +3404,7 @@ export type QueryGetAppConfigArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3245,6 +3414,7 @@ export type QueryGetArticleArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3259,6 +3429,7 @@ export type QueryGetBrandArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3268,6 +3439,17 @@ export type QueryGetCallToActionArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
+  uid?: InputMaybe<Scalars["String"]>;
+};
+
+export type QueryGetChapterArgs = {
+  dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
+  external_id?: InputMaybe<Scalars["String"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
+  language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3286,6 +3468,7 @@ export type QueryGetCreditArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3304,6 +3487,7 @@ export type QueryGetEpisodeArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3313,6 +3497,7 @@ export type QueryGetGenreArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3322,6 +3507,7 @@ export type QueryGetLiveStreamArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3331,6 +3517,7 @@ export type QueryGetMovieArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3340,6 +3527,7 @@ export type QueryGetObjectArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3357,6 +3545,7 @@ export type QueryGetPageArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3366,6 +3555,7 @@ export type QueryGetParentalGuidanceArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3375,6 +3565,7 @@ export type QueryGetPersonArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3384,6 +3575,7 @@ export type QueryGetRatingArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3399,6 +3591,7 @@ export type QueryGetRoleArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3408,6 +3601,7 @@ export type QueryGetSeasonArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3417,6 +3611,7 @@ export type QueryGetSkylarkAssetArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3430,6 +3625,7 @@ export type QueryGetSkylarkEpgProgramArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3439,6 +3635,7 @@ export type QueryGetSkylarkFavoriteListArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3448,6 +3645,7 @@ export type QueryGetSkylarkImageArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3457,6 +3655,7 @@ export type QueryGetSkylarkLiveAssetArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3466,6 +3665,7 @@ export type QueryGetSkylarkSetArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3475,6 +3675,7 @@ export type QueryGetSkylarkTagArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3484,6 +3685,17 @@ export type QueryGetThemeArgs = {
   external_id?: InputMaybe<Scalars["String"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
   language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
+  uid?: InputMaybe<Scalars["String"]>;
+};
+
+export type QueryGetTimecodeEventArgs = {
+  dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
+  external_id?: InputMaybe<Scalars["String"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
+  language?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]>;
   uid?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3520,6 +3732,15 @@ export type QueryListBrandArgs = {
 };
 
 export type QueryListCallToActionArgs = {
+  dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type QueryListChapterArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
   draft?: InputMaybe<Scalars["Boolean"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
@@ -3704,6 +3925,15 @@ export type QueryListSkylarkTagArgs = {
 };
 
 export type QueryListThemeArgs = {
+  dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
+  draft?: InputMaybe<Scalars["Boolean"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type QueryListTimecodeEventArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
   draft?: InputMaybe<Scalars["Boolean"]>;
   ignore_availability?: InputMaybe<Scalars["Boolean"]>;
@@ -4355,6 +4585,7 @@ export type SetContentRelationships = {
   Article?: InputMaybe<ArticleSetInput>;
   Brand?: InputMaybe<BrandSetInput>;
   CallToAction?: InputMaybe<CallToActionSetInput>;
+  Chapter?: InputMaybe<ChapterSetInput>;
   Credit?: InputMaybe<CreditSetInput>;
   Episode?: InputMaybe<EpisodeSetInput>;
   Genre?: InputMaybe<GenreSetInput>;
@@ -4374,6 +4605,7 @@ export type SetContentRelationships = {
   SkylarkSet?: InputMaybe<SubSkylarkSetInput>;
   SkylarkTag?: InputMaybe<SkylarkTagSetInput>;
   Theme?: InputMaybe<ThemeSetInput>;
+  TimecodeEvent?: InputMaybe<TimecodeEventSetInput>;
 };
 
 export type SetLink = {
@@ -4420,6 +4652,7 @@ export type SkylarkAsset = AssetInterface &
     _meta?: Maybe<_SkylarkAssetMeta>;
     availability?: Maybe<AvailabilityListing>;
     brands?: Maybe<BrandListing>;
+    chapters?: Maybe<ChapterListing>;
     content_of?: Maybe<SetListing>;
     credits?: Maybe<CreditListing>;
     dash_dashboard?: Maybe<Scalars["String"]>;
@@ -4446,6 +4679,7 @@ export type SkylarkAsset = AssetInterface &
     slug?: Maybe<Scalars["String"]>;
     status?: Maybe<Scalars["String"]>;
     tags?: Maybe<SkylarkTagListing>;
+    timecode_events?: Maybe<TimecodeEventListing>;
     title?: Maybe<Scalars["String"]>;
     title_sort?: Maybe<Scalars["String"]>;
     type?: Maybe<Scalars["String"]>;
@@ -4466,6 +4700,13 @@ export type SkylarkAssetAvailabilityArgs = {
 };
 
 export type SkylarkAssetBrandsArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+  order_direction?: InputMaybe<OrderDirections>;
+};
+
+export type SkylarkAssetChaptersArgs = {
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
   next_token?: InputMaybe<Scalars["String"]>;
@@ -4548,6 +4789,13 @@ export type SkylarkAssetTagsArgs = {
   order_direction?: InputMaybe<OrderDirections>;
 };
 
+export type SkylarkAssetTimecode_EventsArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+  order_direction?: InputMaybe<OrderDirections>;
+};
+
 export type SkylarkAssetCreateInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
   dash_dashboard?: InputMaybe<Scalars["AWSURL"]>;
@@ -4611,6 +4859,7 @@ export type SkylarkAssetRelationshipInput = {
 
 export type SkylarkAssetRelationships = {
   brands?: InputMaybe<BrandRelationshipInput>;
+  chapters?: InputMaybe<ChapterRelationshipInput>;
   credits?: InputMaybe<CreditRelationshipInput>;
   episodes?: InputMaybe<EpisodeRelationshipInput>;
   genres?: InputMaybe<GenreRelationshipInput>;
@@ -4621,6 +4870,7 @@ export type SkylarkAssetRelationships = {
   seasons?: InputMaybe<SeasonRelationshipInput>;
   sets?: InputMaybe<SkylarkSetRelationshipInput>;
   tags?: InputMaybe<SkylarkTagRelationshipInput>;
+  timecode_events?: InputMaybe<TimecodeEventRelationshipInput>;
 };
 
 export type SkylarkAssetSetCreate = {
@@ -5855,6 +6105,130 @@ export type ThemeSetInput = {
   unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
 };
 
+export enum TimeWindowStatus {
+  Active = "ACTIVE",
+  Expired = "EXPIRED",
+  Future = "FUTURE",
+  Unavailable = "UNAVAILABLE",
+}
+
+export type TimecodeEvent = Metadata &
+  VisibleObject & {
+    __typename?: "TimecodeEvent";
+    _config?: Maybe<ObjectConfig>;
+    _context?: Maybe<RequestContext>;
+    _meta?: Maybe<_TimecodeEventMeta>;
+    assets?: Maybe<SkylarkAssetListing>;
+    availability?: Maybe<AvailabilityListing>;
+    chapters?: Maybe<ChapterListing>;
+    content_of?: Maybe<SetListing>;
+    copy?: Maybe<Scalars["String"]>;
+    external_id?: Maybe<Scalars["String"]>;
+    internal_title?: Maybe<Scalars["String"]>;
+    link_href?: Maybe<Scalars["AWSURL"]>;
+    link_text?: Maybe<Scalars["String"]>;
+    slug?: Maybe<Scalars["String"]>;
+    timecode?: Maybe<Scalars["Float"]>;
+    type?: Maybe<Scalars["String"]>;
+    uid: Scalars["String"];
+  };
+
+export type TimecodeEvent_MetaArgs = {
+  global_version?: InputMaybe<Scalars["Int"]>;
+  language?: InputMaybe<Scalars["String"]>;
+  language_version?: InputMaybe<Scalars["Int"]>;
+};
+
+export type TimecodeEventAssetsArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+  order_direction?: InputMaybe<OrderDirections>;
+};
+
+export type TimecodeEventAvailabilityArgs = {
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+  uid?: InputMaybe<Scalars["String"]>;
+};
+
+export type TimecodeEventChaptersArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+  order_direction?: InputMaybe<OrderDirections>;
+};
+
+export type TimecodeEventContent_OfArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+};
+
+export type TimecodeEventCreateInput = {
+  availability?: InputMaybe<AssignAvailabilityInput>;
+  copy?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]>;
+  internal_title: Scalars["String"];
+  link_href?: InputMaybe<Scalars["AWSURL"]>;
+  link_text?: InputMaybe<Scalars["String"]>;
+  relationships?: InputMaybe<TimecodeEventRelationships>;
+  slug?: InputMaybe<Scalars["String"]>;
+  timecode: Scalars["Float"];
+  type: TimecodeEventType;
+};
+
+export type TimecodeEventInput = {
+  availability?: InputMaybe<AssignAvailabilityInput>;
+  copy?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]>;
+  internal_title?: InputMaybe<Scalars["String"]>;
+  link_href?: InputMaybe<Scalars["AWSURL"]>;
+  link_text?: InputMaybe<Scalars["String"]>;
+  relationships?: InputMaybe<TimecodeEventRelationships>;
+  slug?: InputMaybe<Scalars["String"]>;
+  timecode?: InputMaybe<Scalars["Float"]>;
+  type?: InputMaybe<TimecodeEventType>;
+};
+
+export type TimecodeEventListing = Listing & {
+  __typename?: "TimecodeEventListing";
+  count?: Maybe<Scalars["Int"]>;
+  next_token?: Maybe<Scalars["String"]>;
+  objects?: Maybe<Array<Maybe<TimecodeEvent>>>;
+};
+
+export type TimecodeEventRelationshipInput = {
+  config?: InputMaybe<RelationshipConfigInput>;
+  create?: InputMaybe<Array<InputMaybe<TimecodeEventCreateInput>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+};
+
+export type TimecodeEventRelationships = {
+  assets?: InputMaybe<SkylarkAssetRelationshipInput>;
+  chapters?: InputMaybe<ChapterRelationshipInput>;
+};
+
+export type TimecodeEventSetCreate = {
+  object?: InputMaybe<TimecodeEventInput>;
+  position: Scalars["Int"];
+};
+
+export type TimecodeEventSetInput = {
+  create?: InputMaybe<Array<InputMaybe<TimecodeEventSetCreate>>>;
+  link?: InputMaybe<Array<InputMaybe<SetLink>>>;
+  reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+};
+
+export enum TimecodeEventType {
+  Advertcontextual = "ADVERTCONTEXTUAL",
+  Advertlink = "ADVERTLINK",
+  Tips = "TIPS",
+  Whisk = "WHISK",
+}
+
 export type TypeListing = Listing & {
   __typename?: "TypeListing";
   count?: Maybe<Scalars["Int"]>;
@@ -5901,6 +6275,7 @@ export enum VisibleObjectTypes {
   Availability = "Availability",
   Brand = "Brand",
   CallToAction = "CallToAction",
+  Chapter = "Chapter",
   Credit = "Credit",
   Episode = "Episode",
   Genre = "Genre",
@@ -5919,6 +6294,7 @@ export enum VisibleObjectTypes {
   SkylarkSet = "SkylarkSet",
   SkylarkTag = "SkylarkTag",
   Theme = "Theme",
+  TimecodeEvent = "TimecodeEvent",
 }
 
 export type _AppConfigGlobal = _Global & {
@@ -6081,6 +6457,41 @@ export type _CallToActionMeta = {
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_CallToActionGlobal>;
   language_data?: Maybe<_CallToActionLanguage>;
+  modified?: Maybe<_Audit>;
+  published?: Maybe<Scalars["Boolean"]>;
+};
+
+export type _ChapterGlobal = _Global & {
+  __typename?: "_ChapterGlobal";
+  chapter_type?: Maybe<Scalars["String"]>;
+  created?: Maybe<_Audit>;
+  history?: Maybe<Array<Maybe<_ChapterGlobal>>>;
+  internal_title?: Maybe<Scalars["String"]>;
+  modified?: Maybe<_Audit>;
+  publish_stage?: Maybe<PublishStage>;
+  start_time?: Maybe<Scalars["Int"]>;
+  version?: Maybe<Scalars["Int"]>;
+};
+
+export type _ChapterLanguage = _Language & {
+  __typename?: "_ChapterLanguage";
+  created?: Maybe<_Audit>;
+  history?: Maybe<Array<Maybe<_ChapterLanguage>>>;
+  language?: Maybe<Scalars["String"]>;
+  modified?: Maybe<_Audit>;
+  publish_stage?: Maybe<PublishStage>;
+  slug?: Maybe<Scalars["String"]>;
+  title?: Maybe<Scalars["String"]>;
+  version?: Maybe<Scalars["Int"]>;
+};
+
+export type _ChapterMeta = {
+  __typename?: "_ChapterMeta";
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  created?: Maybe<_Audit>;
+  field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
+  global_data?: Maybe<_ChapterGlobal>;
+  language_data?: Maybe<_ChapterLanguage>;
   modified?: Maybe<_Audit>;
   published?: Maybe<Scalars["Boolean"]>;
 };
@@ -6843,6 +7254,43 @@ export type _ThemeMeta = {
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_ThemeGlobal>;
   language_data?: Maybe<_ThemeLanguage>;
+  modified?: Maybe<_Audit>;
+  published?: Maybe<Scalars["Boolean"]>;
+};
+
+export type _TimecodeEventGlobal = _Global & {
+  __typename?: "_TimecodeEventGlobal";
+  created?: Maybe<_Audit>;
+  history?: Maybe<Array<Maybe<_TimecodeEventGlobal>>>;
+  internal_title?: Maybe<Scalars["String"]>;
+  modified?: Maybe<_Audit>;
+  publish_stage?: Maybe<PublishStage>;
+  timecode?: Maybe<Scalars["Float"]>;
+  type?: Maybe<Scalars["String"]>;
+  version?: Maybe<Scalars["Int"]>;
+};
+
+export type _TimecodeEventLanguage = _Language & {
+  __typename?: "_TimecodeEventLanguage";
+  copy?: Maybe<Scalars["String"]>;
+  created?: Maybe<_Audit>;
+  history?: Maybe<Array<Maybe<_TimecodeEventLanguage>>>;
+  language?: Maybe<Scalars["String"]>;
+  link_href?: Maybe<Scalars["AWSURL"]>;
+  link_text?: Maybe<Scalars["String"]>;
+  modified?: Maybe<_Audit>;
+  publish_stage?: Maybe<PublishStage>;
+  slug?: Maybe<Scalars["String"]>;
+  version?: Maybe<Scalars["Int"]>;
+};
+
+export type _TimecodeEventMeta = {
+  __typename?: "_TimecodeEventMeta";
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  created?: Maybe<_Audit>;
+  field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
+  global_data?: Maybe<_TimecodeEventGlobal>;
+  language_data?: Maybe<_TimecodeEventLanguage>;
   modified?: Maybe<_Audit>;
   published?: Maybe<Scalars["Boolean"]>;
 };
