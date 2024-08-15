@@ -8,7 +8,6 @@ import setLanguage from "next-translate/setLanguage";
 import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
 import { NextParsedUrlQuery } from "next/dist/server/request-meta";
-import { useDeviceType } from "../../hooks";
 import { persistQueryValues } from "../../lib/utils";
 
 interface ReducerAction {
@@ -74,7 +73,6 @@ export const DimensionsContextProvider = ({
 }: {
   children?: React.ReactNode;
 }) => {
-  const { deviceType, isLoading: isLoadingDimensions } = useDeviceType();
   const { lang } = useTranslation();
 
   const [dimensions, dispatch] = useReducer(dimensionsReducer, {
@@ -84,12 +82,6 @@ export const DimensionsContextProvider = ({
     [DimensionKey.TimeTravel]: "",
   });
 
-  // Automatically updates device type dimension depending on screen size
-  useEffect(() => {
-    if (deviceType !== undefined)
-      dispatch({ type: DimensionKey.Property, value: deviceType });
-  }, [deviceType]);
-
   useEffect(() => {
     dispatch({ type: DimensionKey.Language, value: lang });
   }, [lang]);
@@ -97,7 +89,7 @@ export const DimensionsContextProvider = ({
   return (
     <DimensionsContext.Provider
       value={{
-        isLoadingDimensions,
+        isLoadingDimensions: false,
         dimensions,
         setProperty: (value: string) =>
           dispatch({ type: DimensionKey.Property, value }),
