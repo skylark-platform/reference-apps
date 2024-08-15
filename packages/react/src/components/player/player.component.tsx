@@ -51,7 +51,7 @@ const getPlayerType = (src: string, provider?: string, srcId?: string) => {
 
 const ReactPlayer = dynamic(() => import("react-player/lazy"), { ssr: false });
 
-const MuxPlayer = dynamic(() => import("@mux/mux-player-react/lazy"), {
+const MuxPlayer = dynamic(() => import("@mux/mux-player-react"), {
   ssr: false,
 });
 
@@ -142,5 +142,3 @@ export const Player: React.FC<PlayerProps> = ({
     </div>
   );
 };
-
-export default Player;
