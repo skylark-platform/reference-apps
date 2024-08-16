@@ -232,8 +232,6 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
     [asset],
   );
 
-  console.log({ cuePoints, chapters });
-
   const allCredits = credits
     ? Object.values(credits)
         .map(({ formattedCredits }) => formattedCredits)
@@ -284,6 +282,14 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
             autoPlay={player.autoPlay}
             chapters={chapters}
             cuePoints={cuePoints}
+            onCuePointChange={(activeCuePoint) => {
+              console.log("Active Cue Point Changed:");
+              console.log(activeCuePoint);
+            }}
+            onChapterChange={(activeChapter) => {
+              console.log("Active Chapter Changed:");
+              console.log(activeChapter);
+            }}
             playbackId={player.playbackId}
             playbackToken={token}
             poster={player.poster}

@@ -1,6 +1,7 @@
 import { addCloudinaryOnTheFlyImageTransformation } from "@skylark-reference-apps/lib";
 import React from "react";
 import MuxVideo from "@mux/mux-video-react";
+import type MuxPlayerElement from '@mux/mux-player';
 
 import dynamic from "next/dynamic";
 
@@ -29,6 +30,8 @@ interface PlayerProps {
   provider?: string;
   chapters?: PlayerChapter[];
   cuePoints?: PlayerCuePoint[];
+  onChapterChange?: (PlayerChapter) => void;
+  onCuePointChange?: (PlayerCuePoint) => void;
 }
 
 const getPlayerType = (src: string, provider?: string, srcId?: string) => {
@@ -74,6 +77,10 @@ export const Player: React.FC<PlayerProps> = ({
   videoId,
   videoTitle,
   provider,
+  chapters,
+  cuePoints,
+  onChapterChange,
+  onCuePointChange
 }) => {
   const isClient = typeof window !== "undefined";
   const absoluteSrc =
@@ -132,6 +139,40 @@ export const Player: React.FC<PlayerProps> = ({
                   }
                 : undefined
             }
+            onCuePointChange={({ detail }) => {
+              if(cuePoints && onCuePointChange) {
+                onCuePointChange(cuePoints.find(cuePoint => cuePoint.startTime == detail.time));
+              }
+            }}
+            onChapterChange={({ detail }) => {
+              if(chapters && onChapterChange) {
+                onChapterChange(chapters.find(chapter => chapter.startTime == detail.startTime));
+              }
+            }}
+            onLoadedMetadata={({ target }) => {
+              if(!target) {
+                console.log("No target supplied on metadata loaded");
+                return;
+              }
+
+              const playerEl = target as MuxPlayerElement;
+
+              if(chapters) {
+                playerEl.addChapters(chapters.map(chapter => ({ 
+                  startTime: chapter.startTime, 
+                  endTime: chapter.endTime, 
+                  value: chapter.title
+                })));
+              }
+              
+              if(cuePoints) {
+                console.log(cuePoints);
+                playerEl.addCuePoints(cuePoints.map(cuePoint => ({ 
+                  time: cuePoint.startTime, 
+                  value: cuePoint.payload
+                })));
+              }
+            }}
           />
         )}
         {type === "mux-video" && (

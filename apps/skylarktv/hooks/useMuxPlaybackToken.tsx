@@ -48,6 +48,9 @@ export const useMuxPlaybackToken = (provider?: string, playbackId?: string) => {
     queryFn: () => fetcher(playbackId || ""),
     enabled: Boolean(playbackId && provider?.toLocaleLowerCase() === "mux"),
     select,
+    retry: false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
   return {
