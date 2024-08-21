@@ -5166,6 +5166,7 @@ export type SkylarkImage = MediaFile &
     slug?: Maybe<Scalars["String"]>;
     tags?: Maybe<SkylarkTagListing>;
     themes?: Maybe<ThemeListing>;
+    timecode_events?: Maybe<TimecodeEventListing>;
     title?: Maybe<Scalars["String"]>;
     type?: Maybe<Scalars["String"]>;
     uid: Scalars["String"];
@@ -5318,6 +5319,13 @@ export type SkylarkImageThemesArgs = {
   order_direction?: InputMaybe<OrderDirections>;
 };
 
+export type SkylarkImageTimecode_EventsArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+  order_direction?: InputMaybe<OrderDirections>;
+};
+
 export type SkylarkImageCreateInput = {
   alt_text?: InputMaybe<Scalars["String"]>;
   availability?: InputMaybe<AssignAvailabilityInput>;
@@ -5384,6 +5392,7 @@ export type SkylarkImageRelationships = {
   sets?: InputMaybe<SkylarkSetRelationshipInput>;
   tags?: InputMaybe<SkylarkTagRelationshipInput>;
   themes?: InputMaybe<ThemeRelationshipInput>;
+  timecode_events?: InputMaybe<TimecodeEventRelationshipInput>;
 };
 
 export type SkylarkImageSetCreate = {
@@ -6124,11 +6133,13 @@ export type TimecodeEvent = Metadata &
     content_of?: Maybe<SetListing>;
     copy?: Maybe<Scalars["String"]>;
     external_id?: Maybe<Scalars["String"]>;
+    images?: Maybe<SkylarkImageListing>;
     internal_title?: Maybe<Scalars["String"]>;
     link_href?: Maybe<Scalars["AWSURL"]>;
     link_text?: Maybe<Scalars["String"]>;
     slug?: Maybe<Scalars["String"]>;
     timecode?: Maybe<Scalars["Float"]>;
+    title?: Maybe<Scalars["String"]>;
     type?: Maybe<Scalars["String"]>;
     uid: Scalars["String"];
   };
@@ -6165,6 +6176,13 @@ export type TimecodeEventContent_OfArgs = {
   next_token?: InputMaybe<Scalars["String"]>;
 };
 
+export type TimecodeEventImagesArgs = {
+  language?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  next_token?: InputMaybe<Scalars["String"]>;
+  order_direction?: InputMaybe<OrderDirections>;
+};
+
 export type TimecodeEventCreateInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
   copy?: InputMaybe<Scalars["String"]>;
@@ -6175,6 +6193,7 @@ export type TimecodeEventCreateInput = {
   relationships?: InputMaybe<TimecodeEventRelationships>;
   slug?: InputMaybe<Scalars["String"]>;
   timecode: Scalars["Float"];
+  title?: InputMaybe<Scalars["String"]>;
   type: TimecodeEventType;
 };
 
@@ -6188,6 +6207,7 @@ export type TimecodeEventInput = {
   relationships?: InputMaybe<TimecodeEventRelationships>;
   slug?: InputMaybe<Scalars["String"]>;
   timecode?: InputMaybe<Scalars["Float"]>;
+  title?: InputMaybe<Scalars["String"]>;
   type?: InputMaybe<TimecodeEventType>;
 };
 
@@ -6208,6 +6228,7 @@ export type TimecodeEventRelationshipInput = {
 export type TimecodeEventRelationships = {
   assets?: InputMaybe<SkylarkAssetRelationshipInput>;
   chapters?: InputMaybe<ChapterRelationshipInput>;
+  images?: InputMaybe<SkylarkImageRelationshipInput>;
 };
 
 export type TimecodeEventSetCreate = {
@@ -7281,6 +7302,7 @@ export type _TimecodeEventLanguage = _Language & {
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
   slug?: Maybe<Scalars["String"]>;
+  title?: Maybe<Scalars["String"]>;
   version?: Maybe<Scalars["Int"]>;
 };
 

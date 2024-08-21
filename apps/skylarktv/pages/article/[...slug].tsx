@@ -96,7 +96,7 @@ const ArticlePage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
               )}
             </p>
           )}
-          <div className="mt-5 md:mt-10">
+          <div className="mb-5 mt-5 pt-2 md:mt-10">
             <ParseAndDisplayHTML
               fallbackMessage="Article has no body"
               html={article?.body || null}

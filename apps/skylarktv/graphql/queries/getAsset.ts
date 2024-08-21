@@ -1,8 +1,12 @@
 import { gql } from "graphql-request";
-import { ImageListingFragment } from "./fragments";
+import {
+  ImageListingFragment,
+  TimecodeEventListingFragment,
+} from "./fragments";
 
 export const GET_ASSET = gql`
   ${ImageListingFragment}
+  ${TimecodeEventListingFragment}
 
   query GET_ASSET($uid: String, $externalId: String) {
     getObject: getSkylarkAsset(uid: $uid, external_id: $externalId) {
@@ -21,28 +25,12 @@ export const GET_ASSET = gql`
           title
           chapter_type
           timecode_events(limit: 100) {
-            objects {
-              uid
-              type
-              slug
-              copy
-              link_text
-              link_href
-              timecode
-            }
+            ...timecodeEventListingFragment
           }
         }
       }
       timecode_events(limit: 100) {
-        objects {
-          uid
-          type
-          slug
-          copy
-          link_text
-          link_href
-          timecode
-        }
+        ...timecodeEventListingFragment
       }
     }
   }

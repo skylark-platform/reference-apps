@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { formatReleaseDate } from "@skylark-reference-apps/lib";
 import useTranslation from "next-translate/useTranslation";
 import {
@@ -36,8 +36,11 @@ import {
   Maybe,
   SkylarkAsset,
   TimecodeEventListing,
+  TimecodeEventWithType,
 } from "../../../types";
-import { useMuxPlaybackToken } from "../../../hooks/useMuxPlaybackToken";
+import { useMuxPlaybackTokens } from "../../../hooks/useMuxPlaybackToken";
+import { PlayerTimecodeEvent } from "../../playerTimecodeEvent";
+import { PlayerPauseOverlay } from "../../playerPauseOverlay";
 
 interface PlaybackPageProps {
   uid: string;
@@ -177,18 +180,20 @@ const convertTimecodeEventsToPlayerCuePoints = (
         evt &&
         typeof evt.timecode === "number" && {
           startTime: evt.timecode,
-          payload: evt as object,
+          payload: evt,
         },
     )
-    .filter((evt): evt is PlayerCuePoint => !!evt) || undefined;
+    .filter((evt): evt is PlayerCuePoint<TimecodeEventWithType> => !!evt) ||
+  undefined;
 
 const convertChaptersToPlayerChapters = (
   chapterListing: Maybe<ChapterListing> | undefined,
 ) =>
   chapterListing?.objects
-    ?.map((chapter): PlayerChapter | null =>
+    ?.map((chapter): PlayerChapter<TimecodeEventWithType> | null =>
       chapter && typeof chapter.start_time === "number"
         ? {
+            uid: chapter.uid,
             title: chapter.title ? chapter.title : undefined,
             startTime: chapter.start_time,
             cuePoints: convertTimecodeEventsToPlayerCuePoints(
@@ -197,7 +202,9 @@ const convertChaptersToPlayerChapters = (
           }
         : null,
     )
-    .filter((chapter): chapter is PlayerChapter => !!chapter) || undefined;
+    .filter(
+      (chapter): chapter is PlayerChapter<TimecodeEventWithType> => !!chapter,
+    ) || undefined;
 
 export const PlaybackPage: NextPage<PlaybackPageProps> = ({
   uid,
@@ -222,7 +229,10 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
 
   const { data: asset } = useObject<SkylarkAsset>(GET_ASSET, player.assetId);
 
-  const { token } = useMuxPlaybackToken(player.provider, player.playbackId);
+  const { playbackTokens } = useMuxPlaybackTokens(
+    player.provider,
+    player.playbackId,
+  );
 
   const { cuePoints, chapters } = useMemo(
     () => ({
@@ -274,62 +284,88 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
     },
   ];
 
+  const [activeChapter, setActiveChapter] =
+    useState<PlayerChapter<TimecodeEventWithType> | null>(null);
+  const [activeCuePoint, setActiveCuePoint] =
+    useState<PlayerCuePoint<TimecodeEventWithType> | null>(null);
+  const [pauseTime, setPauseTime] = useState<number | null>(null);
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-start bg-gray-900 pb-20 font-body md:pt-64">
       <SkeletonPage show={!!loading}>
-        <div className="flex h-full w-full justify-center pb-10 md:pb-16">
+        <div className="flex h-full w-full justify-center">
           <Player
             autoPlay={player.autoPlay}
             chapters={chapters}
             cuePoints={cuePoints}
-            onCuePointChange={(activeCuePoint) => {
-              console.log("Active Cue Point Changed:");
-              console.log(activeCuePoint);
-            }}
-            onChapterChange={(activeChapter) => {
-              console.log("Active Chapter Changed:");
-              console.log(activeChapter);
-            }}
+            pauseOverlay={
+              pauseTime && (
+                <PlayerPauseOverlay
+                  chapter={activeChapter || chapters?.[0] || null}
+                  timestamp={pauseTime}
+                />
+              )
+            }
             playbackId={player.playbackId}
-            playbackToken={token}
+            playbackTokens={playbackTokens}
             poster={player.poster}
             provider={player.provider}
             src={player.src}
             videoId={player.assetId}
             videoTitle={title}
+            onChapterChange={(c) => {
+              console.log("Active Chapter Changed:", c);
+              setActiveChapter(c);
+            }}
+            onCuePointChange={(p) => {
+              console.log("Active Cue Point Changed:", p);
+              setActiveCuePoint(p);
+            }}
+            onPlayToggle={({ type, currentTime }) =>
+              setPauseTime(type === "pause" ? currentTime : null)
+            }
           />
         </div>
-        <div className="flex w-full flex-col px-gutter sm:px-sm-gutter md:flex-row md:py-2 lg:px-lg-gutter xl:px-xl-gutter">
-          <div className="h-full w-full pb-4 md:w-7/12">
-            <InformationPanel
-              actors={credits?.Actor?.formattedCredits}
-              availableUntil={
-                availabilityEndDate
-                  ? getTimeFromNow(availabilityEndDate)
-                  : undefined
-              }
-              brand={brand}
-              description={synopsis}
-              duration={player.duration}
-              genres={genres}
-              rating={rating}
-              season={season}
-              themes={themes}
-              title={number ? `${number}. ${title}` : title}
-            />
-          </div>
-          <span className="flex border-gray-800 bg-gray-900 md:mx-3 md:border-r" />
-          <div className="h-full w-full pt-4 ltr:pl-1 rtl:pr-1 ltr:sm:pl-5 rtl:sm:pr-5 md:w-5/12">
-            <div className="flex justify-center">
-              <span className="mb-4 w-4/5 border-b border-gray-800 md:hidden" />
+        <div className="flex w-full flex-col px-gutter sm:px-sm-gutter lg:px-lg-gutter xl:px-xl-gutter">
+          <div className="mb-8 flex w-full flex-col border-b border-gray-800 bg-gray-900 md:mb-16">
+            <div className="my-8 rounded border-2 border-pink-500 md:-mx-2">
+              <PlayerTimecodeEvent
+                payload={activeCuePoint?.payload || cuePoints?.[0]?.payload}
+              />
             </div>
-            <MetadataPanel
-              content={metadataPanelContent.filter(({ body }) =>
-                Array.isArray(body)
-                  ? body.length > 0
-                  : React.isValidElement(body) || typeof body === "string",
-              )}
-            />
+          </div>
+          <div className="flex w-full flex-col md:flex-row md:py-2">
+            <div className="h-full w-full pb-4 md:w-7/12">
+              <InformationPanel
+                actors={credits?.Actor?.formattedCredits}
+                availableUntil={
+                  availabilityEndDate
+                    ? getTimeFromNow(availabilityEndDate)
+                    : undefined
+                }
+                brand={brand}
+                description={synopsis}
+                duration={player.duration}
+                genres={genres}
+                rating={rating}
+                season={season}
+                themes={themes}
+                title={number ? `${number}. ${title}` : title}
+              />
+            </div>
+            <span className="flex border-gray-800 bg-gray-900 md:mx-3 md:border-r" />
+            <div className="h-full w-full pt-4 ltr:pl-1 rtl:pr-1 ltr:sm:pl-5 rtl:sm:pr-5 md:w-5/12">
+              <div className="flex justify-center">
+                <span className="mb-4 w-4/5 border-b border-gray-800 md:hidden" />
+              </div>
+              <MetadataPanel
+                content={metadataPanelContent.filter(({ body }) =>
+                  Array.isArray(body)
+                    ? body.length > 0
+                    : React.isValidElement(body) || typeof body === "string",
+                )}
+              />
+            </div>
           </div>
         </div>
         {allCredits && (

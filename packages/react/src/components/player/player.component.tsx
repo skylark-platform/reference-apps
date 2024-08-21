@@ -1,37 +1,51 @@
-import { addCloudinaryOnTheFlyImageTransformation } from "@skylark-reference-apps/lib";
-import React from "react";
+import {
+  addCloudinaryOnTheFlyImageTransformation,
+  hasProperty,
+} from "@skylark-reference-apps/lib";
+import React, { CSSProperties, ReactNode, useState } from "react";
 import MuxVideo from "@mux/mux-video-react";
-import type MuxPlayerElement from '@mux/mux-player';
+import type MuxPlayerElement from "@mux/mux-player";
 
 import dynamic from "next/dynamic";
 
-export interface PlayerCuePoint {
+export interface PlayerTokens {
+  playback: string;
+  storyboard?: string;
+  thumbnail?: string;
+  drm?: string;
+}
+
+export interface PlayerCuePoint<T extends object> {
+  uid: string;
   title?: string;
   startTime: number;
   endTime?: number;
-  payload: object;
+  payload: T;
 }
 
-export interface PlayerChapter {
+export interface PlayerChapter<T extends object> {
+  uid: string;
   title?: string;
   startTime: number;
   endTime?: number;
-  cuePoints?: PlayerCuePoint[];
+  cuePoints?: PlayerCuePoint<T>[];
 }
 
-interface PlayerProps {
+interface PlayerProps<T extends object> {
   src: string;
   playbackId?: string;
-  playbackToken?: string;
+  playbackTokens?: PlayerTokens;
   poster?: string;
   videoId: string;
   videoTitle: string;
   autoPlay?: boolean;
   provider?: string;
-  chapters?: PlayerChapter[];
-  cuePoints?: PlayerCuePoint[];
-  onChapterChange?: (PlayerChapter) => void;
-  onCuePointChange?: (PlayerCuePoint) => void;
+  pauseOverlay?: ReactNode;
+  chapters?: PlayerChapter<T>[];
+  cuePoints?: PlayerCuePoint<T>[];
+  onChapterChange?: (chapter: PlayerChapter<T> | null) => void;
+  onCuePointChange?: (cuePoint: PlayerCuePoint<T> | null) => void;
+  onPlayToggle?: (evt: { type: "play" | "pause"; currentTime: number }) => void;
 }
 
 const getPlayerType = (src: string, provider?: string, srcId?: string) => {
@@ -68,10 +82,10 @@ const ThumbnailImage = ({ src }: { src?: string }) =>
     />
   ) : undefined;
 
-export const Player: React.FC<PlayerProps> = ({
+export function Player<T extends object>({
   src,
   playbackId,
-  playbackToken,
+  playbackTokens,
   poster,
   autoPlay,
   videoId,
@@ -79,9 +93,11 @@ export const Player: React.FC<PlayerProps> = ({
   provider,
   chapters,
   cuePoints,
+  pauseOverlay,
   onChapterChange,
-  onCuePointChange
-}) => {
+  onCuePointChange,
+  onPlayToggle,
+}: PlayerProps<T>) {
   const isClient = typeof window !== "undefined";
   const absoluteSrc =
     isClient && src
@@ -99,11 +115,38 @@ export const Player: React.FC<PlayerProps> = ({
       })
     : undefined;
 
-  console.log({ playbackToken, playbackId });
+  console.log({ playbackTokens, playbackId, chapters, cuePoints });
+
+  const addChaptersAndCuePointsToPlayer = async (player: MuxPlayerElement) => {
+    if (chapters) {
+      const muxChapters = chapters.map((chapter) => ({
+        startTime: chapter.startTime,
+        endTime: chapter.endTime as number,
+        value: chapter.title as string,
+      }));
+      await player.addChapters(muxChapters);
+    }
+
+    if (cuePoints) {
+      const muxCuePoints = cuePoints.map((cuePoint) => ({
+        time: cuePoint.startTime,
+        value: cuePoint.payload,
+      }));
+      await player.addCuePoints(muxCuePoints);
+    }
+  };
+
+  const [isPlaying, setIsPlaying] = useState(true);
 
   return (
     <div className="w-screen sm:w-11/12 lg:w-3/4">
-      <div className="aspect-h-9 aspect-w-16 relative shadow shadow-black md:shadow-xl">
+      <div
+        className="aspect-h-9 aspect-w-16 relative shadow shadow-black md:shadow-xl"
+        id="my-player"
+      >
+        {!isPlaying && pauseOverlay && (
+          <div className="absolute z-[1] h-full w-full">{pauseOverlay}</div>
+        )}
         {/* For Google Drive videos, use iframe embed because they don't work with MuxPlayer */}
         {type === "iframe" && <iframe src={src} />}
         {type === "react-player" && (
@@ -123,7 +166,7 @@ export const Player: React.FC<PlayerProps> = ({
             autoPlay={autoPlay}
             className="h-full w-full bg-black object-cover object-center"
             data-testid="player"
-            key={`${playbackId}-${playbackToken}`}
+            key={`${playbackId}-${playbackTokens?.playback}`}
             metadata={{
               video_id: videoId,
               video_title: videoTitle,
@@ -132,48 +175,58 @@ export const Player: React.FC<PlayerProps> = ({
             poster={posterSrc}
             ref={undefined}
             streamType={"on-demand"}
-            tokens={
-              playbackToken
-                ? {
-                    playback: playbackToken,
-                  }
-                : undefined
+            style={
+              {
+                "--fullscreen-button": "none",
+                "--pip-button": "none",
+              } as CSSProperties
             }
-            onCuePointChange={({ detail }) => {
-              if(cuePoints && onCuePointChange) {
-                onCuePointChange(cuePoints.find(cuePoint => cuePoint.startTime == detail.time));
+            tokens={playbackTokens}
+            onChapterChange={({ detail }) => {
+              if (chapters && onChapterChange) {
+                onChapterChange(
+                  chapters.find(
+                    (chapter) => chapter.startTime === detail.startTime,
+                  ) || null,
+                );
               }
             }}
-            onChapterChange={({ detail }) => {
-              if(chapters && onChapterChange) {
-                onChapterChange(chapters.find(chapter => chapter.startTime == detail.startTime));
+            onCuePointChange={({ detail }) => {
+              if (cuePoints && onCuePointChange) {
+                onCuePointChange(
+                  cuePoints.find(
+                    (cuePoint) => cuePoint.startTime === detail.time,
+                  ) || null,
+                );
               }
             }}
             onLoadedMetadata={({ target }) => {
-              if(!target) {
+              if (!target) {
                 console.log("No target supplied on metadata loaded");
                 return;
               }
-
               const playerEl = target as MuxPlayerElement;
-
-              if(chapters) {
-                playerEl.addChapters(chapters.map(chapter => ({ 
-                  startTime: chapter.startTime, 
-                  endTime: chapter.endTime, 
-                  value: chapter.title
-                })));
-              }
-              
-              if(cuePoints) {
-                console.log(cuePoints);
-                playerEl.addCuePoints(cuePoints.map(cuePoint => ({ 
-                  time: cuePoint.startTime, 
-                  value: cuePoint.payload
-                })));
-              }
+              void addChaptersAndCuePointsToPlayer(playerEl);
             }}
-          />
+            onPause={(e) => {
+              onPlayToggle?.({
+                type: "pause",
+                currentTime: hasProperty(e.target, "currentTime")
+                  ? (e.target.currentTime as number)
+                  : -1,
+              });
+              setIsPlaying(false);
+            }}
+            onPlay={(e) => {
+              onPlayToggle?.({
+                type: "play",
+                currentTime: hasProperty(e.target, "currentTime")
+                  ? (e.target.currentTime as number)
+                  : -1,
+              });
+              setIsPlaying(true);
+            }}
+          ></MuxPlayer>
         )}
         {type === "mux-video" && (
           <MuxVideo
@@ -194,4 +247,4 @@ export const Player: React.FC<PlayerProps> = ({
       </div>
     </div>
   );
-};
+}

@@ -5,10 +5,14 @@ import {
   SAAS_API_ENDPOINT,
   SAAS_API_KEY,
 } from "@skylark-reference-apps/lib";
+import { PlayerTokens } from "@skylark-reference-apps/react";
 import { GQLError } from "../types";
 
 interface ResponseBody {
   playback_url: string;
+  playback_token?: string;
+  storyboard_token?: string;
+  thumbnail_token?: string;
 }
 
 const fetcher = (playbackId: string): Promise<ResponseBody> => {
@@ -36,13 +40,34 @@ const fetcher = (playbackId: string): Promise<ResponseBody> => {
   }).then((res) => res.json()) as Promise<ResponseBody>;
 };
 
-const select = ({ playback_url }: ResponseBody): string | undefined => {
+const select = ({
+  playback_url,
+  storyboard_token,
+  playback_token,
+  thumbnail_token,
+}: ResponseBody): PlayerTokens | undefined => {
+  if (playback_token) {
+    return {
+      playback: playback_token,
+      storyboard: storyboard_token,
+      thumbnail: thumbnail_token,
+    };
+  }
+
   const url = new URL(playback_url);
   const token = url.searchParams.get("token");
-  return token || undefined;
+  if (token) {
+    return {
+      playback: token,
+    };
+  }
+  return undefined;
 };
 
-export const useMuxPlaybackToken = (provider?: string, playbackId?: string) => {
+export const useMuxPlaybackTokens = (
+  provider?: string,
+  playbackId?: string,
+) => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["MuxPlaybackToken", playbackId],
     queryFn: () => fetcher(playbackId || ""),
@@ -54,7 +79,7 @@ export const useMuxPlaybackToken = (provider?: string, playbackId?: string) => {
   });
 
   return {
-    token: data,
+    playbackTokens: data,
     isLoading,
     isError: error as GQLError,
   };
