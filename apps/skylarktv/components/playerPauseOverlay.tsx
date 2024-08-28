@@ -34,7 +34,7 @@ const Tips = ({ tips }: { tips: PlayerCuePoint<TimecodeEventWithType>[] }) => {
   return (
     <Section>
       {tips && (
-        <p className="mb-6 ml-4 w-full text-xl font-medium text-white">{`Tips`}</p>
+        <p className="mb-6 ml-4 w-full text-lg font-medium text-white">{`Tips`}</p>
       )}
       {options?.length > 1 && (
         <div className="px-4">
@@ -60,7 +60,7 @@ const Adverts = ({
   adverts: PlayerCuePoint<TimecodeEventWithType>[];
 }) => (
   <Section>
-    <p className="mb-6 ml-4 w-full text-xl font-medium text-white">
+    <p className="mb-6 ml-4 w-full text-lg font-medium text-white">
       {`In this scene`}
     </p>
     {adverts?.map((ad) => (
@@ -88,9 +88,12 @@ export const PlayerPauseOverlay = ({ chapter }: PlayerPauseOverlayProps) => {
 
   return (
     <div
-      className="flex h-full w-full items-center justify-center overflow-hidden bg-black bg-opacity-75 p-8"
+      className="flex h-full w-full flex-col items-center justify-center overflow-hidden bg-black bg-opacity-75 p-8"
       key={chapter.uid}
     >
+      <p className="w-full px-8 pt-8 text-left text-xl font-medium text-white">
+        {chapter?.title || ""}
+      </p>
       <div className="mb-4 grid h-full max-h-full w-full grid-cols-2 items-center justify-center overflow-hidden">
         {tips && tips.length > 0 && <Tips tips={tips} />}
         {adverts && adverts.length > 0 && <Adverts adverts={adverts} />}

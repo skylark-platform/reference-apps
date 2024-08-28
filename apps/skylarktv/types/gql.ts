@@ -52,6 +52,7 @@ export type AccountConfig = {
   __typename?: "AccountConfig";
   default_language?: Maybe<Scalars["String"]>;
   draft_update?: Maybe<Scalars["Boolean"]>;
+  migrated?: Maybe<Scalars["Boolean"]>;
   raise_uid_exception?: Maybe<Scalars["Boolean"]>;
 };
 

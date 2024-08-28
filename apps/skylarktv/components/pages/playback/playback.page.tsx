@@ -36,6 +36,7 @@ import {
   Maybe,
   SkylarkAsset,
   TimecodeEventListing,
+  TimecodeEventType,
   TimecodeEventWithType,
 } from "../../../types";
 import { useMuxPlaybackTokens } from "../../../hooks/useMuxPlaybackToken";
@@ -319,21 +320,29 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
             }}
             onCuePointChange={(p) => {
               console.log("Active Cue Point Changed:", p);
-              setActiveCuePoint(p);
+              if (
+                p?.payload.type &&
+                [
+                  TimecodeEventType.Advertlink,
+                  TimecodeEventType.Advertcontextual,
+                ].includes(p.payload.type)
+              ) {
+                setActiveCuePoint(p);
+              }
             }}
             onPlayToggle={({ type, currentTime }) =>
               setPauseTime(type === "pause" ? currentTime : null)
             }
           />
         </div>
-        <div className="flex w-full flex-col px-gutter sm:px-sm-gutter lg:px-lg-gutter xl:px-xl-gutter">
-          <div className="mb-8 flex w-full flex-col border-b border-gray-800 bg-gray-900 md:mb-16">
-            <div className="my-8 rounded border-2 border-pink-500 md:-mx-2">
-              <PlayerTimecodeEvent
-                payload={activeCuePoint?.payload || cuePoints?.[0]?.payload}
-              />
-            </div>
+        <div className="mb-8 flex h-64 w-full flex-col items-center border-b border-gray-800 bg-gray-900 md:mb-16">
+          <div className="my-8 rounded sm:w-11/12 lg:w-3/4">
+            <PlayerTimecodeEvent
+              payload={activeCuePoint?.payload || cuePoints?.[0]?.payload}
+            />
           </div>
+        </div>
+        <div className="flex w-full flex-col px-gutter sm:px-sm-gutter lg:px-lg-gutter xl:px-xl-gutter">
           <div className="flex w-full flex-col md:flex-row md:py-2">
             <div className="h-full w-full pb-4 md:w-7/12">
               <InformationPanel
