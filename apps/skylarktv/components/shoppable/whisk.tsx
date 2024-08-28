@@ -1,13 +1,14 @@
 import { hasProperty } from "@skylark-reference-apps/lib";
 import { useEffect } from "react";
 
-const whiskScriptId = "shoppable-whisk-script";
-
 interface WhiskProps {
-  whiskId: string;
+  uid: string;
+  recipeUrl: string;
 }
 
-export const Whisk = ({ whiskId }: WhiskProps) => {
+export const Whisk = ({ uid, recipeUrl }: WhiskProps) => {
+  const whiskId = `whisk-${uid}`;
+
   const whisk =
     typeof window !== "undefined" && hasProperty(global, "whisk")
       ? (global.whisk as {
@@ -15,6 +16,9 @@ export const Whisk = ({ whiskId }: WhiskProps) => {
           display: (id: string) => void;
           shoppingList: {
             defineWidget: (id: string, opts: object) => void;
+          };
+          config: {
+            set: (s: string, o: object) => void;
           };
         })
       : null;
@@ -24,7 +28,12 @@ export const Whisk = ({ whiskId }: WhiskProps) => {
     if (whisk) {
       whisk.queue = whisk.queue || [];
 
-      whisk.queue.push(() => {
+      whisk.config.set("shoppingList", {
+        recipeUrl,
+      });
+
+      // eslint-disable-next-line prefer-arrow-callback, func-names
+      whisk.queue.push(function () {
         whisk.shoppingList.defineWidget(whiskId, {
           styles: {
             type: "save-recipe",
@@ -33,7 +42,8 @@ export const Whisk = ({ whiskId }: WhiskProps) => {
         });
       });
 
-      whisk.queue.push(() => {
+      // eslint-disable-next-line prefer-arrow-callback, func-names
+      whisk.queue.push(function () {
         whisk?.display(whiskId);
       });
     }
@@ -46,62 +56,9 @@ export const Whisk = ({ whiskId }: WhiskProps) => {
     }
   }, [whisk]);
 
-  useEffect(() => {
-    //     <script async="true" src="https://cdn.whisk.com/sdk/shopping-list.js" type="text/javascript"></script>
-    // <script>
-    //   var whisk = whisk || {};
-    //   whisk.queue = whisk.queue || [];
-
-    //   whisk.queue.push(function () {
-    //    whisk.shoppingList.defineWidget("VNRH-NWDX-OCCU-NMLG", {
-    //       styles: {
-    //         type: "save-recipe",
-    //         size: "large"
-    //       }
-    //     })
-    //    });
-
-    // </script>
-
-    console.log({ whisk, queue: whisk?.queue });
-
-    const body = document.getElementsByTagName("body")?.[0];
-    const scriptExists = Boolean(document.getElementById(whiskScriptId));
-
-    if (!whisk && !scriptExists) {
-      if (!scriptExists) {
-        const script = document.createElement("script");
-        script.id = whiskScriptId;
-        script.src = "https://cdn.whisk.com/sdk/shopping-list.js";
-        script.type = "text/javascript";
-
-        body.appendChild(script);
-        script.onload = () => triggerWhiskWidget();
-      }
-
-      // if(whisk !== null) {
-
-      //   triggerWhiskWidget()
-
-      // }
-
-      console.log({ body, whisk });
-    }
-
-    return () => {
-      const whiskScript = document.getElementById(whiskScriptId);
-
-      whiskScript?.remove();
-    };
-  }, [whiskId, whisk]);
-
   return (
-    <div className="h-52 w-full">
-      <div id={whiskId}>
-        {/* <script>
-    {``}
-  </script> */}
-      </div>
+    <div className="w-full">
+      <div className="rounded bg-white p-2" id={whiskId}></div>
     </div>
   );
 };

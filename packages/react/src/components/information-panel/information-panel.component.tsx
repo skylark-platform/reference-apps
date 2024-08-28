@@ -30,6 +30,7 @@ interface InformationPanelProps {
   }[];
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
 const getTranslationStringForAvailability = (
   unit: "day" | "month" | "year" | "never",
   number: number,
@@ -87,13 +88,18 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
   title,
   duration,
   rating,
-  availableUntil,
+  // availableUntil,
   description,
   genres,
   themes,
   actors,
 }) => {
   const { t } = useTranslation("common");
+
+  const seasonBreadcrumb =
+    (season?.number
+      ? `${t("skylark.object.season")} ${season.number}`
+      : season?.title) || "";
 
   return (
     <div className="h-full w-full bg-gray-900">
@@ -107,16 +113,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
               }`}
             >
               <List
-                contents={
-                  [
-                    brand.title,
-                    season
-                      ? season.title ||
-                        (season.number &&
-                          `${t("skylark.object.season")} ${season.number}`)
-                      : "",
-                  ] || []
-                }
+                contents={[brand.title, seasonBreadcrumb] || []}
                 highlightAll
                 textSize={"lg"}
               />
@@ -136,15 +133,15 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
                 </span>
               ) : undefined,
               rating,
-              availableUntil
-                ? t(
-                    getTranslationStringForAvailability(
-                      availableUntil.unit,
-                      availableUntil.number,
-                    ),
-                    { number: availableUntil?.number },
-                  )
-                : getTranslationStringForAvailability("never", -1),
+              // availableUntil
+              //   ? t(
+              //       getTranslationStringForAvailability(
+              //         availableUntil.unit,
+              //         availableUntil.number,
+              //       ),
+              //       { number: availableUntil?.number },
+              //     )
+              //   : getTranslationStringForAvailability("never", -1),
             ]}
             highlightFirst
             textSize={"sm"}

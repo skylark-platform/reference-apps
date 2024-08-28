@@ -207,6 +207,15 @@ const convertChaptersToPlayerChapters = (
       (chapter): chapter is PlayerChapter<TimecodeEventWithType> => !!chapter,
     ) || undefined;
 
+const isAdvert = (type?: TimecodeEventType) =>
+  type &&
+  [TimecodeEventType.Advertcontextual, TimecodeEventType.Advertlink].includes(
+    type,
+  );
+
+const isWhisk = (type?: TimecodeEventType) =>
+  type && type === TimecodeEventType.Whisk;
+
 export const PlaybackPage: NextPage<PlaybackPageProps> = ({
   uid,
   loading,
@@ -287,9 +296,46 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
 
   const [activeChapter, setActiveChapter] =
     useState<PlayerChapter<TimecodeEventWithType> | null>(null);
-  const [activeCuePoint, setActiveCuePoint] =
+  // const [activeCuePoint, setActiveCuePoint] =
+  //   useState<PlayerCuePoint<TimecodeEventWithType> | null>(null);
+  const [advert, setAdvert] =
+    useState<PlayerCuePoint<TimecodeEventWithType> | null>(null);
+  const [whisk, setWhisk] =
     useState<PlayerCuePoint<TimecodeEventWithType> | null>(null);
   const [pauseTime, setPauseTime] = useState<number | null>(null);
+
+  const handleChapterChange = (
+    c: PlayerChapter<TimecodeEventWithType> | null,
+  ) => {
+    console.log("Active Chapter Changed:", c);
+    setActiveChapter(c);
+
+    const firstAdvert = c?.cuePoints?.find(({ payload }) =>
+      isAdvert(payload.type),
+    );
+
+    const firstWhisk = c?.cuePoints?.find(({ payload }) =>
+      isWhisk(payload.type),
+    );
+
+    if (firstAdvert) setAdvert(firstAdvert);
+
+    if (firstWhisk) setWhisk(firstWhisk);
+  };
+
+  const handleCuePointChange = (
+    p: PlayerCuePoint<TimecodeEventWithType> | null,
+  ) => {
+    console.log("Active Cue Point Changed:", p);
+    // setActiveCuePoint(p);
+    if (p?.payload.type && isAdvert(p.payload.type)) {
+      setAdvert(p);
+    }
+
+    if (isWhisk(p?.payload.type)) {
+      setWhisk(p);
+    }
+  };
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-start bg-gray-900 pb-20 font-body md:pt-64">
@@ -308,38 +354,30 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
               )
             }
             playbackId={player.playbackId}
+            playbackPolicy={asset?.policy || undefined}
             playbackTokens={playbackTokens}
             poster={player.poster}
             provider={player.provider}
             src={player.src}
             videoId={player.assetId}
             videoTitle={title}
-            onChapterChange={(c) => {
-              console.log("Active Chapter Changed:", c);
-              setActiveChapter(c);
-            }}
-            onCuePointChange={(p) => {
-              console.log("Active Cue Point Changed:", p);
-              if (
-                p?.payload.type &&
-                [
-                  TimecodeEventType.Advertlink,
-                  TimecodeEventType.Advertcontextual,
-                ].includes(p.payload.type)
-              ) {
-                setActiveCuePoint(p);
-              }
-            }}
+            onChapterChange={handleChapterChange}
+            onCuePointChange={handleCuePointChange}
             onPlayToggle={({ type, currentTime }) =>
               setPauseTime(type === "pause" ? currentTime : null)
             }
           />
         </div>
-        <div className="mb-8 flex h-64 w-full flex-col items-center border-b border-gray-800 bg-gray-900 md:mb-16">
-          <div className="my-8 rounded sm:w-11/12 lg:w-3/4">
+        <div className="mb-8 flex h-72 w-full flex-col items-center border-b border-gray-800 bg-gray-900 md:mb-16">
+          <div className="my-8 flex flex-col justify-between rounded sm:w-11/12 md:flex-row lg:w-3/4">
             <PlayerTimecodeEvent
-              payload={activeCuePoint?.payload || cuePoints?.[0]?.payload}
+              payload={
+                advert?.payload ||
+                cuePoints?.find(({ payload }) => isAdvert(payload.type))
+                  ?.payload
+              }
             />
+            <PlayerTimecodeEvent payload={whisk?.payload} />
           </div>
         </div>
         <div className="flex w-full flex-col px-gutter sm:px-sm-gutter lg:px-lg-gutter xl:px-xl-gutter">

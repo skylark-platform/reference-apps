@@ -13,7 +13,7 @@ interface PlayerPauseOverlayProps {
 }
 
 const Section = ({ children }: { children: ReactNode }) => (
-  <div className="h-5/6 w-full overflow-y-auto overflow-x-hidden px-2 lg:px-4">
+  <div className="h-[90%] w-full overflow-y-auto overflow-x-hidden px-2 lg:px-4">
     {children}
   </div>
 );
@@ -64,7 +64,7 @@ const Adverts = ({
       {`In this scene`}
     </p>
     {adverts?.map((ad) => (
-      <div className="my-8" key={ad.uid}>
+      <div className="my-8" key={ad.payload.uid}>
         <PlayerTimecodeEvent payload={ad?.payload} />
       </div>
     ))}

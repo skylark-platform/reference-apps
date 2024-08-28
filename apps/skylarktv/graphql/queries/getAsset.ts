@@ -14,6 +14,7 @@ export const GET_ASSET = gql`
       slug
       title
       type
+      policy
       images {
         ...imageListingFragment
       }

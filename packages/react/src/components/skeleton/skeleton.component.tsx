@@ -3,6 +3,7 @@ import React from "react";
 
 interface SkeletonProps {
   show: boolean;
+  image?: string;
   isPortrait?: boolean;
 }
 
@@ -13,7 +14,11 @@ const item = {
   show: { opacity: 1, transition: { duration: 1 } },
 };
 
-export const Skeleton: React.FC<SkeletonProps> = ({ show, isPortrait }) => (
+export const Skeleton: React.FC<SkeletonProps> = ({
+  show,
+  image,
+  isPortrait,
+}) => (
   <>
     {show && (
       <motion.div
@@ -25,7 +30,9 @@ export const Skeleton: React.FC<SkeletonProps> = ({ show, isPortrait }) => (
           className={` ${
             isPortrait ? "aspect-h-4 aspect-w-3" : "aspect-h-9 aspect-w-16"
           } animate-pulse rounded-sm bg-gray-700`}
-        ></div>
+        >
+          {image && <img alt="loading image" src={image} />}
+        </div>
       </motion.div>
     )}
   </>

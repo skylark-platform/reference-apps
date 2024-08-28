@@ -7,6 +7,7 @@ import MuxVideo from "@mux/mux-video-react";
 import type MuxPlayerElement from "@mux/mux-player";
 
 import dynamic from "next/dynamic";
+import { Skeleton } from "../skeleton";
 
 export interface PlayerTokens {
   playback: string;
@@ -35,6 +36,7 @@ interface PlayerProps<T extends object> {
   src: string;
   playbackId?: string;
   playbackTokens?: PlayerTokens;
+  playbackPolicy?: string;
   poster?: string;
   videoId: string;
   videoTitle: string;
@@ -86,6 +88,7 @@ export function Player<T extends object>({
   src,
   playbackId,
   playbackTokens,
+  playbackPolicy,
   poster,
   autoPlay,
   videoId,
@@ -115,7 +118,17 @@ export function Player<T extends object>({
       })
     : undefined;
 
-  console.log({ playbackTokens, playbackId, chapters, cuePoints });
+  console.log({
+    playbackTokens,
+    playbackId,
+    chapters,
+    cuePoints,
+    playbackPolicy,
+  });
+
+  const isSigned = Boolean(
+    playbackPolicy && ["PRIVATE"].includes(playbackPolicy.toUpperCase()),
+  );
 
   const addChaptersAndCuePointsToPlayer = async (player: MuxPlayerElement) => {
     if (chapters) {
@@ -161,73 +174,78 @@ export function Player<T extends object>({
             width="100%"
           />
         )}
-        {type === "mux-player" && (
-          <MuxPlayer
-            autoPlay={autoPlay}
-            className="h-full w-full bg-black object-cover object-center"
-            data-testid="player"
-            key={`${playbackId}-${playbackTokens?.playback}`}
-            metadata={{
-              video_id: videoId,
-              video_title: videoTitle,
-            }}
-            playbackId={playbackId}
-            poster={posterSrc}
-            ref={undefined}
-            streamType={"on-demand"}
-            style={
-              {
-                "--fullscreen-button": "none",
-                "--pip-button": "none",
-              } as CSSProperties
-            }
-            tokens={playbackTokens}
-            onChapterChange={({ detail }) => {
-              if (chapters && onChapterChange) {
-                onChapterChange(
-                  chapters.find(
-                    (chapter) => chapter.startTime === detail.startTime,
-                  ) || null,
-                );
+        {type === "mux-player" &&
+          (isSigned && !playbackTokens ? (
+            <>
+              <Skeleton image={posterSrc} show />
+            </>
+          ) : (
+            <MuxPlayer
+              autoPlay={autoPlay}
+              className="h-full w-full bg-black object-cover object-center"
+              data-testid="player"
+              key={`${playbackId}-${playbackTokens?.playback}`}
+              metadata={{
+                video_id: videoId,
+                video_title: videoTitle,
+              }}
+              playbackId={playbackId}
+              poster={posterSrc}
+              ref={undefined}
+              streamType={"on-demand"}
+              style={
+                {
+                  "--fullscreen-button": "none",
+                  "--pip-button": "none",
+                } as CSSProperties
               }
-            }}
-            onCuePointChange={({ detail }) => {
-              if (cuePoints && onCuePointChange) {
-                onCuePointChange(
-                  cuePoints.find(
-                    (cuePoint) => cuePoint.startTime === detail.time,
-                  ) || null,
-                );
-              }
-            }}
-            onLoadedMetadata={({ target }) => {
-              if (!target) {
-                console.log("No target supplied on metadata loaded");
-                return;
-              }
-              const playerEl = target as MuxPlayerElement;
-              void addChaptersAndCuePointsToPlayer(playerEl);
-            }}
-            onPause={(e) => {
-              onPlayToggle?.({
-                type: "pause",
-                currentTime: hasProperty(e.target, "currentTime")
-                  ? (e.target.currentTime as number)
-                  : -1,
-              });
-              setIsPlaying(false);
-            }}
-            onPlay={(e) => {
-              onPlayToggle?.({
-                type: "play",
-                currentTime: hasProperty(e.target, "currentTime")
-                  ? (e.target.currentTime as number)
-                  : -1,
-              });
-              setIsPlaying(true);
-            }}
-          ></MuxPlayer>
-        )}
+              tokens={playbackTokens}
+              onChapterChange={({ detail }) => {
+                if (chapters && onChapterChange) {
+                  onChapterChange(
+                    chapters.find(
+                      (chapter) => chapter.startTime === detail.startTime,
+                    ) || null,
+                  );
+                }
+              }}
+              onCuePointChange={({ detail }) => {
+                if (cuePoints && onCuePointChange) {
+                  onCuePointChange(
+                    cuePoints.find(
+                      (cuePoint) => cuePoint.startTime === detail.time,
+                    ) || null,
+                  );
+                }
+              }}
+              onLoadedMetadata={({ target }) => {
+                if (!target) {
+                  console.log("No target supplied on metadata loaded");
+                  return;
+                }
+                const playerEl = target as MuxPlayerElement;
+                void addChaptersAndCuePointsToPlayer(playerEl);
+              }}
+              onPause={(e) => {
+                onPlayToggle?.({
+                  type: "pause",
+                  currentTime: hasProperty(e.target, "currentTime")
+                    ? (e.target.currentTime as number)
+                    : -1,
+                });
+                setIsPlaying(false);
+              }}
+              onPlay={(e) => {
+                onPlayToggle?.({
+                  type: "play",
+                  currentTime: hasProperty(e.target, "currentTime")
+                    ? (e.target.currentTime as number)
+                    : -1,
+                });
+                setIsPlaying(true);
+              }}
+            ></MuxPlayer>
+          ))}
         {type === "mux-video" && (
           <MuxVideo
             autoPlay={autoPlay}
