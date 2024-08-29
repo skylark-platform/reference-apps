@@ -1,4 +1,5 @@
 import { Button, ParseAndDisplayHTML } from "@skylark-reference-apps/react";
+import clsx from "clsx";
 import { Whisk } from "./shoppable/whisk";
 import { TimecodeEventType, TimecodeEventWithType } from "../types";
 
@@ -14,10 +15,12 @@ export const PlayerTimecodeEvent = ({ payload }: PlayerTimecodeEventProps) => {
   const image = payload.images?.objects?.[0];
 
   return (
-    <div className="mx-2 h-32 flex-grow rounded-sm text-white shadow-lg">
-      {/* {type} */}
-      {/* {cuePoints?.find(({ payload: { type }}) => type && type === "WHISK")?.payload.link_href}
-              <Whisk whiskId="ce7ce5b6e-f194-4f6b-8ed8-be5a05db90ef" /> */}
+    <div
+      className={clsx(
+        "mx-2 flex-grow rounded-sm text-white shadow-lg",
+        payload.type !== TimecodeEventType.Tips && "h-32",
+      )}
+    >
       {payload.type === TimecodeEventType.Tips && (
         <>
           <ParseAndDisplayHTML fallbackMessage="" html={payload.copy || null} />

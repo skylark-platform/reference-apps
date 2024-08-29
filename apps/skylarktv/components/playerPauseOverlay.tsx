@@ -13,9 +13,13 @@ interface PlayerPauseOverlayProps {
 }
 
 const Section = ({ children }: { children: ReactNode }) => (
-  <div className="h-[90%] w-full overflow-y-auto overflow-x-hidden px-2 lg:px-4">
+  <div className="relative h-[90%] w-full overflow-x-hidden overflow-y-hidden px-2 lg:px-4">
     {children}
   </div>
+);
+
+const SectionHeader = ({ children }: { children: ReactNode }) => (
+  <div className="">{children}</div>
 );
 
 const Tips = ({ tips }: { tips: PlayerCuePoint<TimecodeEventWithType>[] }) => {
@@ -33,20 +37,27 @@ const Tips = ({ tips }: { tips: PlayerCuePoint<TimecodeEventWithType>[] }) => {
 
   return (
     <Section>
-      {tips && (
-        <p className="mb-6 ml-2 w-full text-lg font-medium text-white">{`Tips`}</p>
-      )}
-      {options?.length > 1 && (
-        <div className="max-w-96 px-2">
-          <Dropdown
-            items={options}
-            label={options[0]}
-            onChange={(u) => setSelected(u || firstTitle)}
-          />
-        </div>
+      {(tips || options.length > 1) && (
+        <SectionHeader>
+          {tips && (
+            <p className="mb-6 ml-2 w-full text-lg font-medium text-white">{`Tips`}</p>
+          )}
+          {options?.length > 1 && (
+            <div className="max-w-96 px-2">
+              <Dropdown
+                items={options}
+                label={options[0]}
+                onChange={(u) => setSelected(u || firstTitle)}
+              />
+            </div>
+          )}
+        </SectionHeader>
       )}
       {tip && (
-        <div className="my-8 overflow-x-auto" key={tip.uid}>
+        <div
+          className="my-2 h-4/5 overflow-x-auto overflow-y-auto py-2"
+          key={tip.uid}
+        >
           <PlayerTimecodeEvent payload={tip.payload} />
         </div>
       )}
@@ -60,14 +71,18 @@ const Adverts = ({
   adverts: PlayerCuePoint<TimecodeEventWithType>[];
 }) => (
   <Section>
-    <p className="mb-6 ml-2 w-full text-lg font-medium text-white">
-      {`In this scene`}
-    </p>
-    {adverts?.map((ad) => (
-      <div className="my-8" key={ad.payload.uid}>
-        <PlayerTimecodeEvent payload={ad?.payload} />
-      </div>
-    ))}
+    <SectionHeader>
+      <p className="mb-4 ml-2 w-full text-lg font-medium text-white">
+        {`In this scene`}
+      </p>
+    </SectionHeader>
+    <div className="my-2 h-5/6 overflow-x-auto overflow-y-auto py-2">
+      {adverts?.map((ad) => (
+        <div className="mb-8" key={ad.payload.uid}>
+          <PlayerTimecodeEvent payload={ad?.payload} />
+        </div>
+      ))}
+    </div>
   </Section>
 );
 
@@ -91,7 +106,7 @@ export const PlayerPauseOverlay = ({ chapter }: PlayerPauseOverlayProps) => {
       className="flex h-full w-full flex-col items-center justify-center overflow-hidden bg-black bg-opacity-75 p-8"
       key={chapter.uid}
     >
-      <p className="w-full px-6 pt-8 text-left text-xl font-medium text-white">
+      <p className="w-full px-6 pt-4 text-left text-xl font-medium text-white lg:pt-8">
         {chapter?.title || ""}
       </p>
       <div className="mb-4 grid h-full max-h-full w-full grid-cols-2 items-center justify-center overflow-hidden">
