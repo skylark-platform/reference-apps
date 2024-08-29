@@ -369,15 +369,19 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
           />
         </div>
         <div className="mb-8 flex h-72 w-full flex-col items-center border-b border-gray-800 bg-gray-900 md:mb-16">
-          <div className="my-8 flex flex-col justify-between rounded sm:w-11/12 md:flex-row lg:w-3/4">
-            <PlayerTimecodeEvent
-              payload={
-                advert?.payload ||
-                cuePoints?.find(({ payload }) => isAdvert(payload.type))
-                  ?.payload
-              }
-            />
-            <PlayerTimecodeEvent payload={whisk?.payload} />
+          <div className="my-8 grid grid-cols-3 justify-between rounded sm:w-11/12 md:flex-row lg:w-3/4">
+            <div className="col-span-2 lg:col-span-2">
+              <PlayerTimecodeEvent
+                payload={
+                  advert?.payload ||
+                  cuePoints?.find(({ payload }) => isAdvert(payload.type))
+                    ?.payload
+                }
+              />
+            </div>
+            <div className="col-span-1">
+              <PlayerTimecodeEvent payload={whisk?.payload} />
+            </div>
           </div>
         </div>
         <div className="flex w-full flex-col px-gutter sm:px-sm-gutter lg:px-lg-gutter xl:px-xl-gutter">
