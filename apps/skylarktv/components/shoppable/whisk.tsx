@@ -4,6 +4,7 @@ import { useEffect } from "react";
 interface WhiskProps {
   uid: string;
   recipeUrl: string;
+  title?: string;
 }
 
 export const Whisk = ({ uid, recipeUrl }: WhiskProps) => {
@@ -54,11 +55,22 @@ export const Whisk = ({ uid, recipeUrl }: WhiskProps) => {
     if (whisk) {
       triggerWhiskWidget();
     }
+
+    // return () => {
+    //   if (whisk) {
+    //     whisk.remove(whiskId);
+    //   }
+    // };
   }, [whisk]);
 
   return (
-    <div className="w-full">
-      <div className="rounded bg-white p-2" id={whiskId}></div>
+    <div className="w-full" key={recipeUrl}>
+      {/* {title && <p className="mb-1">{title}</p>} */}
+      <div
+        className="rounded bg-white p-2"
+        data-whiskid={recipeUrl}
+        id={whiskId}
+      ></div>
     </div>
   );
 };

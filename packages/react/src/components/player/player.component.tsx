@@ -152,13 +152,21 @@ export function Player<T extends object>({
   const [isPlaying, setIsPlaying] = useState(true);
 
   return (
-    <div className="w-screen sm:w-11/12 lg:w-3/4">
+    <div className="w-screen sm:w-11/12 lg:w-3/4 2xl:w-2/3">
       <div
         className="aspect-h-9 aspect-w-16 relative shadow shadow-black md:shadow-xl"
         id="my-player"
       >
         {!isPlaying && pauseOverlay && (
-          <div className="absolute z-[1] h-full w-full">{pauseOverlay}</div>
+          <div
+            className="absolute z-[1] h-full w-full"
+            data-play-pause-overlay="true"
+            onClick={() => {
+              setIsPlaying(true);
+            }}
+          >
+            {pauseOverlay}
+          </div>
         )}
         {/* For Google Drive videos, use iframe embed because they don't work with MuxPlayer */}
         {type === "iframe" && <iframe src={src} />}
@@ -189,6 +197,7 @@ export function Player<T extends object>({
                 video_id: videoId,
                 video_title: videoTitle,
               }}
+              paused={!isPlaying}
               playbackId={playbackId}
               poster={posterSrc}
               ref={undefined}

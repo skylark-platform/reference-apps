@@ -18,8 +18,13 @@ export const PlayerTimecodeEvent = ({ payload }: PlayerTimecodeEventProps) => {
     <div
       className={clsx(
         "mx-2 flex-grow rounded-sm text-white shadow-lg",
-        payload.type !== TimecodeEventType.Tips && "h-32",
+        [
+          TimecodeEventType.Advertcontextual,
+          TimecodeEventType.Advertlink,
+        ].includes(payload.type) && "h-32",
+        payload.type === TimecodeEventType.Whisk && "md:h-32",
       )}
+      onClick={(e) => e.stopPropagation()}
     >
       {payload.type === TimecodeEventType.Tips && (
         <>
@@ -28,7 +33,11 @@ export const PlayerTimecodeEvent = ({ payload }: PlayerTimecodeEventProps) => {
       )}
       {payload.type === TimecodeEventType.Whisk && (
         <>
-          <Whisk recipeUrl={payload.link_href as string} uid={payload.uid} />
+          <Whisk
+            recipeUrl={payload.link_href as string}
+            title={payload.title || undefined}
+            uid={payload.uid}
+          />
         </>
       )}
       {payload.type === TimecodeEventType.Advertlink && payload.link_href && (

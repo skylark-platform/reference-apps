@@ -4,6 +4,7 @@ import {
   PlayerCuePoint,
 } from "@skylark-reference-apps/react";
 import { ReactNode, useState } from "react";
+import clsx from "clsx";
 import { PlayerTimecodeEvent } from "./playerTimecodeEvent";
 import { Maybe, TimecodeEventType, TimecodeEventWithType } from "../types";
 
@@ -55,7 +56,10 @@ const Tips = ({ tips }: { tips: PlayerCuePoint<TimecodeEventWithType>[] }) => {
       )}
       {tip && (
         <div
-          className="my-2 h-4/5 overflow-x-auto overflow-y-auto py-2"
+          className={clsx(
+            "h-4/5 overflow-x-auto overflow-y-auto",
+            options.length > 1 ? "my-2 py-2" : "-mt-6",
+          )}
           key={tip.uid}
         >
           <PlayerTimecodeEvent payload={tip.payload} />

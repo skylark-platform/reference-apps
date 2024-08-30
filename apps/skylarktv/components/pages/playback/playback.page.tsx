@@ -320,7 +320,7 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
 
     if (firstAdvert) setAdvert(firstAdvert);
 
-    if (firstWhisk) setWhisk(firstWhisk);
+    setWhisk(firstWhisk || null);
   };
 
   const handleCuePointChange = (
@@ -338,9 +338,9 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-start bg-gray-900 pb-20 font-body md:pt-64">
+    <div className="flex min-h-screen flex-col items-center justify-start bg-gray-900 pb-20 font-body md:pt-32">
       <SkeletonPage show={!!loading}>
-        <div className="flex h-full w-full justify-center">
+        <div className="flex h-full w-full justify-center overflow-x-hidden">
           <Player
             autoPlay={player.autoPlay}
             chapters={chapters}
@@ -368,9 +368,9 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
             }
           />
         </div>
-        <div className="mb-8 flex h-72 w-full flex-col items-center border-b border-gray-800 bg-gray-900 md:mb-16">
-          <div className="my-8 grid grid-cols-3 justify-between rounded sm:w-11/12 md:flex-row lg:w-3/4">
-            <div className="col-span-2 lg:col-span-2">
+        <div className="mb-8 flex w-full flex-col items-center border-b border-gray-800 bg-gray-900 md:mb-16 md:h-72">
+          <div className="my-8 grid grid-cols-1 justify-between gap-y-4 rounded sm:w-11/12 md:h-72 md:grid-cols-3 md:gap-y-0 lg:w-3/4 2xl:w-2/3">
+            <div className="col-span-1 md:col-span-2">
               <PlayerTimecodeEvent
                 payload={
                   advert?.payload ||
