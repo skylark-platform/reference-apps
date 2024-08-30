@@ -25,7 +25,6 @@ export const Whisk = ({ uid, recipeUrl }: WhiskProps) => {
       : null;
 
   const triggerWhiskWidget = () => {
-    console.log("triggerWhiskWidget", whisk);
     if (whisk) {
       whisk.queue = whisk.queue || [];
 
@@ -33,8 +32,7 @@ export const Whisk = ({ uid, recipeUrl }: WhiskProps) => {
         recipeUrl,
       });
 
-      // eslint-disable-next-line prefer-arrow-callback, func-names
-      whisk.queue.push(function () {
+      whisk.queue.push(() => {
         whisk.shoppingList.defineWidget(whiskId, {
           styles: {
             type: "save-recipe",
@@ -43,25 +41,17 @@ export const Whisk = ({ uid, recipeUrl }: WhiskProps) => {
         });
       });
 
-      // eslint-disable-next-line prefer-arrow-callback, func-names
-      whisk.queue.push(function () {
+      whisk.queue.push(() => {
         whisk?.display(whiskId);
       });
     }
   };
 
   useEffect(() => {
-    console.log("WHISK IS HERE", whisk);
     if (whisk) {
       triggerWhiskWidget();
     }
-
-    // return () => {
-    //   if (whisk) {
-    //     whisk.remove(whiskId);
-    //   }
-    // };
-  }, [whisk]);
+  }, [whisk, recipeUrl]);
 
   return (
     <div className="w-full" key={recipeUrl}>
