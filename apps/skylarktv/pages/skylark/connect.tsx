@@ -8,8 +8,8 @@ const setKeysAndRedirect = async (
   navigateTo: (url: string) => Promise<boolean>,
   redirect?: string | string[],
 ) => {
-  localStorage.setItem(LOCAL_STORAGE.uri, uri);
-  localStorage.setItem(LOCAL_STORAGE.apikey, apikey);
+  window.localStorage.setItem(LOCAL_STORAGE.uri, uri);
+  window.localStorage.setItem(LOCAL_STORAGE.apikey, apikey);
   // storage events are not picked up in the same tab, so dispatch it for the current one
   window.dispatchEvent(new Event("storage"));
   const redirectUrl = redirect && typeof redirect === "string" ? redirect : "/";

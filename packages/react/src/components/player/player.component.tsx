@@ -64,7 +64,7 @@ export const Player: React.FC<PlayerProps> = ({
 
   return (
     <div className="w-screen sm:w-11/12 lg:w-3/4">
-      <div className="aspect-h-9 aspect-w-16 relative shadow shadow-black md:shadow-xl">
+      <div className="aspect-h-9 aspect-w-16 relative bg-skylarktv-primary shadow shadow-black md:shadow-xl">
         {/* For Google Drive videos, use iframe embed because they don't work with MuxPlayer */}
         {type === "iframe" && <iframe src={src} />}
         {type === "react-player" && (

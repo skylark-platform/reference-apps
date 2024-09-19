@@ -62,8 +62,8 @@ export const ConnectToSkylarkModal = ({
     debouncedSkylarkApiKey !== skylarkApiKey;
 
   useEffect(() => {
-    const uri = localStorage.getItem(LOCAL_STORAGE.uri);
-    if (uri && localStorage.getItem(LOCAL_STORAGE.apikey)) {
+    const uri = window.localStorage.getItem(LOCAL_STORAGE.uri);
+    if (uri && window.localStorage.getItem(LOCAL_STORAGE.apikey)) {
       setUsingCustomSkylark(true);
     }
   }, []);
@@ -92,15 +92,15 @@ export const ConnectToSkylarkModal = ({
   }, [debouncedSkylarkUrl, debouncedSkylarkApiKey, valuesWaitingToBeDebounced]);
 
   const saveToLocalStorageAndRefresh = () => {
-    localStorage.setItem(LOCAL_STORAGE.uri, debouncedSkylarkUrl);
-    localStorage.setItem(LOCAL_STORAGE.apikey, debouncedSkylarkApiKey);
+    window.localStorage.setItem(LOCAL_STORAGE.uri, debouncedSkylarkUrl);
+    window.localStorage.setItem(LOCAL_STORAGE.apikey, debouncedSkylarkApiKey);
 
     window.location.reload();
   };
 
   const clearLocalStorageAndRefresh = () => {
-    localStorage.removeItem(LOCAL_STORAGE.uri);
-    localStorage.removeItem(LOCAL_STORAGE.apikey);
+    window.localStorage.removeItem(LOCAL_STORAGE.uri);
+    window.localStorage.removeItem(LOCAL_STORAGE.apikey);
 
     window.location.reload();
   };

@@ -22,8 +22,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     const update = () => {
       const url =
-        localStorage.getItem(LOCAL_STORAGE.apikey) &&
-        localStorage.getItem(LOCAL_STORAGE.uri);
+        window.localStorage.getItem(LOCAL_STORAGE.apikey) &&
+        window.localStorage.getItem(LOCAL_STORAGE.uri);
       setSkylarkApiUrl(url || process.env.NEXT_PUBLIC_SAAS_API_ENDPOINT);
     };
     update();

@@ -38,8 +38,10 @@ export const skylarkRequestWithLocalStorage = <T>(
 ) => {
   if (typeof window !== "undefined") {
     // Allow users to give their own Skylark to connect to
-    const localStorageUri = localStorage.getItem(LOCAL_STORAGE.uri);
-    const localStorageApiKey = localStorage.getItem(LOCAL_STORAGE.apikey);
+    const localStorageUri = window.localStorage.getItem(LOCAL_STORAGE.uri);
+    const localStorageApiKey = window.localStorage.getItem(
+      LOCAL_STORAGE.apikey,
+    );
     if (localStorageUri && localStorageApiKey) {
       return skylarkRequest<T>(
         localStorageUri,

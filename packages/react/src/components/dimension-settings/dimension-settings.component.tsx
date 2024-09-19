@@ -19,9 +19,11 @@ import { ConnectToSkylarkModal } from "../connect-to-skylark-modal";
 const generateSkylarkAutoconnectUrl = () => {
   const isBrowser = typeof window !== "undefined";
   const url =
-    (isBrowser && localStorage.getItem(LOCAL_STORAGE.uri)) || SAAS_API_ENDPOINT;
+    (isBrowser && window.localStorage.getItem(LOCAL_STORAGE.uri)) ||
+    SAAS_API_ENDPOINT;
   const apikey =
-    (isBrowser && localStorage.getItem(LOCAL_STORAGE.apikey)) || SAAS_API_KEY;
+    (isBrowser && window.localStorage.getItem(LOCAL_STORAGE.apikey)) ||
+    SAAS_API_KEY;
   return `https://app.skylarkplatform.com/beta/connect?uri=${url}&apikey=${apikey}`;
 };
 
