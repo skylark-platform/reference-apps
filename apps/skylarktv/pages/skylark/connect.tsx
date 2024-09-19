@@ -2,21 +2,37 @@ import { LOCAL_STORAGE } from "@skylark-reference-apps/lib";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
+const setKeysAndRedirect = async (
+  uri: string,
+  apikey: string,
+  navigateTo: (url: string) => Promise<boolean>,
+  redirect?: string | string[],
+) => {
+  localStorage.setItem(LOCAL_STORAGE.uri, uri);
+  localStorage.setItem(LOCAL_STORAGE.apikey, apikey);
+  // storage events are not picked up in the same tab, so dispatch it for the current one
+  window.dispatchEvent(new Event("storage"));
+  const redirectUrl = redirect && typeof redirect === "string" ? redirect : "/";
+
+  // Wait before redirecting
+  await new Promise((resolve) => {
+    setTimeout(resolve, 500);
+  });
+
+  await navigateTo(redirectUrl);
+};
+
 export default function BetaConnect() {
   const { query, push: navigateTo } = useRouter();
 
   useEffect(() => {
     if (query.uri && query.apikey) {
-      localStorage.setItem(LOCAL_STORAGE.uri, query.uri as string);
-      localStorage.setItem(LOCAL_STORAGE.apikey, query.apikey as string);
-      // storage events are not picked up in the same tab, so dispatch it for the current one
-      window.dispatchEvent(new Event("storage"));
-      const redirectUrl =
-        query.redirect && typeof query.redirect === "string"
-          ? query.redirect
-          : "/";
-
-      void navigateTo(redirectUrl);
+      void setKeysAndRedirect(
+        query.uri as string,
+        query.apikey as string,
+        navigateTo,
+        query.redirect,
+      );
     }
   }, [query, navigateTo]);
 
