@@ -202,6 +202,7 @@ describe("saas/get.ts", () => {
               external_id: "brand-3-ext-id",
             },
           },
+          errors: [],
         },
       };
       graphQlRequest.mockRejectedValueOnce(mockedGraphQLResponse);

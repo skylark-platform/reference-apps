@@ -30,16 +30,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
     >
       <div className="flex min-w-56 whitespace-nowrap bg-gray-800 py-1">
         <button
-          className="
-          flex
-          w-full
-          items-center
-          py-2.5
-          text-sm
-          text-white
-          ltr:pl-5
-          rtl:pr-5
-        "
+          className="flex w-full items-center py-2.5 text-sm text-white ltr:pl-5 rtl:pr-5"
           type="button"
           onClick={() => setOpen(!isOpen)}
         >
@@ -63,19 +54,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
           {items.map((item) => (
             <li key={item}>
               <button
-                className="
-                  block
-                  w-full
-                  bg-white
-                  px-5
-                  py-3
-                  text-left
-                  text-xs
-                  font-semibold
-                  hover:bg-gray-100
-                  hover:text-skylarktv-primary
-                  md:text-sm
-                  "
+                className="block w-full bg-white px-5 py-3 text-left text-xs font-semibold hover:bg-gray-100 hover:text-skylarktv-primary md:text-sm"
                 type="button"
                 onClick={() => handleOnClick(item)}
               >

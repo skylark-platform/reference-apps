@@ -22,16 +22,11 @@ export const List: React.FC<ListProps> = ({
           <React.Fragment key={`list-${text as string}`}>
             {index !== 0 && <MdCircle className="mx-2 h-1 w-1 text-gray-400" />}
             <p
-              className={`
-              ${
+              className={` ${
                 (highlightFirst && index === 0) || highlightAll
                   ? "text-white"
                   : "text-gray-400"
-              }
-              ${textSize ? `text-${textSize}` : "text-xs"}
-              font-normal transition-colors
-              group-hover:text-white
-            `}
+              } ${textSize ? `text-${textSize}` : "text-xs"} font-normal transition-colors group-hover:text-white`}
             >
               {text}
             </p>

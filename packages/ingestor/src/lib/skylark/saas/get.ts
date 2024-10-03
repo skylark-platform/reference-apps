@@ -217,7 +217,7 @@ const getExistingObjectsByExternalId = async (
       missingExternalIds: [],
     };
   } catch (err) {
-    if (err && has(err, "response.data")) {
+    if (err && has(err, "response")) {
       const {
         response: { data },
       } = err as {

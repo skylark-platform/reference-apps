@@ -70,7 +70,7 @@ const ArticlesPage: NextPage = () => {
 
                 return (
                   <div
-                    className="group flex max-w-4xl flex-col items-center  justify-between rounded px-4 py-4 shadow"
+                    className="group flex max-w-4xl flex-col items-center justify-between rounded px-4 py-4 shadow"
                     key={uid}
                   >
                     <Link className="block" href={href}>
@@ -79,7 +79,7 @@ const ArticlesPage: NextPage = () => {
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
                             alt={title || "the article"}
-                            className="h-full w-full overflow-hidden rounded-sm  object-cover"
+                            className="h-full w-full overflow-hidden rounded-sm object-cover"
                             src={addCloudinaryOnTheFlyImageTransformation(
                               image,
                               {

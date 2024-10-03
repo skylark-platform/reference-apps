@@ -125,22 +125,14 @@ export const Carousel: React.FC<CarouselProps> = ({
 
   return (
     <div
-      className={`
-        relative flex h-full w-full items-center
-        justify-center overflow-hidden pb-32 md:pb-0
-      `}
+      className={`relative flex h-full w-full items-center justify-center overflow-hidden pb-32 md:pb-0`}
       dir={dir}
     >
       {showCarousel && (
         <AnimatePresence custom={direction} initial={false}>
           <motion.div
             animate="center"
-            className={`
-            absolute block h-full w-full min-w-full
-            bg-cover bg-center
-            bg-no-repeat text-white
-            ${!activeImageHasLoaded ? "animate-pulse bg-gray-800" : ""}
-          `}
+            className={`absolute block h-full w-full min-w-full bg-cover bg-center bg-no-repeat text-white ${!activeImageHasLoaded ? "animate-pulse bg-gray-800" : ""} `}
             custom={direction}
             exit="exit"
             initial="enter"
@@ -154,11 +146,7 @@ export const Carousel: React.FC<CarouselProps> = ({
             variants={variants}
           >
             <div
-              className={`
-            flex h-full w-full flex-row items-end justify-between bg-gradient-to-t from-gray-900
-            to-gray-900/5 px-sm-gutter pb-5
-            md:px-md-gutter md:pb-20 lg:px-lg-gutter xl:px-xl-gutter
-          `}
+              className={`flex h-full w-full flex-row items-end justify-between bg-gradient-to-t from-gray-900 to-gray-900/5 px-sm-gutter pb-5 md:px-md-gutter md:pb-20 lg:px-lg-gutter xl:px-xl-gutter`}
             >
               <div className="flex flex-col">
                 {title && (

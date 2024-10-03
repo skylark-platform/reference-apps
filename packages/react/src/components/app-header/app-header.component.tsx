@@ -15,12 +15,7 @@ export const AppHeader: React.FC<NavigationProps & { forceRtl?: boolean }> = ({
       dir={dir}
     >
       <div
-        className={`
-    fixed z-90 flex h-mobile-header w-full items-center justify-center
-    bg-skylarktv-primary md:relative md:h-full md:w-3/5 md:justify-between ltr:md:pr-md-gutter
-    rtl:md:pl-md-gutter lg:w-2/3 ltr:lg:pr-lg-gutter rtl:lg:pl-lg-gutter
-    ltr:xl:pr-xl-gutter rtl:xl:pl-xl-gutter
-  `}
+        className={`fixed z-90 flex h-mobile-header w-full items-center justify-center bg-skylarktv-primary md:relative md:h-full md:w-3/5 md:justify-between lg:w-2/3 ltr:md:pr-md-gutter ltr:lg:pr-lg-gutter ltr:xl:pr-xl-gutter rtl:md:pl-md-gutter rtl:lg:pl-lg-gutter rtl:xl:pl-xl-gutter`}
       >
         {children}
       </div>

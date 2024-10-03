@@ -89,7 +89,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
             <div className="absolute -top-9 right-lg-gutter flex xl:right-xl-gutter">
               <DimensionToggle variant="close" onClick={() => setShow(false)} />
             </div>
-            <div className="relative h-full overflow-y-auto px-sm-gutter py-4 md:px-md-gutter md:py-12  lg:px-lg-gutter xl:px-xl-gutter">
+            <div className="relative h-full overflow-y-auto px-sm-gutter py-4 md:px-md-gutter md:py-12 lg:px-lg-gutter xl:px-xl-gutter">
               <div className="mb-4 flex items-center justify-between">
                 <div className="group flex items-center">
                   <SkylarkBranding className="w-12 md:w-48" />
@@ -138,7 +138,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                     : "Not connected."}
                 </p>
                 <button
-                  className="ml-1.5 rounded-full text-sm font-medium text-skylark-blue  hover:text-blue-600"
+                  className="ml-1.5 rounded-full text-sm font-medium text-skylark-blue hover:text-blue-600"
                   onClick={() => setModalOpen(true)}
                 >
                   {"Change"}

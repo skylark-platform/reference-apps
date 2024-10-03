@@ -73,6 +73,7 @@ describe("saas/create.ts", () => {
           data: {
             brand_1: null,
           },
+          errors: [],
         },
       };
       graphQlRequest.mockRejectedValueOnce(mockedGraphQLResponse);
@@ -235,6 +236,7 @@ describe("saas/create.ts", () => {
           data: {
             credit_1: null,
           },
+          errors: [],
         },
       };
       graphQlRequest.mockRejectedValueOnce(mockedGraphQLResponse);
