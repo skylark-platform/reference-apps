@@ -164,16 +164,7 @@ export const RailComponent = ({
           </>
         )}
         <div
-          className={`
-            flex w-full snap-x snap-mandatory
-            scroll-pr-3 flex-row overflow-x-auto
-            scroll-smooth px-gutter
-            py-2 hide-scrollbar
-            sm:scroll-pr-6 sm:px-sm-gutter
-            md:scroll-pr-14 md:px-md-gutter md:py-4
-            lg:scroll-pr-lg-gutter lg:gap-5 lg:px-lg-gutter
-            xl:scroll-pr-xl-gutter xl:px-xl-gutter
-          `}
+          className={`flex w-full snap-x snap-mandatory scroll-pr-3 flex-row overflow-x-auto scroll-smooth px-gutter py-2 hide-scrollbar sm:scroll-pr-6 sm:px-sm-gutter md:scroll-pr-14 md:px-md-gutter md:py-4 lg:scroll-pr-lg-gutter lg:gap-5 lg:px-lg-gutter xl:scroll-pr-xl-gutter xl:px-xl-gutter`}
           data-testid="rail-scroll"
           ref={myRef}
           onScroll={(e) => debouncedOnScroll(e.target as Element)}
@@ -181,14 +172,7 @@ export const RailComponent = ({
           {/* Add a wrapper around children so that they display correctly */}
           {React.Children.map(children, (child) => (
             <div
-              className={`
-                mx-1
-                w-1/2 min-w-[calc(50%-0.75rem)] max-w-[calc(50%-0.75rem)] ltr:snap-end rtl:snap-start
-                md:mx-2 md:w-1/3 md:min-w-[calc(33.333333%-0.8rem)] md:max-w-[calc(33.333333%-0.8rem)]
-                lg:mx-0 lg:w-1/4 lg:min-w-[calc(25%-1rem)] lg:max-w-[calc(25%-1rem)]
-                xl:mx-0 xl:w-1/5 xl:min-w-[calc(20%-1rem)] xl:max-w-[calc(20%-1rem)]
-                2xl:mx-0 2xl:w-1/6 2xl:min-w-[calc(16.666666%-1rem)] 2xl:max-w-[calc(16.666666%-1rem)]
-              `}
+              className={`mx-1 w-1/2 min-w-[calc(50%-0.75rem)] max-w-[calc(50%-0.75rem)] md:mx-2 md:w-1/3 md:min-w-[calc(33.333333%-0.8rem)] md:max-w-[calc(33.333333%-0.8rem)] lg:mx-0 lg:w-1/4 lg:min-w-[calc(25%-1rem)] lg:max-w-[calc(25%-1rem)] xl:mx-0 xl:w-1/5 xl:min-w-[calc(20%-1rem)] xl:max-w-[calc(20%-1rem)] 2xl:mx-0 2xl:w-1/6 2xl:min-w-[calc(16.666666%-1rem)] 2xl:max-w-[calc(16.666666%-1rem)] ltr:snap-end rtl:snap-start`}
             >
               {child}
             </div>

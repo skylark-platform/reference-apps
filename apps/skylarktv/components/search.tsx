@@ -126,7 +126,7 @@ const SearchResultItem = ({
   onClick: () => void;
 }) => (
   <Link
-    className="group mb-4  grid grid-cols-[4fr_1fr] items-center gap-4 last:mb-0"
+    className="group mb-4 grid grid-cols-[4fr_1fr] items-center gap-4 last:mb-0"
     href={href}
     onClick={() => onClick()}
   >
@@ -201,7 +201,7 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
     >
       <div
         className={clsx(
-          "flex items-center justify-center rounded-full border-0 border-gray-300 bg-skylarktv-purple-500/80 p-3 px-4 transition-colors  focus-within:border-white focus-within:text-white  md:bg-button-tertiary",
+          "flex items-center justify-center rounded-full border-0 border-gray-300 bg-skylarktv-purple-500/80 p-3 px-4 transition-colors focus-within:border-white focus-within:text-white md:bg-button-tertiary",
           searchQuery ? "text-white" : "text-gray-300",
         )}
       >
@@ -221,7 +221,7 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
         />
       </div>
       {searchResultsOpen && searchQuery && (
-        <div className="z-100 mt-2 ltr:right-0 rtl:left-0 md:absolute">
+        <div className="z-100 mt-2 md:absolute ltr:right-0 rtl:left-0">
           <div className="max-h-[70vh] min-h-[2rem] w-[94vw] overflow-y-auto rounded bg-gray-800 px-4 py-6 md:max-h-[24rem] md:w-[34rem] md:px-8 md:py-8">
             {(isLoading || data?.objects?.length === 0) && (
               <p className="text-lg font-medium text-gray-100">

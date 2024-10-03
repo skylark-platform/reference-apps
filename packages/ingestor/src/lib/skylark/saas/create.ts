@@ -57,7 +57,7 @@ const graphqlMutationWithRetry = async <T>(
     return await graphQLClient.uncachedRequest<T>(mutation, variables);
   } catch (err) {
     // Some errors we know won't be fixed on a retry, so we rethrow
-    if (err && has(err, "response.errors")) {
+    if (err && has(err, "response") && has(err.response, "errors")) {
       const {
         response: { errors },
       } = err as SkylarkGraphQLError;
@@ -315,7 +315,7 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
     return { createdObjects: data, deletedObjects: [] };
   } catch (err) {
     // If we catch a known error, attempt to fix it before throwing it again
-    if (err && has(err, "response.errors")) {
+    if (err && has(err, "response") && has(err.response, "errors")) {
       const {
         response: { errors },
       } = err as SkylarkGraphQLError;

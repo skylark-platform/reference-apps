@@ -18,7 +18,7 @@
     "tsc": "lerna run --parallel tsc",
     "prettier": "prettier . --write",
     "prettier:check": "prettier . --check",
-    "prepare": "husky install",
+    "prepare": "husky",
     "storybook": "lerna run --stream storybook",
     "dev": "lerna run --parallel dev",
     "ingest": "lerna run --stream ingest",

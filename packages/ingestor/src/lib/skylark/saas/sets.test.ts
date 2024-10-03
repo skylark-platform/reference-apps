@@ -140,6 +140,7 @@ describe("saas/sets.ts", () => {
           data: {
             home_page_slider: null,
           },
+          errors: [],
         },
       };
       const mockedCreateResponse = {

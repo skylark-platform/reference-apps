@@ -107,16 +107,14 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
               }`}
             >
               <List
-                contents={
-                  [
-                    brand.title,
-                    season
-                      ? season.title ||
-                        (season.number &&
-                          `${t("skylark.object.season")} ${season.number}`)
-                      : "",
-                  ] || []
-                }
+                contents={[
+                  brand.title,
+                  season
+                    ? season.title ||
+                      (season.number &&
+                        `${t("skylark.object.season")} ${season.number}`)
+                    : "",
+                ]}
                 highlightAll
                 textSize={"lg"}
               />
