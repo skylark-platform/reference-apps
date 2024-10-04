@@ -16,17 +16,15 @@ import {
   MdStarOutline,
   MdTag,
 } from "react-icons/md";
-import {
-  InformationPanel,
-  Link,
-  MetadataPanel,
-  Player,
-  SkeletonPage,
-} from "@skylark-reference-apps/react";
 import { Dayjs } from "dayjs";
 import { NextPage } from "next";
 import { getTimeFromNow } from "../../../lib/utils";
 import { ListPersonOtherCreditsRail } from "../../rails";
+import { InformationPanel } from "../../generic/information-panel";
+import { MetadataPanel } from "../../generic/metadata-panel";
+import { Player } from "../../generic/player";
+import { SkeletonPage } from "../../generic/skeleton";
+import { Link } from "../../generic/link";
 
 interface PlaybackPageProps {
   uid: string;

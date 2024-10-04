@@ -1,4 +1,3 @@
-import { SkeletonPage } from "@skylark-reference-apps/react";
 import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
 import { Fragment } from "react";
@@ -28,6 +27,7 @@ import { SkylarkSetGrid } from "../../grid";
 import { getThumbnailVariantFromSetType } from "../../thumbnail";
 import { useSkylarkEnvironment } from "../../../hooks/useSkylarkEnvironment";
 import { CTA } from "../../cta";
+import { SkeletonPage } from "../../generic/skeleton";
 
 const Page: NextPage<{
   slug: string;

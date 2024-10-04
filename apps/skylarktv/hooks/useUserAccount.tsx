@@ -1,8 +1,8 @@
-import { skylarkRequestWithLocalStorage } from "@skylark-reference-apps/react";
 import { useQuery } from "@tanstack/react-query";
 
 import { GET_USER } from "../graphql/queries";
 import { SkylarkApiPermission, UserDetails } from "../types";
+import { skylarkRequestWithLocalStorage } from "../lib/utils";
 
 const select = (data: {
   getUser: UserDetails;

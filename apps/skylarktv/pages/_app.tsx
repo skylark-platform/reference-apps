@@ -1,4 +1,4 @@
-import "@skylark-reference-apps/react/styles/globals.css";
+import "../styles/globals.css";
 import "@fontsource/outfit/400.css";
 import "@fontsource/outfit/500.css";
 import "@fontsource/outfit/700.css";
@@ -10,9 +10,9 @@ import { withPasswordProtect } from "next-password-protect";
 import { LOCAL_STORAGE } from "@skylark-reference-apps/lib";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { DimensionsContextProvider } from "@skylark-reference-apps/react";
 import { IntercomProvider } from "react-use-intercom";
 import { SkylarkTVLayout } from "../components/layout";
+import { DimensionsContextProvider } from "../contexts";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [skylarkApiUrl, setSkylarkApiUrl] = useState(

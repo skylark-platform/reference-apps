@@ -10,18 +10,6 @@ import {
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import {
-  TitleScreen,
-  AppBackgroundGradient,
-  AppHeader,
-  Button,
-  DimensionSettings,
-  ConnectToSkylarkModal,
-  Link,
-  useDimensions,
-  NavigationLink,
-  skylarkRequestWithLocalStorage,
-} from "@skylark-reference-apps/react";
-import {
   addCloudinaryOnTheFlyImageTransformation,
   hasProperty,
 } from "@skylark-reference-apps/lib";
@@ -38,6 +26,16 @@ import { BackButton } from "./backButton";
 import { PURGE_CACHE } from "../graphql/queries/purgeCache";
 import { useUser } from "../hooks/useUserAccount";
 import { SkylarkApiPermission } from "../types";
+import { NavigationLink } from "./generic/navigation";
+import { useDimensions } from "../contexts";
+import { skylarkRequestWithLocalStorage } from "../lib/utils";
+import { AppBackgroundGradient } from "./generic/app-background-gradient";
+import { AppHeader } from "./generic/app-header";
+import { Button } from "./generic/button";
+import { ConnectToSkylarkModal } from "./generic/connect-to-skylark-modal";
+import { DimensionSettings } from "./generic/dimension-settings";
+import { TitleScreen } from "./generic/title-screen";
+import { Link } from "./generic/link";
 
 interface Props {
   skylarkApiUrl?: string;

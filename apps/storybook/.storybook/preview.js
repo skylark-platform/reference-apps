@@ -7,7 +7,7 @@ import "@fontsource/outfit/700.css";
 import "@fontsource/inter/500.css";
 import "@fontsource/inter/600.css";
 
-import { DimensionsContextProvider } from "@skylark-reference-apps/react";
+import { DimensionsContextProvider } from "../../skylarktv/contexts/dimensions-context";
 import I18nProvider from "next-translate/I18nProvider";
 import common from "@skylark-reference-apps/skylarktv/locales/en-gb/common.json";
 

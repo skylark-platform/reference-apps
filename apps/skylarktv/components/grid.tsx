@@ -1,6 +1,6 @@
 import { hasProperty } from "@skylark-reference-apps/lib";
-import { RailHeader } from "@skylark-reference-apps/react";
 import { ReactNode } from "react";
+import { RailHeader } from "./generic/rail";
 import {
   Episode,
   Metadata,

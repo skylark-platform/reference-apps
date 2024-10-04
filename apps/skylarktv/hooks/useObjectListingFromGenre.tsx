@@ -1,15 +1,13 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Dimensions } from "@skylark-reference-apps/lib";
-import {
-  useDimensions,
-  skylarkRequestWithDimensions,
-} from "@skylark-reference-apps/react";
 import { Episode, Genre, Movie } from "../types/gql";
 import { GQLError } from "../types";
 import {
   LIST_EPISODES_BY_GENRE,
   LIST_MOVIES_BY_GENRE,
 } from "../graphql/queries";
+import { skylarkRequestWithDimensions } from "../lib/utils";
+import { useDimensions } from "../contexts";
 
 const objectListingFromGenreFetcher = (
   query: string,

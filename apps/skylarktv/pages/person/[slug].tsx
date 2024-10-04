@@ -2,10 +2,6 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
 import { addCloudinaryOnTheFlyImageTransformation } from "@skylark-reference-apps/lib";
-import {
-  ParseAndDisplayHTML,
-  SkeletonPage,
-} from "@skylark-reference-apps/react";
 import dayjs from "dayjs";
 import useTranslation from "next-translate/useTranslation";
 import clsx from "clsx";
@@ -19,6 +15,8 @@ import {
 import { convertObjectImagesToSeoImages } from "../../lib/getPageSeoData";
 import { getGraphQLImageSrc } from "../../lib/utils";
 import { GridWithSelfFetch } from "../../components/grid";
+import { SkeletonPage } from "../../components/generic/skeleton";
+import { ParseAndDisplayHTML } from "../../components/generic/parseAndDisplayHtml";
 
 const formatDateOfBirth = (date: string) => {
   const withTimezone = dayjs(date, "YYYY-MM-DDZ");

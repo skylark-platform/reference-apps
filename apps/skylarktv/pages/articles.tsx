@@ -1,7 +1,6 @@
 import type { NextPage } from "next";
 
 import { NextSeo } from "next-seo";
-import { Button, H4, SkeletonPage } from "@skylark-reference-apps/react";
 import useTranslation from "next-translate/useTranslation";
 import dayjs from "dayjs";
 import { addCloudinaryOnTheFlyImageTransformation } from "@skylark-reference-apps/lib";
@@ -11,6 +10,9 @@ import { useListObjects } from "../hooks/useListObjects";
 import { LIST_ARTICLES } from "../graphql/queries";
 import { Article, ImageType } from "../types";
 import { getGraphQLImageSrc } from "../lib/utils";
+import { H4 } from "../components/generic/typography";
+import { SkeletonPage } from "../components/generic/skeleton";
+import { Button } from "../components/generic/button";
 
 const ArticlesPage: NextPage = () => {
   const {

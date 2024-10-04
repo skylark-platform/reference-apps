@@ -7,7 +7,7 @@ const createJestConfig = nextJest({
 
 const customJestConfig = {
   ...base,
-  setupFilesAfterEnv: ["../../packages/react/setupJestTests.js"],
+  setupFilesAfterEnv: ["./setupJestTests.js"],
 };
 
 module.exports = createJestConfig(customJestConfig);

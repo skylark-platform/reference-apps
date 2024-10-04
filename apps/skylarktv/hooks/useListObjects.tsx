@@ -1,11 +1,9 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Dimensions } from "@skylark-reference-apps/lib";
-import {
-  useDimensions,
-  skylarkRequestWithDimensions,
-} from "@skylark-reference-apps/react";
 import { Metadata } from "../types/gql";
 import { GQLError } from "../types";
+import { skylarkRequestWithDimensions } from "../lib/utils";
+import { useDimensions } from "../contexts";
 
 interface ListData<T extends Metadata> {
   objects?: T[];

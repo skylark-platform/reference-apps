@@ -5,14 +5,6 @@ import {
   getTitleByOrder,
   hasProperty,
 } from "@skylark-reference-apps/lib";
-import {
-  ArticleThumbnail,
-  CollectionThumbnail,
-  EpisodeThumbnail,
-  MovieThumbnail,
-  Skeleton,
-  StandardThumbnail,
-} from "@skylark-reference-apps/react";
 import { useInView } from "react-intersection-observer";
 import { ForwardedRef, forwardRef } from "react";
 import {
@@ -44,6 +36,14 @@ import {
   SkylarkTVSupportedSetType,
 } from "../types";
 import { useObject } from "../hooks/useObject";
+import { Skeleton } from "./generic/skeleton";
+import {
+  EpisodeThumbnail,
+  MovieThumbnail,
+  CollectionThumbnail,
+  StandardThumbnail,
+  ArticleThumbnail,
+} from "./generic/thumbnail";
 
 export type ThumbnailVariant =
   | "landscape"

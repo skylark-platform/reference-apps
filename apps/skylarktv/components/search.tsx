@@ -10,7 +10,6 @@ import { useDebounce } from "use-debounce";
 import { sanitize } from "dompurify";
 import { sentenceCase } from "sentence-case";
 
-import { Link } from "@skylark-reference-apps/react";
 import useTranslation from "next-translate/useTranslation";
 import { useSearch } from "../hooks/useSearch";
 import {
@@ -19,6 +18,7 @@ import {
   getGraphQLImageSrc,
 } from "../lib/utils";
 import { ImageType, Maybe } from "../types";
+import { Link } from "./generic/link";
 
 const findMatchOrReturnFirst = (
   strings: (string | Maybe<string> | undefined)[],

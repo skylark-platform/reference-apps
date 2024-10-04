@@ -1,8 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import {
-  skylarkRequestWithDimensions,
-  useDimensions,
-} from "@skylark-reference-apps/react";
 import { useEffect, useMemo } from "react";
 import { GQLError, SkylarkImageListing } from "../types";
 import {
@@ -14,6 +10,8 @@ import {
   removeGoogleTagManagerNoScriptFromBody,
 } from "../components/googleTagManager";
 import { useSkylarkEnvironment } from "./useSkylarkEnvironment";
+import { useDimensions } from "../contexts";
+import { skylarkRequestWithDimensions } from "../lib/utils";
 
 interface SkylarkTVConfigResponse {
   listAppConfig?: {

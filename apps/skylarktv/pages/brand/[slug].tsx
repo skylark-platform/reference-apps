@@ -1,12 +1,6 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import {
-  CallToAction,
-  Header,
-  Hero,
-  SkeletonPage,
-} from "@skylark-reference-apps/react";
 import useTranslation from "next-translate/useTranslation";
 import { Brand, ImageType, Season } from "../../types/gql";
 import {
@@ -27,6 +21,10 @@ import {
   SkylarkTVSupportedImageType,
 } from "../../types";
 import { useSkylarkEnvironment } from "../../hooks/useSkylarkEnvironment";
+import { CallToAction } from "../../components/generic/call-to-action";
+import { Header } from "../../components/generic/header";
+import { Hero } from "../../components/generic/hero";
+import { SkeletonPage } from "../../components/generic/skeleton";
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //   const seo = await getSeoDataForObject(

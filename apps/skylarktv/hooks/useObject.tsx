@@ -1,12 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { Dimensions, hasProperty } from "@skylark-reference-apps/lib";
-import {
-  useDimensions,
-  skylarkRequestWithDimensions,
-} from "@skylark-reference-apps/react";
 import { Metadata } from "../types/gql";
 import { GQLError } from "../types";
-import { isSkylarkUid } from "../lib/utils";
+import { isSkylarkUid, skylarkRequestWithDimensions } from "../lib/utils";
+import { useDimensions } from "../contexts";
 
 interface UseObjectOpts<T extends Metadata> {
   disabled?: boolean;

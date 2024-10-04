@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
-import { skylarkRequestWithLocalStorage } from "@skylark-reference-apps/react";
 import { GQLError, SkylarkTVAdditionalFields } from "../types";
 import { GET_SKYLARK_ENVIRONMENT } from "../graphql/queries/skylarkEnvironment";
+import { skylarkRequestWithLocalStorage } from "../lib/utils";
 
 interface SkylarkEnvironmentResponse {
   seasonFields?: {

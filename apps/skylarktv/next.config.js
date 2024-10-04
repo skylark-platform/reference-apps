@@ -6,10 +6,7 @@ const { withPlausibleProxy } = require("next-plausible");
 
 const moduleExports = withPlausibleProxy()({
   reactStrictMode: true,
-  transpilePackages: [
-    "@skylark-reference-apps/lib",
-    "@skylark-reference-apps/react",
-  ],
+  transpilePackages: ["@skylark-reference-apps/lib"],
 });
 
 module.exports = nextTranslate(moduleExports);

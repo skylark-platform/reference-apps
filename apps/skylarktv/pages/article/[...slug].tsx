@@ -1,9 +1,5 @@
 import type { GetStaticProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
-import {
-  ParseAndDisplayHTML,
-  SkeletonPage,
-} from "@skylark-reference-apps/react";
 import dayjs from "dayjs";
 import { Article } from "../../types/gql";
 import { DisplayError } from "../../components/displayError";
@@ -21,6 +17,8 @@ import {
 } from "../../hooks/useUidAndSlugFromObjectUrl";
 import { ListObjectsRail } from "../../components/rails";
 import { LIST_ARTICLES } from "../../graphql/queries";
+import { ParseAndDisplayHTML } from "../../components/generic/parseAndDisplayHtml";
+import { SkeletonPage } from "../../components/generic/skeleton";
 
 export function getStaticPaths() {
   return {
