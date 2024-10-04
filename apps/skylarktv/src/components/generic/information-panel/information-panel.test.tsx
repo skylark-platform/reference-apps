@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "../../../test-utils";
+import { render, screen } from "../../../../test-utils";
 import { InformationPanel } from "./information-panel.component";
 
 describe("InformationPanel component", () => {

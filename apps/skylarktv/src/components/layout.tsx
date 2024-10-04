@@ -16,7 +16,7 @@ import {
   SkylarkTVConfig,
   useSkylarkTVConfig,
 } from "../hooks/useSkylarkTVConfig";
-import createDefaultSeo from "../next-seo.config";
+import createDefaultSeo from "../../next-seo.config";
 import { GoogleTagManagerScript } from "./googleTagManager";
 import { BackButton } from "./backButton";
 import { PURGE_CACHE } from "../graphql/queries/purgeCache";

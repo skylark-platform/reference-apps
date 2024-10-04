@@ -1,6 +1,6 @@
-import { getSeoDataForObject } from "../../lib/getPageSeoData";
-import { graphQLClient } from "../../lib/skylark";
-import { Episode } from "../../types/gql";
+import { getSeoDataForObject } from "../../src/lib/getPageSeoData";
+import { graphQLClient } from "../../src/lib/skylark";
+import { Episode } from "../../src/types";
 
 jest.spyOn(graphQLClient, "request");
 

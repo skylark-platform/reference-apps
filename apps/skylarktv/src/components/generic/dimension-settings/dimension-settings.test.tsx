@@ -1,5 +1,10 @@
 import React from "react";
-import { render, RenderOptions, screen, fireEvent } from "../../../test-utils";
+import {
+  render,
+  RenderOptions,
+  screen,
+  fireEvent,
+} from "../../../../test-utils";
 import { DimensionSettings } from "./dimension-settings.component";
 import { DimensionsContextProvider } from "../../../contexts";
 
