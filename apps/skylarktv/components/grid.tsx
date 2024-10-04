@@ -1,4 +1,3 @@
-import { hasProperty } from "@skylark-reference-apps/lib";
 import { ReactNode } from "react";
 import { RailHeader } from "./generic/rail";
 import {
@@ -16,6 +15,7 @@ import {
 } from "./thumbnail";
 import { useObject } from "../hooks/useObject";
 import { GET_SET_FOR_RAIL } from "../graphql/queries";
+import { hasProperty } from "../lib/utils";
 
 interface GridProps {
   header?: string;

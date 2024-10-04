@@ -1,8 +1,3 @@
-import {
-  addCloudinaryOnTheFlyImageTransformation,
-  formatReleaseDate,
-  hasProperty,
-} from "@skylark-reference-apps/lib";
 import clsx from "clsx";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { MdOutlineRotateRight, MdClear, MdSearch } from "react-icons/md";
@@ -13,9 +8,12 @@ import { sentenceCase } from "sentence-case";
 import useTranslation from "next-translate/useTranslation";
 import { useSearch } from "../hooks/useSearch";
 import {
+  addCloudinaryOnTheFlyImageTransformation,
   convertGraphQLSetType,
   convertTypenameToObjectType,
+  formatReleaseDate,
   getGraphQLImageSrc,
+  hasProperty,
 } from "../lib/utils";
 import { ImageType, Maybe } from "../types";
 import { Link } from "./generic/link";

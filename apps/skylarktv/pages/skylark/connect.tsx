@@ -1,6 +1,6 @@
-import { LOCAL_STORAGE } from "@skylark-reference-apps/lib";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { LOCAL_STORAGE } from "../../lib/skylark";
 
 const setKeysAndRedirect = async (
   uri: string,

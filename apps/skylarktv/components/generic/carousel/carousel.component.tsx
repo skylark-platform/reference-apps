@@ -2,16 +2,16 @@ import React, { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { wrap } from "popmotion";
 import useTranslation from "next-translate/useTranslation";
-import {
-  addCloudinaryOnTheFlyImageTransformation,
-  formatYear,
-  ObjectTypes,
-} from "@skylark-reference-apps/lib";
 import { MdPlayCircleFilled, MdArrowForward } from "react-icons/md";
 import { CarouselButton } from "./carousel-button.component";
 import { List } from "../list";
 import { Button } from "../button";
 import { useHtmlDirection } from "../../../hooks/useHtmlDirection";
+import {
+  addCloudinaryOnTheFlyImageTransformation,
+  formatYear,
+} from "../../../lib/utils";
+import { ObjectTypes } from "../../../lib/interfaces";
 
 export interface CarouselItem {
   title: string;

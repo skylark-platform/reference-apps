@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
-import { hasProperty } from "@skylark-reference-apps/lib";
 import {
   SeoObjectData,
   convertObjectImagesToSeoImages,
@@ -12,6 +11,7 @@ import {
   getGraphQLImageSrc,
   getSynopsisByOrderForGraphQLObject,
   getTitleByOrderForGraphQLObject,
+  hasProperty,
   splitAndFormatGraphQLCreditsByInternalTitle,
 } from "../../lib/utils";
 import { Availability, Episode, ImageType } from "../../types/gql";

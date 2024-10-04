@@ -1,5 +1,5 @@
 import type { CodegenConfig } from "@graphql-codegen/cli";
-import { SAAS_API_ENDPOINT, SAAS_API_KEY } from "@skylark-reference-apps/lib";
+import { SAAS_API_ENDPOINT, SAAS_API_KEY } from "./lib/skylark";
 
 // eslint-disable-next-line no-console
 console.log(`[Codegen] URL: ${SAAS_API_ENDPOINT}`);

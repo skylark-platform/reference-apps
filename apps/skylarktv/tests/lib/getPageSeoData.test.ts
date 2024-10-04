@@ -1,5 +1,5 @@
-import { graphQLClient } from "@skylark-reference-apps/lib";
 import { getSeoDataForObject } from "../../lib/getPageSeoData";
+import { graphQLClient } from "../../lib/skylark";
 import { Episode } from "../../types/gql";
 
 jest.spyOn(graphQLClient, "request");

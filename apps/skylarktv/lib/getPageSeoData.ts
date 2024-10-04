@@ -1,13 +1,12 @@
-import {
-  getTitleByOrder,
-  getSynopsisByOrder,
-  graphQLClient,
-  GraphQLObjectTypes,
-  DimensionKey,
-} from "@skylark-reference-apps/lib";
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import { Article, Entertainment, Maybe, SkylarkImageListing } from "../types";
-import { createGraphQLQueryDimensions } from "./utils";
+import {
+  createGraphQLQueryDimensions,
+  getSynopsisByOrder,
+  getTitleByOrder,
+} from "./utils";
+import { GraphQLObjectTypes, DimensionKey } from "./interfaces";
+import { graphQLClient } from "./skylark";
 
 interface SeoObjectImage {
   url: string;

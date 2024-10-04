@@ -1,10 +1,3 @@
-import {
-  EntertainmentType,
-  SetTypes,
-  formatYear,
-  getTitleByOrder,
-  hasProperty,
-} from "@skylark-reference-apps/lib";
 import { useInView } from "react-intersection-observer";
 import { ForwardedRef, forwardRef } from "react";
 import {
@@ -21,7 +14,10 @@ import { GET_SEASON_THUMBNAIL } from "../graphql/queries/getSeason";
 import {
   convertGraphQLSetType,
   convertTypenameToObjectType,
+  formatYear,
   getGraphQLImageSrc,
+  getTitleByOrder,
+  hasProperty,
 } from "../lib/utils";
 import {
   Article,
@@ -44,6 +40,7 @@ import {
   StandardThumbnail,
   ArticleThumbnail,
 } from "./generic/thumbnail";
+import { SetTypes, EntertainmentType } from "../lib/interfaces";
 
 export type ThumbnailVariant =
   | "landscape"

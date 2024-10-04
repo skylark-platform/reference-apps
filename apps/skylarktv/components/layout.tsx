@@ -9,10 +9,6 @@ import {
 } from "react-icons/md";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
-import {
-  addCloudinaryOnTheFlyImageTransformation,
-  hasProperty,
-} from "@skylark-reference-apps/lib";
 import { DefaultSeo } from "next-seo";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Search } from "./search";
@@ -28,7 +24,11 @@ import { useUser } from "../hooks/useUserAccount";
 import { SkylarkApiPermission } from "../types";
 import { NavigationLink } from "./generic/navigation";
 import { useDimensions } from "../contexts";
-import { skylarkRequestWithLocalStorage } from "../lib/utils";
+import {
+  addCloudinaryOnTheFlyImageTransformation,
+  hasProperty,
+  skylarkRequestWithLocalStorage,
+} from "../lib/utils";
 import { AppBackgroundGradient } from "./generic/app-background-gradient";
 import { AppHeader } from "./generic/app-header";
 import { Button } from "./generic/button";

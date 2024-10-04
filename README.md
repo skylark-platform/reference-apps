@@ -35,7 +35,6 @@ yarn dev
 ### Packages (`packages/`)
 
 - `@skylark-reference-apps/ingestor` - A content ingestor that helps you load large amounts of content into Skylark
-- `@skylark-reference-apps/lib` - Helper functions to communicate with the Skylark API, Cognito etc
 
 ### Running tests
 

@@ -1,7 +1,7 @@
 import React from "react";
-import { DimensionKey } from "@skylark-reference-apps/lib";
 import { fireEvent, render, RenderOptions, screen } from "../../test-utils";
 import { DimensionsContextProvider, useDimensions } from "./dimensions-context";
+import { DimensionKey } from "../../lib/interfaces";
 
 const customRender = (ui: React.ReactElement, renderOptions?: RenderOptions) =>
   render(

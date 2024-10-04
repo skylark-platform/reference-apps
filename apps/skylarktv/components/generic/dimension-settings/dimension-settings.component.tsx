@@ -2,12 +2,6 @@ import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import dayjs from "dayjs";
 import { FiExternalLink } from "react-icons/fi";
-import {
-  DimensionKey,
-  LOCAL_STORAGE,
-  SAAS_API_ENDPOINT,
-  SAAS_API_KEY,
-} from "@skylark-reference-apps/lib";
 import clsx from "clsx";
 import { DimensionContent } from "./dimension-content";
 import { DimensionToggle } from "./dimension-toggle";
@@ -15,6 +9,12 @@ import { DimensionRadioButton } from "./dimension-radio-button";
 import { SkylarkBranding } from "../skylark-branding";
 import { useDimensions } from "../../../contexts";
 import { ConnectToSkylarkModal } from "../connect-to-skylark-modal";
+import { DimensionKey } from "../../../lib/interfaces";
+import {
+  LOCAL_STORAGE,
+  SAAS_API_ENDPOINT,
+  SAAS_API_KEY,
+} from "../../../lib/skylark";
 
 const generateSkylarkAutoconnectUrl = () => {
   const isBrowser = typeof window !== "undefined";

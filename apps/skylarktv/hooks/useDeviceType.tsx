@@ -1,4 +1,4 @@
-import { DeviceTypes } from "@skylark-reference-apps/lib";
+import { DeviceTypes } from "../lib/interfaces";
 import { useTailwindBreakpoint } from "./useTailwindBreakpoint";
 
 /**

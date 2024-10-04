@@ -1,8 +1,8 @@
 import React from "react";
 import NextLink, { LinkProps as NextLinkProps } from "next/link";
 import { useRouter } from "next/router";
-import { ALL_DIMENSION_QUERY_KEYS } from "@skylark-reference-apps/lib";
 import { persistQueryValues } from "../../../lib/utils";
+import { ALL_DIMENSION_QUERY_KEYS } from "../../../lib/skylark";
 
 interface LinkProps extends NextLinkProps {
   isExternal?: boolean;

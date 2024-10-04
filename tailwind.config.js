@@ -12,7 +12,6 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
     "./src/pages/**/*.{js,ts,jsx,tsx}",
     "./src/components/**/*.{js,ts,jsx,tsx}",
-    "../../packages/react/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {

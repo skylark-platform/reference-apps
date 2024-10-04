@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { Dimensions } from "@skylark-reference-apps/lib";
 import {
   SkylarkSet,
   Brand,
@@ -14,6 +13,7 @@ import {
 import { SEARCH } from "../graphql/queries";
 import { skylarkRequestWithDimensions } from "../lib/utils";
 import { useDimensions } from "../contexts";
+import { Dimensions } from "../lib/interfaces";
 
 interface SearchResult extends Omit<SearchResultListing, "objects"> {
   objects: (SkylarkSet | Brand | Episode | Movie | Person | LiveStream)[];

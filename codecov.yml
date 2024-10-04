@@ -5,12 +5,6 @@ flags:
   ingestor:
     paths:
       - packages/ingestor/
-  lib:
-    paths:
-      - packages/lib/
-  react:
-    paths:
-      - packages/react/
 
 coverage:
   status:

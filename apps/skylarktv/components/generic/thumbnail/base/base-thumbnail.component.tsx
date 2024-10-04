@@ -1,9 +1,9 @@
 import React, { useMemo } from "react";
 import { MdPlayArrow } from "react-icons/md";
-import { addCloudinaryOnTheFlyImageTransformation } from "@skylark-reference-apps/lib";
 import { List } from "../../list";
 import { Link } from "../../link";
 import { useImageLoaded } from "../../../../hooks/useImageLoaded";
+import { addCloudinaryOnTheFlyImageTransformation } from "../../../../lib/utils";
 
 export type ThumbnailContentLocation = "inside" | "below";
 

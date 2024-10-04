@@ -1,5 +1,4 @@
 import React from "react";
-import { formatReleaseDate } from "@skylark-reference-apps/lib";
 import useTranslation from "next-translate/useTranslation";
 import {
   MdBook,
@@ -18,7 +17,7 @@ import {
 } from "react-icons/md";
 import { Dayjs } from "dayjs";
 import { NextPage } from "next";
-import { getTimeFromNow } from "../../../lib/utils";
+import { formatReleaseDate, getTimeFromNow } from "../../../lib/utils";
 import { ListPersonOtherCreditsRail } from "../../rails";
 import { InformationPanel } from "../../generic/information-panel";
 import { MetadataPanel } from "../../generic/metadata-panel";

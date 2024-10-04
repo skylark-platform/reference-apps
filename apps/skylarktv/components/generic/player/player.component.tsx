@@ -1,8 +1,8 @@
-import { addCloudinaryOnTheFlyImageTransformation } from "@skylark-reference-apps/lib";
 import React from "react";
 import MuxVideo from "@mux/mux-video-react";
 
 import dynamic from "next/dynamic";
+import { addCloudinaryOnTheFlyImageTransformation } from "../../../lib/utils";
 
 interface PlayerProps {
   src: string;
@@ -31,6 +31,7 @@ const ReactPlayer = dynamic(() => import("react-player/lazy"), { ssr: false });
 
 const ThumbnailImage = ({ src }: { src?: string }) =>
   src ? (
+    // eslint-disable-next-line @next/next/no-img-element
     <img
       alt="Thumbnail"
       className="h-full w-full bg-black object-cover object-center"

@@ -1,5 +1,4 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Dimensions } from "@skylark-reference-apps/lib";
 import { Episode, Genre, Movie } from "../types/gql";
 import { GQLError } from "../types";
 import {
@@ -8,6 +7,7 @@ import {
 } from "../graphql/queries";
 import { skylarkRequestWithDimensions } from "../lib/utils";
 import { useDimensions } from "../contexts";
+import { Dimensions } from "../lib/interfaces";
 
 const objectListingFromGenreFetcher = (
   query: string,

@@ -1,4 +1,4 @@
-import { DimensionKey, Dimensions } from "@skylark-reference-apps/lib";
+import { DimensionKey, Dimensions } from "../../lib/interfaces";
 import * as utils from "../../lib/utils";
 import { Entertainment } from "../../types";
 import { Credit, SkylarkImageListing, ImageType } from "../../types/gql";

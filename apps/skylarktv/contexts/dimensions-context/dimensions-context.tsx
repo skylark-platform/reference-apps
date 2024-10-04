@@ -1,8 +1,3 @@
-import {
-  ALL_DIMENSION_QUERY_KEYS,
-  DimensionKey,
-  Dimensions,
-} from "@skylark-reference-apps/lib";
 import React, { createContext, useContext, useEffect, useReducer } from "react";
 import setLanguage from "next-translate/setLanguage";
 import useTranslation from "next-translate/useTranslation";
@@ -10,6 +5,8 @@ import { useRouter } from "next/router";
 import { NextParsedUrlQuery } from "next/dist/server/request-meta";
 import { useDeviceType } from "../../hooks/useDeviceType";
 import { persistQueryValues } from "../../lib/utils";
+import { DimensionKey, Dimensions } from "../../lib/interfaces";
+import { ALL_DIMENSION_QUERY_KEYS } from "../../lib/skylark";
 
 interface ReducerAction {
   type: DimensionKey;

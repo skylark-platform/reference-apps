@@ -1,9 +1,10 @@
 import React from "react";
-import { formatYear, EntertainmentType } from "@skylark-reference-apps/lib";
 import { MdVideoLibrary, MdLocalMovies } from "react-icons/md";
 import { IconBaseProps } from "react-icons";
 import useTranslation from "next-translate/useTranslation";
 import { List } from "../list";
+import { formatYear } from "../../../lib/utils";
+import { EntertainmentType } from "../../../lib/interfaces";
 
 interface HeaderProps {
   title: string;

@@ -7,12 +7,12 @@ import "@fontsource/inter/600.css";
 import type { AppProps } from "next/app";
 import PlausibleProvider from "next-plausible";
 import { withPasswordProtect } from "next-password-protect";
-import { LOCAL_STORAGE } from "@skylark-reference-apps/lib";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { IntercomProvider } from "react-use-intercom";
 import { SkylarkTVLayout } from "../components/layout";
 import { DimensionsContextProvider } from "../contexts";
+import { LOCAL_STORAGE } from "../lib/skylark";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [skylarkApiUrl, setSkylarkApiUrl] = useState(

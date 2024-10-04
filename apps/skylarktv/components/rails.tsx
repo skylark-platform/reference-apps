@@ -1,4 +1,3 @@
-import { hasProperty } from "@skylark-reference-apps/lib";
 import useTranslation from "next-translate/useTranslation";
 import {
   Brand,
@@ -25,6 +24,7 @@ import {
 } from "../graphql/queries";
 import { GET_SEASON_AND_EPISODES } from "../graphql/queries/getSeason";
 import { Rail } from "./generic/rail";
+import { hasProperty } from "../lib/utils";
 
 export const SeasonRail = ({
   season,

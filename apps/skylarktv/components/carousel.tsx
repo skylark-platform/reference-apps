@@ -1,4 +1,3 @@
-import { hasProperty } from "@skylark-reference-apps/lib";
 import { Carousel as ReactCarousel, CarouselItem } from "./generic/carousel";
 import { GET_SET_FOR_CAROUSEL } from "../graphql/queries";
 import { useObject } from "../hooks/useObject";
@@ -6,6 +5,7 @@ import {
   convertGraphQLSetType,
   convertTypenameToObjectType,
   getGraphQLImageSrc,
+  hasProperty,
 } from "../lib/utils";
 import {
   Entertainment,

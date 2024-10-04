@@ -1,7 +1,6 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
-import { formatReleaseDate } from "@skylark-reference-apps/lib";
 
 import useTranslation from "next-translate/useTranslation";
 import {
@@ -15,6 +14,7 @@ import {
   convertObjectImagesToSeoImages,
 } from "../../lib/getPageSeoData";
 import {
+  formatReleaseDate,
   getFirstRatingValue,
   getGraphQLImageSrc,
   getSynopsisByOrderForGraphQLObject,
