@@ -8,11 +8,14 @@ import "@fontsource/inter/500.css";
 import "@fontsource/inter/600.css";
 
 import type { Preview } from "@storybook/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { DimensionsContextProvider } from "../src/contexts/dimensions-context";
 import I18nProvider from "next-translate/I18nProvider";
 import common from "../locales/en-gb/common.json";
 import React from "react";
+
+const queryClient = new QueryClient();
 
 const preview: Preview = {
   parameters: {
@@ -28,9 +31,11 @@ const preview: Preview = {
   decorators: [
     (Story) => (
       <I18nProvider lang="en-gb" namespaces={{ common }}>
-        <DimensionsContextProvider>
-          <Story />
-        </DimensionsContextProvider>
+        <QueryClientProvider client={queryClient}>
+          <DimensionsContextProvider>
+            <Story />
+          </DimensionsContextProvider>
+        </QueryClientProvider>
       </I18nProvider>
     ),
   ],
