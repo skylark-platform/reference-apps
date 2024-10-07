@@ -1,4 +1,4 @@
-import { GraphQLMediaObjectTypes } from "@skylark-reference-apps/lib";
+import { GraphQLMediaObjectTypes } from "@skylark-apps/skylarktv/src/lib/interfaces";
 import { FieldSet, Record } from "airtable";
 import { EnumType } from "json-to-graphql-query";
 import {

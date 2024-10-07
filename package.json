@@ -1,33 +1,27 @@
 {
-  "name": "skylark-reference-apps",
+  "name": "skylark-apps",
   "version": "0.1.0",
   "private": true,
   "workspaces": [
-    "packages/*",
-    "apps/*"
+    "packages/*"
   ],
   "license": "MIT",
   "scripts": {
-    "lerna-run": "lerna run",
-    "lerna-exec": "lerna exec",
-    "deepclean": "lerna exec -- rm -rf node_modules && rm -rf node_modules",
-    "lint": "lerna run --parallel lint",
-    "lint:fix": "lerna run --parallel lint -- --fix",
-    "test": "lerna run --parallel test",
-    "test:ci": "lerna run --parallel test -- --ci --coverage",
-    "tsc": "lerna run --parallel tsc",
     "prettier": "prettier . --write",
     "prettier:check": "prettier . --check",
     "prepare": "husky",
-    "storybook": "lerna run --stream storybook",
-    "dev": "lerna run --parallel dev",
-    "ingest": "lerna run --stream ingest",
-    "vercel:link": "lerna run --parallel vercel:link",
-    "vercel:env": "lerna run --parallel vercel:env"
+    "lint:skylarktv": "cd packages/skylarktv && yarn lint",
+    "lint:ingestor": "cd packages/ingestor && yarn lint",
+    "lint:all": "yarn lint:skylarktv && yarn lint:ingestor",
+    "test:skylarktv": "cd packages/skylarktv && yarn test",
+    "test:ingestor": "cd packages/ingestor && yarn test",
+    "test:all": "yarn test:skylarktv && yarn test:ingestor",
+    "test:ci": "yarn test:skylarktv --ci --coverage && yarn test:ingestor --ci --coverage",
+    "tsc:skylarktv": "cd packages/skylarktv && yarn tsc",
+    "tsc:ingestor": "cd packages/ingestor && yarn tsc",
+    "tsc:all": "yarn tsc:skylarktv && yarn tsc:ingestor"
   },
   "devDependencies": {
-    "@lerna/exec": "4.0.0",
-    "@lerna/run": "4.0.0",
     "@typescript-eslint/eslint-plugin": "6.21.0",
     "@typescript-eslint/parser": "6.21.0",
     "eslint": "8.57.1",

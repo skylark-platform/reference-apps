@@ -1,4 +1,4 @@
-# `@skylark-reference-apps/ingestor`
+# `@skylark-apps/ingestor`
 
 Ingests content and metadata into a Skylark instance using the Media Data Model.
 

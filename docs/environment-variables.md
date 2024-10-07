@@ -1,6 +1,6 @@
 # Environment Variables
 
-Throughout this monorepo, environment variables are used for configuration to enable apps to run. When the same variables are used in multiple apps, we aim to keep the naming consistent so that we can use a single `.env.local` file currently located in the [apps/skylarktv][skylarktv-app] directory.
+Throughout this monorepo, environment variables are used for configuration to enable apps to run. When the same variables are used in multiple apps, we aim to keep the naming consistent so that we can use a single `.env.local` file currently located in the [packages/skylarktv][skylarktv-app] directory.
 
 In each app, different combinations of the variables are utilised and so the ones that are required for the app to run as expected differ on a per app basis.
 
@@ -47,7 +47,7 @@ AIRTABLE_BASE_ID=
 
 If you prefer to only include the environment variables that allow full functionality of your app, the guides below will help you understand which are required.
 
-### apps/skylarktv (SkylarkTV)
+### packages/skylarktv (SkylarkTV)
 
 ```bash
 NEXT_PUBLIC_SAAS_API_ENDPOINT=
@@ -79,4 +79,4 @@ AIRTABLE_API_KEY=
 AIRTABLE_BASE_ID=
 ```
 
-[skylarktv-app]: ../apps/skylarktv
+[skylarktv-app]: ../packages/skylarktv

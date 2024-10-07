@@ -1,4 +1,3 @@
-import { GraphQLObjectTypes } from "@skylark-reference-apps/lib";
 import {
   Attachment,
   Collaborator,
@@ -8,6 +7,7 @@ import {
 } from "airtable";
 import { EnumType } from "json-to-graphql-query";
 import { has, isArray, isString } from "lodash";
+import { GraphQLObjectTypes } from "@skylark-apps/skylarktv/src/lib/interfaces";
 import {
   CreateOrUpdateRelationships,
   GraphQLBaseObject,

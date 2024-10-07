@@ -1,16 +1,10 @@
 flags:
   skylarkTV:
     paths:
-      - apps/skylarktv/
+      - packages/skylarktv/
   ingestor:
     paths:
       - packages/ingestor/
-  lib:
-    paths:
-      - packages/lib/
-  react:
-    paths:
-      - packages/react/
 
 coverage:
   status:

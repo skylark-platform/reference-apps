@@ -1,5 +1,6 @@
-import { GraphQLObjectTypes, graphQLClient } from "@skylark-reference-apps/lib";
 import { jsonToGraphQLQuery, VariableType } from "json-to-graphql-query";
+import { graphQLClient } from "@skylark-apps/skylarktv/src/lib/skylark";
+import { GraphQLObjectTypes } from "@skylark-apps/skylarktv/src/lib/interfaces";
 import { GraphQLBaseObject } from "../../interfaces";
 
 export const deleteObject = async (

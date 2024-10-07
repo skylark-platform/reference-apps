@@ -1,6 +1,7 @@
-import { GraphQLObjectTypes, hasProperty } from "@skylark-reference-apps/lib";
+import { hasProperty } from "@skylark-apps/skylarktv/src/lib/utils";
 import { ensureDir, writeJSON } from "fs-extra";
 import { join } from "path";
+import { GraphQLObjectTypes } from "@skylark-apps/skylarktv/src/lib/interfaces";
 import {
   FetchedLegacyObjects,
   LegacyObjectType,

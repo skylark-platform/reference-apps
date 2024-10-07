@@ -1,4 +1,4 @@
-import { graphQLClient } from "@skylark-reference-apps/lib";
+import { graphQLClient } from "@skylark-apps/skylarktv/src/lib/skylark";
 import { EnumType, jsonToGraphQLQuery } from "json-to-graphql-query";
 
 const createMutation = (
