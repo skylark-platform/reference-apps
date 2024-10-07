@@ -16,6 +16,7 @@
     "test:skylarktv": "cd packages/skylarktv && yarn test",
     "test:ingestor": "cd packages/ingestor && yarn test",
     "test:all": "yarn test:skylarktv && yarn test:ingestor",
+    "test:ci": "yarn test:skylarktv --ci --coverage && yarn test:ingestor --ci --coverage",
     "tsc:skylarktv": "cd packages/skylarktv && yarn tsc",
     "tsc:ingestor": "cd packages/ingestor && yarn tsc",
     "tsc:all": "yarn tsc:skylarktv && yarn tsc:ingestor"

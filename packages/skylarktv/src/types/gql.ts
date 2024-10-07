@@ -82,7 +82,6 @@ export type AppConfig = Metadata &
     external_id?: Maybe<Scalars["String"]>;
     featured_page_url?: Maybe<Scalars["AWSURL"]>;
     google_tag_manager_id?: Maybe<Scalars["String"]>;
-    /**  reverse::app_config */
     logo?: Maybe<SkylarkImageListing>;
     primary_color?: Maybe<Scalars["String"]>;
     slug?: Maybe<Scalars["String"]>;
@@ -177,16 +176,13 @@ export type Article = Metadata &
     availability?: Maybe<AvailabilityListing>;
     body?: Maybe<Scalars["String"]>;
     content_of?: Maybe<SetListing>;
-    /**  reverse::articles */
     credits?: Maybe<CreditListing>;
     description?: Maybe<Scalars["String"]>;
     external_id?: Maybe<Scalars["String"]>;
-    /**  reverse::articles */
     images?: Maybe<SkylarkImageListing>;
     internal_title?: Maybe<Scalars["String"]>;
     publish_date?: Maybe<Scalars["AWSDateTime"]>;
     slug?: Maybe<Scalars["String"]>;
-    /**  reverse::articles */
     tags?: Maybe<SkylarkTagListing>;
     title?: Maybe<Scalars["String"]>;
     type?: Maybe<Scalars["String"]>;
@@ -439,38 +435,26 @@ export type Brand = Metadata &
     _config?: Maybe<ObjectConfig>;
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_BrandMeta>;
-    /**  reverse::brands */
     assets?: Maybe<SkylarkAssetListing>;
     audience_rating?: Maybe<Scalars["String"]>;
     availability?: Maybe<AvailabilityListing>;
-    /**  reverse::brands */
     call_to_actions?: Maybe<CallToActionListing>;
     content_of?: Maybe<SetListing>;
-    /**  reverse::brands */
     credits?: Maybe<CreditListing>;
-    /**  reverse::brands */
     episodes?: Maybe<EpisodeListing>;
     external_id?: Maybe<Scalars["String"]>;
-    /**  reverse::brands */
     genres?: Maybe<GenreListing>;
-    /**  reverse::brands */
     images?: Maybe<SkylarkImageListing>;
     internal_title?: Maybe<Scalars["String"]>;
-    /**  reverse::brands */
     live_streams?: Maybe<LiveStreamListing>;
-    /**  reverse::brands */
     movies?: Maybe<MovieListing>;
-    /**  reverse::brands */
     ratings?: Maybe<RatingListing>;
     release_date?: Maybe<Scalars["AWSDate"]>;
-    /**  reverse::brands */
     seasons?: Maybe<SeasonListing>;
     slug?: Maybe<Scalars["String"]>;
     synopsis?: Maybe<Scalars["String"]>;
     synopsis_short?: Maybe<Scalars["String"]>;
-    /**  reverse::brands */
     tags?: Maybe<SkylarkTagListing>;
-    /**  reverse::brands */
     themes?: Maybe<ThemeListing>;
     title?: Maybe<Scalars["String"]>;
     title_short?: Maybe<Scalars["String"]>;
@@ -688,24 +672,17 @@ export type CallToAction = Metadata &
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_CallToActionMeta>;
     availability?: Maybe<AvailabilityListing>;
-    /**  reverse::call_to_actions */
     brands?: Maybe<BrandListing>;
     content_of?: Maybe<SetListing>;
     description?: Maybe<Scalars["String"]>;
     description_short?: Maybe<Scalars["String"]>;
-    /**  reverse::call_to_actions */
     episodes?: Maybe<EpisodeListing>;
     external_id?: Maybe<Scalars["String"]>;
-    /**  reverse::call_to_actions */
     images?: Maybe<SkylarkImageListing>;
     internal_title?: Maybe<Scalars["String"]>;
-    /**  reverse::call_to_actions */
     live_streams?: Maybe<LiveStreamListing>;
-    /**  reverse::call_to_actions */
     movies?: Maybe<MovieListing>;
-    /**  reverse::call_to_actions */
     seasons?: Maybe<SeasonListing>;
-    /**  reverse::call_to_actions */
     sets?: Maybe<SkylarkSetListing>;
     slug?: Maybe<Scalars["String"]>;
     text?: Maybe<Scalars["String"]>;
@@ -888,31 +865,21 @@ export type Credit = Metadata &
     _config?: Maybe<ObjectConfig>;
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_CreditMeta>;
-    /**  reverse::credits */
     articles?: Maybe<ArticleListing>;
-    /**  reverse::credits */
     assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
-    /**  reverse::credits */
     brands?: Maybe<BrandListing>;
     character?: Maybe<Scalars["String"]>;
     content_of?: Maybe<SetListing>;
-    /**  reverse::credits */
     episodes?: Maybe<EpisodeListing>;
     external_id?: Maybe<Scalars["String"]>;
     internal_title?: Maybe<Scalars["String"]>;
-    /**  reverse::credits */
     live_streams?: Maybe<LiveStreamListing>;
-    /**  reverse::credits */
     movies?: Maybe<MovieListing>;
     name_sort?: Maybe<Scalars["String"]>;
-    /**  reverse::credits */
     people?: Maybe<PersonListing>;
-    /**  reverse::credits */
     roles?: Maybe<RoleListing>;
-    /**  reverse::credits */
     seasons?: Maybe<SeasonListing>;
-    /**  reverse::credits */
     sets?: Maybe<SkylarkSetListing>;
     slug?: Maybe<Scalars["String"]>;
     uid: Scalars["String"];
@@ -1179,37 +1146,26 @@ export type Episode = Metadata &
     _config?: Maybe<ObjectConfig>;
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_EpisodeMeta>;
-    /**  reverse::episodes */
     assets?: Maybe<SkylarkAssetListing>;
     audience_rating?: Maybe<Scalars["String"]>;
     availability?: Maybe<AvailabilityListing>;
-    /**  reverse::episodes */
     brands?: Maybe<BrandListing>;
-    /**  reverse::episodes */
     call_to_actions?: Maybe<CallToActionListing>;
     content_of?: Maybe<SetListing>;
-    /**  reverse::episodes */
     credits?: Maybe<CreditListing>;
-    /**  reverse::episodes */
     epg_programs?: Maybe<SkylarkEpgProgramListing>;
     episode_number?: Maybe<Scalars["Int"]>;
     external_id?: Maybe<Scalars["String"]>;
-    /**  reverse::episodes */
     genres?: Maybe<GenreListing>;
-    /**  reverse::episodes */
     images?: Maybe<SkylarkImageListing>;
     internal_title?: Maybe<Scalars["String"]>;
-    /**  reverse::episodes */
     ratings?: Maybe<RatingListing>;
     release_date?: Maybe<Scalars["AWSDate"]>;
-    /**  reverse::episodes */
     seasons?: Maybe<SeasonListing>;
     slug?: Maybe<Scalars["String"]>;
     synopsis?: Maybe<Scalars["String"]>;
     synopsis_short?: Maybe<Scalars["String"]>;
-    /**  reverse::episodes */
     tags?: Maybe<SkylarkTagListing>;
-    /**  reverse::episodes */
     themes?: Maybe<ThemeListing>;
     title?: Maybe<Scalars["String"]>;
     title_short?: Maybe<Scalars["String"]>;
@@ -1423,29 +1379,20 @@ export type Genre = Metadata &
     _config?: Maybe<ObjectConfig>;
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_GenreMeta>;
-    /**  reverse::genres */
     assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
-    /**  reverse::genres */
     brands?: Maybe<BrandListing>;
     content_of?: Maybe<SetListing>;
-    /**  reverse::genres */
     episodes?: Maybe<EpisodeListing>;
     external_id?: Maybe<Scalars["String"]>;
-    /**  reverse::genres */
     images?: Maybe<SkylarkImageListing>;
     internal_title?: Maybe<Scalars["String"]>;
-    /**  reverse::genres */
     live_streams?: Maybe<LiveStreamListing>;
     metadata_source?: Maybe<Scalars["String"]>;
-    /**  reverse::genres */
     movies?: Maybe<MovieListing>;
     name?: Maybe<Scalars["String"]>;
-    /**  reverse::genres */
     people?: Maybe<PersonListing>;
-    /**  reverse::genres */
     seasons?: Maybe<SeasonListing>;
-    /**  reverse::genres */
     sets?: Maybe<SkylarkSetListing>;
     slug?: Maybe<Scalars["String"]>;
     title_sort?: Maybe<Scalars["String"]>;
@@ -1627,32 +1574,22 @@ export type LiveStream = Metadata &
     _config?: Maybe<ObjectConfig>;
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_LiveStreamMeta>;
-    /**  reverse::live_streams */
     assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
-    /**  reverse::live_streams */
     brands?: Maybe<BrandListing>;
-    /**  reverse::live_streams */
     call_to_actions?: Maybe<CallToActionListing>;
     content_of?: Maybe<SetListing>;
-    /**  reverse::live_streams */
     credits?: Maybe<CreditListing>;
     external_id?: Maybe<Scalars["String"]>;
-    /**  reverse::live_streams */
     genres?: Maybe<GenreListing>;
-    /**  reverse::live_streams */
     images?: Maybe<SkylarkImageListing>;
     internal_title?: Maybe<Scalars["String"]>;
-    /**  reverse::live_streams */
     live_assets?: Maybe<SkylarkLiveAssetListing>;
-    /**  reverse::live_streams */
     ratings?: Maybe<RatingListing>;
     slug?: Maybe<Scalars["String"]>;
     synopsis?: Maybe<Scalars["String"]>;
     synopsis_short?: Maybe<Scalars["String"]>;
-    /**  reverse::live_streams */
     tags?: Maybe<SkylarkTagListing>;
-    /**  reverse::live_streams */
     themes?: Maybe<ThemeListing>;
     title?: Maybe<Scalars["String"]>;
     title_short?: Maybe<Scalars["String"]>;
@@ -1848,36 +1785,26 @@ export type Movie = Metadata &
     _config?: Maybe<ObjectConfig>;
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_MovieMeta>;
-    /**  reverse::movies */
     assets?: Maybe<SkylarkAssetListing>;
     audience_rating?: Maybe<Scalars["String"]>;
     availability?: Maybe<AvailabilityListing>;
-    /**  reverse::movies */
     brands?: Maybe<BrandListing>;
     budget?: Maybe<Scalars["String"]>;
-    /**  reverse::movies */
     call_to_actions?: Maybe<CallToActionListing>;
     content_of?: Maybe<SetListing>;
-    /**  reverse::movies */
     credits?: Maybe<CreditListing>;
-    /**  reverse::movies */
     epg_programs?: Maybe<SkylarkEpgProgramListing>;
     external_id?: Maybe<Scalars["String"]>;
-    /**  reverse::movies */
     genres?: Maybe<GenreListing>;
-    /**  reverse::movies */
     images?: Maybe<SkylarkImageListing>;
     internal_title?: Maybe<Scalars["String"]>;
     movie_number?: Maybe<Scalars["Int"]>;
-    /**  reverse::movies */
     ratings?: Maybe<RatingListing>;
     release_date?: Maybe<Scalars["AWSDate"]>;
     slug?: Maybe<Scalars["String"]>;
     synopsis?: Maybe<Scalars["String"]>;
     synopsis_short?: Maybe<Scalars["String"]>;
-    /**  reverse::movies */
     tags?: Maybe<SkylarkTagListing>;
-    /**  reverse::movies */
     themes?: Maybe<ThemeListing>;
     title?: Maybe<Scalars["String"]>;
     title_short?: Maybe<Scalars["String"]>;
@@ -2073,7 +2000,6 @@ export type Mutation = {
   createPerson?: Maybe<Person>;
   createRating?: Maybe<Rating>;
   createRole?: Maybe<Role>;
-  createSchemaVersion?: Maybe<SchemaConfiguration>;
   createSeason?: Maybe<Season>;
   createSkylarkAsset?: Maybe<SkylarkAsset>;
   createSkylarkEPGProgram?: Maybe<SkylarkEpgProgram>;
@@ -2252,10 +2178,6 @@ export type MutationCreateRatingArgs = {
 export type MutationCreateRoleArgs = {
   language?: InputMaybe<Scalars["String"]>;
   role?: InputMaybe<RoleCreateInput>;
-};
-
-export type MutationCreateSchemaVersionArgs = {
-  based_on?: InputMaybe<Scalars["Int"]>;
 };
 
 export type MutationCreateSeasonArgs = {
@@ -2877,7 +2799,6 @@ export type Page = Metadata &
     content_of?: Maybe<SetListing>;
     description?: Maybe<Scalars["String"]>;
     external_id?: Maybe<Scalars["String"]>;
-    /**  reverse::pages */
     images?: Maybe<SkylarkImageListing>;
     slug?: Maybe<Scalars["String"]>;
     title?: Maybe<Scalars["String"]>;
@@ -2976,7 +2897,6 @@ export type ParentalGuidance = Metadata &
     content_of?: Maybe<SetListing>;
     external_id?: Maybe<Scalars["String"]>;
     internal_title?: Maybe<Scalars["String"]>;
-    /**  reverse::parental_guidance */
     ratings?: Maybe<RatingListing>;
     reason?: Maybe<Scalars["String"]>;
     reason_sort?: Maybe<Scalars["String"]>;
@@ -3072,22 +2992,17 @@ export type Person = Metadata &
     bio_medium?: Maybe<Scalars["String"]>;
     bio_short?: Maybe<Scalars["String"]>;
     content_of?: Maybe<SetListing>;
-    /**  reverse::people */
     credits?: Maybe<CreditListing>;
     date_of_birth?: Maybe<Scalars["AWSDate"]>;
     external_id?: Maybe<Scalars["String"]>;
     genre?: Maybe<Scalars["String"]>;
-    /**  reverse::people */
     genres?: Maybe<GenreListing>;
-    /**  reverse::people */
     images?: Maybe<SkylarkImageListing>;
     name?: Maybe<Scalars["String"]>;
     name_sort?: Maybe<Scalars["String"]>;
     place_of_birth?: Maybe<Scalars["String"]>;
     slug?: Maybe<Scalars["String"]>;
-    /**  reverse::people */
     tags?: Maybe<SkylarkTagListing>;
-    /**  reverse::people */
     themes?: Maybe<ThemeListing>;
     uid: Scalars["String"];
   };
@@ -3618,8 +3533,11 @@ export type QueryListArticleArgs = {
 };
 
 export type QueryListAvailabilityArgs = {
+  end?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
+  match?: InputMaybe<Scalars["Boolean"]>;
   next_token?: InputMaybe<Scalars["String"]>;
+  start?: InputMaybe<Scalars["String"]>;
 };
 
 export type QueryListBrandArgs = {
@@ -3831,6 +3749,7 @@ export type QuerySearchArgs = {
   language?: InputMaybe<Scalars["String"]>;
   limit?: InputMaybe<Scalars["Int"]>;
   limit_search_fields?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  next_token?: InputMaybe<Scalars["String"]>;
   offset?: InputMaybe<Scalars["Int"]>;
   query: Scalars["String"];
   types?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
@@ -3843,29 +3762,20 @@ export type Rating = Metadata &
     _config?: Maybe<ObjectConfig>;
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_RatingMeta>;
-    /**  reverse::ratings */
     assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
-    /**  reverse::ratings */
     brands?: Maybe<BrandListing>;
     content_of?: Maybe<SetListing>;
     description?: Maybe<Scalars["String"]>;
-    /**  reverse::ratings */
     episodes?: Maybe<EpisodeListing>;
     external_id?: Maybe<Scalars["String"]>;
-    /**  reverse::ratings */
     images?: Maybe<SkylarkImageListing>;
     internal_title?: Maybe<Scalars["String"]>;
-    /**  reverse::ratings */
     live_streams?: Maybe<LiveStreamListing>;
-    /**  reverse::ratings */
     movies?: Maybe<MovieListing>;
-    /**  reverse::ratings */
     parental_guidance?: Maybe<ParentalGuidanceListing>;
     scheme?: Maybe<Scalars["String"]>;
-    /**  reverse::ratings */
     seasons?: Maybe<SeasonListing>;
-    /**  reverse::ratings */
     sets?: Maybe<SkylarkSetListing>;
     slug?: Maybe<Scalars["String"]>;
     title?: Maybe<Scalars["String"]>;
@@ -4057,7 +3967,6 @@ export type Role = Metadata &
     _meta?: Maybe<_RoleMeta>;
     availability?: Maybe<AvailabilityListing>;
     content_of?: Maybe<SetListing>;
-    /**  reverse::roles */
     credits?: Maybe<CreditListing>;
     external_id?: Maybe<Scalars["String"]>;
     internal_title?: Maybe<Scalars["String"]>;
@@ -4251,6 +4160,7 @@ export type SearchListing = {
 export type SearchResultListing = SearchListing & {
   __typename?: "SearchResultListing";
   count?: Maybe<Scalars["Int"]>;
+  next_token?: Maybe<Scalars["String"]>;
   objects?: Maybe<Array<Maybe<VisibleObject>>>;
   total_count?: Maybe<Scalars["Int"]>;
 };
@@ -4261,37 +4171,27 @@ export type Season = Metadata &
     _config?: Maybe<ObjectConfig>;
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_SeasonMeta>;
-    /**  reverse::seasons */
     assets?: Maybe<SkylarkAssetListing>;
     audience_rating?: Maybe<Scalars["String"]>;
     availability?: Maybe<AvailabilityListing>;
-    /**  reverse::seasons */
     brands?: Maybe<BrandListing>;
-    /**  reverse::seasons */
     call_to_actions?: Maybe<CallToActionListing>;
     content_of?: Maybe<SetListing>;
-    /**  reverse::seasons */
     credits?: Maybe<CreditListing>;
-    /**  reverse::seasons */
     episodes?: Maybe<EpisodeListing>;
     external_id?: Maybe<Scalars["String"]>;
-    /**  reverse::seasons */
     genres?: Maybe<GenreListing>;
-    /**  reverse::seasons */
     images?: Maybe<SkylarkImageListing>;
     internal_title?: Maybe<Scalars["String"]>;
     number_of_episodes?: Maybe<Scalars["Int"]>;
     preferred_image_type?: Maybe<Scalars["String"]>;
-    /**  reverse::seasons */
     ratings?: Maybe<RatingListing>;
     release_date?: Maybe<Scalars["AWSDate"]>;
     season_number?: Maybe<Scalars["Int"]>;
     slug?: Maybe<Scalars["String"]>;
     synopsis?: Maybe<Scalars["String"]>;
     synopsis_short?: Maybe<Scalars["String"]>;
-    /**  reverse::seasons */
     tags?: Maybe<SkylarkTagListing>;
-    /**  reverse::seasons */
     themes?: Maybe<ThemeListing>;
     title?: Maybe<Scalars["String"]>;
     title_short?: Maybe<Scalars["String"]>;
@@ -4551,43 +4451,32 @@ export type SkylarkAsset = AssetInterface &
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_SkylarkAssetMeta>;
     availability?: Maybe<AvailabilityListing>;
-    /**  reverse::assets */
     brands?: Maybe<BrandListing>;
     content_of?: Maybe<SetListing>;
-    /**  reverse::assets */
     credits?: Maybe<CreditListing>;
     dash_dashboard?: Maybe<Scalars["String"]>;
     dash_id?: Maybe<Scalars["String"]>;
     dash_url?: Maybe<Scalars["String"]>;
     duration?: Maybe<Scalars["Int"]>;
-    /**  reverse::assets */
     episodes?: Maybe<EpisodeListing>;
     external_id?: Maybe<Scalars["String"]>;
-    /**  reverse::assets */
     genres?: Maybe<GenreListing>;
     hls_dashboard?: Maybe<Scalars["String"]>;
     hls_id?: Maybe<Scalars["String"]>;
     hls_url?: Maybe<Scalars["String"]>;
-    /**  reverse::assets */
     images?: Maybe<SkylarkImageListing>;
     ingest_file?: Maybe<Scalars["String"]>;
     internal_title?: Maybe<Scalars["String"]>;
-    /**  reverse::assets */
     live_streams?: Maybe<LiveStreamListing>;
-    /**  reverse::assets */
     movies?: Maybe<MovieListing>;
     policy?: Maybe<Scalars["String"]>;
     provider?: Maybe<Scalars["String"]>;
-    /**  reverse::assets */
     ratings?: Maybe<RatingListing>;
     release_date?: Maybe<Scalars["String"]>;
-    /**  reverse::assets */
     seasons?: Maybe<SeasonListing>;
-    /**  reverse::assets */
     sets?: Maybe<SkylarkSetListing>;
     slug?: Maybe<Scalars["String"]>;
     status?: Maybe<Scalars["String"]>;
-    /**  reverse::assets */
     tags?: Maybe<SkylarkTagListing>;
     title?: Maybe<Scalars["String"]>;
     title_sort?: Maybe<Scalars["String"]>;
@@ -4812,25 +4701,18 @@ export type SkylarkEpgProgram = Metadata &
     availability?: Maybe<AvailabilityListing>;
     content_of?: Maybe<SetListing>;
     end_time?: Maybe<Scalars["AWSDateTime"]>;
-    /**  reverse::epg_programs */
     episode?: Maybe<EpisodeListing>;
-    /**  reverse::epg_programs */
     episodes?: Maybe<EpisodeListing>;
     external_id?: Maybe<Scalars["String"]>;
-    /**  reverse::epg_programs */
     images?: Maybe<SkylarkImageListing>;
     internal_title?: Maybe<Scalars["String"]>;
-    /**  reverse::epg_programs */
     live_assets?: Maybe<SkylarkLiveAssetListing>;
-    /**  reverse::epg_programs */
     movie?: Maybe<MovieListing>;
-    /**  reverse::epg_programs */
     movies?: Maybe<MovieListing>;
     name?: Maybe<Scalars["String"]>;
     name_sort?: Maybe<Scalars["String"]>;
     slug?: Maybe<Scalars["String"]>;
     start_time?: Maybe<Scalars["AWSDateTime"]>;
-    /**  reverse::epg_programs */
     tags?: Maybe<SkylarkTagListing>;
     uid: Scalars["String"];
     url?: Maybe<Scalars["String"]>;
@@ -5038,51 +4920,33 @@ export type SkylarkImage = MediaFile &
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_SkylarkImageMeta>;
     alt_text?: Maybe<Scalars["String"]>;
-    /**  reverse::logo */
     app_config?: Maybe<AppConfigListing>;
-    /**  reverse::images */
     articles?: Maybe<ArticleListing>;
-    /**  reverse::images */
     assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
-    /**  reverse::images */
     brands?: Maybe<BrandListing>;
-    /**  reverse::images */
     call_to_actions?: Maybe<CallToActionListing>;
     content_of?: Maybe<SetListing>;
     content_type?: Maybe<Scalars["String"]>;
     description?: Maybe<Scalars["String"]>;
     download_from_url?: Maybe<Scalars["String"]>;
-    /**  reverse::images */
     epg_programs?: Maybe<SkylarkEpgProgramListing>;
-    /**  reverse::images */
     episodes?: Maybe<EpisodeListing>;
     external_id?: Maybe<Scalars["String"]>;
     external_url?: Maybe<Scalars["String"]>;
     file_name?: Maybe<Scalars["String"]>;
-    /**  reverse::images */
     genres?: Maybe<GenreListing>;
     internal_title?: Maybe<Scalars["String"]>;
-    /**  reverse::images */
     live_assets?: Maybe<SkylarkLiveAssetListing>;
-    /**  reverse::images */
     live_streams?: Maybe<LiveStreamListing>;
-    /**  reverse::images */
     movies?: Maybe<MovieListing>;
-    /**  reverse::images */
     pages?: Maybe<PageListing>;
-    /**  reverse::images */
     people?: Maybe<PersonListing>;
-    /**  reverse::images */
     ratings?: Maybe<RatingListing>;
-    /**  reverse::images */
     seasons?: Maybe<SeasonListing>;
-    /**  reverse::images */
     sets?: Maybe<SkylarkSetListing>;
     slug?: Maybe<Scalars["String"]>;
-    /**  reverse::images */
     tags?: Maybe<SkylarkTagListing>;
-    /**  reverse::images */
     themes?: Maybe<ThemeListing>;
     title?: Maybe<Scalars["String"]>;
     type?: Maybe<Scalars["String"]>;
@@ -5329,18 +5193,15 @@ export type SkylarkLiveAsset = AssetInterface &
     dash_id?: Maybe<Scalars["String"]>;
     dash_url?: Maybe<Scalars["String"]>;
     duration?: Maybe<Scalars["Int"]>;
-    /**  reverse::live_assets */
     epg_programs?: Maybe<SkylarkEpgProgramListing>;
     external_id?: Maybe<Scalars["String"]>;
     hls_dashboard?: Maybe<Scalars["String"]>;
     hls_id?: Maybe<Scalars["String"]>;
     hls_url?: Maybe<Scalars["String"]>;
-    /**  reverse::live_assets */
     images?: Maybe<SkylarkImageListing>;
     ingest_file?: Maybe<Scalars["String"]>;
     internal_title?: Maybe<Scalars["String"]>;
     live?: Maybe<Scalars["Boolean"]>;
-    /**  reverse::live_assets */
     live_streams?: Maybe<LiveStreamListing>;
     policy?: Maybe<Scalars["String"]>;
     provider?: Maybe<Scalars["String"]>;
@@ -5349,7 +5210,6 @@ export type SkylarkLiveAsset = AssetInterface &
     status?: Maybe<Scalars["String"]>;
     stream_end_time?: Maybe<Scalars["AWSDateTime"]>;
     stream_start_time?: Maybe<Scalars["AWSDateTime"]>;
-    /**  reverse::live_assets */
     tags?: Maybe<SkylarkTagListing>;
     title?: Maybe<Scalars["String"]>;
     title_sort?: Maybe<Scalars["String"]>;
@@ -5497,31 +5357,23 @@ export type SkylarkSet = Metadata &
     _config?: Maybe<ObjectConfig>;
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_SkylarkSetMeta>;
-    /**  reverse::sets */
     assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
-    /**  reverse::sets */
     call_to_actions?: Maybe<CallToActionListing>;
     content?: Maybe<MetadataListing>;
     content_of?: Maybe<SetListing>;
-    /**  reverse::sets */
     credits?: Maybe<CreditListing>;
     description?: Maybe<Scalars["String"]>;
     external_id?: Maybe<Scalars["String"]>;
-    /**  reverse::sets */
     genres?: Maybe<GenreListing>;
-    /**  reverse::sets */
     images?: Maybe<SkylarkImageListing>;
     internal_title?: Maybe<Scalars["String"]>;
-    /**  reverse::sets */
     ratings?: Maybe<RatingListing>;
     release_date?: Maybe<Scalars["String"]>;
     slug?: Maybe<Scalars["String"]>;
     synopsis?: Maybe<Scalars["String"]>;
     synopsis_short?: Maybe<Scalars["String"]>;
-    /**  reverse::sets */
     tags?: Maybe<SkylarkTagListing>;
-    /**  reverse::sets */
     themes?: Maybe<ThemeListing>;
     title?: Maybe<Scalars["String"]>;
     title_short?: Maybe<Scalars["String"]>;
@@ -5675,34 +5527,22 @@ export type SkylarkTag = Metadata &
     _config?: Maybe<ObjectConfig>;
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_SkylarkTagMeta>;
-    /**  reverse::tags */
     articles?: Maybe<ArticleListing>;
-    /**  reverse::tags */
     assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
-    /**  reverse::tags */
     brands?: Maybe<BrandListing>;
     content_of?: Maybe<SetListing>;
-    /**  reverse::tags */
     epg_programs?: Maybe<SkylarkEpgProgramListing>;
-    /**  reverse::tags */
     episodes?: Maybe<EpisodeListing>;
     external_id?: Maybe<Scalars["String"]>;
-    /**  reverse::tags */
     images?: Maybe<SkylarkImageListing>;
-    /**  reverse::tags */
     live_assets?: Maybe<SkylarkLiveAssetListing>;
-    /**  reverse::tags */
     live_streams?: Maybe<LiveStreamListing>;
-    /**  reverse::tags */
     movies?: Maybe<MovieListing>;
     name?: Maybe<Scalars["String"]>;
     name_sort?: Maybe<Scalars["String"]>;
-    /**  reverse::tags */
     people?: Maybe<PersonListing>;
-    /**  reverse::tags */
     seasons?: Maybe<SeasonListing>;
-    /**  reverse::tags */
     sets?: Maybe<SkylarkSetListing>;
     slug?: Maybe<Scalars["String"]>;
     type?: Maybe<Scalars["String"]>;
@@ -5896,27 +5736,19 @@ export type Theme = Metadata &
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_ThemeMeta>;
     availability?: Maybe<AvailabilityListing>;
-    /**  reverse::themes */
     brands?: Maybe<BrandListing>;
     content_of?: Maybe<SetListing>;
-    /**  reverse::themes */
     episodes?: Maybe<EpisodeListing>;
     external_id?: Maybe<Scalars["String"]>;
-    /**  reverse::themes */
     images?: Maybe<SkylarkImageListing>;
     internal_title?: Maybe<Scalars["String"]>;
-    /**  reverse::themes */
     live_streams?: Maybe<LiveStreamListing>;
     metadata_source?: Maybe<Scalars["String"]>;
-    /**  reverse::themes */
     movies?: Maybe<MovieListing>;
     name?: Maybe<Scalars["String"]>;
     name_sort?: Maybe<Scalars["String"]>;
-    /**  reverse::themes */
     people?: Maybe<PersonListing>;
-    /**  reverse::themes */
     seasons?: Maybe<SeasonListing>;
-    /**  reverse::themes */
     sets?: Maybe<SkylarkSetListing>;
     slug?: Maybe<Scalars["String"]>;
     uid: Scalars["String"];

@@ -11,7 +11,7 @@ import type { Preview } from "@storybook/react";
 
 import { DimensionsContextProvider } from "../src/contexts/dimensions-context";
 import I18nProvider from "next-translate/I18nProvider";
-import common from "../src/locales/en-gb/common.json";
+import common from "../locales/en-gb/common.json";
 import React from "react";
 
 const preview: Preview = {

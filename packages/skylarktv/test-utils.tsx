@@ -4,7 +4,7 @@ import React from "react";
 import I18nProvider from "next-translate/I18nProvider";
 import { render, RenderOptions } from "@testing-library/react";
 
-import common from "./src/locales/en-gb/common.json";
+import common from "./locales/en-gb/common.json";
 
 // eslint-disable-next-line react/prop-types
 const AllTheProviders: React.JSXElementConstructor<{
