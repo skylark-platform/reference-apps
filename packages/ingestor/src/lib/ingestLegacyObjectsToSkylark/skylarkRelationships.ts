@@ -1,4 +1,4 @@
-import { GraphQLSetObjectTypes } from "@skylark-reference-apps/lib";
+import { GraphQLSetObjectTypes } from "@skylark-apps/skylarktv/src/lib/interfaces";
 import { GraphQLBaseObject } from "../interfaces";
 import { generateSL8CreditUid } from "./legacy";
 import {

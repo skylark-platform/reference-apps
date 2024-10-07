@@ -1,7 +1,7 @@
 flags:
   skylarkTV:
     paths:
-      - apps/skylarktv/
+      - packages/skylarktv/
   ingestor:
     paths:
       - packages/ingestor/

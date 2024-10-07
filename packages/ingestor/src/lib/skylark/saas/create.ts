@@ -1,12 +1,12 @@
-import {
-  GraphQLMediaObjectTypes,
-  GraphQLObjectTypes,
-  graphQLClient,
-} from "@skylark-reference-apps/lib";
 import { Attachment, FieldSet, Records } from "airtable";
 import { EnumType, jsonToGraphQLQuery } from "json-to-graphql-query";
 import { chunk, flatten, has, isArray, isEmpty } from "lodash";
 import { Variables } from "graphql-request";
+import {
+  GraphQLObjectTypes,
+  GraphQLMediaObjectTypes,
+} from "@skylark-apps/skylarktv/src/lib/interfaces";
+import { graphQLClient } from "@skylark-apps/skylarktv/src/lib/skylark";
 import {
   CREATE_OBJECT_CHUNK_SIZE,
   CONCURRENT_CREATE_REQUESTS_NUM,
@@ -628,9 +628,10 @@ export const createGraphQLMediaObjects = async (
   metadata: GraphQLMetadata,
   languagesTable: Records<FieldSet>,
 ) => {
-  const validObjectProperties: {
-    [key in GraphQLMediaObjectTypes]: GraphQLIntrospectionProperties[];
-  } = {
+  const validObjectProperties: Record<
+    GraphQLMediaObjectTypes,
+    GraphQLIntrospectionProperties[]
+  > = {
     Episode: await getValidPropertiesForObject("Episode"),
     Season: await getValidPropertiesForObject("Season"),
     Brand: await getValidPropertiesForObject("Brand"),

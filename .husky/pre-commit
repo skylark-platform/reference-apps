@@ -1,8 +1,8 @@
-yarn tsc
+yarn tsc:all
 
-yarn lint
+yarn lint:all
 
-yarn test
+yarn test:all
 
 yarn prettier
 

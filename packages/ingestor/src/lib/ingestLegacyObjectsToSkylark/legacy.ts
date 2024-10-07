@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { hasProperty } from "@skylark-reference-apps/lib";
+import { hasProperty } from "@skylark-apps/skylarktv/src/lib/utils";
 import { Axios, AxiosInstance } from "axios";
 import { chunk } from "lodash";
 import axiosRetry, { exponentialDelay } from "axios-retry";

@@ -13,14 +13,14 @@ Home to SkylarkTV, a web app designed to demonstrate the features of [Skylark][s
 
 We use Yarn Workspaces to re-use local packages in multiple projects.
 
-### Apps (`app/`)
+### Packages (`packages/`)
 
-- SkylarkTV - Demo application for Skylark
-- Storybook - [React component library][storybook]
+- `@skylark-apps/skylarktv` - Demo application for Skylark
+- `@skylark-apps/ingestor` - A content ingestor that helps you load large amounts of content into Skylark
 
 #### Running
 
-Create a `.env.local` in the `apps/skylarktv` directory containing the corresponding environment variables found in the [Environment Variables document][environment-variables].
+Create a `.env.local` in the `packages/skylarktv` directory containing the corresponding environment variables found in the [Environment Variables document][environment-variables].
 
 Then run:
 
@@ -31,10 +31,6 @@ yarn
 # Run all apps
 yarn dev
 ```
-
-### Packages (`packages/`)
-
-- `@skylark-reference-apps/ingestor` - A content ingestor that helps you load large amounts of content into Skylark
 
 ### Running tests
 

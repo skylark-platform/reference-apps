@@ -4,7 +4,7 @@ import "@fontsource/inter/600.css";
 
 export default create({
   base: "light",
-  brandTitle: "Skylark Reference Apps Storybook",
+  brandTitle: "SkylarkTV Storybook",
   brandUrl: "https://skylarkplatform.com",
   brandImage: "/skylarklogo.png",
 

@@ -1,5 +1,5 @@
 {
-  "name": "@skylark-reference-apps/lib",
+  "name": "@skylark-apps/lib",
   "description": "Common utility functions",
   "version": "1.0.0",
   "private": true,

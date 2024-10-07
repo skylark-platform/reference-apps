@@ -1,8 +1,9 @@
 // Import dotenv must be first
 import "./env";
-import { SAAS_API_ENDPOINT, hasProperty } from "@skylark-reference-apps/lib";
 import axios from "axios";
 import { has } from "lodash";
+import { hasProperty } from "@skylark-apps/skylarktv/src/lib/utils";
+import { SAAS_API_ENDPOINT } from "@skylark-apps/skylarktv/src/lib/skylark";
 import { getAllTables } from "./lib/airtable";
 import {
   Airtables,

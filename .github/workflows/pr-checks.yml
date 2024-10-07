@@ -48,5 +48,5 @@ jobs:
         uses: chromaui/action@v11
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          workingDir: apps/skylarktv
+          workingDir: packages/skylarktv
           autoAcceptChanges: main
