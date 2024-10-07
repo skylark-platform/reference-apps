@@ -5712,6 +5712,11 @@
   resolved "https://registry.yarnpkg.com/@storybook/global/-/global-5.0.0.tgz#b793d34b94f572c1d7d9e0f44fac4e0dbc9572ed"
   integrity sha512-FcOqPAXACP0I3oJ/ws6/rrPT9WGhu915Cg8D02a9YxLo0DE9zI+a9A5gRGvmQ09fiWPukqI8ZAEoQEdWUKMQdQ==
 
+"@storybook/icons@^1.2.10":
+  version "1.2.12"
+  resolved "https://registry.yarnpkg.com/@storybook/icons/-/icons-1.2.12.tgz#3e4c939113b67df7ab17b78f805dbb57f4acf0db"
+  integrity sha512-UxgyK5W3/UV4VrI3dl6ajGfHM4aOqMAkFLWe2KibeQudLf6NJpDrDMSHwZj+3iKC4jFU7dkKbbtH2h/al4sW3Q==
+
 "@storybook/manager-api@7.0.27", "@storybook/manager-api@^7.0.12":
   version "7.0.27"
   resolved "https://registry.yarnpkg.com/@storybook/manager-api/-/manager-api-7.0.27.tgz#270e560e791f4275882e844af228ba78450b492e"
@@ -15469,10 +15474,12 @@ store2@^2.14.2:
   resolved "https://registry.yarnpkg.com/store2/-/store2-2.14.2.tgz#56138d200f9fe5f582ad63bc2704dbc0e4a45068"
   integrity sha512-siT1RiqlfQnGqgT/YzXVUNsom9S0H1OX+dpdGN1xkyYATo4I6sep5NmsRD/40s3IIOvlCq6akxkqG82urIZW1w==
 
-storybook-addon-pseudo-states@2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/storybook-addon-pseudo-states/-/storybook-addon-pseudo-states-2.2.1.tgz#f04c24de54581e04f778674c9d37d63839684e32"
-  integrity sha512-4LoaiML0BM9sZcQbXjDhRh9jUUKIRTWEQMl91ihP2wIE10n+rL/5c8IBpNiMZLV1rnm24degEncSMY9ck+bpgg==
+storybook-addon-pseudo-states@4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/storybook-addon-pseudo-states/-/storybook-addon-pseudo-states-4.0.2.tgz#f8cb5fa07b343ec36567889e7eadf1797974852b"
+  integrity sha512-dTHkeq4VzqIrJfR8k2BHkX190cQ+aYBZUktWNZpDw3N5tJ8IwaRLzf6ZjHDHY6xwDshaNiTO5UkziRE0Ytukkw==
+  dependencies:
+    "@storybook/icons" "^1.2.10"
 
 storybook@7.6.20:
   version "7.6.20"
