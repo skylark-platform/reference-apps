@@ -22,7 +22,7 @@
   "dependencies": {
     "@fontsource/inter": "4.5.15",
     "@fontsource/outfit": "4.5.11",
-    "@graphql-codegen/client-preset": "1.3.0",
+    "@graphql-codegen/client-preset": "4.3.3",
     "@graphql-typed-document-node/core": "3.2.0",
     "@headlessui/react": "1.7.19",
     "@mux/mux-video-react": "0.11.4",
@@ -50,8 +50,8 @@
     "use-debounce": "7.0.1"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "2.16.5",
-    "@graphql-codegen/schema-ast": "2.6.1",
+    "@graphql-codegen/cli": "5.0.2",
+    "@graphql-codegen/schema-ast": "4.1.0",
     "@next/eslint-plugin-next": "^14.2.14",
     "@storybook/addon-essentials": "7.6.20",
     "@storybook/addon-interactions": "7.6.20",
