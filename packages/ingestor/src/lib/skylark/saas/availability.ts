@@ -1,9 +1,4 @@
 import {
-  DimensionTypes,
-  GraphQLObjectTypes,
-  graphQLClient,
-} from "@skylark-reference-apps/lib";
-import {
   Record as AirtableRecord,
   Attachment,
   Collaborator,
@@ -11,6 +6,11 @@ import {
 } from "airtable";
 import { EnumType, jsonToGraphQLQuery } from "json-to-graphql-query";
 import { gql } from "graphql-request";
+import {
+  DimensionTypes,
+  GraphQLObjectTypes,
+} from "@skylark-apps/skylarktv/src/lib/interfaces";
+import { graphQLClient } from "@skylark-apps/skylarktv/src/lib/skylark";
 import {
   Airtables,
   AvailabilityTableFields,
@@ -193,7 +193,7 @@ export const createOrUpdateDimensionValues = async (
     | ReadonlyArray<Attachment>
   > & { _id: string })[],
   dimensions: GraphQLDimension[],
-) => {
+): Promise<GraphQLBaseObject[]> => {
   const dimension = dimensions.find(({ slug }) => slug === type);
   if (!dimension) {
     throw new Error(`Dimension: ${type} does not exist in Skylark`);

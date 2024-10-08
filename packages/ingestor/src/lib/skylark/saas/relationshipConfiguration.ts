@@ -1,4 +1,4 @@
-import { graphQLClient } from "@skylark-reference-apps/lib";
+import { graphQLClient } from "@skylark-apps/skylarktv/src/lib/skylark";
 import { EnumType, jsonToGraphQLQuery } from "json-to-graphql-query";
 
 const createMutation = (
@@ -31,28 +31,30 @@ const createMutation = (
 
 export const updateRelationshipConfigurations = async () => {
   const mutation = createMutation([
-    { objectType: "Episode", relationship: "credits" },
-    { objectType: "Season", relationship: "credits" },
-    { objectType: "Brand", relationship: "credits" },
-    { objectType: "Movie", relationship: "credits" },
-    { objectType: "SkylarkAsset", relationship: "credits" },
-    { objectType: "LiveStream", relationship: "credits" },
-    { objectType: "SkylarkSet", relationship: "credits" },
-    { objectType: "Episode", relationship: "tags" },
-    { objectType: "Season", relationship: "tags" },
-    { objectType: "Brand", relationship: "tags" },
-    { objectType: "Movie", relationship: "tags" },
-    { objectType: "SkylarkAsset", relationship: "tags" },
-    { objectType: "SkylarkLiveAsset", relationship: "tags" },
-    { objectType: "LiveStream", relationship: "tags" },
-    { objectType: "SkylarkSet", relationship: "tags" },
-    { objectType: "SkylarkEPGProgram", relationship: "tags" },
-    { objectType: "SkylarkImage", relationship: "tags" },
-    // { objectType: "Credit", relationship: "roles" },
-    { objectType: "Credit", relationship: "people" },
-    { objectType: "Person", relationship: "images" },
+    // { objectType: "Episode", relationship: "credits" },
+    // { objectType: "Season", relationship: "credits" },
+    // { objectType: "Brand", relationship: "credits" },
+    // { objectType: "Movie", relationship: "credits" },
+    // { objectType: "SkylarkAsset", relationship: "credits" },
+    // { objectType: "LiveStream", relationship: "credits" },
+    // { objectType: "SkylarkSet", relationship: "credits" },
+    // { objectType: "Episode", relationship: "tags" },
+    // { objectType: "Season", relationship: "tags" },
+    // { objectType: "Brand", relationship: "tags" },
+    // { objectType: "Movie", relationship: "tags" },
+    // { objectType: "SkylarkAsset", relationship: "tags" },
+    // { objectType: "SkylarkLiveAsset", relationship: "tags" },
+    // { objectType: "LiveStream", relationship: "tags" },
+    // { objectType: "SkylarkSet", relationship: "tags" },
+    // { objectType: "SkylarkEPGProgram", relationship: "tags" },
+    // { objectType: "SkylarkImage", relationship: "tags" },
+    // { objectType: "Credit", relationship: "people" },
+    // { objectType: "Person", relationship: "images" },
+    { objectType: "SkylarkAsset", relationship: "movies" },
+    { objectType: "SkylarkAsset", relationship: "episodes" },
     { objectType: "Episode", relationship: "seasons" },
     { objectType: "Season", relationship: "brands" },
+    { objectType: "Movie", relationship: "brands" },
   ]);
 
   await graphQLClient.uncachedRequest(mutation);

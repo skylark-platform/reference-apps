@@ -1,15 +1,16 @@
-import {
-  GraphQLMediaObjectTypes,
-  GraphQLObjectTypes,
-  graphQLClient,
-} from "@skylark-reference-apps/lib";
 import { Attachment, FieldSet, Records } from "airtable";
 import { EnumType, jsonToGraphQLQuery } from "json-to-graphql-query";
 import { chunk, flatten, has, isArray, isEmpty } from "lodash";
 import { Variables } from "graphql-request";
 import {
+  GraphQLObjectTypes,
+  GraphQLMediaObjectTypes,
+} from "@skylark-apps/skylarktv/src/lib/interfaces";
+import { graphQLClient } from "@skylark-apps/skylarktv/src/lib/skylark";
+import {
   CREATE_OBJECT_CHUNK_SIZE,
   CONCURRENT_CREATE_REQUESTS_NUM,
+  CREATE_ONLY,
 } from "../../constants";
 
 import {
@@ -56,7 +57,7 @@ const graphqlMutationWithRetry = async <T>(
     return await graphQLClient.uncachedRequest<T>(mutation, variables);
   } catch (err) {
     // Some errors we know won't be fixed on a retry, so we rethrow
-    if (err && has(err, "response.errors")) {
+    if (err && has(err, "response") && has(err.response, "errors")) {
       const {
         response: { errors },
       } = err as SkylarkGraphQLError;
@@ -147,14 +148,14 @@ export const mutateMultipleObjects = async <T extends { external_id?: string }>(
               requestId.indexOf(airtableRecordPrefix) > 0;
             const externalIdFromRequestId =
               recordIdInRequestId &&
-              `rec${requestId.substring(
-                requestId.indexOf(airtableRecordPrefix) + 1,
-              )}`;
+              `rec${requestId.split(airtableRecordPrefix)[1]}`;
+
+            const externalId =
+              requestDataExternalId || externalIdFromRequestId || null;
 
             return {
               ...requestData,
-              external_id:
-                requestDataExternalId || externalIdFromRequestId || null,
+              external_id: externalId,
             };
           });
           return arr;
@@ -215,6 +216,10 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
 
       const objectExists = existingObjects.has(id);
 
+      if (CREATE_ONLY && objectExists) {
+        return previousOperations;
+      }
+
       const availability = metadataAvailability
         ? getGraphQLObjectAvailability(
             metadataAvailability,
@@ -232,7 +237,7 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
       };
 
       if (isImage) {
-        const imageAttachments = fields.image as Attachment[];
+        const imageAttachments = (fields.image || []) as Attachment[];
         if (imageAttachments.length > 0) {
           const image = imageAttachments[0];
           // https://docs.skylarkplatform.com/docs/creating-an-image#upload-an-image-from-an-external-url
@@ -270,10 +275,10 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
 
       const argName = convertGraphQLObjectTypeToArgName(objectType);
 
+      // Always use update with upsert on
       const args: Record<string, string | number | boolean | object> = {
-        [argName]: objectExists
-          ? objectFields
-          : { ...objectFields, external_id: id },
+        [argName]: objectFields,
+        upsert: true,
       };
 
       if (language) {
@@ -282,7 +287,7 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
 
       const { operation, method } = createGraphQLOperation(
         objectType,
-        objectExists,
+        true,
         args,
         { external_id: id },
       );
@@ -310,7 +315,7 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
     return { createdObjects: data, deletedObjects: [] };
   } catch (err) {
     // If we catch a known error, attempt to fix it before throwing it again
-    if (err && has(err, "response.errors")) {
+    if (err && has(err, "response") && has(err.response, "errors")) {
       const {
         response: { errors },
       } = err as SkylarkGraphQLError;
@@ -437,7 +442,7 @@ export const createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection =
       isImage?: boolean;
       relationships?: CreateOrUpdateRelationships;
     },
-  ) => {
+  ): Promise<GraphQLBaseObject[]> => {
     const objects = airtableRecords.map(({ id, fields }) => ({
       ...fields,
       _id: id,
@@ -445,7 +450,7 @@ export const createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection =
 
     const externalIds = objects.map(({ _id }) => ({ externalId: _id }));
 
-    const { existingExternalIds } = await getExistingObjects(
+    const { existingExternalIds, existingObjects } = await getExistingObjects(
       objectType,
       externalIds,
     );
@@ -458,6 +463,10 @@ export const createOrUpdateGraphQlObjectsFromAirtableUsingIntrospection =
         { metadataAvailability, ...opts },
       );
 
+    if (CREATE_ONLY) {
+      return [...createdObjects, ...Object.values(existingObjects)];
+    }
+
     return createdObjects;
   };
 
@@ -468,13 +477,18 @@ export const createOrUpdateGraphQLCredits = async (
   const validProperties = await getValidPropertiesForObject("Credit");
 
   const externalIds = airtableRecords.map(({ id }) => ({ externalId: id }));
-  const { existingExternalIds } = await getExistingObjects(
+  const { existingExternalIds, existingObjects } = await getExistingObjects(
     "Credit",
     externalIds,
   );
 
   const operations = airtableRecords.reduce(
     (previousOperations, { id, fields }) => {
+      const creditExists = existingExternalIds.has(id);
+      if (CREATE_ONLY && creditExists) {
+        return previousOperations;
+      }
+
       const validFields = getValidFields(fields, validProperties);
 
       const { person: personField, role: roleField } = fields as {
@@ -486,8 +500,6 @@ export const createOrUpdateGraphQLCredits = async (
         metadata.availability,
         fields.availability as string[],
       );
-
-      const creditExists = existingExternalIds.has(id);
 
       const credit: Record<
         string,
@@ -549,6 +561,10 @@ export const createOrUpdateGraphQLCredits = async (
     "createOrUpdateCredits",
     operations,
   );
+
+  if (CREATE_ONLY) {
+    return [...data, ...Object.values(existingObjects)];
+  }
 
   return data;
 };
@@ -612,9 +628,10 @@ export const createGraphQLMediaObjects = async (
   metadata: GraphQLMetadata,
   languagesTable: Records<FieldSet>,
 ) => {
-  const validObjectProperties: {
-    [key in GraphQLMediaObjectTypes]: GraphQLIntrospectionProperties[];
-  } = {
+  const validObjectProperties: Record<
+    GraphQLMediaObjectTypes,
+    GraphQLIntrospectionProperties[]
+  > = {
     Episode: await getValidPropertiesForObject("Episode"),
     Season: await getValidPropertiesForObject("Season"),
     Brand: await getValidPropertiesForObject("Brand"),
@@ -626,6 +643,7 @@ export const createGraphQLMediaObjects = async (
 
   const externalIdsAndLanguage = airtableRecords.map(({ id, fields }) => ({
     externalId: id,
+    objectType: (fields.skylark_object_type as string) || null,
     language: getMediaObjectLanguage(fields, languagesTable),
   }));
 
@@ -641,7 +659,9 @@ export const createGraphQLMediaObjects = async (
     ].map((objectType) =>
       getExistingObjects(
         objectType as GraphQLMediaObjectTypes,
-        externalIdsAndLanguage,
+        externalIdsAndLanguage.filter(
+          (x) => objectType === x.objectType || objectType === null,
+        ),
       ),
     ),
   );
@@ -792,6 +812,10 @@ export const createTranslationsForGraphQLObjects = async (
   translationsTable: Records<FieldSet>,
   languagesTable: Records<FieldSet>,
 ) => {
+  if (originalObjects.length === 0) {
+    return [];
+  }
+
   const languageCodes = getLanguageCodesFromAirtable(languagesTable);
 
   const objectTypesAndValidProperties = await Promise.all(
@@ -895,7 +919,8 @@ export const createTranslationsForGraphQLObjects = async (
   );
 
   const arr = await mutateMultipleObjects<GraphQLBaseObject>(
-    "createMediaObjectTranslations",
+    // eslint-disable-next-line no-underscore-dangle
+    `create${originalObjects[0].__typename}Translations`,
     translationOperations,
   );
 

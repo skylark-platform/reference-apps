@@ -1,4 +1,3 @@
-import { GraphQLObjectTypes } from "@skylark-reference-apps/lib";
 import {
   Attachment,
   Collaborator,
@@ -8,6 +7,7 @@ import {
 } from "airtable";
 import { EnumType } from "json-to-graphql-query";
 import { has, isArray, isString } from "lodash";
+import { GraphQLObjectTypes } from "@skylark-apps/skylarktv/src/lib/interfaces";
 import {
   CreateOrUpdateRelationships,
   GraphQLBaseObject,
@@ -156,6 +156,14 @@ export const gqlObjectMeta = (
         argName: "article",
         relName: "articles",
       };
+    case "Person":
+      return {
+        createFunc: "createPerson",
+        updateFunc: "updatePerson",
+        objectType: "Person",
+        argName: "person",
+        relName: "people",
+      };
     default:
       throw new Error(
         `[gqlObjectMeta] Object type "${type}" does not have GQL values`,
@@ -185,9 +193,18 @@ export const getValidFields = (
   );
   const validFields = validObjectFields.reduce(
     (obj, { property, kind }) => {
-      const val = isArray(fields[property])
+      let val = isArray(fields[property])
         ? (fields[property] as string[])[0]
         : fields[property];
+
+      // HACK FOR DYNAMODB
+      if (
+        ["budget", "audience_rating"].includes(property) &&
+        (val || val === 0)
+      ) {
+        val = `${val as number} `;
+      }
+
       return {
         ...obj,
         [property]:

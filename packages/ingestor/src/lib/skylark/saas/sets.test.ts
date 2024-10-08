@@ -1,5 +1,5 @@
-import { graphQLClient } from "@skylark-reference-apps/lib";
 import { FieldSet, Record, Records } from "airtable";
+import { graphQLClient } from "@skylark-apps/skylarktv/src/lib/skylark";
 import {
   GraphQLBaseObject,
   GraphQLMetadata,
@@ -8,7 +8,7 @@ import {
 import { createOrUpdateGraphQLSet } from "./sets";
 import { gqlObjectMeta } from "./utils";
 
-jest.mock("@skylark-reference-apps/lib");
+jest.mock("@skylark-apps/skylarktv/src/lib/skylark");
 
 describe("saas/sets.ts", () => {
   let graphQlRequest: jest.Mock;
@@ -113,14 +113,23 @@ describe("saas/sets.ts", () => {
         graphQlRequest.mockResolvedValueOnce(mockedCreateResponse);
 
         await createOrUpdateGraphQLSet(
-          setConfig,
+          {
+            id: "my-set",
+            fields: {
+              external_id: setConfig.externalId,
+              slug: setConfig.slug,
+              content: mediaObjects.map((obj) => obj.uid),
+              language: "en-GB",
+            },
+          } as unknown as Record<FieldSet>,
           mediaObjects,
           metadata as GraphQLMetadata,
           languagesTable as Records<FieldSet>,
           [] as Records<FieldSet>,
+          {},
         );
         expect(graphQlRequest).toHaveBeenCalledWith(
-          'mutation { createSkylarkSet_home_page_slider: createSkylarkSet (skylark_set: {slug: "media-reference-home-page-hero", external_id: "home_page_slider", content: {Episode: {link: [{position: 5, uid: "episodes-Game of Thrones S01E01"}]}, Season: {link: [{position: 6, uid: "seasons-Game of Thrones S01"}]}, Brand: {link: [{position: 1, uid: "brands-game-of-thrones"}]}, Movie: {link: [{position: 2, uid: "movies-deadpool-2"}, {position: 3, uid: "movies-sing-2"}, {position: 4, uid: "movies-us"}]}, SkylarkSet: {link: []}, LiveStream: {link: []}}, availability: {link: ["availability-1"]}}) { __typename uid external_id slug } }',
+          'mutation { createSkylarkSet_home_page_slider: createSkylarkSet (skylark_set: {external_id: "home_page_slider", content: {Episode: {link: [{position: 5, uid: "episodes-Game of Thrones S01E01"}]}, Season: {link: [{position: 6, uid: "seasons-Game of Thrones S01"}]}, Brand: {link: [{position: 1, uid: "brands-game-of-thrones"}]}, Movie: {link: [{position: 2, uid: "movies-deadpool-2"}, {position: 3, uid: "movies-sing-2"}, {position: 4, uid: "movies-us"}]}, SkylarkSet: {link: []}, LiveStream: {link: []}}, availability: {link: ["availability-1"]}}) { __typename uid external_id slug } }',
         );
       });
     });
@@ -131,15 +140,19 @@ describe("saas/sets.ts", () => {
           data: {
             home_page_slider: null,
           },
+          errors: [],
         },
       };
       const mockedCreateResponse = {
         createSkylarkSet: {},
       };
 
+      const setAirtableId = "my-set-1";
+
       const translationsTable: Partial<Record<FieldSet>>[] = [
         {
           fields: {
+            set: setAirtableId,
             slug: setConfig.slug,
             language: ["language-1"],
             title_short: "English Title",
@@ -147,6 +160,7 @@ describe("saas/sets.ts", () => {
         },
         {
           fields: {
+            set: setAirtableId,
             slug: setConfig.slug,
             language: ["language-2"],
             title_short: "Portuguese Title",
@@ -159,11 +173,20 @@ describe("saas/sets.ts", () => {
         graphQlRequest.mockResolvedValue(mockedCreateResponse);
 
         await createOrUpdateGraphQLSet(
-          setConfig,
+          {
+            id: setAirtableId,
+            fields: {
+              external_id: setConfig.externalId,
+              slug: setConfig.slug,
+              content: mediaObjects.map((obj) => obj.uid),
+              language: "en-GB",
+            },
+          } as unknown as Record<FieldSet>,
           mediaObjects,
           metadata as GraphQLMetadata,
           languagesTable as Records<FieldSet>,
           translationsTable as Records<FieldSet>,
+          {},
         );
         expect(graphQlRequest).toHaveBeenCalledTimes(6);
         expect(graphQlRequest).toHaveBeenNthCalledWith(

@@ -1,6 +1,6 @@
 # Environment Variables
 
-Throughout this monorepo, environment variables are used for configuration to enable apps to run. When the same variables are used in multiple apps, we aim to keep the naming consistent so that we can use a single `.env.local` file currently located in the [apps/streamtv][streamtv-app] directory.
+Throughout this monorepo, environment variables are used for configuration to enable apps to run. When the same variables are used in multiple apps, we aim to keep the naming consistent so that we can use a single `.env.local` file currently located in the [packages/skylarktv][skylarktv-app] directory.
 
 In each app, different combinations of the variables are utilised and so the ones that are required for the app to run as expected differ on a per app basis.
 
@@ -13,17 +13,17 @@ When running multiple apps, it is efficient to set all variables at once. The ex
 ```bash
 # URL to your Skylark's API endpoint (usually `https://api.` followed by the Skylark URL)
 # Used in
-# - StreamTV
+# - SkylarkTV
 # - Content ingestor
 NEXT_PUBLIC_SKYLARK_API_URL=
 # Deployed domain for your app, used for OpenGraph (SEO) headers
 # Used in
-# - StreamTV
+# - SkylarkTV
 NEXT_PUBLIC_APP_DOMAIN=
 # Configuration for AWS Cognito
 # These should be provided by your customer success representative
 # Used in
-# - Asset video playback in the StreamTV reference app
+# - Asset video playback in the SkylarkTV reference app
 # - Loading content into Skylark via the Ingestor
 COGNITO_AWS_REGION=
 COGNITO_CLIENT_ID=
@@ -31,7 +31,7 @@ COGNITO_USER_POOL_ID=
 # User credentials to authenticate with your Skylark
 # These are the credentials you use to log into Skylark
 # Used in
-# - Asset video playback in the StreamTV reference app
+# - Asset video playback in the SkylarkTV reference app
 # - Loading content into Skylark via the Ingestor
 COGNITO_EMAIL=
 COGNITO_PASSWORD=
@@ -47,18 +47,18 @@ AIRTABLE_BASE_ID=
 
 If you prefer to only include the environment variables that allow full functionality of your app, the guides below will help you understand which are required.
 
-### apps/streamtv (StreamTV)
+### packages/skylarktv (SkylarkTV)
 
 ```bash
 NEXT_PUBLIC_SAAS_API_ENDPOINT=
 NEXT_PUBLIC_SAAS_API_KEY=
 AIRTABLE_API_KEY=
 AIRTABLE_BASE_ID=
-# Title is optional, defaults to `StreamTV`
+# Title is optional, defaults to `SkylarkTV`
 NEXT_PUBLIC_APP_TITLE=
 ```
 
-If you're just testing StreamTV out then you can probably get away with just:
+If you're just testing SkylarkTV out then you can probably get away with just:
 
 ```bash
 NEXT_PUBLIC_SAAS_API_ENDPOINT=
@@ -79,4 +79,4 @@ AIRTABLE_API_KEY=
 AIRTABLE_BASE_ID=
 ```
 
-[streamtv-app]: ../apps/streamtv
+[skylarktv-app]: ../packages/skylarktv

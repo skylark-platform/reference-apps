@@ -12,17 +12,17 @@ jobs:
     runs-on: ubuntu-latest
     name: Lint, Prettier & Jest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: yarn
       - run: yarn
-      - run: yarn lint
+      - run: yarn lint:all
       - run: yarn prettier:check
       - run: yarn test:ci
       - name: Upload coverage reports to Codecov with GitHub Action
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
       - name: Test Report
         uses: dorny/test-reporter@v1
         if: success() || failure()
@@ -36,15 +36,17 @@ jobs:
     runs-on: ubuntu-latest
     name: Deploy Chromatic
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: yarn
       - run: yarn
       - name: Publish to Chromatic
-        uses: chromaui/action@v1
+        uses: chromaui/action@v11
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          workingDir: apps/storybook
+          workingDir: packages/skylarktv
           autoAcceptChanges: main

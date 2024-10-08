@@ -32,7 +32,7 @@ inputs:
     description: The Cognito Password
     required: true
   create-additional-objects:
-    description: Whether to create additional objects (sets and dynamic objects) which StreamTV requires to run
+    description: Whether to create additional objects (sets and dynamic objects) which SkylarkTV requires to run
     required: true
   saas-ingest:
     description: Whether to target Skylark X or not
@@ -42,18 +42,22 @@ inputs:
     description: Access token to use in API Requests, SLX only
     required: false
   content-type:
-    description: The content type to ingest (CONTENT_TYPE) (all, streamtv or slxdemos)
+    description: The content type to ingest (CONTENT_TYPE) (all, skylarktv or slxdemos)
     deprecationMessage: SLX Demos have been moved to a standalone Airtable base. All content in a base is now ingested
     required: false
     default: "all"
-  streamtv-setup-only:
+  skylarktv-setup-only:
     description: Only make set up changes (Add object types, enum values, dimensions)
     required: false
     default: "false"
+  skylarktv-create-only:
+    description: Only create objects (no updates)
+    required: false
+    default: "true"
 runs:
   using: composite
   steps:
-    - uses: actions/setup-node@v3
+    - uses: actions/setup-node@v4
       with:
         node-version: 18
         cache: yarn
@@ -63,7 +67,7 @@ runs:
       run: yarn
     # Uses a retry action in case of a random Skylark error
     - name: Run ingestor
-      uses: nick-fields/retry@v2
+      uses: nick-fields/retry@v3
       env:
         AIRTABLE_API_KEY: ${{ inputs.airtable-api-key }}
         AIRTABLE_BASE_ID: ${{ inputs.airtable-base-id }}
@@ -78,7 +82,8 @@ runs:
         CREATE_SETS: ${{ inputs.create-additional-objects }}
         SAAS_API_ENDPOINT: ${{ inputs.skylark-api-url }}
         SAAS_API_KEY: ${{ inputs.saas-api-token }}
-        STREAMTV_SETUP_ONLY: ${{ inputs.streamtv-setup-only }}
+        SKYLARKTV_SETUP_ONLY: ${{ inputs.skylarktv-setup-only }}
+        CREATE_ONLY: ${{ inputs.skylarktv-create-only }}
       with:
         timeout_minutes: 30
         retry_wait_seconds: 10

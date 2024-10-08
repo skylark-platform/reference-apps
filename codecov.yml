@@ -1,19 +1,10 @@
 flags:
-  streamTV:
+  skylarkTV:
     paths:
-      - apps/streamtv/
-  marketingSite:
-    paths:
-      - apps/marketing-site/
+      - packages/skylarktv/
   ingestor:
     paths:
       - packages/ingestor/
-  lib:
-    paths:
-      - packages/lib/
-  react:
-    paths:
-      - packages/react/
 
 coverage:
   status:
@@ -26,8 +17,7 @@ coverage:
         threshold: 1%
       apps:
         flags:
-          - streamTV
-          - marketingSite
+          - skylarkTV
         target: 80%
       ingestor:
         flags:

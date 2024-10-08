@@ -1,7 +1,8 @@
-import { graphQLClient } from "@skylark-reference-apps/lib";
 import { EnumType, jsonToGraphQLQuery } from "json-to-graphql-query";
 import { chunk } from "lodash";
+import { graphQLClient } from "@skylark-apps/skylarktv/src/lib/skylark";
 import { CREATE_OBJECT_CHUNK_SIZE } from "../../constants";
+import { getObjectTypes } from "./schema";
 
 const OBJECT_CONFIG: Record<
   string,
@@ -16,7 +17,7 @@ const OBJECT_CONFIG: Record<
   }
 > = {
   // Object created in schema section of ingestor
-  StreamtvConfig: {
+  AppConfig: {
     colour: "5B45CE",
     primaryField: "app_name",
     fieldConfig: [
@@ -49,8 +50,12 @@ const OBJECT_CONFIG: Record<
   },
 };
 
-const createMutation = (): string[] => {
+const createMutation = (objectTypes: string[]): string[] => {
   const chunks = chunk(Object.keys(OBJECT_CONFIG), CREATE_OBJECT_CHUNK_SIZE);
+
+  const useStreamTVConfig =
+    objectTypes.includes("StreamtvConfig") &&
+    !objectTypes.includes("AppConfig");
 
   const mutations = chunks.map((objectConfigurations) => {
     const mutation = objectConfigurations.reduce(
@@ -60,7 +65,11 @@ const createMutation = (): string[] => {
           [objectType]: {
             __aliasFor: "setObjectConfiguration",
             __args: {
-              object: new EnumType(objectType),
+              object: new EnumType(
+                useStreamTVConfig && objectType === "AppConfig"
+                  ? "StreamtvConfig"
+                  : objectType,
+              ),
               object_config: {
                 colour: `#${OBJECT_CONFIG[objectType].colour.toLowerCase()}`,
                 primary_field: OBJECT_CONFIG[objectType].primaryField,
@@ -92,7 +101,9 @@ const createMutation = (): string[] => {
 };
 
 export const updateObjectConfigurations = async () => {
-  const mutations = createMutation();
+  const objectTypes = await getObjectTypes();
+
+  const mutations = createMutation(objectTypes);
 
   await Promise.all(
     mutations.map((mutation) => graphQLClient.uncachedRequest(mutation)),

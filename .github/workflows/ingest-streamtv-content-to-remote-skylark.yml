@@ -1,4 +1,4 @@
-name: Add StreamTV Content to a Skylark Account
+name: Add SkylarkTV Content to a Skylark Account
 on:
   workflow_dispatch:
     inputs:
@@ -11,20 +11,25 @@ on:
         type: string
         required: true
         description: Your Skylark API Key.
-      streamtv_setup_only:
+      skylarktv_setup_only:
         type: boolean
         required: false
         default: false
-        description: Only setup StreamTV - Add object types, enum values, dimensions etc
+        description: Only setup SkylarkTV - Add object types, enum values, dimensions etc
+      skylarktv_create_only:
+        type: boolean
+        required: false
+        default: false
+        description: Only create objects (no updates)
 concurrency:
-  group: ingest-streamtv-content-${{ github.event.inputs.skylark_url }}
+  group: ingest-skylarktv-content-${{ github.event.inputs.skylark_url }}
   cancel-in-progress: true
 jobs:
   ingestor:
-    name: Ingest StreamTV Content
+    name: Ingest SkylarkTV Content
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Mask API key input
         id: add_mask
         run: |
@@ -39,5 +44,6 @@ jobs:
           create-additional-objects: "true"
           saas-ingest: "true"
           saas-api-token: ${{ env.SKYLARK_API_KEY }}
-          content-type: "streamtv"
-          streamtv-setup-only: ${{ github.event.inputs.streamtv_setup_only }}
+          content-type: "skylarktv"
+          skylarktv-setup-only: ${{ github.event.inputs.skylarktv_setup_only }}
+          skylarktv-create-only: ${{ github.event.inputs.skylarktv_create_only }}

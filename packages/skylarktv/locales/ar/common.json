@@ -1,0 +1,54 @@
+{
+  "seo": {
+    "description": "تم إنشاء تطبيق عرض لإظهار قوة Skylark. تفضل بزيارة https://www.skylarkplatform.com لمعرفة المزيد."
+  },
+  "cta": {
+    "start-watching": "ابدأ المشاهدة",
+    "continue-watching": "مواصلة المشاهدة"
+  },
+  "skylark": {
+    "object": {
+      "movie": "فيلم",
+      "episode": "حادثة عرضية",
+      "season": "الموسم",
+      "brand": "علامة تجارية",
+      "asset": "شىء ثمين",
+      "count": {
+        "season": "الموسم {{count}}",
+        "movie": "فيلم {{count}}"
+      }
+    }
+  },
+  "discover": "يكتشف",
+  "movies": "أفلام",
+  "shows": "عروض",
+  "episodes": "الحلقات",
+  "articles": "مقالات",
+  "featured": "بارز",
+  "movies-page-description": "ابحث في المئات من أحدث وأروع العناوين المتوفرة للمشاهدة على SkylarkTV",
+  "by-skylark": "بواسطة سكايلارك",
+  "available-for": {
+    "leaving-today": "مغادرة اليوم",
+    "days": "المغادرة خلال {{number}} يومًا",
+    "months": "الإجازة خلال {{number}} شهر",
+    "years": "ترك في {{number}} سنة",
+    "ever": "عنصر أساسي في SkylarkTV"
+  },
+  "show-more": "أظهر المزيد",
+  "show-less": "عرض أقل",
+  "released": "مطلق سراحه",
+  "tags": "العلامات",
+  "search": "يبحث",
+  "loading": "تحميل",
+  "nothing-found": "لم يتم العثور على شيء",
+  "more-from": "{{name}} المزيد من",
+  "budget": "ميزانية",
+  "audience-rating": "تقييم",
+  "errors": {
+    "error-fetching-page": "حدث خطأ أثناء جلب الصفحة",
+    "object-not-found": "المفعول به غير موجود",
+    "object-not-found-desc": "الكائن المطلوب غير موجود في Skylark بأبعاد التوفر المحددة",
+    "unauthorized": "مفتاح API لحساب Skylark غير صالح",
+    "unauthorized-desc": "افتح نموذج اتصال حساب Skylark لتحديث مفتاح API الخاص بك."
+  }
+}

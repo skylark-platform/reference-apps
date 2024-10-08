@@ -1,8 +1,8 @@
 // Disabled tests should be enabled when constants / CREATE_OBJECT_CHUNK_SIZE is greater than 1
 /* eslint-disable jest/no-disabled-tests */
 import { FieldSet, Records, Record, Table } from "airtable";
-import { graphQLClient } from "@skylark-reference-apps/lib";
 
+import { graphQLClient } from "@skylark-apps/skylarktv/src/lib/skylark";
 import { GraphQLBaseObject, GraphQLMetadata } from "../../interfaces";
 import {
   createGraphQLMediaObjects,
@@ -12,7 +12,7 @@ import {
 } from "./create";
 import { CREATE_OBJECT_CHUNK_SIZE } from "../../constants";
 
-jest.mock("@skylark-reference-apps/lib");
+jest.mock("@skylark-apps/skylarktv/src/lib/skylark");
 
 describe("saas/create.ts", () => {
   let graphQlRequest: jest.Mock;
@@ -73,6 +73,7 @@ describe("saas/create.ts", () => {
           data: {
             brand_1: null,
           },
+          errors: [],
         },
       };
       graphQlRequest.mockRejectedValueOnce(mockedGraphQLResponse);
@@ -86,7 +87,7 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.uncachedRequest).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateBrands { createBrand_brand_1: createBrand (brand: {title: "Brand 1", availability: {link: []}, external_id: "brand_1"}) { __typename uid slug external_id } }',
+        'mutation createOrUpdateBrands { updateBrand_brand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: []}}, upsert: true) { __typename uid slug external_id } }',
         {},
       );
     });
@@ -101,7 +102,7 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.uncachedRequest).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateBrands { updateBrand_brand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: []}}) { __typename uid slug external_id } }',
+        'mutation createOrUpdateBrands { updateBrand_brand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: []}}, upsert: true) { __typename uid slug external_id } }',
         {},
       );
     });
@@ -160,7 +161,7 @@ describe("saas/create.ts", () => {
       );
       expect(graphQLClient.uncachedRequest).toHaveBeenNthCalledWith(
         3,
-        'mutation createOrUpdateBrands { updateBrand_brand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: ["default-external-id-1"]}}) { __typename uid slug external_id } }',
+        'mutation createOrUpdateBrands { updateBrand_brand_1: updateBrand (external_id: "brand_1", brand: {title: "Brand 1", availability: {link: ["default-external-id-1"]}}, upsert: true) { __typename uid slug external_id } }',
         {},
       );
     });
@@ -235,6 +236,7 @@ describe("saas/create.ts", () => {
           data: {
             credit_1: null,
           },
+          errors: [],
         },
       };
       graphQlRequest.mockRejectedValueOnce(mockedGraphQLResponse);
@@ -273,7 +275,7 @@ describe("saas/create.ts", () => {
           title: "episode-1",
           slug: "episode-1",
           title_short: "short title",
-          skylark_object_type: "episodes",
+          skylark_object_type: "Episode",
         },
       },
       {
@@ -283,7 +285,7 @@ describe("saas/create.ts", () => {
           title: "episode-2",
           slug: "episode-2",
           synopsis_short: "short synopsis",
-          skylark_object_type: "episodes",
+          skylark_object_type: "Episode",
         },
       },
     ];
@@ -459,7 +461,7 @@ describe("saas/create.ts", () => {
           fields: {
             title: "episode with relationships",
             slug: "episode-relationships",
-            skylark_object_type: "episodes",
+            skylark_object_type: "Episode",
             themes: [metadata.themes[0].external_id],
             genres: [metadata.genres[0].external_id],
             ratings: [metadata.ratings[0].external_id],
@@ -511,9 +513,9 @@ describe("saas/create.ts", () => {
       );
 
       // Assert.
-      expect(graphQlRequest).toHaveBeenCalledTimes(15);
+      expect(graphQlRequest).toHaveBeenCalledTimes(9);
       expect(graphQlRequest).toHaveBeenNthCalledWith(
-        15,
+        9,
         'mutation createMediaObjects { updateEpisode_airtable-episode-1: updateEpisode (external_id: "airtable-episode-1", episode: {title: "episode with relationships", relationships: {themes: {link: ["theme_1"]}, genres: {link: ["genre_1"]}, ratings: {link: ["rating_1"]}, tags: {link: ["tag_1"]}, credits: {link: ["credit_1"]}}, availability: {link: []}}) { __typename uid slug external_id } }',
         {},
       );
@@ -531,7 +533,7 @@ describe("saas/create.ts", () => {
             slug: "episode-3",
             synopsis_short: "short synopsis",
             parent: ["airtable-episode-1"],
-            skylark_object_type: "episodes",
+            skylark_object_type: "Episode",
           },
         },
       ];
@@ -651,7 +653,7 @@ describe("saas/create.ts", () => {
 
       expect(graphQlRequest).toHaveBeenNthCalledWith(
         3,
-        'mutation createMediaObjectTranslations { translation_es_ES_translation-1: updateEpisode (uid: "episode-1-uid", language: "es-ES", episode: {title: "Title in spanish"}) { __typename uid slug external_id } }',
+        'mutation createEpisodeTranslations { translation_es_ES_translation-1: updateEpisode (uid: "episode-1-uid", language: "es-ES", episode: {title: "Title in spanish"}) { __typename uid slug external_id } }',
         {},
       );
     });
