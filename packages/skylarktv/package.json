@@ -83,7 +83,7 @@
     "next-translate-plugin": "^2.6.2",
     "node-mocks-http": "1.16.1",
     "postcss": "^8.4.47",
-    "start-server-and-test": "1.15.5",
+    "start-server-and-test": "2.0.8",
     "storybook": "7.6.20",
     "tailwindcss": "^3.4.13",
     "typescript": "5.6.2"
