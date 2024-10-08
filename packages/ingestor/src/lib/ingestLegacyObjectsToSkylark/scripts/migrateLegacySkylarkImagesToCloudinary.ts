@@ -2,9 +2,9 @@
 import "../../../env";
 import "../env";
 import { gql } from "graphql-request";
-import { graphQLClient } from "@skylark-reference-apps/lib";
 import { Axios } from "axios";
 import { chunk } from "lodash";
+import { graphQLClient } from "@skylark-apps/skylarktv/src/lib/skylark/graphqlClient";
 import { checkEnvVars } from "../utils";
 import { GraphQLBaseObject } from "../../interfaces";
 import { createGraphQLOperation, pause } from "../../skylark/saas/utils";
@@ -95,8 +95,8 @@ const main = async () => {
     }
   }
 
-  const imagesHostedOnSl8 = allImages.filter(
-    ({ external_url }) => external_url?.startsWith(legacyApiUrl),
+  const imagesHostedOnSl8 = allImages.filter(({ external_url }) =>
+    external_url?.startsWith(legacyApiUrl),
   );
 
   const otherImages = allImages.filter(
