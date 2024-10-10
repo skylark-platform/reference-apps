@@ -110,13 +110,12 @@ export const useSkylarkTVConfig = () => {
   useEffect(() => {
     document.documentElement.style.setProperty(
       "--skylarktv-primary-color",
-      config?.primaryColor || "#5b45ce",
+      config?.primaryColor || "#ea223c",
     );
     document.documentElement.style.setProperty(
       "--skylarktv-accent-color",
-      config?.accentColor || "#ff385c",
+      config?.accentColor || "#011832",
     );
-
     if (config?.googleTagManagerId) {
       addGoogleTagManagerNoScriptToBody(config?.googleTagManagerId);
     } else {

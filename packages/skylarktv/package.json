@@ -20,6 +20,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@fontsource/figtree": "^5.1.1",
     "@fontsource/inter": "4.5.15",
     "@fontsource/outfit": "4.5.11",
     "@graphql-codegen/client-preset": "4.3.3",

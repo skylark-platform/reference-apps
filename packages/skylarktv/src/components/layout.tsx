@@ -62,7 +62,7 @@ export const SkylarkTVLayout: React.FC<Props> = ({ children }) => {
   const { config } = useSkylarkTVConfig();
 
   const appTitle =
-    config?.appName || process.env.NEXT_PUBLIC_APP_TITLE || "SkylarkTV";
+    config?.appName || process.env.NEXT_PUBLIC_APP_TITLE || "Countryline";
 
   const { asPath, query } = useRouter();
   const { t } = useTranslation("common");
