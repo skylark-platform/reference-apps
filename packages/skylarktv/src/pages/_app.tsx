@@ -9,7 +9,6 @@ import PlausibleProvider from "next-plausible";
 import { withPasswordProtect } from "next-password-protect";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { IntercomProvider } from "react-use-intercom";
 import { SkylarkTVLayout } from "../components/layout";
 import { DimensionsContextProvider } from "../contexts";
 import { LOCAL_STORAGE } from "../lib/skylark";
@@ -39,13 +38,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <PlausibleProvider domain={process.env.NEXT_PUBLIC_APP_DOMAIN as string}>
       <QueryClientProvider client={queryClient}>
-        <IntercomProvider appId={"t104fsur"} autoBoot>
-          <DimensionsContextProvider>
-            <SkylarkTVLayout skylarkApiUrl={skylarkApiUrl}>
-              <Component {...pageProps} />
-            </SkylarkTVLayout>
-          </DimensionsContextProvider>
-        </IntercomProvider>
+        <DimensionsContextProvider>
+          <SkylarkTVLayout skylarkApiUrl={skylarkApiUrl}>
+            <Component {...pageProps} />
+          </SkylarkTVLayout>
+        </DimensionsContextProvider>
       </QueryClientProvider>
     </PlausibleProvider>
   );
