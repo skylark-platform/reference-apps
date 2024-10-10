@@ -143,7 +143,7 @@ describe("utils.ts", () => {
       const dimensions: Dimensions = {
         [DimensionKey.Language]: "en-GB",
         [DimensionKey.DeviceType]: "smartphone",
-        [DimensionKey.CustomerType]: "premium",
+        [DimensionKey.CustomerType]: "public",
         [DimensionKey.Region]: "europe",
         [DimensionKey.TimeTravel]: "",
       };
@@ -153,7 +153,7 @@ describe("utils.ts", () => {
       expect(got).toEqual({
         dimensions: [
           { dimension: "device-types", value: "smartphone" },
-          { dimension: "customer-types", value: "premium" },
+          { dimension: "customer-types", value: "public" },
           { dimension: "regions", value: "europe" },
         ],
         language: dimensions.language,

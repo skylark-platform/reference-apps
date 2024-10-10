@@ -12,61 +12,70 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]: Maybe<T[SubKey]>;
 };
+export type MakeEmpty<
+  T extends { [key: string]: unknown },
+  K extends keyof T,
+> = { [_ in K]?: never };
+export type Incremental<T> =
+  | T
+  | {
+      [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never;
+    };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  AWSDate: any;
-  AWSDateTime: any;
-  AWSJSON: any;
-  AWSURL: any;
+  ID: { input: string; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
+  AWSDate: { input: any; output: any };
+  AWSDateTime: { input: any; output: any };
+  AWSJSON: { input: any; output: any };
+  AWSURL: { input: any; output: any };
 };
 
 export type ApiKey = {
   __typename?: "APIKey";
-  active?: Maybe<Scalars["Boolean"]>;
-  api_key?: Maybe<Scalars["String"]>;
-  created?: Maybe<Scalars["AWSDateTime"]>;
-  expires?: Maybe<Scalars["AWSDateTime"]>;
-  name?: Maybe<Scalars["String"]>;
-  permissions?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  active?: Maybe<Scalars["Boolean"]["output"]>;
+  api_key?: Maybe<Scalars["String"]["output"]>;
+  created?: Maybe<Scalars["AWSDateTime"]["output"]>;
+  expires?: Maybe<Scalars["AWSDateTime"]["output"]>;
+  name?: Maybe<Scalars["String"]["output"]>;
+  permissions?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
 };
 
 export type ApiKeyInput = {
-  active?: InputMaybe<Scalars["Boolean"]>;
-  expires?: InputMaybe<Scalars["AWSDateTime"]>;
-  name: Scalars["String"];
+  active?: InputMaybe<Scalars["Boolean"]["input"]>;
+  expires?: InputMaybe<Scalars["AWSDateTime"]["input"]>;
+  name: Scalars["String"]["input"];
   permissions: Array<InputMaybe<SkylarkApiPermission>>;
 };
 
 export type ApiKeyInputUpdate = {
-  active?: InputMaybe<Scalars["Boolean"]>;
-  expires?: InputMaybe<Scalars["AWSDateTime"]>;
+  active?: InputMaybe<Scalars["Boolean"]["input"]>;
+  expires?: InputMaybe<Scalars["AWSDateTime"]["input"]>;
   permissions?: InputMaybe<Array<InputMaybe<SkylarkApiPermission>>>;
 };
 
 export type AccountConfig = {
   __typename?: "AccountConfig";
-  default_language?: Maybe<Scalars["String"]>;
-  draft_update?: Maybe<Scalars["Boolean"]>;
-  migrated?: Maybe<Scalars["Boolean"]>;
-  raise_uid_exception?: Maybe<Scalars["Boolean"]>;
+  default_language?: Maybe<Scalars["String"]["output"]>;
+  draft_update?: Maybe<Scalars["Boolean"]["output"]>;
+  migrated?: Maybe<Scalars["Boolean"]["output"]>;
+  raise_uid_exception?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type AccountConfigInput = {
-  default_language?: InputMaybe<Scalars["String"]>;
-  draft_update?: InputMaybe<Scalars["Boolean"]>;
-  raise_uid_exception?: InputMaybe<Scalars["Boolean"]>;
+  default_language?: InputMaybe<Scalars["String"]["input"]>;
+  draft_update?: InputMaybe<Scalars["Boolean"]["input"]>;
+  raise_uid_exception?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type AccountDetails = {
   __typename?: "AccountDetails";
-  account_id?: Maybe<Scalars["String"]>;
+  account_id?: Maybe<Scalars["String"]["output"]>;
   config?: Maybe<AccountConfig>;
-  skylark_version?: Maybe<Scalars["String"]>;
+  skylark_version?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type AppConfig = Metadata &
@@ -75,80 +84,81 @@ export type AppConfig = Metadata &
     _config?: Maybe<ObjectConfig>;
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_AppConfigMeta>;
-    accent_color?: Maybe<Scalars["String"]>;
-    app_name?: Maybe<Scalars["String"]>;
+    accent_color?: Maybe<Scalars["String"]["output"]>;
+    app_name?: Maybe<Scalars["String"]["output"]>;
     availability?: Maybe<AvailabilityListing>;
     content_of?: Maybe<SetListing>;
-    external_id?: Maybe<Scalars["String"]>;
-    featured_page_url?: Maybe<Scalars["AWSURL"]>;
-    google_tag_manager_id?: Maybe<Scalars["String"]>;
+    external_id?: Maybe<Scalars["String"]["output"]>;
+    featured_page_url?: Maybe<Scalars["AWSURL"]["output"]>;
+    google_tag_manager_id?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::app_config */
     logo?: Maybe<SkylarkImageListing>;
-    primary_color?: Maybe<Scalars["String"]>;
-    slug?: Maybe<Scalars["String"]>;
-    uid: Scalars["String"];
+    primary_color?: Maybe<Scalars["String"]["output"]>;
+    slug?: Maybe<Scalars["String"]["output"]>;
+    uid: Scalars["String"]["output"];
   };
 
 export type AppConfig_MetaArgs = {
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type AppConfigAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type AppConfigContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type AppConfigLogoArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type AppConfigCreateInput = {
-  accent_color?: InputMaybe<Scalars["String"]>;
-  app_name?: InputMaybe<Scalars["String"]>;
+  accent_color?: InputMaybe<Scalars["String"]["input"]>;
+  app_name?: InputMaybe<Scalars["String"]["input"]>;
   availability?: InputMaybe<AssignAvailabilityInput>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  featured_page_url?: InputMaybe<Scalars["AWSURL"]>;
-  google_tag_manager_id?: InputMaybe<Scalars["String"]>;
-  primary_color?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  featured_page_url?: InputMaybe<Scalars["AWSURL"]["input"]>;
+  google_tag_manager_id?: InputMaybe<Scalars["String"]["input"]>;
+  primary_color?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<AppConfigRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type AppConfigInput = {
-  accent_color?: InputMaybe<Scalars["String"]>;
-  app_name?: InputMaybe<Scalars["String"]>;
+  accent_color?: InputMaybe<Scalars["String"]["input"]>;
+  app_name?: InputMaybe<Scalars["String"]["input"]>;
   availability?: InputMaybe<AssignAvailabilityInput>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  featured_page_url?: InputMaybe<Scalars["AWSURL"]>;
-  google_tag_manager_id?: InputMaybe<Scalars["String"]>;
-  primary_color?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  featured_page_url?: InputMaybe<Scalars["AWSURL"]["input"]>;
+  google_tag_manager_id?: InputMaybe<Scalars["String"]["input"]>;
+  primary_color?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<AppConfigRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type AppConfigListing = Listing & {
   __typename?: "AppConfigListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<AppConfig>>>;
 };
 
 export type AppConfigRelationshipInput = {
   config?: InputMaybe<RelationshipConfigInput>;
   create?: InputMaybe<Array<InputMaybe<AppConfigCreateInput>>>;
-  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type AppConfigRelationships = {
@@ -157,14 +167,14 @@ export type AppConfigRelationships = {
 
 export type AppConfigSetCreate = {
   object?: InputMaybe<AppConfigInput>;
-  position: Scalars["Int"];
+  position: Scalars["Int"]["input"];
 };
 
 export type AppConfigSetInput = {
   create?: InputMaybe<Array<InputMaybe<AppConfigSetCreate>>>;
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type Article = Metadata &
@@ -174,98 +184,101 @@ export type Article = Metadata &
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_ArticleMeta>;
     availability?: Maybe<AvailabilityListing>;
-    body?: Maybe<Scalars["String"]>;
+    body?: Maybe<Scalars["String"]["output"]>;
     content_of?: Maybe<SetListing>;
+    /**  reverse::articles */
     credits?: Maybe<CreditListing>;
-    description?: Maybe<Scalars["String"]>;
-    external_id?: Maybe<Scalars["String"]>;
+    description?: Maybe<Scalars["String"]["output"]>;
+    external_id?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::articles */
     images?: Maybe<SkylarkImageListing>;
-    internal_title?: Maybe<Scalars["String"]>;
-    publish_date?: Maybe<Scalars["AWSDateTime"]>;
-    slug?: Maybe<Scalars["String"]>;
+    internal_title?: Maybe<Scalars["String"]["output"]>;
+    publish_date?: Maybe<Scalars["AWSDateTime"]["output"]>;
+    slug?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::articles */
     tags?: Maybe<SkylarkTagListing>;
-    title?: Maybe<Scalars["String"]>;
-    type?: Maybe<Scalars["String"]>;
-    uid: Scalars["String"];
+    title?: Maybe<Scalars["String"]["output"]>;
+    type?: Maybe<Scalars["String"]["output"]>;
+    uid: Scalars["String"]["output"];
   };
 
 export type Article_MetaArgs = {
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type ArticleAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type ArticleContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type ArticleCreditsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type ArticleImagesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type ArticleTagsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type ArticleCreateInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  body?: InputMaybe<Scalars["String"]>;
-  description: Scalars["String"];
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title: Scalars["String"];
-  publish_date?: InputMaybe<Scalars["AWSDateTime"]>;
+  body?: InputMaybe<Scalars["String"]["input"]>;
+  description: Scalars["String"]["input"];
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title: Scalars["String"]["input"];
+  publish_date?: InputMaybe<Scalars["AWSDateTime"]["input"]>;
   relationships?: InputMaybe<ArticleRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
-  title: Scalars["String"];
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  title: Scalars["String"]["input"];
   type: ArticleType;
 };
 
 export type ArticleInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  body?: InputMaybe<Scalars["String"]>;
-  description?: InputMaybe<Scalars["String"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
-  publish_date?: InputMaybe<Scalars["AWSDateTime"]>;
+  body?: InputMaybe<Scalars["String"]["input"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
+  publish_date?: InputMaybe<Scalars["AWSDateTime"]["input"]>;
   relationships?: InputMaybe<ArticleRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<ArticleType>;
 };
 
 export type ArticleListing = Listing & {
   __typename?: "ArticleListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<Article>>>;
 };
 
 export type ArticleRelationshipInput = {
   config?: InputMaybe<RelationshipConfigInput>;
   create?: InputMaybe<Array<InputMaybe<ArticleCreateInput>>>;
-  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type ArticleRelationships = {
@@ -276,14 +289,14 @@ export type ArticleRelationships = {
 
 export type ArticleSetCreate = {
   object?: InputMaybe<ArticleInput>;
-  position: Scalars["Int"];
+  position: Scalars["Int"]["input"];
 };
 
 export type ArticleSetInput = {
   create?: InputMaybe<Array<InputMaybe<ArticleSetCreate>>>;
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export enum ArticleType {
@@ -299,38 +312,38 @@ export type AssetInterface = {
   _context?: Maybe<RequestContext>;
   availability?: Maybe<AvailabilityListing>;
   content_of?: Maybe<SetListing>;
-  dash_dashboard?: Maybe<Scalars["String"]>;
-  dash_id?: Maybe<Scalars["String"]>;
-  dash_url?: Maybe<Scalars["String"]>;
-  duration?: Maybe<Scalars["Int"]>;
-  external_id?: Maybe<Scalars["String"]>;
-  hls_dashboard?: Maybe<Scalars["String"]>;
-  hls_id?: Maybe<Scalars["String"]>;
-  hls_url?: Maybe<Scalars["String"]>;
-  ingest_file?: Maybe<Scalars["String"]>;
-  internal_title?: Maybe<Scalars["String"]>;
-  policy?: Maybe<Scalars["String"]>;
-  provider?: Maybe<Scalars["String"]>;
-  release_date?: Maybe<Scalars["String"]>;
-  slug?: Maybe<Scalars["String"]>;
-  status?: Maybe<Scalars["String"]>;
-  title?: Maybe<Scalars["String"]>;
-  title_sort?: Maybe<Scalars["String"]>;
-  type?: Maybe<Scalars["String"]>;
-  uid: Scalars["String"];
-  url?: Maybe<Scalars["String"]>;
+  dash_dashboard?: Maybe<Scalars["String"]["output"]>;
+  dash_id?: Maybe<Scalars["String"]["output"]>;
+  dash_url?: Maybe<Scalars["String"]["output"]>;
+  duration?: Maybe<Scalars["Int"]["output"]>;
+  external_id?: Maybe<Scalars["String"]["output"]>;
+  hls_dashboard?: Maybe<Scalars["String"]["output"]>;
+  hls_id?: Maybe<Scalars["String"]["output"]>;
+  hls_url?: Maybe<Scalars["String"]["output"]>;
+  ingest_file?: Maybe<Scalars["String"]["output"]>;
+  internal_title?: Maybe<Scalars["String"]["output"]>;
+  policy?: Maybe<Scalars["String"]["output"]>;
+  provider?: Maybe<Scalars["String"]["output"]>;
+  release_date?: Maybe<Scalars["String"]["output"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  status?: Maybe<Scalars["String"]["output"]>;
+  title?: Maybe<Scalars["String"]["output"]>;
+  title_sort?: Maybe<Scalars["String"]["output"]>;
+  type?: Maybe<Scalars["String"]["output"]>;
+  uid: Scalars["String"]["output"];
+  url?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type AssetInterfaceAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type AssetInterfaceContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export enum AssetType {
@@ -341,8 +354,8 @@ export enum AssetType {
 
 export type AssignAvailabilityInput = {
   create?: InputMaybe<Array<InputMaybe<AvailabilityInput>>>;
-  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type AssignDimensionGroupInput = {
@@ -351,8 +364,8 @@ export type AssignDimensionGroupInput = {
 };
 
 export type AssignDimensionInput = {
-  dimension_slug: Scalars["String"];
-  value_slugs: Array<InputMaybe<Scalars["String"]>>;
+  dimension_slug: Scalars["String"]["input"];
+  value_slugs: Array<InputMaybe<Scalars["String"]["input"]>>;
 };
 
 export type Availability = VisibleObject & {
@@ -360,71 +373,71 @@ export type Availability = VisibleObject & {
   _config?: Maybe<ObjectConfig>;
   _context?: Maybe<RequestContext>;
   _meta?: Maybe<_AvailabilityMeta>;
-  active?: Maybe<Scalars["Boolean"]>;
+  active?: Maybe<Scalars["Boolean"]["output"]>;
   assigned_to?: Maybe<AvailabilityAssignmentListing>;
   dimensions?: Maybe<DimensionListing>;
-  end?: Maybe<Scalars["AWSDateTime"]>;
-  external_id?: Maybe<Scalars["String"]>;
-  inheritance_source?: Maybe<Scalars["Boolean"]>;
-  inherited?: Maybe<Scalars["Boolean"]>;
+  end?: Maybe<Scalars["AWSDateTime"]["output"]>;
+  external_id?: Maybe<Scalars["String"]["output"]>;
+  inheritance_source?: Maybe<Scalars["Boolean"]["output"]>;
+  inherited?: Maybe<Scalars["Boolean"]["output"]>;
   inherited_by?: Maybe<TypeListing>;
   inherited_from?: Maybe<TypeListing>;
-  slug?: Maybe<Scalars["String"]>;
-  start?: Maybe<Scalars["AWSDateTime"]>;
-  timezone?: Maybe<Scalars["String"]>;
-  title?: Maybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  slug?: Maybe<Scalars["String"]["output"]>;
+  start?: Maybe<Scalars["AWSDateTime"]["output"]>;
+  timezone?: Maybe<Scalars["String"]["output"]>;
+  title?: Maybe<Scalars["String"]["output"]>;
+  uid: Scalars["String"]["output"];
 };
 
 export type AvailabilityAssigned_ToArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type AvailabilityDimensionsArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type AvailabilityInherited_ByArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type AvailabilityInherited_FromArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type AvailabilityAssignment = {
   __typename?: "AvailabilityAssignment";
-  active?: Maybe<Scalars["Boolean"]>;
-  inheritance_source?: Maybe<Scalars["Boolean"]>;
-  inherited?: Maybe<Scalars["Boolean"]>;
+  active?: Maybe<Scalars["Boolean"]["output"]>;
+  inheritance_source?: Maybe<Scalars["Boolean"]["output"]>;
+  inherited?: Maybe<Scalars["Boolean"]["output"]>;
   object?: Maybe<Metadata>;
 };
 
 export type AvailabilityAssignmentListing = Listing & {
   __typename?: "AvailabilityAssignmentListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<AvailabilityAssignment>>>;
 };
 
 export type AvailabilityInput = {
   dimensions?: InputMaybe<AssignDimensionGroupInput>;
-  end?: InputMaybe<Scalars["AWSDateTime"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  start?: InputMaybe<Scalars["AWSDateTime"]>;
-  timezone?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
+  end?: InputMaybe<Scalars["AWSDateTime"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  start?: InputMaybe<Scalars["AWSDateTime"]["input"]>;
+  timezone?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type AvailabilityListing = {
   __typename?: "AvailabilityListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<Availability>>>;
   time_window_status?: Maybe<TimeWindowStatus>;
 };
@@ -435,177 +448,189 @@ export type Brand = Metadata &
     _config?: Maybe<ObjectConfig>;
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_BrandMeta>;
+    /**  reverse::brands */
     assets?: Maybe<SkylarkAssetListing>;
-    audience_rating?: Maybe<Scalars["String"]>;
+    audience_rating?: Maybe<Scalars["String"]["output"]>;
     availability?: Maybe<AvailabilityListing>;
+    /**  reverse::brands */
     call_to_actions?: Maybe<CallToActionListing>;
     content_of?: Maybe<SetListing>;
+    /**  reverse::brands */
     credits?: Maybe<CreditListing>;
+    /**  reverse::brands */
     episodes?: Maybe<EpisodeListing>;
-    external_id?: Maybe<Scalars["String"]>;
+    external_id?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::brands */
     genres?: Maybe<GenreListing>;
+    /**  reverse::brands */
     images?: Maybe<SkylarkImageListing>;
-    internal_title?: Maybe<Scalars["String"]>;
+    internal_title?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::brands */
     live_streams?: Maybe<LiveStreamListing>;
+    /**  reverse::brands */
     movies?: Maybe<MovieListing>;
+    /**  reverse::brands */
     ratings?: Maybe<RatingListing>;
-    release_date?: Maybe<Scalars["AWSDate"]>;
+    release_date?: Maybe<Scalars["AWSDate"]["output"]>;
+    /**  reverse::brands */
     seasons?: Maybe<SeasonListing>;
-    slug?: Maybe<Scalars["String"]>;
-    synopsis?: Maybe<Scalars["String"]>;
-    synopsis_short?: Maybe<Scalars["String"]>;
+    slug?: Maybe<Scalars["String"]["output"]>;
+    synopsis?: Maybe<Scalars["String"]["output"]>;
+    synopsis_short?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::brands */
     tags?: Maybe<SkylarkTagListing>;
+    /**  reverse::brands */
     themes?: Maybe<ThemeListing>;
-    title?: Maybe<Scalars["String"]>;
-    title_short?: Maybe<Scalars["String"]>;
-    title_sort?: Maybe<Scalars["String"]>;
-    uid: Scalars["String"];
+    title?: Maybe<Scalars["String"]["output"]>;
+    title_short?: Maybe<Scalars["String"]["output"]>;
+    title_sort?: Maybe<Scalars["String"]["output"]>;
+    uid: Scalars["String"]["output"];
   };
 
 export type Brand_MetaArgs = {
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type BrandAssetsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type BrandAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type BrandCall_To_ActionsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type BrandContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type BrandCreditsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type BrandEpisodesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type BrandGenresArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type BrandImagesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type BrandLive_StreamsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type BrandMoviesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type BrandRatingsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type BrandSeasonsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type BrandTagsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type BrandThemesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type BrandCreateInput = {
-  audience_rating?: InputMaybe<Scalars["String"]>;
+  audience_rating?: InputMaybe<Scalars["String"]["input"]>;
   availability?: InputMaybe<AssignAvailabilityInput>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<BrandRelationships>;
-  release_date?: InputMaybe<Scalars["AWSDate"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  synopsis?: InputMaybe<Scalars["String"]>;
-  synopsis_short?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
-  title_short?: InputMaybe<Scalars["String"]>;
-  title_sort?: InputMaybe<Scalars["String"]>;
+  release_date?: InputMaybe<Scalars["AWSDate"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  synopsis?: InputMaybe<Scalars["String"]["input"]>;
+  synopsis_short?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  title_short?: InputMaybe<Scalars["String"]["input"]>;
+  title_sort?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type BrandInput = {
-  audience_rating?: InputMaybe<Scalars["String"]>;
+  audience_rating?: InputMaybe<Scalars["String"]["input"]>;
   availability?: InputMaybe<AssignAvailabilityInput>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<BrandRelationships>;
-  release_date?: InputMaybe<Scalars["AWSDate"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  synopsis?: InputMaybe<Scalars["String"]>;
-  synopsis_short?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
-  title_short?: InputMaybe<Scalars["String"]>;
-  title_sort?: InputMaybe<Scalars["String"]>;
+  release_date?: InputMaybe<Scalars["AWSDate"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  synopsis?: InputMaybe<Scalars["String"]["input"]>;
+  synopsis_short?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  title_short?: InputMaybe<Scalars["String"]["input"]>;
+  title_sort?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type BrandListing = Listing & {
   __typename?: "BrandListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<Brand>>>;
 };
 
 export type BrandRelationshipInput = {
   config?: InputMaybe<RelationshipConfigInput>;
   create?: InputMaybe<Array<InputMaybe<BrandCreateInput>>>;
-  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type BrandRelationships = {
@@ -625,14 +650,14 @@ export type BrandRelationships = {
 
 export type BrandSetCreate = {
   object?: InputMaybe<BrandInput>;
-  position: Scalars["Int"];
+  position: Scalars["Int"]["input"];
 };
 
 export type BrandSetInput = {
   create?: InputMaybe<Array<InputMaybe<BrandSetCreate>>>;
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type CacheConfig = {
@@ -641,28 +666,28 @@ export type CacheConfig = {
 };
 
 export type CacheConfigInput = {
-  max_age: Scalars["Int"];
-  stale_while_revalidate?: InputMaybe<Scalars["Int"]>;
-  types?: InputMaybe<Array<Scalars["String"]>>;
+  max_age: Scalars["Int"]["input"];
+  stale_while_revalidate?: InputMaybe<Scalars["Int"]["input"]>;
+  types?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
 export type CachePurgeResponse = {
   __typename?: "CachePurgeResponse";
-  all?: Maybe<Scalars["Boolean"]>;
+  all?: Maybe<Scalars["Boolean"]["output"]>;
   type?: Maybe<ObjectTypes>;
-  uids?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  uids?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
 };
 
 export type CacheRule = {
   __typename?: "CacheRule";
-  max_age?: Maybe<Scalars["Int"]>;
-  stale_while_revalidate?: Maybe<Scalars["Int"]>;
-  types?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  max_age?: Maybe<Scalars["Int"]["output"]>;
+  stale_while_revalidate?: Maybe<Scalars["Int"]["output"]>;
+  types?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
 };
 
 export type CacheTypeInput = {
   name: ObjectTypes;
-  uids?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  uids?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type CallToAction = Metadata &
@@ -672,136 +697,143 @@ export type CallToAction = Metadata &
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_CallToActionMeta>;
     availability?: Maybe<AvailabilityListing>;
+    /**  reverse::call_to_actions */
     brands?: Maybe<BrandListing>;
     content_of?: Maybe<SetListing>;
-    description?: Maybe<Scalars["String"]>;
-    description_short?: Maybe<Scalars["String"]>;
+    description?: Maybe<Scalars["String"]["output"]>;
+    description_short?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::call_to_actions */
     episodes?: Maybe<EpisodeListing>;
-    external_id?: Maybe<Scalars["String"]>;
+    external_id?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::call_to_actions */
     images?: Maybe<SkylarkImageListing>;
-    internal_title?: Maybe<Scalars["String"]>;
+    internal_title?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::call_to_actions */
     live_streams?: Maybe<LiveStreamListing>;
+    /**  reverse::call_to_actions */
     movies?: Maybe<MovieListing>;
+    /**  reverse::call_to_actions */
     seasons?: Maybe<SeasonListing>;
+    /**  reverse::call_to_actions */
     sets?: Maybe<SkylarkSetListing>;
-    slug?: Maybe<Scalars["String"]>;
-    text?: Maybe<Scalars["String"]>;
-    text_short?: Maybe<Scalars["String"]>;
-    type?: Maybe<Scalars["String"]>;
-    uid: Scalars["String"];
-    url?: Maybe<Scalars["AWSURL"]>;
-    url_path?: Maybe<Scalars["String"]>;
+    slug?: Maybe<Scalars["String"]["output"]>;
+    text?: Maybe<Scalars["String"]["output"]>;
+    text_short?: Maybe<Scalars["String"]["output"]>;
+    type?: Maybe<Scalars["String"]["output"]>;
+    uid: Scalars["String"]["output"];
+    url?: Maybe<Scalars["AWSURL"]["output"]>;
+    url_path?: Maybe<Scalars["String"]["output"]>;
   };
 
 export type CallToAction_MetaArgs = {
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type CallToActionAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type CallToActionBrandsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type CallToActionContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type CallToActionEpisodesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type CallToActionImagesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type CallToActionLive_StreamsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type CallToActionMoviesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type CallToActionSeasonsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type CallToActionSetsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type CallToActionCreateInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  description?: InputMaybe<Scalars["String"]>;
-  description_short?: InputMaybe<Scalars["String"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  description_short?: InputMaybe<Scalars["String"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<CallToActionRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
-  text?: InputMaybe<Scalars["String"]>;
-  text_short?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  text?: InputMaybe<Scalars["String"]["input"]>;
+  text_short?: InputMaybe<Scalars["String"]["input"]>;
   type: CallToActionType;
-  url?: InputMaybe<Scalars["AWSURL"]>;
-  url_path?: InputMaybe<Scalars["String"]>;
+  url?: InputMaybe<Scalars["AWSURL"]["input"]>;
+  url_path?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type CallToActionInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  description?: InputMaybe<Scalars["String"]>;
-  description_short?: InputMaybe<Scalars["String"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  description_short?: InputMaybe<Scalars["String"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<CallToActionRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
-  text?: InputMaybe<Scalars["String"]>;
-  text_short?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  text?: InputMaybe<Scalars["String"]["input"]>;
+  text_short?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<CallToActionType>;
-  url?: InputMaybe<Scalars["AWSURL"]>;
-  url_path?: InputMaybe<Scalars["String"]>;
+  url?: InputMaybe<Scalars["AWSURL"]["input"]>;
+  url_path?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type CallToActionListing = Listing & {
   __typename?: "CallToActionListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<CallToAction>>>;
 };
 
 export type CallToActionRelationshipInput = {
   config?: InputMaybe<RelationshipConfigInput>;
   create?: InputMaybe<Array<InputMaybe<CallToActionCreateInput>>>;
-  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type CallToActionRelationships = {
@@ -816,14 +848,14 @@ export type CallToActionRelationships = {
 
 export type CallToActionSetCreate = {
   object?: InputMaybe<CallToActionInput>;
-  position: Scalars["Int"];
+  position: Scalars["Int"]["input"];
 };
 
 export type CallToActionSetInput = {
   create?: InputMaybe<Array<InputMaybe<CallToActionSetCreate>>>;
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export enum CallToActionType {
@@ -841,19 +873,19 @@ export enum ConfigurationOperations {
 
 export type ConfigurationResponse = {
   __typename?: "ConfigurationResponse";
-  messages?: Maybe<Array<Maybe<Scalars["String"]>>>;
-  version?: Maybe<Scalars["Int"]>;
+  messages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type CountResponse = {
   __typename?: "CountResponse";
-  count?: Maybe<Scalars["Int"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type CreateObjectTypeInput = {
   fields?: InputMaybe<Array<InputMaybe<EditFieldInput>>>;
-  is_set?: InputMaybe<Scalars["Boolean"]>;
-  name: Scalars["String"];
+  is_set?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name: Scalars["String"]["input"];
   relationships?: InputMaybe<
     Array<InputMaybe<EditFixedObjectRelationshipInput>>
   >;
@@ -865,146 +897,156 @@ export type Credit = Metadata &
     _config?: Maybe<ObjectConfig>;
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_CreditMeta>;
+    /**  reverse::credits */
     articles?: Maybe<ArticleListing>;
+    /**  reverse::credits */
     assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
+    /**  reverse::credits */
     brands?: Maybe<BrandListing>;
-    character?: Maybe<Scalars["String"]>;
+    character?: Maybe<Scalars["String"]["output"]>;
     content_of?: Maybe<SetListing>;
+    /**  reverse::credits */
     episodes?: Maybe<EpisodeListing>;
-    external_id?: Maybe<Scalars["String"]>;
-    internal_title?: Maybe<Scalars["String"]>;
+    external_id?: Maybe<Scalars["String"]["output"]>;
+    internal_title?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::credits */
     live_streams?: Maybe<LiveStreamListing>;
+    /**  reverse::credits */
     movies?: Maybe<MovieListing>;
-    name_sort?: Maybe<Scalars["String"]>;
+    name_sort?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::credits */
     people?: Maybe<PersonListing>;
+    /**  reverse::credits */
     roles?: Maybe<RoleListing>;
+    /**  reverse::credits */
     seasons?: Maybe<SeasonListing>;
+    /**  reverse::credits */
     sets?: Maybe<SkylarkSetListing>;
-    slug?: Maybe<Scalars["String"]>;
-    uid: Scalars["String"];
+    slug?: Maybe<Scalars["String"]["output"]>;
+    uid: Scalars["String"]["output"];
   };
 
 export type Credit_MetaArgs = {
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type CreditArticlesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type CreditAssetsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type CreditAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type CreditBrandsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type CreditContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type CreditEpisodesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type CreditLive_StreamsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type CreditMoviesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type CreditPeopleArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type CreditRolesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type CreditSeasonsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type CreditSetsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type CreditCreateInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  character?: InputMaybe<Scalars["String"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
-  name_sort?: InputMaybe<Scalars["String"]>;
+  character?: InputMaybe<Scalars["String"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
+  name_sort?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<CreditRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type CreditInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  character?: InputMaybe<Scalars["String"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
-  name_sort?: InputMaybe<Scalars["String"]>;
+  character?: InputMaybe<Scalars["String"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
+  name_sort?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<CreditRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type CreditListing = Listing & {
   __typename?: "CreditListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<Credit>>>;
 };
 
 export type CreditRelationshipInput = {
   config?: InputMaybe<RelationshipConfigInput>;
   create?: InputMaybe<Array<InputMaybe<CreditCreateInput>>>;
-  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type CreditRelationships = {
@@ -1022,57 +1064,57 @@ export type CreditRelationships = {
 
 export type CreditSetCreate = {
   object?: InputMaybe<CreditInput>;
-  position: Scalars["Int"];
+  position: Scalars["Int"]["input"];
 };
 
 export type CreditSetInput = {
   create?: InputMaybe<Array<InputMaybe<CreditSetCreate>>>;
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type DeleteInput = {
-  language?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
   object_type?: InputMaybe<VisibleObjectTypes>;
-  uid: Scalars["String"];
+  uid: Scalars["String"]["input"];
 };
 
 export type Dimension = {
   __typename?: "Dimension";
   _meta?: Maybe<_DimensionMeta>;
   availability?: Maybe<AvailabilityListing>;
-  description?: Maybe<Scalars["String"]>;
-  external_id?: Maybe<Scalars["String"]>;
-  slug: Scalars["String"];
-  title?: Maybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  description?: Maybe<Scalars["String"]["output"]>;
+  external_id?: Maybe<Scalars["String"]["output"]>;
+  slug: Scalars["String"]["output"];
+  title?: Maybe<Scalars["String"]["output"]>;
+  uid: Scalars["String"]["output"];
   values?: Maybe<DimensionValueListing>;
 };
 
 export type DimensionAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type DimensionValuesArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  value_external_id?: InputMaybe<Scalars["String"]>;
-  value_id?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  value_external_id?: InputMaybe<Scalars["String"]["input"]>;
+  value_id?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type DimensionInput = {
-  description?: InputMaybe<Scalars["String"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  slug: Scalars["String"];
-  title?: InputMaybe<Scalars["String"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  slug: Scalars["String"]["input"];
+  title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type DimensionListing = Listing & {
   __typename?: "DimensionListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<Dimension>>>;
 };
 
@@ -1080,52 +1122,52 @@ export type DimensionValue = {
   __typename?: "DimensionValue";
   _meta?: Maybe<_DimensionMeta>;
   availability?: Maybe<AvailabilityListing>;
-  description?: Maybe<Scalars["String"]>;
+  description?: Maybe<Scalars["String"]["output"]>;
   dimension?: Maybe<Dimension>;
-  external_id?: Maybe<Scalars["String"]>;
-  slug: Scalars["String"];
-  title?: Maybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  external_id?: Maybe<Scalars["String"]["output"]>;
+  slug: Scalars["String"]["output"];
+  title?: Maybe<Scalars["String"]["output"]>;
+  uid: Scalars["String"]["output"];
 };
 
 export type DimensionValueAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type DimensionValueListing = Listing & {
   __typename?: "DimensionValueListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<DimensionValue>>>;
 };
 
 export type EditEnumInput = {
-  name: Scalars["String"];
+  name: Scalars["String"]["input"];
   operation: ConfigurationOperations;
-  values?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  values?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type EditFieldInput = {
-  enum_name?: InputMaybe<Scalars["String"]>;
-  is_translatable?: InputMaybe<Scalars["Boolean"]>;
-  name: Scalars["String"];
+  enum_name?: InputMaybe<Scalars["String"]["input"]>;
+  is_translatable?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name: Scalars["String"]["input"];
   operation: ConfigurationOperations;
-  required?: InputMaybe<Scalars["Boolean"]>;
+  required?: InputMaybe<Scalars["Boolean"]["input"]>;
   type?: InputMaybe<FieldTypes>;
 };
 
 export type EditFixedObjectRelationshipInput = {
   operation: ConfigurationOperations;
-  relationship_name: Scalars["String"];
-  reverse_relationship_name: Scalars["String"];
+  relationship_name: Scalars["String"]["input"];
+  reverse_relationship_name: Scalars["String"]["input"];
   to_class: ObjectTypes;
 };
 
 export type EditObjectTypeInput = {
   fields?: InputMaybe<Array<InputMaybe<EditFieldInput>>>;
-  is_set?: InputMaybe<Scalars["Boolean"]>;
-  name: Scalars["String"];
+  is_set?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name: Scalars["String"]["input"];
   operation: ConfigurationOperations;
   relationships?: InputMaybe<
     Array<InputMaybe<EditFixedObjectRelationshipInput>>
@@ -1135,8 +1177,8 @@ export type EditObjectTypeInput = {
 export type EditRelationshipInput = {
   from_class: ObjectTypes;
   operation: ConfigurationOperations;
-  relationship_name: Scalars["String"];
-  reverse_relationship_name: Scalars["String"];
+  relationship_name: Scalars["String"]["input"];
+  reverse_relationship_name: Scalars["String"]["input"];
   to_class: ObjectTypes;
 };
 
@@ -1146,175 +1188,186 @@ export type Episode = Metadata &
     _config?: Maybe<ObjectConfig>;
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_EpisodeMeta>;
+    /**  reverse::episodes */
     assets?: Maybe<SkylarkAssetListing>;
-    audience_rating?: Maybe<Scalars["String"]>;
+    audience_rating?: Maybe<Scalars["String"]["output"]>;
     availability?: Maybe<AvailabilityListing>;
+    /**  reverse::episodes */
     brands?: Maybe<BrandListing>;
+    /**  reverse::episodes */
     call_to_actions?: Maybe<CallToActionListing>;
     content_of?: Maybe<SetListing>;
+    /**  reverse::episodes */
     credits?: Maybe<CreditListing>;
+    /**  reverse::episodes */
     epg_programs?: Maybe<SkylarkEpgProgramListing>;
-    episode_number?: Maybe<Scalars["Int"]>;
-    external_id?: Maybe<Scalars["String"]>;
+    episode_number?: Maybe<Scalars["Int"]["output"]>;
+    external_id?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::episodes */
     genres?: Maybe<GenreListing>;
+    /**  reverse::episodes */
     images?: Maybe<SkylarkImageListing>;
-    internal_title?: Maybe<Scalars["String"]>;
+    internal_title?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::episodes */
     ratings?: Maybe<RatingListing>;
-    release_date?: Maybe<Scalars["AWSDate"]>;
+    release_date?: Maybe<Scalars["AWSDate"]["output"]>;
+    /**  reverse::episodes */
     seasons?: Maybe<SeasonListing>;
-    slug?: Maybe<Scalars["String"]>;
-    synopsis?: Maybe<Scalars["String"]>;
-    synopsis_short?: Maybe<Scalars["String"]>;
+    slug?: Maybe<Scalars["String"]["output"]>;
+    synopsis?: Maybe<Scalars["String"]["output"]>;
+    synopsis_short?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::episodes */
     tags?: Maybe<SkylarkTagListing>;
+    /**  reverse::episodes */
     themes?: Maybe<ThemeListing>;
-    title?: Maybe<Scalars["String"]>;
-    title_short?: Maybe<Scalars["String"]>;
-    title_sort?: Maybe<Scalars["String"]>;
-    uid: Scalars["String"];
-    year_of_release?: Maybe<Scalars["Int"]>;
+    title?: Maybe<Scalars["String"]["output"]>;
+    title_short?: Maybe<Scalars["String"]["output"]>;
+    title_sort?: Maybe<Scalars["String"]["output"]>;
+    uid: Scalars["String"]["output"];
+    year_of_release?: Maybe<Scalars["Int"]["output"]>;
   };
 
 export type Episode_MetaArgs = {
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type EpisodeAssetsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type EpisodeAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type EpisodeBrandsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type EpisodeCall_To_ActionsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type EpisodeContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type EpisodeCreditsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type EpisodeEpg_ProgramsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type EpisodeGenresArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type EpisodeImagesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type EpisodeRatingsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type EpisodeSeasonsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type EpisodeTagsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type EpisodeThemesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type EpisodeCreateInput = {
-  audience_rating?: InputMaybe<Scalars["String"]>;
+  audience_rating?: InputMaybe<Scalars["String"]["input"]>;
   availability?: InputMaybe<AssignAvailabilityInput>;
-  episode_number?: InputMaybe<Scalars["Int"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
+  episode_number?: InputMaybe<Scalars["Int"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<EpisodeRelationships>;
-  release_date?: InputMaybe<Scalars["AWSDate"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  synopsis?: InputMaybe<Scalars["String"]>;
-  synopsis_short?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
-  title_short?: InputMaybe<Scalars["String"]>;
-  title_sort?: InputMaybe<Scalars["String"]>;
-  year_of_release?: InputMaybe<Scalars["Int"]>;
+  release_date?: InputMaybe<Scalars["AWSDate"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  synopsis?: InputMaybe<Scalars["String"]["input"]>;
+  synopsis_short?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  title_short?: InputMaybe<Scalars["String"]["input"]>;
+  title_sort?: InputMaybe<Scalars["String"]["input"]>;
+  year_of_release?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type EpisodeInput = {
-  audience_rating?: InputMaybe<Scalars["String"]>;
+  audience_rating?: InputMaybe<Scalars["String"]["input"]>;
   availability?: InputMaybe<AssignAvailabilityInput>;
-  episode_number?: InputMaybe<Scalars["Int"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
+  episode_number?: InputMaybe<Scalars["Int"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<EpisodeRelationships>;
-  release_date?: InputMaybe<Scalars["AWSDate"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  synopsis?: InputMaybe<Scalars["String"]>;
-  synopsis_short?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
-  title_short?: InputMaybe<Scalars["String"]>;
-  title_sort?: InputMaybe<Scalars["String"]>;
-  year_of_release?: InputMaybe<Scalars["Int"]>;
+  release_date?: InputMaybe<Scalars["AWSDate"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  synopsis?: InputMaybe<Scalars["String"]["input"]>;
+  synopsis_short?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  title_short?: InputMaybe<Scalars["String"]["input"]>;
+  title_sort?: InputMaybe<Scalars["String"]["input"]>;
+  year_of_release?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type EpisodeListing = Listing & {
   __typename?: "EpisodeListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<Episode>>>;
 };
 
 export type EpisodeRelationshipInput = {
   config?: InputMaybe<RelationshipConfigInput>;
   create?: InputMaybe<Array<InputMaybe<EpisodeCreateInput>>>;
-  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type EpisodeRelationships = {
@@ -1333,27 +1386,27 @@ export type EpisodeRelationships = {
 
 export type EpisodeSetCreate = {
   object?: InputMaybe<EpisodeInput>;
-  position: Scalars["Int"];
+  position: Scalars["Int"]["input"];
 };
 
 export type EpisodeSetInput = {
   create?: InputMaybe<Array<InputMaybe<EpisodeSetCreate>>>;
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type FieldConfig = {
   __typename?: "FieldConfig";
-  name?: Maybe<Scalars["String"]>;
-  ui_field_type?: Maybe<Scalars["String"]>;
-  ui_position?: Maybe<Scalars["Int"]>;
+  name?: Maybe<Scalars["String"]["output"]>;
+  ui_field_type?: Maybe<Scalars["String"]["output"]>;
+  ui_position?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type FieldConfigInput = {
-  name: Scalars["String"];
+  name: Scalars["String"]["input"];
   ui_field_type?: InputMaybe<UiFieldTypes>;
-  ui_position?: InputMaybe<Scalars["Int"]>;
+  ui_position?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export enum FieldTypes {
@@ -1379,141 +1432,150 @@ export type Genre = Metadata &
     _config?: Maybe<ObjectConfig>;
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_GenreMeta>;
+    /**  reverse::genres */
     assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
+    /**  reverse::genres */
     brands?: Maybe<BrandListing>;
     content_of?: Maybe<SetListing>;
+    /**  reverse::genres */
     episodes?: Maybe<EpisodeListing>;
-    external_id?: Maybe<Scalars["String"]>;
+    external_id?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::genres */
     images?: Maybe<SkylarkImageListing>;
-    internal_title?: Maybe<Scalars["String"]>;
+    internal_title?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::genres */
     live_streams?: Maybe<LiveStreamListing>;
-    metadata_source?: Maybe<Scalars["String"]>;
+    metadata_source?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::genres */
     movies?: Maybe<MovieListing>;
-    name?: Maybe<Scalars["String"]>;
+    name?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::genres */
     people?: Maybe<PersonListing>;
+    /**  reverse::genres */
     seasons?: Maybe<SeasonListing>;
+    /**  reverse::genres */
     sets?: Maybe<SkylarkSetListing>;
-    slug?: Maybe<Scalars["String"]>;
-    title_sort?: Maybe<Scalars["String"]>;
-    uid: Scalars["String"];
+    slug?: Maybe<Scalars["String"]["output"]>;
+    title_sort?: Maybe<Scalars["String"]["output"]>;
+    uid: Scalars["String"]["output"];
   };
 
 export type Genre_MetaArgs = {
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type GenreAssetsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type GenreAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type GenreBrandsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type GenreContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type GenreEpisodesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type GenreImagesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type GenreLive_StreamsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type GenreMoviesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type GenrePeopleArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type GenreSeasonsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type GenreSetsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type GenreCreateInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
-  metadata_source?: InputMaybe<Scalars["String"]>;
-  name?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
+  metadata_source?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<GenreRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
-  title_sort?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  title_sort?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type GenreInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
-  metadata_source?: InputMaybe<Scalars["String"]>;
-  name?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
+  metadata_source?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<GenreRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
-  title_sort?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  title_sort?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type GenreListing = Listing & {
   __typename?: "GenreListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<Genre>>>;
 };
 
 export type GenreRelationshipInput = {
   config?: InputMaybe<RelationshipConfigInput>;
   create?: InputMaybe<Array<InputMaybe<GenreCreateInput>>>;
-  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type GenreRelationships = {
@@ -1530,21 +1592,21 @@ export type GenreRelationships = {
 
 export type GenreSetCreate = {
   object?: InputMaybe<GenreInput>;
-  position: Scalars["Int"];
+  position: Scalars["Int"]["input"];
 };
 
 export type GenreSetInput = {
   create?: InputMaybe<Array<InputMaybe<GenreSetCreate>>>;
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type HiddenObject = {
   _context?: Maybe<RequestContext>;
-  external_id?: Maybe<Scalars["String"]>;
-  slug?: Maybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  external_id?: Maybe<Scalars["String"]["output"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  uid: Scalars["String"]["output"];
 };
 
 export enum ImageType {
@@ -1564,8 +1626,8 @@ export enum ImageType {
 }
 
 export type Listing = {
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type LiveStream = Metadata &
@@ -1574,155 +1636,165 @@ export type LiveStream = Metadata &
     _config?: Maybe<ObjectConfig>;
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_LiveStreamMeta>;
+    /**  reverse::live_streams */
     assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
+    /**  reverse::live_streams */
     brands?: Maybe<BrandListing>;
+    /**  reverse::live_streams */
     call_to_actions?: Maybe<CallToActionListing>;
     content_of?: Maybe<SetListing>;
+    /**  reverse::live_streams */
     credits?: Maybe<CreditListing>;
-    external_id?: Maybe<Scalars["String"]>;
+    external_id?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::live_streams */
     genres?: Maybe<GenreListing>;
+    /**  reverse::live_streams */
     images?: Maybe<SkylarkImageListing>;
-    internal_title?: Maybe<Scalars["String"]>;
+    internal_title?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::live_streams */
     live_assets?: Maybe<SkylarkLiveAssetListing>;
+    /**  reverse::live_streams */
     ratings?: Maybe<RatingListing>;
-    slug?: Maybe<Scalars["String"]>;
-    synopsis?: Maybe<Scalars["String"]>;
-    synopsis_short?: Maybe<Scalars["String"]>;
+    slug?: Maybe<Scalars["String"]["output"]>;
+    synopsis?: Maybe<Scalars["String"]["output"]>;
+    synopsis_short?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::live_streams */
     tags?: Maybe<SkylarkTagListing>;
+    /**  reverse::live_streams */
     themes?: Maybe<ThemeListing>;
-    title?: Maybe<Scalars["String"]>;
-    title_short?: Maybe<Scalars["String"]>;
-    title_sort?: Maybe<Scalars["String"]>;
-    uid: Scalars["String"];
+    title?: Maybe<Scalars["String"]["output"]>;
+    title_short?: Maybe<Scalars["String"]["output"]>;
+    title_sort?: Maybe<Scalars["String"]["output"]>;
+    uid: Scalars["String"]["output"];
   };
 
 export type LiveStream_MetaArgs = {
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type LiveStreamAssetsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type LiveStreamAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type LiveStreamBrandsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type LiveStreamCall_To_ActionsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type LiveStreamContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type LiveStreamCreditsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type LiveStreamGenresArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type LiveStreamImagesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type LiveStreamLive_AssetsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type LiveStreamRatingsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type LiveStreamTagsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type LiveStreamThemesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type LiveStreamCreateInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<LiveStreamRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
-  synopsis?: InputMaybe<Scalars["String"]>;
-  synopsis_short?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
-  title_short?: InputMaybe<Scalars["String"]>;
-  title_sort?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  synopsis?: InputMaybe<Scalars["String"]["input"]>;
+  synopsis_short?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  title_short?: InputMaybe<Scalars["String"]["input"]>;
+  title_sort?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type LiveStreamInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<LiveStreamRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
-  synopsis?: InputMaybe<Scalars["String"]>;
-  synopsis_short?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
-  title_short?: InputMaybe<Scalars["String"]>;
-  title_sort?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  synopsis?: InputMaybe<Scalars["String"]["input"]>;
+  synopsis_short?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  title_short?: InputMaybe<Scalars["String"]["input"]>;
+  title_sort?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type LiveStreamListing = Listing & {
   __typename?: "LiveStreamListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<LiveStream>>>;
 };
 
 export type LiveStreamRelationshipInput = {
   config?: InputMaybe<RelationshipConfigInput>;
   create?: InputMaybe<Array<InputMaybe<LiveStreamCreateInput>>>;
-  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type LiveStreamRelationships = {
@@ -1740,42 +1812,42 @@ export type LiveStreamRelationships = {
 
 export type LiveStreamSetCreate = {
   object?: InputMaybe<LiveStreamInput>;
-  position: Scalars["Int"];
+  position: Scalars["Int"]["input"];
 };
 
 export type LiveStreamSetInput = {
   create?: InputMaybe<Array<InputMaybe<LiveStreamSetCreate>>>;
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type MediaFile = {
-  content_type?: Maybe<Scalars["String"]>;
-  download_from_url?: Maybe<Scalars["String"]>;
-  external_url?: Maybe<Scalars["String"]>;
-  file_name?: Maybe<Scalars["String"]>;
-  upload_url?: Maybe<Scalars["String"]>;
+  content_type?: Maybe<Scalars["String"]["output"]>;
+  download_from_url?: Maybe<Scalars["String"]["output"]>;
+  external_url?: Maybe<Scalars["String"]["output"]>;
+  file_name?: Maybe<Scalars["String"]["output"]>;
+  upload_url?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type Metadata = {
   _config?: Maybe<ObjectConfig>;
   content_of?: Maybe<SetListing>;
-  external_id?: Maybe<Scalars["String"]>;
-  slug?: Maybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  external_id?: Maybe<Scalars["String"]["output"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  uid: Scalars["String"]["output"];
 };
 
 export type MetadataContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MetadataListing = Listing & {
   __typename?: "MetadataListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<SetContent>>>;
 };
 
@@ -1785,170 +1857,180 @@ export type Movie = Metadata &
     _config?: Maybe<ObjectConfig>;
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_MovieMeta>;
+    /**  reverse::movies */
     assets?: Maybe<SkylarkAssetListing>;
-    audience_rating?: Maybe<Scalars["String"]>;
+    audience_rating?: Maybe<Scalars["String"]["output"]>;
     availability?: Maybe<AvailabilityListing>;
+    /**  reverse::movies */
     brands?: Maybe<BrandListing>;
-    budget?: Maybe<Scalars["String"]>;
+    budget?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::movies */
     call_to_actions?: Maybe<CallToActionListing>;
     content_of?: Maybe<SetListing>;
+    /**  reverse::movies */
     credits?: Maybe<CreditListing>;
+    /**  reverse::movies */
     epg_programs?: Maybe<SkylarkEpgProgramListing>;
-    external_id?: Maybe<Scalars["String"]>;
+    external_id?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::movies */
     genres?: Maybe<GenreListing>;
+    /**  reverse::movies */
     images?: Maybe<SkylarkImageListing>;
-    internal_title?: Maybe<Scalars["String"]>;
-    movie_number?: Maybe<Scalars["Int"]>;
+    internal_title?: Maybe<Scalars["String"]["output"]>;
+    movie_number?: Maybe<Scalars["Int"]["output"]>;
+    /**  reverse::movies */
     ratings?: Maybe<RatingListing>;
-    release_date?: Maybe<Scalars["AWSDate"]>;
-    slug?: Maybe<Scalars["String"]>;
-    synopsis?: Maybe<Scalars["String"]>;
-    synopsis_short?: Maybe<Scalars["String"]>;
+    release_date?: Maybe<Scalars["AWSDate"]["output"]>;
+    slug?: Maybe<Scalars["String"]["output"]>;
+    synopsis?: Maybe<Scalars["String"]["output"]>;
+    synopsis_short?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::movies */
     tags?: Maybe<SkylarkTagListing>;
+    /**  reverse::movies */
     themes?: Maybe<ThemeListing>;
-    title?: Maybe<Scalars["String"]>;
-    title_short?: Maybe<Scalars["String"]>;
-    title_sort?: Maybe<Scalars["String"]>;
-    uid: Scalars["String"];
-    year_of_release?: Maybe<Scalars["Int"]>;
+    title?: Maybe<Scalars["String"]["output"]>;
+    title_short?: Maybe<Scalars["String"]["output"]>;
+    title_sort?: Maybe<Scalars["String"]["output"]>;
+    uid: Scalars["String"]["output"];
+    year_of_release?: Maybe<Scalars["Int"]["output"]>;
   };
 
 export type Movie_MetaArgs = {
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type MovieAssetsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type MovieAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MovieBrandsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type MovieCall_To_ActionsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type MovieContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MovieCreditsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type MovieEpg_ProgramsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type MovieGenresArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type MovieImagesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type MovieRatingsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type MovieTagsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type MovieThemesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type MovieCreateInput = {
-  audience_rating?: InputMaybe<Scalars["String"]>;
+  audience_rating?: InputMaybe<Scalars["String"]["input"]>;
   availability?: InputMaybe<AssignAvailabilityInput>;
-  budget?: InputMaybe<Scalars["String"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
-  movie_number?: InputMaybe<Scalars["Int"]>;
+  budget?: InputMaybe<Scalars["String"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
+  movie_number?: InputMaybe<Scalars["Int"]["input"]>;
   relationships?: InputMaybe<MovieRelationships>;
-  release_date?: InputMaybe<Scalars["AWSDate"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  synopsis?: InputMaybe<Scalars["String"]>;
-  synopsis_short?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
-  title_short?: InputMaybe<Scalars["String"]>;
-  title_sort?: InputMaybe<Scalars["String"]>;
-  year_of_release?: InputMaybe<Scalars["Int"]>;
+  release_date?: InputMaybe<Scalars["AWSDate"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  synopsis?: InputMaybe<Scalars["String"]["input"]>;
+  synopsis_short?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  title_short?: InputMaybe<Scalars["String"]["input"]>;
+  title_sort?: InputMaybe<Scalars["String"]["input"]>;
+  year_of_release?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type MovieInput = {
-  audience_rating?: InputMaybe<Scalars["String"]>;
+  audience_rating?: InputMaybe<Scalars["String"]["input"]>;
   availability?: InputMaybe<AssignAvailabilityInput>;
-  budget?: InputMaybe<Scalars["String"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
-  movie_number?: InputMaybe<Scalars["Int"]>;
+  budget?: InputMaybe<Scalars["String"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
+  movie_number?: InputMaybe<Scalars["Int"]["input"]>;
   relationships?: InputMaybe<MovieRelationships>;
-  release_date?: InputMaybe<Scalars["AWSDate"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  synopsis?: InputMaybe<Scalars["String"]>;
-  synopsis_short?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
-  title_short?: InputMaybe<Scalars["String"]>;
-  title_sort?: InputMaybe<Scalars["String"]>;
-  year_of_release?: InputMaybe<Scalars["Int"]>;
+  release_date?: InputMaybe<Scalars["AWSDate"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  synopsis?: InputMaybe<Scalars["String"]["input"]>;
+  synopsis_short?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  title_short?: InputMaybe<Scalars["String"]["input"]>;
+  title_sort?: InputMaybe<Scalars["String"]["input"]>;
+  year_of_release?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type MovieListing = Listing & {
   __typename?: "MovieListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<Movie>>>;
 };
 
 export type MovieRelationshipInput = {
   config?: InputMaybe<RelationshipConfigInput>;
   create?: InputMaybe<Array<InputMaybe<MovieCreateInput>>>;
-  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type MovieRelationships = {
@@ -1966,14 +2048,14 @@ export type MovieRelationships = {
 
 export type MovieSetCreate = {
   object?: InputMaybe<MovieInput>;
-  position: Scalars["Int"];
+  position: Scalars["Int"]["input"];
 };
 
 export type MovieSetInput = {
   create?: InputMaybe<Array<InputMaybe<MovieSetCreate>>>;
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type Mutation = {
@@ -2000,6 +2082,7 @@ export type Mutation = {
   createPerson?: Maybe<Person>;
   createRating?: Maybe<Rating>;
   createRole?: Maybe<Role>;
+  createSchemaVersion?: Maybe<SchemaConfiguration>;
   createSeason?: Maybe<Season>;
   createSkylarkAsset?: Maybe<SkylarkAsset>;
   createSkylarkEPGProgram?: Maybe<SkylarkEpgProgram>;
@@ -2009,15 +2092,15 @@ export type Mutation = {
   createSkylarkSet?: Maybe<SkylarkSet>;
   createSkylarkTag?: Maybe<SkylarkTag>;
   createTheme?: Maybe<Theme>;
-  deleteApiKey?: Maybe<Scalars["String"]>;
+  deleteApiKey?: Maybe<Scalars["String"]["output"]>;
   deleteAppConfig?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
   deleteArticle?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
-  deleteAvailability?: Maybe<Scalars["String"]>;
+  deleteAvailability?: Maybe<Scalars["String"]["output"]>;
   deleteBrand?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
   deleteCallToAction?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
   deleteCredit?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
-  deleteDimension?: Maybe<Scalars["String"]>;
-  deleteDimensionValue?: Maybe<Scalars["String"]>;
+  deleteDimension?: Maybe<Scalars["String"]["output"]>;
+  deleteDimensionValue?: Maybe<Scalars["String"]["output"]>;
   deleteEpisode?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
   deleteGenre?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
   deleteLiveStream?: Maybe<Array<Maybe<ObjectDeleteResponse>>>;
@@ -2041,9 +2124,9 @@ export type Mutation = {
   editFieldConfiguration?: Maybe<ConfigurationResponse>;
   editObjectTypeConfiguration?: Maybe<ConfigurationResponse>;
   editRelationshipConfiguration?: Maybe<ConfigurationResponse>;
-  editSearchableFields?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  editSearchableFields?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   purgeCache?: Maybe<CachePurgeResponse>;
-  sendSearchInsight?: Maybe<Scalars["String"]>;
+  sendSearchInsight?: Maybe<Scalars["String"]["output"]>;
   setAccountConfiguration?: Maybe<AccountDetails>;
   setCacheConfig?: Maybe<CacheConfig>;
   /** @deprecated Replaced with 'setObjectTypeConfiguration' */
@@ -2080,7 +2163,7 @@ export type Mutation = {
 };
 
 export type MutationActivateConfigurationVersionArgs = {
-  version?: InputMaybe<Scalars["Int"]>;
+  version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type MutationBatchDeleteObjectsArgs = {
@@ -2093,12 +2176,12 @@ export type MutationCreateApiKeyArgs = {
 
 export type MutationCreateAppConfigArgs = {
   app_config?: InputMaybe<AppConfigCreateInput>;
-  language?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationCreateArticleArgs = {
   article?: InputMaybe<ArticleCreateInput>;
-  language?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationCreateAvailabilityArgs = {
@@ -2107,17 +2190,17 @@ export type MutationCreateAvailabilityArgs = {
 
 export type MutationCreateBrandArgs = {
   brand?: InputMaybe<BrandCreateInput>;
-  language?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationCreateCallToActionArgs = {
   call_to_action?: InputMaybe<CallToActionCreateInput>;
-  language?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationCreateCreditArgs = {
   credit?: InputMaybe<CreditCreateInput>;
-  language?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationCreateDimensionArgs = {
@@ -2125,306 +2208,310 @@ export type MutationCreateDimensionArgs = {
 };
 
 export type MutationCreateDimensionValueArgs = {
-  dimension_id?: InputMaybe<Scalars["String"]>;
+  dimension_id?: InputMaybe<Scalars["String"]["input"]>;
   dimension_value: DimensionInput;
-  external_id?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationCreateEpisodeArgs = {
   episode?: InputMaybe<EpisodeCreateInput>;
-  language?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationCreateGenreArgs = {
   genre?: InputMaybe<GenreCreateInput>;
-  language?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationCreateLiveStreamArgs = {
-  language?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
   live_stream?: InputMaybe<LiveStreamCreateInput>;
 };
 
 export type MutationCreateMovieArgs = {
-  language?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
   movie?: InputMaybe<MovieCreateInput>;
 };
 
 export type MutationCreateObjectTypeArgs = {
   object_types?: InputMaybe<Array<InputMaybe<CreateObjectTypeInput>>>;
-  version?: InputMaybe<Scalars["Int"]>;
+  version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type MutationCreatePageArgs = {
-  language?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
   page?: InputMaybe<PageCreateInput>;
 };
 
 export type MutationCreateParentalGuidanceArgs = {
-  language?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
   parental_guidance?: InputMaybe<ParentalGuidanceCreateInput>;
 };
 
 export type MutationCreatePersonArgs = {
-  language?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
   person?: InputMaybe<PersonCreateInput>;
 };
 
 export type MutationCreateRatingArgs = {
-  language?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
   rating?: InputMaybe<RatingCreateInput>;
 };
 
 export type MutationCreateRoleArgs = {
-  language?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
   role?: InputMaybe<RoleCreateInput>;
 };
 
+export type MutationCreateSchemaVersionArgs = {
+  based_on?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
 export type MutationCreateSeasonArgs = {
-  language?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
   season?: InputMaybe<SeasonCreateInput>;
 };
 
 export type MutationCreateSkylarkAssetArgs = {
-  language?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
   skylark_asset?: InputMaybe<SkylarkAssetCreateInput>;
 };
 
 export type MutationCreateSkylarkEpgProgramArgs = {
-  language?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
   skylark_epg_program?: InputMaybe<SkylarkEpgProgramCreateInput>;
 };
 
 export type MutationCreateSkylarkFavoriteListArgs = {
-  language?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
   skylark_favorite_list?: InputMaybe<SkylarkFavoriteListCreateInput>;
 };
 
 export type MutationCreateSkylarkImageArgs = {
-  language?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
   skylark_image?: InputMaybe<SkylarkImageCreateInput>;
 };
 
 export type MutationCreateSkylarkLiveAssetArgs = {
-  language?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
   skylark_live_asset?: InputMaybe<SkylarkLiveAssetCreateInput>;
 };
 
 export type MutationCreateSkylarkSetArgs = {
-  language?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
   skylark_set?: InputMaybe<SkylarkSetCreateInput>;
 };
 
 export type MutationCreateSkylarkTagArgs = {
-  language?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
   skylark_tag?: InputMaybe<SkylarkTagCreateInput>;
 };
 
 export type MutationCreateThemeArgs = {
-  language?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
   theme?: InputMaybe<ThemeCreateInput>;
 };
 
 export type MutationDeleteApiKeyArgs = {
-  name: Scalars["String"];
+  name: Scalars["String"]["input"];
 };
 
 export type MutationDeleteAppConfigArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  uid: Scalars["String"]["input"];
 };
 
 export type MutationDeleteArticleArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  uid: Scalars["String"]["input"];
 };
 
 export type MutationDeleteAvailabilityArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationDeleteBrandArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  uid: Scalars["String"]["input"];
 };
 
 export type MutationDeleteCallToActionArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  uid: Scalars["String"]["input"];
 };
 
 export type MutationDeleteCreditArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  uid: Scalars["String"]["input"];
 };
 
 export type MutationDeleteDimensionArgs = {
-  dimension_id?: InputMaybe<Scalars["String"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
+  dimension_id?: InputMaybe<Scalars["String"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationDeleteDimensionValueArgs = {
-  dimension_id?: InputMaybe<Scalars["String"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  value_external_id?: InputMaybe<Scalars["String"]>;
-  value_id?: InputMaybe<Scalars["String"]>;
+  dimension_id?: InputMaybe<Scalars["String"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  value_external_id?: InputMaybe<Scalars["String"]["input"]>;
+  value_id?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationDeleteEpisodeArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  uid: Scalars["String"]["input"];
 };
 
 export type MutationDeleteGenreArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  uid: Scalars["String"]["input"];
 };
 
 export type MutationDeleteLiveStreamArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  uid: Scalars["String"]["input"];
 };
 
 export type MutationDeleteMovieArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  uid: Scalars["String"]["input"];
 };
 
 export type MutationDeleteObjectArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationDeletePageArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  uid: Scalars["String"]["input"];
 };
 
 export type MutationDeleteParentalGuidanceArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  uid: Scalars["String"]["input"];
 };
 
 export type MutationDeletePersonArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  uid: Scalars["String"]["input"];
 };
 
 export type MutationDeleteRatingArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  uid: Scalars["String"]["input"];
 };
 
 export type MutationDeleteRoleArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  uid: Scalars["String"]["input"];
 };
 
 export type MutationDeleteSeasonArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  uid: Scalars["String"]["input"];
 };
 
 export type MutationDeleteSkylarkAssetArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationDeleteSkylarkEpgProgramArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  uid: Scalars["String"]["input"];
 };
 
 export type MutationDeleteSkylarkFavoriteListArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationDeleteSkylarkImageArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  uid: Scalars["String"]["input"];
 };
 
 export type MutationDeleteSkylarkLiveAssetArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  uid: Scalars["String"]["input"];
 };
 
 export type MutationDeleteSkylarkSetArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationDeleteSkylarkTagArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  uid: Scalars["String"]["input"];
 };
 
 export type MutationDeleteThemeArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  uid: Scalars["String"]["input"];
 };
 
 export type MutationEditEnumConfigurationArgs = {
   enums?: InputMaybe<Array<InputMaybe<EditEnumInput>>>;
-  version?: InputMaybe<Scalars["Int"]>;
+  version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type MutationEditFieldConfigurationArgs = {
   fields: Array<InputMaybe<EditFieldInput>>;
   object_class: ObjectTypes;
-  version?: InputMaybe<Scalars["Int"]>;
+  version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type MutationEditObjectTypeConfigurationArgs = {
   object_types?: InputMaybe<Array<InputMaybe<EditObjectTypeInput>>>;
-  version?: InputMaybe<Scalars["Int"]>;
+  version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type MutationEditRelationshipConfigurationArgs = {
   relationships?: InputMaybe<Array<InputMaybe<EditRelationshipInput>>>;
-  version?: InputMaybe<Scalars["Int"]>;
+  version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type MutationEditSearchableFieldsArgs = {
-  fields: Array<InputMaybe<Scalars["String"]>>;
+  fields: Array<InputMaybe<Scalars["String"]["input"]>>;
 };
 
 export type MutationPurgeCacheArgs = {
-  all?: InputMaybe<Scalars["Boolean"]>;
+  all?: InputMaybe<Scalars["Boolean"]["input"]>;
   type?: InputMaybe<CacheTypeInput>;
 };
 
 export type MutationSendSearchInsightArgs = {
-  uid_clicked?: InputMaybe<Scalars["String"]>;
-  user?: InputMaybe<Scalars["String"]>;
+  uid_clicked?: InputMaybe<Scalars["String"]["input"]>;
+  user?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationSetAccountConfigurationArgs = {
@@ -2448,312 +2535,312 @@ export type MutationSetObjectTypeConfigurationArgs = {
 export type MutationSetRelationshipConfigurationArgs = {
   object: ObjectTypes;
   relationship_config: RelationshipConfigInput;
-  relationship_name: Scalars["String"];
+  relationship_name: Scalars["String"]["input"];
 };
 
 export type MutationUpdateApiKeyArgs = {
   api_key: ApiKeyInputUpdate;
-  name: Scalars["String"];
+  name: Scalars["String"]["input"];
 };
 
 export type MutationUpdateAppConfigArgs = {
   app_config?: InputMaybe<AppConfigInput>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
-  uid?: InputMaybe<Scalars["String"]>;
-  upsert?: InputMaybe<Scalars["Boolean"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateArticleArgs = {
   article?: InputMaybe<ArticleInput>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
-  uid?: InputMaybe<Scalars["String"]>;
-  upsert?: InputMaybe<Scalars["Boolean"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateAvailabilityArgs = {
   availability: AvailabilityInput;
-  external_id?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
-  upsert?: InputMaybe<Scalars["Boolean"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateBrandArgs = {
   brand?: InputMaybe<BrandInput>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
-  uid?: InputMaybe<Scalars["String"]>;
-  upsert?: InputMaybe<Scalars["Boolean"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateCallToActionArgs = {
   call_to_action?: InputMaybe<CallToActionInput>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
-  uid?: InputMaybe<Scalars["String"]>;
-  upsert?: InputMaybe<Scalars["Boolean"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateCreditArgs = {
   credit?: InputMaybe<CreditInput>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
-  uid?: InputMaybe<Scalars["String"]>;
-  upsert?: InputMaybe<Scalars["Boolean"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateDimensionArgs = {
   dimension: UpdateDimensionInput;
-  dimension_id?: InputMaybe<Scalars["String"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
+  dimension_id?: InputMaybe<Scalars["String"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationUpdateDimensionValueArgs = {
-  dimension_id?: InputMaybe<Scalars["String"]>;
+  dimension_id?: InputMaybe<Scalars["String"]["input"]>;
   dimension_value: UpdateDimensionInput;
-  external_id?: InputMaybe<Scalars["String"]>;
-  value_external_id?: InputMaybe<Scalars["String"]>;
-  value_id?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  value_external_id?: InputMaybe<Scalars["String"]["input"]>;
+  value_id?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type MutationUpdateEpisodeArgs = {
-  draft?: InputMaybe<Scalars["Boolean"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
   episode?: InputMaybe<EpisodeInput>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
-  uid?: InputMaybe<Scalars["String"]>;
-  upsert?: InputMaybe<Scalars["Boolean"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateGenreArgs = {
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
   genre?: InputMaybe<GenreInput>;
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
-  uid?: InputMaybe<Scalars["String"]>;
-  upsert?: InputMaybe<Scalars["Boolean"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateLiveStreamArgs = {
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
   live_stream?: InputMaybe<LiveStreamInput>;
-  uid?: InputMaybe<Scalars["String"]>;
-  upsert?: InputMaybe<Scalars["Boolean"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateMovieArgs = {
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
   movie?: InputMaybe<MovieInput>;
-  uid?: InputMaybe<Scalars["String"]>;
-  upsert?: InputMaybe<Scalars["Boolean"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdatePageArgs = {
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
   page?: InputMaybe<PageInput>;
-  uid?: InputMaybe<Scalars["String"]>;
-  upsert?: InputMaybe<Scalars["Boolean"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateParentalGuidanceArgs = {
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
   parental_guidance?: InputMaybe<ParentalGuidanceInput>;
-  uid?: InputMaybe<Scalars["String"]>;
-  upsert?: InputMaybe<Scalars["Boolean"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdatePersonArgs = {
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
   person?: InputMaybe<PersonInput>;
-  uid?: InputMaybe<Scalars["String"]>;
-  upsert?: InputMaybe<Scalars["Boolean"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateRatingArgs = {
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
   rating?: InputMaybe<RatingInput>;
-  uid?: InputMaybe<Scalars["String"]>;
-  upsert?: InputMaybe<Scalars["Boolean"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateRoleArgs = {
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
   role?: InputMaybe<RoleInput>;
-  uid?: InputMaybe<Scalars["String"]>;
-  upsert?: InputMaybe<Scalars["Boolean"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateSeasonArgs = {
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
   season?: InputMaybe<SeasonInput>;
-  uid?: InputMaybe<Scalars["String"]>;
-  upsert?: InputMaybe<Scalars["Boolean"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateSkylarkAssetArgs = {
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
   skylark_asset?: InputMaybe<SkylarkAssetInput>;
-  uid?: InputMaybe<Scalars["String"]>;
-  upsert?: InputMaybe<Scalars["Boolean"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateSkylarkEpgProgramArgs = {
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
   skylark_epg_program?: InputMaybe<SkylarkEpgProgramInput>;
-  uid?: InputMaybe<Scalars["String"]>;
-  upsert?: InputMaybe<Scalars["Boolean"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateSkylarkFavoriteListArgs = {
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
   skylark_favorite_list?: InputMaybe<SkylarkFavoriteListInput>;
-  uid?: InputMaybe<Scalars["String"]>;
-  upsert?: InputMaybe<Scalars["Boolean"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateSkylarkImageArgs = {
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
   skylark_image?: InputMaybe<SkylarkImageInput>;
-  uid?: InputMaybe<Scalars["String"]>;
-  upsert?: InputMaybe<Scalars["Boolean"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateSkylarkLiveAssetArgs = {
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
   skylark_live_asset?: InputMaybe<SkylarkLiveAssetInput>;
-  uid?: InputMaybe<Scalars["String"]>;
-  upsert?: InputMaybe<Scalars["Boolean"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateSkylarkSetArgs = {
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
   skylark_set?: InputMaybe<SkylarkSetInput>;
-  uid?: InputMaybe<Scalars["String"]>;
-  upsert?: InputMaybe<Scalars["Boolean"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateSkylarkTagArgs = {
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
   skylark_tag?: InputMaybe<SkylarkTagInput>;
-  uid?: InputMaybe<Scalars["String"]>;
-  upsert?: InputMaybe<Scalars["Boolean"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type MutationUpdateThemeArgs = {
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
   theme?: InputMaybe<ThemeInput>;
-  uid?: InputMaybe<Scalars["String"]>;
-  upsert?: InputMaybe<Scalars["Boolean"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
+  upsert?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type ObjectConfig = {
   __typename?: "ObjectConfig";
-  colour?: Maybe<Scalars["String"]>;
-  display_name?: Maybe<Scalars["String"]>;
+  colour?: Maybe<Scalars["String"]["output"]>;
+  display_name?: Maybe<Scalars["String"]["output"]>;
   field_config?: Maybe<Array<Maybe<FieldConfig>>>;
-  primary_field?: Maybe<Scalars["String"]>;
+  primary_field?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type ObjectConfigInput = {
-  colour?: InputMaybe<Scalars["String"]>;
-  display_name?: InputMaybe<Scalars["String"]>;
+  colour?: InputMaybe<Scalars["String"]["input"]>;
+  display_name?: InputMaybe<Scalars["String"]["input"]>;
   field_config?: InputMaybe<Array<InputMaybe<FieldConfigInput>>>;
-  primary_field?: InputMaybe<Scalars["String"]>;
+  primary_field?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type ObjectDeleteResponse = {
   __typename?: "ObjectDeleteResponse";
-  global_version?: Maybe<Scalars["String"]>;
-  language?: Maybe<Scalars["String"]>;
-  language_version?: Maybe<Scalars["String"]>;
-  message?: Maybe<Scalars["String"]>;
-  removed_relationships?: Maybe<Array<Maybe<Scalars["String"]>>>;
-  task_id?: Maybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  global_version?: Maybe<Scalars["String"]["output"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
+  language_version?: Maybe<Scalars["String"]["output"]>;
+  message?: Maybe<Scalars["String"]["output"]>;
+  removed_relationships?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
+  task_id?: Maybe<Scalars["String"]["output"]>;
+  uid: Scalars["String"]["output"];
 };
 
 export enum ObjectTypes {
@@ -2797,78 +2884,79 @@ export type Page = Metadata &
     availability?: Maybe<AvailabilityListing>;
     content?: Maybe<MetadataListing>;
     content_of?: Maybe<SetListing>;
-    description?: Maybe<Scalars["String"]>;
-    external_id?: Maybe<Scalars["String"]>;
+    description?: Maybe<Scalars["String"]["output"]>;
+    external_id?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::pages */
     images?: Maybe<SkylarkImageListing>;
-    slug?: Maybe<Scalars["String"]>;
-    title?: Maybe<Scalars["String"]>;
-    uid: Scalars["String"];
+    slug?: Maybe<Scalars["String"]["output"]>;
+    title?: Maybe<Scalars["String"]["output"]>;
+    uid: Scalars["String"]["output"];
   };
 
 export type Page_MetaArgs = {
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type PageAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type PageContentArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order?: InputMaybe<OrderDirections>;
 };
 
 export type PageContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type PageImagesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type PageCreateInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
   content?: InputMaybe<SetContentRelationships>;
-  description?: InputMaybe<Scalars["String"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<PageRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type PageInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
   content?: InputMaybe<SetContentRelationships>;
-  description?: InputMaybe<Scalars["String"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<PageRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type PageListing = Listing & {
   __typename?: "PageListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<Page>>>;
 };
 
 export type PageRelationshipInput = {
   config?: InputMaybe<RelationshipConfigInput>;
   create?: InputMaybe<Array<InputMaybe<PageCreateInput>>>;
-  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type PageRelationships = {
@@ -2877,14 +2965,14 @@ export type PageRelationships = {
 
 export type PageSetCreate = {
   object?: InputMaybe<PageInput>;
-  position: Scalars["Int"];
+  position: Scalars["Int"]["input"];
 };
 
 export type PageSetInput = {
   create?: InputMaybe<Array<InputMaybe<PageSetCreate>>>;
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type ParentalGuidance = Metadata &
@@ -2895,72 +2983,73 @@ export type ParentalGuidance = Metadata &
     _meta?: Maybe<_ParentalGuidanceMeta>;
     availability?: Maybe<AvailabilityListing>;
     content_of?: Maybe<SetListing>;
-    external_id?: Maybe<Scalars["String"]>;
-    internal_title?: Maybe<Scalars["String"]>;
+    external_id?: Maybe<Scalars["String"]["output"]>;
+    internal_title?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::parental_guidance */
     ratings?: Maybe<RatingListing>;
-    reason?: Maybe<Scalars["String"]>;
-    reason_sort?: Maybe<Scalars["String"]>;
-    slug?: Maybe<Scalars["String"]>;
-    uid: Scalars["String"];
+    reason?: Maybe<Scalars["String"]["output"]>;
+    reason_sort?: Maybe<Scalars["String"]["output"]>;
+    slug?: Maybe<Scalars["String"]["output"]>;
+    uid: Scalars["String"]["output"];
   };
 
 export type ParentalGuidance_MetaArgs = {
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type ParentalGuidanceAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type ParentalGuidanceContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type ParentalGuidanceRatingsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type ParentalGuidanceCreateInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
-  reason?: InputMaybe<Scalars["String"]>;
-  reason_sort?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
+  reason?: InputMaybe<Scalars["String"]["input"]>;
+  reason_sort?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<ParentalGuidanceRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type ParentalGuidanceInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
-  reason?: InputMaybe<Scalars["String"]>;
-  reason_sort?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
+  reason?: InputMaybe<Scalars["String"]["input"]>;
+  reason_sort?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<ParentalGuidanceRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type ParentalGuidanceListing = Listing & {
   __typename?: "ParentalGuidanceListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<ParentalGuidance>>>;
 };
 
 export type ParentalGuidanceRelationshipInput = {
   config?: InputMaybe<RelationshipConfigInput>;
   create?: InputMaybe<Array<InputMaybe<ParentalGuidanceCreateInput>>>;
-  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type ParentalGuidanceRelationships = {
@@ -2969,14 +3058,14 @@ export type ParentalGuidanceRelationships = {
 
 export type ParentalGuidanceSetCreate = {
   object?: InputMaybe<ParentalGuidanceInput>;
-  position: Scalars["Int"];
+  position: Scalars["Int"]["input"];
 };
 
 export type ParentalGuidanceSetInput = {
   create?: InputMaybe<Array<InputMaybe<ParentalGuidanceSetCreate>>>;
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type Person = Metadata &
@@ -2985,127 +3074,132 @@ export type Person = Metadata &
     _config?: Maybe<ObjectConfig>;
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_PersonMeta>;
-    abbreviation?: Maybe<Scalars["String"]>;
-    alias?: Maybe<Scalars["String"]>;
+    abbreviation?: Maybe<Scalars["String"]["output"]>;
+    alias?: Maybe<Scalars["String"]["output"]>;
     availability?: Maybe<AvailabilityListing>;
-    bio_long?: Maybe<Scalars["String"]>;
-    bio_medium?: Maybe<Scalars["String"]>;
-    bio_short?: Maybe<Scalars["String"]>;
+    bio_long?: Maybe<Scalars["String"]["output"]>;
+    bio_medium?: Maybe<Scalars["String"]["output"]>;
+    bio_short?: Maybe<Scalars["String"]["output"]>;
     content_of?: Maybe<SetListing>;
+    /**  reverse::people */
     credits?: Maybe<CreditListing>;
-    date_of_birth?: Maybe<Scalars["AWSDate"]>;
-    external_id?: Maybe<Scalars["String"]>;
-    genre?: Maybe<Scalars["String"]>;
+    date_of_birth?: Maybe<Scalars["AWSDate"]["output"]>;
+    external_id?: Maybe<Scalars["String"]["output"]>;
+    genre?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::people */
     genres?: Maybe<GenreListing>;
+    /**  reverse::people */
     images?: Maybe<SkylarkImageListing>;
-    name?: Maybe<Scalars["String"]>;
-    name_sort?: Maybe<Scalars["String"]>;
-    place_of_birth?: Maybe<Scalars["String"]>;
-    slug?: Maybe<Scalars["String"]>;
+    name?: Maybe<Scalars["String"]["output"]>;
+    name_sort?: Maybe<Scalars["String"]["output"]>;
+    place_of_birth?: Maybe<Scalars["String"]["output"]>;
+    slug?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::people */
     tags?: Maybe<SkylarkTagListing>;
+    /**  reverse::people */
     themes?: Maybe<ThemeListing>;
-    uid: Scalars["String"];
+    uid: Scalars["String"]["output"];
   };
 
 export type Person_MetaArgs = {
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type PersonAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type PersonContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type PersonCreditsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type PersonGenresArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type PersonImagesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type PersonTagsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type PersonThemesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type PersonCreateInput = {
-  abbreviation?: InputMaybe<Scalars["String"]>;
-  alias?: InputMaybe<Scalars["String"]>;
+  abbreviation?: InputMaybe<Scalars["String"]["input"]>;
+  alias?: InputMaybe<Scalars["String"]["input"]>;
   availability?: InputMaybe<AssignAvailabilityInput>;
-  bio_long?: InputMaybe<Scalars["String"]>;
-  bio_medium?: InputMaybe<Scalars["String"]>;
-  bio_short?: InputMaybe<Scalars["String"]>;
-  date_of_birth?: InputMaybe<Scalars["AWSDate"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  genre?: InputMaybe<Scalars["String"]>;
-  name?: InputMaybe<Scalars["String"]>;
-  name_sort?: InputMaybe<Scalars["String"]>;
-  place_of_birth?: InputMaybe<Scalars["String"]>;
+  bio_long?: InputMaybe<Scalars["String"]["input"]>;
+  bio_medium?: InputMaybe<Scalars["String"]["input"]>;
+  bio_short?: InputMaybe<Scalars["String"]["input"]>;
+  date_of_birth?: InputMaybe<Scalars["AWSDate"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  genre?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  name_sort?: InputMaybe<Scalars["String"]["input"]>;
+  place_of_birth?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<PersonRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type PersonInput = {
-  abbreviation?: InputMaybe<Scalars["String"]>;
-  alias?: InputMaybe<Scalars["String"]>;
+  abbreviation?: InputMaybe<Scalars["String"]["input"]>;
+  alias?: InputMaybe<Scalars["String"]["input"]>;
   availability?: InputMaybe<AssignAvailabilityInput>;
-  bio_long?: InputMaybe<Scalars["String"]>;
-  bio_medium?: InputMaybe<Scalars["String"]>;
-  bio_short?: InputMaybe<Scalars["String"]>;
-  date_of_birth?: InputMaybe<Scalars["AWSDate"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  genre?: InputMaybe<Scalars["String"]>;
-  name?: InputMaybe<Scalars["String"]>;
-  name_sort?: InputMaybe<Scalars["String"]>;
-  place_of_birth?: InputMaybe<Scalars["String"]>;
+  bio_long?: InputMaybe<Scalars["String"]["input"]>;
+  bio_medium?: InputMaybe<Scalars["String"]["input"]>;
+  bio_short?: InputMaybe<Scalars["String"]["input"]>;
+  date_of_birth?: InputMaybe<Scalars["AWSDate"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  genre?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  name_sort?: InputMaybe<Scalars["String"]["input"]>;
+  place_of_birth?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<PersonRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type PersonListing = Listing & {
   __typename?: "PersonListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<Person>>>;
 };
 
 export type PersonRelationshipInput = {
   config?: InputMaybe<RelationshipConfigInput>;
   create?: InputMaybe<Array<InputMaybe<PersonCreateInput>>>;
-  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type PersonRelationships = {
@@ -3118,14 +3212,14 @@ export type PersonRelationships = {
 
 export type PersonSetCreate = {
   object?: InputMaybe<PersonInput>;
-  position: Scalars["Int"];
+  position: Scalars["Int"]["input"];
 };
 
 export type PersonSetInput = {
   create?: InputMaybe<Array<InputMaybe<PersonSetCreate>>>;
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export enum PlaybackParentObjectTypes {
@@ -3141,8 +3235,8 @@ export enum PlaybackPolicy {
 
 export type PlaybackUrl = {
   __typename?: "PlaybackUrl";
-  url?: Maybe<Scalars["String"]>;
-  url_type?: Maybe<Scalars["String"]>;
+  url?: Maybe<Scalars["String"]["output"]>;
+  url_type?: Maybe<Scalars["String"]["output"]>;
 };
 
 export enum PublishStage {
@@ -3153,7 +3247,7 @@ export enum PublishStage {
 
 export type Query = {
   __typename?: "Query";
-  AiAssistant?: Maybe<Scalars["AWSJSON"]>;
+  AiAssistant?: Maybe<Scalars["AWSJSON"]["output"]>;
   getAccount?: Maybe<AccountDetails>;
   getActivationStatus?: Maybe<ActivationStatus>;
   getAppConfig?: Maybe<AppConfig>;
@@ -3162,11 +3256,11 @@ export type Query = {
   getBrand?: Maybe<Brand>;
   getCacheConfig?: Maybe<CacheConfig>;
   getCallToAction?: Maybe<CallToAction>;
-  getConfigurationSchema?: Maybe<Scalars["AWSJSON"]>;
+  getConfigurationSchema?: Maybe<Scalars["AWSJSON"]["output"]>;
   getConfigurationVersion?: Maybe<SchemaConfiguration>;
   getCredit?: Maybe<Credit>;
   getDimension?: Maybe<Dimension>;
-  getDimensionCode?: Maybe<Scalars["String"]>;
+  getDimensionCode?: Maybe<Scalars["String"]["output"]>;
   getEpisode?: Maybe<Episode>;
   getGenre?: Maybe<Genre>;
   getLiveStream?: Maybe<LiveStream>;
@@ -3181,7 +3275,7 @@ export type Query = {
   getRating?: Maybe<Rating>;
   getRelationshipConfiguration?: Maybe<RelationshipConfig>;
   getRole?: Maybe<Role>;
-  getSearchableFields?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  getSearchableFields?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   getSeason?: Maybe<Season>;
   getSkylarkAsset?: Maybe<SkylarkAsset>;
   getSkylarkBackgroundTask?: Maybe<SkylarkBackgroundTask>;
@@ -3225,81 +3319,83 @@ export type Query = {
 };
 
 export type QueryAiAssistantArgs = {
-  context?: InputMaybe<Scalars["String"]>;
-  fields_to_populate?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  language?: InputMaybe<Scalars["String"]>;
+  context?: InputMaybe<Scalars["String"]["input"]>;
+  fields_to_populate?: InputMaybe<
+    Array<InputMaybe<Scalars["String"]["input"]>>
+  >;
+  language?: InputMaybe<Scalars["String"]["input"]>;
   object_type: ObjectTypes;
-  root_field_data: Scalars["AWSJSON"];
-  set_uid?: InputMaybe<Scalars["String"]>;
+  root_field_data: Scalars["AWSJSON"]["input"];
+  set_uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetAppConfigArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetArticleArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetAvailabilityArgs = {
-  external_id?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetBrandArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetCallToActionArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetConfigurationSchemaArgs = {
-  query?: InputMaybe<Scalars["String"]>;
-  version: Scalars["Int"];
+  query?: InputMaybe<Scalars["String"]["input"]>;
+  version: Scalars["Int"]["input"];
 };
 
 export type QueryGetConfigurationVersionArgs = {
-  version: Scalars["Int"];
+  version: Scalars["Int"]["input"];
 };
 
 export type QueryGetCreditArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetDimensionArgs = {
-  dimension_id?: InputMaybe<Scalars["String"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
+  dimension_id?: InputMaybe<Scalars["String"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetDimensionCodeArgs = {
@@ -3308,52 +3404,52 @@ export type QueryGetDimensionCodeArgs = {
 
 export type QueryGetEpisodeArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetGenreArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetLiveStreamArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetMovieArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetObjectArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetObjectConfigurationArgs = {
@@ -3366,288 +3462,285 @@ export type QueryGetObjectTypeConfigurationArgs = {
 
 export type QueryGetPageArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetParentalGuidanceArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetPersonArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetRatingArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetRelationshipConfigurationArgs = {
   object_type: ObjectTypes;
-  relationship_name: Scalars["String"];
-  uid?: InputMaybe<Scalars["String"]>;
+  relationship_name: Scalars["String"]["input"];
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetRoleArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetSeasonArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetSkylarkAssetArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetSkylarkBackgroundTaskArgs = {
-  task_id: Scalars["String"];
+  task_id: Scalars["String"]["input"];
 };
 
 export type QueryGetSkylarkEpgProgramArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetSkylarkFavoriteListArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetSkylarkImageArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetSkylarkLiveAssetArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetSkylarkSetArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetSkylarkTagArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryGetThemeArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryListAppConfigArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryListArticleArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryListAvailabilityArgs = {
-  end?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  match?: InputMaybe<Scalars["Boolean"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  start?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryListBrandArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryListCallToActionArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryListConfigurationVersionsArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order?: InputMaybe<OrderDirections>;
 };
 
 export type QueryListCreditArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryListDimensionsArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryListEpisodeArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryListGenreArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryListLiveStreamArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryListMovieArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryListPageArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryListParentalGuidanceArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryListPersonArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryListRatingArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryListRelationshipConfigurationArgs = {
@@ -3656,103 +3749,104 @@ export type QueryListRelationshipConfigurationArgs = {
 
 export type QueryListRoleArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryListSeasonArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryListSkylarkAssetArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryListSkylarkBackgroundTaskArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order?: InputMaybe<OrderDirections>;
   status?: InputMaybe<SkylarkBackgroundTaskStatus>;
 };
 
 export type QueryListSkylarkEpgProgramArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryListSkylarkImageArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryListSkylarkLiveAssetArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryListSkylarkSetArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryListSkylarkTagArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QueryListThemeArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  draft?: InputMaybe<Scalars["Boolean"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  draft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type QuerySearchArgs = {
   dimensions?: InputMaybe<Array<InputMaybe<UserDimension>>>;
-  highlight_results?: InputMaybe<Scalars["Boolean"]>;
-  ignore_availability?: InputMaybe<Scalars["Boolean"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  limit_search_fields?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  offset?: InputMaybe<Scalars["Int"]>;
-  query: Scalars["String"];
-  types?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  highlight_results?: InputMaybe<Scalars["Boolean"]["input"]>;
+  ignore_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  limit_search_fields?: InputMaybe<
+    Array<InputMaybe<Scalars["String"]["input"]>>
+  >;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  query: Scalars["String"]["input"];
+  types?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
   typo_tolerance?: InputMaybe<TypoTolerance>;
 };
 
@@ -3762,144 +3856,153 @@ export type Rating = Metadata &
     _config?: Maybe<ObjectConfig>;
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_RatingMeta>;
+    /**  reverse::ratings */
     assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
+    /**  reverse::ratings */
     brands?: Maybe<BrandListing>;
     content_of?: Maybe<SetListing>;
-    description?: Maybe<Scalars["String"]>;
+    description?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::ratings */
     episodes?: Maybe<EpisodeListing>;
-    external_id?: Maybe<Scalars["String"]>;
+    external_id?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::ratings */
     images?: Maybe<SkylarkImageListing>;
-    internal_title?: Maybe<Scalars["String"]>;
+    internal_title?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::ratings */
     live_streams?: Maybe<LiveStreamListing>;
+    /**  reverse::ratings */
     movies?: Maybe<MovieListing>;
+    /**  reverse::ratings */
     parental_guidance?: Maybe<ParentalGuidanceListing>;
-    scheme?: Maybe<Scalars["String"]>;
+    scheme?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::ratings */
     seasons?: Maybe<SeasonListing>;
+    /**  reverse::ratings */
     sets?: Maybe<SkylarkSetListing>;
-    slug?: Maybe<Scalars["String"]>;
-    title?: Maybe<Scalars["String"]>;
-    uid: Scalars["String"];
-    value?: Maybe<Scalars["String"]>;
+    slug?: Maybe<Scalars["String"]["output"]>;
+    title?: Maybe<Scalars["String"]["output"]>;
+    uid: Scalars["String"]["output"];
+    value?: Maybe<Scalars["String"]["output"]>;
   };
 
 export type Rating_MetaArgs = {
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type RatingAssetsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type RatingAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type RatingBrandsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type RatingContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type RatingEpisodesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type RatingImagesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type RatingLive_StreamsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type RatingMoviesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type RatingParental_GuidanceArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type RatingSeasonsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type RatingSetsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type RatingCreateInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  description?: InputMaybe<Scalars["String"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<RatingRelationships>;
-  scheme?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
-  value?: InputMaybe<Scalars["String"]>;
+  scheme?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  value?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type RatingInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  description?: InputMaybe<Scalars["String"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<RatingRelationships>;
-  scheme?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
-  value?: InputMaybe<Scalars["String"]>;
+  scheme?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  value?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type RatingListing = Listing & {
   __typename?: "RatingListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<Rating>>>;
 };
 
 export type RatingRelationshipInput = {
   config?: InputMaybe<RelationshipConfigInput>;
   create?: InputMaybe<Array<InputMaybe<RatingCreateInput>>>;
-  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type RatingRelationships = {
@@ -3916,47 +4019,47 @@ export type RatingRelationships = {
 
 export type RatingSetCreate = {
   object?: InputMaybe<RatingInput>;
-  position: Scalars["Int"];
+  position: Scalars["Int"]["input"];
 };
 
 export type RatingSetInput = {
   create?: InputMaybe<Array<InputMaybe<RatingSetCreate>>>;
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type RelationshipConfig = {
   __typename?: "RelationshipConfig";
-  default_sort_field?: Maybe<Scalars["String"]>;
-  inherit_availability?: Maybe<Scalars["Boolean"]>;
+  default_sort_field?: Maybe<Scalars["String"]["output"]>;
+  inherit_availability?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type RelationshipConfigInput = {
-  default_sort_field?: InputMaybe<Scalars["String"]>;
-  inherit_availability?: InputMaybe<Scalars["Boolean"]>;
+  default_sort_field?: InputMaybe<Scalars["String"]["input"]>;
+  inherit_availability?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type RelationshipConfigList = {
   __typename?: "RelationshipConfigList";
   config?: Maybe<RelationshipConfig>;
-  relationship_name?: Maybe<Scalars["String"]>;
+  relationship_name?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type RelativeTimes = {
-  days?: InputMaybe<Scalars["Int"]>;
-  hours?: InputMaybe<Scalars["Int"]>;
-  minutes?: InputMaybe<Scalars["Int"]>;
-  months?: InputMaybe<Scalars["Int"]>;
-  seconds?: InputMaybe<Scalars["Int"]>;
-  weeks?: InputMaybe<Scalars["Int"]>;
-  years?: InputMaybe<Scalars["Int"]>;
+  days?: InputMaybe<Scalars["Int"]["input"]>;
+  hours?: InputMaybe<Scalars["Int"]["input"]>;
+  minutes?: InputMaybe<Scalars["Int"]["input"]>;
+  months?: InputMaybe<Scalars["Int"]["input"]>;
+  seconds?: InputMaybe<Scalars["Int"]["input"]>;
+  weeks?: InputMaybe<Scalars["Int"]["input"]>;
+  years?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type RequestContext = {
   __typename?: "RequestContext";
-  task_id?: Maybe<Scalars["String"]>;
-  typename_highlight?: Maybe<Scalars["String"]>;
+  task_id?: Maybe<Scalars["String"]["output"]>;
+  typename_highlight?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type Role = Metadata &
@@ -3967,72 +4070,73 @@ export type Role = Metadata &
     _meta?: Maybe<_RoleMeta>;
     availability?: Maybe<AvailabilityListing>;
     content_of?: Maybe<SetListing>;
+    /**  reverse::roles */
     credits?: Maybe<CreditListing>;
-    external_id?: Maybe<Scalars["String"]>;
-    internal_title?: Maybe<Scalars["String"]>;
-    slug?: Maybe<Scalars["String"]>;
-    title?: Maybe<Scalars["String"]>;
-    title_sort?: Maybe<Scalars["String"]>;
-    uid: Scalars["String"];
+    external_id?: Maybe<Scalars["String"]["output"]>;
+    internal_title?: Maybe<Scalars["String"]["output"]>;
+    slug?: Maybe<Scalars["String"]["output"]>;
+    title?: Maybe<Scalars["String"]["output"]>;
+    title_sort?: Maybe<Scalars["String"]["output"]>;
+    uid: Scalars["String"]["output"];
   };
 
 export type Role_MetaArgs = {
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type RoleAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type RoleContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type RoleCreditsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type RoleCreateInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<RoleRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
-  title_sort?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  title_sort?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type RoleInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<RoleRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
-  title_sort?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  title_sort?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type RoleListing = Listing & {
   __typename?: "RoleListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<Role>>>;
 };
 
 export type RoleRelationshipInput = {
   config?: InputMaybe<RelationshipConfigInput>;
   create?: InputMaybe<Array<InputMaybe<RoleCreateInput>>>;
-  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type RoleRelationships = {
@@ -4041,128 +4145,127 @@ export type RoleRelationships = {
 
 export type RoleSetCreate = {
   object?: InputMaybe<RoleInput>;
-  position: Scalars["Int"];
+  position: Scalars["Int"]["input"];
 };
 
 export type RoleSetInput = {
   create?: InputMaybe<Array<InputMaybe<RoleSetCreate>>>;
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type SchemaConfigEnumListing = {
   __typename?: "SchemaConfigEnumListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<SchemaConfigurationEnum>>>;
 };
 
 export type SchemaConfigFieldListing = {
   __typename?: "SchemaConfigFieldListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<SchemaConfigurationField>>>;
 };
 
 export type SchemaConfigObjectListing = {
   __typename?: "SchemaConfigObjectListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<SchemaConfigurationObject>>>;
 };
 
 export type SchemaConfigRelationshipListing = {
   __typename?: "SchemaConfigRelationshipListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<SchemaConfigurationRelationship>>>;
 };
 
 export type SchemaConfiguration = {
   __typename?: "SchemaConfiguration";
-  active?: Maybe<Scalars["Boolean"]>;
-  base_version?: Maybe<Scalars["Int"]>;
+  active?: Maybe<Scalars["Boolean"]["output"]>;
+  base_version?: Maybe<Scalars["Int"]["output"]>;
   configured_objects?: Maybe<SchemaConfigObjectListing>;
   enums?: Maybe<SchemaConfigEnumListing>;
-  published?: Maybe<Scalars["Boolean"]>;
-  version?: Maybe<Scalars["Int"]>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type SchemaConfigurationConfigured_ObjectsArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  object_name?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  object_name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SchemaConfigurationEnumsArgs = {
-  enum_name?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  enum_name?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SchemaConfigurationEnum = {
   __typename?: "SchemaConfigurationEnum";
-  name?: Maybe<Scalars["String"]>;
-  values?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  name?: Maybe<Scalars["String"]["output"]>;
+  values?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
 };
 
 export type SchemaConfigurationField = {
   __typename?: "SchemaConfigurationField";
-  enum_name?: Maybe<Scalars["String"]>;
-  is_translatable?: Maybe<Scalars["Boolean"]>;
-  name?: Maybe<Scalars["String"]>;
-  operation?: Maybe<Scalars["String"]>;
-  required?: Maybe<Scalars["Boolean"]>;
-  type?: Maybe<Scalars["String"]>;
+  enum_name?: Maybe<Scalars["String"]["output"]>;
+  is_translatable?: Maybe<Scalars["Boolean"]["output"]>;
+  name?: Maybe<Scalars["String"]["output"]>;
+  operation?: Maybe<Scalars["String"]["output"]>;
+  required?: Maybe<Scalars["Boolean"]["output"]>;
+  type?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type SchemaConfigurationListing = {
   __typename?: "SchemaConfigurationListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<SchemaConfiguration>>>;
 };
 
 export type SchemaConfigurationObject = {
   __typename?: "SchemaConfigurationObject";
   fields?: Maybe<SchemaConfigFieldListing>;
-  name?: Maybe<Scalars["String"]>;
-  operation?: Maybe<Scalars["String"]>;
+  name?: Maybe<Scalars["String"]["output"]>;
+  operation?: Maybe<Scalars["String"]["output"]>;
   relationships?: Maybe<SchemaConfigRelationshipListing>;
 };
 
 export type SchemaConfigurationObjectFieldsArgs = {
-  field_name?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  field_name?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SchemaConfigurationObjectRelationshipsArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  relationship_name?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  relationship_name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SchemaConfigurationRelationship = {
   __typename?: "SchemaConfigurationRelationship";
-  from_class?: Maybe<Scalars["String"]>;
-  operation?: Maybe<Scalars["String"]>;
-  relationship_name?: Maybe<Scalars["String"]>;
-  reverse_relationship_name?: Maybe<Scalars["String"]>;
-  to_class?: Maybe<Scalars["String"]>;
+  from_class?: Maybe<Scalars["String"]["output"]>;
+  operation?: Maybe<Scalars["String"]["output"]>;
+  relationship_name?: Maybe<Scalars["String"]["output"]>;
+  reverse_relationship_name?: Maybe<Scalars["String"]["output"]>;
+  to_class?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type SearchListing = {
-  count?: Maybe<Scalars["Int"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type SearchResultListing = SearchListing & {
   __typename?: "SearchResultListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
   objects?: Maybe<Array<Maybe<VisibleObject>>>;
-  total_count?: Maybe<Scalars["Int"]>;
+  total_count?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type Season = Metadata &
@@ -4171,173 +4274,183 @@ export type Season = Metadata &
     _config?: Maybe<ObjectConfig>;
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_SeasonMeta>;
+    /**  reverse::seasons */
     assets?: Maybe<SkylarkAssetListing>;
-    audience_rating?: Maybe<Scalars["String"]>;
+    audience_rating?: Maybe<Scalars["String"]["output"]>;
     availability?: Maybe<AvailabilityListing>;
+    /**  reverse::seasons */
     brands?: Maybe<BrandListing>;
+    /**  reverse::seasons */
     call_to_actions?: Maybe<CallToActionListing>;
     content_of?: Maybe<SetListing>;
+    /**  reverse::seasons */
     credits?: Maybe<CreditListing>;
+    /**  reverse::seasons */
     episodes?: Maybe<EpisodeListing>;
-    external_id?: Maybe<Scalars["String"]>;
+    external_id?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::seasons */
     genres?: Maybe<GenreListing>;
+    /**  reverse::seasons */
     images?: Maybe<SkylarkImageListing>;
-    internal_title?: Maybe<Scalars["String"]>;
-    number_of_episodes?: Maybe<Scalars["Int"]>;
-    preferred_image_type?: Maybe<Scalars["String"]>;
+    internal_title?: Maybe<Scalars["String"]["output"]>;
+    number_of_episodes?: Maybe<Scalars["Int"]["output"]>;
+    preferred_image_type?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::seasons */
     ratings?: Maybe<RatingListing>;
-    release_date?: Maybe<Scalars["AWSDate"]>;
-    season_number?: Maybe<Scalars["Int"]>;
-    slug?: Maybe<Scalars["String"]>;
-    synopsis?: Maybe<Scalars["String"]>;
-    synopsis_short?: Maybe<Scalars["String"]>;
+    release_date?: Maybe<Scalars["AWSDate"]["output"]>;
+    season_number?: Maybe<Scalars["Int"]["output"]>;
+    slug?: Maybe<Scalars["String"]["output"]>;
+    synopsis?: Maybe<Scalars["String"]["output"]>;
+    synopsis_short?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::seasons */
     tags?: Maybe<SkylarkTagListing>;
+    /**  reverse::seasons */
     themes?: Maybe<ThemeListing>;
-    title?: Maybe<Scalars["String"]>;
-    title_short?: Maybe<Scalars["String"]>;
-    title_sort?: Maybe<Scalars["String"]>;
-    uid: Scalars["String"];
-    year_of_release?: Maybe<Scalars["Int"]>;
+    title?: Maybe<Scalars["String"]["output"]>;
+    title_short?: Maybe<Scalars["String"]["output"]>;
+    title_sort?: Maybe<Scalars["String"]["output"]>;
+    uid: Scalars["String"]["output"];
+    year_of_release?: Maybe<Scalars["Int"]["output"]>;
   };
 
 export type Season_MetaArgs = {
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type SeasonAssetsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SeasonAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SeasonBrandsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SeasonCall_To_ActionsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SeasonContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SeasonCreditsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SeasonEpisodesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SeasonGenresArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SeasonImagesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SeasonRatingsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SeasonTagsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SeasonThemesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SeasonCreateInput = {
-  audience_rating?: InputMaybe<Scalars["String"]>;
+  audience_rating?: InputMaybe<Scalars["String"]["input"]>;
   availability?: InputMaybe<AssignAvailabilityInput>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
-  number_of_episodes?: InputMaybe<Scalars["Int"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
+  number_of_episodes?: InputMaybe<Scalars["Int"]["input"]>;
   preferred_image_type?: InputMaybe<ImageType>;
   relationships?: InputMaybe<SeasonRelationships>;
-  release_date?: InputMaybe<Scalars["AWSDate"]>;
-  season_number?: InputMaybe<Scalars["Int"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  synopsis?: InputMaybe<Scalars["String"]>;
-  synopsis_short?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
-  title_short?: InputMaybe<Scalars["String"]>;
-  title_sort?: InputMaybe<Scalars["String"]>;
-  year_of_release?: InputMaybe<Scalars["Int"]>;
+  release_date?: InputMaybe<Scalars["AWSDate"]["input"]>;
+  season_number?: InputMaybe<Scalars["Int"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  synopsis?: InputMaybe<Scalars["String"]["input"]>;
+  synopsis_short?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  title_short?: InputMaybe<Scalars["String"]["input"]>;
+  title_sort?: InputMaybe<Scalars["String"]["input"]>;
+  year_of_release?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type SeasonInput = {
-  audience_rating?: InputMaybe<Scalars["String"]>;
+  audience_rating?: InputMaybe<Scalars["String"]["input"]>;
   availability?: InputMaybe<AssignAvailabilityInput>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
-  number_of_episodes?: InputMaybe<Scalars["Int"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
+  number_of_episodes?: InputMaybe<Scalars["Int"]["input"]>;
   preferred_image_type?: InputMaybe<ImageType>;
   relationships?: InputMaybe<SeasonRelationships>;
-  release_date?: InputMaybe<Scalars["AWSDate"]>;
-  season_number?: InputMaybe<Scalars["Int"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  synopsis?: InputMaybe<Scalars["String"]>;
-  synopsis_short?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
-  title_short?: InputMaybe<Scalars["String"]>;
-  title_sort?: InputMaybe<Scalars["String"]>;
-  year_of_release?: InputMaybe<Scalars["Int"]>;
+  release_date?: InputMaybe<Scalars["AWSDate"]["input"]>;
+  season_number?: InputMaybe<Scalars["Int"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  synopsis?: InputMaybe<Scalars["String"]["input"]>;
+  synopsis_short?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  title_short?: InputMaybe<Scalars["String"]["input"]>;
+  title_sort?: InputMaybe<Scalars["String"]["input"]>;
+  year_of_release?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type SeasonListing = Listing & {
   __typename?: "SeasonListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<Season>>>;
 };
 
 export type SeasonRelationshipInput = {
   config?: InputMaybe<RelationshipConfigInput>;
   create?: InputMaybe<Array<InputMaybe<SeasonCreateInput>>>;
-  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type SeasonRelationships = {
@@ -4355,14 +4468,14 @@ export type SeasonRelationships = {
 
 export type SeasonSetCreate = {
   object?: InputMaybe<SeasonInput>;
-  position: Scalars["Int"];
+  position: Scalars["Int"]["input"];
 };
 
 export type SeasonSetInput = {
   create?: InputMaybe<Array<InputMaybe<SeasonSetCreate>>>;
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type Set = {
@@ -4370,16 +4483,16 @@ export type Set = {
 };
 
 export type SetContentArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order?: InputMaybe<OrderDirections>;
 };
 
 export type SetContent = {
   __typename?: "SetContent";
   object?: Maybe<Metadata>;
-  position?: Maybe<Scalars["Int"]>;
+  position?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type SetContentRelationships = {
@@ -4409,27 +4522,22 @@ export type SetContentRelationships = {
 };
 
 export type SetLink = {
-  position: Scalars["Int"];
-  uid: Scalars["String"];
+  position: Scalars["Int"]["input"];
+  uid: Scalars["String"]["input"];
 };
 
 export type SetListing = {
   __typename?: "SetListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<Set>>>;
 };
 
 export enum SetType {
   Collection = "COLLECTION",
-  Grid = "GRID",
-  GridPortrait = "GRID_PORTRAIT",
-  Page = "PAGE",
+  Generic = "GENERIC",
+  Homepage = "HOMEPAGE",
   Rail = "RAIL",
-  RailInset = "RAIL_INSET",
-  RailMovie = "RAIL_MOVIE",
-  RailPortrait = "RAIL_PORTRAIT",
-  RailWithSynopsis = "RAIL_WITH_SYNOPSIS",
   Slider = "SLIDER",
 }
 
@@ -4451,194 +4559,205 @@ export type SkylarkAsset = AssetInterface &
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_SkylarkAssetMeta>;
     availability?: Maybe<AvailabilityListing>;
+    /**  reverse::assets */
     brands?: Maybe<BrandListing>;
     content_of?: Maybe<SetListing>;
+    /**  reverse::assets */
     credits?: Maybe<CreditListing>;
-    dash_dashboard?: Maybe<Scalars["String"]>;
-    dash_id?: Maybe<Scalars["String"]>;
-    dash_url?: Maybe<Scalars["String"]>;
-    duration?: Maybe<Scalars["Int"]>;
+    dash_dashboard?: Maybe<Scalars["String"]["output"]>;
+    dash_id?: Maybe<Scalars["String"]["output"]>;
+    dash_url?: Maybe<Scalars["String"]["output"]>;
+    duration?: Maybe<Scalars["Int"]["output"]>;
+    /**  reverse::assets */
     episodes?: Maybe<EpisodeListing>;
-    external_id?: Maybe<Scalars["String"]>;
+    external_id?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::assets */
     genres?: Maybe<GenreListing>;
-    hls_dashboard?: Maybe<Scalars["String"]>;
-    hls_id?: Maybe<Scalars["String"]>;
-    hls_url?: Maybe<Scalars["String"]>;
+    hls_dashboard?: Maybe<Scalars["String"]["output"]>;
+    hls_id?: Maybe<Scalars["String"]["output"]>;
+    hls_url?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::assets */
     images?: Maybe<SkylarkImageListing>;
-    ingest_file?: Maybe<Scalars["String"]>;
-    internal_title?: Maybe<Scalars["String"]>;
+    ingest_file?: Maybe<Scalars["String"]["output"]>;
+    internal_title?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::assets */
     live_streams?: Maybe<LiveStreamListing>;
+    /**  reverse::assets */
     movies?: Maybe<MovieListing>;
-    policy?: Maybe<Scalars["String"]>;
-    provider?: Maybe<Scalars["String"]>;
+    policy?: Maybe<Scalars["String"]["output"]>;
+    provider?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::assets */
     ratings?: Maybe<RatingListing>;
-    release_date?: Maybe<Scalars["String"]>;
+    release_date?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::assets */
     seasons?: Maybe<SeasonListing>;
+    /**  reverse::assets */
     sets?: Maybe<SkylarkSetListing>;
-    slug?: Maybe<Scalars["String"]>;
-    status?: Maybe<Scalars["String"]>;
+    slug?: Maybe<Scalars["String"]["output"]>;
+    status?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::assets */
     tags?: Maybe<SkylarkTagListing>;
-    title?: Maybe<Scalars["String"]>;
-    title_sort?: Maybe<Scalars["String"]>;
-    type?: Maybe<Scalars["String"]>;
-    uid: Scalars["String"];
-    url?: Maybe<Scalars["String"]>;
+    title?: Maybe<Scalars["String"]["output"]>;
+    title_sort?: Maybe<Scalars["String"]["output"]>;
+    type?: Maybe<Scalars["String"]["output"]>;
+    uid: Scalars["String"]["output"];
+    url?: Maybe<Scalars["String"]["output"]>;
   };
 
 export type SkylarkAsset_MetaArgs = {
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type SkylarkAssetAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkAssetBrandsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkAssetContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkAssetCreditsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkAssetEpisodesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkAssetGenresArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkAssetImagesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkAssetLive_StreamsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkAssetMoviesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkAssetRatingsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkAssetSeasonsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkAssetSetsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkAssetTagsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkAssetCreateInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  dash_dashboard?: InputMaybe<Scalars["AWSURL"]>;
-  dash_id?: InputMaybe<Scalars["String"]>;
-  dash_url?: InputMaybe<Scalars["AWSURL"]>;
-  duration?: InputMaybe<Scalars["Int"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  hls_dashboard?: InputMaybe<Scalars["AWSURL"]>;
-  hls_id?: InputMaybe<Scalars["String"]>;
-  hls_url?: InputMaybe<Scalars["AWSURL"]>;
-  ingest_file?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
+  dash_dashboard?: InputMaybe<Scalars["AWSURL"]["input"]>;
+  dash_id?: InputMaybe<Scalars["String"]["input"]>;
+  dash_url?: InputMaybe<Scalars["AWSURL"]["input"]>;
+  duration?: InputMaybe<Scalars["Int"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  hls_dashboard?: InputMaybe<Scalars["AWSURL"]["input"]>;
+  hls_id?: InputMaybe<Scalars["String"]["input"]>;
+  hls_url?: InputMaybe<Scalars["AWSURL"]["input"]>;
+  ingest_file?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
   policy?: InputMaybe<PlaybackPolicy>;
-  provider?: InputMaybe<Scalars["String"]>;
+  provider?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<SkylarkAssetRelationships>;
-  release_date?: InputMaybe<Scalars["AWSDate"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  status?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
-  title_sort?: InputMaybe<Scalars["String"]>;
+  release_date?: InputMaybe<Scalars["AWSDate"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  status?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  title_sort?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<AssetType>;
-  url?: InputMaybe<Scalars["AWSURL"]>;
+  url?: InputMaybe<Scalars["AWSURL"]["input"]>;
 };
 
 export type SkylarkAssetInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  dash_dashboard?: InputMaybe<Scalars["AWSURL"]>;
-  dash_id?: InputMaybe<Scalars["String"]>;
-  dash_url?: InputMaybe<Scalars["AWSURL"]>;
-  duration?: InputMaybe<Scalars["Int"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  hls_dashboard?: InputMaybe<Scalars["AWSURL"]>;
-  hls_id?: InputMaybe<Scalars["String"]>;
-  hls_url?: InputMaybe<Scalars["AWSURL"]>;
-  ingest_file?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
+  dash_dashboard?: InputMaybe<Scalars["AWSURL"]["input"]>;
+  dash_id?: InputMaybe<Scalars["String"]["input"]>;
+  dash_url?: InputMaybe<Scalars["AWSURL"]["input"]>;
+  duration?: InputMaybe<Scalars["Int"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  hls_dashboard?: InputMaybe<Scalars["AWSURL"]["input"]>;
+  hls_id?: InputMaybe<Scalars["String"]["input"]>;
+  hls_url?: InputMaybe<Scalars["AWSURL"]["input"]>;
+  ingest_file?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
   policy?: InputMaybe<PlaybackPolicy>;
-  provider?: InputMaybe<Scalars["String"]>;
+  provider?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<SkylarkAssetRelationships>;
-  release_date?: InputMaybe<Scalars["AWSDate"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  status?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
-  title_sort?: InputMaybe<Scalars["String"]>;
+  release_date?: InputMaybe<Scalars["AWSDate"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  status?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  title_sort?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<AssetType>;
-  url?: InputMaybe<Scalars["AWSURL"]>;
+  url?: InputMaybe<Scalars["AWSURL"]["input"]>;
 };
 
 export type SkylarkAssetListing = Listing & {
   __typename?: "SkylarkAssetListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<SkylarkAsset>>>;
 };
 
 export type SkylarkAssetRelationshipInput = {
   create?: InputMaybe<Array<InputMaybe<SkylarkAssetInput>>>;
-  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type SkylarkAssetRelationships = {
@@ -4657,31 +4776,31 @@ export type SkylarkAssetRelationships = {
 
 export type SkylarkAssetSetCreate = {
   object?: InputMaybe<SkylarkAssetInput>;
-  position: Scalars["Int"];
+  position: Scalars["Int"]["input"];
 };
 
 export type SkylarkAssetSetInput = {
   create?: InputMaybe<Array<InputMaybe<SkylarkAssetSetCreate>>>;
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type SkylarkBackgroundTask = {
   __typename?: "SkylarkBackgroundTask";
-  created_at?: Maybe<Scalars["String"]>;
-  messages?: Maybe<Array<Maybe<Scalars["String"]>>>;
-  object_uid?: Maybe<Scalars["String"]>;
+  created_at?: Maybe<Scalars["String"]["output"]>;
+  messages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
+  object_uid?: Maybe<Scalars["String"]["output"]>;
   status?: Maybe<SkylarkBackgroundTaskStatus>;
-  task_id?: Maybe<Scalars["String"]>;
-  task_type?: Maybe<Scalars["String"]>;
-  updated_at?: Maybe<Scalars["String"]>;
+  task_id?: Maybe<Scalars["String"]["output"]>;
+  task_type?: Maybe<Scalars["String"]["output"]>;
+  updated_at?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type SkylarkBackgroundTaskListing = {
   __typename?: "SkylarkBackgroundTaskListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<SkylarkBackgroundTask>>>;
 };
 
@@ -4700,128 +4819,135 @@ export type SkylarkEpgProgram = Metadata &
     _meta?: Maybe<_SkylarkEpgProgramMeta>;
     availability?: Maybe<AvailabilityListing>;
     content_of?: Maybe<SetListing>;
-    end_time?: Maybe<Scalars["AWSDateTime"]>;
+    end_time?: Maybe<Scalars["AWSDateTime"]["output"]>;
+    /**  reverse::epg_programs */
     episode?: Maybe<EpisodeListing>;
+    /**  reverse::epg_programs */
     episodes?: Maybe<EpisodeListing>;
-    external_id?: Maybe<Scalars["String"]>;
+    external_id?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::epg_programs */
     images?: Maybe<SkylarkImageListing>;
-    internal_title?: Maybe<Scalars["String"]>;
+    internal_title?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::epg_programs */
     live_assets?: Maybe<SkylarkLiveAssetListing>;
+    /**  reverse::epg_programs */
     movie?: Maybe<MovieListing>;
+    /**  reverse::epg_programs */
     movies?: Maybe<MovieListing>;
-    name?: Maybe<Scalars["String"]>;
-    name_sort?: Maybe<Scalars["String"]>;
-    slug?: Maybe<Scalars["String"]>;
-    start_time?: Maybe<Scalars["AWSDateTime"]>;
+    name?: Maybe<Scalars["String"]["output"]>;
+    name_sort?: Maybe<Scalars["String"]["output"]>;
+    slug?: Maybe<Scalars["String"]["output"]>;
+    start_time?: Maybe<Scalars["AWSDateTime"]["output"]>;
+    /**  reverse::epg_programs */
     tags?: Maybe<SkylarkTagListing>;
-    uid: Scalars["String"];
-    url?: Maybe<Scalars["String"]>;
+    uid: Scalars["String"]["output"];
+    url?: Maybe<Scalars["String"]["output"]>;
   };
 
 export type SkylarkEpgProgram_MetaArgs = {
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type SkylarkEpgProgramAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkEpgProgramContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkEpgProgramEpisodeArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkEpgProgramEpisodesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkEpgProgramImagesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkEpgProgramLive_AssetsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkEpgProgramMovieArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkEpgProgramMoviesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkEpgProgramTagsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkEpgProgramCreateInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  end_time?: InputMaybe<Scalars["AWSDateTime"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
-  name?: InputMaybe<Scalars["String"]>;
-  name_sort?: InputMaybe<Scalars["String"]>;
+  end_time?: InputMaybe<Scalars["AWSDateTime"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  name_sort?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<SkylarkEpgProgramRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
-  start_time?: InputMaybe<Scalars["AWSDateTime"]>;
-  url?: InputMaybe<Scalars["AWSURL"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  start_time?: InputMaybe<Scalars["AWSDateTime"]["input"]>;
+  url?: InputMaybe<Scalars["AWSURL"]["input"]>;
 };
 
 export type SkylarkEpgProgramInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  end_time?: InputMaybe<Scalars["AWSDateTime"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
-  name?: InputMaybe<Scalars["String"]>;
-  name_sort?: InputMaybe<Scalars["String"]>;
+  end_time?: InputMaybe<Scalars["AWSDateTime"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  name_sort?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<SkylarkEpgProgramRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
-  start_time?: InputMaybe<Scalars["AWSDateTime"]>;
-  url?: InputMaybe<Scalars["AWSURL"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  start_time?: InputMaybe<Scalars["AWSDateTime"]["input"]>;
+  url?: InputMaybe<Scalars["AWSURL"]["input"]>;
 };
 
 export type SkylarkEpgProgramListing = Listing & {
   __typename?: "SkylarkEPGProgramListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<SkylarkEpgProgram>>>;
 };
 
 export type SkylarkEpgProgramRelationshipInput = {
   create?: InputMaybe<Array<InputMaybe<SkylarkEpgProgramInput>>>;
-  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type SkylarkEpgProgramRelationships = {
@@ -4836,14 +4962,14 @@ export type SkylarkEpgProgramRelationships = {
 
 export type SkylarkEpgProgramSetCreate = {
   object?: InputMaybe<SkylarkEpgProgramInput>;
-  position: Scalars["Int"];
+  position: Scalars["Int"]["input"];
 };
 
 export type SkylarkEpgProgramSetInput = {
   create?: InputMaybe<Array<InputMaybe<SkylarkEpgProgramSetCreate>>>;
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type SkylarkFavoriteList = HiddenObject &
@@ -4856,60 +4982,60 @@ export type SkylarkFavoriteList = HiddenObject &
     availability?: Maybe<AvailabilityListing>;
     content?: Maybe<MetadataListing>;
     content_of?: Maybe<SetListing>;
-    external_id?: Maybe<Scalars["String"]>;
-    slug?: Maybe<Scalars["String"]>;
-    uid: Scalars["String"];
+    external_id?: Maybe<Scalars["String"]["output"]>;
+    slug?: Maybe<Scalars["String"]["output"]>;
+    uid: Scalars["String"]["output"];
   };
 
 export type SkylarkFavoriteList_MetaArgs = {
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type SkylarkFavoriteListAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkFavoriteListContentArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkFavoriteListContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkFavoriteListCreateInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
   content?: InputMaybe<SetContentRelationships>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkFavoriteListInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
   content?: InputMaybe<SetContentRelationships>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  slug?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkFavoriteListSetCreate = {
   object?: InputMaybe<SkylarkFavoriteListInput>;
-  position: Scalars["Int"];
+  position: Scalars["Int"]["input"];
 };
 
 export type SkylarkFavoriteListSetInput = {
   create?: InputMaybe<Array<InputMaybe<SkylarkFavoriteListSetCreate>>>;
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type SkylarkImage = MediaFile &
@@ -4919,232 +5045,250 @@ export type SkylarkImage = MediaFile &
     _config?: Maybe<ObjectConfig>;
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_SkylarkImageMeta>;
-    alt_text?: Maybe<Scalars["String"]>;
+    alt_text?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::logo */
     app_config?: Maybe<AppConfigListing>;
+    /**  reverse::images */
     articles?: Maybe<ArticleListing>;
+    /**  reverse::images */
     assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
+    /**  reverse::images */
     brands?: Maybe<BrandListing>;
+    /**  reverse::images */
     call_to_actions?: Maybe<CallToActionListing>;
     content_of?: Maybe<SetListing>;
-    content_type?: Maybe<Scalars["String"]>;
-    description?: Maybe<Scalars["String"]>;
-    download_from_url?: Maybe<Scalars["String"]>;
+    content_type?: Maybe<Scalars["String"]["output"]>;
+    description?: Maybe<Scalars["String"]["output"]>;
+    download_from_url?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::images */
     epg_programs?: Maybe<SkylarkEpgProgramListing>;
+    /**  reverse::images */
     episodes?: Maybe<EpisodeListing>;
-    external_id?: Maybe<Scalars["String"]>;
-    external_url?: Maybe<Scalars["String"]>;
-    file_name?: Maybe<Scalars["String"]>;
+    external_id?: Maybe<Scalars["String"]["output"]>;
+    external_url?: Maybe<Scalars["String"]["output"]>;
+    file_name?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::images */
     genres?: Maybe<GenreListing>;
-    internal_title?: Maybe<Scalars["String"]>;
+    internal_title?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::images */
     live_assets?: Maybe<SkylarkLiveAssetListing>;
+    /**  reverse::images */
     live_streams?: Maybe<LiveStreamListing>;
+    /**  reverse::images */
     movies?: Maybe<MovieListing>;
+    /**  reverse::images */
     pages?: Maybe<PageListing>;
+    /**  reverse::images */
     people?: Maybe<PersonListing>;
+    /**  reverse::images */
     ratings?: Maybe<RatingListing>;
+    /**  reverse::images */
     seasons?: Maybe<SeasonListing>;
+    /**  reverse::images */
     sets?: Maybe<SkylarkSetListing>;
-    slug?: Maybe<Scalars["String"]>;
+    slug?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::images */
     tags?: Maybe<SkylarkTagListing>;
+    /**  reverse::images */
     themes?: Maybe<ThemeListing>;
-    title?: Maybe<Scalars["String"]>;
-    type?: Maybe<Scalars["String"]>;
-    uid: Scalars["String"];
-    upload_url?: Maybe<Scalars["String"]>;
-    url?: Maybe<Scalars["String"]>;
-    watermark_text?: Maybe<Scalars["String"]>;
+    title?: Maybe<Scalars["String"]["output"]>;
+    type?: Maybe<Scalars["String"]["output"]>;
+    uid: Scalars["String"]["output"];
+    upload_url?: Maybe<Scalars["String"]["output"]>;
+    url?: Maybe<Scalars["String"]["output"]>;
+    watermark_text?: Maybe<Scalars["String"]["output"]>;
   };
 
 export type SkylarkImage_MetaArgs = {
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type SkylarkImageApp_ConfigArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkImageArticlesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkImageAssetsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkImageAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkImageBrandsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkImageCall_To_ActionsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkImageContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkImageEpg_ProgramsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkImageEpisodesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkImageGenresArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkImageLive_AssetsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkImageLive_StreamsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkImageMoviesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkImagePagesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkImagePeopleArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkImageRatingsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkImageSeasonsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkImageSetsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkImageTagsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkImageThemesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkImageCreateInput = {
-  alt_text?: InputMaybe<Scalars["String"]>;
+  alt_text?: InputMaybe<Scalars["String"]["input"]>;
   availability?: InputMaybe<AssignAvailabilityInput>;
-  content_type?: InputMaybe<Scalars["String"]>;
-  description?: InputMaybe<Scalars["String"]>;
-  download_from_url?: InputMaybe<Scalars["AWSURL"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  external_url?: InputMaybe<Scalars["AWSURL"]>;
-  file_name?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
+  content_type?: InputMaybe<Scalars["String"]["input"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  download_from_url?: InputMaybe<Scalars["AWSURL"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  external_url?: InputMaybe<Scalars["AWSURL"]["input"]>;
+  file_name?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<SkylarkImageRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<ImageType>;
-  watermark_text?: InputMaybe<Scalars["String"]>;
+  watermark_text?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkImageInput = {
-  alt_text?: InputMaybe<Scalars["String"]>;
+  alt_text?: InputMaybe<Scalars["String"]["input"]>;
   availability?: InputMaybe<AssignAvailabilityInput>;
-  content_type?: InputMaybe<Scalars["String"]>;
-  description?: InputMaybe<Scalars["String"]>;
-  download_from_url?: InputMaybe<Scalars["AWSURL"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  external_url?: InputMaybe<Scalars["AWSURL"]>;
-  file_name?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
+  content_type?: InputMaybe<Scalars["String"]["input"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  download_from_url?: InputMaybe<Scalars["AWSURL"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  external_url?: InputMaybe<Scalars["AWSURL"]["input"]>;
+  file_name?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<SkylarkImageRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<ImageType>;
-  watermark_text?: InputMaybe<Scalars["String"]>;
+  watermark_text?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkImageListing = Listing & {
   __typename?: "SkylarkImageListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<SkylarkImage>>>;
 };
 
 export type SkylarkImageRelationshipInput = {
   create?: InputMaybe<Array<InputMaybe<SkylarkImageInput>>>;
-  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type SkylarkImageRelationships = {
@@ -5170,14 +5314,14 @@ export type SkylarkImageRelationships = {
 
 export type SkylarkImageSetCreate = {
   object?: InputMaybe<SkylarkImageInput>;
-  position: Scalars["Int"];
+  position: Scalars["Int"]["input"];
 };
 
 export type SkylarkImageSetInput = {
   create?: InputMaybe<Array<InputMaybe<SkylarkImageSetCreate>>>;
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type SkylarkLiveAsset = AssetInterface &
@@ -5189,146 +5333,150 @@ export type SkylarkLiveAsset = AssetInterface &
     _meta?: Maybe<_SkylarkLiveAssetMeta>;
     availability?: Maybe<AvailabilityListing>;
     content_of?: Maybe<SetListing>;
-    dash_dashboard?: Maybe<Scalars["String"]>;
-    dash_id?: Maybe<Scalars["String"]>;
-    dash_url?: Maybe<Scalars["String"]>;
-    duration?: Maybe<Scalars["Int"]>;
+    dash_dashboard?: Maybe<Scalars["String"]["output"]>;
+    dash_id?: Maybe<Scalars["String"]["output"]>;
+    dash_url?: Maybe<Scalars["String"]["output"]>;
+    duration?: Maybe<Scalars["Int"]["output"]>;
+    /**  reverse::live_assets */
     epg_programs?: Maybe<SkylarkEpgProgramListing>;
-    external_id?: Maybe<Scalars["String"]>;
-    hls_dashboard?: Maybe<Scalars["String"]>;
-    hls_id?: Maybe<Scalars["String"]>;
-    hls_url?: Maybe<Scalars["String"]>;
+    external_id?: Maybe<Scalars["String"]["output"]>;
+    hls_dashboard?: Maybe<Scalars["String"]["output"]>;
+    hls_id?: Maybe<Scalars["String"]["output"]>;
+    hls_url?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::live_assets */
     images?: Maybe<SkylarkImageListing>;
-    ingest_file?: Maybe<Scalars["String"]>;
-    internal_title?: Maybe<Scalars["String"]>;
-    live?: Maybe<Scalars["Boolean"]>;
+    ingest_file?: Maybe<Scalars["String"]["output"]>;
+    internal_title?: Maybe<Scalars["String"]["output"]>;
+    live?: Maybe<Scalars["Boolean"]["output"]>;
+    /**  reverse::live_assets */
     live_streams?: Maybe<LiveStreamListing>;
-    policy?: Maybe<Scalars["String"]>;
-    provider?: Maybe<Scalars["String"]>;
-    release_date?: Maybe<Scalars["String"]>;
-    slug?: Maybe<Scalars["String"]>;
-    status?: Maybe<Scalars["String"]>;
-    stream_end_time?: Maybe<Scalars["AWSDateTime"]>;
-    stream_start_time?: Maybe<Scalars["AWSDateTime"]>;
+    policy?: Maybe<Scalars["String"]["output"]>;
+    provider?: Maybe<Scalars["String"]["output"]>;
+    release_date?: Maybe<Scalars["String"]["output"]>;
+    slug?: Maybe<Scalars["String"]["output"]>;
+    status?: Maybe<Scalars["String"]["output"]>;
+    stream_end_time?: Maybe<Scalars["AWSDateTime"]["output"]>;
+    stream_start_time?: Maybe<Scalars["AWSDateTime"]["output"]>;
+    /**  reverse::live_assets */
     tags?: Maybe<SkylarkTagListing>;
-    title?: Maybe<Scalars["String"]>;
-    title_sort?: Maybe<Scalars["String"]>;
-    type?: Maybe<Scalars["String"]>;
-    uid: Scalars["String"];
-    url?: Maybe<Scalars["String"]>;
+    title?: Maybe<Scalars["String"]["output"]>;
+    title_sort?: Maybe<Scalars["String"]["output"]>;
+    type?: Maybe<Scalars["String"]["output"]>;
+    uid: Scalars["String"]["output"];
+    url?: Maybe<Scalars["String"]["output"]>;
   };
 
 export type SkylarkLiveAsset_MetaArgs = {
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type SkylarkLiveAssetAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkLiveAssetContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkLiveAssetEpg_ProgramsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkLiveAssetImagesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkLiveAssetLive_StreamsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkLiveAssetTagsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkLiveAssetCreateInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  dash_dashboard?: InputMaybe<Scalars["AWSURL"]>;
-  dash_id?: InputMaybe<Scalars["String"]>;
-  dash_url?: InputMaybe<Scalars["AWSURL"]>;
-  duration?: InputMaybe<Scalars["Int"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  hls_dashboard?: InputMaybe<Scalars["AWSURL"]>;
-  hls_id?: InputMaybe<Scalars["String"]>;
-  hls_url?: InputMaybe<Scalars["AWSURL"]>;
-  ingest_file?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
-  live?: InputMaybe<Scalars["Boolean"]>;
+  dash_dashboard?: InputMaybe<Scalars["AWSURL"]["input"]>;
+  dash_id?: InputMaybe<Scalars["String"]["input"]>;
+  dash_url?: InputMaybe<Scalars["AWSURL"]["input"]>;
+  duration?: InputMaybe<Scalars["Int"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  hls_dashboard?: InputMaybe<Scalars["AWSURL"]["input"]>;
+  hls_id?: InputMaybe<Scalars["String"]["input"]>;
+  hls_url?: InputMaybe<Scalars["AWSURL"]["input"]>;
+  ingest_file?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
+  live?: InputMaybe<Scalars["Boolean"]["input"]>;
   policy?: InputMaybe<PlaybackPolicy>;
-  provider?: InputMaybe<Scalars["String"]>;
+  provider?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<SkylarkLiveAssetRelationships>;
-  release_date?: InputMaybe<Scalars["AWSDate"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  status?: InputMaybe<Scalars["String"]>;
-  stream_end_time?: InputMaybe<Scalars["AWSDateTime"]>;
-  stream_start_time?: InputMaybe<Scalars["AWSDateTime"]>;
-  title?: InputMaybe<Scalars["String"]>;
-  title_sort?: InputMaybe<Scalars["String"]>;
+  release_date?: InputMaybe<Scalars["AWSDate"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  status?: InputMaybe<Scalars["String"]["input"]>;
+  stream_end_time?: InputMaybe<Scalars["AWSDateTime"]["input"]>;
+  stream_start_time?: InputMaybe<Scalars["AWSDateTime"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  title_sort?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<AssetType>;
-  url?: InputMaybe<Scalars["AWSURL"]>;
+  url?: InputMaybe<Scalars["AWSURL"]["input"]>;
 };
 
 export type SkylarkLiveAssetInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  dash_dashboard?: InputMaybe<Scalars["AWSURL"]>;
-  dash_id?: InputMaybe<Scalars["String"]>;
-  dash_url?: InputMaybe<Scalars["AWSURL"]>;
-  duration?: InputMaybe<Scalars["Int"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  hls_dashboard?: InputMaybe<Scalars["AWSURL"]>;
-  hls_id?: InputMaybe<Scalars["String"]>;
-  hls_url?: InputMaybe<Scalars["AWSURL"]>;
-  ingest_file?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
-  live?: InputMaybe<Scalars["Boolean"]>;
+  dash_dashboard?: InputMaybe<Scalars["AWSURL"]["input"]>;
+  dash_id?: InputMaybe<Scalars["String"]["input"]>;
+  dash_url?: InputMaybe<Scalars["AWSURL"]["input"]>;
+  duration?: InputMaybe<Scalars["Int"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  hls_dashboard?: InputMaybe<Scalars["AWSURL"]["input"]>;
+  hls_id?: InputMaybe<Scalars["String"]["input"]>;
+  hls_url?: InputMaybe<Scalars["AWSURL"]["input"]>;
+  ingest_file?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
+  live?: InputMaybe<Scalars["Boolean"]["input"]>;
   policy?: InputMaybe<PlaybackPolicy>;
-  provider?: InputMaybe<Scalars["String"]>;
+  provider?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<SkylarkLiveAssetRelationships>;
-  release_date?: InputMaybe<Scalars["AWSDate"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  status?: InputMaybe<Scalars["String"]>;
-  stream_end_time?: InputMaybe<Scalars["AWSDateTime"]>;
-  stream_start_time?: InputMaybe<Scalars["AWSDateTime"]>;
-  title?: InputMaybe<Scalars["String"]>;
-  title_sort?: InputMaybe<Scalars["String"]>;
+  release_date?: InputMaybe<Scalars["AWSDate"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  status?: InputMaybe<Scalars["String"]["input"]>;
+  stream_end_time?: InputMaybe<Scalars["AWSDateTime"]["input"]>;
+  stream_start_time?: InputMaybe<Scalars["AWSDateTime"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  title_sort?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<AssetType>;
-  url?: InputMaybe<Scalars["AWSURL"]>;
+  url?: InputMaybe<Scalars["AWSURL"]["input"]>;
 };
 
 export type SkylarkLiveAssetListing = Listing & {
   __typename?: "SkylarkLiveAssetListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<SkylarkLiveAsset>>>;
 };
 
 export type SkylarkLiveAssetRelationshipInput = {
   create?: InputMaybe<Array<InputMaybe<SkylarkLiveAssetInput>>>;
-  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type SkylarkLiveAssetRelationships = {
@@ -5340,14 +5488,14 @@ export type SkylarkLiveAssetRelationships = {
 
 export type SkylarkLiveAssetSetCreate = {
   object?: InputMaybe<SkylarkLiveAssetInput>;
-  position: Scalars["Int"];
+  position: Scalars["Int"]["input"];
 };
 
 export type SkylarkLiveAssetSetInput = {
   create?: InputMaybe<Array<InputMaybe<SkylarkLiveAssetSetCreate>>>;
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type SkylarkSet = Metadata &
@@ -5357,157 +5505,165 @@ export type SkylarkSet = Metadata &
     _config?: Maybe<ObjectConfig>;
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_SkylarkSetMeta>;
+    /**  reverse::sets */
     assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
+    /**  reverse::sets */
     call_to_actions?: Maybe<CallToActionListing>;
     content?: Maybe<MetadataListing>;
     content_of?: Maybe<SetListing>;
+    /**  reverse::sets */
     credits?: Maybe<CreditListing>;
-    description?: Maybe<Scalars["String"]>;
-    external_id?: Maybe<Scalars["String"]>;
+    description?: Maybe<Scalars["String"]["output"]>;
+    external_id?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::sets */
     genres?: Maybe<GenreListing>;
+    /**  reverse::sets */
     images?: Maybe<SkylarkImageListing>;
-    internal_title?: Maybe<Scalars["String"]>;
+    internal_title?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::sets */
     ratings?: Maybe<RatingListing>;
-    release_date?: Maybe<Scalars["String"]>;
-    slug?: Maybe<Scalars["String"]>;
-    synopsis?: Maybe<Scalars["String"]>;
-    synopsis_short?: Maybe<Scalars["String"]>;
+    release_date?: Maybe<Scalars["String"]["output"]>;
+    slug?: Maybe<Scalars["String"]["output"]>;
+    synopsis?: Maybe<Scalars["String"]["output"]>;
+    synopsis_short?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::sets */
     tags?: Maybe<SkylarkTagListing>;
+    /**  reverse::sets */
     themes?: Maybe<ThemeListing>;
-    title?: Maybe<Scalars["String"]>;
-    title_short?: Maybe<Scalars["String"]>;
-    title_sort?: Maybe<Scalars["String"]>;
-    type?: Maybe<Scalars["String"]>;
-    uid: Scalars["String"];
+    title?: Maybe<Scalars["String"]["output"]>;
+    title_short?: Maybe<Scalars["String"]["output"]>;
+    title_sort?: Maybe<Scalars["String"]["output"]>;
+    type?: Maybe<Scalars["String"]["output"]>;
+    uid: Scalars["String"]["output"];
   };
 
 export type SkylarkSet_MetaArgs = {
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type SkylarkSetAssetsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkSetAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkSetCall_To_ActionsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkSetContentArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkSetContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkSetCreditsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkSetGenresArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkSetImagesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkSetRatingsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkSetTagsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkSetThemesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkSetCreateInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
   content?: InputMaybe<SetContentRelationships>;
-  description?: InputMaybe<Scalars["String"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<SkylarkSetRelationships>;
-  release_date?: InputMaybe<Scalars["AWSDate"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  synopsis?: InputMaybe<Scalars["String"]>;
-  synopsis_short?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
-  title_short?: InputMaybe<Scalars["String"]>;
-  title_sort?: InputMaybe<Scalars["String"]>;
+  release_date?: InputMaybe<Scalars["AWSDate"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  synopsis?: InputMaybe<Scalars["String"]["input"]>;
+  synopsis_short?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  title_short?: InputMaybe<Scalars["String"]["input"]>;
+  title_sort?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<SetType>;
 };
 
 export type SkylarkSetInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
   content?: InputMaybe<SetContentRelationships>;
-  description?: InputMaybe<Scalars["String"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<SkylarkSetRelationships>;
-  release_date?: InputMaybe<Scalars["AWSDate"]>;
-  slug?: InputMaybe<Scalars["String"]>;
-  synopsis?: InputMaybe<Scalars["String"]>;
-  synopsis_short?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
-  title_short?: InputMaybe<Scalars["String"]>;
-  title_sort?: InputMaybe<Scalars["String"]>;
+  release_date?: InputMaybe<Scalars["AWSDate"]["input"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
+  synopsis?: InputMaybe<Scalars["String"]["input"]>;
+  synopsis_short?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  title_short?: InputMaybe<Scalars["String"]["input"]>;
+  title_sort?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<SetType>;
 };
 
 export type SkylarkSetListing = {
   __typename?: "SkylarkSetListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<SkylarkSet>>>;
 };
 
 export type SkylarkSetRelationshipInput = {
   create?: InputMaybe<Array<InputMaybe<SkylarkSetInput>>>;
-  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type SkylarkSetRelationships = {
@@ -5527,161 +5683,173 @@ export type SkylarkTag = Metadata &
     _config?: Maybe<ObjectConfig>;
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_SkylarkTagMeta>;
+    /**  reverse::tags */
     articles?: Maybe<ArticleListing>;
+    /**  reverse::tags */
     assets?: Maybe<SkylarkAssetListing>;
     availability?: Maybe<AvailabilityListing>;
+    /**  reverse::tags */
     brands?: Maybe<BrandListing>;
     content_of?: Maybe<SetListing>;
+    /**  reverse::tags */
     epg_programs?: Maybe<SkylarkEpgProgramListing>;
+    /**  reverse::tags */
     episodes?: Maybe<EpisodeListing>;
-    external_id?: Maybe<Scalars["String"]>;
+    external_id?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::tags */
     images?: Maybe<SkylarkImageListing>;
+    /**  reverse::tags */
     live_assets?: Maybe<SkylarkLiveAssetListing>;
+    /**  reverse::tags */
     live_streams?: Maybe<LiveStreamListing>;
+    /**  reverse::tags */
     movies?: Maybe<MovieListing>;
-    name?: Maybe<Scalars["String"]>;
-    name_sort?: Maybe<Scalars["String"]>;
+    name?: Maybe<Scalars["String"]["output"]>;
+    name_sort?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::tags */
     people?: Maybe<PersonListing>;
+    /**  reverse::tags */
     seasons?: Maybe<SeasonListing>;
+    /**  reverse::tags */
     sets?: Maybe<SkylarkSetListing>;
-    slug?: Maybe<Scalars["String"]>;
-    type?: Maybe<Scalars["String"]>;
-    uid: Scalars["String"];
+    slug?: Maybe<Scalars["String"]["output"]>;
+    type?: Maybe<Scalars["String"]["output"]>;
+    uid: Scalars["String"]["output"];
   };
 
 export type SkylarkTag_MetaArgs = {
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type SkylarkTagArticlesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkTagAssetsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkTagAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkTagBrandsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkTagContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type SkylarkTagEpg_ProgramsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkTagEpisodesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkTagImagesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkTagLive_AssetsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkTagLive_StreamsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkTagMoviesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkTagPeopleArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkTagSeasonsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkTagSetsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type SkylarkTagCreateInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  name?: InputMaybe<Scalars["String"]>;
-  name_sort?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  name_sort?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<SkylarkTagRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<TagType>;
 };
 
 export type SkylarkTagInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  name?: InputMaybe<Scalars["String"]>;
-  name_sort?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  name_sort?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<SkylarkTagRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
   type?: InputMaybe<TagType>;
 };
 
 export type SkylarkTagListing = Listing & {
   __typename?: "SkylarkTagListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<SkylarkTag>>>;
 };
 
 export type SkylarkTagRelationshipInput = {
   create?: InputMaybe<Array<InputMaybe<SkylarkTagInput>>>;
-  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type SkylarkTagRelationships = {
@@ -5701,26 +5869,26 @@ export type SkylarkTagRelationships = {
 
 export type SkylarkTagSetCreate = {
   object?: InputMaybe<SkylarkTagInput>;
-  position: Scalars["Int"];
+  position: Scalars["Int"]["input"];
 };
 
 export type SkylarkTagSetInput = {
   create?: InputMaybe<Array<InputMaybe<SkylarkTagSetCreate>>>;
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type SubSkylarkSetCreate = {
   object?: InputMaybe<SkylarkSetInput>;
-  position: Scalars["Int"];
+  position: Scalars["Int"]["input"];
 };
 
 export type SubSkylarkSetInput = {
   create?: InputMaybe<Array<InputMaybe<SubSkylarkSetCreate>>>;
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export enum TagType {
@@ -5736,132 +5904,140 @@ export type Theme = Metadata &
     _context?: Maybe<RequestContext>;
     _meta?: Maybe<_ThemeMeta>;
     availability?: Maybe<AvailabilityListing>;
+    /**  reverse::themes */
     brands?: Maybe<BrandListing>;
     content_of?: Maybe<SetListing>;
+    /**  reverse::themes */
     episodes?: Maybe<EpisodeListing>;
-    external_id?: Maybe<Scalars["String"]>;
+    external_id?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::themes */
     images?: Maybe<SkylarkImageListing>;
-    internal_title?: Maybe<Scalars["String"]>;
+    internal_title?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::themes */
     live_streams?: Maybe<LiveStreamListing>;
-    metadata_source?: Maybe<Scalars["String"]>;
+    metadata_source?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::themes */
     movies?: Maybe<MovieListing>;
-    name?: Maybe<Scalars["String"]>;
-    name_sort?: Maybe<Scalars["String"]>;
+    name?: Maybe<Scalars["String"]["output"]>;
+    name_sort?: Maybe<Scalars["String"]["output"]>;
+    /**  reverse::themes */
     people?: Maybe<PersonListing>;
+    /**  reverse::themes */
     seasons?: Maybe<SeasonListing>;
+    /**  reverse::themes */
     sets?: Maybe<SkylarkSetListing>;
-    slug?: Maybe<Scalars["String"]>;
-    uid: Scalars["String"];
+    slug?: Maybe<Scalars["String"]["output"]>;
+    uid: Scalars["String"]["output"];
   };
 
 export type Theme_MetaArgs = {
-  global_version?: InputMaybe<Scalars["Int"]>;
-  language?: InputMaybe<Scalars["String"]>;
-  language_version?: InputMaybe<Scalars["Int"]>;
+  global_version?: InputMaybe<Scalars["Int"]["input"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  language_version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type ThemeAvailabilityArgs = {
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
-  uid?: InputMaybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
+  uid?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type ThemeBrandsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type ThemeContent_OfArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type ThemeEpisodesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type ThemeImagesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type ThemeLive_StreamsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type ThemeMoviesArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type ThemePeopleArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type ThemeSeasonsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type ThemeSetsArgs = {
-  language?: InputMaybe<Scalars["String"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  next_token?: InputMaybe<Scalars["String"]>;
+  language?: InputMaybe<Scalars["String"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  next_token?: InputMaybe<Scalars["String"]["input"]>;
   order_direction?: InputMaybe<OrderDirections>;
 };
 
 export type ThemeCreateInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
-  metadata_source?: InputMaybe<Scalars["String"]>;
-  name?: InputMaybe<Scalars["String"]>;
-  name_sort?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
+  metadata_source?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  name_sort?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<ThemeRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type ThemeInput = {
   availability?: InputMaybe<AssignAvailabilityInput>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  internal_title?: InputMaybe<Scalars["String"]>;
-  metadata_source?: InputMaybe<Scalars["String"]>;
-  name?: InputMaybe<Scalars["String"]>;
-  name_sort?: InputMaybe<Scalars["String"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  internal_title?: InputMaybe<Scalars["String"]["input"]>;
+  metadata_source?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  name_sort?: InputMaybe<Scalars["String"]["input"]>;
   relationships?: InputMaybe<ThemeRelationships>;
-  slug?: InputMaybe<Scalars["String"]>;
+  slug?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type ThemeListing = Listing & {
   __typename?: "ThemeListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<Theme>>>;
 };
 
 export type ThemeRelationshipInput = {
   config?: InputMaybe<RelationshipConfigInput>;
   create?: InputMaybe<Array<InputMaybe<ThemeCreateInput>>>;
-  link?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  link?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export type ThemeRelationships = {
@@ -5877,14 +6053,14 @@ export type ThemeRelationships = {
 
 export type ThemeSetCreate = {
   object?: InputMaybe<ThemeInput>;
-  position: Scalars["Int"];
+  position: Scalars["Int"]["input"];
 };
 
 export type ThemeSetInput = {
   create?: InputMaybe<Array<InputMaybe<ThemeSetCreate>>>;
   link?: InputMaybe<Array<InputMaybe<SetLink>>>;
   reposition?: InputMaybe<Array<InputMaybe<SetLink>>>;
-  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  unlink?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
 };
 
 export enum TimeWindowStatus {
@@ -5896,8 +6072,8 @@ export enum TimeWindowStatus {
 
 export type TypeListing = Listing & {
   __typename?: "TypeListing";
-  count?: Maybe<Scalars["Int"]>;
-  next_token?: Maybe<Scalars["String"]>;
+  count?: Maybe<Scalars["Int"]["output"]>;
+  next_token?: Maybe<Scalars["String"]["output"]>;
   objects?: Maybe<Array<Maybe<Metadata>>>;
 };
 
@@ -5917,21 +6093,21 @@ export enum UiFieldTypes {
 }
 
 export type UpdateDimensionInput = {
-  description?: InputMaybe<Scalars["String"]>;
-  external_id?: InputMaybe<Scalars["String"]>;
-  title?: InputMaybe<Scalars["String"]>;
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  external_id?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type UserDimension = {
-  dimension: Scalars["String"];
-  value: Scalars["String"];
+  dimension: Scalars["String"]["input"];
+  value: Scalars["String"]["input"];
 };
 
 export type VisibleObject = {
   _context?: Maybe<RequestContext>;
-  external_id?: Maybe<Scalars["String"]>;
-  slug?: Maybe<Scalars["String"]>;
-  uid: Scalars["String"];
+  external_id?: Maybe<Scalars["String"]["output"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  uid: Scalars["String"]["output"];
 };
 
 export enum VisibleObjectTypes {
@@ -5962,82 +6138,82 @@ export enum VisibleObjectTypes {
 
 export type _AppConfigGlobal = _Global & {
   __typename?: "_AppConfigGlobal";
-  accent_color?: Maybe<Scalars["String"]>;
-  app_name?: Maybe<Scalars["String"]>;
+  accent_color?: Maybe<Scalars["String"]["output"]>;
+  app_name?: Maybe<Scalars["String"]["output"]>;
   created?: Maybe<_Audit>;
-  featured_page_url?: Maybe<Scalars["AWSURL"]>;
-  google_tag_manager_id?: Maybe<Scalars["String"]>;
+  featured_page_url?: Maybe<Scalars["AWSURL"]["output"]>;
+  google_tag_manager_id?: Maybe<Scalars["String"]["output"]>;
   history?: Maybe<Array<Maybe<_AppConfigGlobal>>>;
   modified?: Maybe<_Audit>;
-  primary_color?: Maybe<Scalars["String"]>;
+  primary_color?: Maybe<Scalars["String"]["output"]>;
   publish_stage?: Maybe<PublishStage>;
-  version?: Maybe<Scalars["Int"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _AppConfigLanguage = _Language & {
   __typename?: "_AppConfigLanguage";
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_AppConfigLanguage>>>;
-  language?: Maybe<Scalars["String"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  slug?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _AppConfigMeta = {
   __typename?: "_AppConfigMeta";
-  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   created?: Maybe<_Audit>;
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_AppConfigGlobal>;
   language_data?: Maybe<_AppConfigLanguage>;
   modified?: Maybe<_Audit>;
-  published?: Maybe<Scalars["Boolean"]>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type _ArticleGlobal = _Global & {
   __typename?: "_ArticleGlobal";
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_ArticleGlobal>>>;
-  internal_title?: Maybe<Scalars["String"]>;
+  internal_title?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
-  publish_date?: Maybe<Scalars["AWSDateTime"]>;
+  publish_date?: Maybe<Scalars["AWSDateTime"]["output"]>;
   publish_stage?: Maybe<PublishStage>;
-  type?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  type?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _ArticleLanguage = _Language & {
   __typename?: "_ArticleLanguage";
-  body?: Maybe<Scalars["String"]>;
+  body?: Maybe<Scalars["String"]["output"]>;
   created?: Maybe<_Audit>;
-  description?: Maybe<Scalars["String"]>;
+  description?: Maybe<Scalars["String"]["output"]>;
   history?: Maybe<Array<Maybe<_ArticleLanguage>>>;
-  language?: Maybe<Scalars["String"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  slug?: Maybe<Scalars["String"]>;
-  title?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  title?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _ArticleMeta = {
   __typename?: "_ArticleMeta";
-  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   created?: Maybe<_Audit>;
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_ArticleGlobal>;
   language_data?: Maybe<_ArticleLanguage>;
   modified?: Maybe<_Audit>;
-  published?: Maybe<Scalars["Boolean"]>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type _Audit = {
   __typename?: "_Audit";
-  account?: Maybe<Scalars["String"]>;
-  date?: Maybe<Scalars["String"]>;
-  user?: Maybe<Scalars["String"]>;
+  account?: Maybe<Scalars["String"]["output"]>;
+  date?: Maybe<Scalars["String"]["output"]>;
+  user?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type _AvailabilityMeta = {
@@ -6048,114 +6224,114 @@ export type _AvailabilityMeta = {
 
 export type _BrandGlobal = _Global & {
   __typename?: "_BrandGlobal";
-  audience_rating?: Maybe<Scalars["String"]>;
+  audience_rating?: Maybe<Scalars["String"]["output"]>;
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_BrandGlobal>>>;
-  internal_title?: Maybe<Scalars["String"]>;
+  internal_title?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  release_date?: Maybe<Scalars["AWSDate"]>;
-  title_sort?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  release_date?: Maybe<Scalars["AWSDate"]["output"]>;
+  title_sort?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _BrandLanguage = _Language & {
   __typename?: "_BrandLanguage";
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_BrandLanguage>>>;
-  language?: Maybe<Scalars["String"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  slug?: Maybe<Scalars["String"]>;
-  synopsis?: Maybe<Scalars["String"]>;
-  synopsis_short?: Maybe<Scalars["String"]>;
-  title?: Maybe<Scalars["String"]>;
-  title_short?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  synopsis?: Maybe<Scalars["String"]["output"]>;
+  synopsis_short?: Maybe<Scalars["String"]["output"]>;
+  title?: Maybe<Scalars["String"]["output"]>;
+  title_short?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _BrandMeta = {
   __typename?: "_BrandMeta";
-  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   created?: Maybe<_Audit>;
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_BrandGlobal>;
   language_data?: Maybe<_BrandLanguage>;
   modified?: Maybe<_Audit>;
-  published?: Maybe<Scalars["Boolean"]>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type _CallToActionGlobal = _Global & {
   __typename?: "_CallToActionGlobal";
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_CallToActionGlobal>>>;
-  internal_title?: Maybe<Scalars["String"]>;
+  internal_title?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  type?: Maybe<Scalars["String"]>;
-  url?: Maybe<Scalars["AWSURL"]>;
-  url_path?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  type?: Maybe<Scalars["String"]["output"]>;
+  url?: Maybe<Scalars["AWSURL"]["output"]>;
+  url_path?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _CallToActionLanguage = _Language & {
   __typename?: "_CallToActionLanguage";
   created?: Maybe<_Audit>;
-  description?: Maybe<Scalars["String"]>;
-  description_short?: Maybe<Scalars["String"]>;
+  description?: Maybe<Scalars["String"]["output"]>;
+  description_short?: Maybe<Scalars["String"]["output"]>;
   history?: Maybe<Array<Maybe<_CallToActionLanguage>>>;
-  language?: Maybe<Scalars["String"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  slug?: Maybe<Scalars["String"]>;
-  text?: Maybe<Scalars["String"]>;
-  text_short?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  text?: Maybe<Scalars["String"]["output"]>;
+  text_short?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _CallToActionMeta = {
   __typename?: "_CallToActionMeta";
-  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   created?: Maybe<_Audit>;
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_CallToActionGlobal>;
   language_data?: Maybe<_CallToActionLanguage>;
   modified?: Maybe<_Audit>;
-  published?: Maybe<Scalars["Boolean"]>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type _CreditGlobal = _Global & {
   __typename?: "_CreditGlobal";
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_CreditGlobal>>>;
-  internal_title?: Maybe<Scalars["String"]>;
+  internal_title?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
-  name_sort?: Maybe<Scalars["String"]>;
+  name_sort?: Maybe<Scalars["String"]["output"]>;
   publish_stage?: Maybe<PublishStage>;
-  version?: Maybe<Scalars["Int"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _CreditLanguage = _Language & {
   __typename?: "_CreditLanguage";
-  character?: Maybe<Scalars["String"]>;
+  character?: Maybe<Scalars["String"]["output"]>;
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_CreditLanguage>>>;
-  language?: Maybe<Scalars["String"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  slug?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _CreditMeta = {
   __typename?: "_CreditMeta";
-  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   created?: Maybe<_Audit>;
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_CreditGlobal>;
   language_data?: Maybe<_CreditLanguage>;
   modified?: Maybe<_Audit>;
-  published?: Maybe<Scalars["Boolean"]>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type _DimensionMeta = {
@@ -6172,83 +6348,83 @@ export type _DimensionValueMeta = {
 
 export type _EpisodeGlobal = _Global & {
   __typename?: "_EpisodeGlobal";
-  audience_rating?: Maybe<Scalars["String"]>;
+  audience_rating?: Maybe<Scalars["String"]["output"]>;
   created?: Maybe<_Audit>;
-  episode_number?: Maybe<Scalars["Int"]>;
+  episode_number?: Maybe<Scalars["Int"]["output"]>;
   history?: Maybe<Array<Maybe<_EpisodeGlobal>>>;
-  internal_title?: Maybe<Scalars["String"]>;
+  internal_title?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  release_date?: Maybe<Scalars["AWSDate"]>;
-  title_sort?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
-  year_of_release?: Maybe<Scalars["Int"]>;
+  release_date?: Maybe<Scalars["AWSDate"]["output"]>;
+  title_sort?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
+  year_of_release?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _EpisodeLanguage = _Language & {
   __typename?: "_EpisodeLanguage";
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_EpisodeLanguage>>>;
-  language?: Maybe<Scalars["String"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  slug?: Maybe<Scalars["String"]>;
-  synopsis?: Maybe<Scalars["String"]>;
-  synopsis_short?: Maybe<Scalars["String"]>;
-  title?: Maybe<Scalars["String"]>;
-  title_short?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  synopsis?: Maybe<Scalars["String"]["output"]>;
+  synopsis_short?: Maybe<Scalars["String"]["output"]>;
+  title?: Maybe<Scalars["String"]["output"]>;
+  title_short?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _EpisodeMeta = {
   __typename?: "_EpisodeMeta";
-  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   created?: Maybe<_Audit>;
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_EpisodeGlobal>;
   language_data?: Maybe<_EpisodeLanguage>;
   modified?: Maybe<_Audit>;
-  published?: Maybe<Scalars["Boolean"]>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type _FieldConfig = {
   __typename?: "_FieldConfig";
-  name: Scalars["String"];
+  name: Scalars["String"]["output"];
 };
 
 export type _GenreGlobal = _Global & {
   __typename?: "_GenreGlobal";
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_GenreGlobal>>>;
-  internal_title?: Maybe<Scalars["String"]>;
+  internal_title?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  title_sort?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  title_sort?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _GenreLanguage = _Language & {
   __typename?: "_GenreLanguage";
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_GenreLanguage>>>;
-  language?: Maybe<Scalars["String"]>;
-  metadata_source?: Maybe<Scalars["String"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
+  metadata_source?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
-  name?: Maybe<Scalars["String"]>;
+  name?: Maybe<Scalars["String"]["output"]>;
   publish_stage?: Maybe<PublishStage>;
-  slug?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _GenreMeta = {
   __typename?: "_GenreMeta";
-  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   created?: Maybe<_Audit>;
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_GenreGlobal>;
   language_data?: Maybe<_GenreLanguage>;
   modified?: Maybe<_Audit>;
-  published?: Maybe<Scalars["Boolean"]>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type _Global = {
@@ -6256,96 +6432,96 @@ export type _Global = {
   history?: Maybe<Array<Maybe<_Global>>>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  version?: Maybe<Scalars["Int"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _Language = {
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_Language>>>;
-  language?: Maybe<Scalars["String"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  slug?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _LiveStreamGlobal = _Global & {
   __typename?: "_LiveStreamGlobal";
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_LiveStreamGlobal>>>;
-  internal_title?: Maybe<Scalars["String"]>;
+  internal_title?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  title_sort?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  title_sort?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _LiveStreamLanguage = _Language & {
   __typename?: "_LiveStreamLanguage";
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_LiveStreamLanguage>>>;
-  language?: Maybe<Scalars["String"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  slug?: Maybe<Scalars["String"]>;
-  synopsis?: Maybe<Scalars["String"]>;
-  synopsis_short?: Maybe<Scalars["String"]>;
-  title?: Maybe<Scalars["String"]>;
-  title_short?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  synopsis?: Maybe<Scalars["String"]["output"]>;
+  synopsis_short?: Maybe<Scalars["String"]["output"]>;
+  title?: Maybe<Scalars["String"]["output"]>;
+  title_short?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _LiveStreamMeta = {
   __typename?: "_LiveStreamMeta";
-  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   created?: Maybe<_Audit>;
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_LiveStreamGlobal>;
   language_data?: Maybe<_LiveStreamLanguage>;
   modified?: Maybe<_Audit>;
-  published?: Maybe<Scalars["Boolean"]>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type _MovieGlobal = _Global & {
   __typename?: "_MovieGlobal";
-  audience_rating?: Maybe<Scalars["String"]>;
-  budget?: Maybe<Scalars["String"]>;
+  audience_rating?: Maybe<Scalars["String"]["output"]>;
+  budget?: Maybe<Scalars["String"]["output"]>;
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_MovieGlobal>>>;
-  internal_title?: Maybe<Scalars["String"]>;
+  internal_title?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
-  movie_number?: Maybe<Scalars["Int"]>;
+  movie_number?: Maybe<Scalars["Int"]["output"]>;
   publish_stage?: Maybe<PublishStage>;
-  release_date?: Maybe<Scalars["AWSDate"]>;
-  title_sort?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
-  year_of_release?: Maybe<Scalars["Int"]>;
+  release_date?: Maybe<Scalars["AWSDate"]["output"]>;
+  title_sort?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
+  year_of_release?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _MovieLanguage = _Language & {
   __typename?: "_MovieLanguage";
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_MovieLanguage>>>;
-  language?: Maybe<Scalars["String"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  slug?: Maybe<Scalars["String"]>;
-  synopsis?: Maybe<Scalars["String"]>;
-  synopsis_short?: Maybe<Scalars["String"]>;
-  title?: Maybe<Scalars["String"]>;
-  title_short?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  synopsis?: Maybe<Scalars["String"]["output"]>;
+  synopsis_short?: Maybe<Scalars["String"]["output"]>;
+  title?: Maybe<Scalars["String"]["output"]>;
+  title_short?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _MovieMeta = {
   __typename?: "_MovieMeta";
-  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   created?: Maybe<_Audit>;
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_MovieGlobal>;
   language_data?: Maybe<_MovieLanguage>;
   modified?: Maybe<_Audit>;
-  published?: Maybe<Scalars["Boolean"]>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type _PageGlobal = _Global & {
@@ -6354,304 +6530,304 @@ export type _PageGlobal = _Global & {
   history?: Maybe<Array<Maybe<_PageGlobal>>>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  version?: Maybe<Scalars["Int"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _PageLanguage = _Language & {
   __typename?: "_PageLanguage";
   created?: Maybe<_Audit>;
-  description?: Maybe<Scalars["String"]>;
+  description?: Maybe<Scalars["String"]["output"]>;
   history?: Maybe<Array<Maybe<_PageLanguage>>>;
-  language?: Maybe<Scalars["String"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  slug?: Maybe<Scalars["String"]>;
-  title?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  title?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _PageMeta = {
   __typename?: "_PageMeta";
-  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   created?: Maybe<_Audit>;
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_PageGlobal>;
   language_data?: Maybe<_PageLanguage>;
   modified?: Maybe<_Audit>;
-  published?: Maybe<Scalars["Boolean"]>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type _ParentalGuidanceGlobal = _Global & {
   __typename?: "_ParentalGuidanceGlobal";
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_ParentalGuidanceGlobal>>>;
-  internal_title?: Maybe<Scalars["String"]>;
+  internal_title?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  reason_sort?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  reason_sort?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _ParentalGuidanceLanguage = _Language & {
   __typename?: "_ParentalGuidanceLanguage";
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_ParentalGuidanceLanguage>>>;
-  language?: Maybe<Scalars["String"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  reason?: Maybe<Scalars["String"]>;
-  slug?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  reason?: Maybe<Scalars["String"]["output"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _ParentalGuidanceMeta = {
   __typename?: "_ParentalGuidanceMeta";
-  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   created?: Maybe<_Audit>;
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_ParentalGuidanceGlobal>;
   language_data?: Maybe<_ParentalGuidanceLanguage>;
   modified?: Maybe<_Audit>;
-  published?: Maybe<Scalars["Boolean"]>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type _PersonGlobal = _Global & {
   __typename?: "_PersonGlobal";
   created?: Maybe<_Audit>;
-  date_of_birth?: Maybe<Scalars["AWSDate"]>;
+  date_of_birth?: Maybe<Scalars["AWSDate"]["output"]>;
   history?: Maybe<Array<Maybe<_PersonGlobal>>>;
   modified?: Maybe<_Audit>;
-  name_sort?: Maybe<Scalars["String"]>;
-  place_of_birth?: Maybe<Scalars["String"]>;
+  name_sort?: Maybe<Scalars["String"]["output"]>;
+  place_of_birth?: Maybe<Scalars["String"]["output"]>;
   publish_stage?: Maybe<PublishStage>;
-  version?: Maybe<Scalars["Int"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _PersonLanguage = _Language & {
   __typename?: "_PersonLanguage";
-  abbreviation?: Maybe<Scalars["String"]>;
-  alias?: Maybe<Scalars["String"]>;
-  bio_long?: Maybe<Scalars["String"]>;
-  bio_medium?: Maybe<Scalars["String"]>;
-  bio_short?: Maybe<Scalars["String"]>;
+  abbreviation?: Maybe<Scalars["String"]["output"]>;
+  alias?: Maybe<Scalars["String"]["output"]>;
+  bio_long?: Maybe<Scalars["String"]["output"]>;
+  bio_medium?: Maybe<Scalars["String"]["output"]>;
+  bio_short?: Maybe<Scalars["String"]["output"]>;
   created?: Maybe<_Audit>;
-  genre?: Maybe<Scalars["String"]>;
+  genre?: Maybe<Scalars["String"]["output"]>;
   history?: Maybe<Array<Maybe<_PersonLanguage>>>;
-  language?: Maybe<Scalars["String"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
-  name?: Maybe<Scalars["String"]>;
+  name?: Maybe<Scalars["String"]["output"]>;
   publish_stage?: Maybe<PublishStage>;
-  slug?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _PersonMeta = {
   __typename?: "_PersonMeta";
-  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   created?: Maybe<_Audit>;
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_PersonGlobal>;
   language_data?: Maybe<_PersonLanguage>;
   modified?: Maybe<_Audit>;
-  published?: Maybe<Scalars["Boolean"]>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type _RatingGlobal = _Global & {
   __typename?: "_RatingGlobal";
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_RatingGlobal>>>;
-  internal_title?: Maybe<Scalars["String"]>;
+  internal_title?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  scheme?: Maybe<Scalars["String"]>;
-  value?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  scheme?: Maybe<Scalars["String"]["output"]>;
+  value?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _RatingLanguage = _Language & {
   __typename?: "_RatingLanguage";
   created?: Maybe<_Audit>;
-  description?: Maybe<Scalars["String"]>;
+  description?: Maybe<Scalars["String"]["output"]>;
   history?: Maybe<Array<Maybe<_RatingLanguage>>>;
-  language?: Maybe<Scalars["String"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  slug?: Maybe<Scalars["String"]>;
-  title?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  title?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _RatingMeta = {
   __typename?: "_RatingMeta";
-  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   created?: Maybe<_Audit>;
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_RatingGlobal>;
   language_data?: Maybe<_RatingLanguage>;
   modified?: Maybe<_Audit>;
-  published?: Maybe<Scalars["Boolean"]>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type _RoleGlobal = _Global & {
   __typename?: "_RoleGlobal";
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_RoleGlobal>>>;
-  internal_title?: Maybe<Scalars["String"]>;
+  internal_title?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  title_sort?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  title_sort?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _RoleLanguage = _Language & {
   __typename?: "_RoleLanguage";
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_RoleLanguage>>>;
-  language?: Maybe<Scalars["String"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  slug?: Maybe<Scalars["String"]>;
-  title?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  title?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _RoleMeta = {
   __typename?: "_RoleMeta";
-  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   created?: Maybe<_Audit>;
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_RoleGlobal>;
   language_data?: Maybe<_RoleLanguage>;
   modified?: Maybe<_Audit>;
-  published?: Maybe<Scalars["Boolean"]>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type _SeasonGlobal = _Global & {
   __typename?: "_SeasonGlobal";
-  audience_rating?: Maybe<Scalars["String"]>;
+  audience_rating?: Maybe<Scalars["String"]["output"]>;
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_SeasonGlobal>>>;
-  internal_title?: Maybe<Scalars["String"]>;
+  internal_title?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
-  number_of_episodes?: Maybe<Scalars["Int"]>;
-  preferred_image_type?: Maybe<Scalars["String"]>;
+  number_of_episodes?: Maybe<Scalars["Int"]["output"]>;
+  preferred_image_type?: Maybe<Scalars["String"]["output"]>;
   publish_stage?: Maybe<PublishStage>;
-  release_date?: Maybe<Scalars["AWSDate"]>;
-  season_number?: Maybe<Scalars["Int"]>;
-  title_sort?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
-  year_of_release?: Maybe<Scalars["Int"]>;
+  release_date?: Maybe<Scalars["AWSDate"]["output"]>;
+  season_number?: Maybe<Scalars["Int"]["output"]>;
+  title_sort?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
+  year_of_release?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _SeasonLanguage = _Language & {
   __typename?: "_SeasonLanguage";
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_SeasonLanguage>>>;
-  language?: Maybe<Scalars["String"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  slug?: Maybe<Scalars["String"]>;
-  synopsis?: Maybe<Scalars["String"]>;
-  synopsis_short?: Maybe<Scalars["String"]>;
-  title?: Maybe<Scalars["String"]>;
-  title_short?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  synopsis?: Maybe<Scalars["String"]["output"]>;
+  synopsis_short?: Maybe<Scalars["String"]["output"]>;
+  title?: Maybe<Scalars["String"]["output"]>;
+  title_short?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _SeasonMeta = {
   __typename?: "_SeasonMeta";
-  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   created?: Maybe<_Audit>;
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_SeasonGlobal>;
   language_data?: Maybe<_SeasonLanguage>;
   modified?: Maybe<_Audit>;
-  published?: Maybe<Scalars["Boolean"]>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type _SkylarkAssetGlobal = _Global & {
   __typename?: "_SkylarkAssetGlobal";
   created?: Maybe<_Audit>;
-  dash_dashboard?: Maybe<Scalars["String"]>;
-  dash_id?: Maybe<Scalars["String"]>;
-  dash_url?: Maybe<Scalars["String"]>;
+  dash_dashboard?: Maybe<Scalars["String"]["output"]>;
+  dash_id?: Maybe<Scalars["String"]["output"]>;
+  dash_url?: Maybe<Scalars["String"]["output"]>;
   history?: Maybe<Array<Maybe<_SkylarkAssetGlobal>>>;
-  hls_dashboard?: Maybe<Scalars["String"]>;
-  hls_id?: Maybe<Scalars["String"]>;
-  hls_url?: Maybe<Scalars["String"]>;
-  ingest_file?: Maybe<Scalars["String"]>;
-  internal_title?: Maybe<Scalars["String"]>;
+  hls_dashboard?: Maybe<Scalars["String"]["output"]>;
+  hls_id?: Maybe<Scalars["String"]["output"]>;
+  hls_url?: Maybe<Scalars["String"]["output"]>;
+  ingest_file?: Maybe<Scalars["String"]["output"]>;
+  internal_title?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
-  policy?: Maybe<Scalars["String"]>;
-  provider?: Maybe<Scalars["String"]>;
+  policy?: Maybe<Scalars["String"]["output"]>;
+  provider?: Maybe<Scalars["String"]["output"]>;
   publish_stage?: Maybe<PublishStage>;
-  release_date?: Maybe<Scalars["String"]>;
-  status?: Maybe<Scalars["String"]>;
-  title_sort?: Maybe<Scalars["String"]>;
-  type?: Maybe<Scalars["String"]>;
-  url?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  release_date?: Maybe<Scalars["String"]["output"]>;
+  status?: Maybe<Scalars["String"]["output"]>;
+  title_sort?: Maybe<Scalars["String"]["output"]>;
+  type?: Maybe<Scalars["String"]["output"]>;
+  url?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _SkylarkAssetLanguage = _Language & {
   __typename?: "_SkylarkAssetLanguage";
   created?: Maybe<_Audit>;
-  duration?: Maybe<Scalars["Int"]>;
+  duration?: Maybe<Scalars["Int"]["output"]>;
   history?: Maybe<Array<Maybe<_SkylarkAssetLanguage>>>;
-  language?: Maybe<Scalars["String"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  slug?: Maybe<Scalars["String"]>;
-  title?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  title?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _SkylarkAssetMeta = {
   __typename?: "_SkylarkAssetMeta";
-  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   created?: Maybe<_Audit>;
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_SkylarkAssetGlobal>;
   language_data?: Maybe<_SkylarkAssetLanguage>;
   modified?: Maybe<_Audit>;
-  published?: Maybe<Scalars["Boolean"]>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type _SkylarkEpgProgramGlobal = _Global & {
   __typename?: "_SkylarkEPGProgramGlobal";
   created?: Maybe<_Audit>;
-  end_time?: Maybe<Scalars["AWSDateTime"]>;
+  end_time?: Maybe<Scalars["AWSDateTime"]["output"]>;
   history?: Maybe<Array<Maybe<_SkylarkEpgProgramGlobal>>>;
-  internal_title?: Maybe<Scalars["String"]>;
+  internal_title?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
-  name_sort?: Maybe<Scalars["String"]>;
+  name_sort?: Maybe<Scalars["String"]["output"]>;
   publish_stage?: Maybe<PublishStage>;
-  start_time?: Maybe<Scalars["AWSDateTime"]>;
-  url?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  start_time?: Maybe<Scalars["AWSDateTime"]["output"]>;
+  url?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _SkylarkEpgProgramLanguage = _Language & {
   __typename?: "_SkylarkEPGProgramLanguage";
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_SkylarkEpgProgramLanguage>>>;
-  language?: Maybe<Scalars["String"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
-  name?: Maybe<Scalars["String"]>;
+  name?: Maybe<Scalars["String"]["output"]>;
   publish_stage?: Maybe<PublishStage>;
-  slug?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _SkylarkEpgProgramMeta = {
   __typename?: "_SkylarkEPGProgramMeta";
-  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   created?: Maybe<_Audit>;
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_SkylarkEpgProgramGlobal>;
   language_data?: Maybe<_SkylarkEpgProgramLanguage>;
   modified?: Maybe<_Audit>;
-  published?: Maybe<Scalars["Boolean"]>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type _SkylarkFavoriteListGlobal = _Global & {
@@ -6660,161 +6836,161 @@ export type _SkylarkFavoriteListGlobal = _Global & {
   history?: Maybe<Array<Maybe<_SkylarkFavoriteListGlobal>>>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  version?: Maybe<Scalars["Int"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _SkylarkFavoriteListLanguage = _Language & {
   __typename?: "_SkylarkFavoriteListLanguage";
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_SkylarkFavoriteListLanguage>>>;
-  language?: Maybe<Scalars["String"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  slug?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _SkylarkFavoriteListMeta = {
   __typename?: "_SkylarkFavoriteListMeta";
-  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   created?: Maybe<_Audit>;
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_SkylarkFavoriteListGlobal>;
   language_data?: Maybe<_SkylarkFavoriteListLanguage>;
   modified?: Maybe<_Audit>;
-  published?: Maybe<Scalars["Boolean"]>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type _SkylarkImageGlobal = _Global & {
   __typename?: "_SkylarkImageGlobal";
-  content_type?: Maybe<Scalars["String"]>;
+  content_type?: Maybe<Scalars["String"]["output"]>;
   created?: Maybe<_Audit>;
-  download_from_url?: Maybe<Scalars["String"]>;
-  external_url?: Maybe<Scalars["String"]>;
-  file_name?: Maybe<Scalars["String"]>;
+  download_from_url?: Maybe<Scalars["String"]["output"]>;
+  external_url?: Maybe<Scalars["String"]["output"]>;
+  file_name?: Maybe<Scalars["String"]["output"]>;
   history?: Maybe<Array<Maybe<_SkylarkImageGlobal>>>;
-  internal_title?: Maybe<Scalars["String"]>;
+  internal_title?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  type?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  type?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _SkylarkImageLanguage = _Language & {
   __typename?: "_SkylarkImageLanguage";
-  alt_text?: Maybe<Scalars["String"]>;
+  alt_text?: Maybe<Scalars["String"]["output"]>;
   created?: Maybe<_Audit>;
-  description?: Maybe<Scalars["String"]>;
+  description?: Maybe<Scalars["String"]["output"]>;
   history?: Maybe<Array<Maybe<_SkylarkImageLanguage>>>;
-  language?: Maybe<Scalars["String"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  slug?: Maybe<Scalars["String"]>;
-  title?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
-  watermark_text?: Maybe<Scalars["String"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  title?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
+  watermark_text?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type _SkylarkImageMeta = {
   __typename?: "_SkylarkImageMeta";
-  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   created?: Maybe<_Audit>;
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_SkylarkImageGlobal>;
   language_data?: Maybe<_SkylarkImageLanguage>;
   modified?: Maybe<_Audit>;
-  published?: Maybe<Scalars["Boolean"]>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type _SkylarkLiveAssetGlobal = _Global & {
   __typename?: "_SkylarkLiveAssetGlobal";
   created?: Maybe<_Audit>;
-  dash_dashboard?: Maybe<Scalars["String"]>;
-  dash_id?: Maybe<Scalars["String"]>;
-  dash_url?: Maybe<Scalars["String"]>;
+  dash_dashboard?: Maybe<Scalars["String"]["output"]>;
+  dash_id?: Maybe<Scalars["String"]["output"]>;
+  dash_url?: Maybe<Scalars["String"]["output"]>;
   history?: Maybe<Array<Maybe<_SkylarkLiveAssetGlobal>>>;
-  hls_dashboard?: Maybe<Scalars["String"]>;
-  hls_id?: Maybe<Scalars["String"]>;
-  hls_url?: Maybe<Scalars["String"]>;
-  ingest_file?: Maybe<Scalars["String"]>;
-  internal_title?: Maybe<Scalars["String"]>;
-  live?: Maybe<Scalars["Boolean"]>;
+  hls_dashboard?: Maybe<Scalars["String"]["output"]>;
+  hls_id?: Maybe<Scalars["String"]["output"]>;
+  hls_url?: Maybe<Scalars["String"]["output"]>;
+  ingest_file?: Maybe<Scalars["String"]["output"]>;
+  internal_title?: Maybe<Scalars["String"]["output"]>;
+  live?: Maybe<Scalars["Boolean"]["output"]>;
   modified?: Maybe<_Audit>;
-  policy?: Maybe<Scalars["String"]>;
-  provider?: Maybe<Scalars["String"]>;
+  policy?: Maybe<Scalars["String"]["output"]>;
+  provider?: Maybe<Scalars["String"]["output"]>;
   publish_stage?: Maybe<PublishStage>;
-  release_date?: Maybe<Scalars["String"]>;
-  status?: Maybe<Scalars["String"]>;
-  stream_end_time?: Maybe<Scalars["AWSDateTime"]>;
-  stream_start_time?: Maybe<Scalars["AWSDateTime"]>;
-  title_sort?: Maybe<Scalars["String"]>;
-  type?: Maybe<Scalars["String"]>;
-  url?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  release_date?: Maybe<Scalars["String"]["output"]>;
+  status?: Maybe<Scalars["String"]["output"]>;
+  stream_end_time?: Maybe<Scalars["AWSDateTime"]["output"]>;
+  stream_start_time?: Maybe<Scalars["AWSDateTime"]["output"]>;
+  title_sort?: Maybe<Scalars["String"]["output"]>;
+  type?: Maybe<Scalars["String"]["output"]>;
+  url?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _SkylarkLiveAssetLanguage = _Language & {
   __typename?: "_SkylarkLiveAssetLanguage";
   created?: Maybe<_Audit>;
-  duration?: Maybe<Scalars["Int"]>;
+  duration?: Maybe<Scalars["Int"]["output"]>;
   history?: Maybe<Array<Maybe<_SkylarkLiveAssetLanguage>>>;
-  language?: Maybe<Scalars["String"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  slug?: Maybe<Scalars["String"]>;
-  title?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  title?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _SkylarkLiveAssetMeta = {
   __typename?: "_SkylarkLiveAssetMeta";
-  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   created?: Maybe<_Audit>;
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_SkylarkLiveAssetGlobal>;
   language_data?: Maybe<_SkylarkLiveAssetLanguage>;
   modified?: Maybe<_Audit>;
-  published?: Maybe<Scalars["Boolean"]>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type _SkylarkSetGlobal = _Global & {
   __typename?: "_SkylarkSetGlobal";
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_SkylarkSetGlobal>>>;
-  internal_title?: Maybe<Scalars["String"]>;
+  internal_title?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  release_date?: Maybe<Scalars["String"]>;
-  title_sort?: Maybe<Scalars["String"]>;
-  type?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  release_date?: Maybe<Scalars["String"]["output"]>;
+  title_sort?: Maybe<Scalars["String"]["output"]>;
+  type?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _SkylarkSetLanguage = _Language & {
   __typename?: "_SkylarkSetLanguage";
   created?: Maybe<_Audit>;
-  description?: Maybe<Scalars["String"]>;
+  description?: Maybe<Scalars["String"]["output"]>;
   history?: Maybe<Array<Maybe<_SkylarkSetLanguage>>>;
-  language?: Maybe<Scalars["String"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
   publish_stage?: Maybe<PublishStage>;
-  slug?: Maybe<Scalars["String"]>;
-  synopsis?: Maybe<Scalars["String"]>;
-  synopsis_short?: Maybe<Scalars["String"]>;
-  title?: Maybe<Scalars["String"]>;
-  title_short?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  synopsis?: Maybe<Scalars["String"]["output"]>;
+  synopsis_short?: Maybe<Scalars["String"]["output"]>;
+  title?: Maybe<Scalars["String"]["output"]>;
+  title_short?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _SkylarkSetMeta = {
   __typename?: "_SkylarkSetMeta";
-  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   created?: Maybe<_Audit>;
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_SkylarkSetGlobal>;
   language_data?: Maybe<_SkylarkSetLanguage>;
   modified?: Maybe<_Audit>;
-  published?: Maybe<Scalars["Boolean"]>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type _SkylarkTagGlobal = _Global & {
@@ -6822,82 +6998,82 @@ export type _SkylarkTagGlobal = _Global & {
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_SkylarkTagGlobal>>>;
   modified?: Maybe<_Audit>;
-  name_sort?: Maybe<Scalars["String"]>;
+  name_sort?: Maybe<Scalars["String"]["output"]>;
   publish_stage?: Maybe<PublishStage>;
-  type?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  type?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _SkylarkTagLanguage = _Language & {
   __typename?: "_SkylarkTagLanguage";
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_SkylarkTagLanguage>>>;
-  language?: Maybe<Scalars["String"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
-  name?: Maybe<Scalars["String"]>;
+  name?: Maybe<Scalars["String"]["output"]>;
   publish_stage?: Maybe<PublishStage>;
-  slug?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _SkylarkTagMeta = {
   __typename?: "_SkylarkTagMeta";
-  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   created?: Maybe<_Audit>;
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_SkylarkTagGlobal>;
   language_data?: Maybe<_SkylarkTagLanguage>;
   modified?: Maybe<_Audit>;
-  published?: Maybe<Scalars["Boolean"]>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type _ThemeGlobal = _Global & {
   __typename?: "_ThemeGlobal";
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_ThemeGlobal>>>;
-  internal_title?: Maybe<Scalars["String"]>;
+  internal_title?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
-  name_sort?: Maybe<Scalars["String"]>;
+  name_sort?: Maybe<Scalars["String"]["output"]>;
   publish_stage?: Maybe<PublishStage>;
-  version?: Maybe<Scalars["Int"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _ThemeLanguage = _Language & {
   __typename?: "_ThemeLanguage";
   created?: Maybe<_Audit>;
   history?: Maybe<Array<Maybe<_ThemeLanguage>>>;
-  language?: Maybe<Scalars["String"]>;
-  metadata_source?: Maybe<Scalars["String"]>;
+  language?: Maybe<Scalars["String"]["output"]>;
+  metadata_source?: Maybe<Scalars["String"]["output"]>;
   modified?: Maybe<_Audit>;
-  name?: Maybe<Scalars["String"]>;
+  name?: Maybe<Scalars["String"]["output"]>;
   publish_stage?: Maybe<PublishStage>;
-  slug?: Maybe<Scalars["String"]>;
-  version?: Maybe<Scalars["Int"]>;
+  slug?: Maybe<Scalars["String"]["output"]>;
+  version?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type _ThemeMeta = {
   __typename?: "_ThemeMeta";
-  available_languages?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  available_languages?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
   created?: Maybe<_Audit>;
   field_config?: Maybe<Array<Maybe<_FieldConfig>>>;
   global_data?: Maybe<_ThemeGlobal>;
   language_data?: Maybe<_ThemeLanguage>;
   modified?: Maybe<_Audit>;
-  published?: Maybe<Scalars["Boolean"]>;
+  published?: Maybe<Scalars["Boolean"]["output"]>;
 };
 
 export type ActivationStatus = {
   __typename?: "activationStatus";
-  active_version?: Maybe<Scalars["Int"]>;
-  update_in_progress?: Maybe<Scalars["Boolean"]>;
-  update_started_at?: Maybe<Scalars["String"]>;
+  active_version?: Maybe<Scalars["Int"]["output"]>;
+  update_in_progress?: Maybe<Scalars["Boolean"]["output"]>;
+  update_started_at?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type UserDetails = {
   __typename?: "userDetails";
-  account?: Maybe<Scalars["String"]>;
-  permissions?: Maybe<Array<Maybe<Scalars["String"]>>>;
-  role?: Maybe<Scalars["String"]>;
+  account?: Maybe<Scalars["String"]["output"]>;
+  permissions?: Maybe<Array<Maybe<Scalars["String"]["output"]>>>;
+  role?: Maybe<Scalars["String"]["output"]>;
 };
 
 /* eslint-enable */

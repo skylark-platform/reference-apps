@@ -41,11 +41,11 @@ describe("Dimension Settings component", () => {
 
   it("should change the active dimension customer type", () => {
     customRender(<DimensionSettings show />);
-    expect(getCheckBox("Premium").checked).toBeTruthy();
+    expect(getCheckBox("Public").checked).toBeTruthy();
     expect(getCheckBox("Standard").checked).toBeFalsy();
     fireEvent.click(screen.getByText("Standard"));
     expect(getCheckBox("Standard").checked).toBeTruthy();
-    expect(getCheckBox("Premium").checked).toBeFalsy();
+    expect(getCheckBox("Public").checked).toBeFalsy();
   });
 
   it("should change the active dimension region", () => {

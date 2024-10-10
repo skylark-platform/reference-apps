@@ -1,7 +1,7 @@
 import "../styles/globals.css";
-import "@fontsource/outfit/400.css";
-import "@fontsource/outfit/500.css";
-import "@fontsource/outfit/700.css";
+import "@fontsource/figtree/400.css";
+import "@fontsource/figtree/500.css";
+import "@fontsource/figtree/700.css";
 import "@fontsource/inter/500.css";
 import "@fontsource/inter/600.css";
 import type { AppProps } from "next/app";
@@ -9,7 +9,6 @@ import PlausibleProvider from "next-plausible";
 import { withPasswordProtect } from "next-password-protect";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { IntercomProvider } from "react-use-intercom";
 import { SkylarkTVLayout } from "../components/layout";
 import { DimensionsContextProvider } from "../contexts";
 import { LOCAL_STORAGE } from "../lib/skylark";
@@ -39,13 +38,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <PlausibleProvider domain={process.env.NEXT_PUBLIC_APP_DOMAIN as string}>
       <QueryClientProvider client={queryClient}>
-        <IntercomProvider appId={"t104fsur"} autoBoot>
-          <DimensionsContextProvider>
-            <SkylarkTVLayout skylarkApiUrl={skylarkApiUrl}>
-              <Component {...pageProps} />
-            </SkylarkTVLayout>
-          </DimensionsContextProvider>
-        </IntercomProvider>
+        <DimensionsContextProvider>
+          <SkylarkTVLayout skylarkApiUrl={skylarkApiUrl}>
+            <Component {...pageProps} />
+          </SkylarkTVLayout>
+        </DimensionsContextProvider>
       </QueryClientProvider>
     </PlausibleProvider>
   );

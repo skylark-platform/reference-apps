@@ -149,7 +149,7 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                   <DimensionRadioButton
                     active={dimensions[DimensionKey.CustomerType]}
                     options={[
-                      { text: "Premium", value: "premium" },
+                      { text: "Public", value: "public" },
                       { text: "Standard", value: "standard" },
                       { text: "Kids", value: "kids" },
                     ]}
