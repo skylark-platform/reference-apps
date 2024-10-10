@@ -202,6 +202,7 @@ export const createOrUpdateDimensionValues = async (
   const existingDimensionValues = await getExistingDimensionValues(
     dimension.slug,
   );
+
   const existingObjectSlugs = existingDimensionValues.map(({ slug }) => slug);
 
   const operations = valuesToCreate.reduce(

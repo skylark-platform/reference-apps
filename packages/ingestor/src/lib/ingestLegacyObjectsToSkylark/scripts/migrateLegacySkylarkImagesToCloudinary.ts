@@ -139,6 +139,7 @@ const main = async () => {
         ...image,
         external_url: data.url,
         file_name: `${data.original_filename}.${data.format}`,
+        external_id: image.external_id,
       };
     });
 
