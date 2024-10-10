@@ -31,8 +31,8 @@ import {
 } from "./lib/skylark/saas/fs";
 import { updateObjectConfigurations } from "./lib/skylark/saas/objectConfiguration";
 import { configureCache, purgeCache } from "./lib/skylark/saas/cache";
-import { updateRelationshipConfigurations } from "./lib/skylark/saas/relationshipConfiguration";
 import { guessObjectRelationshipsFromAirtableRows } from "./lib/skylark/saas/utils";
+import { updateRelationshipConfigurations } from "./lib/skylark/saas/relationshipConfiguration";
 
 const timers = {
   full: "Completed in:",

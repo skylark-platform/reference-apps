@@ -89,7 +89,7 @@ const getAllObjectsOfType = async <T extends LegacyBaseObject>(
   // https://developers.skylarkplatform.com/api/skylark_api.html#controlling-responses
   const lastMonthQuery = `created__gte=${LAST_MONTH_MODE_DATE}`;
 
-  const limit = 50; // 40 + 4 requests at once pegged the CPU at ~80% for Episodes (SL6)
+  const limit = 10; // 40 + 4 requests at once pegged the CPU at ~80% for Episodes (SL6) + 50 sets got bad gateway for SL8
   const numRequestsAtOnce = 4;
 
   let numberOfRequests = 0;
@@ -164,13 +164,18 @@ const getAllObjectsOfType = async <T extends LegacyBaseObject>(
             query.push(lastMonthQuery);
           }
 
-          const listObjectsResponse = await legacyAxios.get<string>(
-            `/api/${type}/?${query.join("&")}`,
-          );
+          const url = `/api/${type}/?${query.join("&")}`;
+          const listObjectsResponse = await legacyAxios.get<string>(url);
 
-          const data = parseJSON<LegacyResponseListObjectsData<T>>(
-            listObjectsResponse.data,
-          );
+          let data;
+          try {
+            data = parseJSON<LegacyResponseListObjectsData<T>>(
+              listObjectsResponse.data,
+            );
+          } catch (err) {
+            console.log(err);
+            console.log(listObjectsResponse);
+          }
 
           if (!hasProperty(data, "objects")) {
             throw new Error(
