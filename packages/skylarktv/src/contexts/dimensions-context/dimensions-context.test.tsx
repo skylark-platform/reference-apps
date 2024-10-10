@@ -38,7 +38,7 @@ describe("Dimensions Context", () => {
   it("Returns the active customer type", () => {
     customRender(<Consumer />);
     expect(screen.getByText(/^Customer Type:/).textContent).toBe(
-      "Customer Type: premium",
+      "Customer Type: public",
     );
   });
 

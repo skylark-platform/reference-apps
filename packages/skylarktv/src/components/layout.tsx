@@ -10,7 +10,6 @@ import {
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import { DefaultSeo } from "next-seo";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Search } from "./search";
 import {
   SkylarkTVConfig,
@@ -19,21 +18,16 @@ import {
 import createDefaultSeo from "../../next-seo.config";
 import { GoogleTagManagerScript } from "./googleTagManager";
 import { BackButton } from "./backButton";
-import { PURGE_CACHE } from "../graphql/queries/purgeCache";
-import { useUser } from "../hooks/useUserAccount";
-import { SkylarkApiPermission } from "../types";
 import { NavigationLink } from "./generic/navigation";
 import { useDimensions } from "../contexts";
 import {
   addCloudinaryOnTheFlyImageTransformation,
   hasProperty,
-  skylarkRequestWithLocalStorage,
 } from "../lib/utils";
 import { AppBackgroundGradient } from "./generic/app-background-gradient";
 import { AppHeader } from "./generic/app-header";
 import { Button } from "./generic/button";
 import { ConnectToSkylarkModal } from "./generic/connect-to-skylark-modal";
-import { DimensionSettings } from "./generic/dimension-settings";
 import { TitleScreen } from "./generic/title-screen";
 import { Link } from "./generic/link";
 
@@ -64,10 +58,7 @@ const Logo = ({ config }: { config?: SkylarkTVConfig }) => {
   );
 };
 
-export const SkylarkTVLayout: React.FC<Props> = ({
-  skylarkApiUrl,
-  children,
-}) => {
+export const SkylarkTVLayout: React.FC<Props> = ({ children }) => {
   const { config } = useSkylarkTVConfig();
 
   const appTitle =
@@ -107,24 +98,6 @@ export const SkylarkTVLayout: React.FC<Props> = ({
       setRegion("mena");
     }
   }, [language]);
-
-  const queryClient = useQueryClient();
-
-  const { mutate: purgeCache } = useMutation({
-    mutationKey: ["purgeCache"],
-    mutationFn: () => skylarkRequestWithLocalStorage(PURGE_CACHE, {}, {}),
-    onSuccess: () => {
-      queryClient.clear();
-      // eslint-disable-next-line no-console
-      console.log("Skylark cache cleared.");
-    },
-    // eslint-disable-next-line no-console
-    onError: console.error,
-  });
-
-  const { permissions } = useUser();
-
-  const includeDimensionSettings = !permissions || permissions.length > 1;
 
   return (
     <>
@@ -200,16 +173,6 @@ export const SkylarkTVLayout: React.FC<Props> = ({
         <div className="relative z-10 h-full w-full pt-mobile-header md:pt-0">
           {children}
         </div>
-        {includeDimensionSettings && (
-          <DimensionSettings
-            skylarkApiUrl={skylarkApiUrl}
-            timeTravelEnabled={
-              !permissions ||
-              permissions.includes(SkylarkApiPermission.TimeTravel)
-            }
-            onCachePurge={() => purgeCache({})}
-          />
-        )}
       </div>
       <ConnectToSkylarkModal
         closeModal={() => setModalOpen(false)}
