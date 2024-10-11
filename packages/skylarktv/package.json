@@ -13,6 +13,8 @@
     "codegen": "DOTENV_CONFIG_PATH=.env.local graphql-codegen -r dotenv/config --config codegen.ts",
     "prebuild": "yarn codegen",
     "predev": "yarn codegen",
+    "prestorybook": "yarn codegen",
+    "prebuild-storybook": "yarn codegen",
     "ingest": "cd ../../packages/ingestor && yarn ingest:saas:with-sets",
     "vercel:link": "vercel link -p reference-apps-saas --scope skylark-platform --yes",
     "vercel:env": "vercel env pull .env.local --yes",
