@@ -165,25 +165,24 @@ export const SkylarkTVLayout: React.FC<Props> = ({
         <AppHeader activeHref={asPath} links={links}>
           <div className="flex h-full items-center justify-center text-3xl text-gray-100">
             <BackButton />
-            <Link className="block h-full" href="/">
-              <div className="flex h-full items-center ltr:md:ml-8 ltr:lg:ml-16 ltr:xl:ml-20 rtl:md:mr-8 rtl:lg:mr-16 rtl:xl:mr-20">
-                {config?.logo || CLIENT_APP_CONFIG.header?.logo ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    alt={
-                      config?.logo?.alt || CLIENT_APP_CONFIG.header?.logo.alt
-                    }
-                    className="block h-full py-2 md:py-4 lg:py-8"
-                    src={addCloudinaryOnTheFlyImageTransformation(
-                      (config?.logo?.src ||
-                        CLIENT_APP_CONFIG.header?.logo.src) as string,
-                      { height: 100 },
-                    )}
-                  />
-                ) : (
-                  <MdStream className="h-9 w-9 md:h-10 md:w-10 lg:h-12 lg:w-12" />
-                )}
-              </div>
+            <Link
+              className="flex h-full items-center ltr:md:ml-8 ltr:lg:ml-16 ltr:xl:ml-20 rtl:md:mr-8 rtl:lg:mr-16 rtl:xl:mr-20"
+              href="/"
+            >
+              {config?.logo || CLIENT_APP_CONFIG.header?.logo ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  alt={config?.logo?.alt || CLIENT_APP_CONFIG.header?.logo.alt}
+                  className="block h-full py-2 md:py-4 lg:py-8"
+                  src={addCloudinaryOnTheFlyImageTransformation(
+                    (config?.logo?.src ||
+                      CLIENT_APP_CONFIG.header?.logo.src) as string,
+                    { height: 100 },
+                  )}
+                />
+              ) : (
+                <MdStream className="h-9 w-9 md:h-10 md:w-10 lg:h-12 lg:w-12" />
+              )}
               {!CLIENT_APP_CONFIG.header?.hideAppName && (
                 <h2 className="mx-1 text-base md:mx-2 md:text-xl lg:text-2xl">
                   {appTitle}
