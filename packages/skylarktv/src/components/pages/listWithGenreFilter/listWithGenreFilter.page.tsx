@@ -22,6 +22,7 @@ interface ListWithGenreFilterPageProps {
   objects: Metadata[] | Episode[] | Movie[] | null;
   isLoadingObjects: boolean;
   thumbnailVariant: ThumbnailVariant;
+  hideGenreSelector: boolean;
   setActiveGenre: Dispatch<
     SetStateAction<{ uid: string; name: string } | null>
   >;
@@ -35,6 +36,7 @@ export const ListObjectsWithGenreFilter: NextPage<
   isLoadingObjects,
   thumbnailVariant,
   activeGenre,
+  hideGenreSelector,
   setActiveGenre,
 }) => {
   const { objects: genres, isError: isGenreError } =
@@ -65,13 +67,15 @@ export const ListObjectsWithGenreFilter: NextPage<
             <div className="text-[16px]">{t(translationKeys.description)}</div>
           )}
         </div>
-        <div className="flex flex-row gap-x-2 pb-6 md:pb-16 xl:pb-20">
-          <Dropdown
-            items={genres?.map((genre) => genre.name || "").sort() || []}
-            label="Genres"
-            onChange={updateGenre}
-          />
-        </div>
+        {!hideGenreSelector && (
+          <div className="flex flex-row gap-x-2 pb-6 md:pb-16 xl:pb-20">
+            <Dropdown
+              items={genres?.map((genre) => genre.name || "").sort() || []}
+              label="Genres"
+              onChange={updateGenre}
+            />
+          </div>
+        )}
       </div>
       {!isLoadingObjects && (!objects || objects.length === 0) && (
         <div className="text-center">
