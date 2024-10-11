@@ -12,6 +12,7 @@ import {
 import { useSkylarkEnvironment } from "./useSkylarkEnvironment";
 import { useDimensions } from "../contexts";
 import { skylarkRequestWithDimensions } from "../lib/utils";
+import { CLIENT_APP_CONFIG } from "../constants/app";
 
 interface SkylarkTVConfigResponse {
   listAppConfig?: {
@@ -110,11 +111,11 @@ export const useSkylarkTVConfig = () => {
   useEffect(() => {
     document.documentElement.style.setProperty(
       "--skylarktv-primary-color",
-      config?.primaryColor || "#ea223c",
+      config?.primaryColor || CLIENT_APP_CONFIG.colours.primary,
     );
     document.documentElement.style.setProperty(
       "--skylarktv-accent-color",
-      config?.accentColor || "#011832",
+      config?.accentColor || CLIENT_APP_CONFIG.colours.accent,
     );
     if (config?.googleTagManagerId) {
       addGoogleTagManagerNoScriptToBody(config?.googleTagManagerId);
