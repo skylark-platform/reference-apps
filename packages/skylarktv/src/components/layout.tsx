@@ -14,11 +14,7 @@ import { GoogleTagManagerScript } from "./googleTagManager";
 import { BackButton } from "./backButton";
 import { NavigationLink } from "./generic/navigation";
 import { useDimensions } from "../contexts";
-import {
-  addCloudinaryOnTheFlyImageTransformation,
-  hasProperty,
-  skylarkRequestWithLocalStorage,
-} from "../lib/utils";
+import { hasProperty, skylarkRequestWithLocalStorage } from "../lib/utils";
 import { AppBackgroundGradient } from "./generic/app-background-gradient";
 import { AppHeader } from "./generic/app-header";
 import { Button } from "./generic/button";
@@ -148,7 +144,12 @@ export const SkylarkTVLayout: React.FC<Props> = ({
                 key={config?.loadingLogo?.src || config?.logo?.src || "logo"}
               />
             }
-            title={!config?.loadingLogo ? appTitle : ""}
+            title={
+              !config?.loadingLogo &&
+              !CLIENT_APP_CONFIG.loadingScreen?.hideAppName
+                ? appTitle
+                : ""
+            }
           >
             {CLIENT_APP_CONFIG.showBySkylark && (
               <p className="text-xs text-gray-500 sm:text-sm lg:text-lg">
@@ -170,11 +171,7 @@ export const SkylarkTVLayout: React.FC<Props> = ({
                 <img
                   alt={config?.logo?.alt || CLIENT_APP_CONFIG.header?.logo.alt}
                   className="block h-full py-2 md:py-4 lg:py-8"
-                  src={addCloudinaryOnTheFlyImageTransformation(
-                    (config?.logo?.src ||
-                      CLIENT_APP_CONFIG.header?.logo.src) as string,
-                    { height: 100 },
-                  )}
+                  src={CLIENT_APP_CONFIG.header?.logo.src}
                 />
               ) : (
                 <MdStream className="h-9 w-9 md:h-10 md:w-10 lg:h-12 lg:w-12" />

@@ -90,7 +90,7 @@ export const CLIENT_APP_CONFIG: typeof defaultAppConfig = {
   header: {
     logo: {
       src: logoWithText,
-      alt: "",
+      alt: "logo",
     },
     hideAppName: true,
   },
