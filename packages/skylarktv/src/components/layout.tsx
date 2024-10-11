@@ -1,12 +1,5 @@
-import React, { useEffect, useState } from "react";
-import {
-  MdStream,
-  MdSearch,
-  MdClose,
-  MdHome,
-  MdOutlineStar,
-  MdMovie,
-} from "react-icons/md";
+import React, { useEffect, useMemo, useState } from "react";
+import { MdStream, MdSearch, MdClose } from "react-icons/md";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import { DefaultSeo } from "next-seo";
@@ -19,7 +12,6 @@ import {
 import createDefaultSeo from "../../next-seo.config";
 import { GoogleTagManagerScript } from "./googleTagManager";
 import { BackButton } from "./backButton";
-import { NavigationLink } from "./generic/navigation";
 import { useDimensions } from "../contexts";
 import {
   addCloudinaryOnTheFlyImageTransformation,
@@ -33,11 +25,13 @@ import { ConnectToSkylarkModal } from "./generic/connect-to-skylark-modal";
 import { TitleScreen } from "./generic/title-screen";
 import { Link } from "./generic/link";
 import { CLIENT_APP_CONFIG } from "../constants/app";
+import { CLIENT_NAVIGATION_CONFIG } from "../constants/navigation";
 import { APP_TITLE } from "../constants/env";
 import { PURGE_CACHE } from "../graphql/queries/purgeCache";
 import { useUser } from "../hooks/useUserAccount";
 import { DimensionSettings } from "./generic/dimension-settings";
 import { SkylarkApiPermission } from "../types";
+import { NavigationLink } from "./generic/navigation";
 
 interface Props {
   skylarkApiUrl?: string;
@@ -82,21 +76,23 @@ export const SkylarkTVLayout: React.FC<Props> = ({
   const { t } = useTranslation("common");
   const [isMobileSearchOpen, setMobileSearchOpen] = useState(false);
 
-  const links: NavigationLink[] = [
-    { text: t("discover"), href: "/", icon: <MdHome /> },
-    { text: t("movies"), href: "/movies", icon: <MdMovie /> },
-    {
-      text: t("articles"),
-      href: "/articles",
-      icon: <MdOutlineStar />,
-    },
-    {
-      text: t("search"),
-      onClick: () => setMobileSearchOpen(!isMobileSearchOpen),
-      icon: <MdSearch />,
-      isMobileOnly: true,
-    },
-  ];
+  const links: NavigationLink[] = useMemo(
+    (): NavigationLink[] => [
+      ...CLIENT_NAVIGATION_CONFIG.links.map(
+        ({ localeKey, ...rest }): NavigationLink => ({
+          text: t(localeKey),
+          ...rest,
+        }),
+      ),
+      {
+        text: t("search"),
+        onClick: () => setMobileSearchOpen(!isMobileSearchOpen),
+        icon: <MdSearch />,
+        isMobileOnly: true,
+      },
+    ],
+    [],
+  );
 
   const [modalOpen, setModalOpen] = useState(false);
 
