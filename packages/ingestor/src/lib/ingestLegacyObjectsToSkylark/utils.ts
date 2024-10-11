@@ -2,7 +2,7 @@ import { GraphQLObjectTypes } from "@skylark-apps/skylarktv/src/lib/interfaces";
 import {
   SAAS_API_ENDPOINT,
   SAAS_API_KEY,
-} from "@skylark-apps/skylarktv/src/lib/skylark";
+} from "@skylark-apps/skylarktv/src/constants/env";
 import {
   FetchedLegacyObjects,
   LegacyObjectType,

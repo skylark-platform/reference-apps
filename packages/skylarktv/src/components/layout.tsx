@@ -1,16 +1,9 @@
-import React, { useEffect, useState } from "react";
-import {
-  MdStream,
-  MdSearch,
-  MdClose,
-  MdHome,
-  MdOutlineStar,
-  MdMovie,
-} from "react-icons/md";
+import React, { useEffect, useMemo, useState } from "react";
+import { MdStream, MdSearch, MdClose } from "react-icons/md";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import { DefaultSeo } from "next-seo";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { Search } from "./search";
 import {
   SkylarkTVConfig,
@@ -19,10 +12,6 @@ import {
 import createDefaultSeo from "../../next-seo.config";
 import { GoogleTagManagerScript } from "./googleTagManager";
 import { BackButton } from "./backButton";
-import { PURGE_CACHE } from "../graphql/queries/purgeCache";
-import { useUser } from "../hooks/useUserAccount";
-import { SkylarkApiPermission } from "../types";
-import { NavigationLink } from "./generic/navigation";
 import { useDimensions } from "../contexts";
 import {
   addCloudinaryOnTheFlyImageTransformation,
@@ -33,9 +22,16 @@ import { AppBackgroundGradient } from "./generic/app-background-gradient";
 import { AppHeader } from "./generic/app-header";
 import { Button } from "./generic/button";
 import { ConnectToSkylarkModal } from "./generic/connect-to-skylark-modal";
-import { DimensionSettings } from "./generic/dimension-settings";
 import { TitleScreen } from "./generic/title-screen";
 import { Link } from "./generic/link";
+import { CLIENT_APP_CONFIG } from "../constants/app";
+import { CLIENT_NAVIGATION_CONFIG } from "../constants/navigation";
+import { APP_TITLE } from "../constants/env";
+import { PURGE_CACHE } from "../graphql/queries/purgeCache";
+import { useUser } from "../hooks/useUserAccount";
+import { DimensionSettings } from "./generic/dimension-settings";
+import { SkylarkApiPermission } from "../types";
+import { NavigationLink } from "./generic/navigation";
 
 interface Props {
   skylarkApiUrl?: string;
@@ -43,7 +39,11 @@ interface Props {
 }
 
 const Logo = ({ config }: { config?: SkylarkTVConfig }) => {
-  const configLogo = config?.loadingLogo || config?.logo;
+  const configLogo =
+    config?.loadingLogo ||
+    config?.logo ||
+    CLIENT_APP_CONFIG.loadingScreen?.logo ||
+    CLIENT_APP_CONFIG.header?.logo;
   if (configLogo) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
@@ -70,28 +70,29 @@ export const SkylarkTVLayout: React.FC<Props> = ({
 }) => {
   const { config } = useSkylarkTVConfig();
 
-  const appTitle =
-    config?.appName || process.env.NEXT_PUBLIC_APP_TITLE || "SkylarkTV";
+  const appTitle = config?.appName || APP_TITLE || CLIENT_APP_CONFIG.name;
 
   const { asPath, query } = useRouter();
   const { t } = useTranslation("common");
   const [isMobileSearchOpen, setMobileSearchOpen] = useState(false);
 
-  const links: NavigationLink[] = [
-    { text: t("discover"), href: "/", icon: <MdHome /> },
-    { text: t("movies"), href: "/movies", icon: <MdMovie /> },
-    {
-      text: t("articles"),
-      href: "/articles",
-      icon: <MdOutlineStar />,
-    },
-    {
-      text: t("search"),
-      onClick: () => setMobileSearchOpen(!isMobileSearchOpen),
-      icon: <MdSearch />,
-      isMobileOnly: true,
-    },
-  ];
+  const links: NavigationLink[] = useMemo(
+    (): NavigationLink[] => [
+      ...CLIENT_NAVIGATION_CONFIG.links.map(
+        ({ localeKey, ...rest }): NavigationLink => ({
+          text: t(localeKey),
+          ...rest,
+        }),
+      ),
+      {
+        text: t("search"),
+        onClick: () => setMobileSearchOpen(!isMobileSearchOpen),
+        icon: <MdSearch />,
+        isMobileOnly: true,
+      },
+    ],
+    [],
+  );
 
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -149,33 +150,41 @@ export const SkylarkTVLayout: React.FC<Props> = ({
             }
             title={!config?.loadingLogo ? appTitle : ""}
           >
-            <p className="text-xs text-gray-500 sm:text-sm lg:text-lg">
-              {t("by-skylark")}
-            </p>
+            {CLIENT_APP_CONFIG.showBySkylark && (
+              <p className="text-xs text-gray-500 sm:text-sm lg:text-lg">
+                {t("by-skylark")}
+              </p>
+            )}
           </TitleScreen>
         )}
         <AppBackgroundGradient />
         <AppHeader activeHref={asPath} links={links}>
           <div className="flex h-full items-center justify-center text-3xl text-gray-100">
             <BackButton />
-            <div className="flex h-full items-center ltr:md:ml-8 ltr:lg:ml-16 ltr:xl:ml-20 rtl:md:mr-8 rtl:lg:mr-16 rtl:xl:mr-20">
-              {config?.logo ? (
+            <Link
+              className="flex h-full items-center ltr:md:ml-8 ltr:lg:ml-16 ltr:xl:ml-20 rtl:md:mr-8 rtl:lg:mr-16 rtl:xl:mr-20"
+              href="/"
+            >
+              {config?.logo || CLIENT_APP_CONFIG.header?.logo ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  alt={config.logo.alt}
+                  alt={config?.logo?.alt || CLIENT_APP_CONFIG.header?.logo.alt}
                   className="block h-full py-2 md:py-4 lg:py-8"
                   src={addCloudinaryOnTheFlyImageTransformation(
-                    config.logo.src,
+                    (config?.logo?.src ||
+                      CLIENT_APP_CONFIG.header?.logo.src) as string,
                     { height: 100 },
                   )}
                 />
               ) : (
                 <MdStream className="h-9 w-9 md:h-10 md:w-10 lg:h-12 lg:w-12" />
               )}
-            </div>
-            <h2 className="mx-1 text-base md:mx-2 md:text-xl lg:text-2xl">
-              <Link href="/">{appTitle}</Link>
-            </h2>
+              {!CLIENT_APP_CONFIG.header?.hideAppName && (
+                <h2 className="mx-1 text-base md:mx-2 md:text-xl lg:text-2xl">
+                  {appTitle}
+                </h2>
+              )}
+            </Link>
             <span className="absolute right-2 top-16 md:hidden">
               {isMobileSearchOpen && (
                 <Button
@@ -200,16 +209,17 @@ export const SkylarkTVLayout: React.FC<Props> = ({
         <div className="relative z-10 h-full w-full pt-mobile-header md:pt-0">
           {children}
         </div>
-        {includeDimensionSettings && (
-          <DimensionSettings
-            skylarkApiUrl={skylarkApiUrl}
-            timeTravelEnabled={
-              !permissions ||
-              permissions.includes(SkylarkApiPermission.TimeTravel)
-            }
-            onCachePurge={() => purgeCache({})}
-          />
-        )}
+        {includeDimensionSettings &&
+          !CLIENT_APP_CONFIG.hideDimensionsSettings && (
+            <DimensionSettings
+              skylarkApiUrl={skylarkApiUrl}
+              timeTravelEnabled={
+                !permissions ||
+                permissions.includes(SkylarkApiPermission.TimeTravel)
+              }
+              onCachePurge={() => purgeCache({})}
+            />
+          )}
       </div>
       <ConnectToSkylarkModal
         closeModal={() => setModalOpen(false)}

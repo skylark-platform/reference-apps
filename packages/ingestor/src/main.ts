@@ -3,7 +3,7 @@ import "./env";
 import axios from "axios";
 import { has } from "lodash";
 import { hasProperty } from "@skylark-apps/skylarktv/src/lib/utils";
-import { SAAS_API_ENDPOINT } from "@skylark-apps/skylarktv/src/lib/skylark";
+import { SAAS_API_ENDPOINT } from "@skylark-apps/skylarktv/src/constants/env";
 import { getAllTables } from "./lib/airtable";
 import {
   Airtables,

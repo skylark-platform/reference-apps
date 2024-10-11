@@ -5,12 +5,7 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 
 import "dayjs/locale/pt";
 import { Maybe } from "graphql/jsutils/Maybe";
-import {
-  CLOUDINARY_ENVIRONMENT,
-  graphQLClient,
-  LOCAL_STORAGE,
-  skylarkRequest,
-} from "../skylark";
+import { graphQLClient, skylarkRequest } from "../skylark";
 import {
   DimensionKey,
   Dimensions,
@@ -38,6 +33,8 @@ import {
   Credit,
 } from "../../types";
 import { getImageSrc } from "./classic";
+import { LOCAL_STORAGE } from "../../constants/app";
+import { CLOUDINARY_ENVIRONMENT } from "../../constants/env";
 
 dayjs.extend(relativeTime);
 dayjs.extend(customParseFormat);

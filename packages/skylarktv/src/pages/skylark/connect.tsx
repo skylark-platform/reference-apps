@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { LOCAL_STORAGE } from "../../lib/skylark";
+import { LOCAL_STORAGE } from "../../constants/app";
 
 const setKeysAndRedirect = async (
   uri: string,

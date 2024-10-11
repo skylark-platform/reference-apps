@@ -10,11 +10,8 @@ import { SkylarkBranding } from "../skylark-branding";
 import { useDimensions } from "../../../contexts";
 import { ConnectToSkylarkModal } from "../connect-to-skylark-modal";
 import { DimensionKey } from "../../../lib/interfaces";
-import {
-  LOCAL_STORAGE,
-  SAAS_API_ENDPOINT,
-  SAAS_API_KEY,
-} from "../../../lib/skylark";
+import { CLIENT_APP_CONFIG, LOCAL_STORAGE } from "../../../constants/app";
+import { SAAS_API_ENDPOINT, SAAS_API_KEY } from "../../../constants/env";
 
 const generateSkylarkAutoconnectUrl = () => {
   const isBrowser = typeof window !== "undefined";
@@ -148,25 +145,19 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
                 <DimensionContent label="Customer Type">
                   <DimensionRadioButton
                     active={dimensions[DimensionKey.CustomerType]}
-                    options={[
-                      { text: "Premium", value: "premium" },
-                      { text: "Standard", value: "standard" },
-                      { text: "Kids", value: "kids" },
-                    ]}
+                    options={
+                      CLIENT_APP_CONFIG.dimensions[DimensionKey.CustomerType]
+                        .values
+                    }
                     onChange={(value: string) => setCustomerType(value)}
                   />
                 </DimensionContent>
                 <DimensionContent label="Region">
                   <DimensionRadioButton
                     active={dimensions[DimensionKey.Region]}
-                    options={[
-                      { text: "Europe", value: "europe" },
-                      { text: "North America", value: "north-america" },
-                      {
-                        text: "Middle East",
-                        value: "mena",
-                      },
-                    ]}
+                    options={
+                      CLIENT_APP_CONFIG.dimensions[DimensionKey.Region].values
+                    }
                     onChange={(value: string) => {
                       setRegion(value);
                       if (
