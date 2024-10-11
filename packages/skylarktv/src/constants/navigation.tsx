@@ -5,7 +5,7 @@ export const CLIENT_NAVIGATION_CONFIG = {
     { localeKey: "home", href: "/", icon: <MdHome /> },
     { localeKey: "movies", href: "/movies", icon: <MdMovie /> },
     {
-      localeKey: "articles",
+      localeKey: "blog",
       href: "/articles",
       icon: <MdOutlineStar />,
     },
