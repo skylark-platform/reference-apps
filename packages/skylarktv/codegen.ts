@@ -17,6 +17,15 @@ const { primary, accent } = CLIENT_APP_CONFIG.colours;
 const gqlFile = "./src/types/gql.ts";
 const globalCSSFile = "./src/styles/globals.css";
 
+const schema: CodegenConfig["schema"] = {
+  [SAAS_API_ENDPOINT]: {
+    headers: {
+      "x-api-key": SAAS_API_KEY,
+      Authorization: SAAS_API_KEY,
+    },
+  },
+};
+
 const gqlGenerator: CodegenConfig["generates"][0] = {
   plugins: [
     "typescript",
@@ -33,6 +42,7 @@ const gqlGenerator: CodegenConfig["generates"][0] = {
       },
     },
   ],
+  schema,
 };
 
 const cssGenerator: CodegenConfig["generates"][0] = {
@@ -52,6 +62,7 @@ const cssGenerator: CodegenConfig["generates"][0] = {
       },
     },
   ],
+  schema: onlyGenerateCssFile ? "https://graphqlzero.almansi.me/api" : schema,
 };
 
 const generates: CodegenConfig["generates"] = onlyGenerateCssFile
@@ -60,14 +71,6 @@ const generates: CodegenConfig["generates"] = onlyGenerateCssFile
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: {
-    [SAAS_API_ENDPOINT]: {
-      headers: {
-        "x-api-key": SAAS_API_KEY,
-        Authorization: SAAS_API_KEY,
-      },
-    },
-  },
   generates,
   hooks: { afterAllFileWrite: ["prettier --write"] },
 };
