@@ -6,7 +6,10 @@ import { NextParsedUrlQuery } from "next/dist/server/request-meta";
 import { useDeviceType } from "../../hooks/useDeviceType";
 import { persistQueryValues } from "../../lib/utils";
 import { DimensionKey, Dimensions } from "../../lib/interfaces";
-import { ALL_DIMENSION_QUERY_KEYS } from "../../constants/app";
+import {
+  ALL_DIMENSION_QUERY_KEYS,
+  CLIENT_APP_CONFIG,
+} from "../../constants/app";
 
 interface ReducerAction {
   type: DimensionKey;
@@ -84,9 +87,12 @@ export const DimensionsContextProvider = ({
 
   const [dimensions, dispatch] = useReducer(dimensionsReducer, {
     [DimensionKey.Language]: lang,
-    [DimensionKey.CustomerType]: "public",
-    [DimensionKey.DeviceType]: "",
-    [DimensionKey.Region]: "europe",
+    [DimensionKey.CustomerType]:
+      CLIENT_APP_CONFIG.dimensions[DimensionKey.CustomerType].values[0].value,
+    [DimensionKey.DeviceType]:
+      CLIENT_APP_CONFIG.dimensions[DimensionKey.DeviceType].values[0].value,
+    [DimensionKey.Region]:
+      CLIENT_APP_CONFIG.dimensions[DimensionKey.Region].values[0].value,
     [DimensionKey.TimeTravel]: "",
   });
 

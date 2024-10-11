@@ -7,6 +7,7 @@ import {
 } from "./utils";
 import { GraphQLObjectTypes, DimensionKey } from "./interfaces";
 import { graphQLClient } from "./skylark";
+import { CLIENT_APP_CONFIG } from "../constants/app";
 
 interface SeoObjectImage {
   url: string;
@@ -99,10 +100,13 @@ export const getSeoDataForObject = async (
           ...createGraphQLQueryDimensions({
             language,
             // TODO can we work out these before the client loads the page?
-            [DimensionKey.CustomerType]: "public",
+            [DimensionKey.CustomerType]:
+              CLIENT_APP_CONFIG.dimensions[DimensionKey.CustomerType].values[0]
+                .value,
             [DimensionKey.DeviceType]: "pc",
             [DimensionKey.TimeTravel]: "",
-            [DimensionKey.Region]: "europe",
+            [DimensionKey.Region]:
+              CLIENT_APP_CONFIG.dimensions[DimensionKey.Region].values[0].value,
           }),
         },
         ...getFields(type),

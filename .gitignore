@@ -42,3 +42,6 @@ yarn-error.log*
 # Storybook
 build-storybook.log
 temp/
+
+# Auto generated css file
+packages/skylarktv/src/styles/globals.css
