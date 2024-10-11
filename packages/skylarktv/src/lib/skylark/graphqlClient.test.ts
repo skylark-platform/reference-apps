@@ -3,7 +3,7 @@ import "regenerator-runtime/runtime";
 import { GraphQLClient } from "graphql-request";
 import { graphQLClient } from "./graphqlClient";
 
-jest.mock("./skylark.constants", () => ({
+jest.mock("../../constants/env", () => ({
   SAAS_API_ENDPOINT: "https://endpoint/graphql",
   SAAS_API_KEY: "api-key",
 }));

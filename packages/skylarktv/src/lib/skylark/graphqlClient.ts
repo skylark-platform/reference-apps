@@ -4,7 +4,7 @@ import {
   Variables,
   request,
 } from "graphql-request";
-import { SAAS_API_ENDPOINT, SAAS_API_KEY } from "./skylark.constants";
+import { SAAS_API_ENDPOINT, SAAS_API_KEY } from "../../constants/env";
 
 class SkylarkGraphQLClient extends GraphQLClient {
   uncachedRequest<T>(

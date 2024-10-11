@@ -2,7 +2,8 @@ import React, { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useDebounce } from "use-debounce";
 import { Button } from "../button";
-import { LOCAL_STORAGE, skylarkRequest } from "../../../lib/skylark";
+import { skylarkRequest } from "../../../lib/skylark";
+import { LOCAL_STORAGE } from "../../../constants/app";
 
 interface ConnectToSkylarkModalProps {
   isOpen: boolean;

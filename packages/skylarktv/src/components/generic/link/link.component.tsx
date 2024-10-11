@@ -2,7 +2,7 @@ import React from "react";
 import NextLink, { LinkProps as NextLinkProps } from "next/link";
 import { useRouter } from "next/router";
 import { persistQueryValues } from "../../../lib/utils";
-import { ALL_DIMENSION_QUERY_KEYS } from "../../../lib/skylark";
+import { ALL_DIMENSION_QUERY_KEYS } from "../../../constants/app";
 
 interface LinkProps extends NextLinkProps {
   isExternal?: boolean;

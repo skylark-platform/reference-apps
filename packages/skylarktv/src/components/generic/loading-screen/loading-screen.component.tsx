@@ -1,6 +1,8 @@
 import { AnimatePresence, motion } from "framer-motion";
+import useTranslation from "next-translate/useTranslation";
 import React from "react";
 import { MdStream } from "react-icons/md";
+import { CLIENT_APP_CONFIG } from "../../../constants/app";
 
 interface LoadingScreenProps {
   show: boolean;
@@ -34,6 +36,8 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
   onExitComplete,
   onAnimationComplete,
 }) => {
+  const { t } = useTranslation("common");
+
   const staggerCharacter = 0.7 / title.length;
   const text = {
     hidden: { opacity: 0 },
@@ -116,7 +120,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
             variants={skylarkDemoText}
             onAnimationComplete={onAnimationComplete}
           >
-            {/* {t("by-skylark")} */}
+            {CLIENT_APP_CONFIG.showBySkylark ? t("by-skylark") : null}
           </motion.p>
         </motion.div>
       )}

@@ -18,7 +18,10 @@ export type CreditTypes =
   | "Engineer"
   | "Presenter";
 
-export type DeviceTypes = "smartphone" | "pc";
+export enum DeviceTypes {
+  Smartphone = "smartphone",
+  PC = "pc",
+}
 
 export type TitleTypes = "title" | "title_short";
 

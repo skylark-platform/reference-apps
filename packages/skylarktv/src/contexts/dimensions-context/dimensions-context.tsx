@@ -6,7 +6,7 @@ import { NextParsedUrlQuery } from "next/dist/server/request-meta";
 import { useDeviceType } from "../../hooks/useDeviceType";
 import { persistQueryValues } from "../../lib/utils";
 import { DimensionKey, Dimensions } from "../../lib/interfaces";
-import { ALL_DIMENSION_QUERY_KEYS } from "../../lib/skylark";
+import { ALL_DIMENSION_QUERY_KEYS } from "../../constants/app";
 
 interface ReducerAction {
   type: DimensionKey;

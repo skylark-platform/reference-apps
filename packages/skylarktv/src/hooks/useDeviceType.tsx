@@ -13,6 +13,8 @@ export const useDeviceType = (): {
   const [breakpoint] = useTailwindBreakpoint();
   const isSmartphone = ["", "sm"].includes(breakpoint as string);
   const isLoading = breakpoint === undefined;
-  const deviceType: DeviceTypes = isSmartphone ? "smartphone" : "pc";
+  const deviceType: DeviceTypes = isSmartphone
+    ? DeviceTypes.Smartphone
+    : DeviceTypes.PC;
   return { isLoading, deviceType: isLoading ? undefined : deviceType };
 };
