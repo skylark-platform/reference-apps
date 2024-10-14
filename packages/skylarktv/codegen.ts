@@ -58,6 +58,14 @@ const cssGenerator: CodegenConfig["generates"][0] = {
         content: `:root {
 --skylarktv-primary-color: ${primary.startsWith("#") ? primary : `#${primary}`};
 --skylarktv-accent-color: ${accent.startsWith("#") ? accent : `#${accent}`};
+}
+
+/* Cheat to change prose bullet point color */
+.prose
+  :where(ul > li):not(
+    :where([class~="not-prose"], [class~="not-prose"] *)
+  )::marker {
+  color: var(--skylarktv-primary-color);
 }`,
       },
     },

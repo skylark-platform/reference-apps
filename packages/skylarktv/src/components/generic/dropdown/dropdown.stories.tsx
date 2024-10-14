@@ -1,6 +1,5 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { within } from "@storybook/testing-library";
 import { Dropdown } from "./dropdown.component";
 
 export default {
@@ -44,13 +43,4 @@ Themes.args = {
     "Innocence",
     "Vengeance",
   ],
-};
-
-export const Open = Template.bind({});
-Open.args = {
-  ...Themes.args,
-};
-Open.play = ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  canvas.getByRole("button").click();
 };

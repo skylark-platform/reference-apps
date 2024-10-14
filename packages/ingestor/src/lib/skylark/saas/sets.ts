@@ -35,7 +35,7 @@ const createSetContent = (
   mediaObjects: GraphQLBaseObject[],
   airtableMediaObjectToExternalIDMapping: Record<string, string>,
 ): SetRelationshipsLink => {
-  const contents = airtableSet.fields.content as string[];
+  const contents = (airtableSet.fields.content as string[] | undefined) || [];
   const setItems = contents
     .map((contentAirtableId, index): SetItem | null => {
       const setExternalId =

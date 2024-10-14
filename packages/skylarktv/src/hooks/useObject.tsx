@@ -38,7 +38,7 @@ export const useObject = <T extends Metadata>(
       : !isSkylarkUid(uid);
 
   const { data, error, isLoading } = useQuery({
-    queryKey: ["Search", query, uid, dimensions],
+    queryKey: ["Object", query, uid, dimensions],
     queryFn: () =>
       fetcher<T>(query, uid, dimensions, { ...opts, useExternalId }),
     enabled: Boolean(!opts?.disabled && !isLoadingDimensions && query),

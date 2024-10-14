@@ -109,6 +109,8 @@ export const GET_EPISODE = (skylarkTVIngestorSchemaLoaded: boolean) => gql`
           uid
           url
           hls_url
+          hls_id
+          provider
         }
       }
       seasons {

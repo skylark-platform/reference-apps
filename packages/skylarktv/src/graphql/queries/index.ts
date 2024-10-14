@@ -11,3 +11,4 @@ export * from "./getLiveStream";
 export * from "./getArticle";
 export * from "./listArticles";
 export * from "./getUserAccount";
+export * from "./getAsset";

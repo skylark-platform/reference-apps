@@ -17,7 +17,6 @@ const config: StorybookConfig = {
     getAbsolutePath("@storybook/addon-onboarding"),
     getAbsolutePath("@storybook/addon-interactions"),
     "storybook-addon-pseudo-states",
-    "@storybook/addon-styling",
   ],
   framework: {
     name: getAbsolutePath("@storybook/nextjs"),

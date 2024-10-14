@@ -38,7 +38,7 @@ const defaultAppConfig: {
     hideAppName: boolean;
   };
 } = {
-  name: "StreamTV",
+  name: "SkylarkTV",
   colours: {
     primary: "#5b45ce",
     accent: "#ff385c",

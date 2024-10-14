@@ -24,6 +24,7 @@ import { MetadataPanel } from "../../generic/metadata-panel";
 import { Player } from "../../generic/player";
 import { SkeletonPage } from "../../generic/skeleton";
 import { Link } from "../../generic/link";
+import { useMuxPlaybackTokens } from "../../../hooks/useMuxPlaybackToken";
 
 interface PlaybackPageProps {
   uid: string;
@@ -37,9 +38,12 @@ interface PlaybackPageProps {
   player: {
     assetId: string;
     src: string;
+    playbackId?: string;
     poster: string;
     duration?: number;
     autoPlay?: boolean;
+    provider?: string;
+    policy?: string;
   };
   number?: string | number;
   releaseDate?: string;
@@ -173,6 +177,11 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
 }) => {
   const { t, lang } = useTranslation("common");
 
+  const { playbackTokens } = useMuxPlaybackTokens(
+    player.provider,
+    player.playbackId,
+  );
+
   const allCredits = credits
     ? Object.values(credits)
         .map(({ formattedCredits }) => formattedCredits)
@@ -221,7 +230,11 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
         <div className="flex h-full w-full justify-center pb-10 md:pb-16">
           <Player
             autoPlay={player.autoPlay}
+            playbackId={player.playbackId}
+            playbackPolicy={player?.policy || undefined}
+            playbackTokens={playbackTokens}
             poster={player.poster}
+            provider={player.provider}
             src={player.src}
             videoId={player.assetId}
             videoTitle={title}
