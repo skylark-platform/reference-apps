@@ -16,8 +16,6 @@
     "typescript": "5.6.3"
   },
   "dependencies": {
-    "@aws-amplify/auth": "4.6.17",
-    "@aws-amplify/core": "4.7.15",
     "@aws-sdk/client-s3": "3.670.0",
     "@aws-sdk/util-credentials": "3.56.0",
     "@skylark-apps/skylarktv": "0.1.0",
