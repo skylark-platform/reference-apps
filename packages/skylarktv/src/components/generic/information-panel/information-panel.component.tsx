@@ -95,6 +95,11 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
 }) => {
   const { t } = useTranslation("common");
 
+  const seasonBreadcrumb =
+    (season?.number
+      ? `${t("skylark.object.season")} ${season.number}`
+      : season?.title) || null;
+
   return (
     <div className="h-full w-full bg-gray-900">
       <div className="p-2 text-white">
@@ -107,14 +112,7 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
               }`}
             >
               <List
-                contents={[
-                  brand.title,
-                  season
-                    ? season.title ||
-                      (season.number &&
-                        `${t("skylark.object.season")} ${season.number}`)
-                    : "",
-                ]}
+                contents={[brand.title, seasonBreadcrumb]}
                 highlightAll
                 textSize={"lg"}
               />
