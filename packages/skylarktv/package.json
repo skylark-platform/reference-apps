@@ -22,8 +22,8 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@fontsource/inter": "4.5.15",
-    "@fontsource/outfit": "4.5.11",
+    "@fontsource/inter": "5.1.0",
+    "@fontsource/outfit": "5.1.0",
     "@graphql-codegen/client-preset": "4.4.0",
     "@graphql-typed-document-node/core": "3.2.0",
     "@headlessui/react": "1.7.19",
