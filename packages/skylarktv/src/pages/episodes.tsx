@@ -55,7 +55,7 @@ const GenrePage = ({ genreFromUrl }: { genreFromUrl: string | null }) => {
 };
 
 const TagPage = ({ tagFromUrl }: { tagFromUrl: string | null }) => {
-  const { episodes, isLoading } = useEpisodeListingFromTag(tagFromUrl);
+  const { tag, episodes, isLoading } = useEpisodeListingFromTag(tagFromUrl);
 
   return (
     <ListObjects
@@ -63,7 +63,7 @@ const TagPage = ({ tagFromUrl }: { tagFromUrl: string | null }) => {
       objects={episodes || []}
       thumbnailVariant="landscape"
       translationKeys={{
-        title: "episodes",
+        title: tag?.name || "episodes",
       }}
     />
   );

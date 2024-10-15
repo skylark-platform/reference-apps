@@ -47,7 +47,10 @@ export const useMovieListingFromTag = (tagUid: string | null) => {
       .flatMap(({ getObject }) => getObject?.movies?.objects)
       .filter((m): m is Movie => !!m);
 
+  const tag = data?.pages?.[0].getObject;
+
   return {
+    tag,
     movies,
     isLoading,
     isError: error,
@@ -84,7 +87,10 @@ export const useEpisodeListingFromTag = (tagUid: string | null) => {
       .flatMap(({ getObject }) => getObject?.episodes?.objects)
       .filter((e): e is Episode => !!e);
 
+  const tag = data?.pages?.[0].getObject;
+
   return {
+    tag,
     episodes,
     isLoading,
     isError: error,

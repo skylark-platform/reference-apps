@@ -53,7 +53,7 @@ const GenrePage = ({ genreFromUrl }: { genreFromUrl: string | null }) => {
 };
 
 const TagPage = ({ tagFromUrl }: { tagFromUrl: string | null }) => {
-  const { movies, isLoading } = useMovieListingFromTag(tagFromUrl);
+  const { tag, movies, isLoading } = useMovieListingFromTag(tagFromUrl);
 
   return (
     <ListObjects
@@ -61,8 +61,8 @@ const TagPage = ({ tagFromUrl }: { tagFromUrl: string | null }) => {
       objects={movies || []}
       thumbnailVariant="landscape"
       translationKeys={{
-        title: "movies",
-        description: "movies-page-description",
+        title: tag?.name || "episodes",
+        description: !tag ? "movies-page-description" : undefined,
       }}
     />
   );
