@@ -86,12 +86,6 @@ export const Player: React.FC<PlayerProps> = ({
       })
     : undefined;
 
-  console.log({
-    playbackTokens,
-    playbackId,
-    playbackPolicy,
-  });
-
   const isSigned = Boolean(
     !playbackPolicy || ["PRIVATE"].includes(playbackPolicy.toUpperCase()),
   );
