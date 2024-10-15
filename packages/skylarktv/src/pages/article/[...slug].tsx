@@ -1,7 +1,7 @@
 import type { GetStaticProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 import dayjs from "dayjs";
-import { Article } from "../../types/gql";
+import { Article, ImageType } from "../../types/gql";
 import { DisplayError } from "../../components/displayError";
 import { useObject } from "../../hooks/useObject";
 import {
@@ -19,6 +19,10 @@ import { ListObjectsRail } from "../../components/rails";
 import { LIST_ARTICLES } from "../../graphql/queries";
 import { ParseAndDisplayHTML } from "../../components/generic/parseAndDisplayHtml";
 import { SkeletonPage } from "../../components/generic/skeleton";
+import {
+  addCloudinaryOnTheFlyImageTransformation,
+  getGraphQLImageSrc,
+} from "../../lib/utils";
 
 export function getStaticPaths() {
   return {
@@ -69,6 +73,8 @@ const ArticlePage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
     );
   }
 
+  const image = getGraphQLImageSrc(article?.images, ImageType.Thumbnail);
+
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-start bg-gray-900 pb-20 pt-4 font-body md:pt-48">
       <NextSeo
@@ -83,7 +89,19 @@ const ArticlePage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
         title={article?.title || seo?.title || "article"}
       />
       <SkeletonPage show={isLoading}>
-        <div className="mx-4 flex w-full flex-col items-center px-4 text-white md:max-w-5xl">
+        {image && (
+          <div className="fixed left-0 right-0 top-36 -z-0 flex items-start justify-center opacity-5">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              alt={article?.title || seo?.title || "article"}
+              className="mb-10 h-full w-full max-w-7xl overflow-hidden rounded-sm object-cover"
+              src={addCloudinaryOnTheFlyImageTransformation(image, {
+                width: 600,
+              })}
+            />
+          </div>
+        )}
+        <div className="relative mx-4 flex w-full flex-col items-center px-4 text-white md:max-w-5xl">
           <h1 className="mb-4 rounded-sm bg-skylarktv-accent p-4 text-center font-display text-xl md:p-10 md:text-left md:text-4xl">
             {article?.title}
           </h1>
