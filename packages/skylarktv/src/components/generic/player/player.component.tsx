@@ -93,7 +93,7 @@ export const Player: React.FC<PlayerProps> = ({
   });
 
   const isSigned = Boolean(
-    playbackPolicy && ["PRIVATE"].includes(playbackPolicy.toUpperCase()),
+    !playbackPolicy || ["PRIVATE"].includes(playbackPolicy.toUpperCase()),
   );
 
   return (
