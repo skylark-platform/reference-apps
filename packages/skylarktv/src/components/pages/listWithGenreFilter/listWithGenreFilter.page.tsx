@@ -2,30 +2,23 @@ import { Dispatch, SetStateAction } from "react";
 import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
 import useTranslation from "next-translate/useTranslation";
-import { Episode, Genre, Metadata, Movie } from "../../../types/gql";
+import { Genre } from "../../../types/gql";
 
 import { DisplayError } from "../../displayError";
 import { Grid } from "../../grid";
 import { useListObjects } from "../../../hooks/useListObjects";
 import { LIST_GENRES } from "../../../graphql/queries";
-import { ThumbnailVariant } from "../../thumbnail";
 import { SkeletonPage } from "../../generic/skeleton";
 import { Dropdown } from "../../generic/dropdown";
 import { H4 } from "../../generic/typography";
+import { ListObjectsPageProps } from "../listObjects/listObjects.page";
 
-interface ListWithGenreFilterPageProps {
-  translationKeys: {
-    title: string;
-    description?: string;
-  };
+interface ListWithGenreFilterPageProps extends ListObjectsPageProps {
   activeGenre: Genre | null;
-  objects: Metadata[] | Episode[] | Movie[] | null;
-  isLoadingObjects: boolean;
-  thumbnailVariant: ThumbnailVariant;
-  hideGenreSelector: boolean;
   setActiveGenre: Dispatch<
     SetStateAction<{ uid: string; name: string } | null>
   >;
+  hideGenreSelector: boolean;
 }
 
 export const ListObjectsWithGenreFilter: NextPage<

@@ -1,42 +1,38 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Episode, Genre, Movie } from "../types/gql";
+import { Episode, SkylarkTag, Movie } from "../types/gql";
 import { GQLError } from "../types";
-import {
-  LIST_EPISODES_BY_GENRE,
-  LIST_MOVIES_BY_GENRE,
-} from "../graphql/queries";
+import { LIST_EPISODES_BY_TAG, LIST_MOVIES_BY_TAG } from "../graphql/queries";
 import { skylarkRequestWithDimensions } from "../lib/utils";
 import { useDimensions } from "../contexts";
 import { Dimensions } from "../lib/interfaces";
 
-function objectListingFromGenreFetcher<T>(
+const objectListingFromTagFetcher = (
   query: string,
-  genreUid: string,
+  tagUid: string,
   dimensions: Dimensions,
   nextToken?: string,
-) {
-  return skylarkRequestWithDimensions<{ getObject: T }>(query, dimensions, {
-    uid: genreUid,
+) =>
+  skylarkRequestWithDimensions<{ getObject: SkylarkTag }>(query, dimensions, {
+    uid: tagUid,
     nextToken,
   });
-}
 
-export const useMovieListingFromGenre = (genreUid: string | null) => {
+export const useMovieListingFromTag = (tagUid: string | null) => {
   const { dimensions, isLoadingDimensions } = useDimensions();
 
   const { data, isLoading, error, hasNextPage, fetchNextPage } =
-    useInfiniteQuery<{ getObject: Genre }, GQLError>({
-      queryKey: ["LIST_MOVIES_BY_GENRE", genreUid, dimensions],
+    useInfiniteQuery<{ getObject: SkylarkTag }, GQLError>({
+      queryKey: ["LIST_MOVIES_BY_TAG", tagUid, dimensions],
       queryFn: ({ pageParam: nextToken }: { pageParam?: string }) =>
-        objectListingFromGenreFetcher(
-          LIST_MOVIES_BY_GENRE,
-          genreUid as string,
+        objectListingFromTagFetcher(
+          LIST_MOVIES_BY_TAG,
+          tagUid as string,
           dimensions,
           nextToken,
         ),
       getNextPageParam: (lastPage): string | undefined =>
         lastPage.getObject.movies?.next_token || undefined,
-      enabled: Boolean(genreUid && !isLoadingDimensions),
+      enabled: Boolean(tagUid && !isLoadingDimensions),
     });
 
   // This if statement ensures that all data is fetched
@@ -58,22 +54,22 @@ export const useMovieListingFromGenre = (genreUid: string | null) => {
   };
 };
 
-export const useEpisodeListingFromGenre = (genreUid: string | null) => {
+export const useEpisodeListingFromTag = (tagUid: string | null) => {
   const { dimensions, isLoadingDimensions } = useDimensions();
 
   const { data, isLoading, error, hasNextPage, fetchNextPage } =
-    useInfiniteQuery<{ getObject: Genre }, GQLError>({
-      queryKey: ["LIST_EPISODES_BY_GENRE", genreUid, dimensions],
+    useInfiniteQuery<{ getObject: SkylarkTag }, GQLError>({
+      queryKey: ["LIST_EPISODES_BY_TAG", tagUid, dimensions],
       queryFn: ({ pageParam: nextToken }: { pageParam?: string }) =>
-        objectListingFromGenreFetcher(
-          LIST_EPISODES_BY_GENRE,
-          genreUid as string,
+        objectListingFromTagFetcher(
+          LIST_EPISODES_BY_TAG,
+          tagUid as string,
           dimensions,
           nextToken,
         ),
       getNextPageParam: (lastPage): string | undefined =>
         lastPage.getObject.movies?.next_token || undefined,
-      enabled: Boolean(genreUid && !isLoadingDimensions),
+      enabled: Boolean(tagUid && !isLoadingDimensions),
     });
 
   // This if statement ensures that all data is fetched

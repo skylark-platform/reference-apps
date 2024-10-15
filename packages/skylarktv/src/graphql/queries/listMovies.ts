@@ -52,3 +52,15 @@ export const LIST_MOVIES_BY_GENRE = gql`
     }
   }
 `;
+
+export const LIST_MOVIES_BY_TAG = gql`
+  ${movieListingFragment}
+
+  query LIST_MOVIES_BY_TAG($uid: String!, $nextToken: String) {
+    getObject: getSkylarkTag(uid: $uid) {
+      movies(next_token: $nextToken, limit: 20) {
+        ...movieListingFragment
+      }
+    }
+  }
+`;
