@@ -72,7 +72,7 @@ export const useEpisodeListingFromGenre = (genreUid: string | null) => {
           nextToken,
         ),
       getNextPageParam: (lastPage): string | undefined =>
-        lastPage.getObject.movies?.next_token || undefined,
+        lastPage.getObject.episodes?.next_token || undefined,
       enabled: Boolean(genreUid && !isLoadingDimensions),
     });
 

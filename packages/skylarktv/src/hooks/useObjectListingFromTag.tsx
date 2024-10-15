@@ -71,7 +71,7 @@ export const useEpisodeListingFromTag = (tagUid: string | null) => {
           nextToken,
         ),
       getNextPageParam: (lastPage): string | undefined =>
-        lastPage.getObject.movies?.next_token || undefined,
+        lastPage.getObject.episodes?.next_token || undefined,
       enabled: Boolean(tagUid && !isLoadingDimensions),
     });
 
