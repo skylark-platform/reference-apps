@@ -28,3 +28,19 @@ export const LIST_EPISODES_BY_GENRE = gql`
     }
   }
 `;
+
+// No Portuguese Genres have been added to the ingestor yet, so only set language on the movies relationship
+export const LIST_EPISODES_BY_TAG = gql`
+  query LIST_EPISODES_BY_TAG($uid: String!, $nextToken: String) {
+    getObject: getGenre(uid: $uid) {
+      episodes(next_token: $nextToken) {
+        next_token
+        objects {
+          __typename
+          uid
+          slug
+        }
+      }
+    }
+  }
+`;
