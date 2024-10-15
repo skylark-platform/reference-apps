@@ -61,6 +61,7 @@ export const LIST_EPISODES_BY_TAG = gql`
 
   query LIST_EPISODES_BY_TAG($uid: String!, $nextToken: String) {
     getObject: getSkylarkTag(uid: $uid) {
+      name
       episodes(next_token: $nextToken) {
         ...episodeListingFragment
       }

@@ -1,12 +1,16 @@
 import React, { ReactNode } from "react";
 import clsx from "clsx";
+import { LinkProps } from "next/link";
 import { Link } from "../link";
 
 export type NavigationLink = {
   text: string;
   icon: ReactNode;
   isMobileOnly?: boolean;
-} & ({ href: string; onClick?: never } | { onClick: () => void; href?: never });
+} & (
+  | { href: LinkProps["href"]; onClick?: never }
+  | { onClick: () => void; href?: never }
+);
 
 export interface NavigationProps {
   links: NavigationLink[];

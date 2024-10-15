@@ -58,6 +58,7 @@ export const LIST_MOVIES_BY_TAG = gql`
 
   query LIST_MOVIES_BY_TAG($uid: String!, $nextToken: String) {
     getObject: getSkylarkTag(uid: $uid) {
+      name
       movies(next_token: $nextToken, limit: 20) {
         ...movieListingFragment
       }
