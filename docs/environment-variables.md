@@ -20,14 +20,6 @@ NEXT_PUBLIC_SKYLARK_API_URL=
 # Used in
 # - SkylarkTV
 NEXT_PUBLIC_APP_DOMAIN=
-# Configuration for AWS Cognito
-# These should be provided by your customer success representative
-# Used in
-# - Asset video playback in the SkylarkTV reference app
-# - Loading content into Skylark via the Ingestor
-COGNITO_AWS_REGION=
-COGNITO_CLIENT_ID=
-COGNITO_USER_POOL_ID=
 # User credentials to authenticate with your Skylark
 # These are the credentials you use to log into Skylark
 # Used in
