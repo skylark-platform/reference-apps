@@ -3,7 +3,11 @@ import { useQuery } from "@tanstack/react-query";
 import { GQLError } from "../types";
 import { LOCAL_STORAGE } from "../constants/app";
 import { PlayerTokens } from "../components/generic/player";
-import { SAAS_API_ENDPOINT, SAAS_API_KEY } from "../constants/env";
+import {
+  SAAS_API_ENDPOINT,
+  SAAS_API_KEY,
+  SKYLARK_ADMIN_API_KEY,
+} from "../constants/env";
 
 interface ResponseBody {
   playback_url: string;
@@ -22,11 +26,13 @@ const fetcher = (playbackId: string): Promise<ResponseBody> => {
 
   const useLocalStorage = Boolean(localStorageUri && localStorageApiKey);
 
+  const apiKeyFromEnv = SKYLARK_ADMIN_API_KEY || SAAS_API_KEY || "";
+
   const headers = {
     "X-Skylark-Api-Url":
       (useLocalStorage ? localStorageUri : SAAS_API_ENDPOINT) || "",
     "X-Skylark-Api-Key":
-      (useLocalStorage ? localStorageApiKey : SAAS_API_KEY) || "",
+      (useLocalStorage ? localStorageApiKey : apiKeyFromEnv) || "",
     "Content-Type": "application/json",
   };
 
