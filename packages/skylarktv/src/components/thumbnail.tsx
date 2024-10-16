@@ -373,7 +373,10 @@ const ThumbnailComponent = (
               href={href}
               key={uid}
               number={
-                data && hasProperty(data, "episode_number") && season
+                data &&
+                hasProperty(data, "episode_number") &&
+                season &&
+                season.season_number
                   ? `S${season.season_number}E${data.episode_number as number}`
                   : undefined
               }

@@ -171,19 +171,18 @@ export const splitAndFormatGraphQLCreditsByInternalTitle = (
 
   const splitCredits = gqlCredits.reduce(
     (prev, credit) => {
-      // This filtering needs on the role internal_title field
+      // This filtering needs on the role internal_title field or it uses `_default`
       // It assumes there is only one role
-      if (
-        !credit ||
-        !credit?.roles?.objects ||
-        credit.roles.objects.length === 0 ||
-        !hasProperty(credit.roles.objects[0], "internal_title") ||
-        !credit.roles.objects[0].internal_title
-      ) {
+      if (!credit) {
         return prev;
       }
 
-      const role = credit.roles.objects[0].internal_title;
+      const role =
+        (credit?.roles?.objects &&
+          credit.roles.objects.length === 0 &&
+          hasProperty(credit.roles.objects[0], "internal_title") &&
+          credit.roles.objects[0].internal_title) ||
+        "_default";
 
       if (hasProperty(prev, role) && prev[role]) {
         return {
