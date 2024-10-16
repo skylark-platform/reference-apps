@@ -205,7 +205,7 @@ export const Search = ({ onSearch }: { onSearch?: () => void }) => {
       >
         <input
           className={clsx(
-            "w-full border-none bg-transparent px-2 py-0 shadow-none outline-none ring-0 placeholder:text-gray-300 focus:border-none focus:shadow-none focus:outline-none focus:ring-0 focus:placeholder:text-white focus-visible:border-none focus-visible:outline-none md:w-44",
+            "w-full border-none bg-transparent px-2 py-0 shadow-none outline-none ring-0 placeholder:text-gray-100 focus:border-none focus:shadow-none focus:outline-none focus:ring-0 focus:placeholder:text-white focus-visible:border-none focus-visible:outline-none md:w-44",
           )}
           placeholder={t("search")}
           type="text"

@@ -45,7 +45,7 @@
     "days": "Partindo Em {{number}} Dias",
     "months": "Partindo Em {{number}} Meses",
     "years": "Partindo Em {{number}} Anos",
-    "ever": "Um Grampo SkylarkTV"
+    "ever": "Um Grampo {{name}}"
   },
   "show-more": "Mostre mais",
   "show-less": "Mostre menos",

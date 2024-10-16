@@ -163,7 +163,7 @@ export const SkylarkTVLayout: React.FC<Props> = ({
           <div className="flex h-full items-center justify-center text-3xl text-gray-100">
             <BackButton />
             <Link
-              className="flex h-full items-center ltr:md:ml-8 ltr:lg:ml-16 ltr:xl:ml-20 rtl:md:mr-8 rtl:lg:mr-16 rtl:xl:mr-20"
+              className="flex h-full items-center ltr:md:ml-8 ltr:xl:ml-20 rtl:md:mr-8 rtl:xl:mr-20"
               href="/"
             >
               {config?.logo || CLIENT_APP_CONFIG.header?.logo ? (

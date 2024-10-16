@@ -45,7 +45,7 @@
     "days": "Leaving In {{number}} Days",
     "months": "Leaving In {{number}} Months",
     "years": "Leaving In {{number}} Years",
-    "ever": "A SkylarkTV Staple"
+    "ever": "A {{name}} Staple"
   },
   "show-more": "Show more",
   "show-less": "Show less",

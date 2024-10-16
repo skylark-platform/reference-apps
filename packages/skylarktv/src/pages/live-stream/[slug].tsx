@@ -54,11 +54,7 @@ const LiveStreamPage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
   const liveAsset = liveStream?.live_assets?.objects?.[0];
   const asset = liveStream?.assets?.objects?.[0];
   const playbackUrl =
-    liveAsset?.hls_url ||
-    liveAsset?.url ||
-    asset?.hls_url ||
-    asset?.url ||
-    "/mux-video-intro.mp4";
+    liveAsset?.hls_url || liveAsset?.url || asset?.hls_url || asset?.url || "";
 
   const synopsis = getSynopsisByOrderForGraphQLObject(liveStream);
   const availabilityEndDate = getFurthestAvailabilityEndDate(
