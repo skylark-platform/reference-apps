@@ -5,7 +5,7 @@ import React from "react";
 export const ParseAndDisplayHTML = ({
   html,
   fallbackMessage,
-  variant,
+  variant = "default",
   className,
 }: {
   html: string | null;
@@ -31,10 +31,9 @@ export const ParseAndDisplayHTML = ({
     <div
       className={clsx(
         "prose prose-invert overflow-hidden prose-p:text-base",
-        variant === "default" &&
-          "text-xs text-gray-200 sm:text-sm md:text-base",
+        variant === "default" && "text-sm text-gray-200 md:text-base",
         variant === "tight" &&
-          "text-xs text-white marker:text-white prose-p:my-1 prose-p:text-sm prose-p:font-normal prose-p:leading-5 prose-li:text-white sm:text-sm md:prose-p:text-lg",
+          "text-sm text-white marker:text-white prose-p:my-1 prose-p:text-base prose-p:font-normal prose-p:leading-5 prose-li:text-white md:prose-p:text-lg",
         className,
       )}
     >

@@ -51,7 +51,9 @@ const Logo = ({ config }: { config?: SkylarkTVConfig }) => {
         alt={configLogo.alt}
         className="block max-h-20"
         key={configLogo.src}
-        src={configLogo.src}
+        src={addCloudinaryOnTheFlyImageTransformation(configLogo.src, {
+          height: 100,
+        })}
       />
     );
   }
@@ -181,7 +183,7 @@ export const SkylarkTVLayout: React.FC<Props> = ({
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   alt={config?.logo?.alt || CLIENT_APP_CONFIG.header?.logo.alt}
-                  className="block h-full py-2 md:py-4 lg:py-8"
+                  className="block h-full max-h-8 py-1 md:max-h-16 md:py-2 lg:py-3"
                   src={addCloudinaryOnTheFlyImageTransformation(
                     (config?.logo?.src ||
                       CLIENT_APP_CONFIG.header?.logo.src) as string,
