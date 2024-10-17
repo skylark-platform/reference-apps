@@ -58,7 +58,7 @@ const ArticlesPage: NextPage = () => {
       )}
       <SkeletonPage show={isLoading && !articles}>
         {sortedArticles && (
-          <div className="grid max-w-5xl grid-cols-2 gap-10 px-4">
+          <div className="grid max-w-5xl grid-cols-1 gap-10 px-4 md:grid-cols-2">
             {sortedArticles.map(
               ({
                 uid,

@@ -30,10 +30,11 @@ export const ParseAndDisplayHTML = ({
   return (
     <div
       className={clsx(
-        "prose prose-invert overflow-hidden",
-        variant === "default" && "text-sm text-gray-200 md:text-base",
+        "prose prose-invert overflow-hidden prose-p:text-base",
+        variant === "default" &&
+          "text-xs text-gray-200 sm:text-sm md:text-base",
         variant === "tight" &&
-          "text-sm text-white marker:text-white prose-p:my-1 prose-p:text-lg prose-p:font-normal prose-p:leading-5 prose-li:text-white",
+          "text-xs text-white marker:text-white prose-p:my-1 prose-p:text-sm prose-p:font-normal prose-p:leading-5 prose-li:text-white sm:text-sm md:prose-p:text-lg",
         className,
       )}
     >

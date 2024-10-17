@@ -4535,9 +4535,14 @@ export type SetListing = {
 
 export enum SetType {
   Collection = "COLLECTION",
-  Generic = "GENERIC",
-  Homepage = "HOMEPAGE",
+  Grid = "GRID",
+  GridPortrait = "GRID_PORTRAIT",
+  Page = "PAGE",
   Rail = "RAIL",
+  RailInset = "RAIL_INSET",
+  RailMovie = "RAIL_MOVIE",
+  RailPortrait = "RAIL_PORTRAIT",
+  RailWithSynopsis = "RAIL_WITH_SYNOPSIS",
   Slider = "SLIDER",
 }
 
