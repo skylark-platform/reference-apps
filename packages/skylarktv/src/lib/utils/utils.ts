@@ -532,6 +532,14 @@ export const addCloudinaryOnTheFlyImageTransformation = (
     return imageUrl;
   }
 
+  const cloudinaryDomain = "res.cloudinary.com";
+
+  const isAlreadyCloudinary = imageUrl.includes(cloudinaryDomain);
+
+  if (isAlreadyCloudinary) {
+    return imageUrl;
+  }
+
   const urlOpts = [];
   if (opts.height) {
     urlOpts.push(`h_${opts.height}`);
@@ -546,6 +554,6 @@ export const addCloudinaryOnTheFlyImageTransformation = (
 
   const urlOptsStr = urlOpts.length > 0 ? `${urlOpts.join(",")}/` : "";
 
-  const cloudinaryUrl = `https://res.cloudinary.com/${CLOUDINARY_ENVIRONMENT}/image/fetch/${urlOptsStr}${imageUrl}`;
+  const cloudinaryUrl = `https://${cloudinaryDomain}/${CLOUDINARY_ENVIRONMENT}/image/fetch/${urlOptsStr}${imageUrl}`;
   return cloudinaryUrl;
 };
