@@ -40,7 +40,7 @@ const defaultAppConfig: {
   };
   placeholderVideo: string;
 } = {
-  name: "Fremantle",
+  name: "SkylarkTV",
   colours: {
     primary: "#5b45ce",
     accent: "#ff385c",
@@ -64,4 +64,24 @@ const defaultAppConfig: {
 
 export const CLIENT_APP_CONFIG: typeof defaultAppConfig = {
   ...defaultAppConfig,
+  name: "Fremantle",
+  description: "",
+  colours: {
+    primary: "000000",
+    accent: "#FFFFFF",
+  },
+  showBySkylark: true,
+  hideDimensionsSettings: false,
+  withIntercom: false,
+  dimensions: {
+    [DimensionKey.Property]: {
+      values: [{ text: "Fremantle", value: "fremantle" }],
+    },
+    [DimensionKey.Region]: {
+      values: [
+        { text: "Europe", value: "europe" },
+        { text: "Canada", value: "canada" },
+      ],
+    },
+  },
 };
