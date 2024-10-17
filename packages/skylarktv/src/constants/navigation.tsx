@@ -40,5 +40,5 @@ export const CLIENT_NAVIGATION_CONFIG: {
       icon: <MdOutlineStar />,
     },
   ],
-  mobileVariant: "bar",
+  mobileVariant: "hamburger",
 };
