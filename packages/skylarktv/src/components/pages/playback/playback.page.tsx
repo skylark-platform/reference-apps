@@ -268,7 +268,8 @@ export const PlaybackPage: NextPage<PlaybackPageProps> = ({
               content={metadataPanelContent.filter(({ body }) =>
                 Array.isArray(body)
                   ? body.length > 0
-                  : React.isValidElement(body) || typeof body === "string",
+                  : body &&
+                    (React.isValidElement(body) || typeof body === "string"),
               )}
             />
           </div>

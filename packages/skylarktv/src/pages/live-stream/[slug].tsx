@@ -19,6 +19,7 @@ import {
   getFirstRatingValue,
 } from "../../lib/utils";
 import { LiveStream, Availability, ImageType } from "../../types";
+import { CLIENT_APP_CONFIG } from "../../constants/app";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject(
@@ -58,7 +59,7 @@ const LiveStreamPage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
     liveAsset?.url ||
     asset?.hls_url ||
     asset?.url ||
-    "/mux-video-intro.mp4";
+    CLIENT_APP_CONFIG.placeholderVideo;
 
   const synopsis = getSynopsisByOrderForGraphQLObject(liveStream);
   const availabilityEndDate = getFurthestAvailabilityEndDate(

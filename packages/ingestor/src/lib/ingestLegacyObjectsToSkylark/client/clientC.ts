@@ -109,6 +109,7 @@ const convertLegacyObject = (
       hls_url: hasOvp ? `https://stream.mux.com/${ovp.playback_id}.m3u8` : null,
       hls_dashboard: hasOvp ? "https://dashboard.mux.com" : null,
       status: hasOvp ? "created" : null,
+      policy: "PRIVATE",
     };
   }
 

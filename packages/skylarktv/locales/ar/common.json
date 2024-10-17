@@ -36,7 +36,7 @@
     "days": "المغادرة خلال {{number}} يومًا",
     "months": "الإجازة خلال {{number}} شهر",
     "years": "ترك في {{number}} سنة",
-    "ever": "عنصر أساسي في SkylarkTV"
+    "ever": "عنصر أساسي في {{name}}"
   },
   "show-more": "أظهر المزيد",
   "show-less": "عرض أقل",

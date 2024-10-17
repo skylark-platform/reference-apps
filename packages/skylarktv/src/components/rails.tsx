@@ -199,6 +199,7 @@ export const ListPersonOtherCreditsRail = ({
     ?.map((credit) => [
       ...(credit?.movies?.objects || []),
       ...(credit?.episodes?.objects || []),
+      ...(credit?.articles?.objects || []),
     ])
     .flatMap((arr) => arr)
     .filter(

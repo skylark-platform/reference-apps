@@ -6,6 +6,7 @@ import { sanitize } from "dompurify";
 import Link from "next/link";
 import clsx from "clsx";
 import { List } from "../list";
+import { CLIENT_APP_CONFIG } from "../../../constants/app";
 
 interface InformationPanelProps {
   brand?: {
@@ -138,9 +139,14 @@ export const InformationPanel: React.FC<InformationPanelProps> = ({
                       availableUntil.unit,
                       availableUntil.number,
                     ),
-                    { number: availableUntil?.number },
+                    {
+                      number: availableUntil?.number,
+                      name: CLIENT_APP_CONFIG.name,
+                    },
                   )
-                : t(getTranslationStringForAvailability("never", -1)),
+                : t(getTranslationStringForAvailability("never", -1), {
+                    name: CLIENT_APP_CONFIG.name,
+                  }),
             ]}
             highlightFirst
             textSize={"sm"}

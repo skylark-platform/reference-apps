@@ -148,7 +148,12 @@ export const SkylarkTVLayout: React.FC<Props> = ({
                 key={config?.loadingLogo?.src || config?.logo?.src || "logo"}
               />
             }
-            title={!config?.loadingLogo ? appTitle : ""}
+            title={
+              !config?.loadingLogo &&
+              !CLIENT_APP_CONFIG.loadingScreen?.hideAppName
+                ? appTitle
+                : ""
+            }
           >
             {CLIENT_APP_CONFIG.showBySkylark && (
               <p className="text-xs text-gray-500 sm:text-sm lg:text-lg">

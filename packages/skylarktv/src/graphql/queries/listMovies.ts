@@ -35,7 +35,7 @@ export const LIST_MOVIES = gql`
   ${movieListingFragment}
 
   query LIST_MOVIES($nextToken: String) {
-    listObjects: listMovie(next_token: $nextToken, limit: 20) {
+    listObjects: listMovie(next_token: $nextToken, limit: 50) {
       ...movieListingFragment
     }
   }
@@ -46,7 +46,7 @@ export const LIST_MOVIES_BY_GENRE = gql`
 
   query LIST_MOVIES_BY_GENRE($uid: String!, $nextToken: String) {
     getObject: getGenre(uid: $uid) {
-      movies(next_token: $nextToken, limit: 20) {
+      movies(next_token: $nextToken, limit: 50) {
         ...movieListingFragment
       }
     }
@@ -59,7 +59,7 @@ export const LIST_MOVIES_BY_TAG = gql`
   query LIST_MOVIES_BY_TAG($uid: String!, $nextToken: String) {
     getObject: getSkylarkTag(uid: $uid) {
       name
-      movies(next_token: $nextToken, limit: 20) {
+      movies(next_token: $nextToken, limit: 50) {
         ...movieListingFragment
       }
     }

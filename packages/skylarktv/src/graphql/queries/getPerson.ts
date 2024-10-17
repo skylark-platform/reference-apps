@@ -56,6 +56,12 @@ export const GET_PERSON = gql`
               uid
             }
           }
+          articles(limit: 20) {
+            objects {
+              __typename
+              uid
+            }
+          }
           roles {
             objects {
               uid
@@ -132,6 +138,26 @@ export const GET_PERSON_FOR_RELATED_CREDITS = gql`
                   uid
                   name
                   type
+                }
+              }
+            }
+          }
+          articles(limit: 20) {
+            objects {
+              __typename
+              uid
+              slug
+              title
+              description
+              body
+              type
+              publish_date
+              images {
+                objects {
+                  uid
+                  title
+                  type
+                  url
                 }
               }
             }
