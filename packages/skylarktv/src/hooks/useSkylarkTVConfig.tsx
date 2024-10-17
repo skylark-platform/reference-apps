@@ -114,6 +114,12 @@ export const useSkylarkTVConfig = () => {
       config?.primaryColor || CLIENT_APP_CONFIG.colours.primary,
     );
     document.documentElement.style.setProperty(
+      "--skylarktv-header-color",
+      config?.primaryColor ||
+        CLIENT_APP_CONFIG.colours.header ||
+        CLIENT_APP_CONFIG.colours.primary,
+    );
+    document.documentElement.style.setProperty(
       "--skylarktv-accent-color",
       config?.accentColor || CLIENT_APP_CONFIG.colours.accent,
     );
