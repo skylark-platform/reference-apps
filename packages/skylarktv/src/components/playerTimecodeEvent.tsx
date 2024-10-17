@@ -18,7 +18,7 @@ export const PlayerTimecodeEvent = ({ payload }: PlayerTimecodeEventProps) => {
   return (
     <div
       className={clsx(
-        "mx-2 flex-grow rounded-sm text-white shadow-lg",
+        "mx-2 flex-grow rounded-sm text-white",
         [
           TimecodeEventType.Advertcontextual,
           TimecodeEventType.Advertlink,

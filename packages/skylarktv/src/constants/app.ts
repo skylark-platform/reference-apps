@@ -40,7 +40,7 @@ const defaultAppConfig: {
   };
   placeholderVideo: string;
 } = {
-  name: "SkylarkTV",
+  name: "Fremantle",
   colours: {
     primary: "#5b45ce",
     accent: "#ff385c",
