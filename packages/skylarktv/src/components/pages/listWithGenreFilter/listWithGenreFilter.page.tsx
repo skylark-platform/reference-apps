@@ -49,7 +49,7 @@ export const ListObjectsWithGenreFilter: NextPage<
   }
 
   return (
-    <div className="flex w-full flex-col justify-center bg-gray-900 py-20 font-body">
+    <div className="flex w-full flex-col justify-center bg-gray-900 py-4 font-body md:py-20">
       <NextSeo title={t(translationKeys.title)} />
       <div className="px-gutter sm:px-sm-gutter md:pt-20 lg:px-lg-gutter xl:px-xl-gutter">
         <div className="my-10 text-white">
