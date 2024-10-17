@@ -12,6 +12,7 @@ import { ConnectToSkylarkModal } from "../connect-to-skylark-modal";
 import { DimensionKey } from "../../../lib/interfaces";
 import { CLIENT_APP_CONFIG, LOCAL_STORAGE } from "../../../constants/app";
 import { SAAS_API_ENDPOINT, SAAS_API_KEY } from "../../../constants/env";
+import { CLIENT_NAVIGATION_CONFIG } from "../../../constants/navigation";
 
 const generateSkylarkAutoconnectUrl = () => {
   const isBrowser = typeof window !== "undefined";
@@ -37,6 +38,8 @@ const variants = {
   animate: { opacity: 1, y: 0 },
 };
 
+const { mobileVariant } = CLIENT_NAVIGATION_CONFIG;
+
 export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
   show: propShow = false,
   timeTravelEnabled,
@@ -57,7 +60,8 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
     <>
       <div
         className={clsx(
-          `fixed bottom-14 right-lg-gutter z-20 flex transition-opacity duration-500 md:bottom-0 xl:right-xl-gutter`,
+          `fixed right-lg-gutter z-20 flex transition-opacity duration-500 md:bottom-0 xl:right-xl-gutter`,
+          mobileVariant === "bar" ? "bottom-14" : "bottom-0",
           show ? "opacity-0" : "opacity-100",
         )}
       >
@@ -67,7 +71,10 @@ export const DimensionSettings: React.FC<DimensionSettingsProps> = ({
         {show && (
           <motion.div
             animate="animate"
-            className={`fixed bottom-14 left-0 right-0 z-50 block h-[60vh] bg-white font-skylark-branding md:bottom-0 md:h-auto`}
+            className={clsx(
+              `fixed left-0 right-0 z-50 block h-[60vh] bg-white font-skylark-branding md:bottom-0 md:h-auto`,
+              mobileVariant === "bar" ? "bottom-14" : "bottom-0",
+            )}
             dir="ltr"
             exit="hidden"
             initial="hidden"

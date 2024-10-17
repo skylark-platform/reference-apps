@@ -1,7 +1,8 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { MdHome, MdMovie, MdOutlineStar, MdSearch } from "react-icons/md";
-import { Navigation, NavigationLink } from "./navigation.component";
+import { Navigation } from "./navigation.component";
+import { NavigationLink } from "./navigation-item/navigation-item.component";
 
 export default {
   title: "React/Navigation",
@@ -16,17 +17,19 @@ const links: NavigationLink[] = [
     href: "/featured",
     icon: <MdOutlineStar />,
   },
-  {
-    text: "Search",
-    onClick: () => "",
-    icon: <MdSearch />,
-    isMobileOnly: true,
-  },
 ];
 
 const Template: ComponentStory<typeof Navigation> = (args) => (
   <div className="h-screen w-screen bg-gray-500 md:h-48 md:w-full" dir="ltr">
-    <Navigation {...args} />
+    <Navigation
+      {...args}
+      search={{
+        text: "Search",
+        onClick: () => "",
+        icon: <MdSearch />,
+        isMobileOnly: true,
+      }}
+    />
   </div>
 );
 

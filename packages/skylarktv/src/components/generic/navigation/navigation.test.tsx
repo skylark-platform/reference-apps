@@ -8,6 +8,12 @@ describe("Navigation component", () => {
       <Navigation
         activeHref="/"
         links={[{ text: "JW", href: "/homepage", icon: <></> }]}
+        search={{
+          text: "Search",
+          onClick: () => "",
+          icon: <></>,
+          isMobileOnly: true,
+        }}
       />,
     );
     expect(screen.getByRole("link")).toHaveProperty(

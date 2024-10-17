@@ -73,20 +73,13 @@ export const SkylarkTVLayout: React.FC<Props> = ({
   const [isMobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   const links: NavigationLink[] = useMemo(
-    (): NavigationLink[] => [
-      ...CLIENT_NAVIGATION_CONFIG.links.map(
+    (): NavigationLink[] =>
+      CLIENT_NAVIGATION_CONFIG.links.map(
         ({ localeKey, ...rest }): NavigationLink => ({
           text: t(localeKey),
           ...rest,
         }),
       ),
-      {
-        text: t("search"),
-        onClick: () => setMobileSearchOpen(!isMobileSearchOpen),
-        icon: <MdSearch />,
-        isMobileOnly: true,
-      },
-    ],
     [],
   );
 
@@ -164,7 +157,16 @@ export const SkylarkTVLayout: React.FC<Props> = ({
           </TitleScreen>
         )}
         <AppBackgroundGradient />
-        <AppHeader activeHref={asPath} links={links}>
+        <AppHeader
+          activeHref={asPath}
+          links={links}
+          search={{
+            text: t("search"),
+            onClick: () => setMobileSearchOpen(!isMobileSearchOpen),
+            icon: <MdSearch />,
+            isMobileOnly: true,
+          }}
+        >
           <div className="flex h-full items-center justify-center text-3xl text-gray-100">
             <BackButton />
             <Link

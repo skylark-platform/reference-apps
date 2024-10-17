@@ -30,12 +30,6 @@ Default.args = {
       href: "/featured",
       icon: <MdOutlineStar />,
     },
-    {
-      text: "Search",
-      onClick: () => "",
-      icon: <MdSearch />,
-      isMobileOnly: true,
-    },
   ],
   activeHref: "/",
   children: (
@@ -59,6 +53,12 @@ Default.args = {
       </div>
     </>
   ),
+  search: {
+    text: "Search",
+    onClick: () => "",
+    icon: <MdSearch />,
+    isMobileOnly: true,
+  },
 };
 
 export const DefaultRTL = Template.bind({});
