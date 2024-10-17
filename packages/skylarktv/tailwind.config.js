@@ -32,6 +32,7 @@ module.exports = {
         skylarktv: {
           primary: "var(--skylarktv-primary-color)",
           accent: "var(--skylarktv-accent-color)",
+          header: "var(--skylarktv-header-color)",
           purple: {
             50: "#EDE8F9",
             100: "#D0C7F0",

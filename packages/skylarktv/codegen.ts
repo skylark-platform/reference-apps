@@ -12,7 +12,7 @@ if (onlyGenerateCssFile) {
   console.log(`[Codegen] URL: ${SAAS_API_ENDPOINT}`);
 }
 
-const { primary, accent } = CLIENT_APP_CONFIG.colours;
+const { primary, accent, header } = CLIENT_APP_CONFIG.colours;
 
 const gqlFile = "./src/types/gql.ts";
 const globalCSSFile = "./src/styles/globals.css";
@@ -59,6 +59,7 @@ const cssGenerator: CodegenConfig["generates"][0] = {
         content: `:root {
 --skylarktv-primary-color: ${primary.startsWith("#") ? primary : `#${primary}`};
 --skylarktv-accent-color: ${accent.startsWith("#") ? accent : `#${accent}`};
+--skylarktv-header-color: ${(header || primary).startsWith("#") ? header || primary : `#${header || primary}`};
 }
 
 /* Cheat to change prose bullet point color */

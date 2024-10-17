@@ -27,7 +27,7 @@ export const AppHeader: React.FC<NavigationProps & { forceRtl?: boolean }> = ({
       dir={dir}
     >
       <div
-        className={`fixed z-90 flex h-mobile-header w-full items-center justify-center bg-white lg:relative lg:h-full lg:w-1/2 lg:justify-between 2xl:w-3/5 ltr:lg:pr-8 ltr:xl:pr-xl-gutter rtl:lg:pl-8 rtl:xl:pl-xl-gutter`}
+        className={`fixed z-90 flex h-mobile-header w-full items-center justify-center bg-skylarktv-header lg:relative lg:h-full lg:w-1/2 lg:justify-between 2xl:w-3/5 ltr:lg:pr-8 ltr:xl:pr-xl-gutter rtl:lg:pl-8 rtl:xl:pl-xl-gutter`}
       >
         {mobileVariant === "hamburger" && (
           <ul className="absolute right-0 top-0 flex flex-row bg-skylarktv-primary pl-2 lg:hidden lg:bg-gray-900/80">

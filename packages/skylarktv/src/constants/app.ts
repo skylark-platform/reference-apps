@@ -14,6 +14,7 @@ const defaultAppConfig: {
   colours: {
     primary: string;
     accent: string;
+    header?: string;
   };
   favicon?: string;
   showBySkylark: boolean;
@@ -89,6 +90,7 @@ export const CLIENT_APP_CONFIG: typeof defaultAppConfig = {
   colours: {
     accent: "#ea223c",
     primary: "#011832",
+    header: "#ffffff",
   },
   showBySkylark: false,
   hideDimensionsSettings: true,
