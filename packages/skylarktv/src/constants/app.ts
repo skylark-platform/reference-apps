@@ -14,6 +14,7 @@ const defaultAppConfig: {
   colours: {
     primary: string;
     accent: string;
+    header?: string;
   };
   favicon?: string;
   showBySkylark: boolean;
