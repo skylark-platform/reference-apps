@@ -1,0 +1,67 @@
+{
+  "seo": {
+    "description": "Uma compilação de aplicativo de demonstração para demonstrar o poder do Skylark. Visite https://www.skylarkplatform.com para saber mais."
+  },
+  "cta": {
+    "start-watching": "Comece a assistir",
+    "continue-watching": "Continuar assistindo"
+  },
+  "skylark": {
+    "object": {
+      "movie": "Filme",
+      "episode": "Episódio",
+      "season": "Temporada",
+      "brand": "Marca",
+      "asset": "De Ativos",
+      "count": {
+        "season": {
+          "0": "0 Temporadas",
+          "one": "{{count}} Temporada",
+          "other": "{{count}} Temporadas"
+        },
+        "movie": {
+          "0": "0 Filmes",
+          "one": "{{count}} Filme",
+          "other": "{{count}} Filmes"
+        }
+      }
+    }
+  },
+  "home": "Lar",
+  "discover": "Descobrir",
+  "movies": "Filmes",
+  "shows": "Programas",
+  "music-videos": "Vídeos Musicais",
+  "interviews": "Entrevistas",
+  "podcasts": "Podcasts",
+  "episodes": "Episódios",
+  "articles": "Artigos",
+  "blog": "Blogue",
+  "featured": "Apresentou",
+  "movies-page-description": "Pesquise 100 dos melhores e mais recentes títulos, disponíveis para assistir em SkylarkTV",
+  "by-skylark": "Por Skylark",
+  "available-for": {
+    "leaving-today": "Saindo Hoje",
+    "days": "Partindo Em {{number}} Dias",
+    "months": "Partindo Em {{number}} Meses",
+    "years": "Partindo Em {{number}} Anos",
+    "ever": "Um Grampo {{name}}"
+  },
+  "show-more": "Mostre mais",
+  "show-less": "Mostre menos",
+  "released": "Lançado",
+  "tags": "Tags",
+  "search": "Procurar",
+  "loading": "Carregando...",
+  "nothing-found": "Nada encontrado",
+  "more-from": "Mais de {{name}}",
+  "budget": "Orçamento",
+  "audience-rating": "Avaliação",
+  "errors": {
+    "error-fetching-page": "Ocorreu um erro ao buscar a página",
+    "object-not-found": "Objeto não encontrado",
+    "object-not-found-desc": "O objeto solicitado não existe no Skylark com as dimensões de disponibilidade fornecidas",
+    "unauthorized": "Chave de API da conta Skylark inválida",
+    "unauthorized-desc": "Abra o modal Skylark Account Connection para atualizar sua chave API."
+  }
+}

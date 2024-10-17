@@ -1,4 +1,4 @@
-import { graphQLClient } from "@skylark-reference-apps/lib";
+import { graphQLClient } from "@skylark-apps/skylarktv/src/lib/skylark";
 import { gql } from "graphql-request";
 
 const SET_ACCOUNT_CONFIGURATION = gql`

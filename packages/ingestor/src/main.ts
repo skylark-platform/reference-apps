@@ -1,8 +1,9 @@
 // Import dotenv must be first
 import "./env";
-import { SAAS_API_ENDPOINT, hasProperty } from "@skylark-reference-apps/lib";
 import axios from "axios";
 import { has } from "lodash";
+import { hasProperty } from "@skylark-apps/skylarktv/src/lib/utils";
+import { SAAS_API_ENDPOINT } from "@skylark-apps/skylarktv/src/constants/env";
 import { getAllTables } from "./lib/airtable";
 import {
   Airtables,
@@ -30,8 +31,8 @@ import {
 } from "./lib/skylark/saas/fs";
 import { updateObjectConfigurations } from "./lib/skylark/saas/objectConfiguration";
 import { configureCache, purgeCache } from "./lib/skylark/saas/cache";
-import { updateRelationshipConfigurations } from "./lib/skylark/saas/relationshipConfiguration";
 import { guessObjectRelationshipsFromAirtableRows } from "./lib/skylark/saas/utils";
+import { updateRelationshipConfigurations } from "./lib/skylark/saas/relationshipConfiguration";
 
 const timers = {
   full: "Completed in:",

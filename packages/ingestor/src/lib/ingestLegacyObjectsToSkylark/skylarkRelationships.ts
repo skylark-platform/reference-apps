@@ -1,4 +1,4 @@
-import { GraphQLSetObjectTypes } from "@skylark-reference-apps/lib";
+import { GraphQLSetObjectTypes } from "@skylark-apps/skylarktv/src/lib/interfaces";
 import { GraphQLBaseObject } from "../interfaces";
 import { generateSL8CreditUid } from "./legacy";
 import {
@@ -127,7 +127,10 @@ export const createRelationships = (
   const relationships: Record<string, { link: string[] }> = {};
 
   // TAG CATEGORIES
-  if (legacyObjectType === LegacyObjectType.Tags) {
+  if (
+    legacyObjectType === LegacyObjectType.Tags &&
+    relationshipObjects.tagCategories.length > 0
+  ) {
     const categoryExtId = getLegacyUidFromUrl(legacyObject.category_url);
     const createdCategory = relationshipObjects.tagCategories.find(
       ({ external_id }) => external_id === categoryExtId,

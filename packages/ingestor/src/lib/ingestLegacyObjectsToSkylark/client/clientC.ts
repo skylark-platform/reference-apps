@@ -88,6 +88,9 @@ const convertLegacyObject = (
   if (legacyObjectType === LegacyObjectType.Assets) {
     const assetType = legacyObject.asset_type_url?.name || null;
 
+    const ovp = legacyObject.ovps?.[0] || null;
+    const hasOvp = Boolean(ovp && ovp?.playback_id);
+
     return {
       ...commonFields,
       internal_title: legacyObject.title,
@@ -99,6 +102,14 @@ const convertLegacyObject = (
       duration: legacyObject.duration_in_seconds,
       url: legacyObject.url !== "" ? legacyObject.url : null,
       release_date: legacyObject.release_date,
+      // Mux specific
+      // external_id: ovp.asset_id,
+      provider: hasOvp ? "MUX" : null,
+      hls_id: hasOvp ? ovp.playback_id : null,
+      hls_url: hasOvp ? `https://stream.mux.com/${ovp.playback_id}.m3u8` : null,
+      hls_dashboard: hasOvp ? "https://dashboard.mux.com" : null,
+      status: hasOvp ? "created" : null,
+      policy: "PRIVATE",
     };
   }
 
@@ -196,13 +207,19 @@ const convertLegacyObject = (
     };
   }
 
-  if (
-    legacyObjectType === LegacyObjectType.Genres ||
-    legacyObjectType === LegacyObjectType.Tags
-  ) {
+  if (legacyObjectType === LegacyObjectType.Genres) {
     return {
       ...commonFields,
       internal_title: legacyObject.name,
+      // All fields should be handled by the introspection create
+    };
+  }
+
+  if (legacyObjectType === LegacyObjectType.Tags) {
+    return {
+      ...commonFields,
+      internal_title: legacyObject.name,
+      // type: legacyObject
       // All fields should be handled by the introspection create
     };
   }
@@ -319,7 +336,7 @@ export const ingestClientC = async ({
     fields: {
       ...obj,
       customers: obj.customer_type_urls.map(({ uid }) => uid),
-      title: obj.rights ? `${obj.title} (License)` : obj.title,
+      title: `[LEGACY] ${obj.rights ? `${obj.title} (License)` : obj.title}`,
     } as unknown as FieldSet,
   }));
   const availabilities = await createOrUpdateAvailability(
@@ -338,13 +355,13 @@ export const ingestClientC = async ({
     isCreateOnly,
     legacyCredits,
     // alwaysAvailability,
-    availabilities,
+    availabilities: [],
   };
 
-  skylarkObjects.tagCategories = await createObjectsInSkylark(
-    legacyObjects.tagCategories,
-    commonArgs,
-  );
+  // skylarkObjects.tagCategories = await createObjectsInSkylark(
+  //   legacyObjects.tagCategories,
+  //   commonArgs,
+  // );
 
   skylarkObjects.tags = await createObjectsInSkylark(
     legacyObjects.tags,
@@ -392,7 +409,15 @@ export const ingestClientC = async ({
 
   skylarkObjects.episodes = await createObjectsInSkylark(
     legacyObjects.episodes,
-    commonArgs,
+    {
+      ...commonArgs,
+      alwaysAvailability: {
+        uid: "01J9RK1809VAFMBBQZ56YYP7QG",
+        external_id: "always-public",
+        slug: "",
+        __typename: "SkylarkAvailability",
+      },
+    },
   );
 
   skylarkObjects.seasons = await createObjectsInSkylark(

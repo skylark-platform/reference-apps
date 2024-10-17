@@ -1,6 +1,6 @@
 # Environment Variables
 
-Throughout this monorepo, environment variables are used for configuration to enable apps to run. When the same variables are used in multiple apps, we aim to keep the naming consistent so that we can use a single `.env.local` file currently located in the [apps/skylarktv][skylarktv-app] directory.
+Throughout this monorepo, environment variables are used for configuration to enable apps to run. When the same variables are used in multiple apps, we aim to keep the naming consistent so that we can use a single `.env.local` file currently located in the [packages/skylarktv][skylarktv-app] directory.
 
 In each app, different combinations of the variables are utilised and so the ones that are required for the app to run as expected differ on a per app basis.
 
@@ -20,14 +20,6 @@ NEXT_PUBLIC_SKYLARK_API_URL=
 # Used in
 # - SkylarkTV
 NEXT_PUBLIC_APP_DOMAIN=
-# Configuration for AWS Cognito
-# These should be provided by your customer success representative
-# Used in
-# - Asset video playback in the SkylarkTV reference app
-# - Loading content into Skylark via the Ingestor
-COGNITO_AWS_REGION=
-COGNITO_CLIENT_ID=
-COGNITO_USER_POOL_ID=
 # User credentials to authenticate with your Skylark
 # These are the credentials you use to log into Skylark
 # Used in
@@ -47,7 +39,7 @@ AIRTABLE_BASE_ID=
 
 If you prefer to only include the environment variables that allow full functionality of your app, the guides below will help you understand which are required.
 
-### apps/skylarktv (SkylarkTV)
+### packages/skylarktv (SkylarkTV)
 
 ```bash
 NEXT_PUBLIC_SAAS_API_ENDPOINT=
@@ -79,4 +71,4 @@ AIRTABLE_API_KEY=
 AIRTABLE_BASE_ID=
 ```
 
-[skylarktv-app]: ../apps/skylarktv
+[skylarktv-app]: ../packages/skylarktv

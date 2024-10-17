@@ -1,6 +1,6 @@
-import { graphQLClient } from "@skylark-reference-apps/lib";
 import { EnumType, jsonToGraphQLQuery } from "json-to-graphql-query";
 import { chunk } from "lodash";
+import { graphQLClient } from "@skylark-apps/skylarktv/src/lib/skylark";
 import { CREATE_OBJECT_CHUNK_SIZE } from "../../constants";
 import { getObjectTypes } from "./schema";
 

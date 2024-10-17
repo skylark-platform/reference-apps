@@ -1,10 +1,11 @@
 import { EnumType, jsonToGraphQLQuery } from "json-to-graphql-query";
+
+import { FieldSet, Records } from "airtable";
 import {
-  graphQLClient,
   GraphQLObjectTypes,
   GraphQLSetObjectTypes,
-} from "@skylark-reference-apps/lib";
-import { FieldSet, Records } from "airtable";
+} from "@skylark-apps/skylarktv/src/lib/interfaces";
+import { graphQLClient } from "@skylark-apps/skylarktv/src/lib/skylark";
 import {
   SetConfig,
   GraphQLBaseObject,

@@ -18,7 +18,7 @@ jobs:
           node-version: 18
           cache: yarn
       - run: yarn
-      - run: yarn lint
+      - run: yarn lint:all
       - run: yarn prettier:check
       - run: yarn test:ci
       - name: Upload coverage reports to Codecov with GitHub Action
@@ -44,9 +44,11 @@ jobs:
           node-version: 18
           cache: yarn
       - run: yarn
+      - run: yarn prebuild-storybook
+        working-directory: packages/skylarktv
       - name: Publish to Chromatic
         uses: chromaui/action@v11
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          workingDir: apps/storybook
+          workingDir: packages/skylarktv
           autoAcceptChanges: main

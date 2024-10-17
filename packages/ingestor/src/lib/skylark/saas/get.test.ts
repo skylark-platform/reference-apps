@@ -1,8 +1,7 @@
-import { graphQLClient } from "@skylark-reference-apps/lib";
-
+import { graphQLClient } from "@skylark-apps/skylarktv/src/lib/skylark";
 import { getExistingObjects, getValidPropertiesForObject } from "./get";
 
-jest.mock("@skylark-reference-apps/lib");
+jest.mock("@skylark-apps/skylarktv/src/lib/skylark");
 
 describe("saas/get.ts", () => {
   let graphQlRequest: jest.Mock;
@@ -202,6 +201,7 @@ describe("saas/get.ts", () => {
               external_id: "brand-3-ext-id",
             },
           },
+          errors: [],
         },
       };
       graphQlRequest.mockRejectedValueOnce(mockedGraphQLResponse);

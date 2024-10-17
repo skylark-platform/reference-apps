@@ -1,6 +1,7 @@
-import { GraphQLObjectTypes, hasProperty } from "@skylark-reference-apps/lib";
+import { hasProperty } from "@skylark-apps/skylarktv/src/lib/utils";
 import { ensureDir, writeJSON } from "fs-extra";
 import { join } from "path";
+import { GraphQLObjectTypes } from "@skylark-apps/skylarktv/src/lib/interfaces";
 import {
   FetchedLegacyObjects,
   LegacyObjectType,
@@ -18,7 +19,7 @@ import {
 } from "./utils";
 import { assignAvailabilitiesToObjects } from "../skylark/saas/availability";
 
-const getExistingObjectsForAllLanguages = async (
+export const getExistingObjectsForAllLanguages = async (
   objectType: GraphQLObjectTypes,
   languages: string[],
   objects: Record<string, LegacyObjects | ParsedSL8Credits[]>,

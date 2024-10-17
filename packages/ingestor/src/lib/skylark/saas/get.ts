@@ -1,7 +1,8 @@
 import { jsonToGraphQLQuery } from "json-to-graphql-query";
 import { chunk, has, isNull } from "lodash";
-import { graphQLClient, GraphQLObjectTypes } from "@skylark-reference-apps/lib";
 
+import { GraphQLObjectTypes } from "@skylark-apps/skylarktv/src/lib/interfaces";
+import { graphQLClient } from "@skylark-apps/skylarktv/src/lib/skylark";
 import {
   GraphQLBaseObject,
   GraphQLIntrospection,
@@ -217,7 +218,7 @@ const getExistingObjectsByExternalId = async (
       missingExternalIds: [],
     };
   } catch (err) {
-    if (err && has(err, "response.data")) {
+    if (err && has(err, "response")) {
       const {
         response: { data },
       } = err as {

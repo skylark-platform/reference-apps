@@ -1,8 +1,8 @@
 // Disabled tests should be enabled when constants / CREATE_OBJECT_CHUNK_SIZE is greater than 1
 /* eslint-disable jest/no-disabled-tests */
 import { FieldSet, Records, Record, Table } from "airtable";
-import { graphQLClient } from "@skylark-reference-apps/lib";
 
+import { graphQLClient } from "@skylark-apps/skylarktv/src/lib/skylark";
 import { GraphQLBaseObject, GraphQLMetadata } from "../../interfaces";
 import {
   createGraphQLMediaObjects,
@@ -12,7 +12,7 @@ import {
 } from "./create";
 import { CREATE_OBJECT_CHUNK_SIZE } from "../../constants";
 
-jest.mock("@skylark-reference-apps/lib");
+jest.mock("@skylark-apps/skylarktv/src/lib/skylark");
 
 describe("saas/create.ts", () => {
   let graphQlRequest: jest.Mock;
@@ -73,6 +73,7 @@ describe("saas/create.ts", () => {
           data: {
             brand_1: null,
           },
+          errors: [],
         },
       };
       graphQlRequest.mockRejectedValueOnce(mockedGraphQLResponse);
@@ -235,6 +236,7 @@ describe("saas/create.ts", () => {
           data: {
             credit_1: null,
           },
+          errors: [],
         },
       };
       graphQlRequest.mockRejectedValueOnce(mockedGraphQLResponse);

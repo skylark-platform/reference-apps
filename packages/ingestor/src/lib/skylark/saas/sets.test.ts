@@ -1,5 +1,5 @@
-import { graphQLClient } from "@skylark-reference-apps/lib";
 import { FieldSet, Record, Records } from "airtable";
+import { graphQLClient } from "@skylark-apps/skylarktv/src/lib/skylark";
 import {
   GraphQLBaseObject,
   GraphQLMetadata,
@@ -8,7 +8,7 @@ import {
 import { createOrUpdateGraphQLSet } from "./sets";
 import { gqlObjectMeta } from "./utils";
 
-jest.mock("@skylark-reference-apps/lib");
+jest.mock("@skylark-apps/skylarktv/src/lib/skylark");
 
 describe("saas/sets.ts", () => {
   let graphQlRequest: jest.Mock;
@@ -140,6 +140,7 @@ describe("saas/sets.ts", () => {
           data: {
             home_page_slider: null,
           },
+          errors: [],
         },
       };
       const mockedCreateResponse = {

@@ -287,7 +287,12 @@ export interface LegacyAsset extends LegacyCommonObject {
   items: string[];
   cc_urls: string[];
   image_urls: string[];
-  ovps: string[];
+  ovps: {
+    account_url: string;
+    asset_id: string;
+    playback_id: string;
+    duration: string;
+  }[];
   plan_urls: string[];
   product_urls: string[];
   rating_urls: string[];

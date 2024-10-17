@@ -1,10 +1,10 @@
-import { graphQLClient } from "@skylark-reference-apps/lib";
 import { gql } from "graphql-request";
 import {
   EnumType,
   jsonToGraphQLQuery,
   VariableType,
 } from "json-to-graphql-query";
+import { graphQLClient } from "@skylark-apps/skylarktv/src/lib/skylark";
 import { ENUMS } from "../../constants";
 import { pause } from "./utils";
 
