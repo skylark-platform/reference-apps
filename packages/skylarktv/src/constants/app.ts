@@ -84,6 +84,8 @@ const logoOnly =
 export const CLIENT_APP_CONFIG: typeof defaultAppConfig = {
   ...defaultAppConfig,
   name: "Countryline",
+  description:
+    "Welcome to the home of Country Music Online! View the latest videos, shows, and interviews of all your favourite Country Music artists in one place",
   colours: {
     primary: "#ea223c",
     accent: "#011832",
