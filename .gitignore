@@ -43,5 +43,6 @@ yarn-error.log*
 build-storybook.log
 temp/
 
-# Auto generated css file
+# Auto generated files via codegen.ts
 packages/skylarktv/src/styles/globals.css
+packages/skylarktv/public/site.webmanifest
