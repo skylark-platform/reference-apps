@@ -37,6 +37,7 @@ const defaultAppConfig: {
     };
     hideAppName: boolean;
   };
+  placeholderVideo: string;
 } = {
   name: "SkylarkTV",
   colours: {
@@ -71,6 +72,7 @@ const defaultAppConfig: {
       ],
     },
   },
+  placeholderVideo: "/mux-video-intro.mp4",
 };
 
 const logoWithText =
@@ -109,4 +111,5 @@ export const CLIENT_APP_CONFIG: typeof defaultAppConfig = {
       values: [{ text: "Public", value: "public" }],
     },
   },
+  placeholderVideo: "",
 };

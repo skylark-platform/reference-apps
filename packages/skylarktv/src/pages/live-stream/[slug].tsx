@@ -19,6 +19,7 @@ import {
   getFirstRatingValue,
 } from "../../lib/utils";
 import { LiveStream, Availability, ImageType } from "../../types";
+import { CLIENT_APP_CONFIG } from "../../constants/app";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const seo = await getSeoDataForObject(
@@ -54,7 +55,11 @@ const LiveStreamPage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
   const liveAsset = liveStream?.live_assets?.objects?.[0];
   const asset = liveStream?.assets?.objects?.[0];
   const playbackUrl =
-    liveAsset?.hls_url || liveAsset?.url || asset?.hls_url || asset?.url || "";
+    liveAsset?.hls_url ||
+    liveAsset?.url ||
+    asset?.hls_url ||
+    asset?.url ||
+    CLIENT_APP_CONFIG.placeholderVideo;
 
   const synopsis = getSynopsisByOrderForGraphQLObject(liveStream);
   const availabilityEndDate = getFurthestAvailabilityEndDate(

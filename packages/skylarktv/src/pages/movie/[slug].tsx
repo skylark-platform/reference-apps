@@ -21,6 +21,7 @@ import { useObject } from "../../hooks/useObject";
 import { GET_MOVIE } from "../../graphql/queries";
 import { PlaybackPage } from "../../components/pages/playback";
 import { useSkylarkEnvironment } from "../../hooks/useSkylarkEnvironment";
+import { CLIENT_APP_CONFIG } from "../../constants/app";
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //   const seo = await getSeoDataForObject(
@@ -76,7 +77,8 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
   const synopsis = getSynopsisByOrderForGraphQLObject(movie);
 
   const asset = movie?.assets?.objects?.[0];
-  const playbackUrl = asset?.hls_url || asset?.url || "";
+  const playbackUrl =
+    asset?.hls_url || asset?.url || CLIENT_APP_CONFIG.placeholderVideo;
 
   const availabilityEndDate = getFurthestAvailabilityEndDate(
     movie?.availability?.objects as Availability[] | undefined,

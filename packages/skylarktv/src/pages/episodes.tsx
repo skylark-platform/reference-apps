@@ -63,7 +63,7 @@ const TagPage = ({ tagFromUrl }: { tagFromUrl: string | null }) => {
       objects={episodes || []}
       thumbnailVariant="landscape"
       translationKeys={{
-        title: tag?.name || "episodes",
+        title: isLoading ? "" : tag?.name || "episodes",
       }}
     />
   );

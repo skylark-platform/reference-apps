@@ -24,6 +24,7 @@ import {
   useUidAndSlugFromObjectUrl,
 } from "../../hooks/useUidAndSlugFromObjectUrl";
 import { useSkylarkEnvironment } from "../../hooks/useSkylarkEnvironment";
+import { CLIENT_APP_CONFIG } from "../../constants/app";
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //   const seo = await getSeoDataForObject(
@@ -73,7 +74,8 @@ const EpisodePage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
   const synopsis = getSynopsisByOrderForGraphQLObject(episode);
 
   const asset = episode?.assets?.objects?.[0];
-  const playbackUrl = asset?.hls_url || asset?.url || "";
+  const playbackUrl =
+    asset?.hls_url || asset?.url || CLIENT_APP_CONFIG.placeholderVideo;
 
   const availabilityEndDate = getFurthestAvailabilityEndDate(
     episode?.availability?.objects as Availability[] | undefined,
