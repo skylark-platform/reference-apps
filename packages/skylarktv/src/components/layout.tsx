@@ -129,7 +129,7 @@ export const SkylarkTVLayout: React.FC<Props> = ({
       )}
       <div className="relative w-full">
         {isMobileSearchOpen && (
-          <div className="fixed inset-0 z-80 bg-gray-800 md:hidden">
+          <div className="fixed inset-0 z-80 bg-gray-800 lg:hidden">
             <Search onSearch={() => setMobileSearchOpen(false)} />
           </div>
         )}
@@ -170,26 +170,26 @@ export const SkylarkTVLayout: React.FC<Props> = ({
           <div className="flex h-full items-center justify-center text-3xl text-gray-100">
             <BackButton />
             <Link
-              className="flex h-full items-center ltr:md:ml-8 ltr:xl:ml-20 rtl:md:mr-8 rtl:xl:mr-20"
+              className="flex h-full items-center ltr:lg:ml-8 ltr:xl:ml-20 rtl:lg:mr-8 rtl:xl:mr-20"
               href="/"
             >
               {config?.logo || CLIENT_APP_CONFIG.header?.logo ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   alt={config?.logo?.alt || CLIENT_APP_CONFIG.header?.logo.alt}
-                  className="block h-full py-2 md:py-4 lg:py-8"
+                  className="block h-full py-2 lg:py-4 xl:py-8"
                   src={CLIENT_APP_CONFIG.header?.logo.src}
                 />
               ) : (
-                <MdStream className="h-9 w-9 md:h-10 md:w-10 lg:h-12 lg:w-12" />
+                <MdStream className="h-9 w-9 lg:h-10 lg:w-10 xl:h-12 xl:w-12" />
               )}
               {!CLIENT_APP_CONFIG.header?.hideAppName && (
-                <h2 className="mx-1 text-base md:mx-2 md:text-xl lg:text-2xl">
+                <h2 className="mx-1 text-base lg:mx-2 lg:text-2xl xl:text-xl">
                   {appTitle}
                 </h2>
               )}
             </Link>
-            <span className="absolute right-2 top-16 md:hidden">
+            <span className="absolute right-2 top-16 lg:hidden">
               {isMobileSearchOpen && (
                 <Button
                   icon={
@@ -206,11 +206,11 @@ export const SkylarkTVLayout: React.FC<Props> = ({
               )}
             </span>
           </div>
-          <div className="hidden md:block">
+          <div className="hidden lg:block">
             <Search />
           </div>
         </AppHeader>
-        <div className="relative z-10 h-full w-full pt-mobile-header md:pt-0">
+        <div className="relative z-10 h-full w-full pt-mobile-header lg:pt-0">
           {children}
         </div>
         {includeDimensionSettings &&
