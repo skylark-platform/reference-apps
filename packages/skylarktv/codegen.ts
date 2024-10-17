@@ -16,6 +16,7 @@ const { primary, accent } = CLIENT_APP_CONFIG.colours;
 
 const gqlFile = "./src/types/gql.ts";
 const globalCSSFile = "./src/styles/globals.css";
+const siteWebmanifestFile = "./public/site.webmanifest";
 
 const schema: CodegenConfig["schema"] = {
   [SAAS_API_ENDPOINT]: {
@@ -73,9 +74,47 @@ const cssGenerator: CodegenConfig["generates"][0] = {
   schema: onlyGenerateCssFile ? "https://graphqlzero.almansi.me/api" : schema,
 };
 
+const siteWebmanifestGenerator: CodegenConfig["generates"][0] = {
+  plugins: [
+    {
+      add: {
+        content: JSON.stringify(
+          {
+            name: CLIENT_APP_CONFIG.name,
+            short_name: CLIENT_APP_CONFIG.name,
+            icons: [
+              {
+                src: CLIENT_APP_CONFIG.favicon || "/android-chrome-192x192.png",
+                sizes: "192x192",
+                type: "image/png",
+              },
+              {
+                src: CLIENT_APP_CONFIG.favicon || "/android-chrome-512x512.png",
+                sizes: "512x512",
+                type: "image/png",
+              },
+            ],
+            theme_color: "#1B1A20",
+            background_color: "#1B1A20",
+            display: "standalone",
+          },
+          null,
+          2,
+        ),
+      },
+    },
+  ],
+  schema: onlyGenerateCssFile ? "https://graphqlzero.almansi.me/api" : schema,
+};
+
+const defaultGenerates: CodegenConfig["generates"] = {
+  [globalCSSFile]: cssGenerator,
+  [siteWebmanifestFile]: siteWebmanifestGenerator,
+};
+
 const generates: CodegenConfig["generates"] = onlyGenerateCssFile
-  ? { [globalCSSFile]: cssGenerator }
-  : { [gqlFile]: gqlGenerator, [globalCSSFile]: cssGenerator };
+  ? defaultGenerates
+  : { ...defaultGenerates, [gqlFile]: gqlGenerator };
 
 const config: CodegenConfig = {
   overwrite: true,
