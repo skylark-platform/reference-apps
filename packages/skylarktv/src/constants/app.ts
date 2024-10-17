@@ -23,6 +23,7 @@ const defaultAppConfig: {
     { values: { text: string; value: string }[] }
   >;
   withIntercom: boolean;
+  withSegment: boolean;
   hideDimensionsSettings: boolean;
   defaultLanguage?: string;
   header?: {
@@ -48,6 +49,7 @@ const defaultAppConfig: {
   },
   showBySkylark: true,
   withIntercom: true,
+  withSegment: true,
   hideDimensionsSettings: false,
   dimensions: {
     [DimensionKey.Property]: {

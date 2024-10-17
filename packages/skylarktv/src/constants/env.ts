@@ -13,3 +13,8 @@ export const CLOUDINARY_ENVIRONMENT = process.env
   .NEXT_PUBLIC_CLOUDINARY_ENVIRONMENT as string;
 
 export const APP_TITLE = process.env.NEXT_PUBLIC_APP_TITLE;
+
+export const SEGMENT_WRITE_KEY = process.env
+  .NEXT_PUBLIC_SEGMENT_WRITE_KEY as string;
+export const AMPLITUDE_API_KEY = process.env
+  .NEXT_PUBLIC_AMPLITUDE_API_KEY as string;

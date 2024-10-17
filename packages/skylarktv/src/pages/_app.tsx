@@ -12,9 +12,12 @@ import { withPasswordProtect } from "next-password-protect";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactNode, useEffect, useState } from "react";
 import { IntercomProvider } from "react-use-intercom";
+import { useRouter } from "next/router";
 import { SkylarkTVLayout } from "../components/layout";
 import { DimensionsContextProvider } from "../contexts";
 import { CLIENT_APP_CONFIG, LOCAL_STORAGE } from "../constants/app";
+import { configureSegment, segment } from "../lib/segment";
+import { SEGMENT_WRITE_KEY, AMPLITUDE_API_KEY } from "../constants/env";
 
 const IntercomWrapper = ({ children }: { children: ReactNode }) =>
   CLIENT_APP_CONFIG.withIntercom ? (
@@ -24,6 +27,37 @@ const IntercomWrapper = ({ children }: { children: ReactNode }) =>
   ) : (
     children
   );
+
+const SegmentWrapper = ({ children }: { children: ReactNode }) => {
+  const withSegment =
+    CLIENT_APP_CONFIG.withSegment && SEGMENT_WRITE_KEY && AMPLITUDE_API_KEY;
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (withSegment) {
+      configureSegment();
+    }
+  }, []);
+
+  useEffect(() => {
+    const segmentPage = () => {
+      if (withSegment) {
+        void segment.page();
+      }
+    };
+
+    segmentPage();
+
+    router.events.on("routeChangeComplete", segmentPage);
+
+    return () => {
+      router.events.off("routeChangeComplete", segmentPage);
+    };
+  }, [router.events]);
+
+  return children;
+};
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [skylarkApiUrl, setSkylarkApiUrl] = useState(
@@ -48,17 +82,19 @@ function MyApp({ Component, pageProps }: AppProps) {
   const queryClient = new QueryClient();
 
   return (
-    <PlausibleProvider domain={process.env.NEXT_PUBLIC_APP_DOMAIN as string}>
-      <QueryClientProvider client={queryClient}>
-        <IntercomWrapper>
-          <DimensionsContextProvider>
-            <SkylarkTVLayout skylarkApiUrl={skylarkApiUrl}>
-              <Component {...pageProps} />
-            </SkylarkTVLayout>
-          </DimensionsContextProvider>
-        </IntercomWrapper>
-      </QueryClientProvider>
-    </PlausibleProvider>
+    <SegmentWrapper>
+      <PlausibleProvider domain={process.env.NEXT_PUBLIC_APP_DOMAIN as string}>
+        <QueryClientProvider client={queryClient}>
+          <IntercomWrapper>
+            <DimensionsContextProvider>
+              <SkylarkTVLayout skylarkApiUrl={skylarkApiUrl}>
+                <Component {...pageProps} />
+              </SkylarkTVLayout>
+            </DimensionsContextProvider>
+          </IntercomWrapper>
+        </QueryClientProvider>
+      </PlausibleProvider>
+    </SegmentWrapper>
   );
 }
 
