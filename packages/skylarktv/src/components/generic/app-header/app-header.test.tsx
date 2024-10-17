@@ -8,6 +8,12 @@ describe("AppHeader component", () => {
       <AppHeader
         activeHref="/"
         links={[{ text: "Home", href: "/homepage", icon: <></> }]}
+        search={{
+          text: "Search",
+          onClick: () => "",
+          icon: <></>,
+          isMobileOnly: true,
+        }}
       >
         {`test title`}
       </AppHeader>,
