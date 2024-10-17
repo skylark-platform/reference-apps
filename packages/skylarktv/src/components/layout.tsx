@@ -177,7 +177,7 @@ export const SkylarkTVLayout: React.FC<Props> = ({
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   alt={config?.logo?.alt || CLIENT_APP_CONFIG.header?.logo.alt}
-                  className="block h-full py-2 lg:py-4 xl:py-8"
+                  className="block h-full max-h-8 py-1 md:max-h-16 md:py-2 lg:py-3"
                   src={CLIENT_APP_CONFIG.header?.logo.src}
                 />
               ) : (

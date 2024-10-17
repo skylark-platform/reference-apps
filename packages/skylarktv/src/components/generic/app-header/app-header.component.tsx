@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useMotionValueEvent, useScroll } from "framer-motion";
+import clsx from "clsx";
 import {
   Navigation,
   NavigationItem,
@@ -17,13 +19,28 @@ export const AppHeader: React.FC<NavigationProps & { forceRtl?: boolean }> = ({
   forceRtl,
   search,
 }) => {
+  const { scrollYProgress } = useScroll();
+
+  const [fullHeightNavigation, setFullHeightNavigation] = useState(true);
+
+  useMotionValueEvent(scrollYProgress, "change", (scrollY) => {
+    if (fullHeightNavigation && scrollY > 0.001) {
+      setFullHeightNavigation(false);
+    } else if (!fullHeightNavigation && scrollY <= 0.001) {
+      setFullHeightNavigation(true);
+    }
+  });
+
   const { dir } = useHtmlDirection(forceRtl);
 
   const [mobileNavIsOpen, setMobileNavIsOpen] = useState(false);
 
   return (
     <header
-      className="fixed top-0 z-80 flex w-full flex-col font-display lg:h-28 lg:flex-row-reverse"
+      className={clsx(
+        "fixed top-0 z-80 flex w-full flex-col font-display transition-all md:flex-row-reverse",
+        fullHeightNavigation ? "md:h-24 lg:h-28" : "md:h-14 lg:h-16",
+      )}
       dir={dir}
     >
       <div
