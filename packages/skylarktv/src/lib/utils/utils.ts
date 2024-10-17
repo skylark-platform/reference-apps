@@ -204,7 +204,7 @@ export const splitAndFormatGraphQLCreditsByInternalTitle = (
       role,
       {
         formattedCredits: formatGraphQLCredits(credits),
-        translatedRole: credits?.[0].roles?.objects?.[0]?.title || "test",
+        translatedRole: credits?.[0].roles?.objects?.[0]?.title || "",
       },
     ]),
   );
