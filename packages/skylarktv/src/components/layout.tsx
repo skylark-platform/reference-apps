@@ -125,7 +125,12 @@ export const SkylarkTVLayout: React.FC<Props> = ({
 
   return (
     <>
-      <DefaultSeo {...createDefaultSeo(appTitle, t("seo.description"))} />
+      <DefaultSeo
+        {...createDefaultSeo(
+          appTitle,
+          CLIENT_APP_CONFIG?.description || t("seo.description"),
+        )}
+      />
       {config?.googleTagManagerId && (
         <GoogleTagManagerScript id={config.googleTagManagerId} />
       )}

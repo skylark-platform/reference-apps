@@ -10,6 +10,7 @@ export const LOCAL_STORAGE = {
 
 const defaultAppConfig: {
   name: string;
+  description?: string;
   colours: {
     primary: string;
     accent: string;
