@@ -68,8 +68,9 @@ export const CLIENT_APP_CONFIG: typeof defaultAppConfig = {
   name: "Fremantle",
   description: "",
   colours: {
-    primary: "000000",
+    primary: "rgb(18, 16, 37)",
     accent: "#FFFFFF",
+    header: "rgb(27 26 32 / 0.7)",
   },
   showBySkylark: true,
   hideDimensionsSettings: false,
