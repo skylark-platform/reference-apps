@@ -2,13 +2,16 @@
 import "../../../env";
 import "../env";
 import { gql } from "graphql-request";
-import { Axios } from "axios";
 import { chunk } from "lodash";
 import { graphQLClient } from "@skylark-apps/skylarktv/src/lib/skylark/graphqlClient";
 import { checkEnvVars } from "../utils";
 import { GraphQLBaseObject } from "../../interfaces";
 import { createGraphQLOperation, pause } from "../../skylark/saas/utils";
 import { mutateMultipleObjects } from "../../skylark/saas/create";
+import {
+  createCloudinaryClient,
+  uploadCloudinaryImage,
+} from "../../cloudinary";
 
 /**
  * Assumptions:
@@ -41,18 +44,6 @@ const LIST_IMAGES = gql`
 interface GraphQLImage extends GraphQLBaseObject {
   external_url: string | null;
   url: string | null;
-}
-
-interface CloudinaryUploadResponse {
-  asset_id: string;
-  public_id: string;
-  version: number;
-  version_id: string;
-  signature: string;
-  secure_url: string;
-  url: string;
-  original_filename: string;
-  format: string;
 }
 
 const main = async () => {
@@ -105,11 +96,9 @@ const main = async () => {
 
   console.log(allImages, imagesHostedOnSl8, otherImages);
 
-  const cloudinaryClient = new Axios({
-    baseURL: `https://api.cloudinary.com/v1_1/${
-      process.env.CLIENT_CLOUDINARY_ENV as string
-    }/image`,
-  });
+  const cloudinaryClient = createCloudinaryClient(
+    process.env.CLIENT_CLOUDINARY_ENV as string,
+  );
 
   const chunkedImages = chunk(imagesHostedOnSl8, 20);
 
@@ -119,15 +108,15 @@ const main = async () => {
     const imagesToCreate = chunkedImages[i];
 
     const promises = imagesToCreate.map(async (image) => {
-      const res = await cloudinaryClient.post<string>(
-        "/upload",
-        `file=${image.external_url}&upload_preset=${
-          process.env.CLIENT_CLOUDINARY_PRESET as string
-        }`,
-      );
+      if (!image.external_url) {
+        return { ...image, file_name: null };
+      }
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const data = JSON.parse(res.data) as CloudinaryUploadResponse;
+      const data = await uploadCloudinaryImage(
+        cloudinaryClient,
+        process.env.CLIENT_CLOUDINARY_PRESET as string,
+        image.external_url,
+      );
 
       console.log(data);
 

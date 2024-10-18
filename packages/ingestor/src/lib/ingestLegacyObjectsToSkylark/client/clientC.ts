@@ -189,7 +189,7 @@ const convertLegacyObject = (
       ...commonFields,
       internal_title: legacyObject.title,
       type: imageType,
-      external_url: legacyObject.url, // TODO when doing full ingest, change the external_url to be download_from_url so the images are moved across
+      external_url: legacyObject.url, // TODO upload images to Cloudinary and use that external_url - not needed due to migration script
     };
   }
 

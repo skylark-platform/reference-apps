@@ -237,12 +237,19 @@ export const createOrUpdateGraphQlObjectsUsingIntrospection = async (
       };
 
       if (isImage) {
-        const imageAttachments = (fields.image || []) as Attachment[];
-        if (imageAttachments.length > 0) {
-          const image = imageAttachments[0];
-          // https://docs.skylarkplatform.com/docs/creating-an-image#upload-an-image-from-an-external-url
-          objectFields.download_from_url = image.url;
-          objectFields.content_type = image.type;
+        if (fields.cloudinary_url) {
+          objectFields.external_url = fields.cloudinary_url as string;
+          objectFields.file_name =
+            (fields.cloudinary_file_name as string) || "";
+        } else {
+          // Deprecated: fallback for when image isn't using cloudinary
+          const imageAttachments = (fields.image || []) as Attachment[];
+          if (imageAttachments.length > 0) {
+            const image = imageAttachments[0];
+            // https://docs.skylarkplatform.com/docs/creating-an-image#upload-an-image-from-an-external-url
+            objectFields.download_from_url = image.url;
+            objectFields.content_type = image.type;
+          }
         }
       }
 
