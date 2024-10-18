@@ -527,13 +527,9 @@ export const addCloudinaryOnTheFlyImageTransformation = (
     return imageUrl;
   }
 
-  const cloudinaryDomain = "res.cloudinary.com";
+  const cloudinaryDomain = "://res.cloudinary.com";
 
   const isAlreadyCloudinary = imageUrl.includes(cloudinaryDomain);
-
-  if (isAlreadyCloudinary) {
-    return imageUrl;
-  }
 
   const urlOpts = [];
   if (opts.height) {
@@ -547,8 +543,33 @@ export const addCloudinaryOnTheFlyImageTransformation = (
     urlOpts.push("c_fill");
   }
 
-  const urlOptsStr = urlOpts.length > 0 ? `${urlOpts.join(",")}/` : "";
+  const urlOptsStr = urlOpts.length > 0 ? `${urlOpts.join(",")}` : "";
 
-  const cloudinaryUrl = `https://${cloudinaryDomain}/${CLOUDINARY_ENVIRONMENT}/image/fetch/${urlOptsStr}${imageUrl}`;
+  if (isAlreadyCloudinary) {
+    // Typical Cloudinary URL: https://res.cloudinary.com/da4t73d6g/image/upload/v1729255243/pe1hmqsf9fws91zkax6z.jpg
+    // We can add transformations in the URL like: https://res.cloudinary.com/da4t73d6g/image/upload/c_pad,h_300,w_300/v1729255243/pe1hmqsf9fws91zkax6z.jpg
+
+    const splitUrl = imageUrl.split(cloudinaryDomain);
+    const imagePath = splitUrl[1];
+    const splitPath = imagePath.split("/");
+
+    const canInsertTransformations =
+      splitPath.length === 6 &&
+      splitPath[2] === "image" &&
+      splitPath[3] === "upload" &&
+      splitPath[4].startsWith("v");
+
+    if (canInsertTransformations) {
+      splitPath.splice(4, 0, urlOptsStr);
+      const newPath = splitPath.join("/");
+
+      const cloudinaryUrl = `${splitUrl[0]}${cloudinaryDomain}${newPath}`;
+      return cloudinaryUrl;
+    }
+
+    return imageUrl;
+  }
+
+  const cloudinaryUrl = `https://${cloudinaryDomain}/${CLOUDINARY_ENVIRONMENT}/image/fetch/${urlOptsStr}${urlOptsStr ? "/" : ""}${imageUrl}`;
   return cloudinaryUrl;
 };
