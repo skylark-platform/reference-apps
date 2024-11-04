@@ -36,6 +36,7 @@ const LIST_IMAGES = gql`
         slug
         external_url
         url
+        download_from_url
       }
     }
   }
