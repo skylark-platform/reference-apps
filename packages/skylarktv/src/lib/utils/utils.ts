@@ -570,6 +570,6 @@ export const addCloudinaryOnTheFlyImageTransformation = (
     return imageUrl;
   }
 
-  const cloudinaryUrl = `https://${cloudinaryDomain}/${CLOUDINARY_ENVIRONMENT}/image/fetch/${urlOptsStr}${urlOptsStr ? "/" : ""}${imageUrl}`;
+  const cloudinaryUrl = `https${cloudinaryDomain}/${CLOUDINARY_ENVIRONMENT}/image/fetch/${urlOptsStr}${urlOptsStr ? "/" : ""}${imageUrl}`;
   return cloudinaryUrl;
 };
