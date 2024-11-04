@@ -42,7 +42,6 @@ export const BaseThumbnail: React.FC<BaseThumbnailProps> = ({
     const url = addCloudinaryOnTheFlyImageTransformation(uncachedImage, {
       width: 400,
     });
-    console.log({ url });
     return url;
   }, [uncachedImage]);
 
