@@ -31,6 +31,7 @@ export interface Airtables {
   tags: Record<FieldSet>[];
   images: Record<FieldSet>[];
   availability: Record<FieldSet>[];
+  availabilitySegments: Record<FieldSet>[];
   sets: Record<FieldSet>[];
   setsMetadata: Record<FieldSet>[];
   assetTypes: Record<FieldSet>[];
@@ -49,4 +50,5 @@ export interface AvailabilityTableFields extends FieldSet {
   devices?: string[];
   customers?: string[];
   regions?: string[];
+  segments?: string[];
 }

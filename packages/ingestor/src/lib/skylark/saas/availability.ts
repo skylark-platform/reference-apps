@@ -3,6 +3,7 @@ import {
   Attachment,
   Collaborator,
   FieldSet,
+  Records,
 } from "airtable";
 import { EnumType, jsonToGraphQLQuery } from "json-to-graphql-query";
 import { gql } from "graphql-request";
@@ -258,6 +259,36 @@ export const createOrUpdateDimensionValues = async (
   return arr;
 };
 
+const getValueSlugs = (
+  dimensionValues: GraphQLBaseObject[],
+  dimensionAirtableField?: string[],
+) =>
+  dimensionValues
+    .filter(({ external_id }) => dimensionAirtableField?.includes(external_id))
+    .map(({ slug }) => slug);
+
+const createAvailabilityDimensionsInput = (
+  dimensions: GraphQLMetadata["dimensions"],
+  fields: AvailabilityTableFields,
+): {
+  dimension_slug: string;
+  value_slugs: string[];
+}[] =>
+  [
+    {
+      dimension_slug: "customer-types",
+      value_slugs: getValueSlugs(dimensions.customerTypes, fields.customers),
+    },
+    {
+      dimension_slug: "device-types",
+      value_slugs: getValueSlugs(dimensions.deviceTypes, fields.devices),
+    },
+    {
+      dimension_slug: "regions",
+      value_slugs: getValueSlugs(dimensions.regions, fields.regions),
+    },
+  ].filter(({ value_slugs }) => value_slugs.length > 0);
+
 export const createOrUpdateScheduleDimensionValues = async (
   airtable: Airtables["dimensions"],
 ): Promise<GraphQLMetadata["dimensions"]> => {
@@ -294,17 +325,85 @@ export const createOrUpdateScheduleDimensionValues = async (
   };
 };
 
-const getValueSlugs = (
-  dimensionValues: GraphQLBaseObject[],
-  dimensionAirtableField?: string[],
-) =>
-  dimensionValues
-    .filter(({ external_id }) => dimensionAirtableField?.includes(external_id))
-    .map(({ slug }) => slug);
+export const createOrUpdateAvailabilitySegments = async (
+  segments: Records<FieldSet>,
+  dimensions: GraphQLMetadata["dimensions"],
+) => {
+  const externalIds = segments.map(({ id }) => ({ externalId: id }));
+  const { existingExternalIds } = await getExistingObjects(
+    "AvailabilitySegment",
+    externalIds,
+  );
+
+  const operations = segments.reduce(
+    (previousOperations, { id, ...record }) => {
+      const fields = record.fields as AvailabilityTableFields;
+
+      const objectExists = existingExternalIds.has(id);
+
+      const availabilityInput: {
+        title: string;
+        slug: string;
+        dimensions?: {
+          link: {
+            dimension_slug: string;
+            value_slugs: string[];
+          }[];
+        };
+      } = {
+        title: fields.title,
+        slug: fields.slug,
+      };
+
+      const availabilityDimensions = createAvailabilityDimensionsInput(
+        dimensions,
+        fields,
+      );
+
+      if (availabilityDimensions.length > 0) {
+        availabilityInput.dimensions = {
+          link: availabilityDimensions,
+        };
+      }
+
+      const args = objectExists
+        ? { segment: availabilityInput }
+        : {
+            segment: {
+              external_id: id,
+              ...availabilityInput,
+            },
+          };
+
+      const { operation, method } = createGraphQLOperation(
+        "AvailabilitySegment",
+        objectExists,
+        args,
+        { external_id: id },
+      );
+
+      const updatedOperations = {
+        ...previousOperations,
+        [`${method}${id}`]: operation,
+      };
+      return updatedOperations;
+    },
+    {} as { [key: string]: object },
+  );
+
+  const createdAvailabilitySegments =
+    await mutateMultipleObjects<GraphQLBaseObject>(
+      "createOrUpdateAvailabilitySegment",
+      operations,
+    );
+
+  return createdAvailabilitySegments;
+};
 
 export const createOrUpdateAvailability = async (
   schedules: { id: string; fields: FieldSet }[],
   dimensions: GraphQLMetadata["dimensions"],
+  segments: GraphQLBaseObject[],
 ) => {
   const externalIds = schedules.map(({ id }) => ({ externalId: id }));
   const { existingExternalIds } = await getExistingObjects(
@@ -329,39 +428,32 @@ export const createOrUpdateAvailability = async (
             value_slugs: string[];
           }[];
         };
+        segments?: {
+          link: string[];
+        };
       } = {
         title: fields.title,
         slug: fields.slug,
       };
 
-      const availabilityDimensions: {
-        dimension_slug: string;
-        value_slugs: string[];
-      }[] = [
-        {
-          dimension_slug: "customer-types",
-          value_slugs: getValueSlugs(
-            dimensions.customerTypes,
-            fields.customers,
-          ),
-        },
-        {
-          dimension_slug: "device-types",
-          value_slugs: getValueSlugs(dimensions.deviceTypes, fields.devices),
-        },
-        {
-          dimension_slug: "regions",
-          value_slugs: getValueSlugs(dimensions.regions, fields.regions),
-        },
-      ].filter(({ value_slugs }) => value_slugs.length > 0);
-
-      // Filter out any dimensions that are empty, only add the dimensions property to the input if at least one dimension is given
-      const filteredDimensions = availabilityDimensions.filter(
-        ({ value_slugs }) => value_slugs.length > 0,
+      const availabilityDimensions = createAvailabilityDimensionsInput(
+        dimensions,
+        fields,
       );
-      if (filteredDimensions.length > 0) {
+
+      const segmentsToLink = segments
+        .filter(({ external_id }) => fields.segments?.includes(external_id))
+        .map(({ uid }) => uid);
+
+      if (segmentsToLink && segmentsToLink.length > 0) {
+        availabilityInput.segments = {
+          link: segmentsToLink,
+        };
+      }
+
+      if (availabilityDimensions.length > 0) {
         availabilityInput.dimensions = {
-          link: filteredDimensions,
+          link: availabilityDimensions,
         };
       }
 

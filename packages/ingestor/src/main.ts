@@ -21,6 +21,7 @@ import { createOrUpdateGraphQLSet } from "./lib/skylark/saas/sets";
 import {
   createDimensions,
   createOrUpdateAvailability,
+  createOrUpdateAvailabilitySegments,
   createOrUpdateScheduleDimensionValues,
   showcaseDimensionsConfig,
 } from "./lib/skylark/saas/availability";
@@ -262,7 +263,12 @@ const main = async () => {
     airtable.dimensions,
   );
 
-  await createOrUpdateAvailability(airtable.availability, dimensions);
+  const segments = await createOrUpdateAvailabilitySegments(
+    airtable.availabilitySegments,
+    dimensions,
+  );
+
+  await createOrUpdateAvailability(airtable.availability, dimensions, segments);
 
   if (!skylarktvSetupOnly) {
     const defaultSchedule = airtable.availability.find(
