@@ -21,7 +21,7 @@ import { createOrUpdateGraphQLSet } from "./lib/skylark/saas/sets";
 import {
   createDimensions,
   createOrUpdateAvailability,
-  createOrUpdateAvailabilitySegments,
+  createOrUpdateAudienceSegments,
   createOrUpdateScheduleDimensionValues,
   showcaseDimensionsConfig,
 } from "./lib/skylark/saas/availability";
@@ -263,8 +263,8 @@ const main = async () => {
     airtable.dimensions,
   );
 
-  const segments = await createOrUpdateAvailabilitySegments(
-    airtable.availabilitySegments,
+  const segments = await createOrUpdateAudienceSegments(
+    airtable.audienceSegments,
     dimensions,
   );
 

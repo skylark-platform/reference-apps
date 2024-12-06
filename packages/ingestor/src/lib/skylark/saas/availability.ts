@@ -325,13 +325,13 @@ export const createOrUpdateScheduleDimensionValues = async (
   };
 };
 
-export const createOrUpdateAvailabilitySegments = async (
+export const createOrUpdateAudienceSegments = async (
   segments: Records<FieldSet>,
   dimensions: GraphQLMetadata["dimensions"],
 ) => {
   const externalIds = segments.map(({ id }) => ({ externalId: id }));
   const { existingExternalIds } = await getExistingObjects(
-    "AvailabilitySegment",
+    "AudienceSegment",
     externalIds,
   );
 
@@ -376,7 +376,7 @@ export const createOrUpdateAvailabilitySegments = async (
           };
 
       const { operation, method } = createGraphQLOperation(
-        "AvailabilitySegment",
+        "AudienceSegment",
         objectExists,
         args,
         { external_id: id },
@@ -391,13 +391,13 @@ export const createOrUpdateAvailabilitySegments = async (
     {} as { [key: string]: object },
   );
 
-  const createdAvailabilitySegments =
+  const createdAudienceSegments =
     await mutateMultipleObjects<GraphQLBaseObject>(
-      "createOrUpdateAvailabilitySegment",
+      "createOrUpdateAudienceSegment",
       operations,
     );
 
-  return createdAvailabilitySegments;
+  return createdAudienceSegments;
 };
 
 export const createOrUpdateAvailability = async (

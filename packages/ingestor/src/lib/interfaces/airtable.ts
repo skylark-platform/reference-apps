@@ -31,7 +31,7 @@ export interface Airtables {
   tags: Record<FieldSet>[];
   images: Record<FieldSet>[];
   availability: Record<FieldSet>[];
-  availabilitySegments: Record<FieldSet>[];
+  audienceSegments: Record<FieldSet>[];
   sets: Record<FieldSet>[];
   setsMetadata: Record<FieldSet>[];
   assetTypes: Record<FieldSet>[];
