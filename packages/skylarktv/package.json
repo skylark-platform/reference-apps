@@ -40,7 +40,7 @@
     "graphql": "16.9.0",
     "graphql-request": "6.1.0",
     "json-to-graphql-query": "2.3.0",
-    "next": "14.2.15",
+    "next": "15.0.4",
     "next-password-protect": "1.8.0",
     "next-plausible": "3.12.2",
     "next-seo": "6.6.0",
@@ -57,7 +57,7 @@
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.3",
     "@graphql-codegen/schema-ast": "4.1.0",
-    "@next/eslint-plugin-next": "14.2.15",
+    "@next/eslint-plugin-next": "15.0.4",
     "@storybook/addon-essentials": "7.6.20",
     "@storybook/addon-interactions": "7.6.20",
     "@storybook/addon-links": "7.6.20",
