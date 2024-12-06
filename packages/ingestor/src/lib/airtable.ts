@@ -88,7 +88,7 @@ export const getAllTables = async (): Promise<Airtables> => {
     "tags",
     "images",
     "availability",
-    "availability-segments",
+    "audience-segments",
     "sets",
     "sets-metadata",
     "asset-types",

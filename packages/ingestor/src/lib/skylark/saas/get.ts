@@ -173,7 +173,8 @@ const getExistingObjectsByExternalId = async (
       // Dimensions don't have availability
       if (
         !objectType.startsWith("Dimension") &&
-        !objectType.startsWith("Availability")
+        !objectType.startsWith("Availability") &&
+        objectType !== "AudienceSegment"
       ) {
         args.ignore_availability = true;
       }
