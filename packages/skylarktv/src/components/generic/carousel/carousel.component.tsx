@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { wrap } from "popmotion";
 import useTranslation from "next-translate/useTranslation";
 import { MdPlayCircleFilled, MdArrowForward } from "react-icons/md";
