@@ -1,5 +1,5 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import { MdHome, MdMovie, MdOutlineStar, MdSearch } from "react-icons/md";
 import { Navigation } from "./navigation.component";
 import { NavigationLink } from "./navigation-item/navigation-item.component";
@@ -7,7 +7,7 @@ import { NavigationLink } from "./navigation-item/navigation-item.component";
 export default {
   title: "React/Navigation",
   component: Navigation,
-} as ComponentMeta<typeof Navigation>;
+} as Meta<typeof Navigation>;
 
 const links: NavigationLink[] = [
   { text: "Discover", href: "/", icon: <MdHome /> },
@@ -19,7 +19,7 @@ const links: NavigationLink[] = [
   },
 ];
 
-const Template: ComponentStory<typeof Navigation> = (args) => (
+const Template: StoryFn<typeof Navigation> = (args) => (
   <div className="h-screen w-screen bg-gray-500 md:h-48 md:w-full" dir="ltr">
     <Navigation
       {...args}

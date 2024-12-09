@@ -1,13 +1,13 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import { AppBackgroundGradient } from "./app-background-gradient.component";
 
 export default {
   title: "React/AppBackgroundGradient",
   component: AppBackgroundGradient,
-} as ComponentMeta<typeof AppBackgroundGradient>;
+} as Meta<typeof AppBackgroundGradient>;
 
-const Template: ComponentStory<typeof AppBackgroundGradient> = (args) => (
+const Template: StoryFn<typeof AppBackgroundGradient> = (args) => (
   <AppBackgroundGradient {...args} />
 );
 

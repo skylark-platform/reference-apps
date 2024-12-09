@@ -1,13 +1,13 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import { CallToAction } from "./call-to-action.component";
 
 export default {
   title: "React/CallToAction",
   component: CallToAction,
-} as ComponentMeta<typeof CallToAction>;
+} as Meta<typeof CallToAction>;
 
-const Template: ComponentStory<typeof CallToAction> = (args) => (
+const Template: StoryFn<typeof CallToAction> = (args) => (
   <div className="bg-gray-900">
     <CallToAction {...args} />
   </div>

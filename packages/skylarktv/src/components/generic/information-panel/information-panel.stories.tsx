@@ -1,13 +1,13 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import { InformationPanel } from "./information-panel.component";
 
 export default {
   title: "React/InformationPanel",
   component: InformationPanel,
-} as ComponentMeta<typeof InformationPanel>;
+} as Meta<typeof InformationPanel>;
 
-const Template: ComponentStory<typeof InformationPanel> = (args) => (
+const Template: StoryFn<typeof InformationPanel> = (args) => (
   <InformationPanel {...args} />
 );
 

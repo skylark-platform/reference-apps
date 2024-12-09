@@ -1,13 +1,13 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import { Overline as OverlineComponent } from "./overline.component";
 
 export default {
   title: "React/Typography/Overline",
   component: OverlineComponent,
-} as ComponentMeta<typeof OverlineComponent>;
+} as Meta<typeof OverlineComponent>;
 
-const Template: ComponentStory<typeof OverlineComponent> = (args) => (
+const Template: StoryFn<typeof OverlineComponent> = (args) => (
   <OverlineComponent {...args}>{`Overline ${args.level}`}</OverlineComponent>
 );
 

@@ -6,3 +6,4 @@ dist
 outputs
 backup_outputs
 .vercel
+storybook-static

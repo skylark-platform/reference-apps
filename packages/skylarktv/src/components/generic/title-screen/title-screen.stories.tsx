@@ -1,14 +1,14 @@
 import React from "react";
 import { MdStream } from "react-icons/md";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import { TitleScreen } from "./title-screen.component";
 
 export default {
   title: "React/TitleScreen",
   component: TitleScreen,
-} as ComponentMeta<typeof TitleScreen>;
+} as Meta<typeof TitleScreen>;
 
-const Template: ComponentStory<typeof TitleScreen> = (args) => (
+const Template: StoryFn<typeof TitleScreen> = (args) => (
   <TitleScreen {...args} />
 );
 

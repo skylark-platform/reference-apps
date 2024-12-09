@@ -1,13 +1,13 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import { DimensionContent } from "./dimension-content.component";
 
 export default {
   title: "React/DimensionSettings/DimensionContent",
   component: DimensionContent,
-} as ComponentMeta<typeof DimensionContent>;
+} as Meta<typeof DimensionContent>;
 
-const Template: ComponentStory<typeof DimensionContent> = (args) => (
+const Template: StoryFn<typeof DimensionContent> = (args) => (
   <DimensionContent {...args} />
 );
 

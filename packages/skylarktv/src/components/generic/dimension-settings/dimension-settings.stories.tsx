@@ -1,13 +1,13 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import { DimensionSettings } from "./dimension-settings.component";
 
 export default {
   title: "React/DimensionSettings",
   component: DimensionSettings,
-} as ComponentMeta<typeof DimensionSettings>;
+} as Meta<typeof DimensionSettings>;
 
-const Template: ComponentStory<typeof DimensionSettings> = (args) => (
+const Template: StoryFn<typeof DimensionSettings> = (args) => (
   <div className="h-screen w-screen bg-gray-900">
     <DimensionSettings {...args} />
   </div>

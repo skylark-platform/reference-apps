@@ -1,5 +1,5 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import { Carousel } from "./carousel.component";
 import { heros } from "./carousel.fixtures";
 
@@ -10,9 +10,9 @@ export default {
     // sm, md and lg Tailwind viewports covered by Chromatic
     chromatic: { viewports: [500, 800, 1200] },
   },
-} as ComponentMeta<typeof Carousel>;
+} as Meta<typeof Carousel>;
 
-const Template: ComponentStory<typeof Carousel> = (args) => (
+const Template: StoryFn<typeof Carousel> = (args) => (
   <div className="flex h-[600px] w-full flex-col justify-center overflow-y-visible bg-gray-900 lg:w-4/5 xl:w-2/3">
     <Carousel {...args} />
   </div>

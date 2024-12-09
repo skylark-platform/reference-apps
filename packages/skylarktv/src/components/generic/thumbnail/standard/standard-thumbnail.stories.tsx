@@ -1,5 +1,5 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import { StandardThumbnail as StandardThumbnailComponent } from "./standard-thumbnail.component";
 import { allMovieBackgroundImages } from "../../rail/rail.fixtures";
 
@@ -16,9 +16,9 @@ export default {
       control: { type: "select" },
     },
   },
-} as ComponentMeta<typeof StandardThumbnailComponent>;
+} as Meta<typeof StandardThumbnailComponent>;
 
-const Template: ComponentStory<typeof StandardThumbnailComponent> = (args) => (
+const Template: StoryFn<typeof StandardThumbnailComponent> = (args) => (
   <div className="mt-10 flex h-72 w-full flex-col justify-center overflow-y-visible">
     <div className="w-96 bg-gray-900 p-10">
       <StandardThumbnailComponent {...args} />
