@@ -51,7 +51,7 @@ The fastest method to deploy SkylarkTV is by using the [Vercel Deploy Button][ve
 
 By using it, you will deploy SkylarkTV into your Vercel account and receive prompts to add required configuration such as environment variables that connect your deployment to your Skylark instance. This should ensure that SkylarkTV works first time.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fskylark-platform%2Freference-apps%2Ftree%2Fmain%2Fapps%2Fskylarktv&env=NEXT_PUBLIC_SAAS_API_ENDPOINT,NEXT_PUBLIC_SAAS_API_KEY,NEXT_PUBLIC_APP_TITLE&envDescription=Envs%20required%20for%20SkylarkTV%20to%20connect%20to%20Skylark&envLink=https%3A%2F%2Fgithub.com%2Fskylark-platform%2Freference-apps%2Fblob%2Fmain%2Fdocs%2Fenvironment-variables.md&project-name=skylarktv&repository-name=skylarktv)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fskylark-platform%2Fskylarktv%2Ftree%2Fmain%2Fapps%2Fskylarktv&env=NEXT_PUBLIC_SAAS_API_ENDPOINT,NEXT_PUBLIC_SAAS_API_KEY,NEXT_PUBLIC_APP_TITLE&envDescription=Envs%20required%20for%20SkylarkTV%20to%20connect%20to%20Skylark&envLink=https%3A%2F%2Fgithub.com%2Fskylark-platform%2Fskylarktv%2Fblob%2Fmain%2Fdocs%2Fenvironment-variables.md&project-name=skylarktv&repository-name=skylarktv)
 
 <!-- Generated using https://vercel.com/docs/deploy-button -->
 
