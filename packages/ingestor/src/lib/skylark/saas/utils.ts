@@ -193,17 +193,9 @@ export const getValidFields = (
   );
   const validFields = validObjectFields.reduce(
     (obj, { property, kind }) => {
-      let val = isArray(fields[property])
+      const val = isArray(fields[property])
         ? (fields[property] as string[])[0]
         : fields[property];
-
-      // HACK FOR DYNAMODB
-      if (
-        ["budget", "audience_rating"].includes(property) &&
-        (val || val === 0)
-      ) {
-        val = `${val as number} `;
-      }
 
       return {
         ...obj,

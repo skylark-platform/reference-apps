@@ -1,5 +1,5 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import {
   MdRecentActors,
   MdCalendarToday,
@@ -11,9 +11,9 @@ import { MetadataPanel } from "./metadata-panel.component";
 export default {
   title: "React/MetadataPanel",
   component: MetadataPanel,
-} as ComponentMeta<typeof MetadataPanel>;
+} as Meta<typeof MetadataPanel>;
 
-const Template: ComponentStory<typeof MetadataPanel> = (args) => (
+const Template: StoryFn<typeof MetadataPanel> = (args) => (
   <div dir="ltr">
     <MetadataPanel {...args} />
   </div>

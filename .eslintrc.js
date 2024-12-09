@@ -27,7 +27,7 @@ module.exports = {
     "unused-imports/no-unused-imports": "error",
     "unused-imports/no-unused-vars": "error",
   },
-  ignorePatterns: ["**/.next/**/*"],
+  ignorePatterns: ["**/.next/**/*", "**/storybook-static/**/*"],
   overrides: [
     {
       parser: "@typescript-eslint/parser",

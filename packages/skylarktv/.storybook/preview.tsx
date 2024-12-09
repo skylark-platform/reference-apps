@@ -19,7 +19,7 @@ const queryClient = new QueryClient();
 
 const preview: Preview = {
   parameters: {
-    actions: { argTypesRegex: "^on[A-Z].*" },
+    // actions: { argTypesRegex: "^on[A-Z].*" },
     controls: {
       matchers: {
         color: /(background|color)$/i,
@@ -28,6 +28,7 @@ const preview: Preview = {
     },
     layout: "fullscreen",
   },
+
   decorators: [
     (Story) => (
       <I18nProvider lang="en-gb" namespaces={{ common }}>
@@ -39,6 +40,8 @@ const preview: Preview = {
       </I18nProvider>
     ),
   ],
+
+  tags: ["autodocs"],
 };
 
 export default preview;

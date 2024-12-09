@@ -1,7 +1,7 @@
 import useTranslation from "next-translate/useTranslation";
 import React, { useState } from "react";
 import { MdOutlineWatchLater } from "react-icons/md";
-import { sanitize } from "dompurify";
+import DOMPurify from "dompurify";
 
 import Link from "next/link";
 import clsx from "clsx";
@@ -61,7 +61,7 @@ const Description = ({ description }: { description: string }) => {
 
   const { t } = useTranslation("common");
 
-  const cleanHTML = sanitize(description);
+  const cleanHTML = DOMPurify.sanitize(description);
 
   return (
     <div className="mb-5 pt-2 text-sm text-gray-200 md:text-base">

@@ -129,7 +129,7 @@ describe("saas/sets.ts", () => {
           {},
         );
         expect(graphQlRequest).toHaveBeenCalledWith(
-          'mutation { createSkylarkSet_home_page_slider: createSkylarkSet (skylark_set: {external_id: "home_page_slider", content: {Episode: {link: [{position: 5, uid: "episodes-Game of Thrones S01E01"}]}, Season: {link: [{position: 6, uid: "seasons-Game of Thrones S01"}]}, Brand: {link: [{position: 1, uid: "brands-game-of-thrones"}]}, Movie: {link: [{position: 2, uid: "movies-deadpool-2"}, {position: 3, uid: "movies-sing-2"}, {position: 4, uid: "movies-us"}]}, SkylarkSet: {link: []}, LiveStream: {link: []}}, availability: {link: ["availability-1"]}}) { __typename uid external_id slug } }',
+          'mutation { createSkylarkSet_home_page_slider: createSkylarkSet (skylark_set: {slug: "media-reference-home-page-hero", external_id: "home_page_slider", content: {Episode: {link: [{position: 5, uid: "episodes-Game of Thrones S01E01"}]}, Season: {link: [{position: 6, uid: "seasons-Game of Thrones S01"}]}, Brand: {link: [{position: 1, uid: "brands-game-of-thrones"}]}, Movie: {link: [{position: 2, uid: "movies-deadpool-2"}, {position: 3, uid: "movies-sing-2"}, {position: 4, uid: "movies-us"}]}, SkylarkSet: {link: []}, LiveStream: {link: []}}, dynamic_content: null, availability: {link: ["availability-1"]}}) { __typename uid external_id slug } }',
         );
       });
     });

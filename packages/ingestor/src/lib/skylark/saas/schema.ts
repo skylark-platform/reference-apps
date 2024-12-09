@@ -176,7 +176,7 @@ const addCustomEpisodeFields = (version: number) => {
         fields: {
           name: "audience_rating"
           operation: CREATE
-          type: STRING
+          type: FLOAT
           is_translatable: false
         }
         object_class: Episode
@@ -206,7 +206,7 @@ const addCustomSeasonFields = (version: number) => {
           {
             name: "audience_rating"
             operation: CREATE
-            type: STRING
+            type: FLOAT
             is_translatable: false
           }
         ]
@@ -229,7 +229,7 @@ const addCustomBrandFields = (version: number) => {
         fields: {
           name: "audience_rating"
           operation: CREATE
-          type: STRING
+          type: FLOAT
           is_translatable: false
         }
         object_class: Brand
@@ -252,13 +252,13 @@ const addCustomMovieFields = (version: number) => {
           {
             name: "budget"
             operation: CREATE
-            type: STRING
+            type: FLOAT
             is_translatable: false
           }
           {
             name: "audience_rating"
             operation: CREATE
-            type: STRING
+            type: FLOAT
             is_translatable: false
           }
         ]

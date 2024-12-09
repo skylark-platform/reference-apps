@@ -7,7 +7,12 @@ import {
   sortObjectByNumberProperty,
   getImageSrcAndSizeByWindow,
   skylarkRequestWithDimensions,
+  addCloudinaryOnTheFlyImageTransformation,
 } from "./utils";
+
+jest.mock("../../constants/env", () => ({
+  CLOUDINARY_ENVIRONMENT: "CLOUDINARY_ENVIRONMENT",
+}));
 
 describe("utils", () => {
   describe("getImageSrcAndSizeByWindow", () => {
@@ -243,6 +248,48 @@ describe("utils", () => {
     it("sorts the array of strings into alphabetical order", () => {
       const got = arr.sort(sortArrayIntoAlphabeticalOrder);
       expect(got).toEqual(["apples", "AVOCADO", "bananas", "Car", "peach"]);
+    });
+  });
+
+  describe("addCloudinaryOnTheFlyImageTransformation", () => {
+    it("correctly prefixes with cloudinary url for Skylark S3 (https)", () => {
+      const got = addCloudinaryOnTheFlyImageTransformation(
+        "https://media.skylarkplatform.com/skylarkimages/ss77sbncbrdvjknaaws4hsksse/01J58D5JDQN646VXX2V8A205GX/01J58DKSVKABCMEMEM44Y23BTN",
+        { width: 400 },
+      );
+      expect(got).toEqual(
+        "https://res.cloudinary.com/CLOUDINARY_ENVIRONMENT/image/fetch/w_400/https://media.skylarkplatform.com/skylarkimages/ss77sbncbrdvjknaaws4hsksse/01J58D5JDQN646VXX2V8A205GX/01J58DKSVKABCMEMEM44Y23BTN",
+      );
+    });
+
+    it("correctly prefixes with cloudinary url for Skylark S3 (http)", () => {
+      const got = addCloudinaryOnTheFlyImageTransformation(
+        "http://media.skylarkplatform.com/skylarkimages/ss77sbncbrdvjknaaws4hsksse/01J58D5JDQN646VXX2V8A205GX/01J58DKSVKABCMEMEM44Y23BTN",
+        { width: 400 },
+      );
+      expect(got).toEqual(
+        "https://res.cloudinary.com/CLOUDINARY_ENVIRONMENT/image/fetch/w_400/http://media.skylarkplatform.com/skylarkimages/ss77sbncbrdvjknaaws4hsksse/01J58D5JDQN646VXX2V8A205GX/01J58DKSVKABCMEMEM44Y23BTN",
+      );
+    });
+
+    it("does nothing when already prefixed", () => {
+      const got = addCloudinaryOnTheFlyImageTransformation(
+        "https://res.cloudinary.com/CLOUDINARY_ENVIRONMENT/image/fetch/w_400/https://media.skylarkplatform.com/skylarkimages/ss77sbncbrdvjknaaws4hsksse/01J58D5JDQN646VXX2V8A205GX/01J58DKSVKABCMEMEM44Y23BTN",
+        { width: 600 },
+      );
+      expect(got).toEqual(
+        "https://res.cloudinary.com/CLOUDINARY_ENVIRONMENT/image/fetch/w_400/https://media.skylarkplatform.com/skylarkimages/ss77sbncbrdvjknaaws4hsksse/01J58D5JDQN646VXX2V8A205GX/01J58DKSVKABCMEMEM44Y23BTN",
+      );
+    });
+
+    it("correctly adds resizing when url is already cloudinary", () => {
+      const got = addCloudinaryOnTheFlyImageTransformation(
+        "http://res.cloudinary.com/CLOUDINARY_ENVIRONMENT/image/upload/v1729261701/ej0qkuprpwqnspdoaxsj.jpg",
+        { height: 400 },
+      );
+      expect(got).toEqual(
+        "http://res.cloudinary.com/CLOUDINARY_ENVIRONMENT/image/upload/h_400/v1729261701/ej0qkuprpwqnspdoaxsj.jpg",
+      );
     });
   });
 });

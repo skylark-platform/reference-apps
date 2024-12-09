@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { sanitize } from "dompurify";
+import DOMPurify from "dompurify";
 import React from "react";
 
 export const ParseAndDisplayHTML = ({
@@ -15,7 +15,7 @@ export const ParseAndDisplayHTML = ({
 }) => {
   const cleanHTML =
     html &&
-    sanitize(html, {
+    DOMPurify.sanitize(html, {
       ADD_TAGS: ["iframe", "script"],
       ADD_ATTR: [
         "allow",

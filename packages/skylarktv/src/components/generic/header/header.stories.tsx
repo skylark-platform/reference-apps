@@ -1,13 +1,13 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import { Header } from "./header.component";
 
 export default {
   title: "React/Header",
   component: Header,
-} as ComponentMeta<typeof Header>;
+} as Meta<typeof Header>;
 
-const Template: ComponentStory<typeof Header> = (args) => (
+const Template: StoryFn<typeof Header> = (args) => (
   <div className="bg-gray-900" dir="ltr">
     <Header {...args} />
   </div>

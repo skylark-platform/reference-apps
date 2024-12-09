@@ -1,13 +1,13 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import { Subtitle as SubtitleComponent } from "./subtitle.component";
 
 export default {
   title: "React/Typography/Subtitle",
   component: SubtitleComponent,
-} as ComponentMeta<typeof SubtitleComponent>;
+} as Meta<typeof SubtitleComponent>;
 
-const Template: ComponentStory<typeof SubtitleComponent> = (args) => (
+const Template: StoryFn<typeof SubtitleComponent> = (args) => (
   <SubtitleComponent {...args}>{`Subtitle ${args.level}`}</SubtitleComponent>
 );
 

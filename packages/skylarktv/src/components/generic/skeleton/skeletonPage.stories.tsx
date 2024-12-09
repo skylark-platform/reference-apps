@@ -1,13 +1,13 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import { SkeletonPage } from "./skeletonPage.component";
 
 export default {
   title: "React/SkeletonPage",
   component: SkeletonPage,
-} as ComponentMeta<typeof SkeletonPage>;
+} as Meta<typeof SkeletonPage>;
 
-const Template: ComponentStory<typeof SkeletonPage> = (args) => (
+const Template: StoryFn<typeof SkeletonPage> = (args) => (
   <SkeletonPage {...args} />
 );
 

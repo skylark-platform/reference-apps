@@ -7,24 +7,24 @@
   "devDependencies": {
     "@tsconfig/node18": "18.2.4",
     "@types/fs-extra": "11.0.4",
-    "@types/jest": "29.5.13",
-    "@types/node": "20.16.11",
+    "@types/jest": "29.5.14",
+    "@types/node": "22.10.1",
     "cross-env": "7.0.3",
     "jest": "29.7.0",
     "jest-environment-jsdom": "29.7.0",
     "ts-node": "10.9.2",
-    "typescript": "5.6.3"
+    "typescript": "5.7.2"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "3.670.0",
+    "@aws-sdk/client-s3": "3.705.0",
     "@aws-sdk/util-credentials": "3.56.0",
     "@skylark-apps/skylarktv": "0.1.0",
-    "@types/lodash": "4.17.10",
+    "@types/lodash": "4.17.13",
     "airtable": "0.12.2",
-    "axios": "1.7.7",
+    "axios": "1.7.9",
     "axios-retry": "4.5.0",
     "dayjs": "1.11.13",
-    "dotenv": "16.4.5",
+    "dotenv": "16.4.7",
     "fs-extra": "11.2.0",
     "graphql": "16.9.0",
     "graphql-request": "6.1.0",
@@ -44,6 +44,6 @@
     "ingest:legacy-to-skylark:cloudinary-images": "ts-node src/lib/ingestLegacyObjectsToSkylark/scripts/migrateLegacySkylarkImagesToCloudinary.ts"
   },
   "resolutions": {
-    "axios": "1.7.7"
+    "axios": "1.7.9"
   }
 }

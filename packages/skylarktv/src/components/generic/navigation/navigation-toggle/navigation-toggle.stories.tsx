@@ -1,13 +1,13 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import { NavigationToggle } from "./navigation-toggle.component";
 
 export default {
   title: "React/Navigation/Toggle",
   component: NavigationToggle,
-} as ComponentMeta<typeof NavigationToggle>;
+} as Meta<typeof NavigationToggle>;
 
-const Template: ComponentStory<typeof NavigationToggle> = (args) => (
+const Template: StoryFn<typeof NavigationToggle> = (args) => (
   <NavigationToggle {...args} />
 );
 

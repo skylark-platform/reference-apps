@@ -345,6 +345,7 @@ export const ingestClientC = async ({
       deviceTypes: [],
       regions: [],
     },
+    [],
   );
 
   const skylarkObjects = createEmptySkylarkObjects();

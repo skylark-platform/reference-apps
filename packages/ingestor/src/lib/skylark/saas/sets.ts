@@ -95,10 +95,121 @@ const createSetContent = (
   return content;
 };
 
+const createDynamicSetContent = (
+  airtableSet: Records<FieldSet>[0],
+  mediaObjects: GraphQLBaseObject[],
+  metadata: GraphQLMetadata,
+): {
+  dynamic_content_types: EnumType[];
+  dynamic_content_rules: {
+    object_types: EnumType[];
+    uid: string[] | null;
+    relationship_name: string | null;
+  }[][];
+} | null => {
+  if (typeof airtableSet?.fields?.dynamic_content !== "string") {
+    return null;
+  }
+
+  try {
+    const parsedJson = JSON.parse(airtableSet.fields.dynamic_content) as {
+      dynamic_content_types?: string[];
+      dynamic_content_rules?: {
+        object_types: string[];
+        uid: string[] | null;
+        relationship_name: string | null;
+      }[][];
+    };
+
+    if (
+      !parsedJson ||
+      !parsedJson.dynamic_content_types ||
+      parsedJson.dynamic_content_types.length === 0 ||
+      !parsedJson.dynamic_content_rules ||
+      parsedJson.dynamic_content_rules.length === 0
+    ) {
+      return null;
+    }
+
+    const parsedDynamicContentTypes = parsedJson.dynamic_content_types.map(
+      (ot) => new EnumType(ot),
+    );
+
+    const metadataCopy: Partial<GraphQLMetadata> = {
+      ...metadata,
+    };
+    delete metadataCopy?.availability;
+    delete metadataCopy?.dimensions;
+
+    const allMetadataObjects: GraphQLBaseObject[] = Object.entries(
+      metadataCopy as Partial<
+        Omit<GraphQLMetadata, "availability" | "dimensions">
+      >,
+    ).flatMap(([, objects]) => objects);
+
+    const externalIdToUidMapping: Record<string, string> = [
+      ...mediaObjects,
+      ...allMetadataObjects,
+    ].reduce(
+      (prev, { uid, external_id }) =>
+        external_id
+          ? {
+              ...prev,
+              [external_id]: uid,
+            }
+          : prev,
+      {},
+    );
+
+    const parsedDynamicContentRules = parsedJson.dynamic_content_rules.map(
+      (ruleBlock) =>
+        ruleBlock.map((rule, index) => {
+          const objectTypes = rule.object_types.map((ot) => new EnumType(ot));
+
+          if (index === 0) {
+            return {
+              object_types: objectTypes,
+              uid: null,
+              relationship_name: null,
+            };
+          }
+
+          return {
+            object_types: objectTypes,
+            uid: rule.uid
+              ? rule.uid
+                  .map(
+                    (externalId) =>
+                      externalIdToUidMapping?.[externalId] || null,
+                  )
+                  .filter((str): str is string => !!str)
+              : null,
+            relationship_name: rule.relationship_name || null,
+          };
+        }),
+    );
+
+    return {
+      dynamic_content_types: parsedDynamicContentTypes,
+      dynamic_content_rules: parsedDynamicContentRules,
+    };
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.log(
+      `[createDynamicSetContent] Error creating dynamic set content for ${airtableSet.id}`,
+    );
+    // eslint-disable-next-line no-console
+    console.log(airtableSet.fields);
+    return null;
+  }
+};
+
 const createBasicSetArgs = (
   set: SetConfig,
+  airtableFields: FieldSet,
   validProperties: GraphQLIntrospectionProperties[],
   content: SetRelationshipsLink,
+  dynamicContent: object | null,
   metadata: GraphQLMetadata,
   update: boolean,
 ) => {
@@ -106,6 +217,7 @@ const createBasicSetArgs = (
 
   const validFields = getValidFields(
     {
+      ...airtableFields,
       type: set.graphQlSetType,
     },
     validProperties,
@@ -117,6 +229,7 @@ const createBasicSetArgs = (
         skylark_set: {
           ...validFields,
           content,
+          dynamic_content: dynamicContent,
           availability,
         },
       }
@@ -125,6 +238,7 @@ const createBasicSetArgs = (
           ...validFields,
           external_id: set.externalId,
           content,
+          dynamic_content: dynamicContent,
           availability,
         },
       };
@@ -137,6 +251,7 @@ const createSetArgsWithTranslations = (
   airtableFields: FieldSet,
   validProperties: GraphQLIntrospectionProperties[],
   content: SetRelationshipsLink,
+  dynamicContent: object | null,
   metadata: GraphQLMetadata,
   language: string,
   update: boolean,
@@ -186,6 +301,7 @@ const createSetArgsWithTranslations = (
 
   if (addRelationships) {
     args.skylark_set.content = content;
+    args.skylark_set.dynamic_content = dynamicContent;
     args.skylark_set.availability = availability;
     args.skylark_set.relationships = relationships;
   }
@@ -275,6 +391,12 @@ export const createOrUpdateGraphQLSet = async (
     airtableMediaObjectToExternalIDMapping,
   );
 
+  const dynamicContent = createDynamicSetContent(
+    airtableSet,
+    mediaObjects,
+    metadata,
+  );
+
   if (
     airtableTranslationsForThisSet &&
     airtableTranslationsForThisSet.length > 0
@@ -295,9 +417,10 @@ export const createOrUpdateGraphQLSet = async (
 
       const args = createSetArgsWithTranslations(
         setConfig,
-        metadataTranslation.fields,
+        { ...airtableSet.fields, ...metadataTranslation.fields },
         validProperties,
         content,
+        dynamicContent,
         metadata,
         language,
         updateObject,
@@ -323,8 +446,10 @@ export const createOrUpdateGraphQLSet = async (
 
   const args = createBasicSetArgs(
     setConfig,
+    airtableSet.fields,
     validProperties,
     content,
+    dynamicContent,
     metadata,
     setExists,
   );
