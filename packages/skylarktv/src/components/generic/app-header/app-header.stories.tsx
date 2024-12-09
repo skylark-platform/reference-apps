@@ -1,5 +1,5 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import {
   MdStream,
   MdAccountCircle,
@@ -14,11 +14,9 @@ import { Button } from "../button";
 export default {
   title: "React/AppHeader",
   component: AppHeader,
-} as ComponentMeta<typeof AppHeader>;
+} as Meta<typeof AppHeader>;
 
-const Template: ComponentStory<typeof AppHeader> = (args) => (
-  <AppHeader {...args} />
-);
+const Template: StoryFn<typeof AppHeader> = (args) => <AppHeader {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {

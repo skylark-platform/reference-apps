@@ -1,5 +1,5 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import { CollectionThumbnail as CollectionThumbnailComponent } from "./collection-thumbnail.component";
 
 export default {
@@ -11,11 +11,9 @@ export default {
       control: { type: "select" },
     },
   },
-} as ComponentMeta<typeof CollectionThumbnailComponent>;
+} as Meta<typeof CollectionThumbnailComponent>;
 
-const Template: ComponentStory<typeof CollectionThumbnailComponent> = (
-  args,
-) => (
+const Template: StoryFn<typeof CollectionThumbnailComponent> = (args) => (
   <div className="mt-10 flex h-[400px] w-full flex-col justify-center overflow-y-visible">
     <div className="w-96 bg-gray-900 p-10">
       <CollectionThumbnailComponent {...args} />

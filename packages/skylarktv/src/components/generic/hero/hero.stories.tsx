@@ -1,5 +1,5 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import { Hero } from "./hero.component";
 
 const images = [
@@ -18,9 +18,9 @@ export default {
       control: { type: "radio" },
     },
   },
-} as ComponentMeta<typeof Hero>;
+} as Meta<typeof Hero>;
 
-const Template: ComponentStory<typeof Hero> = (args) => (
+const Template: StoryFn<typeof Hero> = (args) => (
   <div className="bg-gray-900">
     <Hero {...args} />
   </div>

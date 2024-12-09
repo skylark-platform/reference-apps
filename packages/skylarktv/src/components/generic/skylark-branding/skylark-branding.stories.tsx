@@ -1,13 +1,13 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import { SkylarkBranding } from "./skylark-branding.component";
 
 export default {
   title: "React/SkylarkBranding",
   component: SkylarkBranding,
-} as ComponentMeta<typeof SkylarkBranding>;
+} as Meta<typeof SkylarkBranding>;
 
-const Template: ComponentStory<typeof SkylarkBranding> = (args) => (
+const Template: StoryFn<typeof SkylarkBranding> = (args) => (
   <SkylarkBranding {...args} />
 );
 

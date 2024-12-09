@@ -1,5 +1,5 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import { Heading as HeadingComponent } from "./heading.component";
 
 export default {
@@ -8,9 +8,9 @@ export default {
   parameters: {
     chromatic: { viewports: [320, 1200] },
   },
-} as ComponentMeta<typeof HeadingComponent>;
+} as Meta<typeof HeadingComponent>;
 
-const Template: ComponentStory<typeof HeadingComponent> = (args) => (
+const Template: StoryFn<typeof HeadingComponent> = (args) => (
   <HeadingComponent
     {...args}
     className="text-gray-900"

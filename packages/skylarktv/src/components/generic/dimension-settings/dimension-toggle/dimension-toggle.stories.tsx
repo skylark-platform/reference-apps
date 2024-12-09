@@ -1,13 +1,13 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import { DimensionToggle } from "./dimension-toggle.component";
 
 export default {
   title: "React/DimensionSettings/DimensionToggle",
   component: DimensionToggle,
-} as ComponentMeta<typeof DimensionToggle>;
+} as Meta<typeof DimensionToggle>;
 
-const Template: ComponentStory<typeof DimensionToggle> = (args) => (
+const Template: StoryFn<typeof DimensionToggle> = (args) => (
   <div className="flex h-32 w-32 items-center justify-center bg-gray-900">
     <DimensionToggle {...args} />
   </div>
