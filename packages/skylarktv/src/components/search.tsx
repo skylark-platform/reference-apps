@@ -2,7 +2,7 @@ import clsx from "clsx";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { MdOutlineRotateRight, MdClear, MdSearch } from "react-icons/md";
 import { useDebounce } from "use-debounce";
-import { sanitize } from "dompurify";
+import DOMPurify from "dompurify";
 import { sentenceCase } from "change-case";
 
 import useTranslation from "next-translate/useTranslation";
@@ -68,7 +68,7 @@ const HighlightedSearchResultText = ({
   className?: string;
   matchClassName?: string;
 }) => {
-  const cleanHTML = sanitize(text, { ALLOWED_TAGS: ["span"] });
+  const cleanHTML = DOMPurify.sanitize(text, { ALLOWED_TAGS: ["span"] });
   return (
     <p
       className={clsx(

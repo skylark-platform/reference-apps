@@ -1,13 +1,13 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import { DimensionRadioButton } from "./dimension-radio-button.component";
 
 export default {
   title: "React/DimensionSettings/RadioButton",
   component: DimensionRadioButton,
-} as ComponentMeta<typeof DimensionRadioButton>;
+} as Meta<typeof DimensionRadioButton>;
 
-const Template: ComponentStory<typeof DimensionRadioButton> = (args) => (
+const Template: StoryFn<typeof DimensionRadioButton> = (args) => (
   <DimensionRadioButton {...args} />
 );
 

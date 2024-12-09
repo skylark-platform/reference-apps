@@ -1,5 +1,5 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import { Player } from "./player.component";
 
 export default {
@@ -9,9 +9,9 @@ export default {
     // MuxPlayer doesn't play well with the snapshot (shows blank)
     chromatic: { disableSnapshot: true },
   },
-} as ComponentMeta<typeof Player>;
+} as Meta<typeof Player>;
 
-const Template: ComponentStory<typeof Player> = (args) => (
+const Template: StoryFn<typeof Player> = (args) => (
   <div className="flex h-screen w-screen items-center justify-center bg-gray-900">
     <Player {...args} />
   </div>

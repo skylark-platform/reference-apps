@@ -8,6 +8,7 @@ export const segment: AnalyticsBrowser = AnalyticsBrowser.load({
 
 export const configureSegment = () => {
   void setupAmpSRSegmentWrapper({
+    // @ts-expect-error @amplitude/segment-session-replay-wrapper needs updating to have the correct type
     segmentInstance: segment,
     amplitudeApiKey: AMPLITUDE_API_KEY,
     sessionReplayOptions: {

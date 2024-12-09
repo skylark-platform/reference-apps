@@ -1,13 +1,13 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import { PlaybackPage } from "./playback.page";
 
 export default {
   title: "Pages/PlaybackPage",
   component: PlaybackPage,
-} as ComponentMeta<typeof PlaybackPage>;
+} as Meta<typeof PlaybackPage>;
 
-const Template: ComponentStory<typeof PlaybackPage> = (args) => (
+const Template: StoryFn<typeof PlaybackPage> = (args) => (
   <PlaybackPage {...args} />
 );
 

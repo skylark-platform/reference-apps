@@ -1,5 +1,5 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import { Rail } from "./rail.component";
 import {
   episodeThumbnails,
@@ -20,7 +20,7 @@ export default {
     // sm, md and lg Tailwind viewports covered by Chromatic
     chromatic: { viewports: [500, 800, 1200] },
   },
-} as ComponentMeta<typeof Rail>;
+} as Meta<typeof Rail>;
 
 const getMovieThumbnails = (length?: number) => {
   let arr = movieThumbnails;
@@ -38,7 +38,7 @@ const getMovieThumbnails = (length?: number) => {
   ));
 };
 
-const Template: ComponentStory<typeof Rail> = (args) => (
+const Template: StoryFn<typeof Rail> = (args) => (
   <div className="flex h-[500px] w-full flex-col justify-center overflow-y-visible bg-gray-900">
     <Rail {...args} />
   </div>

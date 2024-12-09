@@ -1,14 +1,14 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 
 import { List } from "./list.component";
 
 export default {
   title: "React/List",
   component: List,
-} as ComponentMeta<typeof List>;
+} as Meta<typeof List>;
 
-const Template: ComponentStory<typeof List> = (args) => (
+const Template: StoryFn<typeof List> = (args) => (
   <div className="bg-gray-900 p-6">
     <List {...args} />
   </div>

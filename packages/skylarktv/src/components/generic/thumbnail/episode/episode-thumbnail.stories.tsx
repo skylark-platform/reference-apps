@@ -1,13 +1,13 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryFn, Meta } from "@storybook/react";
 import { EpisodeThumbnail as EpisodeThumbnailComponent } from "./episode-thumbnail.component";
 
 export default {
   title: "React/Thumbnails/Episode",
   component: EpisodeThumbnailComponent,
-} as ComponentMeta<typeof EpisodeThumbnailComponent>;
+} as Meta<typeof EpisodeThumbnailComponent>;
 
-const Template: ComponentStory<typeof EpisodeThumbnailComponent> = (args) => (
+const Template: StoryFn<typeof EpisodeThumbnailComponent> = (args) => (
   <div className="mt-10 flex h-72 w-full flex-col justify-center overflow-y-visible">
     <div className="w-96 bg-gray-900 p-10">
       <EpisodeThumbnailComponent {...args} />
