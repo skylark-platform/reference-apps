@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import useTranslation from "next-translate/useTranslation";
 import React from "react";
 import { MdStream } from "react-icons/md";
