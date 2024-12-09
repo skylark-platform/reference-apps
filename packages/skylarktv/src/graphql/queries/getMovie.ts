@@ -31,7 +31,7 @@ export const GET_MOVIE_THUMBNAIL = gql`
   }
 `;
 
-export const GET_MOVIE = (skylarkTVIngestorSchemaLoaded: boolean) => gql`
+export const GET_MOVIE = (skylarkTVIngestorSchemaLoaded?: boolean) => gql`
   query GET_MOVIE($uid: String, $externalId: String) {
     getObject: getMovie(uid: $uid, external_id: $externalId) {
       uid

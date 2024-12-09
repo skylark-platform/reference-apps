@@ -230,7 +230,7 @@ export const GET_COLLECTION_SET = gql`
   }
 `;
 
-export const GET_PAGE_SET = (skylarkTVIngestorSchemaLoaded: boolean) => gql`
+export const GET_PAGE_SET = (skylarkTVIngestorSchemaLoaded?: boolean) => gql`
   query GET_PAGE_SET(
     $uid: String
     $externalId: String

@@ -71,7 +71,11 @@ export const useMuxPlaybackTokens = (
   provider?: string,
   playbackId?: string,
 ) => {
-  const { data, error, isLoading } = useQuery({
+  const { data, error, isLoading } = useQuery<
+    ResponseBody,
+    GQLError,
+    PlayerTokens | undefined
+  >({
     queryKey: ["MuxPlaybackToken", playbackId],
     queryFn: () => fetcher(playbackId || ""),
     enabled: Boolean(playbackId && provider?.toLocaleLowerCase() === "mux"),
@@ -84,6 +88,6 @@ export const useMuxPlaybackTokens = (
   return {
     playbackTokens: data,
     isLoading,
-    isError: error as GQLError,
+    isError: error,
   };
 };

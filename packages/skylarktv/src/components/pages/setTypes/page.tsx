@@ -38,7 +38,7 @@ const Page: NextPage<{
     useSkylarkEnvironment();
 
   const { data, isLoading, isError } = useObject<SkylarkSet>(
-    GET_PAGE_SET(environment.hasUpdatedSeason),
+    GET_PAGE_SET(environment?.hasUpdatedSeason),
     slug,
     { disabled: isLoadingEnvironment },
   );

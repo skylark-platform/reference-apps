@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { GQLError, SkylarkImageListing } from "../types";
 import {
   GET_APP_CONFIG,
@@ -43,70 +43,77 @@ export interface SkylarkTVConfig {
   };
 }
 
+const select = (data: SkylarkTVConfigResponse): SkylarkTVConfig | undefined => {
+  if (
+    !data?.listAppConfig?.objects ||
+    data.listAppConfig.objects.length === 0
+  ) {
+    return undefined;
+  }
+
+  const gqlConfig = data.listAppConfig.objects[0];
+
+  const logo =
+    gqlConfig.logo.objects &&
+    gqlConfig.logo.objects.length > 0 &&
+    (gqlConfig.logo.objects.find(
+      (img) => img?.type && ["MAIN", "THUMBNAIL"].includes(img.type),
+    ) ||
+      gqlConfig.logo.objects[0]);
+
+  // Only use loadingLogo when logo is populated
+  const loadingLogo =
+    logo &&
+    gqlConfig.logo.objects &&
+    gqlConfig.logo.objects.length > 1 &&
+    gqlConfig.logo.objects.find((img) => img?.type === "PRE_LIVE");
+
+  return {
+    appName: gqlConfig.app_name,
+    primaryColor: gqlConfig.primary_color,
+    accentColor: gqlConfig.accent_color,
+    googleTagManagerId: gqlConfig.google_tag_manager_id,
+    featuredPageUrl: gqlConfig.featured_page_url,
+    logo:
+      logo && logo.url
+        ? {
+            alt: logo.title || logo.slug || logo.url,
+            src: logo.url,
+          }
+        : undefined,
+    loadingLogo:
+      loadingLogo && loadingLogo.url
+        ? {
+            alt: loadingLogo.title || loadingLogo.slug || loadingLogo.url,
+            src: loadingLogo.url,
+          }
+        : undefined,
+  };
+};
+
 export const useSkylarkTVConfig = () => {
   const { dimensions } = useDimensions();
 
   const { environment } = useSkylarkEnvironment();
 
-  const { data, error } = useQuery({
+  const { data: config, error } = useQuery<
+    SkylarkTVConfigResponse,
+    GQLError,
+    SkylarkTVConfig | undefined
+  >({
     queryKey: ["SkylarkTVConfig", dimensions],
     queryFn: () =>
       skylarkRequestWithDimensions<SkylarkTVConfigResponse>(
-        environment.hasAppConfig ? GET_APP_CONFIG : GET_STREAMTV_CONFIG,
+        environment?.hasAppConfig ? GET_APP_CONFIG : GET_STREAMTV_CONFIG,
         dimensions,
         {},
       ),
-    cacheTime: Infinity,
-    enabled: Boolean(environment.hasAppConfig || environment.hasStreamTVConfig),
+    gcTime: Infinity,
+    enabled: Boolean(
+      environment?.hasAppConfig || environment?.hasStreamTVConfig,
+    ),
+    select,
   });
-
-  const config = useMemo((): SkylarkTVConfig | undefined => {
-    if (
-      !data?.listAppConfig?.objects ||
-      data.listAppConfig.objects.length === 0
-    ) {
-      return undefined;
-    }
-
-    const gqlConfig = data.listAppConfig.objects[0];
-
-    const logo =
-      gqlConfig.logo.objects &&
-      gqlConfig.logo.objects.length > 0 &&
-      (gqlConfig.logo.objects.find(
-        (img) => img?.type && ["MAIN", "THUMBNAIL"].includes(img.type),
-      ) ||
-        gqlConfig.logo.objects[0]);
-
-    // Only use loadingLogo when logo is populated
-    const loadingLogo =
-      logo &&
-      gqlConfig.logo.objects &&
-      gqlConfig.logo.objects.length > 1 &&
-      gqlConfig.logo.objects.find((img) => img?.type === "PRE_LIVE");
-
-    return {
-      appName: gqlConfig.app_name,
-      primaryColor: gqlConfig.primary_color,
-      accentColor: gqlConfig.accent_color,
-      googleTagManagerId: gqlConfig.google_tag_manager_id,
-      featuredPageUrl: gqlConfig.featured_page_url,
-      logo:
-        logo && logo.url
-          ? {
-              alt: logo.title || logo.slug || logo.url,
-              src: logo.url,
-            }
-          : undefined,
-      loadingLogo:
-        loadingLogo && loadingLogo.url
-          ? {
-              alt: loadingLogo.title || loadingLogo.slug || loadingLogo.url,
-              src: loadingLogo.url,
-            }
-          : undefined,
-    };
-  }, [data]);
 
   useEffect(() => {
     document.documentElement.style.setProperty(
@@ -132,6 +139,6 @@ export const useSkylarkTVConfig = () => {
 
   return {
     config,
-    error: error as GQLError,
+    error,
   };
 };

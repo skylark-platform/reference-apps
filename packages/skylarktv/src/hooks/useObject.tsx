@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { Metadata } from "../types/gql";
-import { GQLError } from "../types";
 import {
   hasProperty,
   isSkylarkUid,
@@ -8,6 +7,7 @@ import {
 } from "../lib/utils";
 import { useDimensions } from "../contexts";
 import { Dimensions } from "../lib/interfaces";
+import { GQLError } from "../types";
 
 interface UseObjectOpts<T extends Metadata> {
   disabled?: boolean;
@@ -37,7 +37,7 @@ export const useObject = <T extends Metadata>(
       ? opts.useExternalId
       : !isSkylarkUid(uid);
 
-  const { data, error, isLoading } = useQuery({
+  const { data, error, isLoading } = useQuery<T, GQLError>({
     queryKey: ["Object", query, uid, dimensions],
     queryFn: () =>
       fetcher<T>(query, uid, dimensions, { ...opts, useExternalId }),
@@ -48,6 +48,6 @@ export const useObject = <T extends Metadata>(
   return {
     data,
     isLoading: !uid || isLoading,
-    isError: error as GQLError,
+    isError: error,
   };
 };

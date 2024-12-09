@@ -80,7 +80,7 @@ export const GET_EPISODE_THUMBNAIL_WITH_ADDITIONAL_RELATIONSHIPS = gql`
   }
 `;
 
-export const GET_EPISODE = (skylarkTVIngestorSchemaLoaded: boolean) => gql`
+export const GET_EPISODE = (skylarkTVIngestorSchemaLoaded?: boolean) => gql`
   query GET_EPISODE($uid: String, $externalId: String) {
     getObject: getEpisode(uid: $uid, external_id: $externalId) {
       uid
