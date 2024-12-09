@@ -2,8 +2,8 @@
 
 # SkylarkTV
 
-[![Vercel Deploy](https://github.com/skylark-platform/reference-apps/actions/workflows/deploy-vercel.yml/badge.svg)](https://github.com/skylark-platform/reference-apps/actions/workflows/deploy-vercel.yml)
-[![Pull Request Checks](https://github.com/skylark-platform/reference-apps/actions/workflows/pr-checks.yml/badge.svg)](https://github.com/skylark-platform/reference-apps/actions/workflows/pr-checks.yml)
+[![Vercel Deploy](https://github.com/skylark-platform/skylarktv/actions/workflows/deploy-vercel.yml/badge.svg)](https://github.com/skylark-platform/skylarktv/actions/workflows/deploy-vercel.yml)
+[![Pull Request Checks](https://github.com/skylark-platform/skylarktv/actions/workflows/pr-checks.yml/badge.svg)](https://github.com/skylark-platform/skylarktv/actions/workflows/pr-checks.yml)
 
 Home to SkylarkTV, a web app designed to demonstrate the features of [Skylark][skylark], a headless CMS designed to enable customers to build and scale world-class streaming products.
 

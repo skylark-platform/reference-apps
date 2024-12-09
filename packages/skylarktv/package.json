@@ -16,7 +16,7 @@
     "prestorybook": "ONLY_GENERATE_CSS_FILE=true yarn codegen",
     "prebuild-storybook": "ONLY_GENERATE_CSS_FILE=true yarn codegen",
     "ingest": "cd ../../packages/ingestor && yarn ingest:saas:with-sets",
-    "vercel:link": "vercel link -p reference-apps-saas --scope skylark-platform --yes",
+    "vercel:link": "vercel link -p skylarktv-saas --scope skylark-platform --yes",
     "vercel:env": "vercel env pull .env.local --yes",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"

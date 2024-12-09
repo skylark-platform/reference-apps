@@ -48,7 +48,7 @@ interface PlaybackPageProps {
   number?: string | number;
   releaseDate?: string;
   budget?: string | number;
-  audienceRating?: string;
+  audienceRating?: string | number;
   brand?: {
     title: string;
     uid: string;
