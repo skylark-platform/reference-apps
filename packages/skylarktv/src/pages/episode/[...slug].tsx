@@ -50,7 +50,7 @@ const EpisodePage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
     isError,
     isLoading,
   } = useObject<Episode>(
-    GET_EPISODE(environment.hasUpdatedSeason),
+    GET_EPISODE(environment?.hasUpdatedSeason),
     uid as string,
     { disabled: isLoadingEnvironment },
   );

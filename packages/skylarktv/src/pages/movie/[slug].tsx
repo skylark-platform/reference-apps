@@ -47,7 +47,7 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
     isError,
     isLoading,
   } = useObject<Movie>(
-    GET_MOVIE(environment.hasUpdatedSeason),
+    GET_MOVIE(environment?.hasUpdatedSeason),
     query?.slug as string,
     { disabled: isLoadingEnvironment },
   );
