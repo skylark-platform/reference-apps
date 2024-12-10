@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
 import { GQLError, SkylarkTVAdditionalFields } from "../types";
 import { GET_SKYLARK_ENVIRONMENT } from "../graphql/queries/skylarkEnvironment";
 import { skylarkRequestWithLocalStorage } from "../lib/utils";
@@ -28,8 +27,36 @@ interface SkylarkEnvironment {
   objectTypes: string[];
 }
 
+const select = (data: SkylarkEnvironmentResponse): SkylarkEnvironment => {
+  const hasUpdatedSeason = Boolean(
+    data?.seasonFields?.fields &&
+      data.seasonFields.fields.findIndex(
+        ({ name }) =>
+          (name as SkylarkTVAdditionalFields) ===
+          SkylarkTVAdditionalFields.PreferredImageType,
+      ) > -1,
+  );
+
+  const objectTypes =
+    data?.objectTypes?.possibleTypes.map(({ name }) => name) || [];
+
+  const hasStreamTVConfig = objectTypes.includes("StreamtvConfig");
+  const hasAppConfig = objectTypes.includes("AppConfig");
+
+  return {
+    hasUpdatedSeason,
+    hasStreamTVConfig,
+    hasAppConfig,
+    objectTypes,
+  };
+};
+
 export const useSkylarkEnvironment = () => {
-  const { data, error, isLoading } = useQuery({
+  const { data, error, isLoading } = useQuery<
+    SkylarkEnvironmentResponse,
+    GQLError,
+    SkylarkEnvironment
+  >({
     queryKey: ["SkylarkEnvironment"],
     queryFn: () =>
       skylarkRequestWithLocalStorage<SkylarkEnvironmentResponse>(
@@ -38,35 +65,12 @@ export const useSkylarkEnvironment = () => {
         {},
       ),
     refetchOnMount: false,
+    select,
   });
 
-  const environment: SkylarkEnvironment = useMemo(() => {
-    const hasUpdatedSeason = Boolean(
-      data?.seasonFields?.fields &&
-        data.seasonFields.fields.findIndex(
-          ({ name }) =>
-            (name as SkylarkTVAdditionalFields) ===
-            SkylarkTVAdditionalFields.PreferredImageType,
-        ) > -1,
-    );
-
-    const objectTypes =
-      data?.objectTypes?.possibleTypes.map(({ name }) => name) || [];
-
-    const hasStreamTVConfig = objectTypes.includes("StreamtvConfig");
-    const hasAppConfig = objectTypes.includes("AppConfig");
-
-    return {
-      hasUpdatedSeason,
-      hasStreamTVConfig,
-      hasAppConfig,
-      objectTypes,
-    };
-  }, [data]);
-
   return {
-    environment,
+    environment: data,
     isLoading,
-    error: error as GQLError,
+    error,
   };
 };

@@ -24,15 +24,7 @@ const fetcher = (query: string, dimensions: Dimensions) =>
     query,
   }).then(({ search: data }): SearchResult => data);
 
-export const useSearch = (query: string) => {
-  const { dimensions, isLoadingDimensions } = useDimensions();
-
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["Search", query, dimensions],
-    queryFn: () => fetcher(query, dimensions),
-    enabled: Boolean(query && !isLoadingDimensions),
-  });
-
+const select = (data: SearchResult): SearchResult => {
   // Filter SkylarkSet results to only collections (as SkylarkTV only has pages for collections)
   // TODO remove after the type filtering has been added to search (SL-2665)
   const objects = data?.objects.filter(
@@ -42,11 +34,28 @@ export const useSearch = (query: string) => {
   );
 
   return {
-    data: {
-      ...data,
-      objects,
-    },
+    ...data,
+    objects,
+  };
+};
+
+export const useSearch = (query: string) => {
+  const { dimensions, isLoadingDimensions } = useDimensions();
+
+  const { data, error, isLoading } = useQuery<
+    SearchResult,
+    GQLError,
+    SearchResult
+  >({
+    queryKey: ["Search", query, dimensions],
+    queryFn: () => fetcher(query, dimensions),
+    enabled: Boolean(query && !isLoadingDimensions),
+    select,
+  });
+
+  return {
+    data,
     isLoading,
-    isError: error as GQLError,
+    isError: error,
   };
 };

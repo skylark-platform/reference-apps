@@ -30,7 +30,7 @@ export const GET_BRAND_THUMBNAIL = gql`
   }
 `;
 
-export const GET_BRAND = (skylarkTVIngestorSchemaLoaded: boolean) => gql`
+export const GET_BRAND = (skylarkTVIngestorSchemaLoaded?: boolean) => gql`
   query GET_BRAND(
     $uid: String
     $externalId: String

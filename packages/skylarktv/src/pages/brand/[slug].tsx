@@ -50,7 +50,7 @@ const BrandPage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
     isError,
     isLoading,
   } = useObject<Brand>(
-    GET_BRAND(environment.hasUpdatedSeason),
+    GET_BRAND(environment?.hasUpdatedSeason),
     query?.slug as string,
     { disabled: isLoadingEnvironment },
   );
