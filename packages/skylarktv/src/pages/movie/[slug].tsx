@@ -12,6 +12,7 @@ import {
   getGraphQLImageSrc,
   getSynopsisByOrderForGraphQLObject,
   getTitleByOrderForGraphQLObject,
+  hasProperty,
   splitAndFormatGraphQLCreditsByInternalTitle,
 } from "../../lib/utils";
 import { Availability, ImageType, Movie } from "../../types/gql";
@@ -97,7 +98,10 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         title={title || seo?.title || "Movie"}
       />
       <PlaybackPage
-        audienceRating={movie?.audience_rating || undefined}
+        audienceRating={
+          (hasProperty(movie, "audience_rating") && movie?.audience_rating) ||
+          undefined
+        }
         availabilityEndDate={availabilityEndDate}
         brand={
           firstBrand
@@ -107,7 +111,7 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
               }
             : undefined
         }
-        budget={movie?.budget || undefined}
+        budget={(hasProperty(movie, "budget") && movie?.budget) || undefined}
         credits={splitAndFormatGraphQLCreditsByInternalTitle(
           movie?.credits?.objects,
         )}
