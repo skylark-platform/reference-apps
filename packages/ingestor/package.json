@@ -5,6 +5,8 @@
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.16.0",
     "@tsconfig/node18": "18.2.4",
     "@types/fs-extra": "11.0.4",
     "@types/jest": "29.5.14",
@@ -37,13 +39,14 @@
     "ingest:saas": "cross-env yarn ingest",
     "ingest:saas:with-sets": "cross-env CREATE_SETS=true yarn ingest",
     "test": "jest --config=jest.config.js",
-    "lint": "eslint -c .eslintrc.js .",
+    "lint": "eslint -c eslint.config.mjs .",
     "ingest:legacy-to-skylark": "ts-node src/lib/ingestLegacyObjectsToSkylark/main.ts",
     "ingest:legacy-to-skylark-from-disk": "cross-env READ_LEGACY_OBJECTS_FROM_DISK=true yarn ingest:legacy-to-skylark",
     "ingest:legacy-to-skylark:availability": "ts-node src/lib/ingestLegacyObjectsToSkylark/scripts/assignAlwaysAvailabilityToAllObjects.ts",
     "ingest:legacy-to-skylark:cloudinary-images": "ts-node src/lib/ingestLegacyObjectsToSkylark/scripts/migrateLegacySkylarkImagesToCloudinary.ts"
   },
   "resolutions": {
-    "axios": "1.7.9"
+    "axios": "1.7.9",
+    "globals": "15.13.0"
   }
 }
