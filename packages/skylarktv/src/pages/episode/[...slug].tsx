@@ -11,8 +11,8 @@ import {
   getGraphQLImageSrc,
   getSynopsisByOrderForGraphQLObject,
   getTitleByOrderForGraphQLObject,
-  hasProperty,
   splitAndFormatGraphQLCreditsByInternalTitle,
+  useNonSkylarkEntertainmentModelProperty,
 } from "../../lib/utils";
 import { Availability, Episode, ImageType } from "../../types/gql";
 import { DisplayError } from "../../components/displayError";
@@ -96,11 +96,9 @@ const EpisodePage: NextPage<{ seo?: SeoObjectData }> = ({ seo }) => {
         title={title || seo?.title || "Episode"}
       />
       <PlaybackPage
-        audienceRating={
-          (hasProperty(episode, "audience_rating") &&
-            episode?.audience_rating) ||
-          undefined
-        }
+        audienceRating={useNonSkylarkEntertainmentModelProperty<
+          number | string
+        >(episode, "audience_rating")}
         availabilityEndDate={availabilityEndDate}
         brand={
           episode?.seasons?.objects?.[0]?.brands?.objects?.[0]

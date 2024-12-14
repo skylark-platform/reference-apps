@@ -31,6 +31,7 @@ import {
   Entertainment,
   Availability,
   Credit,
+  Metadata,
 } from "../../types";
 import { getImageSrc } from "./classic";
 import { LOCAL_STORAGE } from "../../constants/app";
@@ -577,4 +578,16 @@ export const addCloudinaryOnTheFlyImageTransformation = (
 
   const cloudinaryUrl = `https${cloudinaryDomain}/${CLOUDINARY_ENVIRONMENT}/image/fetch/${urlOptsStr}${urlOptsStr ? "/" : ""}${imageUrl}`;
   return cloudinaryUrl;
+};
+
+export const useNonSkylarkEntertainmentModelProperty = <T>(
+  metadata: Metadata | null | undefined,
+  property: string,
+  defaultValue?: T,
+) => {
+  if (metadata && hasProperty(metadata, property)) {
+    return metadata.property as T;
+  }
+
+  return defaultValue;
 };

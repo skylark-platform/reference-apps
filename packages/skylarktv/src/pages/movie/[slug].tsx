@@ -12,8 +12,8 @@ import {
   getGraphQLImageSrc,
   getSynopsisByOrderForGraphQLObject,
   getTitleByOrderForGraphQLObject,
-  hasProperty,
   splitAndFormatGraphQLCreditsByInternalTitle,
+  useNonSkylarkEntertainmentModelProperty,
 } from "../../lib/utils";
 import { Availability, ImageType, Movie } from "../../types/gql";
 import { DisplayError } from "../../components/displayError";
@@ -98,10 +98,9 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
         title={title || seo?.title || "Movie"}
       />
       <PlaybackPage
-        audienceRating={
-          (hasProperty(movie, "audience_rating") && movie?.audience_rating) ||
-          undefined
-        }
+        audienceRating={useNonSkylarkEntertainmentModelProperty<
+          number | string
+        >(movie, "audience_rating")}
         availabilityEndDate={availabilityEndDate}
         brand={
           firstBrand
@@ -111,7 +110,10 @@ const MoviePage: NextPage<{ seo: SeoObjectData }> = ({ seo }) => {
               }
             : undefined
         }
-        budget={(hasProperty(movie, "budget") && movie?.budget) || undefined}
+        budget={useNonSkylarkEntertainmentModelProperty<number | string>(
+          movie,
+          "budget",
+        )}
         credits={splitAndFormatGraphQLCreditsByInternalTitle(
           movie?.credits?.objects,
         )}
